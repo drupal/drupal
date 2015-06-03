@@ -1,4 +1,4 @@
-name: Internal page cache
+name: Internal Page Cache
 type: module
 description: 'Caches pages for anonymous users. Works well for small to medium-sized websites.'
 package: Core

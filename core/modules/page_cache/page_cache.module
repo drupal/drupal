@@ -16,18 +16,14 @@ function page_cache_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.page_cache':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Internal page cache module caches pages for anonymous users in the database.') . '</p>';
+      $output .= '<p>' . t('The Internal Page Cache module caches pages for anonymous users in the database. For more information, see the <a href="!pagecache-documentation">online documentation for the Internal Page Cache module</a>.', array('!pagecache-documentation' => 'https://www.drupal.org/documentation/modules/internal_page_cache')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Speeding up your site') . '</dt>';
-      $output .= '<dd>';
-      $output .= '<p>' . t('Pages requested by anonymous users are stored the first time they are requested and then reused; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, the caching system may significantly increase the speed of your site.');
-      $output .= '<p>' . t('(For authenticated users, pages need to be assembled for each user individually, but anonymous users all get the exact same version of each page.)') . '</p>';
-      $output .= '</dd>';
-      $output .= '<dt>' . t('Configuring Internal page cache') . '</dt>';
-      $output .= '<dd>';
-      $output .= '<p>' . t('On the <a href="@cache-settings">Performance settings page</a>, you can configure how long browsers and proxies may cache pages, that setting is also respected by the Internal page cache module. There is no other configuration.', array('@cache-settings' => \Drupal::url('system.performance_settings')))  . '</p>';
-      $output .= '</dd>';
+      $output .= '<dd>' . t('Pages requested by anonymous users are stored the first time they are requested and then are reused. Depending on your site configuration and the amount of your web traffic tied to anonymous visitors, the caching system may significantly increase the speed of your site.') . '</dd>';
+      $output .= '<dd>' . t('Pages are usually identical for all anonymous users, while they can be customized for each authenticated user. This is why pages can be cached for anonymous users, whereas they will have to be rebuilt for every authenticated user.') . '</dd>';
+      $output .= '<dt>' . t('Configuring the internal page cache') . '</dt>';
+      $output .= '<dd>' . t('On the <a href="!cache-settings">Performance page</a>, you can configure how long browsers and proxies may cache pages; that setting is also respected by the Internal Page Cache module. There is no other configuration.', array('!cache-settings' => \Drupal::url('system.performance_settings')))  . '</dd>';
       $output .= '</dl>';
 
       return $output;
