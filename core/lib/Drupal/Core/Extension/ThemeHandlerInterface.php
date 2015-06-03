@@ -52,7 +52,7 @@ interface ThemeHandlerInterface {
    * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
    *   Use the theme_installer service instead.
    *
-   * @see \Drupal\Core\Extension\ThemeInstallerInterface::install
+   * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall
    */
   public function uninstall(array $theme_list);
 
