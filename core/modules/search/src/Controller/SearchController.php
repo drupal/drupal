@@ -117,14 +117,11 @@ class SearchController extends ControllerBase {
         '#markup' => '<h3>' . $this->t('Your search yielded no results.') . '</h3>',
       ),
       '#list_type' => 'ol',
-      '#attributes' => array(
-        'class' => array(
-          'search-results',
-          $plugin->getPluginId() . '-results',
-        ),
-      ),
       '#cache' => array(
         'tags' => $entity->getCacheTags(),
+      ),
+      '#context' => array(
+        'plugin' => $plugin->getPluginId(),
       ),
     );
 
