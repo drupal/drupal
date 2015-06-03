@@ -60,8 +60,11 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   /**
    * Set the current site path.
    *
-   * @param $path
+   * @param string $path
    *   The current site path.
+   *
+   * @throws \LogicException
+   *   In case the kernel is already booted.
    */
   public function setSitePath($path);
 

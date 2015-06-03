@@ -166,7 +166,7 @@ class DrupalKernelTest extends KernelTestBase {
   }
 
   /**
-   * Test repeated loading of compiled DIC with different environment.
+   * Tests repeated loading of compiled DIC with different environment.
    */
   public function testRepeatedBootWithDifferentEnvironment() {
     $request = Request::createFromGlobals();
@@ -187,6 +187,28 @@ class DrupalKernelTest extends KernelTestBase {
     }
 
     $this->pass('Repeatedly loaded compiled DIC with different environment');
+  }
+
+  /**
+   * Tests setting of site path after kernel boot.
+   */
+  public function testPreventChangeOfSitePath() {
+    // @todo: write a memory based storage backend for testing.
+    $modules_enabled = array(
+      'system' => 'system',
+      'user' => 'user',
+    );
+
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request, $modules_enabled);
+    $pass = FALSE;
+    try {
+      $kernel->setSitePath('/dev/null');
+    }
+    catch (\LogicException $e) {
+      $pass = TRUE;
+    }
+    $this->assertTrue($pass, 'Throws LogicException if DrupalKernel::setSitePath() is called after boot');
   }
 
 }
