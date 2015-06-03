@@ -136,12 +136,8 @@ class HtmlRenderer implements MainContentRendererInterface {
     }
     $content = $this->renderer->render($html);
 
-    // Set the generator in the HTTP header.
-    list($version) = explode('.', \Drupal::VERSION, 2);
-
     $response = new CacheableResponse($content, 200,[
       'Content-Type' => 'text/html; charset=UTF-8',
-      'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
 
     // Bubble the cacheability metadata associated with the rendered render
