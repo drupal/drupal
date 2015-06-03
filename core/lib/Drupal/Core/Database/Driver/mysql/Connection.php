@@ -211,7 +211,7 @@ class Connection extends DatabaseConnection {
   public function nextIdDelete() {
     // While we want to clean up the table to keep it up from occupying too
     // much storage and memory, we must keep the highest value in the table
-    // because InnoDB  uses an in-memory auto-increment counter as long as the
+    // because InnoDB uses an in-memory auto-increment counter as long as the
     // server runs. When the server is stopped and restarted, InnoDB
     // reinitializes the counter for each table for the first INSERT to the
     // table based solely on values from the table so deleting all values would
