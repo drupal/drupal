@@ -106,6 +106,10 @@ class UninstallTest extends WebTestBase {
     // Make sure our unique cache entry is gone.
     $cached = \Drupal::cache()->get('uninstall_test');
     $this->assertFalse($cached, 'Cache entry not found');
+    // Make sure we get an error message when we try to confirm uninstallation
+    // of an empty list of modules.
+    $this->drupalGet('admin/modules/uninstall/confirm');
+    $this->assertText(t('The selected modules could not be uninstalled, either due to a website problem or due to the uninstall confirmation form timing out. Please try again.'), 'Module uninstall confirmation form displays error message');
 
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
