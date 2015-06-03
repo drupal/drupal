@@ -219,16 +219,6 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSystemPath($rel = 'canonical') {
-    if ($this->hasLinkTemplate($rel) && $uri = $this->urlInfo($rel)) {
-      return $uri->getInternalPath();
-    }
-    return '';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function hasLinkTemplate($rel) {
     $link_templates = $this->linkTemplates();
     return isset($link_templates[$rel]);

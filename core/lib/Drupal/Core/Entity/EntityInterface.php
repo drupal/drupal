@@ -162,23 +162,6 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   public function link($text = NULL, $rel = 'canonical', array $options = []);
 
   /**
-   * Gets the internal path for this entity.
-   *
-   * self::url() will return the full path including any prefixes, fragments, or
-   * query strings. This path does not include those.
-   *
-   * @param string $rel
-   *   The link relationship type, for example: canonical or edit-form.
-   *
-   * @return string
-   *   The internal path for this entity.
-   *
-   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0. Use
-   *    static::urlInfo() instead.
-   */
-  public function getSystemPath($rel = 'canonical');
-
-  /**
    * Indicates if a link template exists for a given key.
    *
    * @param string $key

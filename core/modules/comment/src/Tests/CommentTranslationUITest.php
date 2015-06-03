@@ -138,12 +138,12 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    */
   protected function doTestAuthoringInfo() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    $path = $entity->getSystemPath('edit-form');
     $languages = $this->container->get('language_manager')->getLanguages();
     $values = array();
 
     // Post different authoring information for each translation.
     foreach ($this->langcodes as $langcode) {
+      $url = $entity->urlInfo('edit-form', ['language' => $languages[$langcode]]);
       $user = $this->drupalCreateUser();
       $values[$langcode] = array(
         'uid' => $user->id(),
@@ -154,7 +154,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );
-      $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode), array('language' => $languages[$langcode]));
+      $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
     }
 
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);

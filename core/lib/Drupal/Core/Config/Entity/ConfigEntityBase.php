@@ -395,13 +395,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function getSystemPath($rel = 'edit-form') {
-    return parent::getSystemPath($rel);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function url($rel = 'edit-form', $options = array()) {
     return parent::url($rel, $options);
   }

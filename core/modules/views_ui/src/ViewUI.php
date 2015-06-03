@@ -997,13 +997,6 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getSystemPath($rel = 'edit-form') {
-    return $this->storage->getSystemPath($rel);
-  }
-
-  /**
    * Implements \Drupal\Core\Entity\EntityInterface::label().
    */
   public function label() {
