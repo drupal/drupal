@@ -102,7 +102,7 @@ function template_preprocess_toolbar(&$variables) {
     }
 
     // Add the tab.
-    if (isset($element[$key]['tray'])) {
+    if (isset($element[$key]['tab'])) {
       $attributes = array();
       // Pass the wrapper attributes along.
       if (array_key_exists('#wrapper_attributes', $element[$key])) {

@@ -484,6 +484,16 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
+   * Test that back to site link exists on admin pages, not on content pages.
+   */
+  public function testBackToSiteLink() {
+    // Back to site link should exist in the markup.
+    $this->drupalGet('test-page');
+    $back_link = $this->cssSelect('.home-toolbar-tab');
+    $this->assertTrue($back_link);
+  }
+
+  /**
    * Get the hash value from the admin menu subtrees route path.
    *
    * @return string
