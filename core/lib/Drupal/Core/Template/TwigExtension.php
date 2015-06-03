@@ -65,8 +65,23 @@ class TwigExtension extends \Twig_Extension {
    *   The URL generator.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Template\TwigExtension::setUrlGenerator().
    */
   public function setGenerators(UrlGeneratorInterface $url_generator) {
+    return $this->setUrlGenerator($url_generator);
+  }
+
+  /**
+   * Sets the URL generator.
+   *
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The URL generator.
+   *
+   * @return $this
+   */
+  public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
     return $this;
   }

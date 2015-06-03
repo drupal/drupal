@@ -32,7 +32,7 @@ class TwigExtensionTest extends UnitTestCase {
       'autoescape' => TRUE,
       'optimizations' => 0
     ));
-    $twig->addExtension((new TwigExtension($renderer))->setGenerators($this->getMock('Drupal\Core\Routing\UrlGeneratorInterface')));
+    $twig->addExtension((new TwigExtension($renderer))->setUrlGenerator($this->getMock('Drupal\Core\Routing\UrlGeneratorInterface')));
 
     $nodes = $twig->parse($twig->tokenize($template));
 
