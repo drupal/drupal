@@ -6,7 +6,8 @@ Drupal community may be downloaded at http://drupal.org/project/modules.
 It is safe to organize modules into subdirectories, such as "contrib" for
 contributed modules, and "custom" for custom modules. Note that if you move a
 module to a subdirectory after it has been enabled, you may need to clear the
-Drupal cache so that it can be found.
+Drupal cache so that it can be found. (Alternatively, you can disable the
+module before moving it and then re-enable it after the move.)
 
 In multisite configuration, modules found in this directory are available to
 all sites. Alternatively, the sites/your_site_name/modules directory pattern may
