@@ -41,12 +41,35 @@ class ContainerBuilder extends SymfonyContainerBuilder {
    *   services in a frozen builder.
    */
   public function set($id, $service, $scope = self::SCOPE_CONTAINER) {
+    if (strtolower($id) !== $id) {
+      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
+    }
     SymfonyContainer::set($id, $service, $scope);
 
     // Ensure that the _serviceId property is set on synthetic services as well.
     if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
       $this->services[$id]->_serviceId = $id;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register($id, $class = null) {
+    if (strtolower($id) !== $id) {
+      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
+    }
+    return parent::register($id, $class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setParameter($name, $value) {
+    if (strtolower($name) !== $name) {
+      throw new \InvalidArgumentException("Parameter names must be lowercase: $name");
+    }
+    parent::setParameter($name, $value);
   }
 
   /**

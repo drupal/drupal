@@ -53,12 +53,12 @@ class DefaultConfigTest extends KernelTestBase {
    */
   public function containerBuild(ContainerBuilder $container) {
     parent::containerBuild($container);
-    $container->register('DefaultConfigTest.schema_storage')
+    $container->register('default_config_test.schema_storage')
       ->setClass('\Drupal\config_test\TestInstallStorage')
       ->addArgument(InstallStorage::CONFIG_SCHEMA_DIRECTORY);
 
     $definition = $container->getDefinition('config.typed');
-    $definition->replaceArgument(1, new Reference('DefaultConfigTest.schema_storage'));
+    $definition->replaceArgument(1, new Reference('default_config_test.schema_storage'));
   }
 
   /**

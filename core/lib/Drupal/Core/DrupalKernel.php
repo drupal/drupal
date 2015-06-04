@@ -977,7 +977,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getServicesToPersist(ContainerInterface $container) {
     $persist = array();
-    foreach ($container->getParameter('persistIds') as $id) {
+    foreach ($container->getParameter('persist_ids') as $id) {
       // It's pointless to persist services not yet initialized.
       if ($container->initialized($id)) {
         $persist[$id] = $container->get($id);
@@ -1127,7 +1127,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $persist_ids[] = $id;
       }
     }
-    $container->setParameter('persistIds', $persist_ids);
+    $container->setParameter('persist_ids', $persist_ids);
 
     $container->compile();
     return $container;
