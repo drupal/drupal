@@ -972,10 +972,8 @@
  * - Session: Information about individual users' interactions with the site,
  *   such as whether they are logged in. This is really "state" information, but
  *   it is not stored the same way so it's a separate type here. Session
- *   information is managed via the session_manager service in Drupal, which
- *   implements \Drupal\Core\Session\SessionManagerInterface. See the
- *   @link container Services topic @endlink for more information about
- *   services.
+ *   information is available from the Request object. The session implements
+ *   \Symfony\Component\HttpFoundation\Session\SessionInterface.
  * - State: Information of a temporary nature, generally machine-generated and
  *   not human-edited, about the current state of your site. Examples: the time
  *   when Cron was last run, whether node access permissions need rebuilding,

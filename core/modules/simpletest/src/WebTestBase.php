@@ -573,19 +573,13 @@ abstract class WebTestBase extends TestBase {
    *   The user account object to check.
    */
   protected function drupalUserIsLoggedIn($account) {
-    if (!isset($account->session_id)) {
-      return FALSE;
+    $logged_in = FALSE;
+
+    if (isset($account->session_id)) {
+      $session_handler = $this->container->get('session_handler.storage');
+      $logged_in = (bool) $session_handler->read($account->session_id);
     }
-    $session_id = $account->session_id;
-    $request_stack = $this->container->get('request_stack');
-    $request = $request_stack->getCurrentRequest();
-    $cookies = $request->cookies->all();
-    foreach ($this->cookies as $name => $value) {
-      $cookies[$name] = $value['value'];
-    }
-    $request_stack->push($request->duplicate(NULL, NULL, NULL, $cookies));
-    $logged_in = (bool) $this->container->get('session_manager')->getSaveHandler()->read($session_id);
-    $request_stack->pop();
+
     return $logged_in;
   }
 

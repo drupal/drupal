@@ -63,7 +63,7 @@ class CsrfTokenGenerator {
    *   'drupal_private_key' configuration variable.
    *
    * @see \Drupal\Core\Site\Settings::getHashSalt()
-   * @see \Drupal\Core\Session\SessionManager::start()
+   * @see \Symfony\Component\HttpFoundation\Session\SessionInterface::start()
    */
   public function get($value = '') {
     $seed = $this->sessionMetadata->getCsrfTokenSeed();

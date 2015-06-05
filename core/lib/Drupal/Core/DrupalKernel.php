@@ -746,21 +746,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function initializeContainer($rebuild = FALSE) {
     $this->containerNeedsDumping = FALSE;
-    $session_manager_started = FALSE;
+    $session_started = FALSE;
     if (isset($this->container)) {
       // Save the id of the currently logged in user.
       if ($this->container->initialized('current_user')) {
         $current_user_id = $this->container->get('current_user')->id();
       }
 
-      // If there is a session manager, close and save the session.
-      if ($this->container->initialized('session_manager')) {
-        $session_manager = $this->container->get('session_manager');
-        if ($session_manager->isStarted()) {
-          $session_manager_started = TRUE;
-          $session_manager->save();
+      // If there is a session, close and save it.
+      if ($this->container->initialized('session')) {
+        $session = $this->container->get('session');
+        if ($session->isStarted()) {
+          $session_started = TRUE;
+          $session->save();
         }
-        unset($session_manager);
+        unset($session);
       }
     }
 
@@ -786,8 +786,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->attachSynthetic($container);
 
     $this->container = $container;
-    if ($session_manager_started) {
-      $this->container->get('session_manager')->start();
+    if ($session_started) {
+      $this->container->get('session')->start();
     }
 
     // The request stack is preserved across container rebuilds. Reinject the
