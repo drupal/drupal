@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_test\Plugin\Validation\Constraint;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -32,7 +33,16 @@ class EntityTestCompositeConstraintValidator extends ConstraintValidator {
         ->atPath('type')
         ->addViolation();
     }
-
+    if ($entity->name->value === 'failure-field-name') {
+      $this->context->buildViolation('Name field violation')
+        ->atPath('name')
+        ->addViolation();
+    }
+    elseif ($entity->name->value === 'failure-field-type') {
+      $this->context->buildViolation('Type field violation')
+        ->atPath('type')
+        ->addViolation();
+    }
   }
 
 }

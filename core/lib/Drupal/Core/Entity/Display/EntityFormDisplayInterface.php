@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity\Display;
 
+use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -101,35 +102,6 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
   public function buildForm(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
 
   /**
-   * Validates submitted widget values and sets the corresponding form errors.
-   *
-   * There are two levels of validation for fields in forms: widget validation
-   * and field validation.
-   * - Widget validation steps are specific to a given widget's own form
-   *   structure and UI metaphors. They are executed during normal form
-   *   validation, usually through Form API's #element_validate property.
-   *   Errors reported at this level are typically those that prevent the
-   *   extraction of proper field values from the submitted form input.
-   * - If no form / widget errors were reported for the field, field validation
-   *   steps are performed according to the "constraints" specified by the
-   *   field definition. Those are independent of the specific widget being
-   *   used in a given form, and are also performed on REST entity submissions.
-   *
-   * This function performs field validation in the context of a form submission.
-   * It reports field constraint violations as form errors on the correct form
-   * elements.
-   *
-   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
-   *   The entity.
-   * @param array $form
-   *   The form structure where field elements are attached to. This might be a
-   *   full form structure, or a sub-element of a larger form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   */
-  public function validateFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
-
-  /**
    * Extracts field values from the submitted widget values into the entity.
    *
    * This accounts for drag-and-drop reordering of field values, and filtering
@@ -150,5 +122,63 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   the caller if needed.
    */
   public function extractFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
+
+  /**
+   * Validates submitted widget values and sets the corresponding form errors.
+   *
+   * This method invokes entity validation and takes care of flagging them on
+   * the form. This is particularly useful when all elements on the form are
+   * managed by the form display.
+   *
+   * As an alternative, entity validation can be invoked separately such that
+   * some violations can be flagged manually. In that case
+   * \Drupal\Core\Entity\Display\EntityFormDisplayInterface::flagViolations()
+   * must be used for flagging violations related to the form display.
+   *
+   * Note that there are two levels of validation for fields in forms: widget
+   * validation and field validation:
+   * - Widget validation steps are specific to a given widget's own form
+   *   structure and UI metaphors. They are executed during normal form
+   *   validation, usually through Form API's #element_validate property.
+   *   Errors reported at this level are typically those that prevent the
+   *   extraction of proper field values from the submitted form input.
+   * - If no form / widget errors were reported for the field, field validation
+   *   steps are performed according to the "constraints" specified by the
+   *   field definition as part of the entity validation. That validation is
+   *   independent of the specific widget being used in a given form, and is
+   *   also performed on REST entity submissions.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity.
+   * @param array $form
+   *   The form structure where field elements are attached to. This might be a
+   *   full form structure, or a sub-element of a larger form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function validateFormValues(FieldableEntityInterface $entity, array &$form, FormStateInterface $form_state);
+
+  /**
+   * Flags entity validation violations as form errors.
+   *
+   * This method processes all violations passed, thus any violations not
+   * related to fields of the form display must be processed before this method
+   * is invoked.
+   *
+   * The method flags constraint violations related to fields shown on the
+   * form as form errors on the correct form elements. Possibly pre-existing
+   * violations of hidden fields (so fields not appearing in the display) are
+   * ignored. Other, non-field related violations are passed through and set as
+   * form errors according to the property path of the violations.
+   *
+   * @param \Drupal\Core\Entity\EntityConstraintViolationListInterface $violations
+   *   The violations to flag.
+   * @param array $form
+   *   The form structure where field elements are attached to. This might be a
+   *   full form structure, or a sub-element of a larger form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function flagWidgetsErrorsFromViolations(EntityConstraintViolationListInterface $violations, array &$form, FormStateInterface $form_state);
 
 }

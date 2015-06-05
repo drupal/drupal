@@ -135,7 +135,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $definitions['content_translation_changed'] = BaseFieldDefinition::create('changed')
         ->setLabel(t('Translation changed time'))
         ->setDescription(t('The Unix timestamp when the translation was most recently saved.'))
-        ->setPropertyConstraints('value', array('EntityChanged' => array()))
         ->setRevisionable(TRUE)
         ->setTranslatable(TRUE);
     }

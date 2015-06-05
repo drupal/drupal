@@ -75,14 +75,71 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    * https://www.drupal.org/node/2015613.
    */
   public function validate(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->buildEntity($form, $form_state);
-    $this->getFormDisplay($form_state)->validateFormValues($entity, $form, $form_state);
+
+    $violations = $entity->validate();
+
+    // Remove violations of inaccessible fields and not edited fields.
+    $violations
+      ->filterByFieldAccess($this->currentUser())
+      ->filterByFields(array_diff(array_keys($entity->getFieldDefinitions()), $this->getEditedFieldNames($form_state)));
+
+    $this->flagViolations($violations, $form, $form_state);
 
     // @todo Remove this.
     // Execute legacy global validation handlers.
     $form_state->setValidateHandlers([]);
     \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
     return $entity;
+  }
+
+  /**
+   * Gets the names of all fields edited in the form.
+   *
+   * If the entity form customly adds some fields to the form (i.e. without
+   * using the form display), it needs to add its fields here and override
+   * flagViolations() for displaying the violations.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return string[]
+   *   An array of field names.
+   */
+  protected function getEditedFieldNames(FormStateInterface $form_state) {
+    return array_keys($this->getFormDisplay($form_state)->getComponents());
+  }
+
+  /**
+   * Flags violations for the current form.
+   *
+   * If the entity form customly adds some fields to the form (i.e. without
+   * using the form display), it needs to add its fields to array returned by
+   * getEditedFieldNames() and overwrite this method in order to show any
+   * violations for those fields; e.g.:
+   * @code
+   * foreach ($violations->getByField('name') as $violation) {
+   *   $form_state->setErrorByName('name', $violation->getMessage());
+   * }
+   * parent::flagViolations($violations, $form, $form_state);
+   * @endcode
+   *
+   * @param \Drupal\Core\Entity\EntityConstraintViolationListInterface $violations
+   *   The violations to flag.
+   * @param array $form
+   *   A nested array of form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function flagViolations(EntityConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
+    // Flag entity level violations.
+    foreach ($violations->getEntityViolations() as $violation) {
+      /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+      $form_state->setErrorByName('', $violation->getMessage());
+    }
+    // Let the form display flag violations of its fields.
+    $this->getFormDisplay($form_state)->flagWidgetsErrorsFromViolations($violations, $form, $form_state);
   }
 
   /**

@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -314,24 +315,22 @@ class CommentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    $comment = parent::validate($form, $form_state);
+  protected function getEditedFieldNames(FormStateInterface $form_state) {
+    return array_merge(['created', 'name'], parent::getEditedFieldNames($form_state));
+  }
 
-    // Customly trigger validation of manually added fields and add in
-    // violations.
-    $violations = $comment->created->validate();
-    foreach ($violations as $violation) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function flagViolations(EntityConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
+    // Manually flag violations of fields not handled by the form display.
+    foreach ($violations->getByField('created') as $violation) {
       $form_state->setErrorByName('date', $violation->getMessage());
     }
-    $violations = $comment->validate();
-    // Filter out violations for the name path.
-    foreach ($violations as $violation) {
-      if ($violation->getPropertyPath() === 'name') {
-        $form_state->setErrorByName('name', $violation->getMessage());
-      }
+    foreach ($violations->getByField('name') as $violation) {
+      $form_state->setErrorByName('name', $violation->getMessage());
     }
-
-    return $comment;
+    parent::flagViolations($violations, $form, $form_state);
   }
 
   /**

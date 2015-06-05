@@ -738,28 +738,6 @@ function node_page_title(NodeInterface $node) {
 }
 
 /**
- * Finds the last time a node was changed.
- *
- * @param $nid
- *   The ID of a node.
- * @param string $langcode
- *   (optional) The language to get the last changed time for. If omitted, the
- *   last changed time across all translations will be returned.
- *
- * @return string
- *   A unix timestamp indicating the last time the node was changed.
- *
- * @todo Remove once https://www.drupal.org/node/2002180 is resolved. It's only
- *   used for validation, which will be done by
- *   EntityChangedConstraintValidator.
- */
-function node_last_changed($nid, $langcode = NULL) {
-  $node = \Drupal::entityManager()->getStorage('node')->loadUnchanged($nid);
-  $changed = $langcode ? $node->getTranslation($langcode)->getChangedTime() : $node->getChangedTimeAcrossTranslations();
-  return $changed ?: FALSE;
-}
-
-/**
  * Finds the most recently changed nodes that are available to the current user.
  *
  * @param $number

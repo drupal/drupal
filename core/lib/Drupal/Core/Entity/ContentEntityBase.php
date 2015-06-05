@@ -284,7 +284,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function validate() {
-    return $this->getTypedData()->validate();
+    $violations = $this->getTypedData()->validate();
+    return new EntityConstraintViolationList($this, iterator_to_array($violations));
   }
 
   /**

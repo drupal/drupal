@@ -206,7 +206,7 @@ interface FieldableEntityInterface extends EntityInterface {
   /**
    * Validates the currently set values.
    *
-   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+   * @return \Drupal\Core\Entity\EntityConstraintViolationListInterface
    *   A list of constraint violations. If the list is empty, validation
    *   succeeded.
    */

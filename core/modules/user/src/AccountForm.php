@@ -9,6 +9,7 @@ namespace Drupal\user;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
@@ -348,23 +349,35 @@ abstract class AccountForm extends ContentEntityForm {
       $account->setExistingPassword($current_pass);
     }
 
+    // Skip the protected user field constraint if the user came from the
+    // password recovery page.
+    $account->_skipProtectedUserFieldConstraint = $form_state->get('user_pass_reset');
+
     return $account;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\user\UserInterface $account */
-    $account = parent::validate($form, $form_state);
+  protected function getEditedFieldNames(FormStateInterface $form_state) {
+    return array_merge(array(
+      'name',
+      'pass',
+      'mail',
+      'timezone',
+      'langcode',
+      'preferred_langcode',
+      'preferred_admin_langcode'
+    ), parent::getEditedFieldNames($form_state));
+  }
 
-    // Skip the protected user field constraint if the user came from the
-    // password recovery page.
-    $account->_skipProtectedUserFieldConstraint = $form_state->get('user_pass_reset');
-
-    // Customly trigger validation of manually added fields and add in
-    // violations. This is necessary as entity form displays only invoke entity
-    // validation for fields contained in the display.
+  /**
+   * {@inheritdoc}
+   */
+  protected function flagViolations(EntityConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
+    // Manually flag violations of fields not handled by the form display. This
+    // is necessary as entity form displays only flag violations for fields
+    // contained in the display.
     $field_names = array(
       'name',
       'pass',
@@ -374,14 +387,11 @@ abstract class AccountForm extends ContentEntityForm {
       'preferred_langcode',
       'preferred_admin_langcode'
     );
-    foreach ($field_names as $field_name) {
-      $violations = $account->$field_name->validate();
-      foreach ($violations as $violation) {
-        $form_state->setErrorByName($field_name, $violation->getMessage());
-      }
+    foreach ($violations->getByFields($field_names) as $violation) {
+      list($field_name) = explode('.', $violation->getPropertyPath(), 2);
+      $form_state->setErrorByName($field_name, $violation->getMessage());
     }
-
-    return $account;
+    parent::flagViolations($violations, $form, $form_state);
   }
 
   /**

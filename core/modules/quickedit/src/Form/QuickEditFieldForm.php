@@ -156,20 +156,7 @@ class QuickEditFieldForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $entity = $this->buildEntity($form, $form_state);
-
     $form_state->get('form_display')->validateFormValues($entity, $form, $form_state);
-
-    // Run entity-level validation as well, while skipping validation of all
-    // fields. We can do so by fetching and validating the entity-level
-    // constraints manually.
-    // @todo: Improve this in https://www.drupal.org/node/2395831.
-    $typed_entity = $entity->getTypedData();
-    $violations = $this->validator
-      ->validate($typed_entity, $typed_entity->getConstraints());
-
-    foreach ($violations as $violation) {
-      $form_state->setErrorByName($violation->getPropertyPath(), $violation->getMessage());
-    }
   }
 
   /**

@@ -285,19 +285,6 @@ class NodeForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
-   */
-  public function validate(array $form, FormStateInterface $form_state) {
-    $node = parent::validate($form, $form_state);
-
-    if ($node->id() && (node_last_changed($node->id()) > $node->getChangedTimeAcrossTranslations())) {
-      $form_state->setErrorByName('changed', $this->t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
-    }
-
-    return $node;
-  }
-
-  /**
-   * {@inheritdoc}
    *
    * Updates the node object by processing the submitted values.
    *
