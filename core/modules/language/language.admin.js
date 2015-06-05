@@ -1,9 +1,16 @@
+/**
+ * @file
+ * Language admin behavior.
+ */
+
 (function ($, Drupal) {
 
   "use strict";
 
   /**
    * Makes language negotiation inherit user interface negotiation.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.negotiationLanguage = {
     attach: function () {

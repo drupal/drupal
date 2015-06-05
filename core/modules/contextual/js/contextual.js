@@ -33,12 +33,12 @@
   }
 
   /**
-   * Initializes a contextual link: updates its DOM, sets up model and views
+   * Initializes a contextual link: updates its DOM, sets up model and views.
    *
-   * @param jQuery $contextual
+   * @param {jQuery} $contextual
    *   A contextual links placeholder DOM element, containing the actual
    *   contextual links as rendered by the server.
-   * @param string html
+   * @param {string} html
    *   The server-side rendered HTML for this contextual link.
    */
   function initContextual($contextual, html) {
@@ -97,7 +97,7 @@
    *
    * This only deals with two levels of nesting; deeper levels are not touched.
    *
-   * @param jQuery $contextual
+   * @param {jQuery} $contextual
    *   A contextual links placeholder DOM element, containing the actual
    *   contextual links as rendered by the server.
    */
@@ -138,6 +138,8 @@
    * Events
    *   Contextual triggers an event that can be used by other scripts.
    *   - drupalContextualLinkAdded: Triggered when a contextual link is added.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.contextual = {
     attach: function (context) {
@@ -206,23 +208,39 @@
     }
   };
 
+  /**
+   * @namespace
+   */
   Drupal.contextual = {
-    // The Drupal.contextual.View instances associated with each list element of
-    // contextual links.
+
+    /**
+     * The {@link Drupal.contextual.View} instances associated with each list
+     * element of contextual links.
+     *
+     * @type {Array}
+     */
     views: [],
 
-    // The Drupal.contextual.RegionView instances associated with each contextual
-    // region element.
+    /**
+     * The {@link Drupal.contextual.RegionView} instances associated with each contextual
+     * region element.
+     *
+     * @type {Array}
+     */
     regionViews: []
   };
 
-  // A Backbone.Collection of Drupal.contextual.StateModel instances.
+  /**
+   * A Backbone.Collection of {@link Drupal.contextual.StateModel} instances.
+   *
+   * @type {Backbone.Collection}
+   */
   Drupal.contextual.collection = new Backbone.Collection([], {model: Drupal.contextual.StateModel});
 
   /**
    * A trigger is an interactive element often bound to a click handler.
    *
-   * @return String
+   * @return {string}
    *   A string representing a DOM fragment.
    */
   Drupal.theme.contextualTrigger = function () {

@@ -1,7 +1,16 @@
+/**
+ * @file
+ * Menu UI admin behaviors.
+ */
+
 (function ($) {
 
   "use strict";
 
+  /**
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.menuUiChangeParentItems = {
     attach: function (context, settings) {
       var $menu = $('#edit-menu').once('menu-parent');

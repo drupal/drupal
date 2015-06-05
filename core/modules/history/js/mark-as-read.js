@@ -1,8 +1,12 @@
 /**
+ * @file
  * Marks the nodes listed in drupalSettings.history.nodesToMarkAsRead as read.
  *
  * Uses the History module JavaScript API.
+ *
+ * @see Drupal.history
  */
+
 (function (window, Drupal, drupalSettings) {
 
   "use strict";

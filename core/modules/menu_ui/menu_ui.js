@@ -1,7 +1,16 @@
+/**
+ * @file
+ * Menu UI behaviors.
+ */
+
 (function ($) {
 
   "use strict";
 
+  /**
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.menuUiDetailsSummaries = {
     attach: function (context) {
       $(context).find('.menu-link-form').drupalSetSummary(function (context) {
@@ -18,6 +27,8 @@
 
   /**
    * Automatically fill in a menu link title, if possible.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.menuUiLinkAutomaticTitle = {
     attach: function (context) {

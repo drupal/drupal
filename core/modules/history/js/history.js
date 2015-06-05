@@ -1,8 +1,10 @@
 /**
+ * @file
  * JavaScript API for the History module, with client-side caching.
  *
  * May only be loaded for authenticated users, with the History module enabled.
  */
+
 (function ($, Drupal, drupalSettings, storage) {
 
   "use strict";
@@ -19,14 +21,17 @@
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
 
+  /**
+   * @namespace
+   */
   Drupal.history = {
 
     /**
      * Fetch "last read" timestamps for the given nodes.
      *
-     * @param Array nodeIDs
+     * @param {Array} nodeIDs
      *   An array of node IDs.
-     * @param Function callback
+     * @param {function} callback
      *   A callback that is called after the requested timestamps were fetched.
      */
     fetchTimestamps: function (nodeIDs, callback) {
@@ -55,10 +60,10 @@
     /**
      * Get the last read timestamp for the given node.
      *
-     * @param Number|String nodeID
+     * @param {number|string} nodeID
      *   A node ID.
      *
-     * @return Number
+     * @return {number}
      *   A UNIX timestamp.
      */
     getLastRead: function (nodeID) {
@@ -72,7 +77,7 @@
     /**
      * Marks a node as read, store the last read timestamp in client-side storage.
      *
-     * @param Number|String nodeID
+     * @param {number|string} nodeID
      *   A node ID.
      */
     markAsRead: function (nodeID) {
@@ -98,12 +103,12 @@
      * Any content that was published before the oldest known reading also never
      * gets a "new" or "updated" indicator, because it must've been read already.
      *
-     * @param Number|String nodeID
+     * @param {number|string} nodeID
      *   A node ID.
-     * @param Number contentTimestamp
+     * @param {number} contentTimestamp
      *   The time at which some content (e.g. a comment) was published.
      *
-     * @return Boolean
+     * @return {bool}
      *   Whether a server check is necessary for the given node and its timestamp.
      */
     needsServerCheck: function (nodeID, contentTimestamp) {

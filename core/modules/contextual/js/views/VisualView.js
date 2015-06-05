@@ -7,11 +7,11 @@
 
   "use strict";
 
-  /**
-   * Renders the visual view of a contextual link. Listens to mouse & touch.
-   */
-  Drupal.contextual.VisualView = Backbone.View.extend({
+  Drupal.contextual.VisualView = Backbone.View.extend(/** @lends Drupal.contextual.VisualView# */{
 
+    /**
+     * @return {object}
+     */
     events: function () {
       // Prevents delay and simulated mouse events.
       var touchEndToClick = function (event) {
@@ -32,14 +32,20 @@
     },
 
     /**
-     * {@inheritdoc}
+     * Renders the visual view of a contextual link. Listens to mouse & touch.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.listenTo(this.model, 'change', this.render);
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {Drupal.contextual.VisualView}
      */
     render: function () {
       var isOpen = this.model.get('isOpen');

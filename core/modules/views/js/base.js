@@ -2,14 +2,22 @@
  * @file
  * Some basic behaviors and utility functions for Views.
  */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
 
+  /**
+   * @namespace
+   */
   Drupal.Views = {};
 
   /**
    * Helper function to parse a querystring.
+   *
+   * @param {string} query
+   *
+   * @return {object}
    */
   Drupal.Views.parseQueryString = function (query) {
     var args = {};
@@ -31,6 +39,11 @@
 
   /**
    * Helper function to return a view's arguments based on a path.
+   *
+   * @param {string} href
+   * @param {string} viewPath
+   *
+   * @return {object}
    */
   Drupal.Views.parseViewArgs = function (href, viewPath) {
     var returnObj = {};
@@ -46,12 +59,16 @@
 
   /**
    * Strip off the protocol plus domain from an href.
+   *
+   * @param {string} href
+   *
+   * @return {string}
    */
   Drupal.Views.pathPortion = function (href) {
     // Remove e.g. http://example.com if present.
     var protocol = window.location.protocol;
     if (href.substring(0, protocol.length) === protocol) {
-      // 2 is the length of the '//' that normally follows the protocol
+      // 2 is the length of the '//' that normally follows the protocol.
       href = href.substring(href.indexOf('/', protocol.length + 2));
     }
     return href;
@@ -59,6 +76,10 @@
 
   /**
    * Return the Drupal path portion of an href.
+   *
+   * @param {string} href
+   *
+   * @return {string}
    */
   Drupal.Views.getPath = function (href) {
     href = Drupal.Views.pathPortion(href);

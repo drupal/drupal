@@ -7,6 +7,10 @@
 
   "use strict";
 
+  /**
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.filterStatus = {
     attach: function (context, settings) {
       var $context = $(context);

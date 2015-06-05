@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Preview behaviors.
+ */
+
 (function ($, Drupal) {
 
   "use strict";
@@ -5,6 +10,8 @@
   /**
    * Disabling all links (except local fragment identifiers such as href="#frag")
    * in node previews to prevent users from leaving the page.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.nodePreviewDestroyLinks = {
     attach: function (context) {
@@ -52,6 +59,8 @@
 
   /**
    * Switch view mode.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach: function (context) {
@@ -64,6 +73,10 @@
     }
   };
 
+  /**
+   *
+   * @return {string}
+   */
   Drupal.theme.nodePreviewModal = function () {
     return '<p>' +
       Drupal.t('Leaving the preview will cause unsaved changes to be lost. Are you sure you want to leave the preview?') +

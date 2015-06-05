@@ -1,10 +1,17 @@
+/**
+ * @file
+ * User behaviors.
+ */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
 
   /**
-   * Attach handlers to evaluate the strength of any password fields and to check
-   * that its confirmation is correct.
+   * Attach handlers to evaluate the strength of any password fields and to
+   * check that its confirmation is correct.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.password = {
     attach: function (context, settings) {
@@ -60,7 +67,8 @@
               $passwordSuggestions.html(result.message);
             }
 
-            // Only show the description box if a weakness exists in the password.
+            // Only show the description box if a weakness exists in the
+            // password.
             $passwordSuggestions.toggle(result.strength !== 100);
 
             // Adjust the length of the strength indicator.
@@ -94,6 +102,11 @@
    * Evaluate the strength of a user's password.
    *
    * Returns the estimated strength and the relevant output message.
+   *
+   * @param {string} password
+   * @param {object} translate
+   *
+   * @return {object}
    */
   Drupal.evaluatePasswordStrength = function (password, translate) {
     var indicatorText;
@@ -107,8 +120,8 @@
     var hasNumbers = /[0-9]/.test(password);
     var hasPunctuation = /[^a-zA-Z0-9]/.test(password);
 
-    // If there is a username edit box on the page, compare password to that, otherwise
-    // use value from the database.
+    // If there is a username edit box on the page, compare password to that,
+    // otherwise use value from the database.
     var $usernameBox = $('input.username');
     var username = ($usernameBox.length > 0) ? $usernameBox.val() : translate.username;
 
@@ -162,7 +175,8 @@
       strength = 5;
     }
 
-    // Based on the strength, work out what text should be shown by the password strength meter.
+    // Based on the strength, work out what text should be shown by the
+    // password strength meter.
     if (strength < 60) {
       indicatorText = translate.weak;
       indicatorClass = 'is-weak';

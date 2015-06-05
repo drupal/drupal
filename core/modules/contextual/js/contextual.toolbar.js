@@ -14,9 +14,9 @@
   };
 
   /**
-   * Initializes a contextual link: updates its DOM, sets up model and views
+   * Initializes a contextual link: updates its DOM, sets up model and views.
    *
-   * @param DOM links
+   * @param {HTMLElement} context
    *   A contextual links DOM element as rendered by the server.
    */
   function initContextualToolbar(context) {
@@ -45,6 +45,8 @@
 
   /**
    * Attaches contextual's edit toolbar tab behavior.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.contextualToolbar = {
     attach: function (context) {
@@ -54,8 +56,16 @@
     }
   };
 
+  /**
+   * @namespace
+   */
   Drupal.contextualToolbar = {
-    // The Drupal.contextualToolbar.Model instance.
+
+    /**
+     * The {@link Drupal.contextualToolbar.StateModel} instance.
+     *
+     * @type {?Drupal.contextualToolbar.StateModel}
+     */
     model: null
   };
 

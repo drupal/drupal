@@ -7,13 +7,16 @@
 
   "use strict";
 
-  /**
-   * Renders the aural view of a contextual link (i.e. screen reader support).
-   */
-  Drupal.contextual.AuralView = Backbone.View.extend({
+  Drupal.contextual.AuralView = Backbone.View.extend(/** @lends Drupal.contextual.AuralView# */{
 
     /**
-     * {@inheritdoc}
+     * Renders the aural view of a contextual link (i.e. screen reader support).
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
+     *
+     * @param {object} options
      */
     initialize: function (options) {
       this.options = options;
@@ -28,7 +31,7 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     render: function () {
       var isOpen = this.model.get('isOpen');

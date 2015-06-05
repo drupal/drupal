@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Statistics functionality.
+ */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";

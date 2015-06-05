@@ -7,6 +7,9 @@
 
   "use strict";
 
+  /**
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.blockContentDetailsSummaries = {
     attach: function (context) {
       var $context = $(context);

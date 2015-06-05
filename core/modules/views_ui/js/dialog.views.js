@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Views dialog behaviors.
+ */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
@@ -25,6 +30,10 @@
     }
   }
 
+  /**
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.viewsModalContent = {
     attach: function (context) {
       $('body').once('viewsDialog').on('dialogContentResize.viewsDialog', '.ui-dialog-content', handleDialogResize);

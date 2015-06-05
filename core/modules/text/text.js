@@ -1,9 +1,16 @@
+/**
+ * @file
+ * Text behaviors.
+ */
+
 (function ($) {
 
   "use strict";
 
   /**
    * Auto-hide summary textarea if empty and show hide and unhide links.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.textSummary = {
     attach: function (context, settings) {

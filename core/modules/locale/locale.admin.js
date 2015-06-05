@@ -1,9 +1,16 @@
+/**
+ * @file
+ * Locale admin behavior.
+ */
+
 (function ($, Drupal) {
 
   "use strict";
 
   /**
-   * Marks changes of translations
+   * Marks changes of translations.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.localeTranslateDirty = {
     attach: function () {
@@ -41,6 +48,8 @@
 
   /**
    * Show/hide the description details on Available translation updates page.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach: function (context, settings) {
@@ -73,10 +82,20 @@
     }
   };
 
-  $.extend(Drupal.theme, {
+  $.extend(Drupal.theme, /** @lends Drupal.theme */{
+
+    /**
+     *
+     * @return {string}
+     */
     localeTranslateChangedMarker: function () {
       return '<abbr class="warning ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
     },
+
+    /**
+     *
+     * @return {string}
+     */
     localeTranslateChangedWarning: function () {
       return '<div class="clearfix messages messages--warning">' + Drupal.theme('localeTranslateChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
     }

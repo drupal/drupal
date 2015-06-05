@@ -1,15 +1,19 @@
 /**
+ * @file
  * Attaches behaviors for the Comment module's "X new comments" link.
  *
  * May only be loaded for authenticated users, with the History module
  * installed.
  */
+
 (function ($, Drupal) {
 
   "use strict";
 
   /**
    * Render "X new comments" links wherever necessary.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.nodeNewCommentsLink = {
     attach: function (context) {

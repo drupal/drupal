@@ -7,10 +7,11 @@
 
   "use strict";
 
-  /**
-   * Provides keyboard interaction for a contextual link.
-   */
-  Drupal.contextual.KeyboardView = Backbone.View.extend({
+  Drupal.contextual.KeyboardView = Backbone.View.extend(/** @lends Drupal.contextual.KeyboardView# */{
+
+    /**
+     * @type {object}
+     */
     events: {
       'focus .trigger': 'focus',
       'focus .contextual-links a': 'focus',
@@ -26,14 +27,23 @@
     },
 
     /**
-     * {@inheritdoc}
+     * Provides keyboard interaction for a contextual link.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
-      // The timer is used to create a delay before dismissing the contextual
-      // links on blur. This is only necessary when keyboard users tab into
-      // contextual links without edit mode (i.e. without TabbingManager).
-      // That means that if we decide to disable tabbing of contextual links
-      // without edit mode, all this timer logic can go away.
+
+      /**
+       * The timer is used to create a delay before dismissing the contextual
+       * links on blur. This is only necessary when keyboard users tab into
+       * contextual links without edit mode (i.e. without TabbingManager).
+       * That means that if we decide to disable tabbing of contextual links
+       * without edit mode, all this timer logic can go away.
+       *
+       * @type {NaN|number}
+       */
       this.timer = NaN;
     },
 

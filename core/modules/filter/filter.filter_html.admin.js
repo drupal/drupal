@@ -7,12 +7,19 @@
 
   "use strict";
 
-  /**
-   * Implement a live setting parser to prevent text editors from automatically
-   * enabling buttons that are not allowed by this filter's configuration.
-   */
   if (Drupal.filterConfiguration) {
+
+    /**
+     * Implement a live setting parser to prevent text editors from automatically
+     * enabling buttons that are not allowed by this filter's configuration.
+     *
+     * @namespace
+     */
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
+
+      /**
+       * @return {Array}
+       */
       getRules: function () {
         var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
         var rules = [];
@@ -37,6 +44,12 @@
     };
   }
 
+  /**
+   *
+   * @type {Drupal~behavior}
+   *
+   * @todo Remove everything but 'attach' and 'detach' and make a proper object.
+   */
   Drupal.behaviors.filterFilterHtmlUpdating = {
 
     // The form item contains the "Allowed HTML tags" setting.
@@ -114,12 +127,13 @@
      * The filter_html filter is only concerned with the required tags, not with
      * any properties, nor with each feature's "allowed" tags.
      *
-     * @param Array userAllowedTags
+     * @param {Array} userAllowedTags
      *   The list of user-defined allowed tags.
-     * @param Object newFeatures
-     *   A list of Drupal.EditorFeature objects' rules, keyed by their name.
+     * @param {object} newFeatures
+     *   A list of {@link Drupal.EditorFeature} objects' rules, keyed by
+     *   their name.
      *
-     * @return Array
+     * @return {Array}
      *   A list of new allowed tags.
      */
     _calculateAutoAllowedTags: function (userAllowedTags, newFeatures) {
@@ -141,10 +155,10 @@
     /**
      * Parses the value of this.$allowedHTMLFormItem.
      *
-     * @param String setting
+     * @param {string} setting
      *   The string representation of the setting. e.g. "<p> <br> <a>"
      *
-     * @return Array
+     * @return {Array}
      *   The array representation of the setting. e.g. ['p', 'br', 'a']
      */
     _parseSetting: function (setting) {
@@ -154,10 +168,10 @@
     /**
      * Generates the value of this.$allowedHTMLFormItem.
      *
-     * @param Array setting
+     * @param {Array} tags
      *   The array representation of the setting. e.g. ['p', 'br', 'a']
      *
-     * @return Array
+     * @return {Array}
      *   The string representation of the setting. e.g. "<p> <br> <a>"
      */
     _generateSetting: function (tags) {
@@ -169,9 +183,10 @@
   /**
    * Theme function for the filter_html update message.
    *
-   * @param Array tags
+   * @param {Array} tags
    *   An array of the new tags that are to be allowed.
-   * @return
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {

@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Block admin behaviors.
+ */
+
 (function ($, Drupal) {
 
   "use strict";
@@ -8,6 +13,8 @@
    * Text search input: input.block-filter-text
    * Target element:    input.block-filter-text[data-element]
    * Source text:       .block-filter-text-source
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.blockFilterByText = {
     attach: function (context, settings) {
@@ -17,7 +24,10 @@
       var $details;
 
       /**
-       * Hides the <details> element for a category if it has no visible blocks.
+       * Hides the `<details>` element for a category if it has no visible blocks.
+       *
+       * @param {number} index
+       * @param {HTMLElement} element
        */
       function hideCategoryDetails(index, element) {
         var $catDetails = $(element);
@@ -26,12 +36,17 @@
 
       /**
        * Filters the block list.
+       *
+       * @param {jQuery.Event} e
        */
       function filterBlockList(e) {
         var query = $(e.target).val().toLowerCase();
 
         /**
          * Shows or hides the block entry based on the query.
+         *
+         * @param {number} index
+         * @param {HTMLElement} block
          */
         function showBlockEntry(index, block) {
           var $block = $(block);
@@ -71,6 +86,8 @@
 
   /**
    * Highlights the block that was just placed into the block listing.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function (context, settings) {

@@ -9,6 +9,8 @@
 
   /**
    * Attaches language support to the jQuery UI datepicker component.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.localeDatepicker = {
     attach: function (context, settings) {

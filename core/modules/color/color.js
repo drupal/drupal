@@ -7,6 +7,9 @@
 
   "use strict";
 
+  /**
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.color = {
     attach: function (context, settings) {
       var i;
@@ -49,7 +52,8 @@
           width.push(parseInt(gradient.css('width'), 10) / 10);
           // Add rows (or columns for horizontal gradients).
           // Each gradient line should have a height (or width for horizontal
-          // gradients) of 10px (because we divided the height/width by 10 above).
+          // gradients) of 10px (because we divided the height/width by 10
+          // above).
           for (j = 0; j < (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
             gradient.append('<div class="gradient-line"></div>');
           }
@@ -82,11 +86,19 @@
       /**
        * Shifts a given color, using a reference pair (ref in HSL).
        *
-       * This algorithm ensures relative ordering on the saturation and luminance
-       * axes is preserved, and performs a simple hue shift.
+       * This algorithm ensures relative ordering on the saturation and
+       * luminance axes is preserved, and performs a simple hue shift.
        *
        * It is also symmetrical. If: shift_color(c, a, b) === d, then
        * shift_color(d, b, a) === c.
+       *
+       * @function Drupal.color~shift_color
+       *
+       * @param {string} given
+       * @param {Array} ref1
+       * @param {Array} ref2
+       *
+       * @return {string}
        */
       function shift_color(given, ref1, ref2) {
         var d;
@@ -129,6 +141,11 @@
 
       /**
        * Callback for Farbtastic when a new color is chosen.
+       *
+       * @param {HTMLElement} input
+       * @param {string} color
+       * @param {bool} propagate
+       * @param {bool} colorScheme
        */
       function callback(input, color, propagate, colorScheme) {
         var matched;
@@ -182,6 +199,8 @@
 
       /**
        * Focuses Farbtastic on a particular field.
+       *
+       * @param {jQuery.Event} e
        */
       function focus(e) {
         var input = e.target;
@@ -203,7 +222,7 @@
       // Initialize color fields.
       form.find('.js-color-palette input.form-text')
         .each(function () {
-          // Extract palette field name
+          // Extract palette field name.
           this.key = this.id.substring(13);
 
           // Link to color picker temporarily to initialize.

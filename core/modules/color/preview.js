@@ -7,14 +7,26 @@
 
   "use strict";
 
+  /**
+   * @namespace
+   */
   Drupal.color = {
+
+    /**
+     * @param {Element} context
+     * @param {object} settings
+     * @param {HTMLFormElement} form
+     * @param {object} farb
+     * @param {number} height
+     * @param {number} width
+     */
     callback: function (context, settings, form, farb, height, width) {
       var accum;
       var delta;
       // Solid background.
       form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());
 
-      // Text preview
+      // Text preview.
       form.find('#text').css('color', form.find('.color-palette input[name="palette[text]"]').val());
       form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]').val());
 

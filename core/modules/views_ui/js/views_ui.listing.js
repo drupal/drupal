@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Views listing behaviors.
+ */
+
 (function ($, Drupal) {
 
   "use strict";
@@ -8,6 +13,8 @@
    * Text search input: input.views-filter-text
    * Target table:      input.views-filter-text[data-table]
    * Source text:       .views-table-filter-text-source
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.viewTableFilterByText = {
     attach: function (context, settings) {

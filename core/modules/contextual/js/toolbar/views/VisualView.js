@@ -7,13 +7,11 @@
 
   "use strict";
 
-  /**
-   * Renders the visual view of the edit mode toggle. Listens to mouse & touch.
-   *
-   * Handles edit mode toggle interactions.
-   */
-  Drupal.contextualToolbar.VisualView = Backbone.View.extend({
+  Drupal.contextualToolbar.VisualView = Backbone.View.extend(/** @lends Drupal.contextualToolbar.VisualView# */{
 
+    /**
+     * @return {object}
+     */
     events: function () {
       // Prevents delay and simulated mouse events.
       var touchEndToClick = function (event) {
@@ -30,7 +28,13 @@
     },
 
     /**
-     * {@inheritdoc}
+     * Renders the visual view of the edit mode toggle.
+     *
+     * Listens to mouse & touch and handles edit mode toggle interactions.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.listenTo(this.model, 'change', this.render);
@@ -38,7 +42,9 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {Drupal.contextualToolbar.VisualView}
      */
     render: function () {
       // Render the visibility.
@@ -52,12 +58,12 @@
     /**
      * Model change handler; persists the isViewing value to localStorage.
      *
-     * isViewing === true is the default, so only stores in localStorage when
+     * `isViewing === true` is the default, so only stores in localStorage when
      * it's not the default value (i.e. false).
      *
-     * @param Drupal.contextualToolbar.StateModel model
-     *   A Drupal.contextualToolbar.StateModel model.
-     * @param bool isViewing
+     * @param {Drupal.contextualToolbar.StateModel} model
+     *   A {@link Drupal.contextualToolbar.StateModel} model.
+     * @param {bool} isViewing
      *   The value of the isViewing attribute in the model.
      */
     persist: function (model, isViewing) {

@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Taxonomy behaviors.
+ */
+
 (function ($) {
 
   "use strict";
@@ -7,12 +12,15 @@
    *
    * This behavior is dependent on the tableDrag behavior, since it uses the
    * objects initialized in that behavior to update the row.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.termDrag = {
     attach: function (context, settings) {
       var backStep = settings.taxonomy.backStep;
       var forwardStep = settings.taxonomy.forwardStep;
-      var tableDrag = Drupal.tableDrag.taxonomy; // Get the blocks tableDrag object.
+      // Get the blocks tableDrag object.
+      var tableDrag = Drupal.tableDrag.taxonomy;
       var $table = $('#taxonomy');
       var rows = $table.find('tr').length;
 

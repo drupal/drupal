@@ -14,12 +14,14 @@
    *
    * It uses the query string for:
    * - tour: When ?tour=1 is present, the tour will start automatically
-   *         after the page has loaded.
+   *   after the page has loaded.
    * - tips: Pass ?tips=class in the url to filter the available tips to
-   *         the subset which match the given class.
+   *   the subset which match the given class.
    *
-   * Example:
-   *   http://example.com/foo?tour=1&tips=bar
+   * @example
+   * http://example.com/foo?tour=1&tips=bar
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.tour = {
     attach: function (context) {
@@ -35,7 +37,8 @@
           .on('change:isActive', function (model, isActive) {
             $(document).trigger((isActive) ? 'drupalTourStarted' : 'drupalTourStopped');
           })
-          // Initialization: check whether a tour is available on the current page.
+          // Initialization: check whether a tour is available on the current
+          // page.
           .set('tour', $(context).find('ol#tour'));
 
         // Start the tour immediately if toggled via query string.
@@ -46,31 +49,72 @@
     }
   };
 
-  Drupal.tour = Drupal.tour || {models: {}, views: {}};
+  /**
+   * @namespace
+   */
+  Drupal.tour = Drupal.tour || {
+
+    /**
+     * @namespace Drupal.tour.models
+     */
+    models: {},
+
+    /**
+     * @namespace Drupal.tour.views
+     */
+    views: {}
+  };
 
   /**
    * Backbone Model for tours.
+   *
+   * @constructor
+   *
+   * @augments Backbone.Model
    */
-  Drupal.tour.models.StateModel = Backbone.Model.extend({
-    defaults: {
-      // Indicates whether the Drupal root window has a tour.
+  Drupal.tour.models.StateModel = Backbone.Model.extend(/** @lends Drupal.tour.models.StateModel# */{
+
+    /**
+     * @type {object}
+     */
+    defaults: /** @lends Drupal.tour.models.StateModel# */{
+
+      /**
+       * Indicates whether the Drupal root window has a tour.
+       *
+       * @type {Array}
+       */
       tour: [],
-      // Indicates whether the tour is currently running.
+
+      /**
+       * Indicates whether the tour is currently running.
+       *
+       * @type {bool}
+       */
       isActive: false,
-      // Indicates which tour is the active one (necessary to cleanly stop).
+
+      /**
+       * Indicates which tour is the active one (necessary to cleanly stop).
+       *
+       * @type {Array}
+       */
       activeTour: []
     }
   });
 
-  /**
-   * Handles edit mode toggle interactions.
-   */
-  Drupal.tour.views.ToggleTourView = Backbone.View.extend({
+  Drupal.tour.views.ToggleTourView = Backbone.View.extend(/** @lends Drupal.tour.views.ToggleTourView# */{
 
+    /**
+     * @type {object}
+     */
     events: {'click': 'onClick'},
 
     /**
-     * Implements Backbone Views' initialize().
+     * Handles edit mode toggle interactions.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.listenTo(this.model, 'change:tour change:isActive', this.render);
@@ -78,7 +122,9 @@
     },
 
     /**
-     * Implements Backbone Views' render().
+     * @inheritdoc
+     *
+     * @return {Drupal.tour.views.ToggleTourView}
      */
     render: function () {
       // Render the visibility.
@@ -103,7 +149,8 @@
           $tour.joyride({
             autoStart: true,
             postRideCallback: function () { that.model.set('isActive', false); },
-            template: { // HTML segments for tip layout
+            // HTML segments for tip layout.
+            template: {
               link: '<a href=\"#close\" class=\"joyride-close-tip\">&times;</a>',
               button: '<a href=\"#\" class=\"button button--primary joyride-next-tip\"></a>'
             }
@@ -119,6 +166,8 @@
 
     /**
      * Toolbar tab click event handler; toggles isActive.
+     *
+     * @param {jQuery.Event} event
      */
     onClick: function (event) {
       this.model.set('isActive', !this.model.get('isActive'));
@@ -129,8 +178,8 @@
     /**
      * Gets the tour.
      *
-     * @return jQuery
-     *   A jQuery element pointing to a <ol> containing tour items.
+     * @return {jQuery}
+     *   A jQuery element pointing to a `<ol>` containing tour items.
      */
     _getTour: function () {
       return this.model.get('tour');
@@ -139,7 +188,7 @@
     /**
      * Gets the relevant document as a jQuery element.
      *
-     * @return jQuery
+     * @return {jQuery}
      *   A jQuery element pointing to the document within which a tour would be
      *   started given the current state.
      */
@@ -148,22 +197,22 @@
     },
 
     /**
-     * Removes tour items for elements that don't have matching page elements or
-     * are explicitly filtered out via the 'tips' query string.
+     * Removes tour items for elements that don't have matching page elements.
      *
-     * Example:
-     *   http://example.com/foo?tips=bar
+     * Or that are explicitly filtered out via the 'tips' query string.
      *
-     *   The above will filter out tips that do not have a matching page element or
-     *   don't have the "bar" class.
+     * @example
+     * <caption>This will filter out tips that do not have a matching
+     * page element or don't have the "bar" class.</caption>
+     * http://example.com/foo?tips=bar
      *
-     * @param jQuery $tour
-     *   A jQuery element pointing to a <ol> containing tour items.
-     * @param jQuery $document
+     * @param {jQuery} $tour
+     *   A jQuery element pointing to a `<ol>` containing tour items.
+     * @param {jQuery} $document
      *   A jQuery element pointing to the document within which the elements
      *   should be sought.
      *
-     * @see _getDocument()
+     * @see Drupal.tour.views.ToggleTourView#_getDocument
      */
     _removeIrrelevantTourItems: function ($tour, $document) {
       var removals = false;

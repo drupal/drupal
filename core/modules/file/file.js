@@ -13,6 +13,8 @@
 
   /**
    * Attach behaviors to managed file element upload fields.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.fileValidateAutoAttach = {
     attach: function (context, settings) {
@@ -49,6 +51,8 @@
 
   /**
    * Attach behaviors to managed file element upload fields.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.fileAutoUpload = {
     attach: function (context) {
@@ -63,6 +67,8 @@
 
   /**
    * Attach behaviors to the file upload and remove buttons.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.fileButtons = {
     attach: function (context) {
@@ -79,6 +85,8 @@
 
   /**
    * Attach behaviors to links within managed file elements.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.filePreviewLinks = {
     attach: function (context) {
@@ -91,10 +99,17 @@
 
   /**
    * File upload utility functions.
+   *
+   * @namespace
    */
   Drupal.file = Drupal.file || {
+
     /**
      * Client-side file input validation of file extensions.
+     *
+     * @name Drupal.file.validateExtension
+     *
+     * @param {jQuery.Event} event
      */
     validateExtension: function (event) {
       event.preventDefault();
@@ -124,14 +139,24 @@
         }
       }
     },
+
     /**
      * Trigger the upload_button mouse event to auto-upload as a managed file.
+     *
+     * @name Drupal.file.triggerUploadButton
+     *
+     * @param {jQuery.Event} event
      */
     triggerUploadButton: function (event) {
       $(event.target).closest('.form-managed-file').find('.js-form-submit').trigger('mousedown');
     },
+
     /**
      * Prevent file uploads when using buttons not intended to upload.
+     *
+     * @name Drupal.file.disableFields
+     *
+     * @param {jQuery.Event} event
      */
     disableFields: function (event) {
       var $clickedButton = $(this).findOnce('ajax');
@@ -149,20 +174,26 @@
 
       // Temporarily disable upload fields other than the one we're currently
       // working with. Filter out fields that are already disabled so that they
-      // do not get enabled when we re-enable these fields at the end of behavior
-      // processing. Re-enable in a setTimeout set to a relatively short amount
-      // of time (1 second). All the other mousedown handlers (like Drupal's Ajax
-      // behaviors) are executed before any timeout functions are called, so we
-      // don't have to worry about the fields being re-enabled too soon.
-      // @todo If the previous sentence is true, why not set the timeout to 0?
+      // do not get enabled when we re-enable these fields at the end of
+      // behavior processing. Re-enable in a setTimeout set to a relatively
+      // short amount of time (1 second). All the other mousedown handlers
+      // (like Drupal's Ajax behaviors) are executed before any timeout
+      // functions are called, so we don't have to worry about the fields being
+      // re-enabled too soon. @todo If the previous sentence is true, why not
+      // set the timeout to 0?
       var $fieldsToTemporarilyDisable = $('div.form-managed-file input.form-file').not($enabledFields).not(':disabled');
       $fieldsToTemporarilyDisable.prop('disabled', true);
       setTimeout(function () {
         $fieldsToTemporarilyDisable.prop('disabled', false);
       }, 1000);
     },
+
     /**
      * Add progress bar support if possible.
+     *
+     * @name Drupal.file.progressBar
+     *
+     * @param {jQuery.Event} event
      */
     progressBar: function (event) {
       var $clickedButton = $(this);
@@ -183,8 +214,13 @@
         $clickedButton.closest('div.form-managed-file').find('div.ajax-progress-bar').slideDown();
       }, 500);
     },
+
     /**
      * Open links to files within forms in a new window.
+     *
+     * @name Drupal.file.openInNewWindow
+     *
+     * @param {jQuery.Event} event
      */
     openInNewWindow: function (event) {
       event.preventDefault();

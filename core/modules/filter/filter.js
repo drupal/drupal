@@ -9,6 +9,8 @@
 
   /**
    * Displays the guidelines of the selected text format automatically.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.filterGuidelines = {
     attach: function (context) {

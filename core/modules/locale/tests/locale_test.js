@@ -1,6 +1,8 @@
 /**
  * @file
  * JavaScript for locale_test.module.
+ *
+ * @ignore
  */
 
 Drupal.t("Standard Call t");

@@ -2,12 +2,16 @@
  * @file
  * Handles AJAX fetching of views, including filter submission and response.
  */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
 
   /**
-   * Attaches the AJAX behavior to Views exposed filter forms and key View links.
+   * Attaches the AJAX behavior to Views exposed filter forms and key View
+   * links.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.ViewsAjaxView = {};
   Drupal.behaviors.ViewsAjaxView.attach = function () {
@@ -21,11 +25,23 @@
     }
   };
 
+  /**
+   * @namespace
+   */
   Drupal.views = {};
+
+  /**
+   * @type {object.<string, Drupal.views.ajaxView>}
+   */
   Drupal.views.instances = {};
 
   /**
    * Javascript object for a certain view.
+   *
+   * @constructor
+   *
+   * @param {object} settings
+   * @param {string} settings.view_dom_id
    */
   Drupal.views.ajaxView = function (settings) {
     var selector = '.js-view-dom-id-' + settings.view_dom_id;
@@ -34,7 +50,8 @@
     // Retrieve the path to use for views' ajax.
     var ajax_path = drupalSettings.views.ajax_path;
 
-    // If there are multiple views this might've ended up showing up multiple times.
+    // If there are multiple views this might've ended up showing up multiple
+    // times.
     if (ajax_path.constructor.toString().indexOf("Array") !== -1) {
       ajax_path = ajax_path[0];
     }
@@ -45,7 +62,8 @@
       // Remove the question mark and Drupal path component if any.
       queryString = queryString.slice(1).replace(/q=[^&]+&?|&?render=[^&]+/, '');
       if (queryString !== '') {
-        // If there is a '?' in ajax_path, clean url are on and & should be used to add parameters.
+        // If there is a '?' in ajax_path, clean url are on and & should be
+        // used to add parameters.
         queryString = ((/\?/.test(ajax_path)) ? '&' : '?') + queryString;
       }
     }
@@ -86,6 +104,9 @@
     this.refreshViewAjax = Drupal.ajax(self_settings);
   };
 
+  /**
+   * @method
+   */
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     var button = $('input[type=submit], input[type=image]', this.$exposed_form);
     button = button[0];
@@ -97,6 +118,12 @@
     this.exposedFormAjax = Drupal.ajax(self_settings);
   };
 
+  /**
+   * @return {bool}
+   *   If there is at least one parent with a view class return false.
+   *
+   * @todo remove .size() replace with .length.
+   */
   Drupal.views.ajaxView.prototype.filterNestedViews = function () {
     // If there is at least one parent with a view class, this view
     // is nested (e.g., an attachment). Bail.
@@ -113,6 +140,9 @@
 
   /**
    * Attach the ajax behavior to a singe link.
+   *
+   * @param {string} id
+   * @param {HTMLElement} link
    */
   Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function (id, link) {
     var $link = $(link);
@@ -136,6 +166,12 @@
     this.pagerAjax = Drupal.ajax(self_settings);
   };
 
+  /**
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {string} response.selector
+   */
   Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {
     // Scroll to the top of the view. This will allow users
     // to browse newly loaded content after e.g. clicking a pager
@@ -149,7 +185,7 @@
     while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
       scrollTarget = $(scrollTarget).parent();
     }
-    // Only scroll upward
+    // Only scroll upward.
     if (offset.top - 10 < $(scrollTarget).scrollTop()) {
       $(scrollTarget).animate({scrollTop: (offset.top - 10)}, 500);
     }

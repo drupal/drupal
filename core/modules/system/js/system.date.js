@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides date format preview feature.
+ */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
@@ -6,6 +11,8 @@
 
   /**
    * Display the preview for date format entered.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.dateFormat = {
     attach: function (context) {
@@ -22,7 +29,7 @@
       /**
        * Event handler that replaces date characters with value.
        *
-       * @param {object} e
+       * @param {jQuery.Event} e
        */
       function dateFormatHandler(e) {
         var baseValue = $(e.target).val() || '';

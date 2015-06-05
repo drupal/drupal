@@ -1,3 +1,8 @@
+/**
+ * @file
+ * System behaviors.
+ */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
@@ -9,6 +14,8 @@
    * When a field is filled out, apply its value to other fields that will likely
    * use the same value. In the installer this is used to populate the
    * administrator email address with the same value as the site email address.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.copyFieldValue = {
     attach: function (context) {
@@ -34,12 +41,13 @@
         $('#' + ids.join(', #')).removeOnce('copy-field-values').off('blur');
       }
     },
+
     /**
      * Event handler that fill the target element with the specified value.
      *
-     * @param e
+     * @param {jQuery.Event} e
      *   Event object.
-     * @param value
+     * @param {string} value
      *   Custom value from jQuery trigger.
      */
     valueTargetCopyHandler: function (e, value) {
@@ -48,10 +56,13 @@
         $target.val(value);
       }
     },
+
     /**
      * Handler for a Blur event on a source field.
      *
      * This event handler will trigger a 'value:copy' event on all dependent fields.
+     *
+     * @param {jQuery.Event} e
      */
     valueSourceBlurHandler: function (e) {
       var value = $(e.target).val();

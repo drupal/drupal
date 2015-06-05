@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Module page behaviors.
+ */
+
 (function ($, Drupal) {
 
   "use strict";
@@ -11,6 +16,8 @@
    * Text search input: input.table-filter-text
    * Target table:      input.table-filter-text[data-table]
    * Source text:       .table-filter-text-source
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.tableFilterByText = {
     attach: function (context, settings) {

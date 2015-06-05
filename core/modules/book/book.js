@@ -7,6 +7,9 @@
 
   "use strict";
 
+  /**
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.bookDetailsSummaries = {
     attach: function (context) {
       $(context).find('.book-outline-form').drupalSetSummary(function (context) {

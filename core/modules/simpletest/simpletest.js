@@ -1,9 +1,16 @@
+/**
+ * @file
+ * Simpletest behaviors.
+ */
+
 (function ($) {
 
   "use strict";
 
   /**
    * Collapses table rows followed by group rows on the test listing page.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.simpleTestGroupCollapse = {
     attach: function (context) {
@@ -25,6 +32,8 @@
 
   /**
    * Toggles test checkboxes to match the group checkbox.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.simpleTestSelectAll = {
     attach: function (context) {
@@ -64,6 +73,8 @@
    * Text search input: input.table-filter-text
    * Target table:      input.table-filter-text[data-table]
    * Source text:       .table-filter-text-source
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.simpletestTableFilterByText = {
     attach: function (context) {

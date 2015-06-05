@@ -1,9 +1,16 @@
+/**
+ * @file
+ * User permission page behaviors.
+ */
+
 (function ($) {
 
   "use strict";
 
   /**
    * Shows checked and disabled checkboxes for inherited permissions.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.permissions = {
     attach: function (context) {
