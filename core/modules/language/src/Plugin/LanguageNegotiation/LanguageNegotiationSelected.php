@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class for identifying language from a selected language.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected::METHOD_ID,
  *   weight = 12,
  *   name = @Translation("Selected language"),

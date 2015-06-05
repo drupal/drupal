@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class for identifying language via URL prefix or domain.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID,
  *   types = {\Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE,
  *   \Drupal\Core\Language\LanguageInterface::TYPE_CONTENT,

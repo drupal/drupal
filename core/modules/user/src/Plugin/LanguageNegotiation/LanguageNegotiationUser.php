@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class for identifying language from the user preferences.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = \Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser::METHOD_ID,
  *   weight = -4,
  *   name = @Translation("User"),

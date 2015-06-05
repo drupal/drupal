@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class for identifying language from the browser Accept-language HTTP header.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser::METHOD_ID,
  *   weight = -2,
  *   name = @Translation("Browser"),

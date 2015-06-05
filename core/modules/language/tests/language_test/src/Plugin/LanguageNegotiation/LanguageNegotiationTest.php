@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class for identifying language from a selected language.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = "test_language_negotiation_method",
  *   weight = -10,
  *   name = @Translation("Test"),

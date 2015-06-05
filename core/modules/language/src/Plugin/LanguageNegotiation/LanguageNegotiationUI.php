@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Identifies the language from the interface text language selected for page.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI::METHOD_ID,
  *   types = {Drupal\Core\Language\LanguageInterface::TYPE_CONTENT},
  *   weight = 9,

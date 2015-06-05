@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 /**
  * Identifies admin language from the user preferences.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin::METHOD_ID,
  *   types = {Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE},
  *   weight = -10,

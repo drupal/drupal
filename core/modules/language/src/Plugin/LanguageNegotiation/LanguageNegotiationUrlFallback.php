@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
  *     fixed. This is done by introducing a prefix or domain in the rendered
  *     page matching the detected interface language.
  *
- * @Plugin(
+ * @LanguageNegotiation(
  *   id = Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback::METHOD_ID,
  *   types = {Drupal\Core\Language\LanguageInterface::TYPE_URL},
  *   weight = 8,
