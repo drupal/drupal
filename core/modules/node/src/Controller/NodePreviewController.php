@@ -21,15 +21,12 @@ class NodePreviewController extends EntityViewController {
    */
   public function view(EntityInterface $node_preview, $view_mode_id = 'full', $langcode = NULL) {
     $node_preview->preview_view_mode = $view_mode_id;
-    $build = array('nodes' => parent::view($node_preview, $view_mode_id));
+    $build = parent::view($node_preview, $view_mode_id);
 
     $build['#attached']['library'][] = 'node/drupal.node.preview';
 
-    $build['#title'] = $build['nodes']['#title'];
-    unset($build['nodes']['#title']);
-
     // Don't render cache previews.
-    unset($build['nodes']['#cache']);
+    unset($build['#cache']);
 
     foreach ($node_preview->uriRelationships() as $rel) {
       // Set the node path as the canonical URL to prevent duplicate content.

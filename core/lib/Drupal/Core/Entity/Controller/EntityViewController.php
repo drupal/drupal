@@ -57,6 +57,31 @@ class EntityViewController implements ContainerInjectionInterface {
   }
 
   /**
+   * Pre-render callback to build the page title.
+   *
+   * @param array $page
+   *   A page render array.
+   *
+   * @return array
+   *   The changed page render array.
+   */
+  public function buildTitle(array $page) {
+    $entity_type = $page['#entity_type'];
+    $entity = $page['#' . $entity_type];
+    // If the entity's label is rendered using a field formatter, set the
+    // rendered title field formatter as the page title instead of the default
+    // plain text title. This allows attributes set on the field to propagate
+    // correctly (e.g. RDFa, in-place editing).
+    if ($entity instanceof FieldableEntityInterface) {
+      $label_field = $entity->getEntityType()->getKey('label');
+      if (isset($page[$label_field])) {
+        $page['#title'] = $this->renderer->render($page[$label_field]);
+      }
+    }
+    return $page;
+  }
+
+  /**
    * Provides a page to render a single entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $_entity
@@ -78,22 +103,9 @@ class EntityViewController implements ContainerInjectionInterface {
       ->getViewBuilder($_entity->getEntityTypeId())
       ->view($_entity, $view_mode, $langcode);
 
-    // If the entity's label is rendered using a field formatter, set the
-    // rendered title field formatter as the page title instead of the default
-    // plain text title. This allows attributes set on the field to propagate
-    // correctly (e.g. RDFa, in-place editing).
-    if ($_entity instanceof FieldableEntityInterface) {
-      $label_field = $_entity->getEntityType()->getKey('label');
-      if ($label_field && $_entity->getFieldDefinition($label_field)->getDisplayOptions('view')) {
-        // We must render the label field, because rendering the entity may be
-        // a cache hit, in which case we can't extract the rendered label field
-        // from the $page renderable array.
-        $build = $this->entityManager->getTranslationFromContext($_entity)
-          ->get($label_field)
-          ->view($view_mode);
-        $page['#title'] = $this->renderer->render($build);
-      }
-    }
+    $page['#pre_render'][] = [$this, 'buildTitle'];
+    $page['#entity_type'] = $_entity->getEntityTypeId();
+
 
     return $page;
   }

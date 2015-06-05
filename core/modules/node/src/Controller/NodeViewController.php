@@ -20,10 +20,7 @@ class NodeViewController extends EntityViewController {
    * {@inheritdoc}
    */
   public function view(EntityInterface $node, $view_mode = 'full', $langcode = NULL) {
-    $build = array('nodes' => parent::view($node));
-
-    $build['#title'] = $build['nodes']['#title'];
-    unset($build['nodes']['#title']);
+    $build = parent::view($node);
 
     foreach ($node->uriRelationships() as $rel) {
       // Set the node path as the canonical URL to prevent duplicate content.
