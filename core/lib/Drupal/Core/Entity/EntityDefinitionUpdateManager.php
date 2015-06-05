@@ -98,7 +98,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
     $change_list = $this->getChangeList();
     if ($change_list) {
       // getChangeList() only disables the cache and does not invalidate.
-      // In case there are changes, explictly invalidate caches.
+      // In case there are changes, explicitly invalidate caches.
       $this->entityManager->clearCachedDefinitions();
     }
     foreach ($change_list as $entity_type_id => $change_list) {

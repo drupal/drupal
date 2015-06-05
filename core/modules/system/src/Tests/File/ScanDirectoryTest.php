@@ -29,7 +29,7 @@ class ScanDirectoryTest extends FileTestBase {
   protected function setUp() {
     parent::setUp();
     // Hardcode the location of the simpletest files as it is already known
-    // and shouldn't change, and we don't yet have a way to retreive their
+    // and shouldn't change, and we don't yet have a way to retrieve their
     // location from drupal_get_filename() in a cached way.
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $this->path = 'core/modules/simpletest/files';

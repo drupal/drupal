@@ -60,7 +60,7 @@ class DrupalKernelTrustedHostsTest extends UnitTestCase {
     // Tests canonical URL.
     $data[] = ['www.example.com', 'www.example.com', 'canonical URL is trusted', TRUE];
 
-    // Tests missing hostname for HTTP/1.0 compatability where the Host
+    // Tests missing hostname for HTTP/1.0 compatibility where the Host
     // header is optional.
     $data[] = [NULL, 'www.example.com', 'empty Host is valid', TRUE];
 
