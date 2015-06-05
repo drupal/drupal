@@ -14,7 +14,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\simpletest\Exception\MissingGroupException;
-use Drupal\simpletest\Exception\MissingSummaryLineException;
 use PHPUnit_Util_Test;
 
 /**
@@ -297,9 +296,6 @@ class TestDiscovery {
    *     PHPDoc annotations:
    *     - module: List of Drupal module extension names the test depends on.
    *
-   * @throws \Drupal\simpletest\Exception\MissingSummaryLineException
-   *   If the class does not have a PHPDoc summary line or @coversDefaultClass
-   *   annotation.
    * @throws \Drupal\simpletest\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
    */
@@ -343,9 +339,6 @@ class TestDiscovery {
     }
     else {
       $info['description'] = static::parseTestClassSummary($doc_comment);
-      if (empty($info['description'])) {
-        throw new MissingSummaryLineException(sprintf('Missing PHPDoc summary line in %s', $classname));
-      }
     }
     if (isset($annotations['dependencies'])) {
       $info['requires']['module'] = array_map('trim', explode(',', $annotations['dependencies']));

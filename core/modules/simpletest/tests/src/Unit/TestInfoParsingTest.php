@@ -215,8 +215,6 @@ EOT;
 
   /**
    * @covers ::getTestInfo
-   * @expectedException \Drupal\simpletest\Exception\MissingSummaryLineException
-   * @expectedExceptionMessage Missing PHPDoc summary line in Drupal\field\Tests\BulkDeleteTest
    */
   public function testTestInfoParserMissingSummary() {
     $classname = 'Drupal\field\Tests\BulkDeleteTest';
@@ -225,7 +223,8 @@ EOT;
  * @group field
  */
 EOT;
-    \Drupal\simpletest\TestDiscovery::getTestInfo($classname, $doc_comment);
+    $info = \Drupal\simpletest\TestDiscovery::getTestInfo($classname, $doc_comment);
+    $this->assertEmpty($info['description']);
   }
 
 }
