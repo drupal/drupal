@@ -369,3 +369,7 @@ migrate_entity_constant:
     auto_create:
       type: boolean
       label: 'Entity reference selection setting: Auto-create new entities'
+
+migrate.source.md_empty:
+  type: migrate.source.empty
+  label: 'Empty source for migrate_drupal migrations'

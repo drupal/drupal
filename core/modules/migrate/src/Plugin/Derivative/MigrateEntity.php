@@ -68,6 +68,7 @@ class MigrateEntity implements ContainerDeriverInterface {
         'id' => "entity:$entity_type",
         'class' => $class,
         'requirements_met' => 1,
+        'provider' => $entity_info->getProvider(),
       );
     }
     return $this->derivatives;

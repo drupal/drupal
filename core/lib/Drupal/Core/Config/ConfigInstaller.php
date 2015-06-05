@@ -498,12 +498,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   TRUE if the dependencies are met, FALSE if not.
    */
   protected function validateDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
-    // All the migrate tests will fail if we check since they install the
-    // migrate_drupal module but only set up the dependencies for the single
-    // migration they are testing.
-    if (strpos($config_name, 'migrate.migration.') === 0) {
-      return TRUE;
-    }
     if (isset($data['dependencies'])) {
       $all_dependencies = $data['dependencies'];
 

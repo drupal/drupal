@@ -7,6 +7,11 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Entity\MigrationInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * The view mode source.
  *
@@ -65,6 +70,17 @@ class ViewMode extends ViewModeBase {
   public function getIds() {
     $ids['view_mode']['type'] = 'string';
     return $ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $this->dependencies = parent::calculateDependencies();
+    if (isset($this->configuration['constants']['targetEntityType'])) {
+      $this->addDependency('module', $this->entityManager->getDefinition($this->configuration['constants']['targetEntityType'])->getProvider());
+    }
+    return $this->dependencies;
   }
 
 }

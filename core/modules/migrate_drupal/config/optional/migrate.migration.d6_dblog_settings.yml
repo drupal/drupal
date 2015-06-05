@@ -1,0 +1,17 @@
+id: d6_dblog_settings
+label: Drupal 6 database logging configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - dblog_row_limit
+process:
+  row_limit: dblog_row_limit
+destination:
+  plugin: config
+  config_name: dblog.settings
+dependencies:
+  module:
+    - dblog
+    - migrate_drupal

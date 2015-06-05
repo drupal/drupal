@@ -167,4 +167,11 @@ class TestSqlBase extends SqlBase {
    */
   public function query() {}
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return [];
+  }
+
 }

@@ -68,7 +68,8 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
    */
   protected function setUp() {
     $plugin = 'placeholder_id';
-    $this->base = new TestDrupal6SqlBase($this->migrationConfiguration, $plugin, array(), $this->getMigration());
+    $entity_manager = $this->getmock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->base = new TestDrupal6SqlBase($this->migrationConfiguration, $plugin, array(), $this->getMigration(), $entity_manager);
     $this->base->setDatabase($this->getDatabase($this->databaseContents));
   }
 

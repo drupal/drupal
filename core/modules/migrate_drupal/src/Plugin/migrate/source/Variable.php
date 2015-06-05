@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 
 /**
@@ -31,8 +32,8 @@ class Variable extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $entity_manager);
     $this->variables = $this->configuration['variables'];
   }
 

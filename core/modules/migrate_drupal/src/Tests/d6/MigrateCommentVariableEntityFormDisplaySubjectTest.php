@@ -22,7 +22,7 @@ class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupal6T
    *
    * @var array
    */
-  static $modules = array('comment');
+  public static $modules = array('comment', 'node');
 
   /**
    * {@inheritdoc}

@@ -198,11 +198,40 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   protected $requirements = [];
 
   /**
-   * These migrations, if ran at all, must be executed before this migration.
+   * These migrations, if run, must be executed before this migration.
+   *
+   * These are different from the configuration dependencies. Migration
+   * dependencies are only used to store relationships between migrations.
+   *
+   * The migration_dependencies value is structured like this:
+   * @code
+   * array(
+   *   'required' => array(
+   *     // An array of migration IDs that must be run before this migration.
+   *   ),
+   *   'optional' => array(
+   *     // An array of migration IDs that, if they exist, must be run before
+   *     // this migration.
+   *   ),
+   * );
+   * @endcode
    *
    * @var array
    */
   protected $migration_dependencies = [];
+
+  /**
+   * The migration's configuration dependencies.
+   *
+   * These store any dependencies on modules or other configuration (including
+   * other migrations) that must be available before the migration can be
+   * created.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
+   *
+   * @var array
+   */
+  protected $dependencies = [];
 
   /**
    * The entity manager.
@@ -478,6 +507,31 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    * {@inheritdoc}
    */
   public function getMigrationDependencies() {
-    return $this->migration_dependencies;
+    return $this->migration_dependencies + ['required' => [], 'optional' => []];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function trustData() {
+    // Migrations cannot be trusted since they are often written by hand and not
+    // through a UI.
+    $this->trustedData = FALSE;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $this->calculatePluginDependencies($this->getSourcePlugin());
+    $this->calculatePluginDependencies($this->getDestinationPlugin());
+    // Add dependencies on required migration dependencies.
+    foreach ($this->getMigrationDependencies()['required'] as $dependency) {
+      $this->addDependency('config', $this->getEntityType()->getConfigPrefix() . '.' . $dependency);
+    }
+
+    return $this->dependencies;
   }
 }

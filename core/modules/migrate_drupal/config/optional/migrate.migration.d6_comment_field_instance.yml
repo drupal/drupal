@@ -1,0 +1,42 @@
+id: d6_comment_field_instance
+label: Drupal 6 comment field instance configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_comment_variable
+  constants:
+    entity_type: node
+    label: Comments
+    required: true
+process:
+  entity_type: 'constants/entity_type'
+  label: 'constants/label'
+  required: 'constants/required'
+
+  field_name:
+    plugin: static_map
+    source: comment_subject_field
+    default_value: comment
+    map:
+      0: comment_no_subject
+  bundle: node_type
+  'default_value/0/status': comment
+  'settings/default_mode': comment_default_mode
+  'settings/per_page': comment_default_per_page
+  'settings/anonymous': comment_anonymous
+  'settings/form_location': comment_form_location
+  'settings/preview': comment_preview
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d6_comment_field
+    - d6_node_type
+dependencies:
+  config:
+    - migrate.migration.d6_comment_field
+    - migrate.migration.d6_node_type
+  module:
+    - field
+    - migrate_drupal
+    - node

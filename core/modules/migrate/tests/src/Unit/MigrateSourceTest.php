@@ -83,7 +83,7 @@ class MigrateSourceTest extends MigrateTestCase {
       ->willReturn($id_map_array);
 
     $constructor_args = [$configuration, 'd6_action', [], $this->migration];
-    $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'getIterator', 'prepareRow', 'initializeIterator'];
+    $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'getIterator', 'prepareRow', 'initializeIterator', 'calculateDependencies'];
     $source_plugin = $this->getMock('\Drupal\migrate\Plugin\migrate\source\SourcePluginBase', $methods, $constructor_args);
 
     $source_plugin

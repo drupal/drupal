@@ -1,0 +1,24 @@
+id: d6_cck_field_revision
+label: Drupal 6 field revisions
+migration_tags:
+  - Drupal 6
+load:
+  plugin: drupal_entity
+  bundle_migration: d6_node_type
+source:
+  plugin: d6_cck_field_revision
+process:
+  vid: vid
+destination:
+  plugin: entity_revision:node
+migration_dependencies:
+  required:
+    - d6_cck_field_values
+    - d6_node_revision
+dependencies:
+  config:
+    - migrate.migration.d6_cck_field_values
+    - migrate.migration.d6_node_revision
+  module:
+    - migrate_drupal
+    - node

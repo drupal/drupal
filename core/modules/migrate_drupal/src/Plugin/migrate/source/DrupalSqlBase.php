@@ -7,7 +7,10 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Entity\DependencyTrait;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Exception\RequirementsException;
@@ -21,7 +24,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Mainly to let children retrieve information from the origin system in an
  * easier way.
  */
-abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginInterface, RequirementsInterface {
+abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginInterface, RequirementsInterface, DependentPluginInterface {
+
+  use DependencyTrait;
 
    /**
    * The contents of the system table.
@@ -36,6 +41,21 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
    * @var bool
    */
   protected $requirements = TRUE;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+    $this->entityManager = $entity_manager;
+  }
 
   /**
     * Retrieves all system data information from origin system.
@@ -69,7 +89,8 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $migration
+      $migration,
+      $container->get('entity.manager')
     );
   }
 
@@ -142,6 +163,20 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
       $result = FALSE;
     }
     return $result !== FALSE ? unserialize($result) : $default;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    // Generic handling for Drupal source plugin constants.
+    if (isset($this->configuration['constants']['entity_type'])) {
+      $this->addDependency('module', $this->entityManager->getDefinition($this->configuration['constants']['entity_type'])->getProvider());
+    }
+    if (isset($this->configuration['constants']['module'])) {
+      $this->addDependency('module', $this->configuration['constants']['module']);
+    }
+    return $this->dependencies;
   }
 
 }

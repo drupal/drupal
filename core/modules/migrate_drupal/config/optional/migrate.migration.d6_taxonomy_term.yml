@@ -1,0 +1,34 @@
+id: d6_taxonomy_term
+label: Drupal 6 taxonomy terms
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_taxonomy_term
+process:
+  tid: tid
+  vid:
+    plugin: migration
+    migration: d6_taxonomy_vocabulary
+    source: vid
+  name: name
+  description: description
+  weight: weight
+  parent:
+    -
+      plugin: skip_process_on_empty
+      source: parent
+    -
+      plugin: migration
+      migration: d6_taxonomy_term
+  changed: timestamp
+destination:
+  plugin: entity:taxonomy_term
+migration_dependencies:
+  required:
+    - d6_taxonomy_vocabulary
+dependencies:
+  config:
+    - migrate.migration.d6_taxonomy_vocabulary
+  module:
+    - migrate_drupal
+    - taxonomy

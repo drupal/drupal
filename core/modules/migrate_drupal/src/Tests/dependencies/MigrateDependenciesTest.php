@@ -20,7 +20,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateDependenciesTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('aggregator');
+  static $modules = array('aggregator', 'node', 'comment', 'filter');
 
   /**
    * Tests that the order is correct when loading several migrations.

@@ -7,6 +7,10 @@
 
 namespace Drupal\migrate_drupal\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Config\ExtensionInstallStorage;
+use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\simpletest\TestBase;
 
@@ -54,6 +58,7 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
     $this->loadDumps($dumps);
 
     $classes = $this->getTestClassesList();
+    $extension_install_storage = new ExtensionInstallStorage(\Drupal::service('config.storage'), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, TRUE);
     foreach ($classes as $class) {
       if (is_subclass_of($class, '\Drupal\migrate\Tests\MigrateDumpAlterInterface')) {
         $class::migrateDumpAlter($this);
@@ -63,6 +68,16 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
     // Run every migration in the order specified by the storage controller.
     foreach (entity_load_multiple('migration', static::$migrations) as $migration) {
       (new MigrateExecutable($migration, $this))->import();
+
+      // Ensure that the default migration has the correct dependencies.
+      list($base_name, ) = explode(':', $migration->id(), 2);
+      $default_configuration = $extension_install_storage->read('migrate.migration.' . $base_name);
+      $default_dependencies = isset($default_configuration['dependencies']) ? $default_configuration['dependencies'] : [];
+      $this->assertEqual($default_dependencies, $migration->getDependencies(), SafeMarkup::format('Dependencies in @id match after installing. Default configuration @first is equal to active configuration @second.', array(
+        '@id' => $migration->id(),
+        '@first' => var_export($default_dependencies, TRUE),
+        '@second' => var_export($migration->getDependencies(), TRUE)
+      )));
     }
     foreach ($classes as $class) {
       $test_object = new $class($this->testId);

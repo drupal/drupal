@@ -1,0 +1,17 @@
+id: d6_system_filter
+label: Drupal 6 filter configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - filter_allowed_protocols
+process:
+  protocols: filter_allowed_protocols
+destination:
+  plugin: config
+  config_name: system.filter
+dependencies:
+  module:
+    - migrate_drupal
+    - system

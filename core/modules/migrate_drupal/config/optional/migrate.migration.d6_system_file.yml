@@ -1,0 +1,24 @@
+id: d6_system_file
+label: Drupal 6 file system configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - file_directory_temp
+    - allow_insecure_uploads
+process:
+  'path/temporary': file_directory_temp
+  allow_insecure_uploads:
+    plugin: static_map
+    source: allow_insecure_uploads
+    map:
+      0: FALSE
+      1: TRUE
+destination:
+  plugin: config
+  config_name: system.file
+dependencies:
+  module:
+    - migrate_drupal
+    - system

@@ -1,0 +1,29 @@
+id: d6_aggregator_settings
+label: Drupal 6 aggregator configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - aggregator_fetcher
+    - aggregator_parser
+    - aggregator_processors
+    - aggregator_allowed_html_tags
+    - aggregator_teaser_length
+    - aggregator_clear
+    - aggregator_summary_items
+process:
+  fetcher: aggregator_fetcher
+  parser: aggregator_parser
+  processors: aggregator_processors
+  'items/allowed_html': aggregator_allowed_html_tags
+  'items/teaser_length': aggregator_teaser_length
+  'items/expire': aggregator_clear
+  'source/list_max': aggregator_summary_items
+destination:
+  plugin: config
+  config_name: aggregator.settings
+dependencies:
+  module:
+    - aggregator
+    - migrate_drupal

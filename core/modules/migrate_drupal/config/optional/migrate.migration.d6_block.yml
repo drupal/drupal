@@ -1,0 +1,101 @@
+id: d6_block
+label: Drupal 6 blocks
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_block
+process:
+  # Drupal 8 does not have a status but it doesn't matter; this is here to
+  # skip disabled blocks.
+  status:
+    plugin: skip_row_on_empty
+    source: status
+  id:
+    # We need something unique, so aggregator, aggregator_1 etc will do.
+    plugin: dedupe_entity
+    entity_type: block
+    field: id
+    postfix: _
+    length: 32
+    source: module
+  plugin:
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - module
+        - delta
+      map:
+        book:
+          0: book_navigation
+        comment:
+          0: views_block:comments_recent-block_1
+        forum:
+          0: forum_active_block
+          1: forum_new_block
+        locale:
+          0: language_block
+        node:
+          0: node_syndicate_block
+        search:
+          0: search_form_block
+        statistics:
+          0: statistics_popular_block
+        system:
+          0: system_powered_by_block
+        user:
+          0: user_login_block
+          1: system_menu_block:tools
+          2: views_block:who_s_new-block_1
+          3: views_block:who_s_online-who_s_online_block
+    -
+      plugin: d6_block_plugin_id
+  theme:
+    plugin: d6_block_theme
+    source:
+      - theme
+      - default_theme
+      - admin_theme
+  region:
+    plugin: d6_block_region
+    source:
+      - region
+      - theme
+      - @theme
+    region_map:
+      left: sidebar_first
+      right: sidebar_second
+      sidebar_first: sidebar_first
+      sidebar_second: sidebar_second
+      help: help
+      header: header
+      footer: footer
+  label: title
+  weight: weight
+  settings:
+    plugin: d6_block_settings
+    source:
+      - @plugin
+      - delta
+      - settings
+  visibility:
+    plugin: d6_block_visibility
+    source:
+      - pages
+      - roles
+      - visibility
+destination:
+  plugin: entity:block
+migration_dependencies:
+  required:
+    - d6_menu
+    - d6_custom_block
+    - d6_user_role
+dependencies:
+  config:
+    - migrate.migration.d6_custom_block
+    - migrate.migration.d6_menu
+    - migrate.migration.d6_user_role
+  module:
+    - block
+    - migrate_drupal

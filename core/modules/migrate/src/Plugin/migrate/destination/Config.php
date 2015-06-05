@@ -6,7 +6,9 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
@@ -24,7 +26,8 @@ use Drupal\Core\Config\Config as ConfigObject;
  *   id = "config"
  * )
  */
-class Config extends DestinationBase implements ContainerFactoryPluginInterface {
+class Config extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
+  use DependencyTrait;
 
   /**
    * The config object.
@@ -102,6 +105,15 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface 
    */
   public function getIds() {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $provider = explode('.', $this->config->getName(), 2)[0];
+    $this->addDependency('module', $provider);
+    return $this->dependencies;
   }
 
 }

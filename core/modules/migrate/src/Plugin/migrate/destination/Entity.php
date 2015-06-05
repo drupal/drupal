@@ -7,6 +7,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
@@ -19,7 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   deriver = "Drupal\migrate\Plugin\Derivative\MigrateEntity"
  * )
  */
-abstract class Entity extends DestinationBase implements ContainerFactoryPluginInterface {
+abstract class Entity extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
+  use DependencyTrait;
 
   /**
    * The entity storage.
@@ -80,7 +83,6 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    *
    * @return string
    *   The entity type.
-   * @throws \Drupal\migrate\MigrateException
    */
   protected static function getEntityTypeId($plugin_id) {
     // Remove "entity:"
@@ -167,6 +169,14 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    */
   protected function getKey($key) {
     return $this->storage->getEntityType()->getKey($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $this->addDependency('module', $this->storage->getEntityType()->getProvider());
+    return $this->dependencies;
   }
 
 }

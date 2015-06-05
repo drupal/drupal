@@ -1,0 +1,59 @@
+id: d6_field_instance
+label: Drupal 6 field instance configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_field_instance
+  constants:
+    entity_type: node
+
+process:
+  # We skip field types that don't exist because they weren't migrated by the
+  # field migration.
+  field_type_exists:
+    -
+      plugin: migration
+      migration: d6_field
+      source:
+        - field_name
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: skip_row_on_empty
+  entity_type: 'constants/entity_type'
+  field_name: field_name
+  bundle: type_name
+  label: label
+  description: description
+  required: required
+  status: active
+  settings:
+    plugin: d6_field_field_settings
+    source:
+      - widget_type
+      - widget_settings
+      - global_settings
+
+  default_value_callback: ''
+  default_value:
+    plugin: d6_field_instance_defaults
+    source:
+      - widget_type
+      - widget_settings
+
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d6_node_type
+    - d6_field
+dependencies:
+  config:
+    - migrate.migration.d6_field
+    - migrate.migration.d6_node_type
+  module:
+    - field
+    - migrate_drupal
+    - node

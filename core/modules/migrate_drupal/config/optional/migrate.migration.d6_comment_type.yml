@@ -1,0 +1,20 @@
+id: d6_comment_type
+label: Drupal 6 comment type
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_comment_variable_per_comment_type
+  constants:
+    entity_type: node
+process:
+  target_entity_type_id: 'constants/entity_type'
+  id: comment_type
+  label: label
+  description: description
+destination:
+  plugin: entity:comment_type
+dependencies:
+  module:
+    - comment
+    - migrate_drupal
+    - node
