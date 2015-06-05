@@ -8,6 +8,7 @@
 namespace Drupal\Core\Ajax;
 
 use Drupal\Core\Asset\AttachedAssets;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Renderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -79,7 +80,7 @@ class AjaxResponse extends JsonResponse {
         'library' => $assets->getLibraries(),
         'drupalSettings' => $assets->getSettings(),
       ];
-      $attachments = $this->getRenderer()->mergeAttachments($this->attachments, $attachments);
+      $attachments = BubbleableMetadata::mergeAttachments($this->attachments, $attachments);
       $this->setAttachments($attachments);
     }
 

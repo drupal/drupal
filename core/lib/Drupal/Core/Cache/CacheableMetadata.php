@@ -140,9 +140,38 @@ class CacheableMetadata implements CacheableDependencyInterface {
    */
   public function merge(CacheableMetadata $other) {
     $result = new static();
-    $result->contexts = Cache::mergeContexts($this->contexts, $other->contexts);
-    $result->tags = Cache::mergeTags($this->tags, $other->tags);
-    $result->maxAge = Cache::mergeMaxAges($this->maxAge, $other->maxAge);
+
+    // This is called many times per request, so avoid merging unless absolutely
+    // necessary.
+    if (empty($this->contexts)) {
+      $result->contexts = $other->contexts;
+    }
+    elseif (empty($other->contexts)) {
+      $result->contexts = $this->contexts;
+    }
+    else {
+      $result->contexts = Cache::mergeContexts($this->contexts, $other->contexts);
+    }
+
+    if (empty($this->tags)) {
+      $result->tags = $other->tags;
+    }
+    elseif (empty($other->tags)) {
+      $result->tags = $this->tags;
+    }
+    else {
+      $result->tags = Cache::mergeTags($this->tags, $other->tags);
+    }
+
+    if ($this->maxAge === Cache::PERMANENT) {
+      $result->maxAge = $other->maxAge;
+    }
+    elseif ($other->maxAge === Cache::PERMANENT) {
+      $result->maxAge = $this->maxAge;
+    }
+    else {
+      $result->maxAge = Cache::mergeMaxAges($this->maxAge, $other->maxAge);
+    }
     return $result;
   }
 

@@ -32,6 +32,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AnonymousUserSession;
 
@@ -571,10 +572,10 @@ function drupal_js_defaults($data = NULL) {
  *   The merged #attached array.
  *
  * @deprecated To be removed in Drupal 8.0.x. Use
- *   \Drupal\Core\Render\Renderer::mergeAttachments() instead.
+ *   \Drupal\Core\Render\BubbleableMetadata::mergeAttachments() instead.
  */
 function drupal_merge_attached(array $a, array $b) {
-  return \Drupal::service('renderer')->mergeAttachments($a, $b);
+  return BubbleableMetadata::mergeAttachments($a, $b);
 }
 
 /**

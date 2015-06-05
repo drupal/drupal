@@ -206,4 +206,411 @@ class BubbleableMetadataTest extends UnitTestCase {
     return $data;
   }
 
+  /**
+   * Tests library asset merging.
+   *
+   * @covers ::mergeAttachments
+   */
+  function testMergeAttachmentsLibraryMerging() {
+    $a['#attached'] = array(
+      'library' => array(
+        'core/drupal',
+        'core/drupalSettings',
+      ),
+      'drupalSettings' => [
+        'foo' => ['d'],
+      ],
+    );
+    $b['#attached'] = array(
+      'library' => array(
+        'core/jquery',
+      ),
+      'drupalSettings' => [
+        'bar' => ['a', 'b', 'c'],
+      ],
+    );
+    $expected['#attached'] = array(
+      'library' => array(
+        'core/drupal',
+        'core/drupalSettings',
+        'core/jquery',
+      ),
+      'drupalSettings' => [
+        'foo' => ['d'],
+        'bar' => ['a', 'b', 'c'],
+      ],
+    );
+    $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected['#attached'] = array(
+      'library' => array(
+        'core/jquery',
+        'core/drupal',
+        'core/drupalSettings',
+      ),
+      'drupalSettings' => [
+        'bar' => ['a', 'b', 'c'],
+        'foo' => ['d'],
+      ],
+    );
+    $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
+
+    // Merging with duplicates: duplicates are simply retained, it's up to the
+    // rest of the system to handle duplicates.
+    $b['#attached']['library'][] = 'core/drupalSettings';
+    $expected['#attached'] = array(
+      'library' => array(
+        'core/drupal',
+        'core/drupalSettings',
+        'core/jquery',
+        'core/drupalSettings',
+      ),
+      'drupalSettings' => [
+        'foo' => ['d'],
+        'bar' => ['a', 'b', 'c'],
+      ],
+    );
+    $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly; duplicates are retained.');
+
+    // Merging with duplicates (simple case).
+    $b['#attached']['drupalSettings']['foo'] = ['a', 'b', 'c'];
+    $expected['#attached'] = array(
+      'library' => array(
+        'core/drupal',
+        'core/drupalSettings',
+        'core/jquery',
+        'core/drupalSettings',
+      ),
+      'drupalSettings' => [
+        'foo' => ['a', 'b', 'c'],
+        'bar' => ['a', 'b', 'c'],
+      ],
+    );
+    $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($a['#attached'], $b['#attached']));
+
+    // Merging with duplicates (simple case) in the opposite direction yields
+    // the opposite JS setting asset order, but also opposite overriding order.
+    $expected['#attached'] = array(
+      'library' => array(
+        'core/jquery',
+        'core/drupalSettings',
+        'core/drupal',
+        'core/drupalSettings',
+      ),
+      'drupalSettings' => [
+        'bar' => ['a', 'b', 'c'],
+        'foo' => ['d', 'b', 'c'],
+      ],
+    );
+    $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($b['#attached'], $a['#attached']));
+
+    // Merging with duplicates: complex case.
+    // Only the second of these two entries should appear in drupalSettings.
+    $build = array();
+    $build['a']['#attached']['drupalSettings']['commonTest'] = 'firstValue';
+    $build['b']['#attached']['drupalSettings']['commonTest'] = 'secondValue';
+    // Only the second of these entries should appear in drupalSettings.
+    $build['a']['#attached']['drupalSettings']['commonTestJsArrayLiteral'] = ['firstValue'];
+    $build['b']['#attached']['drupalSettings']['commonTestJsArrayLiteral'] = ['secondValue'];
+    // Only the second of these two entries should appear in drupalSettings.
+    $build['a']['#attached']['drupalSettings']['commonTestJsObjectLiteral'] = ['key' => 'firstValue'];
+    $build['b']['#attached']['drupalSettings']['commonTestJsObjectLiteral'] = ['key' => 'secondValue'];
+    // Real world test case: multiple elements in a render array are adding the
+    // same (or nearly the same) JavaScript settings. When merged, they should
+    // contain all settings and not duplicate some settings.
+    $settings_one = array('moduleName' => array('ui' => array('button A', 'button B'), 'magical flag' => 3.14159265359));
+    $build['a']['#attached']['drupalSettings']['commonTestRealWorldIdentical'] = $settings_one;
+    $build['b']['#attached']['drupalSettings']['commonTestRealWorldIdentical'] = $settings_one;
+    $settings_two_a = array('moduleName' => array('ui' => array('button A', 'button B', 'button C'), 'magical flag' => 3.14159265359, 'thingiesOnPage' => array('id1' => array())));
+    $build['a']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_a;
+    $settings_two_b = array('moduleName' => array('ui' => array('button D', 'button E'), 'magical flag' => 3.14, 'thingiesOnPage' => array('id2' => array())));
+    $build['b']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_b;
+
+    $merged = BubbleableMetadata::mergeAttachments($build['a']['#attached'], $build['b']['#attached']);
+
+    // Test whether #attached can be used to override a previous setting.
+    $this->assertSame('secondValue', $merged['drupalSettings']['commonTest']);
+
+    // Test whether #attached can be used to add and override a JavaScript
+    // array literal (an indexed PHP array) values.
+    $this->assertSame('secondValue', $merged['drupalSettings']['commonTestJsArrayLiteral'][0]);
+
+    // Test whether #attached can be used to add and override a JavaScript
+    // object literal (an associate PHP array) values.
+    $this->assertSame('secondValue', $merged['drupalSettings']['commonTestJsObjectLiteral']['key']);
+
+    // Test whether the two real world cases are handled correctly: the first
+    // adds the exact same settings twice and hence tests idempotency, the
+    // second adds *almost* the same settings twice: the second time, some
+    // values are altered, and some key-value pairs are added.
+    $settings_two['moduleName']['thingiesOnPage']['id1'] = array();
+    $this->assertSame($settings_one, $merged['drupalSettings']['commonTestRealWorldIdentical']);
+    $expected_settings_two = $settings_two_a;
+    $expected_settings_two['moduleName']['ui'][0] = 'button D';
+    $expected_settings_two['moduleName']['ui'][1] = 'button E';
+    $expected_settings_two['moduleName']['ui'][2] = 'button C';
+    $expected_settings_two['moduleName']['magical flag'] = 3.14;
+    $expected_settings_two['moduleName']['thingiesOnPage']['id2'] = [];
+    $this->assertSame($expected_settings_two, $merged['drupalSettings']['commonTestRealWorldAlmostIdentical']);
+  }
+
+  /**
+   * Tests feed asset merging.
+   *
+   * @covers ::mergeAttachments
+   *
+   * @dataProvider providerTestMergeAttachmentsFeedMerging
+   */
+  function testMergeAttachmentsFeedMerging($a, $b, $expected) {
+    $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
+  }
+
+  /**
+   * Data provider for testMergeAttachmentsFeedMerging
+   *
+   * @return array
+   */
+  public function providerTestMergeAttachmentsFeedMerging() {
+    $feed_a =         [
+      'aggregator/rss',
+      'Feed title',
+    ];
+
+    $feed_b =         [
+      'taxonomy/term/1/feed',
+      'RSS - foo',
+    ];
+
+    $a = [
+      'feed' => [
+        $feed_a,
+      ],
+    ];
+    $b = [
+      'feed' => [
+        $feed_b,
+      ],
+    ];
+
+    $expected_a = [
+      'feed' => [
+        $feed_a,
+        $feed_b,
+      ],
+    ];
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected_b = [
+      'feed' => [
+        $feed_b,
+        $feed_a,
+      ],
+    ];
+
+    return [
+      [$a, $b, $expected_a],
+      [$b, $a, $expected_b],
+    ];
+  }
+
+  /**
+   * Tests html_head asset merging.
+   *
+   * @covers ::mergeAttachments
+   *
+   * @dataProvider providerTestMergeAttachmentsHtmlHeadMerging
+   */
+  function testMergeAttachmentsHtmlHeadMerging($a, $b, $expected) {
+    $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
+  }
+
+  /**
+   * Data provider for testMergeAttachmentsHtmlHeadMerging
+   *
+   * @return array
+   */
+  public function providerTestMergeAttachmentsHtmlHeadMerging() {
+    $meta = [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'charset' => 'utf-8',
+      ],
+      '#weight' => -1000,
+    ];
+
+    $html_tag = [
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'Generator',
+        'content' => 'Kitten 1.0 (https://www.drupal.org/project/kitten)',
+      ],
+    ];
+
+    $a = [
+      'html_head' => [
+        $meta,
+        'system_meta_content_type',
+      ],
+    ];
+
+    $b = [
+      'html_head' => [
+        $html_tag,
+        'system_meta_generator',
+      ],
+    ];
+
+    $expected_a = [
+      'html_head' => [
+        $meta,
+        'system_meta_content_type',
+        $html_tag,
+        'system_meta_generator',
+      ],
+    ];
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected_b = [
+      'html_head' => [
+        $html_tag,
+        'system_meta_generator',
+        $meta,
+        'system_meta_content_type',
+      ],
+    ];
+
+    return [
+      [$a, $b, $expected_a],
+      [$b, $a, $expected_b],
+    ];
+  }
+
+  /**
+   * Tests html_head_link asset merging.
+   *
+   * @covers ::mergeAttachments
+   *
+   * @dataProvider providerTestMergeAttachementsHtmlHeadLinkMerging
+   */
+  function testMergeAttachementsHtmlHeadLinkMerging($a, $b, $expected) {
+    $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
+  }
+
+  /**
+   * Data provider for testMergeAttachementsHtmlHeadLinkMerging
+   *
+   * @return array
+   */
+  public function providerTestMergeAttachementsHtmlHeadLinkMerging() {
+    $rel =         [
+      'rel' => 'rel',
+      'href' => 'http://rel.example.com',
+    ];
+
+    $shortlink =         [
+      'rel' => 'shortlink',
+      'href' => 'http://shortlink.example.com',
+    ];
+
+    $a = [
+      'html_head_link' => [
+        $rel,
+        TRUE,
+      ],
+    ];
+
+    $b = [
+      'html_head_link' => [
+        $shortlink,
+        FALSE,
+      ],
+    ];
+
+    $expected_a = [
+      'html_head_link' => [
+        $rel,
+        TRUE,
+        $shortlink,
+        FALSE,
+      ],
+    ];
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected_b = [
+      'html_head_link' => [
+        $shortlink,
+        FALSE,
+        $rel,
+        TRUE,
+      ],
+    ];
+
+    return [
+      [$a, $b, $expected_a],
+      [$b, $a, $expected_b],
+    ];
+  }
+
+  /**
+   * Tests http_header asset merging.
+   *
+   * @covers ::mergeAttachments
+   *
+   * @dataProvider providerTestMergeAttachmentsHttpHeaderMerging
+   */
+  function testMergeAttachmentsHttpHeaderMerging($a, $b, $expected) {
+    $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
+  }
+
+  /**
+   * Data provider for testMergeAttachmentsHttpHeaderMerging
+   *
+   * @return array
+   */
+  public function providerTestMergeAttachmentsHttpHeaderMerging() {
+    $content_type = [
+      'Content-Type',
+      'application/rss+xml; charset=utf-8',
+    ];
+
+    $expires = [
+      'Expires',
+      'Sun, 19 Nov 1978 05:00:00 GMT',
+    ];
+
+    $a = [
+      'http_header' => [
+        $content_type,
+      ],
+    ];
+
+    $b = [
+      'http_header' => [
+        $expires,
+      ],
+    ];
+
+    $expected_a = [
+      'http_header' => [
+        $content_type,
+        $expires,
+      ],
+    ];
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected_b = [
+      'http_header' => [
+        $expires,
+        $content_type,
+      ],
+    ];
+
+    return [
+      [$a, $b, $expected_a],
+      [$b, $a, $expected_b],
+    ];
+  }
+
 }
