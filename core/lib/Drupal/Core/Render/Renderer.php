@@ -7,12 +7,13 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
@@ -103,14 +104,51 @@ class Renderer implements RendererInterface {
   }
 
   /**
+   * Renders final HTML for a placeholder.
+   *
+   * Renders the placeholder in isolation.
+   *
+   * @param string $placeholder
+   *   An attached placeholder to render. (This must be a key of one of the
+   *   values of $elements['#attached']['placeholders'].)
+   * @param array $elements
+   *   The structured array describing the data to be rendered.
+   *
+   * @return array
+   *   The updated $elements.
+   *
+   * @see ::replacePlaceholders()
+   *
+   * @todo Make public as part of https://www.drupal.org/node/2469431
+   */
+  protected function renderPlaceholder($placeholder, array $elements) {
+    // Get the render array for the given placeholder
+    $placeholder_elements = $elements['#attached']['placeholders'][$placeholder];
+
+    // Render the placeholder into markup.
+    $markup = $this->renderPlain($placeholder_elements);
+
+    // Replace the placeholder with its rendered markup, and merge its
+    // bubbleable metadata with the main elements'.
+    $elements['#markup'] = str_replace($placeholder, $markup, $elements['#markup']);
+    $elements = $this->mergeBubbleableMetadata($elements, $placeholder_elements);
+
+    // Remove the placeholder that we've just rendered.
+    unset($elements['#attached']['placeholders'][$placeholder]);
+
+    return $elements;
+  }
+
+
+  /**
    * {@inheritdoc}
    */
   public function render(&$elements, $is_root_call = FALSE) {
-    // Since #pre_render, #post_render, #post_render_cache callbacks and theme
-    // functions/templates may be used for generating a render array's content,
-    // and we might be rendering the main content for the page, it is possible
-    // that any of them throw an exception that will cause a different page to
-    // be rendered (e.g. throwing
+    // Since #pre_render, #post_render, #lazy_builder callbacks and theme
+    // functions or templates may be used for generating a render array's
+    // content, and we might be rendering the main content for the page, it is
+    // possible that any of them throw an exception that will cause a different
+    // page to be rendered (e.g. throwing
     // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will cause
     // the 404 page to be rendered). That page might also use Renderer::render()
     // but if exceptions aren't caught here, the stack will be left in an
@@ -167,17 +205,17 @@ class Renderer implements RendererInterface {
       }
     }
 
-    // Try to fetch the prerendered element from cache, run any
-    // #post_render_cache callbacks and return the final markup.
+    // Try to fetch the prerendered element from cache, replace any placeholders
+    // and return the final markup.
     if (isset($elements['#cache']['keys'])) {
       $cached_element = $this->renderCache->get($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
-        // Only when we're not in a root (non-recursive) drupal_render() call,
-        // #post_render_cache callbacks must be executed, to prevent breaking
-        // the render cache in case of nested elements with #cache set.
+        // Only when we're in a root (non-recursive) Renderer::render() call,
+        // placeholders must be processed, to prevent breaking the render cache
+        // in case of nested elements with #cache set.
         if ($is_root_call) {
-          $this->processPostRenderCache($elements);
+          $this->replacePlaceholders($elements);
         }
         // Mark the element markup as safe. If we have cached children, we need
         // to mark them as safe too. The parent markup contains the child
@@ -211,6 +249,66 @@ class Renderer implements RendererInterface {
       $elements += $this->elementInfo->getInfo($elements['#type']);
     }
 
+    // First validate the usage of #lazy_builder; both of the next if-statements
+    // use it if available.
+    if (isset($elements['#lazy_builder'])) {
+      // @todo Convert to assertions once https://www.drupal.org/node/2408013
+      //   lands.
+      if (!is_array($elements['#lazy_builder'])) {
+        throw new \DomainException('The #lazy_builder property must have an array as a value.');
+      }
+      if (count($elements['#lazy_builder']) !== 2) {
+        throw new \DomainException('The #lazy_builder property must have an array as a value, containing two values: the callback, and the arguments for the callback.');
+      }
+      if (count($elements['#lazy_builder'][1]) !== count(array_filter($elements['#lazy_builder'][1], function($v) { return is_null($v) || is_scalar($v); }))) {
+        throw new \DomainException("A #lazy_builder callback's context may only contain scalar values or NULL.");
+      }
+      $children = Element::children($elements);
+      if ($children) {
+        throw new \DomainException(sprintf('When a #lazy_builder callback is specified, no children can exist; all children must be generated by the #lazy_builder callback. You specified the following children: %s.', implode(', ', $children)));
+      }
+      $supported_keys = [
+        '#lazy_builder',
+        '#cache',
+        '#create_placeholder',
+        // These keys are not actually supported, but they are added automatically
+        // by the Renderer, so we don't crash on them; them being missing when
+        // their #lazy_builder callback is invoked won't surprise the developer.
+        '#weight',
+        '#printed'
+      ];
+      $unsupported_keys = array_diff(array_keys($elements), $supported_keys);
+      if (count($unsupported_keys)) {
+        throw new \DomainException(sprintf('When a #lazy_builder callback is specified, no properties can exist; all properties must be generated by the #lazy_builder callback. You specified the following properties: %s.', implode(', ', $unsupported_keys)));
+      }
+    }
+    // If instructed to create a placeholder, and a #lazy_builder callback is
+    // present (without such a callback, it would be impossible to replace the
+    // placeholder), replace the current element with a placeholder.
+    if (isset($elements['#create_placeholder']) && $elements['#create_placeholder'] === TRUE) {
+      if (!isset($elements['#lazy_builder'])) {
+        throw new \LogicException('When #create_placeholder is set, a #lazy_builder callback must be present as well.');
+      }
+      $elements = $this->createPlaceholder($elements);
+    }
+    // Build the element if it is still empty.
+    if (isset($elements['#lazy_builder'])) {
+      $callable = $elements['#lazy_builder'][0];
+      $args = $elements['#lazy_builder'][1];
+      if (is_string($callable) && strpos($callable, '::') === FALSE) {
+        $callable = $this->controllerResolver->getControllerFromDefinition($callable);
+      }
+      $new_elements = call_user_func_array($callable, $args);
+      // Retain the original cacheability metadata, plus cache keys.
+      CacheableMetadata::createFromRenderArray($elements)
+        ->merge(CacheableMetadata::createFromRenderArray($new_elements))
+        ->applyTo($new_elements);
+      if (isset($elements['#cache']['keys'])) {
+        $new_elements['#cache']['keys'] = $elements['#cache']['keys'];
+      }
+      $elements = $new_elements;
+      $elements['#lazy_builder_built'] = TRUE;
+    }
     // Make any final changes to the element before it is rendered. This means
     // that the $element or the children can be altered or corrected before the
     // element is rendered into the final text.
@@ -227,7 +325,6 @@ class Renderer implements RendererInterface {
     $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
     $elements['#cache']['max-age'] = isset($elements['#cache']['max-age']) ? $elements['#cache']['max-age'] : Cache::PERMANENT;
     $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : array();
-    $elements['#post_render_cache'] = isset($elements['#post_render_cache']) ? $elements['#post_render_cache'] : array();
 
     // Allow #pre_render to abort rendering.
     if (!empty($elements['#printed'])) {
@@ -352,9 +449,9 @@ class Renderer implements RendererInterface {
     }
 
     // We store the resulting output in $elements['#markup'], to be consistent
-    // with how render cached output gets stored. This ensures that
-    // #post_render_cache callbacks get the same data to work with, no matter if
-    // #cache is disabled, #cache is enabled, there is a cache hit or miss.
+    // with how render cached output gets stored. This ensures that placeholder
+    // replacement logic gets the same data to work with, no matter if #cache is
+    // disabled, #cache is enabled, there is a cache hit or miss.
     $prefix = isset($elements['#prefix']) ? SafeMarkup::checkAdminXss($elements['#prefix']) : '';
     $suffix = isset($elements['#suffix']) ? SafeMarkup::checkAdminXss($elements['#suffix']) : '';
 
@@ -372,9 +469,9 @@ class Renderer implements RendererInterface {
       $this->renderCache->set($elements, $pre_bubbling_elements);
     }
 
-    // Only when we're in a root (non-recursive) drupal_render() call,
-    // #post_render_cache callbacks must be executed, to prevent breaking the
-    // render cache in case of nested elements with #cache set.
+    // Only when we're in a root (non-recursive) Renderer::render() call,
+    // placeholders must be processed, to prevent breaking the render cache in
+    // case of nested elements with #cache set.
     //
     // By running them here, we ensure that:
     // - they run when #cache is disabled,
@@ -382,21 +479,7 @@ class Renderer implements RendererInterface {
     // Only the case of a cache hit when #cache is enabled, is not handled here,
     // that is handled earlier in Renderer::render().
     if ($is_root_call) {
-      // We've already called ::updateStack() earlier, which updated both the
-      // element and current stack frame. However,
-      // Renderer::processPostRenderCache() can both change the element
-      // further and create and render new child elements, so provide a fresh
-      // stack frame to collect those additions, merge them back to the element,
-      // and then update the current frame to match the modified element state.
-      do {
-        static::$stack->push(new BubbleableMetadata());
-        $this->processPostRenderCache($elements);
-        $post_render_additions = static::$stack->pop();
-        $elements['#post_render_cache'] = NULL;
-        BubbleableMetadata::createFromRenderArray($elements)
-          ->merge($post_render_additions)
-          ->applyTo($elements);
-      } while (!empty($elements['#post_render_cache']));
+      $this->replacePlaceholders($elements);
       if (static::$stack->count() !== 1) {
         throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
       }
@@ -460,36 +543,79 @@ class Renderer implements RendererInterface {
   }
 
   /**
-   * Processes #post_render_cache callbacks.
+   * Replaces placeholders.
    *
-   * #post_render_cache callbacks may modify:
-   * - #markup: to replace placeholders
-   * - #attached: to add libraries or JavaScript settings
-   * - #post_render_cache: to execute additional #post_render_cache callbacks
+   * Placeholders may have:
+   * - #lazy_builder callback, to build a render array to be rendered into
+   *   markup that can replace the placeholder
+   * - #cache: to cache the result of the placeholder
    *
-   * Note that in either of these cases, #post_render_cache callbacks are
-   * implicitly idempotent: a placeholder that has been replaced can't be
-   * replaced again, and duplicate attachments are ignored.
+   * Also merges the bubbleable metadata resulting from the rendering of the
+   * contents of the placeholders. Hence $elements will be contain the entirety
+   * of bubbleable metadata.
    *
    * @param array &$elements
-   *   The structured array describing the data being rendered.
+   *   The structured array describing the data being rendered. Including the
+   *   bubbleable metadata associated with the markup that replaced the
+   *   placeholders.
+   *
+   * @returns bool
+   *   Whether placeholders were replaced.
    */
-  protected function processPostRenderCache(array &$elements) {
-    if (isset($elements['#post_render_cache'])) {
-
-      // Call all #post_render_cache callbacks, passing the provided context.
-      foreach (array_keys($elements['#post_render_cache']) as $callback) {
-        if (strpos($callback, '::') === FALSE) {
-          $callable = $this->controllerResolver->getControllerFromDefinition($callback);
-        }
-        else {
-          $callable = $callback;
-        }
-        foreach ($elements['#post_render_cache'][$callback] as $context) {
-          $elements = call_user_func_array($callable, array($elements, $context));
-        }
-      }
+  protected function replacePlaceholders(array &$elements) {
+    if (!isset($elements['#attached']['placeholders']) || empty($elements['#attached']['placeholders'])) {
+      return FALSE;
     }
+
+    foreach (array_keys($elements['#attached']['placeholders']) as $placeholder) {
+      $elements = $this->renderPlaceholder($placeholder, $elements);
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Turns this element into a placeholder.
+   *
+   * Placeholdering allows us to avoid "poor cacheability contamination": this
+   * maps the current render array to one that only has #markup and #attached,
+   * and #attached contains a placeholder with this element's prior cacheability
+   * metadata. In other words: this placeholder is perfectly cacheable, the
+   * placeholder replacement logic effectively cordons off poor cacheability.
+   *
+   * @param array $element
+   *   The render array to create a placeholder for.
+   *
+   * @return array
+   *   Render array with placeholder markup and the attached placeholder
+   *   replacement metadata.
+   */
+  protected function createPlaceholder(array $element) {
+    $placeholder_render_array = array_intersect_key($element, [
+      // Placeholders are replaced with markup by executing the associated
+      // #lazy_builder callback, which generates a render array, and which the
+      // Renderer will render and replace the placeholder with.
+      '#lazy_builder' => TRUE,
+      // The cacheability metadata for the placeholder. The rendered result of
+      // the placeholder may itself be cached, if [#cache][keys] are specified.
+      '#cache' => TRUE,
+    ]);
+
+    // Generate placeholder markup. Note that the only requirement is that this
+    // is unique markup that isn't easily guessable. The #lazy_builder callback
+    // and its arguments are put in the placeholder markup solely to simplify
+    // debugging.
+    $attributes = new Attribute();
+    $attributes['callback'] = $placeholder_render_array['#lazy_builder'][0];
+    $attributes['arguments'] = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
+    $attributes['token'] = hash('sha1', serialize($placeholder_render_array));
+    $placeholder_markup = '<drupal-render-placeholder' . $attributes . '></drupal-render-placeholder>';
+
+    // Build the placeholder element to return.
+    $placeholder_element = [];
+    $placeholder_element['#markup'] = $placeholder_markup;
+    $placeholder_element['#attached']['placeholders'][$placeholder_markup] = $placeholder_render_array;
+    return $placeholder_element;
   }
 
   /**
@@ -524,36 +650,24 @@ class Renderer implements RendererInterface {
       unset($a['drupalSettings']);
       unset($b['drupalSettings']);
     }
+    // Optimize merging of placeholders: no need for deep merging.
+    if (!empty($a['placeholders']) && !empty($b['placeholders'])) {
+      $placeholders = $a['placeholders'] + $b['placeholders'];
+      // No need for re-merging them.
+      unset($a['placeholders']);
+      unset($b['placeholders']);
+    }
     // Apply the normal merge.
     $a = array_merge_recursive($a, $b);
     if (isset($drupalSettings)) {
       // Save the custom merge for the drupalSettings.
       $a['drupalSettings'] = $drupalSettings;
     }
+    if (isset($placeholders)) {
+      // Save the custom merge for the placeholders.
+      $a['placeholders'] = $placeholders;
+    }
     return $a;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function generateCachePlaceholder($callback, array &$context) {
-    if (is_string($callback) && strpos($callback, '::') === FALSE) {
-      $callable = $this->controllerResolver->getControllerFromDefinition($callback);
-    }
-    else {
-      $callable = $callback;
-    }
-
-    if (!is_callable($callable)) {
-      throw new \InvalidArgumentException('$callable must be a callable function or of the form service_id:method.');
-    }
-
-    // Generate a unique token if one is not already provided.
-    $context += [
-      'token' => Crypt::randomBytesBase64(55),
-    ];
-
-    return '<drupal-render-cache-placeholder callback="' . $callback . '" token="' . $context['token'] . '"></drupal-render-cache-placeholder>';
   }
 
 }

@@ -20,22 +20,13 @@ class RendererRecursionTest extends RendererTestBase {
     $parent_markup = '<p>Rendered!</p>';
 
     $complex_child_template = [
-      '#markup' => $complex_child_markup,
-      '#attached' => [
-        'library' => [
-          'core/drupal',
-        ],
-      ],
       '#cache' => [
         'tags' => [
           'test:complex_child',
         ],
       ],
-      '#post_render_cache' => [
-        'Drupal\Tests\Core\Render\PostRenderCache::callback' => [
-          ['foo' => $this->getRandomGenerator()->string()],
-        ],
-      ],
+      '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', [$this->getRandomGenerator()->string()]],
+      '#create_placeholder' => TRUE,
     ];
 
     return [$complex_child_markup, $parent_markup, $complex_child_template];
@@ -86,17 +77,15 @@ class RendererRecursionTest extends RendererTestBase {
     $renderer = $this->renderer;
     $this->setUpRequest();
 
-    $complex_child = $complex_child_template;
-
-    $callable = function ($elements) use ($renderer, $complex_child, $complex_child_markup, $parent_markup) {
-      $elements['#markup'] = $renderer->render($complex_child);
-      $this->assertEquals($complex_child_markup, $elements['#markup'], 'Rendered complex child output as expected, without the #post_render_cache callback executed.');
-      return $elements;
+    $callable = function ($markup) use ($renderer, $complex_child_template) {
+      $this->assertTrue(strpos($markup, '<drupal-render-placeholder') === 0, 'Rendered complex child output as expected, without the placeholder replaced, i.e. with just the placeholder.');
+      return $markup;
     };
 
     $page = [
       'content' => [
-        '#pre_render' => [
+        'complex_child' => $complex_child_template,
+        '#post_render' => [
           $callable
         ],
         '#suffix' => $parent_markup,
@@ -104,9 +93,9 @@ class RendererRecursionTest extends RendererTestBase {
     ];
     $output = $renderer->renderRoot($page);
 
-    $this->assertEquals('<p>overridden</p>', $output, 'Rendered output as expected, with the #post_render_cache callback executed.');
+    $this->assertEquals('<p>This is a rendered placeholder!</p><p>Rendered!</p>', $output, 'Rendered output as expected, with the placeholder replaced.');
     $this->assertTrue(in_array('test:complex_child', $page['#cache']['tags']), 'Cache tag bubbling performed.');
-    $this->assertTrue(in_array('core/drupal', $page['#attached']['library']), 'Asset bubbling performed.');
+    $this->assertTrue(in_array('dynamic_animal', array_keys($page['#attached']['drupalSettings'])), 'Asset bubbling performed.');
   }
 
   /**
@@ -126,7 +115,7 @@ class RendererRecursionTest extends RendererTestBase {
 
     $callable = function ($elements) use ($renderer, $complex_child, $parent_markup) {
       $elements['#markup'] = $renderer->renderPlain($complex_child);
-      $this->assertEquals('<p>overridden</p>', $elements['#markup'], 'Rendered complex child output as expected, with the #post_render_cache callback executed.');
+      $this->assertEquals('<p>This is a rendered placeholder!</p>', $elements['#markup'], 'Rendered complex child output as expected, with the placeholder replaced.');
       return $elements;
     };
 
@@ -139,7 +128,7 @@ class RendererRecursionTest extends RendererTestBase {
       ]
     ];
     $output = $renderer->renderRoot($page);
-    $this->assertEquals('<p>overridden</p>' . $parent_markup, $output, 'Rendered output as expected, with the #post_render_cache callback executed.');
+    $this->assertEquals('<p>This is a rendered placeholder!</p>' . $parent_markup, $output, 'Rendered output as expected, with the placeholder replaced.');
     $this->assertFalse(in_array('test:complex_child', $page['#cache']['tags']), 'Cache tag bubbling not performed.');
     $this->assertTrue(empty($page['#attached']), 'Asset bubbling not performed.');
   }

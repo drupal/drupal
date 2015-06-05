@@ -46,8 +46,8 @@ use Drupal\Core\Form\FormStateInterface;
  * - declare cache tags that the resulting filtered text depends upon, so when
  *   either of those cache tags is invalidated, the render-cached HTML that the
  *   filtered text is part of should also be invalidated;
- * - declare #post_render_cache callbacks to apply uncacheable filtering, for
- *   example because it differs per user.
+ * - create placeholders to apply uncacheable filtering, for example because it
+ *   changes every few seconds.
  *
  * @see \Drupal\filter\Plugin\FilterInterface::process()
  *
@@ -169,7 +169,7 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    *
    * @return \Drupal\filter\FilterProcessResult
    *   The filtered text, wrapped in a FilterProcessResult object, and possibly
-   *   with associated assets, cache tags and #post_render_cache callbacks.
+   *   with associated assets, cacheability metadata and placeholders.
    *
    * @see \Drupal\filter\FilterProcessResult
    */

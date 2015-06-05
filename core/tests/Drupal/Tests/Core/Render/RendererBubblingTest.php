@@ -177,7 +177,6 @@ class RendererBubblingTest extends RendererTestBase {
           'tags' => [],
           'max-age' => Cache::PERMANENT,
         ],
-        '#post_render_cache' => [],
         '#markup' => 'parent',
       ],
     ];
@@ -201,7 +200,6 @@ class RendererBubblingTest extends RendererTestBase {
           'tags' => [],
           'max-age' => Cache::PERMANENT,
         ],
-        '#post_render_cache' => [],
         '#markup' => '',
       ],
     ];
@@ -243,7 +241,6 @@ class RendererBubblingTest extends RendererTestBase {
           'tags' => [],
           'max-age' => 3600,
         ],
-        '#post_render_cache' => [],
         '#markup' => 'parent',
       ],
     ];
@@ -291,7 +288,6 @@ class RendererBubblingTest extends RendererTestBase {
           'tags' => ['dee', 'fiddle', 'har', 'yar'],
           'max-age' => Cache::PERMANENT,
         ],
-        '#post_render_cache' => [],
         '#markup' => 'parent',
       ],
     ];
@@ -366,7 +362,6 @@ class RendererBubblingTest extends RendererTestBase {
         'tags' => ['a', 'b'],
         'max-age' => Cache::PERMANENT,
       ],
-      '#post_render_cache' => [],
       '#markup' => 'parent',
     ]);
 
@@ -391,7 +386,6 @@ class RendererBubblingTest extends RendererTestBase {
         'tags' => ['a', 'b', 'c'],
         'max-age' => Cache::PERMANENT,
       ],
-      '#post_render_cache' => [],
       '#markup' => 'parent',
     ]);
 
@@ -424,7 +418,6 @@ class RendererBubblingTest extends RendererTestBase {
         'tags' => ['a', 'b'],
         'max-age' => Cache::PERMANENT,
       ],
-      '#post_render_cache' => [],
       '#markup' => 'parent',
     ]);
 
@@ -450,7 +443,6 @@ class RendererBubblingTest extends RendererTestBase {
         'tags' => ['a', 'b', 'c', 'd'],
         'max-age' => Cache::PERMANENT,
       ],
-      '#post_render_cache' => [],
       '#markup' => 'parent',
     ]);
 
@@ -466,7 +458,6 @@ class RendererBubblingTest extends RendererTestBase {
         'tags' => ['a', 'b'],
         'max-age' => Cache::PERMANENT,
       ],
-      '#post_render_cache' => [],
       '#markup' => 'parent',
     ]);
 
@@ -482,7 +473,6 @@ class RendererBubblingTest extends RendererTestBase {
         'tags' => ['a', 'b', 'c'],
         'max-age' => Cache::PERMANENT,
       ],
-      '#post_render_cache' => [],
       '#markup' => 'parent',
     ]);
   }
@@ -517,20 +507,20 @@ class RendererBubblingTest extends RendererTestBase {
     // - … is not cached DOES get called.
     \Drupal::state()->set('bubbling_nested_pre_render_cached', FALSE);
     \Drupal::state()->set('bubbling_nested_pre_render_uncached', FALSE);
-    $this->memoryCache->set('cached_nested', ['#markup' => 'Cached nested!', '#attached' => [], '#cache' => ['contexts' => [], 'tags' => []], '#post_render_cache' => []]);
+    $this->memoryCache->set('cached_nested', ['#markup' => 'Cached nested!', '#attached' => [], '#cache' => ['contexts' => [], 'tags' => []]]);
 
     // Simulate the rendering of an entire response (i.e. a root call).
     $output = $this->renderer->renderRoot($test_element);
 
     // First, assert the render array is of the expected form.
-    $this->assertEquals('Cache context!Cache tag!Asset!Post-render cache!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
+    $this->assertEquals('Cache context!Cache tag!Asset!Placeholder!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
     $this->assertEquals(['child.cache_context'], $test_element['#cache']['contexts'], 'Expected cache contexts found.');
     $this->assertEquals(['child:cache_tag'], $test_element['#cache']['tags'], 'Expected cache tags found.');
     $expected_attached = [
       'drupalSettings' => ['foo' => 'bar'],
+      'placeholders' => [],
     ];
-    $this->assertEquals($expected_attached, $test_element['#attached'], 'Expected assets found.');
-    $this->assertEquals([], $test_element['#post_render_cache'], '#post_render_cache property is empty after rendering');
+    $this->assertEquals($expected_attached, $test_element['#attached'], 'Expected attachments found.');
 
     // Second, assert that #pre_render callbacks are only executed if they don't
     // have a render cache hit (and hence a #pre_render callback for a render
@@ -591,12 +581,6 @@ class BubblingTest {
    * #pre_render callback for testBubblingWithPrerender().
    */
   public static function bubblingPreRender($elements) {
-    $callback = __CLASS__ . '::bubblingPostRenderCache';
-    $context = [
-      'foo' => 'bar',
-      'baz' => 'qux',
-    ];
-    $placeholder = \Drupal::service('renderer')->generateCachePlaceholder($callback, $context);
     $elements += [
       'child_cache_context' => [
         '#cache' => [
@@ -616,13 +600,9 @@ class BubblingTest {
         ],
         '#markup' => 'Asset!',
       ],
-      'child_post_render_cache' => [
-        '#post_render_cache' => [
-          $callback => [
-            $context,
-          ],
-        ],
-        '#markup' => $placeholder,
+      'child_placeholder' => [
+        '#create_placeholder' => TRUE,
+        '#lazy_builder' => [__CLASS__ . '::bubblingPlaceholder', ['bar', 'qux']],
       ],
       'child_nested_pre_render_uncached' => [
         '#cache' => ['keys' => ['uncached_nested']],
@@ -654,13 +634,12 @@ class BubblingTest {
   }
 
   /**
-   * #post_render_cache callback for testBubblingWithPrerender().
+   * #lazy_builder callback for testBubblingWithPrerender().
    */
-  public static function bubblingPostRenderCache(array $element, array $context) {
-    $callback = __CLASS__ . '::bubblingPostRenderCache';
-    $placeholder = \Drupal::service('renderer')->generateCachePlaceholder($callback, $context);
-    $element['#markup'] = str_replace($placeholder, 'Post-render cache!' . $context['foo'] . $context['baz'], $element['#markup']);
-    return $element;
+  public static function bubblingPlaceholder($foo, $baz) {
+    return [
+      '#markup' => 'Placeholder!' . $foo . $baz,
+    ];
   }
 
   /**

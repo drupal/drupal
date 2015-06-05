@@ -242,7 +242,6 @@ abstract class CachePluginBase extends PluginBase {
             $this->view->display_handler->output = $this->storage;
             $this->view->element['#attached'] = &$this->view->display_handler->output['#attached'];
             $this->view->element['#cache']['tags'] = &$this->view->display_handler->output['#cache']['tags'];
-            $this->view->element['#post_render_cache'] = &$this->view->display_handler->output['#post_render_cache'];
             return TRUE;
           }
         }

@@ -1192,33 +1192,6 @@ function show(&$element) {
 }
 
 /**
- * Generates a render cache placeholder.
- *
- * This can be used to generate placeholders, and hence should also be used by
- * #post_render_cache callbacks that want to replace the placeholder with the
- * final markup.
- *
- * @param string $callback
- *   The #post_render_cache callback that will replace the placeholder with its
- *   eventual markup.
- * @param array $context
- *   An array providing context for the #post_render_cache callback. This array
- *   will be altered to provide a 'token' key/value pair, if not already
- *   provided, to uniquely identify the generated placeholder.
- *
- * @return string
- *   The generated placeholder HTML.
- *
- * @throws \Exception
- *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal::service('renderer')->generateCachePlaceholder().
- */
-function drupal_render_cache_generate_placeholder($callback, array &$context) {
-  return \Drupal::service('renderer')->generateCachePlaceholder($callback, $context);
-}
-
-/**
  * Retrieves the default properties for the defined element type.
  *
  * @param $type

@@ -15,10 +15,10 @@ services:
     tags:
       - { name: backend_overridable }
 
-  comment.post_render_cache:
-    class: Drupal\comment\CommentPostRenderCache
+  comment.lazy_builders:
+    class: Drupal\comment\CommentLazyBuilders
     arguments: ['@entity.manager', '@entity.form_builder', '@current_user', '@comment.manager', '@module_handler', '@renderer']
 
   comment.link_builder:
     class: Drupal\comment\CommentLinkBuilder
-    arguments: ['@current_user', '@comment.manager', '@module_handler', '@string_translation']
+    arguments: ['@current_user', '@comment.manager', '@module_handler', '@string_translation', '@entity.manager']

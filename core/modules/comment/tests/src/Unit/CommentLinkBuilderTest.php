@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\comment\Unit\CommentLinkBuilderTest.
  */
 
-namespace Drupal\Tests\comment\Unit;
+namespace Drupal\Tests\comment\Unit {
 
 use Drupal\comment\CommentLinkBuilder;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -33,6 +33,13 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $stringTranslation;
+
+  /**
+   * The entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
 
   /**
    * Module handler mock.
@@ -66,9 +73,10 @@ class CommentLinkBuilderTest extends UnitTestCase {
   protected function setUp() {
     $this->commentManager = $this->getMock('\Drupal\comment\CommentManagerInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
+    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
     $this->currentUser = $this->getMock('\Drupal\Core\Session\AccountProxyInterface');
-    $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation);
+    $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation, $this->entityManager);
     $this->commentManager->expects($this->any())
       ->method('getFields')
       ->with('node')
@@ -326,4 +334,14 @@ class CommentLinkBuilderTest extends UnitTestCase {
     return $node;
   }
 
+}
+
+}
+
+namespace {
+  if (!function_exists('history_read')) {
+    function history_read() {
+      return 0;
+    }
+  }
 }

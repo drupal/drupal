@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Url;
 
 /**
  * Tests the 'new' indicator posted on comments.
@@ -109,6 +110,26 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // perform an HTTP request to render the "new comments" node link.
     $this->assertIdentical(1, count($this->xpath('//*[@data-history-node-last-comment-timestamp="' . $comment->getChangedTime() .  '"]')), 'data-history-node-last-comment-timestamp attribute is set to the correct value.');
     $this->assertIdentical(1, count($this->xpath('//*[@data-history-node-field-name="comment"]')), 'data-history-node-field-name attribute is set to the correct value.');
+    // The data will be pre-seeded on this particular page in drupalSettings, to
+    // avoid the need for the client to make a separate request to the server.
+    $settings = $this->getDrupalSettings();
+    $this->assertEqual($settings['history'], ['lastReadTimestamps' => [1 => 0]]);
+    $this->assertEqual($settings['comment'], [
+      'newCommentsLinks' => [
+        'node' => [
+          'comment' => [
+            1 => [
+              'new_comment_count' => 1,
+              'first_new_comment_link' => Url::fromRoute('entity.node.canonical', ['node' => 1])->setOptions([
+                'fragment' => 'new',
+              ])->toString(),
+            ],
+          ],
+        ],
+      ],
+    ]);
+    // Pretend the data was not present in drupalSettings, i.e. test the
+    // separate request to the server.
     $response = $this->renderNewCommentsNodeLinks(array($this->node->id()));
     $this->assertResponse(200);
     $json = Json::decode($response);

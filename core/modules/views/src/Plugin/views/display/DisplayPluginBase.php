@@ -2133,7 +2133,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       // be available on the view.
       '#attached' => &$this->view->element['#attached'],
       '#cache' => &$this->view->element['#cache'],
-      '#post_render_cache' => &$this->view->element['#post_render_cache'],
     );
 
     if (!isset($element['#cache'])) {

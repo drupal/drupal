@@ -176,21 +176,16 @@ function history_user_delete($account) {
 }
 
 /**
- * #post_render_cache callback; attaches the last read timestamp for a node.
+ * #lazy_builder callback; attaches the last read timestamp for a node.
  *
- * @param array $element
- *  A render array with the following keys:
- *    - #markup
- *    - #attached
- * @param array $context
- *  An array with the following keys:
- *    - node_id: the node ID for which to attach the last read timestamp.
+ * @param int $node_id
+ *   The node ID for which to attach the last read timestamp.
  *
  * @return array $element
- *   The updated $element.
+ *   A renderable array containing the last read timestamp.
  */
-function history_attach_timestamp(array $element, array $context) {
-  $node_id = $context['node_id'];
+function history_attach_timestamp($node_id) {
+  $element = [];
   $element['#attached']['drupalSettings']['history']['lastReadTimestamps'][$node_id] = (int) history_read($node_id);
   return $element;
 }

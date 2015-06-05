@@ -28,7 +28,6 @@ class RendererTest extends RendererTestBase {
       'max-age' => Cache::PERMANENT,
     ],
     '#attached' => [],
-    '#post_render_cache' => [],
     '#children' => '',
   ];
 

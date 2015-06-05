@@ -34,21 +34,14 @@ class NodeViewBuilder extends EntityViewBuilder {
       $display = $displays[$bundle];
 
       if ($display->getComponent('links')) {
-        $callback = get_called_class() . '::renderLinks';
-        $context = array(
-          'node_entity_id' => $entity->id(),
-          'view_mode' => $view_mode,
-          'langcode' => $langcode,
-          'in_preview' => !empty($entity->in_preview),
-        );
-        $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
         $build[$id]['links'] = array(
-          '#post_render_cache' => array(
-            $callback => array(
-              $context,
-            ),
-          ),
-          '#markup' => $placeholder,
+          '#lazy_builder' => [get_called_class() . '::renderLinks', [
+            $entity->id(),
+            $view_mode,
+            $langcode,
+            !empty($entity->in_preview),
+          ]],
+          '#create_placeholder' => TRUE,
         );
       }
 
@@ -80,47 +73,39 @@ class NodeViewBuilder extends EntityViewBuilder {
   }
 
   /**
-   * #post_render_cache callback; replaces the placeholder with node links.
+   * #lazy_builder callback; builds a node's links.
    *
-   * Renders the links on a node.
-   *
-   * @param array $element
-   *   The renderable array that contains the to be replaced placeholder.
-   * @param array $context
-   *   An array with the following keys:
-   *   - node_entity_id: a node entity ID
-   *   - view_mode: the view mode in which the node entity is being viewed
-   *   - langcode: in which language the node entity is being viewed
-   *   - in_preview: whether the node is currently being previewed
+   * @param string $node_entity_id
+   *   The node entity ID.
+   * @param string $view_mode
+   *   The view mode in which the node entity is being viewed.
+   * @param string $langcode
+   *   The language in which the node entity is being viewed.
+   * @param bool $is_in_preview
+   *   Whether the node is currently being previewed.
    *
    * @return array
    *   A renderable array representing the node links.
    */
-  public static function renderLinks(array $element, array $context) {
-    $callback = get_called_class() . '::renderLinks';
-    $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
-
+  public static function renderLinks($node_entity_id, $view_mode, $langcode, $is_in_preview) {
     $links = array(
       '#theme' => 'links__node',
       '#pre_render' => array('drupal_pre_render_links'),
       '#attributes' => array('class' => array('links', 'inline')),
     );
 
-    if (!$context['in_preview']) {
-      $entity = Node::load($context['node_entity_id'])->getTranslation($context['langcode']);
-      $links['node'] = static::buildLinks($entity, $context['view_mode']);
+    if (!$is_in_preview) {
+      $entity = Node::load($node_entity_id)->getTranslation($langcode);
+      $links['node'] = static::buildLinks($entity, $view_mode);
 
       // Allow other modules to alter the node links.
       $hook_context = array(
-        'view_mode' => $context['view_mode'],
-        'langcode' => $context['langcode'],
+        'view_mode' => $view_mode,
+        'langcode' => $langcode,
       );
       \Drupal::moduleHandler()->alter('node_links', $links, $entity, $hook_context);
     }
-    $markup = drupal_render($links);
-    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
-
-    return $element;
+    return $links;
   }
 
   /**

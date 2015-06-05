@@ -906,8 +906,8 @@ function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $asset
  * depends on the elements of other modules, use hook_page_attachments_alter()
  * instead, which runs after this hook.
  *
- * If you try to add anything but #attached and #post_render_cache to the array
- * an exception is thrown.
+ * If you try to add anything but #attached and #cache to the array, an
+ * exception is thrown.
  *
  * @param array &$attachments
  *   An array that you can add attachments to.
@@ -931,8 +931,8 @@ function hook_page_attachments(array &$attachments) {
  * add attachments to the page that depend on another module's attachments (this
  * hook runs after hook_page_attachments().
  *
- * If you try to add anything but #attached and #post_render_cache to the array
- * an exception is thrown.
+ * If you try to add anything but #attached and #cache to the array, an
+ * exception is thrown.
  *
  * @param array &$attachments
  *   Array of all attachments provided by hook_page_attachments() implementations.

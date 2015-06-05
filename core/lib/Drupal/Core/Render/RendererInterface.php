@@ -15,8 +15,7 @@ interface RendererInterface {
   /**
    * Renders final HTML given a structured array tree.
    *
-   * Calls ::render() in such a way that #post_render_cache callbacks are
-   * applied.
+   * Calls ::render() in such a way that placeholders are replaced.
    *
    * Should therefore only be used in occasions where the final rendering is
    * happening, just before sending a Response:
@@ -36,8 +35,7 @@ interface RendererInterface {
   /**
    * Renders final HTML in situations where no assets are needed.
    *
-   * Calls ::render() in such a way that #post_render_cache callbacks are
-   * applied.
+   * Calls ::render() in such a way that placeholders are replaced.
    *
    * Useful for e.g. rendering the values of tokens or e-mails, which need a
    * render array being turned into a string, but don't need any of the
@@ -88,8 +86,8 @@ interface RendererInterface {
    *   retrieval.
    * - Cache tags, so that cached renderings are invalidated when site content
    *   or configuration that can affect that rendering changes.
-   * - #post_render_cache callbacks, for executing code to handle dynamic
-   *   requirements that cannot be cached.
+   * - Placeholders, with associated self-contained placeholder render arrays,
+   *   for executing code to handle dynamic requirements that cannot be cached.
    * A stack of \Drupal\Core\Render\BubbleableMetadata objects can be used to
    * perform this bubbling.
    *
@@ -148,15 +146,31 @@ interface RendererInterface {
    *     process render arrays and call the element info service before passing
    *     the array to Renderer::render(), such as form_builder() in the Form
    *     API.
-   *   - If this element has an array of #pre_render functions defined, they are
-   *     called sequentially to modify the element before rendering. After all
-   *     the #pre_render functions have been called, #printed is checked a
-   *     second time in case a #pre_render function flags the element as
-   *     printed. If #printed is set, we return early and hence no rendering
-   *     work is left to be done, similarly to a render cache hit. Once again,
-   *     the empty (and topmost) frame that was just pushed onto the stack is
-   *     updated with all bubbleable rendering metadata from the element whose
-   *     #printed = TRUE.
+   *   - If this element has #create_placeholder set to TRUE, and it has a
+   *     #lazy_builder callback, then the element is replaced with another
+   *     element that has only two properties: #markup and #attached. #markup
+   *     will contain placeholder markup, and #attached contains the placeholder
+   *     metadata, that will be used for replacing this placeholder. That
+   *     metadata contains a very compact render array (containing only
+   *     #lazy_builder and #cache) that will be rendered to replace the
+   *     placeholder with its final markup. This means that when the
+   *     #lazy_builder callback is called, it received a render array to add to
+   *     that only contains #cache.
+   *   - If this element has a #lazy_builder or an array of #pre_render
+   *     functions defined, they are called sequentially to modify the element
+   *     before rendering. #lazy_builder is preferred, since it allows for
+   *     placeholdering (see previous step), but #pre_render is still supported.
+   *     Both have their use case: #lazy_builder is for building a render array,
+   *     #pre_render is for decorating an existing render array.
+   *     After the #lazy_builder function is called, #lazy_builder is removed,
+   *     and #built is set to TRUE.
+   *     After the #lazy_builder and all #pre_render functions have been called,
+   *     #printed is checked a second time in case a #lazy_builder or
+   *     #pre_render function flags the element as printed. If #printed is set,
+   *     we return early and hence no rendering work is left to be done,
+   *     similarly to a render cache hit. Once again, the empty (and topmost)
+   *     frame that was just pushed onto the stack is updated with all
+   *     bubbleable rendering metadata from the element whose #printed = TRUE.
    *     Then, this stack frame is bubbled: the two topmost frames are popped
    *     from the stack, they are merged, and the result is pushed back onto the
    *     stack.
@@ -253,25 +267,14 @@ interface RendererInterface {
    *     assumes only children's individual markup is relevant and ignores the
    *     parent markup. This approach is normally not needed and should be
    *     adopted only when dealing with very advanced use cases.
-   *   - If this element has an array of #post_render_cache functions defined,
+   *   - If this element has attached placeholders ([#attached][placeholders]),
    *     or any of its children has (which we would know thanks to the stack
-   *     having been updated just before the render caching step), they are
-   *     called sequentially to replace placeholders in the final #markup and
-   *     extend #attached. Placeholders must contain a unique token, to
-   *     guarantee that e.g. samples of placeholders are not replaced also. But,
-   *     since #post_render_cache callbacks add attach additional assets, the
-   *     correct bubbling of those must once again be taken into account. This
-   *     final stage of rendering should be considered as if it were the parent
-   *     of the current element, because it takes that as its input, and then
-   *     alters its #markup. Hence, just before calling the #post_render_cache
-   *     callbacks, a new empty frame is pushed onto the stack, where all assets
-   *     #attached during the execution of those callbacks will end up in. Then,
-   *     after the execution of those callbacks, we merge that back into the
-   *     element. Note that these callbacks run always: when hitting the render
-   *     cache, when missing, or when render caching is not used at all. This is
-   *     done to allow any Drupal module to customize other render arrays
-   *     without breaking the render cache if it is enabled, and to not require
-   *     it to use other logic when render caching is disabled.
+   *     having been updated just before the render caching step), its
+   *     placeholder element containing a #lazy_builder function is rendered in
+   *     isolation. The resulting markup is used to replace the placeholder, and
+   *     any bubbleable metadata is merged.
+   *     Placeholders must be unique, to guarantee that e.g. samples of
+   *     placeholders are not replaced as well.
    *   - Just before finishing the rendering of this element, this element's
    *     stack frame (the topmost one) is bubbled: the two topmost frames are
    *     popped from the stack, they are merged and the result is pushed back
@@ -389,28 +392,5 @@ interface RendererInterface {
    *   The merged attachments array.
    */
   public function mergeAttachments(array $a, array $b);
-
-  /**
-   * Generates a render cache placeholder.
-   *
-   * This can be used to generate placeholders, and hence should also be used by
-   * #post_render_cache callbacks that want to replace the placeholder with the
-   * final markup.
-   *
-   * @param string $callback
-   *   The #post_render_cache callback that will replace the placeholder with its
-   *   eventual markup.
-   * @param array $context
-   *   An array providing context for the #post_render_cache callback. This array
-   *   will be altered to provide a 'token' key/value pair, if not already
-   *   provided, to uniquely identify the generated placeholder.
-   *
-   * @return string
-   *   The generated placeholder HTML.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown when no valid callable got passed in.
-   */
-  public function generateCachePlaceholder($callback, array &$context);
 
 }

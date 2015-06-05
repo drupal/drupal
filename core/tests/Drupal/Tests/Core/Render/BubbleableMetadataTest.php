@@ -32,7 +32,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
    * @see \Drupal\system\Tests\Common\MergeAttachmentsTest
-   * @see \Drupal\Tests\Core\Render\RendererPostRenderCacheTest
+   * @see \Drupal\Tests\Core\Render\RendererPlaceholdersTest
    */
   public function testMerge(BubbleableMetadata $a, CacheableMetadata $b, BubbleableMetadata $expected) {
     // Verify that if the second operand is a CacheableMetadata object, not a
@@ -81,9 +81,9 @@ class BubbleableMetadataTest extends UnitTestCase {
       // Cache max-ages.
       [(new BubbleableMetadata())->setCacheMaxAge(60), (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT), (new BubbleableMetadata())->setCacheMaxAge(60)],
       // Assets.
-      [(new BubbleableMetadata())->setAssets(['library' => ['core/foo']]), (new BubbleableMetadata())->setAssets(['library' => ['core/bar']]), (new BubbleableMetadata())->setAssets(['library' => ['core/foo', 'core/bar']])],
-      // #post_render_cache callbacks.
-      [(new BubbleableMetadata())->setPostRenderCacheCallbacks(['callback' => [['token' => 'A']]]), (new BubbleableMetadata())->setPostRenderCacheCallbacks(['callback' => [['token' => 'B']]]), (new BubbleableMetadata())->setPostRenderCacheCallbacks(['callback' => [['token' => 'A'], ['token' => 'B']]])],
+      [(new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]), (new BubbleableMetadata())->setAttachments(['library' => ['core/bar']]), (new BubbleableMetadata())->setAttachments(['library' => ['core/foo', 'core/bar']])],
+      // Placeholders.
+      [(new BubbleableMetadata())->setAttachments(['placeholders' => ['<my-placeholder>' => ['callback', ['A']]]]), (new BubbleableMetadata())->setAttachments(['placeholders' => ['<my-placeholder>' => ['callback', ['A']]]]), (new BubbleableMetadata())->setAttachments(['placeholders' => ['<my-placeholder>' => ['callback', ['A']]]])],
 
       // Second operand is a CacheableMetadata object.
       // All empty.
@@ -118,7 +118,7 @@ class BubbleableMetadataTest extends UnitTestCase {
     $nonempty_metadata = new BubbleableMetadata();
     $nonempty_metadata->setCacheContexts(['qux'])
       ->setCacheTags(['foo:bar'])
-      ->setAssets(['settings' => ['foo' => 'bar']]);
+      ->setAttachments(['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
@@ -132,7 +132,6 @@ class BubbleableMetadataTest extends UnitTestCase {
           'core/jquery',
         ],
       ],
-      '#post_render_cache' => [],
     ];
 
 
@@ -143,7 +142,6 @@ class BubbleableMetadataTest extends UnitTestCase {
         'max-age' => Cache::PERMANENT,
       ],
       '#attached' => [],
-      '#post_render_cache' => [],
     ];
     $data[] = [$empty_metadata, $empty_render_array, $expected_when_empty_metadata];
     $data[] = [$empty_metadata, $nonempty_render_array, $expected_when_empty_metadata];
@@ -158,7 +156,6 @@ class BubbleableMetadataTest extends UnitTestCase {
           'foo' => 'bar',
         ],
       ],
-      '#post_render_cache' => [],
     ];
     $data[] = [$nonempty_metadata, $empty_render_array, $expected_when_nonempty_metadata];
     $data[] = [$nonempty_metadata, $nonempty_render_array, $expected_when_nonempty_metadata];
@@ -186,7 +183,7 @@ class BubbleableMetadataTest extends UnitTestCase {
     $nonempty_metadata = new BubbleableMetadata();
     $nonempty_metadata->setCacheContexts(['qux'])
       ->setCacheTags(['foo:bar'])
-      ->setAssets(['settings' => ['foo' => 'bar']]);
+      ->setAttachments(['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
@@ -200,7 +197,6 @@ class BubbleableMetadataTest extends UnitTestCase {
           'foo' => 'bar',
         ],
       ],
-      '#post_render_cache' => [],
     ];
 
 

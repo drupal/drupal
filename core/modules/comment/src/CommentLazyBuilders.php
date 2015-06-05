@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\CommentPostRenderCache.
+ * Contains \Drupal\comment\CommentLazyBuilders.
  */
 
 namespace Drupal\comment;
@@ -17,9 +17,9 @@ use Drupal\Core\Url;
 use Drupal\Core\Render\Renderer;
 
 /**
- * Defines a service for comment post render cache callbacks.
+ * Defines a service for comment #lazy_builder callbacks.
  */
-class CommentPostRenderCache {
+class CommentLazyBuilders {
 
   /**
    * The entity manager service.
@@ -64,7 +64,7 @@ class CommentPostRenderCache {
   protected $renderer;
 
   /**
-   * Constructs a new CommentPostRenderCache object.
+   * Constructs a new CommentLazyBuilders object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
@@ -89,87 +89,70 @@ class CommentPostRenderCache {
   }
 
   /**
-   * #post_render_cache callback; replaces placeholder with comment form.
+   * #lazy_builder callback; builds the comment form.
    *
-   * @param array $element
-   *   The renderable array that contains the to be replaced placeholder.
-   * @param array $context
-   *   An array with the following keys:
-   *   - entity_type: an entity type
-   *   - entity_id: an entity ID
-   *   - field_name: a comment field name
-   *   - comment_type: the comment type
+   * @param string $commented_entity_type_id
+   *   The commented entity type ID.
+   * @param string $commented_entity_id
+   *   The commented entity ID.
+   * @param string $field_name
+   *   The comment field name.
+   * @param string $comment_type_id
+   *   The comment type ID.
    *
    * @return array
    *   A renderable array containing the comment form.
    */
-  public function renderForm(array $element, array $context) {
+  public function renderForm($commented_entity_type_id, $commented_entity_id, $field_name, $comment_type_id) {
     $values = array(
-      'entity_type' => $context['entity_type'],
-      'entity_id' => $context['entity_id'],
-      'field_name' => $context['field_name'],
-      'comment_type' => $context['comment_type'],
+      'entity_type' => $commented_entity_type_id,
+      'entity_id' => $commented_entity_id,
+      'field_name' => $field_name,
+      'comment_type' => $comment_type_id,
       'pid' => NULL,
     );
     $comment = $this->entityManager->getStorage('comment')->create($values);
-    $form = $this->entityFormBuilder->getForm($comment);
-    $markup = $this->renderer->render($form);
-
-    $callback = 'comment.post_render_cache:renderForm';
-    $placeholder = $this->generatePlaceholder($callback, $context);
-    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
-    $element = $this->renderer->mergeBubbleableMetadata($element, $form);
-
-    return $element;
+    return $this->entityFormBuilder->getForm($comment);
   }
 
   /**
-   * #post_render_cache callback; replaces the placeholder with comment links.
+   * #lazy_builder callback; builds a comment's links.
    *
-   * Renders the links on a comment.
-   *
-   * @param array $element
-   *   The renderable array that contains the to be replaced placeholder.
-   * @param array $context
-   *   An array with the following keys:
-   *   - comment_entity_id: a comment entity ID
-   *   - view_mode: the view mode in which the comment entity is being viewed
-   *   - langcode: in which language the comment entity is being viewed
-   *   - commented_entity_type: the entity type to which the comment is attached
-   *   - commented_entity_id: the entity ID to which the comment is attached
-   *   - in_preview: whether the comment is currently being previewed
+   * @param string $comment_entity_id
+   *   The comment entity ID.
+   * @param string $view_mode
+   *   The view mode in which the comment entity is being viewed.
+   * @param string $langcode
+   *   The language in which the comment entity is being viewed.
+   * @param bool $is_in_preview
+   *  Whether the comment is currently being previewed.
    *
    * @return array
    *   A renderable array representing the comment links.
    */
-  public function renderLinks(array $element, array $context) {
-    $callback = 'comment.post_render_cache:renderLinks';
-    $placeholder = $this->generatePlaceholder($callback, $context);
+  public function renderLinks($comment_entity_id, $view_mode, $langcode, $is_in_preview) {
     $links = array(
       '#theme' => 'links__comment',
       '#pre_render' => array('drupal_pre_render_links'),
       '#attributes' => array('class' => array('links', 'inline')),
     );
 
-    if (!$context['in_preview']) {
+    if (!$is_in_preview) {
       /** @var \Drupal\comment\CommentInterface $entity */
-      $entity = $this->entityManager->getStorage('comment')->load($context['comment_entity_id']);
+      $entity = $this->entityManager->getStorage('comment')->load($comment_entity_id);
       $commented_entity = $entity->getCommentedEntity();
 
       $links['comment'] = $this->buildLinks($entity, $commented_entity);
 
       // Allow other modules to alter the comment links.
       $hook_context = array(
-        'view_mode' => $context['view_mode'],
-        'langcode' => $context['langcode'],
+        'view_mode' => $view_mode,
+        'langcode' => $langcode,
         'commented_entity' => $commented_entity,
       );
       $this->moduleHandler->alter('comment_links', $links, $entity, $hook_context);
     }
-    $markup = $this->renderer->render($links);
-    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
-
-    return $element;
+    return $links;
   }
 
   /**
@@ -237,71 +220,6 @@ class CommentPostRenderCache {
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
-  }
-
-  /**
-   * #post_render_cache callback; attaches "X new comments" link metadata.
-   *
-   * @param array $element
-   *   A render array with the following keys:
-   *   - #markup
-   *   - #attached
-   * @param array $context
-   *   An array with the following keys:
-   *   - entity_type: an entity type
-   *   - entity_id: an entity ID
-   *   - field_name: a comment field name
-   *
-   * @return array
-   *   The updated $element.
-   */
-  public function attachNewCommentsLinkMetadata(array $element, array $context) {
-    $entity = $this->entityManager
-      ->getStorage($context['entity_type'])
-      ->load($context['entity_id']);
-    // Build "X new comments" link metadata.
-    $new = $this->commentManager
-      ->getCountNewComments($entity);
-    // Early-return if there are zero new comments for the current user.
-    if ($new === 0) {
-      return $element;
-    }
-
-    $field_name = $context['field_name'];
-    $page_number = $this->entityManager
-      ->getStorage('comment')
-      ->getNewCommentPageNumber($entity->{$field_name}->comment_count, $new, $entity);
-    $query = $page_number ? array('page' => $page_number) : NULL;
-
-    // Attach metadata.
-    $element['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array(
-        'comment' => array(
-          'newCommentsLinks' => array(
-            $context['entity_type'] => array(
-              $context['field_name'] => array(
-                $context['entity_id'] => array(
-                  'new_comment_count' => (int) $new,
-                  'first_new_comment_link' => $entity->url('canonical', [
-                    'query' => $query,
-                    'fragment' => 'new',
-                  ]),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    return $element;
-  }
-
-  /**
-   * Wraps drupal_render_cache_generate_placeholder().
-   */
-  protected function generatePlaceholder($callback, $context) {
-    return drupal_render_cache_generate_placeholder($callback, $context);
   }
 
   /**

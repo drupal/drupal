@@ -25,13 +25,6 @@ class BubbleableMetadata extends CacheableMetadata {
   protected $attached = [];
 
   /**
-   * #post_render_cache metadata.
-   *
-   * @var array[]
-   */
-  protected $postRenderCache = [];
-
-  /**
    * Merges the values of another bubbleable metadata object with this one.
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $other
@@ -44,7 +37,6 @@ class BubbleableMetadata extends CacheableMetadata {
     $result = parent::merge($other);
     if ($other instanceof BubbleableMetadata) {
       $result->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $other->attached);
-      $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
     }
     return $result;
   }
@@ -58,7 +50,6 @@ class BubbleableMetadata extends CacheableMetadata {
   public function applyTo(array &$build) {
     parent::applyTo($build);
     $build['#attached'] = $this->attached;
-    $build['#post_render_cache'] = $this->postRenderCache;
   }
 
   /**
@@ -72,14 +63,51 @@ class BubbleableMetadata extends CacheableMetadata {
   public static function createFromRenderArray(array $build) {
     $meta = parent::createFromRenderArray($build);
     $meta->attached = (isset($build['#attached'])) ? $build['#attached'] : [];
-    $meta->postRenderCache = (isset($build['#post_render_cache'])) ? $build['#post_render_cache'] : [];
     return $meta;
+  }
+
+  /**
+   * Gets attachments.
+   *
+   * @return array
+   *   The attachments
+   */
+  public function getAttachments() {
+    return $this->attached;
+  }
+
+  /**
+   * Adds attachments.
+   *
+   * @param array $attachments
+   *   The attachments to add.
+   *
+   * @return $this
+   */
+  public function addAttachments(array $attachments) {
+    $this->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $attachments);
+    return $this;
+  }
+
+  /**
+   * Sets attachments.
+   *
+   * @param array $attachments
+   *   The attachments to set.
+   *
+   * @return $this
+   */
+  public function setAttachments(array $attachments) {
+    $this->attached = $attachments;
+    return $this;
   }
 
   /**
    * Gets assets.
    *
    * @return array
+   *
+   * @deprecated Use ::getAttachments() instead. To be removed before Drupal 8.0.0.
    */
   public function getAssets() {
     return $this->attached;
@@ -92,10 +120,11 @@ class BubbleableMetadata extends CacheableMetadata {
    *   The associated assets to be attached.
    *
    * @return $this
+   *
+   * @deprecated Use ::addAttachments() instead. To be removed before Drupal 8.0.0.
    */
   public function addAssets(array $assets) {
-    $this->attached = NestedArray::mergeDeep($this->attached, $assets);
-    return $this;
+    return $this->addAttachments($assets);
   }
 
   /**
@@ -105,49 +134,11 @@ class BubbleableMetadata extends CacheableMetadata {
    *   The associated assets to be attached.
    *
    * @return $this
+   *
+   * @deprecated Use ::setAttachments() instead. To be removed before Drupal 8.0.0.
    */
   public function setAssets(array $assets) {
     $this->attached = $assets;
-    return $this;
-  }
-
-  /**
-   * Gets #post_render_cache callbacks.
-   *
-   * @return array
-   */
-  public function getPostRenderCacheCallbacks() {
-    return $this->postRenderCache;
-  }
-
-  /**
-   * Adds #post_render_cache callbacks.
-   *
-   * @param string $callback
-   *   The #post_render_cache callback that will replace the placeholder with
-   *   its eventual markup.
-   * @param array $context
-   *   An array providing context for the #post_render_cache callback.
-   *
-   * @see \Drupal\Core\Render\RendererInterface::generateCachePlaceholder()
-   *
-   * @return $this
-   */
-  public function addPostRenderCacheCallback($callback, array $context) {
-    $this->postRenderCache[$callback][] = $context;
-    return $this;
-  }
-
-  /**
-   * Sets #post_render_cache callbacks.
-   *
-   * @param array $post_render_cache_callbacks
-   *   The associated #post_render_cache callbacks to be executed.
-   *
-   * @return $this
-   */
-  public function setPostRenderCacheCallbacks(array $post_render_cache_callbacks) {
-    $this->postRenderCache = $post_render_cache_callbacks;
     return $this;
   }
 

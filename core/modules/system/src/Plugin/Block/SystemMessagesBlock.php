@@ -59,8 +59,8 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
    */
   public function getCacheMaxAge() {
     // The messages are session-specific and hence aren't cacheable, but the
-    // block itself *is* cacheable because it uses a #post_render_cache callback
-    // and hence the block has a globally cacheable render array.
+    // block itself *is* cacheable because it uses a #lazy_builder callback and
+    // hence the block has a globally cacheable render array.
     return Cache::PERMANENT;
   }
 

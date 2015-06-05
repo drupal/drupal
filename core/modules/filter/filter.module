@@ -306,8 +306,8 @@ function filter_fallback_format() {
  * Note: this function should only be used when filtering text for use elsewhere
  * than on a rendered HTML page. If this is part of a HTML page, then a
  * renderable array with a #type 'processed_text' element should be used instead
- * of this, because that will allow cache tags to be set and bubbled up, assets
- * to be loaded and #post_render_cache callbacks to be associated. In other
+ * of this, because that will allow cacheability metadata to be set and bubbled
+ * up and attachments to be associated (assets, placeholders, etc.). In other
  * words: if you are presenting the filtered text in a HTML page, the only way
  * this will be presented correctly, is by using the 'processed_text' element.
  *

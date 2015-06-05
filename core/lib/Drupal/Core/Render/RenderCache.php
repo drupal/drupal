@@ -300,7 +300,6 @@ class RenderCache implements RenderCacheInterface {
     $data = [
       '#markup' => $elements['#markup'],
       '#attached' => $elements['#attached'],
-      '#post_render_cache' => $elements['#post_render_cache'],
       '#cache' => [
         'contexts' => $elements['#cache']['contexts'],
         'tags' => $elements['#cache']['tags'],

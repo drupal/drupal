@@ -179,7 +179,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * This is meant to be used mainly to deal with field handlers whose output
    * cannot be cached at row level but can be cached at display level. The
    * typical example is the row counter. For completely uncacheable field output
-   * #post_render_cache should be used.
+   * placeholders should be used.
    *
    * @param \Drupal\views\ResultRow $row
    *   An array of all ResultRow objects returned from the query.

@@ -134,23 +134,14 @@ class CommentViewBuilder extends EntityViewBuilder {
 
       $display = $displays[$entity->bundle()];
       if ($display->getComponent('links')) {
-        $callback = 'comment.post_render_cache:renderLinks';
-        $context = array(
-          'comment_entity_id' => $entity->id(),
-          'view_mode' => $view_mode,
-          'langcode' => $langcode,
-          'commented_entity_type' => $commented_entity->getEntityTypeId(),
-          'commented_entity_id' => $commented_entity->id(),
-          'in_preview' => !empty($entity->in_preview),
-        );
-        $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
         $build[$id]['links'] = array(
-          '#post_render_cache' => array(
-            $callback => array(
-              $context,
-            ),
-          ),
-          '#markup' => $placeholder,
+          '#lazy_builder' => ['comment.lazy_builders:renderLinks', [
+            $entity->id(),
+            $view_mode,
+            $langcode,
+            !empty($entity->in_preview),
+          ]],
+          '#create_placeholder' => TRUE,
         );
       }
 
@@ -162,9 +153,10 @@ class CommentViewBuilder extends EntityViewBuilder {
         $build[$id]['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
 
         // Embed the metadata for the comment "new" indicators on this node.
-        $build[$id]['#post_render_cache']['history_attach_timestamp'] = array(
-          array('node_id' => $commented_entity->id()),
-        );
+        $build[$id]['history'] = [
+          '#lazy_builder' => ['history_attach_timestamp', [$commented_entity->id()]],
+          '#create_placeholder' => TRUE,
+        ];
       }
     }
     if ($build[$id]['#comment_threaded']) {

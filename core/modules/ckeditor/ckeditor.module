@@ -131,7 +131,7 @@ function ckeditor_filter_format_update() {
  * cause the CKEditor::getJSSettings() to be called, which will cause
  * Internal::generateFormatTagsSetting() to be called, which calls
  * check_markup(), which finally calls drupal_render() non-recursively, because
- * a filter might apply #post_render_cache callbacks.
+ * a filter might add placeholders to replace.
  * This would be a root call inside a root call, which breaks the stack-based
  * logic for bubbling rendering metadata.
  * Therefore this pre-calculates the needed values, and hence performs the

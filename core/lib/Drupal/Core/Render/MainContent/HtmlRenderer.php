@@ -121,12 +121,11 @@ class HtmlRenderer implements MainContentRendererInterface {
 
     // The three parts of rendered markup in html.html.twig (page_top, page and
     // page_bottom) must be rendered with drupal_render_root(), so that their
-    // #post_render_cache callbacks are executed (which may attach additional
-    // assets).
+    // placeholders are replaced (which may attach additional assets).
     // html.html.twig must be able to render the final list of attached assets,
-    // and hence may not execute any #post_render_cache_callbacks (because they
-    // might add yet more assets to be attached), and therefore it must be
-    // rendered with drupal_render(), not drupal_render_root().
+    // and hence may not replace any placeholders (because they might add yet
+    // more assets to be attached), and therefore it must be rendered with
+    // drupal_render(), not drupal_render_root().
     $this->renderer->render($html['page'], TRUE);
     if (isset($html['page_top'])) {
       $this->renderer->render($html['page_top'], TRUE);
@@ -193,8 +192,8 @@ class HtmlRenderer implements MainContentRendererInterface {
 
       // We must render the main content now already, because it might provide a
       // title. We set its $is_root_call parameter to FALSE, to ensure
-      // #post_render_cache callbacks are not yet applied. This is essentially
-      // "pre-rendering" the main content, the "full rendering" will happen in
+      // placeholders are not yet replaced. This is essentially "pre-rendering"
+      // the main content, the "full rendering" will happen in
       // ::renderResponse().
       // @todo Remove this once https://www.drupal.org/node/2359901 lands.
       if (!empty($main_content)) {
@@ -260,15 +259,15 @@ class HtmlRenderer implements MainContentRendererInterface {
       $function = $module . '_page_attachments';
       $function($attachments);
     }
-    if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache', '#cache']) !== []) {
-      throw new \LogicException('Only #attached, #post_render_cache and #cache may be set in hook_page_attachments().');
+    if (array_diff(array_keys($attachments), ['#attached', '#cache']) !== []) {
+      throw new \LogicException('Only #attached and #cache may be set in hook_page_attachments().');
     }
 
     // Modules and themes can alter page attachments.
     $this->moduleHandler->alter('page_attachments', $attachments);
     \Drupal::theme()->alter('page_attachments', $attachments);
-    if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache', '#cache']) !== []) {
-      throw new \LogicException('Only #attached, #post_render_cache and #cache may be set in hook_page_attachments_alter().');
+    if (array_diff(array_keys($attachments), ['#attached', '#cache']) !== []) {
+      throw new \LogicException('Only #attached and #cache may be set in hook_page_attachments_alter().');
     }
 
     // Merge the attachments onto the $page render array.

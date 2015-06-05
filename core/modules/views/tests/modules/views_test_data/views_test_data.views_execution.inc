@@ -48,19 +48,19 @@ function views_test_data_views_pre_render(ViewExecutable $view) {
   if (isset($view) && ($view->storage->id() == 'test_cache_header_storage')) {
     $view->element['#attached']['library'][] = 'views_test_data/test';
     $view->element['#attached']['drupalSettings']['foo'] = 'bar';
+    $view->element['#attached']['placeholders']['non-existing-placeholder-just-for-testing-purposes']['#lazy_builder'] = ['views_test_data_placeholders', ['bar']];
     $view->element['#cache']['tags'][] = 'views_test_data:1';
-    $view->element['#post_render_cache']['views_test_data_post_render_cache'][] = ['foo' => 'bar'];
     $view->build_info['pre_render_called'] = TRUE;
   }
 
 }
 
 /**
- * #post_render_cache callback; for testing purposes only.
+ * #lazy_builder callback; for testing purposes only.
  */
-function views_test_data_post_render_cache(array $element, array $context) {
+function views_test_data_placeholders() {
   // No-op.
-  return $element;
+  return [];
 }
 
 /**
