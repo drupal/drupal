@@ -606,6 +606,10 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
     foreach ($messages as $message_type => $message_typed_messages) {
       foreach ($message_typed_messages as $key => $message) {
+        // Because the messages are stored in the session, the safe status of
+        // the messages also needs to be stored in the session. We retrieve the
+        // safe status here and determine whether to mark the string as safe or
+        // let autoescape do its thing. See drupal_set_message().
         if ($message['safe']) {
           $message['message'] = SafeMarkup::set($message['message']);
         }
