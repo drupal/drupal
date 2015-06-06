@@ -7,15 +7,19 @@
 
   "use strict";
 
-  /**
-   * Backbone View acting as a controller for CKEditor toolbar configuration.
-   */
-  Drupal.ckeditor.ControllerView = Backbone.View.extend({
+  Drupal.ckeditor.ControllerView = Backbone.View.extend(/** @lends Drupal.ckeditor.ControllerView# */{
 
+    /**
+     * @type {object}
+     */
     events: {},
 
     /**
-     * {@inheritdoc}
+     * Backbone View acting as a controller for CKEditor toolbar configuration.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.getCKEditorFeatures(this.model.get('hiddenEditorConfig'), this.disableFeaturesDisallowedByFilters.bind(this));
@@ -28,16 +32,18 @@
     /**
      * Converts the active toolbar DOM structure to an object representation.
      *
-     * @param Drupal.ckeditor.ConfigurationModel model
+     * @param {Drupal.ckeditor.ConfigurationModel} model
      *   The state model for the CKEditor configuration.
-     * @param Boolean isDirty
+     * @param {bool} isDirty
      *   Tracks whether the active toolbar DOM structure has been changed.
      *   isDirty is toggled back to false in this method.
-     * @param Object options
+     * @param {object} options
      *   An object that includes:
-     *   - Boolean broadcast: (optional) A flag that controls whether a
-     *     CKEditorToolbarChanged event should be fired for configuration
-     *     changes.
+     * @param {bool} [options.broadcast]
+     *   A flag that controls whether a CKEditorToolbarChanged event should be
+     *   fired for configuration changes.
+     *
+     * @fires event:CKEditorToolbarChanged
      */
     parseEditorDOM: function (model, isDirty, options) {
       if (isDirty) {
@@ -97,13 +103,13 @@
      * In order to get a list of all features needed by CKEditor, we create a
      * hidden CKEditor instance, then check the CKEditor's "allowedContent"
      * filter settings. Because creating an instance is expensive, a callback
-     * must be provided that will receive a hash of Drupal.EditorFeature
+     * must be provided that will receive a hash of {@link Drupal.EditorFeature}
      * features keyed by feature (button) name.
      *
-     * @param Object CKEditorConfig
+     * @param {object} CKEditorConfig
      *   An object that represents the configuration settings for a CKEditor
      *   editor component.
-     * @param Function callback
+     * @param {function} callback
      *   A function to invoke when the instanceReady event is fired by the
      *   CKEditor object.
      */
@@ -192,9 +198,10 @@
      * Retrieves the feature for a given button from featuresMetadata. Returns
      * false if the given button is in fact a divider.
      *
-     * @param String button
+     * @param {string} button
      *   The name of a CKEditor button.
-     * @return Object
+     *
+     * @return {object}
      *   The feature metadata object for a button.
      */
     getFeatureForButton: function (button) {
@@ -218,8 +225,8 @@
     /**
      * Checks buttons against filter settings; disables disallowed buttons.
      *
-     * @param Object features
-     *   A map of Drupal.EditorFeature objects.
+     * @param {object} features
+     *   A map of {@link Drupal.EditorFeature} objects.
      */
     disableFeaturesDisallowedByFilters: function (features) {
       this.model.set('featuresMetadata', features);
@@ -272,7 +279,7 @@
     /**
      * Sets up broadcasting of CKEditor toolbar configuration changes.
      *
-     * @param jQuery $ckeditorToolbar
+     * @param {jQuery} $ckeditorToolbar
      *   The active toolbar DOM element wrapped in jQuery.
      */
     broadcastConfigurationChanges: function ($ckeditorToolbar) {
@@ -329,14 +336,15 @@
     /**
      * Returns the list of buttons from an editor configuration.
      *
-     * @param Object config
+     * @param {object} config
      *   A CKEditor configuration object.
-     * @return Array
+     *
+     * @return {Array}
      *   A list of buttons in the CKEditor configuration.
      */
     getButtonList: function (config) {
       var buttons = [];
-      // Remove the rows
+      // Remove the rows.
       config = _.flatten(config);
 
       // Loop through the button groups and pull out the buttons.

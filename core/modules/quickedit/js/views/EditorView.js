@@ -7,36 +7,36 @@
 
   "use strict";
 
-  /**
-   * A base implementation that outlines the structure for in-place editors.
-   *
-   * Specific in-place editor implementations should subclass (extend) this View
-   * and override whichever method they deem necessary to override.
-   *
-   * Look at Drupal.quickedit.editors.form and
-   * Drupal.quickedit.editors.plain_text for examples.
-   *
-   * @see Drupal.quickedit.EditorModel
-   */
-  Drupal.quickedit.EditorView = Backbone.View.extend({
+  Drupal.quickedit.EditorView = Backbone.View.extend(/** @lends Drupal.quickedit.EditorView# */{
 
     /**
-     * {@inheritdoc}
+     * A base implementation that outlines the structure for in-place editors.
      *
-     * Typically you would want to override this method to set the originalValue
-     * attribute in the FieldModel to such a value that your in-place editor can
-     * revert to the original value when necessary.
+     * Specific in-place editor implementations should subclass (extend) this
+     * View and override whichever method they deem necessary to override.
      *
-     * If you override this method, you should call this method (the parent
-     * class' initialize()) first, like this:
-     *   Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
+     * Typically you would want to override this method to set the
+     * originalValue attribute in the FieldModel to such a value that your
+     * in-place editor can revert to the original value when necessary.
      *
-     * For an example, @see Drupal.quickedit.editors.plain_text.
+     * @example
+     * <caption>If you override this method, you should call this
+     * method (the parent class' initialize()) first.</caption>
+     * Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
      *
-     * @param Object options
+     * @constructs
+     *
+     * @augments Backbone.View
+     *
+     * @param {object} options
      *   An object with the following keys:
-     *   - Drupal.quickedit.EditorModel model: the in-place editor state model
-     *   - Drupal.quickedit.FieldModel fieldModel: the field model
+     * @param {Drupal.quickedit.EditorModel} options.model
+     *   The in-place editor state model.
+     * @param {Drupal.quickedit.FieldModel} options.fieldModel
+     *   The field model.
+     *
+     * @see Drupal.quickedit.EditorModel
+     * @see Drupal.quickedit.editors.plain_text
      */
     initialize: function (options) {
       this.fieldModel = options.fieldModel;
@@ -44,7 +44,7 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     remove: function () {
       // The el property is the field, which should not be removed. Remove the
@@ -63,16 +63,18 @@
      * e.g. using a WYSIWYG editor on a body field should happen on the DOM
      * element containing the text itself, not on the field wrapper.
      *
-     * For example, @see Drupal.quickedit.editors.plain_text.
-     *
-     * @return jQuery
+     * @return {jQuery}
      *   A jQuery-wrapped DOM element.
+     *
+     * @see Drupal.quickedit.editors.plain_text
      */
     getEditedElement: function () {
       return this.$el;
     },
 
     /**
+     *
+     * @return {object}
      * Returns 3 Quick Edit UI settings that depend on the in-place editor:
      *  - Boolean padding: indicates whether padding should be applied to the
      *    edited element, to guarantee legibility of text.
@@ -90,9 +92,10 @@
     /**
      * Determines the actions to take given a change of state.
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
-     * @param String state
-     *   The state of the associated field. One of Drupal.quickedit.FieldModel.states.
+     * @param {Drupal.quickedit.FieldModel} fieldModel
+     * @param {string} state
+     *   The state of the associated field. One of
+     *   {@link Drupal.quickedit.FieldModel.states}.
      */
     stateChange: function (fieldModel, state) {
       var from = fieldModel.previous('state');
@@ -102,26 +105,27 @@
           // An in-place editor view will not yet exist in this state, hence
           // this will never be reached. Listed for sake of completeness.
           break;
+
         case 'candidate':
           // Nothing to do for the typical in-place editor: it should not be
-          // visible yet.
-
-          // Except when we come from the 'invalid' state, then we clean up.
+          // visible yet. Except when we come from the 'invalid' state, then we
+          // clean up.
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
           break;
+
         case 'highlighted':
           // Nothing to do for the typical in-place editor: it should not be
           // visible yet.
           break;
+
         case 'activating':
           // The user has indicated he wants to do in-place editing: if
           // something needs to be loaded (CSS/JavaScript/server data/…), then
           // do so at this stage, and once the in-place editor is ready,
-          // set the 'active' state.
-          // A "loading" indicator will be shown in the UI for as long as the
-          // field remains in this state.
+          // set the 'active' state. A "loading" indicator will be shown in the
+          // UI for as long as the field remains in this state.
           var loadDependencies = function (callback) {
             // Do the loading here.
             callback();
@@ -130,30 +134,35 @@
             fieldModel.set('state', 'active');
           });
           break;
+
         case 'active':
           // The user can now actually use the in-place editor.
           break;
+
         case 'changed':
           // Nothing to do for the typical in-place editor. The UI will show an
           // indicator that the field has changed.
           break;
+
         case 'saving':
           // When the user has indicated he wants to save his changes to this
-          // field, this state will be entered.
-          // If the previous saving attempt resulted in validation errors, the
-          // previous state will be 'invalid'. Clean up those validation errors
-          // while the user is saving.
+          // field, this state will be entered. If the previous saving attempt
+          // resulted in validation errors, the previous state will be
+          // 'invalid'. Clean up those validation errors while the user is
+          // saving.
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
           this.save();
           break;
+
         case 'saved':
           // Nothing to do for the typical in-place editor. Immediately after
           // being saved, a field will go to the 'candidate' state, where it
           // should no longer be visible (after all, the field will then again
           // just be a *candidate* to be in-place edited).
           break;
+
         case 'invalid':
           // The modified field value was attempted to be saved, but there were
           // validation errors.
@@ -167,7 +176,6 @@
      */
     revert: function () {
       // A no-op by default; each editor should implement reverting itself.
-
       // Note that if the in-place editor does not cause the FieldModel's
       // element to be modified, then nothing needs to happen.
     },
@@ -233,12 +241,13 @@
           removeHiddenForm();
           // First, transition the state to 'saved'.
           fieldModel.set('state', 'saved');
-          // Second, set the 'htmlForOtherViewModes' attribute, so that when this
-          // field is rerendered, the change can be propagated to other instances of
-          // this field, which may be displayed in different view modes.
+          // Second, set the 'htmlForOtherViewModes' attribute, so that when
+          // this field is rerendered, the change can be propagated to other
+          // instances of this field, which may be displayed in different view
+          // modes.
           fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
-          // Finally, set the 'html' attribute on the field model. This will cause
-          // the field to be rerendered.
+          // Finally, set the 'html' attribute on the field model. This will
+          // cause the field to be rerendered.
           fieldModel.set('html', response.data);
         };
 

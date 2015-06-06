@@ -10,10 +10,10 @@
   /**
    * Finds the text area field associated with the given text format selector.
    *
-   * @param jQuery $formatSelector
+   * @param {jQuery} $formatSelector
    *   A text format selector DOM element.
    *
-   * @return DOM
+   * @return {HTMLElement}
    *   The text area DOM element, if it was found.
    */
   function findFieldForFormatSelector($formatSelector) {
@@ -26,9 +26,9 @@
   /**
    * Changes the text editor on a text area.
    *
-   * @param DOM field
+   * @param {HTMLElement} field
    *   The text area DOM element.
-   * @param String newFormatID
+   * @param {string} newFormatID
    *   The text format we're changing to; the text editor for the currently
    *   active text format will be detached, and the text editor for the new text
    *   format will be attached.
@@ -58,7 +58,7 @@
   /**
    * Handles changes in text format.
    *
-   * @param jQuery.Event event
+   * @param {jQuery.Event} event
    */
   function onTextFormatChange(event) {
     var $select = $(event.target);
@@ -129,11 +129,15 @@
 
   /**
    * Initialize an empty object for editors to place their attachment code.
+   *
+   * @namespace
    */
   Drupal.editors = {};
 
   /**
    * Enables editors on text_format elements.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.editor = {
     attach: function (context, settings) {
@@ -214,6 +218,19 @@
     }
   };
 
+  /**
+   * Attaches editor behaviors to the field.
+   *
+   * @param {HTMLElement} field
+   *   The textarea DOM element.
+   * @param {object} format
+   *   The text format that's being activated, from
+   *   drupalSettings.editor.formats.
+   *
+   * @listens event:change
+   *
+   * @fires event:formUpdated
+   */
   Drupal.editorAttach = function (field, format) {
     if (format.editor) {
       // HTML5 validation cannot ever work for WYSIWYG editors, because WYSIWYG
@@ -240,6 +257,17 @@
     }
   };
 
+  /**
+   * Detaches editor behaviors from the field.
+   *
+   * @param {HTMLElement} field
+   *   The textarea DOM element.
+   * @param {object} format
+   *   The text format that's being activated, from
+   *   drupalSettings.editor.formats.
+   * @param {string} trigger
+   *   Trigger value from the detach behavior.
+   */
   Drupal.editorDetach = function (field, format, trigger) {
     if (format.editor) {
       // Restore the HTML5 validation "required" attribute if it was removed in
@@ -261,13 +289,14 @@
   /**
    * Filter away XSS attack vectors when switching text formats.
    *
-   * @param DOM field
+   * @param {HTMLElement} field
    *   The textarea DOM element.
-   * @param Object format
-   *   The text format that's being activated, from drupalSettings.editor.formats.
-   * @param String originalFormatID
+   * @param {object} format
+   *   The text format that's being activated, from
+   *   drupalSettings.editor.formats.
+   * @param {string} originalFormatID
    *   The text format ID of the original text format.
-   * @param Function callback
+   * @param {function} callback
    *   A callback to be called (with no parameters) after the field's value has
    *   been XSS filtered.
    */

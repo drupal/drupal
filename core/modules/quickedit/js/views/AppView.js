@@ -10,24 +10,29 @@
   "use strict";
 
   // Indicates whether the page should be reloaded after in-place editing has
-  // shut down. A page reload is necessary to re-instate the original HTML of the
-  // edited fields if in-place editing has been canceled and one or more of the
-  // entity's fields were saved to PrivateTempStore: one of them may have been
-  // changed to the empty value and hence may have been rerendered as the empty
-  // string, which makes it impossible for Quick Edit to know where to restore
-  // the original HTML.
+  // shut down. A page reload is necessary to re-instate the original HTML of
+  // the edited fields if in-place editing has been canceled and one or more of
+  // the entity's fields were saved to PrivateTempStore: one of them may have
+  // been changed to the empty value and hence may have been rerendered as the
+  // empty string, which makes it impossible for Quick Edit to know where to
+  // restore the original HTML.
   var reload = false;
 
-  Drupal.quickedit.AppView = Backbone.View.extend({
+  Drupal.quickedit.AppView = Backbone.View.extend(/** @lends Drupal.quickedit.AppView# */{
 
     /**
-     * {@inheritdoc}
+     * @constructs
      *
-     * @param Object options
+     * @augments Backbone.View
+     *
+     * @param {object} options
      *   An object with the following keys:
-     *   - Drupal.quickedit.AppModel model: the application state model
-     *   - Drupal.quickedit.EntityCollection entitiesCollection: all on-page entities
-     *   - Drupal.quickedit.FieldCollection fieldsCollection: all on-page fields
+     * @param {Drupal.quickedit.AppModel} options.model
+     *   The application state model.
+     * @param {Drupal.quickedit.EntityCollection} options.entitiesCollection
+     *   All on-page entities.
+     * @param {Drupal.quickedit.FieldCollection} options.fieldsCollection
+     *   All on-page fields
      */
     initialize: function (options) {
       // AppView's configuration for handling states.
@@ -57,10 +62,11 @@
     /**
      * Handles setup/teardown and state changes when the active entity changes.
      *
-     * @param Drupal.quickedit.EntityModel entityModel
+     * @param {Drupal.quickedit.EntityModel} entityModel
      *   An instance of the EntityModel class.
-     * @param String state
-     *   The state of the associated field. One of Drupal.quickedit.EntityModel.states.
+     * @param {string} state
+     *   The state of the associated field. One of
+     *   {@link Drupal.quickedit.EntityModel.states}.
      */
     appStateChange: function (entityModel, state) {
       var app = this;
@@ -75,8 +81,8 @@
           });
           entityModel.toolbarView = entityToolbarView;
           // Second, set up in-place editors.
-          // They must be notified of state changes, hence this must happen while
-          // the associated fields are still in the 'inactive' state.
+          // They must be notified of state changes, hence this must happen
+          // while the associated fields are still in the 'inactive' state.
           entityModel.get('fields').each(function (fieldModel) {
             app.setupEditor(fieldModel);
           });
@@ -86,6 +92,7 @@
             entityModel.set('state', 'opening');
           });
           break;
+
         case 'closed':
           entityToolbarView = entityModel.toolbarView;
           // First, tear down the in-place editors.
@@ -97,8 +104,8 @@
             entityToolbarView.remove();
             delete entityModel.toolbarView;
           }
-          // A page reload may be necessary to re-instate the original HTML of the
-          // edited fields.
+          // A page reload may be necessary to re-instate the original HTML of
+          // the edited fields.
           if (reload) {
             reload = false;
             location.reload();
@@ -112,14 +119,16 @@
      *
      * This is what ensures that the app is in control of what happens.
      *
-     * @param String from
+     * @param {string} from
      *   The previous state.
-     * @param String to
+     * @param {string} to
      *   The new state.
-     * @param null|Object context
+     * @param {null|object} context
      *   The context that is trying to trigger the state change.
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The fieldModel to which this change applies.
+     *
+     * @return {bool}
      */
     acceptEditorStateChange: function (from, to, context, fieldModel) {
       var accept = true;
@@ -164,9 +173,9 @@
             accept = true;
           }
           // Allow: invalid -> activating.
-          // Necessary to be able to correct a field that turned out to be invalid
-          // after the user already had moved on to the next field (which we
-          // explicitly allow to have a fluent UX).
+          // Necessary to be able to correct a field that turned out to be
+          // invalid after the user already had moved on to the next field
+          // (which we explicitly allow to have a fluent UX).
           else if (from === 'invalid' && to === 'activating') {
             accept = true;
           }
@@ -177,11 +186,11 @@
         if (accept) {
           var activeField;
           var activeFieldState;
-          // Ensure only one field (editor) at a time is active … but allow a user
-          // to hop from one field to the next, even if we still have to start
-          // saving the field that is currently active: assume it will be valid,
-          // to allow for a fluent UX. (If it turns out to be invalid, this block
-          // of code also handles that.)
+          // Ensure only one field (editor) at a time is active … but allow a
+          // user to hop from one field to the next, even if we still have to
+          // start saving the field that is currently active: assume it will be
+          // valid, to allow for a fluent UX. (If it turns out to be invalid,
+          // this block of code also handles that.)
           if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
             activeField = this.model.get('activeField');
             if (activeField && activeField !== fieldModel) {
@@ -198,12 +207,12 @@
               }
 
               // If the field that's being activated is in fact already in the
-              // invalid state (which can only happen because above we allowed the
-              // user to move on to another field to allow for a fluent UX; we
-              // assumed it would be saved successfully), then we shouldn't allow
-              // the field to enter the 'activating' state, instead, we simply
-              // change the active editor. All guarantees and assumptions for this
-              // field still hold!
+              // invalid state (which can only happen because above we allowed
+              // the user to move on to another field to allow for a fluent UX;
+              // we assumed it would be saved successfully), then we shouldn't
+              // allow the field to enter the 'activating' state, instead, we
+              // simply change the active editor. All guarantees and
+              // assumptions for this field still hold!
               if (from === 'invalid') {
                 this.model.set('activeField', fieldModel);
                 accept = false;
@@ -244,7 +253,7 @@
      *
      * Must happen before the fieldModel's state is changed to 'candidate'.
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The field for which an in-place editor must be set up.
      */
     setupEditor: function (fieldModel) {
@@ -273,8 +282,8 @@
         entityModel: entityModel
       });
 
-      // Create decoration for edited element: padding if necessary, sets classes
-      // on the element to style it according to the current state.
+      // Create decoration for edited element: padding if necessary, sets
+      // classes on the element to style it according to the current state.
       var decorationView = new Drupal.quickedit.FieldDecorationView({
         el: $(editorView.getEditedElement()),
         model: fieldModel,
@@ -293,7 +302,7 @@
      *
      * Must happen after the fieldModel's state is changed to 'inactive'.
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The field for which an in-place editor must be torn down.
      */
     teardownEditor: function (fieldModel) {
@@ -320,7 +329,9 @@
     /**
      * Asks the user to confirm whether he wants to stop editing via a modal.
      *
-     * @see acceptEditorStateChange()
+     * @param {Drupal.quickedit.EntityModel} entityModel
+     *
+     * @see Drupal.quickedit.AppView#acceptEditorStateChange
      */
     confirmEntityDeactivation: function (entityModel) {
       var that = this;
@@ -370,15 +381,16 @@
               }
             }
           ],
-          // Prevent this modal from being closed without the user making a choice
-          // as per http://stackoverflow.com/a/5438771.
+          // Prevent this modal from being closed without the user making a
+          // choice as per http://stackoverflow.com/a/5438771.
           closeOnEscape: false,
           create: function () {
             $(this).parent().find('.ui-dialog-titlebar-close').remove();
           },
           beforeClose: false,
           close: function (event) {
-            // Automatically destroy the DOM element that was used for the dialog.
+            // Automatically destroy the DOM element that was used for the
+            // dialog.
             $(event.target).remove();
           }
         });
@@ -391,9 +403,10 @@
     /**
      * Reacts to field state changes; tracks global state.
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
-     * @param String state
-     *   The state of the associated field. One of Drupal.quickedit.FieldModel.states.
+     * @param {Drupal.quickedit.FieldModel} fieldModel
+     * @param {string} state
+     *   The state of the associated field. One of
+     *   {@link Drupal.quickedit.FieldModel.states}.
      */
     editorStateChange: function (fieldModel, state) {
       var from = fieldModel.previous('state');
@@ -423,15 +436,15 @@
     /**
      * Render an updated field (a field whose 'html' attribute changed).
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The FieldModel whose 'html' attribute changed.
-     * @param String html
+     * @param {string} html
      *   The updated 'html' attribute.
-     * @param Object options
+     * @param {object} options
      *   An object with the following keys:
-     *   - Boolean propagation: whether this change to the 'html' attribute
-     *     occurred because of the propagation of changes to another instance of
-     *     this field.
+     * @param {bool} options.propagation
+     *   Whether this change to the 'html' attribute occurred because of the
+     *   propagation of changes to another instance of this field.
      */
     renderUpdatedField: function (fieldModel, html, options) {
       // Get data necessary to rerender property before it is unavailable.
@@ -458,19 +471,19 @@
       // of this field happens not because of propagation, but because it is
       // being edited itself.
       if (!options.propagation) {
-        // Deferred because renderUpdatedField is reacting to a field model change
-        // event, and we want to make sure that event fully propagates before
-        // making another change to the same model.
+        // Deferred because renderUpdatedField is reacting to a field model
+        // change event, and we want to make sure that event fully propagates
+        // before making another change to the same model.
         _.defer(function () {
           // First set the state to 'candidate', to allow all attached views to
           // clean up all their "active state"-related changes.
           fieldModel.set('state', 'candidate');
 
-          // Similarly, the above .set() call's change event must fully propagate
-          // before calling it again.
+          // Similarly, the above .set() call's change event must fully
+          // propagate before calling it again.
           _.defer(function () {
-            // Set the field's state to 'inactive', to enable the updating of its
-            // DOM value.
+            // Set the field's state to 'inactive', to enable the updating of
+            // its DOM value.
             fieldModel.set('state', 'inactive', {reason: 'rerender'});
 
             renderField();
@@ -483,31 +496,32 @@
     },
 
     /**
-     * Propagates the changes to an updated field to all instances of that field.
+     * Propagates changes to an updated field to all instances of that field.
      *
-     * @param Drupal.quickedit.FieldModel updatedField
+     * @param {Drupal.quickedit.FieldModel} updatedField
      *   The FieldModel whose 'html' attribute changed.
-     * @param String html
+     * @param {string} html
      *   The updated 'html' attribute.
-     * @param Object options
+     * @param {object} options
      *   An object with the following keys:
-     *   - Boolean propagation: whether this change to the 'html' attribute
-     *     occurred because of the propagation of changes to another instance of
-     *     this field.
+     * @param {bool} options.propagation
+     *   Whether this change to the 'html' attribute occurred because of the
+     *   propagation of changes to another instance of this field.
      *
-     * @see Drupal.quickedit.AppView.renderUpdatedField()
+     * @see Drupal.quickedit.AppView#renderUpdatedField
      */
     propagateUpdatedField: function (updatedField, html, options) {
-      // Don't propagate field updates that themselves were caused by propagation.
+      // Don't propagate field updates that themselves were caused by
+      // propagation.
       if (options.propagation) {
         return;
       }
 
       var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
       Drupal.quickedit.collections.fields
-        // Find all instances of fields that display the same logical field (same
-        // entity, same field, just a different instance and maybe a different
-        // view mode).
+        // Find all instances of fields that display the same logical field
+        // (same entity, same field, just a different instance and maybe a
+        // different view mode).
         .where({logicalFieldID: updatedField.get('logicalFieldID')})
         .forEach(function (field) {
           // Ignore the field that was already updated.
@@ -522,8 +536,8 @@
           // If this other instance of the field has a different view mode, and
           // that is one of the view modes for which a re-rendered version is
           // available (and that should be the case unless this field was only
-          // added to the page after editing of the updated field began), then use
-          // that view mode's re-rendered version.
+          // added to the page after editing of the updated field began), then
+          // use that view mode's re-rendered version.
           else {
             if (field.getViewMode() in htmlForOtherViewModes) {
               field.set('html', htmlForOtherViewModes[field.getViewMode()], {propagation: true});
@@ -538,7 +552,7 @@
      *
      * This happens when a field was modified, saved and hence rerendered.
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   A field that was just added to the collection of fields.
      */
     rerenderedFieldToCandidate: function (fieldModel) {
@@ -557,10 +571,11 @@
     },
 
     /**
-     * EntityModel Collection change handler, called on change:isActive, enforces
-     * a single active entity.
+     * EntityModel Collection change handler.
      *
-     * @param Drupal.quickedit.EntityModel
+     * Handler is called `change:isActive` and enforces a single active entity.
+     *
+     * @param {Drupal.quickedit.EntityModel} changedEntityModel
      *   The entityModel instance whose active state has changed.
      */
     enforceSingleActiveEntity: function (changedEntityModel) {

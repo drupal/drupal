@@ -7,8 +7,12 @@
  *   uses to track where images are being used)
  * - use a Drupal-native dialog (that is in fact just an alterable Drupal form
  *   like any other) instead of CKEditor's own dialogs.
- *   @see \Drupal\editor\Form\EditorImageDialog
+ *
+ * @see \Drupal\editor\Form\EditorImageDialog
+ *
+ * @ignore
  */
+
 (function ($, Drupal, CKEDITOR) {
 
   "use strict";

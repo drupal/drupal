@@ -7,13 +7,14 @@
 
   "use strict";
 
-  /**
-   * Backbone View for CKEditor toolbar configuration; keyboard UX.
-   */
-  Drupal.ckeditor.KeyboardView = Backbone.View.extend({
+  Drupal.ckeditor.KeyboardView = Backbone.View.extend(/** @lends Drupal.ckeditor.KeyboardView# */{
 
     /**
-     * {@inheritdoc}
+     * Backbone View for CKEditor toolbar configuration; keyboard UX.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       // Add keyboard arrow support.
@@ -22,7 +23,7 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     render: function () {
     },
@@ -30,7 +31,7 @@
     /**
      * Handles keypresses on a CKEditor configuration button.
      *
-     * @param jQuery.Event event
+     * @param {jQuery.Event} event
      */
     onPressButton: function (event) {
       var upDownKeys = [
@@ -181,7 +182,7 @@
     /**
      * Handles keypresses on a CKEditor configuration group.
      *
-     * @param jQuery.Event event
+     * @param {jQuery.Event} event
      */
     onPressGroup: function (event) {
       var upDownKeys = [

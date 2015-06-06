@@ -7,16 +7,32 @@
 
   "use strict";
 
-  Drupal.quickedit.editors.form = Drupal.quickedit.EditorView.extend({
+  /**
+   * @constructor
+   *
+   * @augments Drupal.quickedit.EditorView
+   */
+  Drupal.quickedit.editors.form = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.form# */{
 
-    // Tracks the form container DOM element that is used while in-place editing.
+    /**
+     * Tracks form container DOM element that is used while in-place editing.
+     *
+     * @type {jQuery}
+     */
     $formContainer: null,
 
-    // Holds the Drupal.ajax object
+    /**
+     * Holds the {@link Drupal.Ajax} object.
+     *
+     * @type {Drupal.Ajax}
+     */
     formSaveAjax: null,
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @param {object} fieldModel
+     * @param {string} state
      */
     stateChange: function (fieldModel, state) {
       var from = fieldModel.previous('state');
@@ -24,28 +40,36 @@
       switch (to) {
         case 'inactive':
           break;
+
         case 'candidate':
           if (from !== 'inactive') {
             this.removeForm();
           }
           break;
+
         case 'highlighted':
           break;
+
         case 'activating':
           // If coming from an invalid state, then the form is already loaded.
           if (from !== 'invalid') {
             this.loadForm();
           }
           break;
+
         case 'active':
           break;
+
         case 'changed':
           break;
+
         case 'saving':
           this.save();
           break;
+
         case 'saved':
           break;
+
         case 'invalid':
           this.showValidationErrors();
           break;
@@ -53,7 +77,9 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {object}
      */
     getQuickEditUISettings: function () {
       return {padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: true};
@@ -137,7 +163,7 @@
     },
 
     /**
-     * Removes the form for this field and detaches behaviors and event handlers.
+     * Removes the form for this field, detaches behaviors and event handlers.
      */
     removeForm: function () {
       if (this.$formContainer === null) {
@@ -155,7 +181,7 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     save: function () {
       var $formContainer = this.$formContainer;
@@ -180,8 +206,8 @@
         // First, transition the state to 'saved'.
         fieldModel.set('state', 'saved');
         // Second, set the 'htmlForOtherViewModes' attribute, so that when this
-        // field is rerendered, the change can be propagated to other instances of
-        // this field, which may be displayed in different view modes.
+        // field is rerendered, the change can be propagated to other instances
+        // of this field, which may be displayed in different view modes.
         fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
         // Finally, set the 'html' attribute on the field model. This will cause
         // the field to be rerendered.
@@ -213,7 +239,7 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     showValidationErrors: function () {
       this.$formContainer

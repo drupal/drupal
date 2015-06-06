@@ -1,9 +1,25 @@
+/**
+ * @file
+ * CKEditor implementation of {@link Drupal.editors} API.
+ */
+
 (function (Drupal, debounce, CKEDITOR, $) {
 
   "use strict";
 
+  /**
+   * @namespace
+   */
   Drupal.editors.ckeditor = {
 
+    /**
+     * Editor attach callback.
+     *
+     * @param {HTMLElement} element
+     * @param {string} format
+     *
+     * @return {bool}
+     */
     attach: function (element, format) {
       this._loadExternalPlugins(format);
       // Also pass settings that are Drupal-specific.
@@ -26,6 +42,15 @@
       return !!CKEDITOR.replace(element, format.editorSettings);
     },
 
+    /**
+     * Editor detach callback.
+     *
+     * @param {HTMLElement} element
+     * @param {string} format
+     * @param {string} trigger
+     *
+     * @return {bool}
+     */
     detach: function (element, format, trigger) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
@@ -40,6 +65,13 @@
       return !!editor;
     },
 
+    /**
+     *
+     * @param {HTMLElement} element
+     * @param {function} callback
+     *
+     * @return {bool}
+     */
     onChange: function (element, callback) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
@@ -50,6 +82,15 @@
       return !!editor;
     },
 
+    /**
+     *
+     * @param {HTMLElement} element
+     * @param {object} format
+     * @param {string} mainToolbarId
+     * @param {string} floatedToolbarId
+     *
+     * @return {bool}
+     */
     attachInlineEditor: function (element, format, mainToolbarId, floatedToolbarId) {
       this._loadExternalPlugins(format);
       // Also pass settings that are Drupal-specific.
@@ -101,6 +142,9 @@
       return !!CKEDITOR.inline(element, settings);
     },
 
+    /**
+     * @param {object} format
+     */
     _loadExternalPlugins: function (format) {
       var externalPlugins = format.editorSettings.drupalExternalPlugins;
       // Register and load additional CKEditor plugins as necessary.
@@ -117,8 +161,11 @@
   };
 
   Drupal.ckeditor = {
+
     /**
      * Variable storing the current dialog's save callback.
+     *
+     * @type {?function}
      */
     saveCallback: null,
 
@@ -128,16 +175,16 @@
      * This dynamically loads jQuery UI (if necessary) using the Drupal AJAX
      * framework, then opens a dialog at the specified Drupal path.
      *
-     * @param editor
+     * @param {CKEditor} editor
      *   The CKEditor instance that is opening the dialog.
-     * @param string url
+     * @param {string} url
      *   The URL that contains the contents of the dialog.
-     * @param Object existingValues
+     * @param {object} existingValues
      *   Existing values that will be sent via POST to the url for the dialog
      *   contents.
-     * @param Function saveCallback
+     * @param {function} saveCallback
      *   A function to be called upon saving the dialog.
-     * @param Object dialogSettings
+     * @param {object} dialogSettings
      *   An object containing settings to be passed to the jQuery UI.
      */
     openDialog: function (editor, url, existingValues, saveCallback, dialogSettings) {
@@ -156,8 +203,8 @@
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = Drupal.checkWidthBreakpoint(600);
 
-      // Add a "Loading…" message, hide it underneath the CKEditor toolbar, create
-      // a Drupal.ajax instance to load the dialog and trigger it.
+      // Add a "Loading…" message, hide it underneath the CKEditor toolbar,
+      // create a Drupal.Ajax instance to load the dialog and trigger it.
       var $content = $('<div class="ckeditor-dialog-loading"><span style="top: -40px;" class="ckeditor-dialog-loading-link">' + Drupal.t('Loading...') + '</span></div>');
       $content.appendTo($target);
 

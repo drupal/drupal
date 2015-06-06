@@ -7,10 +7,16 @@
 
   "use strict";
 
-  Drupal.quickedit.BaseModel = Backbone.Model.extend({
+  Drupal.quickedit.BaseModel = Backbone.Model.extend(/** @lends Drupal.quickedit.BaseModel# */{
 
     /**
-     * {@inheritdoc}
+     * @constructs
+     *
+     * @augments Backbone.Model
+     *
+     * @param {object} options
+     *
+     * @return {Drupal.quickedit.BaseModel}
      */
     initialize: function (options) {
       this.__initialized = true;
@@ -18,7 +24,12 @@
     },
 
     /**
-     * {@inheritdoc}
+     *
+     * @param {object|string} key
+     * @param {*} val
+     * @param {object} [options]
+     *
+     * @return {*}
      */
     set: function (key, val, options) {
       if (this.__initialized) {

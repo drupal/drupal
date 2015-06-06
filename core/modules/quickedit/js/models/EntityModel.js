@@ -7,58 +7,139 @@
 
   "use strict";
 
-  Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend({
+  Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend(/** @lends Drupal.quickedit.EntityModel# */{
 
-    defaults: {
-      // The DOM element that represents this entity. It may seem bizarre to
-      // have a DOM element in a Backbone Model, but we need to be able to map
-      // entities in the DOM to EntityModels in memory.
+    /**
+     * @type {object}
+     */
+    defaults: /** @lends Drupal.quickedit.EntityModel# */{
+
+      /**
+       * The DOM element that represents this entity.
+       *
+       * It may seem bizarre to have a DOM element in a Backbone Model, but we
+       * need to be able to map entities in the DOM to EntityModels in memory.
+       *
+       * @type {HTMLElement}
+       */
       el: null,
-      // An entity ID, of the form "<entity type>/<entity ID>", e.g. "node/1".
+
+      /**
+       * An entity ID, of the form `<entity type>/<entity ID>`
+       *
+       * @example
+       * "node/1"
+       *
+       * @type {string}
+       */
       entityID: null,
-      // An entity instance ID. The first instance of a specific entity (i.e. with
-      // a given entity ID) is assigned 0, the second 1, and so on.
+
+      /**
+       * An entity instance ID.
+       *
+       * The first instance of a specific entity (i.e. with a given entity ID)
+       * is assigned 0, the second 1, and so on.
+       *
+       * @type {number}
+       */
       entityInstanceID: null,
-      // The unique ID of this entity instance on the page, of the form "<entity
-      // type>/<entity ID>[entity instance ID]", e.g. "node/1[0]".
+
+      /**
+       * The unique ID of this entity instance on the page, of the form
+       * `<entity type>/<entity ID>[entity instance ID]`
+       *
+       * @example
+       * "node/1[0]"
+       *
+       * @type {string}
+       */
       id: null,
-      // The label of the entity.
+
+      /**
+       * The label of the entity.
+       *
+       * @type {string}
+       */
       label: null,
-      // A Drupal.quickedit.FieldCollection for all fields of this entity.
+
+      /**
+       * A FieldCollection for all fields of the entity.
+       *
+       * @type {Drupal.quickedit.FieldCollection}
+       *
+       * @see Drupal.quickedit.FieldCollection
+       */
       fields: null,
 
       // The attributes below are stateful. The ones above will never change
       // during the life of a EntityModel instance.
 
-      // Indicates whether this instance of this entity is currently being
-      // edited in-place.
+      /**
+       * Indicates whether this entity is currently being edited in-place.
+       *
+       * @type {bool}
+       */
       isActive: false,
-      // Whether one or more fields have already been stored in
-      // PrivateTempStore.
+
+      /**
+       * Whether one or more fields are already been stored in PrivateTempStore.
+       *
+       * @type {bool}
+       */
       inTempStore: false,
-      // Whether one or more fields have already been stored in PrivateTempStore
-      // *or* the field that's currently being edited is in the 'changed' or a
-      // later state. In other words, this boolean indicates whether a "Save"
-      // button is necessary or not.
+
+      /**
+       * Indicates whether a "Save" button is necessary or not.
+       *
+       * Whether one or more fields have already been stored in PrivateTempStore
+       * *or* the field that's currently being edited is in the 'changed' or a
+       * later state.
+       *
+       * @type {bool}
+       */
       isDirty: false,
-      // Whether the request to the server has been made to commit this entity.
-      // Used to prevent multiple such requests.
+
+      /**
+       * Whether the request to the server has been made to commit this entity.
+       *
+       * Used to prevent multiple such requests.
+       *
+       * @type {bool}
+       */
       isCommitting: false,
-      // The current processing state of an entity.
+
+      /**
+       * The current processing state of an entity.
+       *
+       * @type {string}
+       */
       state: 'closed',
-      // The IDs of the fields whose new values have been stored in
-      // PrivateTempStore. We must store this on the EntityModel as well (even
-      // though it already is on the FieldModel) because when a field is
-      // rerendered, its FieldModel is destroyed and this allows us to
-      // transition it back to the proper state.
+
+      /**
+       * IDs of fields whose new values have been stored in PrivateTempStore.
+       *
+       * We must store this on the EntityModel as well (even though it already
+       * is on the FieldModel) because when a field is rerendered, its
+       * FieldModel is destroyed and this allows us to transition it back to
+       * the proper state.
+       *
+       * @type {Array.<string>}
+       */
       fieldsInTempStore: [],
-      // A flag the tells the application that this EntityModel must be reloaded
-      // in order to restore the original values to its fields in the client.
+
+      /**
+       * A flag the tells the application that this EntityModel must be reloaded
+       * in order to restore the original values to its fields in the client.
+       *
+       * @type {bool}
+       */
       reload: false
     },
 
     /**
-     * {@inheritdoc}
+     * @constructs
+     *
+     * @augments Drupal.quickedit.BaseModel
      */
     initialize: function () {
       this.set('fields', new Drupal.quickedit.FieldCollection());
@@ -77,10 +158,11 @@
     /**
      * Updates FieldModels' states when an EntityModel change occurs.
      *
-     * @param Drupal.quickedit.EntityModel entityModel
-     * @param String state
-     *   The state of the associated entity. One of Drupal.quickedit.EntityModel.states.
-     * @param Object options
+     * @param {Drupal.quickedit.EntityModel} entityModel
+     * @param {string} state
+     *   The state of the associated entity. One of
+     *   {@link Drupal.quickedit.EntityModel.states}.
+     * @param {object} options
      */
     stateChange: function (entityModel, state, options) {
       var to = state;
@@ -195,12 +277,12 @@
      *
      * Helper function.
      *
-     * @param Drupal.quickedit.EntityModel entityModel
+     * @param {Drupal.quickedit.EntityModel} entityModel
      *   The model of the entity for which a field's state attribute has changed.
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The model of the field whose state attribute has changed.
      *
-     * @see fieldStateChange()
+     * @see Drupal.quickedit.EntityModel#fieldStateChange
      */
     _updateInTempStoreAttributes: function (entityModel, fieldModel) {
       var current = fieldModel.get('state');
@@ -233,10 +315,11 @@
     /**
      * Reacts to state changes in this entity's fields.
      *
-     * @param Drupal.quickedit.FieldModel fieldModel
+     * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The model of the field whose state attribute changed.
-     * @param String state
-     *   The state of the associated field. One of Drupal.quickedit.FieldModel.states.
+     * @param {string} state
+     *   The state of the associated field. One of
+     *   {@link Drupal.quickedit.FieldModel.states}.
      */
     fieldStateChange: function (fieldModel, state) {
       var entityModel = this;
@@ -354,10 +437,10 @@
     /**
      * Fires an AJAX request to the REST save URL for an entity.
      *
-     * @param options
+     * @param {object} options
      *   An object of options that contains:
-     *     - success: (optional) A function to invoke if the entity is success-
-     *     fully saved.
+     * @param {function} [options.success]
+     *   A function to invoke if the entity is successfully saved.
      */
     save: function (options) {
       var entityModel = this;
@@ -393,19 +476,22 @@
     },
 
     /**
-     * {@inheritdoc}
      *
-     * @param Object attrs
+     * @param {object} attrs
      *   The attributes changes in the save or set call.
-     * @param Object options
+     * @param {object} options
      *   An object with the following option:
-     *     - String reason (optional): a string that conveys a particular reason
-     *       to allow for an exceptional state change.
-     *     - Array accept-field-states (optional) An array of strings that
-     *     represent field states that the entities must be in to validate. For
-     *     example, if accept-field-states is ['candidate', 'highlighted'], then
-     *     all the fields of the entity must be in either of these two states
-     *     for the save or set call to validate and proceed.
+     * @param {string} [options.reason]
+     *   A string that conveys a particular reason to allow for an exceptional
+     *   state change.
+     * @param {Array} options.accept-field-states
+     *   An array of strings that represent field states that the entities must
+     *   be in to validate. For example, if `accept-field-states` is
+     *   `['candidate', 'highlighted']`, then all the fields of the entity must
+     *   be in either of these two states for the save or set call to
+     *   validate and proceed.
+     *
+     * @return {string}
      */
     validate: function (attrs, options) {
       var acceptedFieldStates = options['accept-field-states'] || [];
@@ -444,7 +530,18 @@
       }
     },
 
-    // Like @see AppView.acceptEditorStateChange()
+    /**
+     *
+     * @param {string} from
+     * @param {string} to
+     * @param {object} context
+     * @param {string} context.reason
+     * @param {bool} context.confirming
+     *
+     * @return {bool}
+     *
+     * @see Drupal.quickedit.AppView#acceptEditorStateChange
+     */
     _acceptStateChange: function (from, to, context) {
       var accept = true;
 
@@ -481,9 +578,11 @@
     },
 
     /**
-     * @param Array acceptedFieldStates
-     *   @see validate()
-     * @return Boolean
+     * @param {Array} acceptedFieldStates
+     *
+     * @return {bool}
+     *
+     * @see Drupal.quickedit.EntityModel#validate
      */
     _fieldsHaveAcceptableStates: function (acceptedFieldStates) {
       var accept = true;
@@ -504,7 +603,7 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @param {object} options
      */
     destroy: function (options) {
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
@@ -518,18 +617,19 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     sync: function () {
       // We don't use REST updates to sync.
       return;
     }
 
-  }, {
+  }, /** @lends Drupal.quickedit.EntityModel */{
 
     /**
-     * A list (sequence) of all possible states an entity can be in during
-     * in-place editing.
+     * Sequence of all possible states an entity can be in during quickediting.
+     *
+     * @type {Array.<string>}
      */
     states: [
       // Initial state, like field's 'inactive' OR the user has just finished
@@ -587,11 +687,12 @@
     /**
      * Indicates whether the 'from' state comes before the 'to' state.
      *
-     * @param String from
-     *   One of Drupal.quickedit.EntityModel.states.
-     * @param String to
-     *   One of Drupal.quickedit.EntityModel.states.
-     * @return Boolean
+     * @param {string} from
+     *   One of {@link Drupal.quickedit.EntityModel.states}.
+     * @param {string} to
+     *   One of {@link Drupal.quickedit.EntityModel.states}.
+     *
+     * @return {bool}
      */
     followsStateSequence: function (from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
@@ -599,7 +700,16 @@
 
   });
 
-  Drupal.quickedit.EntityCollection = Backbone.Collection.extend({
+  /**
+   * @constructor
+   *
+   * @augments Backbone.Collection
+   */
+  Drupal.quickedit.EntityCollection = Backbone.Collection.extend(/** @lends Drupal.quickedit.EntityCollection# */{
+
+    /**
+     * @type {Drupal.quickedit.EntityModel}
+     */
     model: Drupal.quickedit.EntityModel
   });
 

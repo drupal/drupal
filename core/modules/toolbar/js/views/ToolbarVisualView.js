@@ -7,11 +7,11 @@
 
   "use strict";
 
-  /**
-   * Backbone view for the toolbar element. Listens to mouse & touch.
-   */
-  Drupal.toolbar.ToolbarVisualView = Backbone.View.extend({
+  Drupal.toolbar.ToolbarVisualView = Backbone.View.extend(/** @lends Drupal.toolbar.ToolbarVisualView# */{
 
+    /**
+     * @return {object}
+     */
     events: function () {
       // Prevents delay and simulated mouse events.
       var touchEndToClick = function (event) {
@@ -28,7 +28,14 @@
     },
 
     /**
-     * {@inheritdoc}
+     * Backbone view for the toolbar element. Listens to mouse & touch.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
+     *
+     * @param {object} options
+     * @param {object} options.strings
      */
     initialize: function (options) {
       this.strings = options.strings;
@@ -48,7 +55,9 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {Drupal.toolbar.ToolbarVisualView}
      */
     render: function () {
       this.updateTabs();
@@ -81,7 +90,7 @@
     /**
      * Responds to a toolbar tab click.
      *
-     * @param jQuery.Event event
+     * @param {jQuery.Event} event
      */
     onTabClick: function (event) {
       // If this tab has a tray associated with it, it is considered an
@@ -101,7 +110,7 @@
     /**
      * Toggles the orientation of a toolbar tray.
      *
-     * @param jQuery.Event event
+     * @param {jQuery.Event} event
      */
     onOrientationToggleClick: function (event) {
       var orientation = this.model.get('orientation');

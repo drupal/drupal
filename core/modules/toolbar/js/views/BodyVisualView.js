@@ -7,20 +7,21 @@
 
   "use strict";
 
-  /**
-   * Adjusts the body element with the toolbar position and dimension changes.
-   */
-  Drupal.toolbar.BodyVisualView = Backbone.View.extend({
+  Drupal.toolbar.BodyVisualView = Backbone.View.extend(/** @lends Drupal.toolbar.BodyVisualView# */{
 
     /**
-     * {@inheritdoc}
+     * Adjusts the body element with the toolbar position and dimension changes.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.listenTo(this.model, 'change:orientation change:offsets change:activeTray change:isOriented change:isFixed change:isViewportOverflowConstrained', this.render);
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     render: function () {
       var $body = $('body');

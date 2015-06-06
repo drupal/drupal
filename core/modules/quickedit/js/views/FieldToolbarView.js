@@ -7,22 +7,44 @@
 
   "use strict";
 
-  Drupal.quickedit.FieldToolbarView = Backbone.View.extend({
+  Drupal.quickedit.FieldToolbarView = Backbone.View.extend(/** @lends Drupal.quickedit.FieldToolbarView# */{
 
-    // The edited element, as indicated by EditorView.getEditedElement().
+    /**
+     * The edited element, as indicated by EditorView.getEditedElement.
+     *
+     * @type {jQuery}
+     */
     $editedElement: null,
 
-    // A reference to the in-place editor.
+    /**
+     * A reference to the in-place editor.
+     *
+     * @type {Drupal.quickedit.EditorView}
+     */
     editorView: null,
 
+    /**
+     * @type {string}
+     */
     _id: null,
 
     /**
-     * {@inheritdoc}
+     * @constructs
+     *
+     * @augments Backbone.View
+     *
+     * @param {object} options
+     * @param {jQuery} options.$editedElement
+     * @param {Drupal.quickedit.EditorView} options.editorView
      */
     initialize: function (options) {
       this.$editedElement = options.$editedElement;
       this.editorView = options.editorView;
+
+      /**
+       *
+       * @type {jQuery}
+       */
       this.$root = this.$el;
 
       // Generate a DOM-compatible ID for the form container DOM element.
@@ -32,7 +54,9 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {Drupal.quickedit.FieldToolbarView}
      */
     render: function () {
       // Render toolbar and set it as the view's element.
@@ -49,9 +73,10 @@
     /**
      * Determines the actions to take given a change of state.
      *
-     * @param Drupal.quickedit.FieldModel model
-     * @param String state
-     *   The state of the associated field. One of Drupal.quickedit.FieldModel.states.
+     * @param {Drupal.quickedit.FieldModel} model
+     * @param {string} state
+     *   The state of the associated field. One of
+     *   {@link Drupal.quickedit.FieldModel.states}.
      */
     stateChange: function (model, state) {
       var from = model.previous('state');
@@ -59,6 +84,7 @@
       switch (to) {
         case 'inactive':
           break;
+
         case 'candidate':
           // Remove the view's existing element if we went to the 'activating'
           // state or later, because it will be recreated. Not doing this would
@@ -68,8 +94,10 @@
             this.setElement();
           }
           break;
+
         case 'highlighted':
           break;
+
         case 'activating':
           this.render();
 
@@ -81,14 +109,19 @@
             this.insertWYSIWYGToolGroups();
           }
           break;
+
         case 'active':
           break;
+
         case 'changed':
           break;
+
         case 'saving':
           break;
+
         case 'saved':
           break;
+
         case 'invalid':
           break;
       }
@@ -120,7 +153,7 @@
      *
      * Only used to make sane hovering behavior possible.
      *
-     * @return String
+     * @return {string}
      *   A string that can be used as the ID for this toolbar's container.
      */
     getId: function () {
@@ -132,7 +165,7 @@
      *
      * Used to provide an abstraction for any WYSIWYG editor to plug in.
      *
-     * @return String
+     * @return {string}
      *   A string that can be used as the ID.
      */
     getFloatedWysiwygToolgroupId: function () {
@@ -144,7 +177,7 @@
      *
      * Used to provide an abstraction for any WYSIWYG editor to plug in.
      *
-     * @return String
+     * @return {string}
      *   A string that can be used as the ID.
      */
     getMainWysiwygToolgroupId: function () {
@@ -154,9 +187,10 @@
     /**
      * Finds a toolgroup.
      *
-     * @param String toolgroup
+     * @param {string} toolgroup
      *   A toolgroup name.
-     * @return jQuery
+     *
+     * @return {jQuery}
      */
     _find: function (toolgroup) {
       return this.$el.find('.quickedit-toolgroup.' + toolgroup);
@@ -165,7 +199,7 @@
     /**
      * Shows a toolgroup.
      *
-     * @param String toolgroup
+     * @param {string} toolgroup
      *   A toolgroup name.
      */
     show: function (toolgroup) {

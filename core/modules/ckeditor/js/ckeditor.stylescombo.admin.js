@@ -1,3 +1,8 @@
+/**
+ * @file
+ * CKEditor SylesCombo admin behavior.
+ */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
@@ -9,6 +14,8 @@
    * plugin settings change, to ensure that the corresponding feature metadata is
    * immediately updated — i.e. ensure that HTML tags and classes entered here are
    * known to be "required", which may affect filter settings.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.ckeditorStylesComboSettings = {
     attach: function (context) {
@@ -46,10 +53,10 @@
      * parsing works identically, but instead of failing on invalid styles, we
      * just ignore those.
      *
-     * @param String styles
+     * @param {string} styles
      *   The "styles" setting.
      *
-     * @return array
+     * @return {Array}
      *   An array containing the "stylesSet" configuration.
      */
     _generateStylesSetSetting: function (styles) {
@@ -93,6 +100,8 @@
 
   /**
    * Provides the summary for the "stylescombo" plugin settings vertical tab.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.ckeditorStylesComboSettingsSummary = {
     attach: function () {

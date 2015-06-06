@@ -7,19 +7,21 @@
 
   "use strict";
 
-  /**
-   * Backbone View for collapsible menus.
-   */
-  Drupal.toolbar.MenuVisualView = Backbone.View.extend({
+  Drupal.toolbar.MenuVisualView = Backbone.View.extend(/** @lends Drupal.toolbar.MenuVisualView# */{
+
     /**
-     * {@inheritdoc}
+     * Backbone View for collapsible menus.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.listenTo(this.model, 'change:subtrees', this.render);
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     render: function () {
       var subtrees = this.model.get('subtrees');

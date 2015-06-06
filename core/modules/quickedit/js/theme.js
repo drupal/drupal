@@ -1,6 +1,6 @@
 /**
  * @file
- * Provides overridable theme functions for all of Quick Edit's client-side HTML.
+ * Provides theme functions for all of Quick Edit's client-side HTML.
  */
 
 (function ($, Drupal) {
@@ -10,10 +10,11 @@
   /**
    * Theme function for a "backstage" for the Quick Edit module.
    *
-   * @param Object settings
-   *   An object with the following keys:
-   *   - String id: the id to apply to the backstage.
-   * @return String
+   * @param {object} settings
+   * @param {string} settings.id
+   *   The id to apply to the backstage.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditBackstage = function (settings) {
@@ -25,10 +26,11 @@
   /**
    * Theme function for a toolbar container of the Quick Edit module.
    *
-   * @param Object settings
-   *   An object with the following keys:
-   *   - String id: the id to apply to the toolbar container.
-   * @return String
+   * @param {object} settings
+   * @param {string} settings.id
+   *   the id to apply to the backstage.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditEntityToolbar = function (settings) {
@@ -47,11 +49,13 @@
   /**
    * Theme function for a toolbar container of the Quick Edit module.
    *
-   * @param Object settings
-   *   An object with the following keys:
-   *   - String entityLabel: The title of the active entity.
-   *   - String fieldLabel: The label of the highlighted or active field.
-   * @return String
+   * @param {object} settings
+   * @param {string} settings.entityLabel
+   *   The title of the active entity.
+   * @param {string} settings.fieldLabel
+   *   The label of the highlighted or active field.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditEntityToolbarLabel = function (settings) {
@@ -59,9 +63,9 @@
   };
 
   /**
-   * Element that defines a containing box of the placement of the entity toolbar.
+   * Element defining a containing box for the placement of the entity toolbar.
    *
-   * @return String
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditEntityToolbarFence = function () {
@@ -71,10 +75,11 @@
   /**
    * Theme function for a toolbar container of the Quick Edit module.
    *
-   * @param settings
-   *   An object with the following keys:
-   *   - id: the id to apply to the toolbar container.
-   * @return
+   * @param {object} settings
+   * @param {string} settings.id
+   *   The id to apply to the toolbar container.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditFieldToolbar = function (settings) {
@@ -84,12 +89,15 @@
   /**
    * Theme function for a toolbar toolgroup of the Quick Edit module.
    *
-   * @param Object settings
-   *   An object with the following keys:
-   *   - String id: (optional) the id of the toolgroup
-   *   - String classes: the class of the toolgroup.
-   *   - Array buttons: @see Drupal.theme.quickeditButtons().
-   * @return String
+   * @param {object} settings
+   * @param {string} [settings.id]
+   *   The id of the toolgroup.
+   * @param {string} settings.classes
+   *   The class of the toolgroup.
+   * @param {Array} settings.buttons
+   *   See {@link Drupal.theme.quickeditButtons}.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditToolgroup = function (settings) {
@@ -110,15 +118,16 @@
   /**
    * Theme function for buttons of the Quick Edit module.
    *
-   * Can be used for the buttons both in the toolbar toolgroups and in the modal.
+   * Can be used for the buttons both in the toolbar toolgroups and in the
+   * modal.
    *
-   * @param Object settings
-   *   An object with the following keys:
-   *   - buttons: an array of objects with the following keys:
-   *     - String type: the type of the button (defaults to 'button')
-   *     - Array classes: the classes of the button.
-   *     - String label: the label of the button.
-   * @return String
+   * @param {object} settings
+   * @param {Array} settings.buttons
+   * - String type: the type of the button (defaults to 'button')
+   * - Array classes: the classes of the button.
+   * - String label: the label of the button.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditButtons = function (settings) {
@@ -146,11 +155,13 @@
   /**
    * Theme function for a form container of the Quick Edit module.
    *
-   * @param Object settings
-   *   An object with the following keys:
-   *   - String id: the id to apply to the toolbar container.
-   *   - String loadingMsg: The message to show while loading.
-   * @return String
+   * @param {object} settings
+   * @param {string} settings.id
+   *   The id to apply to the toolbar container.
+   * @param {string} settings.loadingMsg
+   *   The message to show while loading.
+   *
+   * @return {string}
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditFormContainer = function (settings) {

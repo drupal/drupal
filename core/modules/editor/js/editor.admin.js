@@ -11,69 +11,81 @@
 
   "use strict";
 
+  /**
+   * @namespace
+   */
   Drupal.editorConfiguration = {
 
     /**
-     * Must be called by a specific text editor's configuration whenever a feature
-     * is added by the user.
+     * Must be called by a specific text editor's configuration whenever a
+     * feature is added by the user.
      *
-     * Triggers the drupalEditorFeatureAdded event on the document, which receives
-     * a Drupal.EditorFeature object.
+     * Triggers the drupalEditorFeatureAdded event on the document, which
+     * receives a {@link Drupal.EditorFeature} object.
      *
-     * @param Drupal.EditorFeature feature
+     * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
+     *
+     * @fires event:drupalEditorFeatureAdded
      */
     addedFeature: function (feature) {
       $(document).trigger('drupalEditorFeatureAdded', feature);
     },
 
     /**
-     * Must be called by a specific text editor's configuration whenever a feature
-     * is removed by the user.
+     * Must be called by a specific text editor's configuration whenever a
+     * feature is removed by the user.
      *
      * Triggers the drupalEditorFeatureRemoved event on the document, which
-     * receives a Drupal.EditorFeature object.
+     * receives a {@link Drupal.EditorFeature} object.
      *
-     * @param Drupal.EditorFeature feature
+     * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
+     *
+     * @fires event:drupalEditorFeatureRemoved
      */
     removedFeature: function (feature) {
       $(document).trigger('drupalEditorFeatureRemoved', feature);
     },
 
     /**
-     * Must be called by a specific text editor's configuration whenever a feature
-     * is modified, i.e. has different rules.
+     * Must be called by a specific text editor's configuration whenever a
+     * feature is modified, i.e. has different rules.
      *
-     * For example when the "Bold" button is configured to use the <b> tag instead
-     * of the <strong> tag.
+     * For example when the "Bold" button is configured to use the `<b>` tag
+     * instead of the `<strong>` tag.
      *
      * Triggers the drupalEditorFeatureModified event on the document, which
-     * receives a Drupal.EditorFeature object.
+     * receives a {@link Drupal.EditorFeature} object.
      *
-     * @param Drupal.EditorFeature feature
+     * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
+     *
+     * @fires event:drupalEditorFeatureModified
      */
     modifiedFeature: function (feature) {
       $(document).trigger('drupalEditorFeatureModified', feature);
     },
 
     /**
-     * May be called by a specific text editor's configuration whenever a feature
-     * is being added, to check whether it would require the filter settings to be
-     * updated.
+     * May be called by a specific text editor's configuration whenever a
+     * feature is being added, to check whether it would require the filter
+     * settings to be updated.
      *
-     * The canonical use case is when a text editor is being enabled: preferably
-     * this would not cause the filter settings to be changed; rather, the default
-     * set of buttons (features) for the text editor should adjust itself to not
-     * cause filter setting changes.
+     * The canonical use case is when a text editor is being enabled:
+     * preferably
+     * this would not cause the filter settings to be changed; rather, the
+     * default set of buttons (features) for the text editor should adjust
+     * itself to not cause filter setting changes.
      *
      * Note: for filters to integrate with this functionality, it is necessary
-     * that they implement Drupal.filterSettingsForEditors[filterID].getRules().
+     * that they implement
+     * `Drupal.filterSettingsForEditors[filterID].getRules()`.
      *
-     * @param Drupal.EditorFeature feature
+     * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
-     * @return Boolean
+     *
+     * @return {bool}
      *   Whether the given feature is allowed by the current filters.
      */
     featureIsAllowedByFilters: function (feature) {
@@ -102,22 +114,26 @@
        *   };
        *
        * In this example, the given text editor feature resulted in the above
-       * universe, which shows that it must be allowed to generate the a, strong
-       * and img tags. For the a tag, it must be able to set the "href" attribute
-       * and the "external" class. For the strong tag, no further properties are
-       * required. For the img tag, the "src" attribute is required.
-       * The "tag" key is used to track whether that tag was explicitly allowed by
-       * one of the filter's rules. The "touchedByAllowedPropertyRule" key is used
-       * for state tracking that is essential for filterStatusAllowsFeature() to
-       * be able to reason: when all of a filter's rules have been applied, and
-       * none of the forbidden rules matched (which would have resulted in early
-       * termination) yet the universe has not been made empty (which would be the
-       * end result if everything in the universe were explicitly allowed), then
-       * this piece of state data enables us to determine whether a tag whose
-       * properties were not all explicitly allowed are in fact still allowed,
-       * because its tag was explicitly allowed and there were no filter rules
-       * applying "allowed tag property value" restrictions for this particular
-       * tag.
+       * universe, which shows that it must be allowed to generate the a,
+       * strong and img tags. For the a tag, it must be able to set the "href"
+       * attribute and the "external" class. For the strong tag, no further
+       * properties are required. For the img tag, the "src" attribute is
+       * required. The "tag" key is used to track whether that tag was
+       * explicitly allowed by one of the filter's rules. The
+       * "touchedByAllowedPropertyRule" key is used for state tracking that is
+       * essential for filterStatusAllowsFeature() to be able to reason: when
+       * all of a filter's rules have been applied, and none of the forbidden
+       * rules matched (which would have resulted in early termination) yet the
+       * universe has not been made empty (which would be the end result if
+       * everything in the universe were explicitly allowed), then this piece
+       * of state data enables us to determine whether a tag whose properties
+       * were not all explicitly allowed are in fact still allowed, because its
+       * tag was explicitly allowed and there were no filter rules applying
+       * "allowed tag property value" restrictions for this particular tag.
+       *
+       * @param {object} feature
+       *
+       * @return {object}
        *
        * @see findPropertyValueOnTag()
        * @see filterStatusAllowsFeature()
@@ -151,9 +167,9 @@
             continue;
           }
 
-          // Expand the existing universe, assume that each tags' property value
-          // is disallowed. If the filter rules allow everything in the feature's
-          // universe, then the feature is allowed.
+          // Expand the existing universe, assume that each tags' property
+          // value is disallowed. If the filter rules allow everything in the
+          // feature's universe, then the feature is allowed.
           for (var p = 0; p < properties.length; p++) {
             var property = properties[p];
             for (var pv = 0; pv < featureRule.required[property].length; pv++) {
@@ -169,6 +185,10 @@
       /**
        * Provided a section of a feature or filter rule, checks if no property
        * values are defined for all properties: attributes, classes and styles.
+       *
+       * @param {object} section
+       *
+       * @return {bool}
        */
       function emptyProperties(section) {
         return section.attributes.length === 0 && section.classes.length === 0 && section.styles.length === 0;
@@ -178,6 +198,14 @@
        * Calls findPropertyValueOnTag on the given tag for every property value
        * that is listed in the "propertyValues" parameter. Supports the wildcard
        * tag.
+       *
+       * @param {object} universe
+       * @param {string} tag
+       * @param {string} property
+       * @param {Array} propertyValues
+       * @param {bool} allowing
+       *
+       * @return {bool}
        */
       function findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing) {
         // Detect the wildcard case.
@@ -196,6 +224,13 @@
 
       /**
        * Calls findPropertyValuesOnAllTags for all tags in the universe.
+       *
+       * @param {object} universe
+       * @param {string} property
+       * @param {Array} propertyValues
+       * @param {bool} allowing
+       *
+       * @return {bool}
        */
       function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
         var atLeastOneFound = false;
@@ -208,10 +243,18 @@
       }
 
       /**
-       * Finds out if a specific property value (potentially containing wildcards)
-       * exists on the given tag. When the "allowing" parameter equals true, the
-       * universe will be updated if that specific property value exists.
-       * Returns true if found, false otherwise.
+       * Finds out if a specific property value (potentially containing
+       * wildcards) exists on the given tag. When the "allowing" parameter
+       * equals true, the universe will be updated if that specific property
+       * value exists. Returns true if found, false otherwise.
+       *
+       * @param {object} universe
+       * @param {string} tag
+       * @param {string} property
+       * @param {string} propertyValue
+       * @param {bool} allowing
+       *
+       * @return {bool}
        */
       function findPropertyValueOnTag(universe, tag, property, propertyValue, allowing) {
         // If the tag does not exist in the universe, then it definitely can't
@@ -258,6 +301,11 @@
       /**
        * Deletes a tag from the universe if the tag itself and each of its
        * properties are marked as allowed.
+       *
+       * @param {object} universe
+       * @param {string} tag
+       *
+       * @return {bool}
        */
       function deleteFromUniverseIfAllowed(universe, tag) {
         // Detect the wildcard case.
@@ -273,6 +321,10 @@
 
       /**
        * Calls deleteFromUniverseIfAllowed for all tags in the universe.
+       *
+       * @param {object} universe
+       *
+       * @return {bool}
        */
       function deleteAllTagsFromUniverseIfAllowed(universe) {
         var atLeastOneDeleted = false;
@@ -287,6 +339,11 @@
       /**
        * Checks if any filter rule forbids either a tag or a tag property value
        * that exists in the universe.
+       *
+       * @param {object} universe
+       * @param {object} filterStatus
+       *
+       * @return {bool}
        */
       function anyForbiddenFilterRuleMatches(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
@@ -315,8 +372,8 @@
               // … then iterate over all properties …
               for (var k = 0; k < properties.length; k++) {
                 var property = properties[k];
-                // … and return true if just one of the forbidden property values
-                // for this tag and property is listed in the universe.
+                // … and return true if just one of the forbidden property
+                // values for this tag and property is listed in the universe.
                 if (findPropertyValuesOnTag(universe, tag, property, filterRule.restrictedTags.forbidden[property], false)) {
                   return true;
                 }
@@ -329,10 +386,13 @@
       }
 
       /**
-       * Applies every filter rule's explicit allowing of a tag or a tag property
-       * value to the universe. Whenever both the tag and all of its required
-       * property values are marked as explicitly allowed, they are deleted from
-       * the universe.
+       * Applies every filter rule's explicit allowing of a tag or a tag
+       * property value to the universe. Whenever both the tag and all of its
+       * required property values are marked as explicitly allowed, they are
+       * deleted from the universe.
+       *
+       * @param {object} universe
+       * @param {object} filterStatus
        */
       function markAllowedTagsAndPropertyValues(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
@@ -365,9 +425,10 @@
               // … then iterate over all properties …
               for (var k = 0; k < properties.length; k++) {
                 var property = properties[k];
-                // … and try to delete this tag from the universe if just one of
-                // the allowed property values for this tag and property is listed
-                // in the universe. (Because everything might be allowed now.)
+                // … and try to delete this tag from the universe if just one
+                // of the allowed property values for this tag and property is
+                // listed in the universe. (Because everything might be allowed
+                // now.)
                 if (findPropertyValuesOnTag(universe, tag, property, filterRule.restrictedTags.allowed[property], true)) {
                   deleteFromUniverseIfAllowed(universe, tag);
                 }
@@ -383,6 +444,11 @@
        * requirements and then checking whether anything in the filter prevents
        * that.
        *
+       * @param {object} filterStatus
+       * @param {object} feature
+       *
+       * @return {bool}
+       *
        * @see generateUniverseFromFeatureRequirements()
        */
       function filterStatusAllowsFeature(filterStatus, feature) {
@@ -391,8 +457,8 @@
           return true;
         }
 
-        // A feature that specifies no rules has no HTML requirements and is hence
-        // allowed by definition.
+        // A feature that specifies no rules has no HTML requirements and is
+        // hence allowed by definition.
         if (feature.rules.length === 0) {
           return true;
         }
@@ -418,17 +484,16 @@
         // universe will become empty.
         markAllowedTagsAndPropertyValues(universe, filterStatus);
 
-        // If there was at least one filter rule allowing tags, then everything in
-        // the universe must be allowed for this feature to be allowed, and thus
-        // by now it must be empty.
-        // However, it is still possible that the filter allows the feature, due
-        // to no rules for allowing tag property values and/or rules for
-        // forbidding tag property values. For details: see the comments below.
-        //
+        // If there was at least one filter rule allowing tags, then everything
+        // in the universe must be allowed for this feature to be allowed, and
+        // thus by now it must be empty. However, it is still possible that the
+        // filter allows the feature, due to no rules for allowing tag property
+        // values and/or rules for forbidding tag property values. For details:
+        // see the comments below.
         // @see generateUniverseFromFeatureRequirements()
         if (_.some(_.pluck(filterStatus.rules, 'allow'))) {
-          // If the universe is empty, then everything was explicitly allowed and
-          // our job is done: this filter allows this feature!
+          // If the universe is empty, then everything was explicitly allowed
+          // and our job is done: this filter allows this feature!
           if (_.isEmpty(universe)) {
             return true;
           }
@@ -440,13 +505,13 @@
               return false;
             }
             // Every tag was explicitly allowed, but since the universe is not
-            // empty, one or more tag properties are disallowed. However, if only
-            // blacklisting of tag properties was applied to these tags, and no
-            // whitelisting was ever applied, then it's still fine: since none of
-            // the tag properties were blacklisted, we got to this point, and since
-            // no whitelisting was applied, it doesn't matter that the properties:
-            // this could never have happened anyway.
-            // It's only this late that we can know this for certain.
+            // empty, one or more tag properties are disallowed. However, if
+            // only blacklisting of tag properties was applied to these tags,
+            // and no whitelisting was ever applied, then it's still fine:
+            // since none of the tag properties were blacklisted, we got to
+            // this point, and since no whitelisting was applied, it doesn't
+            // matter that the properties: this could never have happened
+            // anyway. It's only this late that we can know this for certain.
             else {
               var tags = _.keys(universe);
               // Figure out if there was any rule applying whitelisting tag
@@ -471,7 +536,8 @@
         }
       }
 
-      // If any filter's current status forbids the editor feature, return false.
+      // If any filter's current status forbids the editor feature, return
+      // false.
       Drupal.filterConfiguration.update();
       for (var filterID in Drupal.filterConfiguration.statuses) {
         if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
@@ -487,25 +553,89 @@
   };
 
   /**
+   * Constructor for an editor feature HTML rule.
+   *
+   * Intended to be used in combination with {@link Drupal.EditorFeature}.
+   *
+   * A text editor feature rule object describes both:
+   *  - required HTML tags, attributes, styles and classes: without these, the
+   *    text editor feature is unable to function. It's possible that a
+   *  - allowed HTML tags, attributes, styles and classes: these are optional
+   *    in the strictest sense, but it is possible that the feature generates
+   *    them.
+   *
+   * The structure can be very clearly seen below: there's a "required" and an
+   * "allowed" key. For each of those, there are objects with the "tags",
+   * "attributes", "styles" and "classes" keys. For all these keys the values
+   * are initialized to the empty array. List each possible value as an array
+   * value. Besides the "required" and "allowed" keys, there's an optional
+   * "raw" key: it allows text editor implementations to optionally pass in
+   * their raw representation instead of the Drupal-defined representation for
+   * HTML rules.
+   *
+   * @example
+   * tags: ['<a>']
+   * attributes: ['href', 'alt']
+   * styles: ['color', 'text-decoration']
+   * classes: ['external', 'internal']
+   *
+   * @constructor
+   *
+   * @see Drupal.EditorFeature
+   */
+  Drupal.EditorFeatureHTMLRule = function () {
+
+    /**
+     *
+     * @type {object}
+     *
+     * @prop {Array} tags
+     * @prop {Array} attributes
+     * @prop {Array} styles
+     * @prop {Array} classes
+     */
+    this.required = {tags: [], attributes: [], styles: [], classes: []};
+
+    /**
+     *
+     * @type {object}
+     *
+     * @prop {Array} tags
+     * @prop {Array} attributes
+     * @prop {Array} styles
+     * @prop {Array} classes
+     */
+    this.allowed = {tags: [], attributes: [], styles: [], classes: []};
+
+    /**
+     *
+     * @type {null}
+     */
+    this.raw = null;
+  };
+
+  /**
    * A text editor feature object. Initialized with the feature name.
    *
-   * Contains a set of HTML rules (Drupal.EditorFeatureHTMLRule objects) that
-   * describe which HTML tags, attributes, styles and classes are required (i.e.
-   * essential for the feature to function at all) and which are allowed (i.e. the
-   * feature may generate this, but they're not essential).
+   * Contains a set of HTML rules ({@link Drupal.EditorFeatureHTMLRule} objects)
+   * that describe which HTML tags, attributes, styles and classes are required
+   * (i.e. essential for the feature to function at all) and which are allowed
+   * (i.e. the feature may generate this, but they're not essential).
    *
-   * It is necessary to allow for multiple HTML rules per feature: with just one
-   * HTML rule per feature, there is not enough expressiveness to describe certain
-   * cases. For example: a "table" feature would probably require the <table> tag,
-   * and might allow for e.g. the "summary" attribute on that tag. However, the
-   * table feature would also require the <tr> and <td> tags, but it doesn't make
-   * sense to allow for a "summary" attribute on these tags. Hence these would
-   * need to be split in two separate rules.
+   * It is necessary to allow for multiple HTML rules per feature: with just
+   * one HTML rule per feature, there is not enough expressiveness to describe
+   * certain cases. For example: a "table" feature would probably require the
+   * `<table>` tag, and might allow e.g. the "summary" attribute on that tag.
+   * However, the table feature would also require the `<tr>` and `<td>` tags,
+   * but it doesn't make sense to allow for a "summary" attribute on these tags.
+   * Hence these would need to be split in two separate rules.
    *
-   * HTML rules must be added with the addHTMLRule() method. A feature that has
-   * zero HTML rules does not create or modify HTML.
+   * HTML rules must be added with the `addHTMLRule()` method. A feature that
+   * has zero HTML rules does not create or modify HTML.
    *
-   * @param String name
+   * @constructor
+   *
+   * @param {string} name
    *   The name of the feature.
    *
    * @see Drupal.EditorFeatureHTMLRule
@@ -518,7 +648,7 @@
   /**
    * Adds a HTML rule to the list of HTML rules for this feature.
    *
-   * @param Drupal.editorFeatureHTMLRule rule
+   * @param {Drupal.EditorFeatureHTMLRule} rule
    *   A text editor feature HTML rule.
    */
   Drupal.EditorFeature.prototype.addHTMLRule = function (rule) {
@@ -526,66 +656,53 @@
   };
 
   /**
-   * Constructor for an editor feature HTML rule. Intended to be used in
-   * combination with Drupal.EditorFeature.
-   *
-   * A text editor feature rule object describes both
-   *  - required HTML tags, attributes, styles and classes: without these, the
-   *    text editor feature is unable to function. It's possible that a
-   *  - allowed HTML tags, attributes, styles and classes: these are optional in
-   *    the strictest sense, but it is possible that the feature generates them.
-   *
-   * The structure can be very clearly seen below: there's a "required" and an
-   * "allowed" key. For each of those, there are objects with the "tags",
-   * "attributes", "styles" and "classes" keys. For all these keys the values are
-   * initialized to the empty array. List each possible value as an array value.
-   * Besides the "required" and "allowed" keys, there's an optional "raw" key: it
-   * allows text editor implementations to optionally pass in their raw
-   * representation instead of the Drupal-defined representation for HTML rules.
-   *
-   * Examples:
-   *  - tags: ['<a>']
-   *  - attributes: ['href', 'alt']
-   *  - styles: ['color', 'text-decoration']
-   *  - classes: ['external', 'internal']
-   */
-  Drupal.EditorFeatureHTMLRule = function () {
-    this.required = {tags: [], attributes: [], styles: [], classes: []};
-    this.allowed = {tags: [], attributes: [], styles: [], classes: []};
-    this.raw = null;
-  };
-
-  /**
-   * Constructor for a text filter status object. Initialized with the filter ID.
+   * Text filter status object. Initialized with the filter ID.
    *
    * Indicates whether the text filter is currently active (enabled) or not.
    *
-   * Contains a set of HTML rules (Drupal.FilterHTMLRule objects) that describe
-   * which HTML tags are allowed or forbidden. They can also describe for a set of
-   * tags (or all tags) which attributes, styles and classes are allowed and which
-   * are forbidden.
+   * Contains a set of HTML rules ({@link Drupal.FilterHTMLRule} objects) that
+   * describe which HTML tags are allowed or forbidden. They can also describe
+   * for a set of tags (or all tags) which attributes, styles and classes are
+   * allowed and which are forbidden.
    *
-   * It is necessary to allow for multiple HTML rules per feature, for analogous
-   * reasons as Drupal.EditorFeature.
+   * It is necessary to allow for multiple HTML rules per feature, for
+   * analogous reasons as {@link Drupal.EditorFeature}.
    *
-   * HTML rules must be added with the addHTMLRule() method. A filter that has
+   * HTML rules must be added with the `addHTMLRule()` method. A filter that has
    * zero HTML rules does not disallow any HTML.
    *
-   * @param String name
+   * @constructor
+   *
+   * @param {string} name
    *   The name of the feature.
    *
    * @see Drupal.FilterHTMLRule
    */
   Drupal.FilterStatus = function (name) {
+
+    /**
+     *
+     * @type {string}
+     */
     this.name = name;
+
+    /**
+     *
+     * @type {bool}
+     */
     this.active = false;
+
+    /**
+     *
+     * @type {Array.<Drupal.FilterHTMLRule>}
+     */
     this.rules = [];
   };
 
   /**
    * Adds a HTML rule to the list of HTML rules for this filter.
    *
-   * @param Drupal.FilterHTMLRule rule
+   * @param {Drupal.FilterHTMLRule} rule
    *   A text filter HTML rule.
    */
   Drupal.FilterStatus.prototype.addHTMLRule = function (rule) {
@@ -593,59 +710,75 @@
   };
 
   /**
-   * A text filter HTML rule object. Intended to be used in combination with
-   * Drupal.FilterStatus.
+   * A text filter HTML rule object.
    *
-   * A text filter rule object describes
+   * Intended to be used in combination with {@link Drupal.FilterStatus}.
+   *
+   * A text filter rule object describes:
    *  1. allowed or forbidden tags: (optional) whitelist or blacklist HTML tags
-   *  2. restricted tag properties: (optional) whitelist or blacklist attributes,
-   *     styles and classes on a set of HTML tags.
+   *  2. restricted tag properties: (optional) whitelist or blacklist
+   *     attributes, styles and classes on a set of HTML tags.
    *
    * Typically, each text filter rule object does either 1 or 2, not both.
    *
    * The structure can be very clearly seen below:
-   *  1. use the "tags" key to list HTML tags, and set the "allow" key to either
-   *     true (to allow these HTML tags) or false (to forbid these HTML tags). If
-   *     you leave the "tags" key's default value (the empty array), no
-   *     restrictions are applied.
-   *  2. all nested within the "restrictedTags" key: use the "tags" subkey to list
-   *     HTML tags to which you want to apply property restrictions, then use the
-   *     "allowed" subkey to whitelist specific property values, and similarly use
-   *     the "forbidden" subkey to blacklist specific property values.
+   *  1. use the "tags" key to list HTML tags, and set the "allow" key to
+   *     either true (to allow these HTML tags) or false (to forbid these HTML
+   *     tags). If you leave the "tags" key's default value (the empty array),
+   *     no restrictions are applied.
+   *  2. all nested within the "restrictedTags" key: use the "tags" subkey to
+   *     list HTML tags to which you want to apply property restrictions, then
+   *     use the "allowed" subkey to whitelist specific property values, and
+   *     similarly use the "forbidden" subkey to blacklist specific property
+   *     values.
    *
-   * Examples:
-   *  - Whitelist the "p", "strong" and "a" HTML tags:
-   *    {
-   *      tags: ['p', 'strong', 'a'],
-   *      allow: true,
-   *      restrictedTags: {
-   *        tags: [],
-   *        allowed: { attributes: [], styles: [], classes: [] },
-   *        forbidden: { attributes: [], styles: [], classes: [] }
-   *      }
-   *    }
-   *  - For the "a" HTML tag, only allow the "href" attribute and the "external"
-   *    class and disallow the "target" attribute.
-   *    {
-   *      tags: [],
-   *      allow: null,
-   *      restrictedTags: {
-   *        tags: ['a'],
-   *        allowed: { attributes: ['href'], styles: [], classes: ['external'] },
-   *        forbidden: { attributes: ['target'], styles: [], classes: [] }
-   *      }
-   *    }
-   *  - For all tags, allow the "data-*" attribute (that is, any attribute that
-   *    begins with "data-").
-   *    {
-   *      tags: [],
-   *      allow: null,
-   *      restrictedTags: {
-   *        tags: ['*'],
-   *        allowed: { attributes: ['data-*'], styles: [], classes: [] },
-   *        forbidden: { attributes: [], styles: [], classes: [] }
-   *      }
-   *    }
+   * @example
+   * <caption>Whitelist the "p", "strong" and "a" HTML tags.</caption>
+   * {
+   *   tags: ['p', 'strong', 'a'],
+   *   allow: true,
+   *   restrictedTags: {
+   *     tags: [],
+   *     allowed: { attributes: [], styles: [], classes: [] },
+   *     forbidden: { attributes: [], styles: [], classes: [] }
+   *   }
+   * }
+   * @example
+   * <caption>For the "a" HTML tag, only allow the "href" attribute
+   * and the "external" class and disallow the "target" attribute.</caption>
+   * {
+   *   tags: [],
+   *   allow: null,
+   *   restrictedTags: {
+   *     tags: ['a'],
+   *     allowed: { attributes: ['href'], styles: [], classes: ['external'] },
+   *     forbidden: { attributes: ['target'], styles: [], classes: [] }
+   *   }
+   * }
+   * @example
+   * <caption>For all tags, allow the "data-*" attribute (that is, any
+   * attribute that begins with "data-").</caption>
+   * {
+   *   tags: [],
+   *   allow: null,
+   *   restrictedTags: {
+   *     tags: ['*'],
+   *     allowed: { attributes: ['data-*'], styles: [], classes: [] },
+   *     forbidden: { attributes: [], styles: [], classes: [] }
+   *   }
+   * }
+   *
+   * @return {{
+   *   tags: Array,
+   *   allow: null,
+   *   restrictedTags: {
+   *     tags: Array,
+   *     allowed: {attributes: Array, styles: Array, classes: Array},
+   *     forbidden: {attributes: Array, styles: Array, classes: Array}
+   *   }
+   *  }}
+   *
+   *  @see Drupal.FilterStatus
    */
   Drupal.FilterHTMLRule = function () {
     return {
@@ -662,34 +795,43 @@
   };
 
   /**
-   * Tracks the configuration of all text filters in Drupal.FilterStatus objects
-   * for Drupal.editorConfiguration.featureIsAllowedByFilters().
+   * Tracks the configuration of all text filters in {@link Drupal.FilterStatus}
+   * objects for {@link Drupal.editorConfiguration.featureIsAllowedByFilters}.
+   *
+   * @namespace
    */
   Drupal.filterConfiguration = {
 
     /**
      * Drupal.FilterStatus objects, keyed by filter ID.
+     *
+     * @type {Object.<string, Drupal.FilterStatus>}
      */
     statuses: {},
 
     /**
-     * Live filter setting parsers, keyed by filter ID, for those filters that
-     * implement it.
+     * Live filter setting parsers.
      *
-     * Filters should load the implementing JavaScript on the filter configuration
-     * form and implement Drupal.filterSettings[filterID].getRules(), which should
-     * return an array of Drupal.FilterHTMLRule objects.
+     * Object keyed by filter ID, for those filters that implement it.
+     *
+     * Filters should load the implementing JavaScript on the filter
+     * configuration form and implement
+     * `Drupal.filterSettings[filterID].getRules()`, which should return an
+     * array of {@link Drupal.FilterHTMLRule} objects.
+     *
+     * @namespace
      */
     liveSettingParsers: {},
 
     /**
-     * Updates all Drupal.FilterStatus objects to reflect the current state.
+     * Updates all {@link Drupal.FilterStatus} objects to reflect current state.
      *
      * Automatically checks whether a filter is currently enabled or not. To
-     * support more finegrained
+     * support more finegrained.
      *
      * If a filter implements a live setting parser, then that will be used to
-     * keep the HTML rules for the Drupal.FilterStatus object up-to-date.
+     * keep the HTML rules for the {@link Drupal.FilterStatus} object
+     * up-to-date.
      */
     update: function () {
       for (var filterID in Drupal.filterConfiguration.statuses) {
@@ -708,7 +850,9 @@
   };
 
   /**
-   * Initializes Drupal.filterConfiguration.
+   * Initializes {@link Drupal.filterConfiguration}.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.initializeFilterConfiguration = {
     attach: function (context, settings) {
@@ -719,7 +863,8 @@
         var nameAttribute = $checkbox.attr('name');
 
         // The filter's checkbox has a name attribute of the form
-        // "filters[<name of filter>][status]", parse "<name of filter>" from it.
+        // "filters[<name of filter>][status]", parse "<name of filter>"
+        // from it.
         var filterID = nameAttribute.substring(8, nameAttribute.indexOf(']'));
 
         // Create a Drupal.FilterStatus object to track the state (whether it's

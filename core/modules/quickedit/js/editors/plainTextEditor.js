@@ -1,19 +1,25 @@
 /**
  * @file
- * contentEditable-based in-place editor for plain text content.
+ * ContentEditable-based in-place editor for plain text content.
  */
 
 (function ($, _, Drupal) {
 
   "use strict";
 
-  Drupal.quickedit.editors.plain_text = Drupal.quickedit.EditorView.extend({
+  Drupal.quickedit.editors.plain_text = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.plain_text# */{
 
-    // Stores the textual DOM element that is being in-place edited.
+    /**
+     * Stores the textual DOM element that is being in-place edited.
+     */
     $textElement: null,
 
     /**
-     * {@inheritdoc}
+     * @constructs
+     *
+     * @augments Drupal.quickedit.EditorView
+     *
+     * @param {object} options
      */
     initialize: function (options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
@@ -21,7 +27,8 @@
       var editorModel = this.model;
       var fieldModel = this.fieldModel;
 
-      // Store the original value of this field. Necessary for reverting changes.
+      // Store the original value of this field. Necessary for reverting
+      // changes.
       var $textElement;
       var $fieldItems = this.$el.find('.field-item');
       if ($fieldItems.length) {
@@ -32,7 +39,7 @@
       }
       editorModel.set('originalValue', $.trim(this.$textElement.text()));
 
-      // Sets the state to 'changed' whenever the value changes
+      // Sets the state to 'changed' whenever the value changes.
       var previousText = editorModel.get('originalValue');
       $textElement.on('keyup paste', function (event) {
         var currentText = $.trim($textElement.text());
@@ -45,14 +52,20 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {jQuery}
      */
     getEditedElement: function () {
       return this.$textElement;
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @param {object} fieldModel
+     * @param {string} state
+     * @param {object} options
      */
     stateChange: function (fieldModel, state, options) {
       var from = fieldModel.previous('state');
@@ -60,6 +73,7 @@
       switch (to) {
         case 'inactive':
           break;
+
         case 'candidate':
           if (from !== 'inactive') {
             this.$textElement.removeAttr('contenteditable');
@@ -68,8 +82,10 @@
             this.removeValidationErrors();
           }
           break;
+
         case 'highlighted':
           break;
+
         case 'activating':
           // Defer updating the field model until the current state change has
           // propagated, to not trigger a nested state change event.
@@ -77,19 +93,24 @@
             fieldModel.set('state', 'active');
           });
           break;
+
         case 'active':
           this.$textElement.attr('contenteditable', 'true');
           break;
+
         case 'changed':
           break;
+
         case 'saving':
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
           this.save(options);
           break;
+
         case 'saved':
           break;
+
         case 'invalid':
           this.showValidationErrors();
           break;
@@ -97,14 +118,16 @@
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
+     * @return {object}
      */
     getQuickEditUISettings: function () {
       return {padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false};
     },
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     revert: function () {
       this.$textElement.html(this.model.get('originalValue'));

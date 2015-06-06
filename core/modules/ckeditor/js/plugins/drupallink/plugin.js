@@ -1,6 +1,8 @@
 /**
  * @file
  * Drupal Link plugin.
+ *
+ * @ignore
  */
 
 (function ($, Drupal, drupalSettings, CKEDITOR) {
@@ -199,6 +201,7 @@
    *
    * The following selection will all return the link element.
    *
+   * @example
    *  <a href="#">li^nk</a>
    *  <a href="#">[link]</a>
    *  text[<a href="#">link]</a>
@@ -207,6 +210,8 @@
    *  [<a href="#"><b>li]nk</b></a>
    *
    * @param {CKEDITOR.editor} editor
+   *
+   * @return {?bool}
    */
   function getSelectedLink(editor) {
     var selection = editor.getSelection();

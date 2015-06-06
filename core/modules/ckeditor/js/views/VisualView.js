@@ -1,16 +1,14 @@
 /**
  * @file
- * A Backbone View that provides the visual UX view of CKEditor toolbar configuration.
+ * A Backbone View that provides the visual UX view of CKEditor toolbar
+ *   configuration.
  */
 
 (function (Drupal, Backbone, $) {
 
   "use strict";
 
-  /**
-   * Backbone View for CKEditor toolbar configuration; visual UX.
-   */
-  Drupal.ckeditor.VisualView = Backbone.View.extend({
+  Drupal.ckeditor.VisualView = Backbone.View.extend(/** @lends Drupal.ckeditor.VisualView# */{
 
     events: {
       'click .ckeditor-toolbar-group-name': 'onGroupNameClick',
@@ -19,7 +17,11 @@
     },
 
     /**
-     * {@inheritdoc}
+     * Backbone View for CKEditor toolbar configuration; visual UX.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
      */
     initialize: function () {
       this.listenTo(this.model, 'change:isDirty change:groupNamesVisible', this.render);
@@ -32,7 +34,12 @@
     },
 
     /**
-     * {@inheritdoc}
+     *
+     * @param {*} model
+     * @param {string} [value]
+     * @param {object} changedAttributes
+     *
+     * @return {Drupal.ckeditor.VisualView}
      */
     render: function (model, value, changedAttributes) {
       this.insertPlaceholders();
@@ -57,7 +64,7 @@
     /**
      * Handles clicks to a button group name.
      *
-     * @param jQuery.Event event
+     * @param {jQuery.Event} event
      */
     onGroupNameClick: function (event) {
       var $group = $(event.currentTarget).closest('.ckeditor-toolbar-group');
@@ -69,6 +76,8 @@
 
     /**
      * Handles clicks on the button group names toggle button.
+     *
+     * @param {jQuery.Event} event
      */
     onGroupNamesToggleClick: function (event) {
       this.model.set('groupNamesVisible', !this.model.get('groupNamesVisible'));
@@ -78,17 +87,17 @@
     /**
      * Prompts the user to provide a name for a new button group; inserts it.
      *
-     * @param jQuery.Event event
+     * @param {jQuery.Event} event
      */
     onAddGroupButtonClick: function (event) {
 
       /**
        * Inserts a new button if the openGroupNameDialog function returns true.
        *
-       * @param Boolean success
+       * @param {bool} success
        *   A flag that indicates if the user created a new group (true) or
        *   canceled out of the dialog (false).
-       * @param jQuery $group
+       * @param {jQuery} $group
        *   A jQuery DOM fragment that represents the new button group. It has
        *   not been added to the DOM yet.
        */
@@ -110,8 +119,8 @@
     /**
      * Handles jQuery Sortable stop sort of a button group.
      *
-     * @param jQuery.Event event
-     * @param Object ui
+     * @param {jQuery.Event} event
+     * @param {object} ui
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
      */
@@ -128,8 +137,8 @@
     /**
      * Handles jQuery Sortable start sort of a button.
      *
-     * @param jQuery.Event event
-     * @param Object ui
+     * @param {jQuery.Event} event
+     * @param {object} ui
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
      */
@@ -143,8 +152,8 @@
     /**
      * Handles jQuery Sortable stop sort of a button.
      *
-     * @param jQuery.Event event
-     * @param Object ui
+     * @param {jQuery.Event} event
+     * @param {object} ui
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
      */
