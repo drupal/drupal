@@ -48,6 +48,8 @@ function _batch_page(Request $request) {
     }
   }
   // Restore safe strings from previous batches.
+  // This is safe because we are passing through the known safe values from
+  // SafeMarkup::getAll(). See _batch_shutdown().
   // @todo Ensure we are not storing an excessively large string list in:
   //   https://www.drupal.org/node/2295823
   if (!empty($batch['safe_strings'])) {
