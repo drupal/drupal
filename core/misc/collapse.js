@@ -91,7 +91,11 @@
       else {
         $summaryPrefix.html(Drupal.t('Hide'));
       }
-      this.$node.attr('open', !isOpen);
+      // Delay setting the attribute to emulate chrome behavior and make
+      // details-aria.js work as expected with this polyfill.
+      setTimeout(function () {
+        this.$node.attr('open', !isOpen);
+      }.bind(this), 0);
     }
   });
 

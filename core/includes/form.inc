@@ -225,7 +225,7 @@ function template_preprocess_details(&$variables) {
     if (!empty($element['#attributes']['id'])) {
       $variables['summary_attributes']['aria-controls'] = $element['#attributes']['id'];
     }
-    $variables['summary_attributes']['aria-expanded'] = !empty($element['#attributes']['open']);
+    $variables['summary_attributes']['aria-expanded'] = !empty($element['#attributes']['open']) ? 'true' : 'false';
     $variables['summary_attributes']['aria-pressed'] = $variables['summary_attributes']['aria-expanded'];
   }
   $variables['title'] = (!empty($element['#title'])) ? $element['#title'] : '';

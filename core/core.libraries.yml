@@ -124,6 +124,7 @@ drupal.batch:
 drupal.collapse:
   version: VERSION
   js:
+    misc/details-aria.js: {}
     misc/collapse.js: {}
   dependencies:
     - core/jquery
