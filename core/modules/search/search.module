@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -767,7 +768,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').
   $text = trim(preg_replace('/' . $boundary . '(?:' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
-  return SafeMarkup::set($text);
+  return Xss::filter($text, ['strong']);
 }
 
 /**
