@@ -134,7 +134,6 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
         ],
         '#theme' => 'time',
         '#text' => $formatted_date,
-        '#html' => FALSE,
         '#attributes' => array(
           'datetime' => $iso_date,
         ),

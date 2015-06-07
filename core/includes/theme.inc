@@ -445,12 +445,10 @@ function template_preprocess_time(&$variables) {
     // Format and use a human-readable version of the timestamp, if any.
     if (isset($variables['timestamp'])) {
       $variables['text'] = format_date($variables['timestamp']);
-      $variables['html'] = FALSE;
     }
     // Otherwise, use the literal datetime attribute.
     elseif (isset($variables['attributes']['datetime'])) {
       $variables['text'] = $variables['attributes']['datetime'];
-      $variables['html'] = FALSE;
     }
   }
 }
@@ -1729,7 +1727,7 @@ function drupal_common_theme() {
       'render element' => 'elements',
     ),
     'time' => array(
-      'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
+      'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array()),
     ),
     'datetime_form' => array(
       'render element' => 'element',
