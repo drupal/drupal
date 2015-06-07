@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\views\Views;
 
 /**
@@ -90,11 +91,12 @@ class AreaTest extends HandlerTestBase {
     $view = Views::getView('test_example_area');
     $view->initHandlers();
 
-    // Insert a random string to the test area plugin and see whether it is
-    // rendered for both header, footer and empty text.
-    $header_string = $this->randomString();
-    $footer_string = $this->randomString();
-    $empty_string = $this->randomString();
+    // Insert a random string with XSS injection in the test area plugin.
+    // Ensure that the string is rendered for the header, footer, and empty
+    // text with the markup properly escaped.
+    $header_string = '<script type="text/javascript">alert("boo");</script><p>' . $this->randomMachineName() . '</p>';
+    $footer_string = '<script type="text/javascript">alert("boo");</script><p>' . $this->randomMachineName() . '</p>';
+    $empty_string = '<script type="text/javascript">alert("boo");</script><p>' . $this->randomMachineName() . '</p>';
 
     $view->header['test_example']->options['string'] = $header_string;
     $view->header['test_example']->options['empty'] = TRUE;
@@ -104,12 +106,13 @@ class AreaTest extends HandlerTestBase {
 
     $view->empty['test_example']->options['string'] = $empty_string;
 
-    // Check whether the strings exists in the output.
+    // Check whether the strings exist in the output and are sanitized.
     $output = $view->preview();
     $output = drupal_render($output);
-    $this->assertTrue(strpos($output, $header_string) !== FALSE);
-    $this->assertTrue(strpos($output, $footer_string) !== FALSE);
-    $this->assertTrue(strpos($output, $empty_string) !== FALSE);
+    $this->assertTrue(strpos($output, Xss::filterAdmin($header_string)) !== FALSE, 'Views header exists in the output and is sanitized');
+    $this->assertTrue(strpos($output, Xss::filterAdmin($footer_string)) !== FALSE, 'Views footer exists in the output and is sanitized');
+    $this->assertTrue(strpos($output, Xss::filterAdmin($empty_string)) !== FALSE, 'Views empty exists in the output and is sanitized');
+    $this->assertTrue(strpos($output, '<script') === FALSE, 'Script tags were escaped');
   }
 
   /**

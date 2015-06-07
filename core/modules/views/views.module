@@ -695,7 +695,7 @@ function views_pre_render_views_form_views_form($element) {
   }
 
   // Apply substitutions to the rendered output.
-  $element['output'] = array('#markup' => str_replace($search, $replace, drupal_render($element['output'])));
+  $element['output'] = ['#markup' => SafeMarkup::replace($search, $replace, drupal_render($element['output']))];
 
   // Sort, render and add remaining form fields.
   $children = Element::children($element, TRUE);

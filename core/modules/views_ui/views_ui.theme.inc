@@ -147,21 +147,35 @@ function theme_views_ui_build_group_filter_form($variables) {
 
   foreach (Element::children($form['group_items']) as $group_id) {
     $form['group_items'][$group_id]['value']['#title'] = '';
+    $default = [
+      $form['default_group'][$group_id],
+      $form['default_group_multiple'][$group_id],
+    ];
+    $link = [
+      '#type' => 'link',
+      '#url' => Url::fromRoute('<none>', [], [
+        'attributes' => [
+          'id' => 'views-remove-link-' . $group_id,
+          'class' => [
+            'views-hidden',
+            'views-button-remove',
+            'views-groups-remove-link',
+            'views-remove-link',
+          ],
+          'alt' => t('Remove this item'),
+          'title' => t('Remove this item'),
+        ],
+      ]),
+      '#title' => SafeMarkup::format('<span>@text</span>', ['@text' => t('Remove')]),
+    ];
+    $remove = [$form['group_items'][$group_id]['remove'], $link];
     $data = array(
-      'default' => array(
-        'data' => array(
-          '#markup' => drupal_render($form['default_group'][$group_id]) . drupal_render($form['default_group_multiple'][$group_id]),
-        ),
-      ),
+      'default' => ['data' => $default],
       'weight' => drupal_render($form['group_items'][$group_id]['weight']),
       'title' => drupal_render($form['group_items'][$group_id]['title']),
       'operator' => drupal_render($form['group_items'][$group_id]['operator']),
       'value' => drupal_render($form['group_items'][$group_id]['value']),
-      'remove' => array(
-        'data' => array(
-          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l(SafeMarkup::format('<span>@text</span>', array('@text' => t('Remove'))), Url::fromRoute('<none>', [], array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item'))))),
-        ),
-      ),
+      'remove' => ['data' => $remove],
     );
     $rows[] = array('data' => $data, 'id' => 'views-row-' . $group_id, 'class' => array('draggable'));
   }

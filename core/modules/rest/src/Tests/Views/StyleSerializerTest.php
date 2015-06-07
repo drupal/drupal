@@ -390,6 +390,16 @@ class StyleSerializerTest extends PluginTestBase {
     $result = $this->drupalGetJSON('test/serialize/node-field');
     $this->assertEqual($result[0]['nid'], $node->id());
     $this->assertEqual($result[0]['body'], $node->body->processed);
-  }
 
+    // Make sure that serialized fields are not exposed to XSS.
+    $node = $this->drupalCreateNode();
+    $node->body = [
+      'value' => '<script type="text/javascript">alert("node-body");</script>' . $this->randomMachineName(32),
+      'format' => filter_default_format(),
+    ];
+    $node->save();
+    $result = $this->drupalGetJSON('test/serialize/node-field');
+    $this->assertEqual($result[1]['nid'], $node->id());
+    $this->assertTrue(strpos($this->getRawContent(), "<script") === FALSE, "No script tag is present in the raw page contents.");
+  }
 }

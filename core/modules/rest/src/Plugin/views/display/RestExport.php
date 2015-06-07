@@ -284,6 +284,20 @@ class RestExport extends PathPluginBase {
     $header = [];
     $header['Content-type'] = $this->getMimeType();
 
+    if ($this->view->getRequest()->getFormat($header['Content-type']) !== 'html') {
+      // This display plugin is primarily for returning non-HTML formats.
+      // However, we still invoke the renderer to collect cacheability metadata.
+      // Because the renderer is designed for HTML rendering, it filters
+      // #markup for XSS unless it is already known to be safe, but that filter
+      // only works for HTML. Therefore, we mark the contents as safe to bypass
+      // the filter. So long as we are returning this in a non-HTML response
+      // (checked above), this is safe, because an XSS attack only works when
+      // executed by an HTML agent.
+      // @todo Decide how to support non-HTML in the render API in
+      //   https://www.drupal.org/node/2501313.
+      $output['#markup'] = SafeMarkup::set($output['#markup']);
+    }
+
     $response = new CacheableResponse($this->renderer->renderRoot($output), 200);
     $cache_metadata = CacheableMetadata::createFromRenderArray($output);
 

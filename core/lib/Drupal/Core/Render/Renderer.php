@@ -350,9 +350,10 @@ class Renderer implements RendererInterface {
       $elements['#children'] = '';
     }
 
-    // @todo Simplify after https://www.drupal.org/node/2273925.
     if (isset($elements['#markup'])) {
-      $elements['#markup'] = SafeMarkup::set($elements['#markup']);
+      // @todo Decide how to support non-HTML in the render API in
+      //   https://www.drupal.org/node/2501313.
+      $elements['#markup'] = SafeMarkup::checkAdminXss($elements['#markup']);
     }
 
     // Assume that if #theme is set it represents an implemented hook.
@@ -609,7 +610,7 @@ class Renderer implements RendererInterface {
     $attributes['callback'] = $placeholder_render_array['#lazy_builder'][0];
     $attributes['arguments'] = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
     $attributes['token'] = hash('sha1', serialize($placeholder_render_array));
-    $placeholder_markup = '<drupal-render-placeholder' . $attributes . '></drupal-render-placeholder>';
+    $placeholder_markup = SafeMarkup::format('<drupal-render-placeholder@attributes></drupal-render-placeholder>', ['@attributes' => $attributes]);
 
     // Build the placeholder element to return.
     $placeholder_element = [];

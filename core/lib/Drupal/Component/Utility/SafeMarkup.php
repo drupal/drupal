@@ -282,4 +282,51 @@ class SafeMarkup {
     return $string;
   }
 
+  /**
+   * Replaces all occurrences of the search string with the replacement string.
+   *
+   * Functions identically to str_replace(), but marks the returned output as
+   * safe if all the inputs and the subject have also been marked as safe.
+   *
+   * @param string|array $search
+   *   The value being searched for. An array may be used to designate multiple
+   *   values to search for.
+   * @param string|array $replace
+   *   The replacement value that replaces found search values. An array may be
+   *   used to designate multiple replacements.
+   * @param string $subject
+   *   The string or array being searched and replaced on.
+   *
+   * @return string
+   *   The passed subject with replaced values.
+   */
+  public static function replace($search, $replace, $subject) {
+    $output = str_replace($search, $replace, $subject);
+
+    // If any replacement is unsafe, then the output is also unsafe, so just
+    // return the output.
+    if (!is_array($replace)) {
+      if (!SafeMarkup::isSafe($replace)) {
+        return $output;
+      }
+    }
+    else {
+      foreach ($replace as $replacement) {
+        if (!SafeMarkup::isSafe($replacement)) {
+          return $output;
+        }
+      }
+    }
+
+    // If the subject is unsafe, then the output is as well, so return it.
+    if (!SafeMarkup::isSafe($subject)) {
+      return $output;
+    }
+    else {
+      // If we have reached this point, then all replacements were safe. If the
+      // subject was also safe, then mark the entire output as safe.
+      return SafeMarkup::set($output);
+    }
+  }
+
 }

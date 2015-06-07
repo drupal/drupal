@@ -188,4 +188,73 @@ class SafeMarkupTest extends UnitTestCase {
     $this->assertEquals('<em class="placeholder">Some text</em>', SafeMarkup::placeholder('Some text'));
   }
 
+  /**
+   * Tests SafeMarkup::replace().
+   *
+   * @dataProvider providerReplace
+   * @covers ::replace
+   */
+  public function testReplace($search, $replace, $subject, $expected, $is_safe) {
+    $result = SafeMarkup::replace($search, $replace, $subject);
+    $this->assertEquals($expected, $result);
+    $this->assertEquals($is_safe, SafeMarkup::isSafe($result));
+  }
+
+  /**
+   * Data provider for testReplace().
+   *
+   * @see testReplace()
+   */
+  public function providerReplace() {
+    $tests = [];
+
+    // Subject unsafe.
+    $tests[] = [
+      '<placeholder>',
+      SafeMarkup::set('foo'),
+      '<placeholder>bazqux',
+      'foobazqux',
+      FALSE,
+    ];
+
+    // All safe.
+    $tests[] = [
+      '<placeholder>',
+      SafeMarkup::set('foo'),
+      SafeMarkup::set('<placeholder>barbaz'),
+      'foobarbaz',
+      TRUE,
+    ];
+
+    // Safe subject, but should result in unsafe string because replacement is
+    // unsafe.
+    $tests[] = [
+      '<placeholder>',
+      'fubar',
+      SafeMarkup::set('<placeholder>barbaz'),
+      'fubarbarbaz',
+      FALSE,
+    ];
+
+    // Array with all safe.
+    $tests[] = [
+      ['<placeholder1>', '<placeholder2>', '<placeholder3>'],
+      [SafeMarkup::set('foo'), SafeMarkup::set('bar'), SafeMarkup::set('baz')],
+      SafeMarkup::set('<placeholder1><placeholder2><placeholder3>'),
+      'foobarbaz',
+      TRUE,
+    ];
+
+    // Array with unsafe replacement.
+    $tests[] = [
+      ['<placeholder1>', '<placeholder2>', '<placeholder3>',],
+      [SafeMarkup::set('bar'), SafeMarkup::set('baz'), 'qux'],
+      SafeMarkup::set('<placeholder1><placeholder2><placeholder3>'),
+      'barbazqux',
+      FALSE,
+    ];
+
+    return $tests;
+  }
+
 }

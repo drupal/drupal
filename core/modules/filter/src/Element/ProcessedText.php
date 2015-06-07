@@ -8,6 +8,7 @@
 namespace Drupal\filter\Element;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element\RenderElement;
@@ -118,9 +119,15 @@ class ProcessedText extends RenderElement {
       }
     }
 
-    // Filtering done, store in #markup, set the updated bubbleable rendering
-    // metadata, and set the text format's cache tag.
-    $element['#markup'] = $text;
+    // Filtering and sanitizing have been done in
+    // \Drupal\filter\Plugin\FilterInterface. $text is not guaranteed to be
+    // safe, but it has been passed through the filter system and checked with
+    // a text format, so it must be printed as is. (See the note about security
+    // in the method documentation above.)
+    $element['#markup'] = SafeMarkup::set($text);
+
+    // Set the updated bubbleable rendering metadata and the text format's
+    // cache tag.
     $metadata->applyTo($element);
     $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $format->getCacheTags());
 

@@ -80,6 +80,14 @@ class RendererTest extends RendererTestBase {
     $data[] = [[
       'child' => ['#markup' => 'bar'],
     ], 'bar'];
+    // XSS filtering test.
+    $data[] = [[
+      'child' => ['#markup' => "This is <script>alert('XSS')</script> test"],
+    ], "This is alert('XSS') test"];
+    // Ensure non-XSS tags are not filtered out.
+    $data[] = [[
+      'child' => ['#markup' => "This is <strong><script>alert('not a giraffe')</script></strong> test"],
+    ], "This is <strong>alert('not a giraffe')</strong> test"];
     // #children set but empty, and renderable children.
     $data[] = [[
       '#children' => '',

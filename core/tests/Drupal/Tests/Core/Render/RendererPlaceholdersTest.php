@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Cache\Cache;
 
@@ -61,7 +62,11 @@ class RendererPlaceholdersTest extends RendererTestBase {
         unset($token_render_array['#cache']);
       }
       $token = hash('sha1', serialize($token_render_array));
-      return '<drupal-render-placeholder callback="Drupal\Tests\Core\Render\PlaceholdersTest::callback" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>';
+      return SafeMarkup::format('<drupal-render-placeholder callback="@callback" arguments="@arguments" token="@token"></drupal-render-placeholder>', [
+        '@callback' => 'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
+        '@arguments' => '0=' . $args[0],
+        '@token' => $token,
+      ]);
     };
 
     $base_element_a1 = [

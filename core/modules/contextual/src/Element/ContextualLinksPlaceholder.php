@@ -9,6 +9,7 @@ namespace Drupal\contextual\Element;
 
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Provides a contextual_links_placeholder element.
@@ -47,7 +48,8 @@ class ContextualLinksPlaceholder extends RenderElement {
    * @see _contextual_links_to_id()
    */
   public static function preRenderPlaceholder(array $element) {
-    $element['#markup'] = '<div' . new Attribute(array('data-contextual-id' => $element['#id'])) . '></div>';
+    $element['#markup'] = SafeMarkup::format('<div@attributes></div>', ['@attributes' => new Attribute(['data-contextual-id' => $element['#id']])]);
+
     return $element;
   }
 
