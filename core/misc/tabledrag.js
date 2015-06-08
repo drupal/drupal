@@ -1211,7 +1211,7 @@
     var rows = [];
     var child = 0;
 
-    function rowIndentation(el, indentNum) {
+    function rowIndentation(indentNum, el) {
       var self = $(el);
       if (child === 1 && (indentNum === parentIndentation)) {
         self.addClass('tree-child-first');
