@@ -1428,6 +1428,7 @@ function user_logout() {
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_user(&$variables) {
+  $variables['user'] = $variables['elements']['#user'];
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];

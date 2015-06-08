@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Default theme implementation to present all user data.
+ * Theme override for testing the presence of all user data.
  *
  * This template is used when viewing a registered user's page,
  * e.g., example.com/user/123. 123 being the user's ID.
@@ -20,12 +20,13 @@
  * - user: A Drupal User entity.
  *
  * @see template_preprocess_user()
- *
- * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+<article{{ attributes.addClass('profile') }}>
   {% if content %}
-    {{- content -}}
+    {{ content }}
   {% endif %}
+  {% if user %}
+    <p>{{ user.mail.value }}</p>
+  {% endif  %}
 </article>
