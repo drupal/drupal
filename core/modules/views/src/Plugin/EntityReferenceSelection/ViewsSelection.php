@@ -107,13 +107,15 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
     // Filter views that list the entity type we want, and group the separate
     // displays by view.
     $entity_type = $this->entityManager->getDefinition($this->configuration['target_type']);
+    $view_storage = $this->entityManager->getStorage('view');
+
     $options = array();
     foreach ($displays as $data) {
-      list($view, $display_id) = $data;
-      if (in_array($view->storage->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
-        $name = $view->storage->get('id');
-        $display = $view->storage->get('display');
-        $options[$name . ':' . $display_id] = $name . ' - ' . $display[$display_id]['display_title'];
+      list($view_id, $display_id) = $data;
+      $view = $view_storage->load($view_id);
+      if (in_array($view->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
+        $display = $view->get('display');
+        $options[$view_id . ':' . $display_id] = $view_id . ' - ' . $display[$display_id]['display_title'];
       }
     }
 

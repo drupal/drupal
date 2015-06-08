@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,16 +36,26 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
   protected $state;
 
   /**
+   * The view storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $viewStorage;
+
+  /**
    * Constructs a \Drupal\views\Plugin\Derivative\ViewsLocalTask instance.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
+   *   The view storage.
    */
-  public function __construct(RouteProviderInterface $route_provider, StateInterface $state) {
+  public function __construct(RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $view_storage) {
     $this->routeProvider = $route_provider;
     $this->state = $state;
+    $this->viewStorage = $view_storage;
   }
 
   /**
@@ -52,7 +64,8 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $container->get('router.route_provider'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('entity.manager')->getStorage('view')
     );
   }
 
@@ -65,7 +78,8 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
     $view_route_names = $this->state->get('views.view_route_names');
     foreach ($this->getApplicableMenuViews() as $pair) {
       /** @var $executable \Drupal\views\ViewExecutable */
-      list($executable, $display_id) = $pair;
+      list($view_id, $display_id) = $pair;
+      $executable = $this->viewStorage->load($view_id)->getExecutable();
 
       $executable->setDisplay($display_id);
       $menu = $executable->display_handler->getOption('menu');
@@ -101,8 +115,9 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
     $view_route_names = $this->state->get('views.view_route_names');
 
     foreach ($this->getApplicableMenuViews() as $pair) {
+      list($view_id, $display_id) = $pair;
       /** @var $executable \Drupal\views\ViewExecutable */
-      list($executable, $display_id) = $pair;
+      $executable = $this->viewStorage->load($view_id)->getExecutable();
 
       $executable->setDisplay($display_id);
       $menu = $executable->display_handler->getOption('menu');

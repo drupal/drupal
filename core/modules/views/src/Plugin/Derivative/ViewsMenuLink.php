@@ -8,14 +8,43 @@
 namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\views\Views;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides menu links for Views.
  *
  * @see \Drupal\views\Plugin\Menu\ViewsMenuLink
  */
-class ViewsMenuLink extends DeriverBase {
+class ViewsMenuLink extends DeriverBase implements ContainerDeriverInterface {
+
+  /**
+   * The view storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $viewStorage;
+
+  /**
+   * Constructs a \Drupal\views\Plugin\Derivative\ViewsLocalTask instance.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
+   *   The view storage.
+   */
+  public function __construct(EntityStorageInterface $view_storage) {
+    $this->viewStorage = $view_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $container->get('entity.manager')->getStorage('view')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -23,10 +52,13 @@ class ViewsMenuLink extends DeriverBase {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $links = array();
     $views = Views::getApplicableViews('uses_menu_links');
+
     foreach ($views as $data) {
-      /** @var \Drupal\views\ViewExecutable $view */
-      list($view, $display_id) = $data;
-      if ($result = $view->getMenuLinks($display_id)) {
+      list($view_id, $display_id) = $data;
+      /** @var \Drupal\views\ViewExecutable $executable */
+      $executable = $this->viewStorage->load($view_id)->getExecutable();
+
+      if ($result = $executable->getMenuLinks($display_id)) {
         foreach ($result as $link_id => $link) {
           $links[$link_id] = $link + $base_plugin_definition;
         }

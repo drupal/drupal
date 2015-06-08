@@ -101,9 +101,8 @@ class RouteSubscriber extends RouteSubscriberBase {
       // @todo Convert this method to some service.
       $views = $this->getApplicableViews();
       foreach ($views as $data) {
-        list($view, $display_id) = $data;
-        $id = $view->storage->id();
-        $this->viewsDisplayPairs[] = $id . '.' . $display_id;
+        list($view_id, $display_id) = $data;
+        $this->viewsDisplayPairs[] = $view_id . '.' . $display_id;
       }
       $this->viewsDisplayPairs = array_combine($this->viewsDisplayPairs, $this->viewsDisplayPairs);
     }

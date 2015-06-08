@@ -186,9 +186,9 @@ class RouteSubscriberTest extends UnitTestCase {
     $executable->displayHandlers = $display_collection;
 
     $this->routeSubscriber->applicableViews = array();
-    $this->routeSubscriber->applicableViews[] = array($executable, 'page_1');
-    $this->routeSubscriber->applicableViews[] = array($executable, 'page_2');
-    $this->routeSubscriber->applicableViews[] = array($executable, 'page_3');
+    $this->routeSubscriber->applicableViews[] = array('test_id', 'page_1');
+    $this->routeSubscriber->applicableViews[] = array('test_id', 'page_2');
+    $this->routeSubscriber->applicableViews[] = array('test_id', 'page_3');
 
     return array($executable, $view, $display_1, $display_2);
   }
