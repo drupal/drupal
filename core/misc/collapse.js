@@ -1,9 +1,18 @@
+/**
+ * @file
+ * Polyfill for HTML5 details elements.
+ */
+
 (function ($, Modernizr, Drupal) {
 
   "use strict";
 
   /**
-   * The collapsible details object represents a single collapsible details element.
+   * The collapsible details object represents a single details element.
+   *
+   * @constructor Drupal.CollapsibleDetails
+   *
+   * @param {HTMLElement} node
    */
   function CollapsibleDetails(node) {
     this.$node = $(node);
@@ -20,22 +29,24 @@
     this.setupLegend();
   }
 
-  /**
-   * Extend CollapsibleDetails function.
-   */
-  $.extend(CollapsibleDetails, {
+  $.extend(CollapsibleDetails, /** @lends Drupal.CollapsibleDetails */{
+
     /**
      * Holds references to instantiated CollapsibleDetails objects.
+     *
+     * @type {Array.<Drupal.CollapsibleDetails>}
      */
     instances: []
   });
 
-  /**
-   * Extend CollapsibleDetails prototype.
-   */
-  $.extend(CollapsibleDetails.prototype, {
+  $.extend(CollapsibleDetails.prototype, /** @lends Drupal.CollapsibleDetails# */{
+
     /**
      * Initialize and setup summary events and markup.
+     *
+     * @fires event:summaryUpdated
+     *
+     * @listens event:summaryUpdated
      */
     setupSummary: function () {
       this.$summary = $('<span class="summary"></span>');
@@ -43,6 +54,7 @@
         .on('summaryUpdated', $.proxy(this.onSummaryUpdated, this))
         .trigger('summaryUpdated');
     },
+
     /**
      * Initialize and setup legend markup.
      */
@@ -65,20 +77,25 @@
         .append(this.$summary)
         .on('click', $.proxy(this.onLegendClick, this));
     },
+
     /**
-     * Handle legend clicks
+     * Handle legend clicks.
+     *
+     * @param {jQuery.Event} e
      */
     onLegendClick: function (e) {
       this.toggle();
       e.preventDefault();
     },
+
     /**
-     * Update summary
+     * Update summary.
      */
     onSummaryUpdated: function () {
       var text = $.trim(this.$node.drupalGetSummary());
       this.$summary.html(text ? ' (' + text + ')' : '');
     },
+
     /**
      * Toggle the visibility of a details element using smooth animations.
      */
@@ -99,6 +116,11 @@
     }
   });
 
+  /**
+   * Polyfill HTML5 details element.
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.collapse = {
     attach: function (context) {
       if (Modernizr.details) {

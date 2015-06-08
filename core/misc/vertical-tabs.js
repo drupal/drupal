@@ -1,17 +1,31 @@
+/**
+ * @file
+ * Define vertical tabs functionality.
+ */
+
+/**
+ * Triggers when form values inside a vertical tab changes.
+ *
+ * This is used to update the summary in vertical tabs in order to know what
+ * are the important fields' values.
+ *
+ * @event summaryUpdated
+ */
+
 (function ($) {
 
   "use strict";
 
   /**
-   * This script transforms a set of details into a stack of vertical
-   * tabs. Another tab pane can be selected by clicking on the respective
-   * tab.
+   * This script transforms a set of details into a stack of vertical tabs.
    *
    * Each tab may have a summary which can be updated by another
    * script. For that to work, each details element has an associated
    * 'verticalTabCallback' (with jQuery.data() attached to the details),
    * which is called every time the user performs an update to a form
    * element inside the tab pane.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.verticalTabs = {
     attach: function (context) {
@@ -25,7 +39,8 @@
         var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
         var tab_focus;
 
-        // Check if there are some details that can be converted to vertical-tabs
+        // Check if there are some details that can be converted to
+        // vertical-tabs.
         var $details = $this.find('> details');
         if ($details.length === 0) {
           return;
@@ -79,10 +94,17 @@
   /**
    * The vertical tab object represents a single tab within a tab group.
    *
-   * @param settings
-   *   An object with the following keys:
-   *   - title: The name of the tab.
-   *   - details: The jQuery object of the details element that is the tab pane.
+   * @constructor
+   *
+   * @param {object} settings
+   * @param {string} settings.title
+   *   The name of the tab.
+   * @param {jQuery} settings.details
+   *   The jQuery object of the details element that is the tab pane.
+   *
+   * @fires event:summaryUpdated
+   *
+   * @listens event:summaryUpdated
    */
   Drupal.verticalTab = function (settings) {
     var self = this;
@@ -114,6 +136,7 @@
   };
 
   Drupal.verticalTab.prototype = {
+
     /**
      * Displays the tab's content pane.
      */
@@ -144,15 +167,17 @@
 
     /**
      * Shows a vertical tab pane.
+     *
+     * @return {Drupal.verticalTab}
      */
     tabShow: function () {
       // Display the tab.
       this.item.show();
       // Show the vertical tabs.
       this.item.closest('.js-form-type-vertical-tabs').show();
-      // Update .first marker for items. We need recurse from parent to retain the
-      // actual DOM element order as jQuery implements sortOrder, but not as public
-      // method.
+      // Update .first marker for items. We need recurse from parent to retain
+      // the actual DOM element order as jQuery implements sortOrder, but not
+      // as public method.
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
         .filter(':visible').eq(0).addClass('first');
       // Display the details element.
@@ -164,13 +189,15 @@
 
     /**
      * Hides a vertical tab pane.
+     *
+     * @return {Drupal.verticalTab}
      */
     tabHide: function () {
       // Hide this tab.
       this.item.hide();
-      // Update .first marker for items. We need recurse from parent to retain the
-      // actual DOM element order as jQuery implements sortOrder, but not as public
-      // method.
+      // Update .first marker for items. We need recurse from parent to retain
+      // the actual DOM element order as jQuery implements sortOrder, but not
+      // as public method.
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
         .filter(':visible').eq(0).addClass('first');
       // Hide the details element.
@@ -191,10 +218,12 @@
   /**
    * Theme function for a vertical tab.
    *
-   * @param settings
+   * @param {object} settings
    *   An object with the following keys:
-   *   - title: The name of the tab.
-   * @return
+   * @param {string} settings.title
+   *   The name of the tab.
+   *
+   * @return {object}
    *   This function has to return an object with at least these keys:
    *   - item: The root tab jQuery element
    *   - link: The anchor tag that acts as the clickable area of the tab

@@ -1,9 +1,25 @@
+/**
+ * @file
+ * Form features.
+ */
+
+/**
+ * Triggers when a value in the form changed.
+ *
+ * The event triggers when content is typed or pasted in a text field, before
+ * the change event triggers.
+ *
+ * @event formUpdated
+ */
+
 (function ($, Drupal, debounce) {
 
   "use strict";
 
   /**
    * Retrieves the summary for the first element.
+   *
+   * @return {string}
    */
   $.fn.drupalGetSummary = function () {
     var callback = this.data('summaryCallback');
@@ -13,9 +29,15 @@
   /**
    * Sets the summary for all matched elements.
    *
-   * @param callback
+   * @param {function} callback
    *   Either a function that will be called each time the summary is
    *   retrieved or a string (which is returned each time).
+   *
+   * @return {jQuery}
+   *
+   * @fires event:summaryUpdated
+   *
+   * @listens event:formUpdated
    */
   $.fn.drupalSetSummary = function (callback) {
     var self = this;
@@ -43,13 +65,13 @@
   /**
    * Prevents consecutive form submissions of identical form values.
    *
-   * Repetitive form submissions that would submit the identical form values are
-   * prevented, unless the form values are different to the previously submitted
-   * values.
+   * Repetitive form submissions that would submit the identical form values
+   * are prevented, unless the form values are different to the previously
+   * submitted values.
    *
-   * This is a simplified re-implementation of a user-agent behavior that should
-   * be natively supported by major web browsers, but at this time, only Firefox
-   * has a built-in protection.
+   * This is a simplified re-implementation of a user-agent behavior that
+   * should be natively supported by major web browsers, but at this time, only
+   * Firefox has a built-in protection.
    *
    * A form value-based approach ensures that the constraint is triggered for
    * consecutive, identical form submissions only. Compared to that, a form
@@ -57,26 +79,28 @@
    * technically not required and (2) require more complex state management if
    * there are multiple buttons in a form.
    *
-   * This implementation is based on form-level submit events only and relies on
-   * jQuery's serialize() method to determine submitted form values. As such, the
-   * following limitations exist:
+   * This implementation is based on form-level submit events only and relies
+   * on jQuery's serialize() method to determine submitted form values. As such,
+   * the following limitations exist:
    *
    * - Event handlers on form buttons that preventDefault() do not receive a
    *   double-submit protection. That is deemed to be fine, since such button
-   *   events typically trigger reversible client-side or server-side operations
-   *   that are local to the context of a form only.
-   * - Changed values in advanced form controls, such as file inputs, are not part
-   *   of the form values being compared between consecutive form submits (due to
-   *   limitations of jQuery.serialize()). That is deemed to be acceptable,
-   *   because if the user forgot to attach a file, then the size of HTTP payload
-   *   will most likely be small enough to be fully passed to the server endpoint
-   *   within (milli)seconds. If a user mistakenly attached a wrong file and is
-   *   technically versed enough to cancel the form submission (and HTTP payload)
-   *   in order to attach a different file, then that edge-case is not supported
-   *   here.
+   *   events typically trigger reversible client-side or server-side
+   *   operations that are local to the context of a form only.
+   * - Changed values in advanced form controls, such as file inputs, are not
+   *   part of the form values being compared between consecutive form submits
+   *   (due to limitations of jQuery.serialize()). That is deemed to be
+   *   acceptable, because if the user forgot to attach a file, then the size of
+   *   HTTP payload will most likely be small enough to be fully passed to the
+   *   server endpoint within (milli)seconds. If a user mistakenly attached a
+   *   wrong file and is technically versed enough to cancel the form submission
+   *   (and HTTP payload) in order to attach a different file, then that
+   *   edge-case is not supported here.
    *
-   * Lastly, all forms submitted via HTTP GET are idempotent by definition of HTTP
-   * standards, so excluded in this implementation.
+   * Lastly, all forms submitted via HTTP GET are idempotent by definition of
+   * HTTP standards, so excluded in this implementation.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.formSingleSubmit = {
     attach: function () {
@@ -99,6 +123,10 @@
 
   /**
    * Sends a 'formUpdated' event each time a form element is modified.
+   *
+   * @param {HTMLElement} element
+   *
+   * @fires event:formUpdated
    */
   function triggerFormUpdated(element) {
     $(element).trigger('formUpdated');
@@ -108,6 +136,7 @@
    * Collects the IDs of all form fields in the given form.
    *
    * @param {HTMLFormElement} form
+   *
    * @return {Array}
    */
   function fieldsList(form) {
@@ -122,6 +151,10 @@
 
   /**
    * Triggers the 'formUpdated' event on form elements when they are modified.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @fires event:formUpdated
    */
   Drupal.behaviors.formUpdated = {
     attach: function (context) {
@@ -132,7 +165,8 @@
 
       if ($forms.length) {
         // Initialize form behaviors, use $.makeArray to be able to use native
-        // forEach array method and have the callback parameters in the right order.
+        // forEach array method and have the callback parameters in the right
+        // order.
         $.makeArray($forms).forEach(function (form) {
           var events = 'change.formUpdated input.formUpdated ';
           var eventHandler = debounce(function (event) { triggerFormUpdated(event.target); }, 300);
@@ -147,7 +181,7 @@
         formFields = fieldsList(context).join(',');
         // @todo replace with form.getAttribute() when #1979468 is in.
         var currentFields = $(context).attr('data-drupal-form-fields');
-        // if there has been a change in the fields or their order, trigger
+        // If there has been a change in the fields or their order, trigger
         // formUpdated.
         if (formFields !== currentFields) {
           triggerFormUpdated(context);
@@ -172,6 +206,8 @@
 
   /**
    * Prepopulate form fields with information from the visitor browser.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.fillUserInfoFromBrowser = {
     attach: function (context, settings) {

@@ -1,30 +1,64 @@
 /**
  * @file
+ * Dialog API inspired by HTML5 dialog element.
  *
- * Dialog API inspired by HTML5 dialog element:
- * http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
+ * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
 
+  /**
+   * Default dialog options.
+   *
+   * @type {object}
+   *
+   * @prop {bool} [autoOpen=true]
+   * @prop {string} [dialogClass='']
+   * @prop {string} [buttonClass='button']
+   * @prop {string} [buttonPrimaryClass='button--primary']
+   * @prop {function} close
+   */
   drupalSettings.dialog = {
     autoOpen: true,
     dialogClass: '',
     // Drupal-specific extensions: see dialog.jquery-ui.js.
     buttonClass: 'button',
     buttonPrimaryClass: 'button--primary',
-    // When using this API directly (when generating dialogs on the client side),
-    // you may want to override this method and do
-    // @code
-    // jQuery(event.target).remove()
-    // @endcode
-    // as well, to remove the dialog on closing.
+    // When using this API directly (when generating dialogs on the client
+    // side), you may want to override this method and do
+    // `jQuery(event.target).remove()` as well, to remove the dialog on
+    // closing.
     close: function (event) {
       Drupal.detachBehaviors(event.target, null, 'unload');
     }
   };
 
+  /**
+   * @typedef {object} Drupal.dialog~dialogDefinition
+   *
+   * @prop {boolean} open
+   *   Is the dialog open or not.
+   * @prop {*} returnValue
+   *   Return value of the dialog.
+   * @prop {function} show
+   *   Method to display the dialog on the page.
+   * @prop {function} showModal
+   *   Method to display the dialog as a modal on the page.
+   * @prop {function} close
+   *   Method to hide the dialog from the page.
+   */
+
+  /**
+   * Polyfill HTML5 dialog element with jQueryUI.
+   *
+   * @param {HTMLElement} element
+   * @param {object} options
+   *   jQuery UI options to be passed to the dialog.
+   *
+   * @return {Drupal.dialog~dialogDefinition}
+   */
   Drupal.dialog = function (element, options) {
 
     function openDialog(settings) {

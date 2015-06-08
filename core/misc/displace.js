@@ -1,13 +1,38 @@
 /**
+ * @file
  * Manages elements that can offset the size of the viewport.
  *
  * Measures and reports viewport offset dimensions from elements like the
  * toolbar that can potentially displace the positioning of other elements.
  */
+
+/**
+ * @typedef {object} Drupal~displaceOffset
+ *
+ * @prop {number} top
+ * @prop {number} left
+ * @prop {number} right
+ * @prop {number} bottom
+ */
+
+/**
+ * Triggers when layout of the page changes.
+ *
+ * This is used to position fixed element on the page during page resize and
+ * Toolbar toggling.
+ *
+ * @event drupalViewportOffsetChange
+ */
+
 (function ($, Drupal, debounce) {
 
   "use strict";
 
+  /**
+   * @name Drupal.displace.offsets
+   *
+   * @type {Drupal~displaceOffset}
+   */
   var offsets = {
     top: 0,
     right: 0,
@@ -17,6 +42,8 @@
 
   /**
    * Registers a resize handler on the window.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.drupalDisplace = {
     attach: function () {
@@ -33,14 +60,20 @@
   /**
    * Informs listeners of the current offset dimensions.
    *
-   * @param {boolean} broadcast
-   *   (optional) When true or undefined, causes the recalculated offsets values to be
+   * @function Drupal.displace
+   *
+   * @prop {Drupal~displaceOffset} offsets
+   *
+   * @param {bool} [broadcast]
+   *   When true or undefined, causes the recalculated offsets values to be
    *   broadcast to listeners.
    *
-   * @return {object}
+   * @return {Drupal~displaceOffset}
    *   An object whose keys are the for sides an element -- top, right, bottom
    *   and left. The value of each key is the viewport displacement distance for
    *   that edge.
+   *
+   * @fires event:drupalViewportOffsetChange
    */
   function displace(broadcast) {
     offsets = Drupal.displace.offsets = calculateOffsets();
@@ -53,7 +86,7 @@
   /**
    * Determines the viewport offsets.
    *
-   * @return {object}
+   * @return {Drupal~displaceOffset}
    *   An object whose keys are the for sides an element -- top, right, bottom
    *   and left. The value of each key is the viewport displacement distance for
    *   that edge.
@@ -74,6 +107,8 @@
    * be considered in the viewport offset calculations. If the attribute has a
    * numeric value, that value will be used. If no value is provided, one will
    * be calculated using the element's dimensions and placement.
+   *
+   * @function Drupal.displace.calculateOffset
    *
    * @param {string} edge
    *   The name of the edge to calculate. Can be 'top', 'right',
@@ -111,7 +146,7 @@
   /**
    * Calculates displacement for element based on its dimensions and placement.
    *
-   * @param {jQuery} $el
+   * @param {HTMLElement} el
    *   The jQuery element whose dimensions and placement will be measured.
    *
    * @param {string} edge
@@ -163,15 +198,23 @@
 
   /**
    * Assign the displace function to a property of the Drupal global object.
+   *
+   * @ignore
    */
   Drupal.displace = displace;
   $.extend(Drupal.displace, {
+
     /**
-     * Expose offsets to other scripts to avoid having to recalculate offsets
+     * Expose offsets to other scripts to avoid having to recalculate offsets.
+     *
+     * @ignore
      */
     offsets: offsets,
+
     /**
      * Expose method to compute a single edge offsets.
+     *
+     * @ignore
      */
     calculateOffset: calculateOffset
   });

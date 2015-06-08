@@ -7,6 +7,11 @@
 
   "use strict";
 
+  /**
+   * Handles `aria-expanded` and `aria-pressed` attributes on details elements.
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.detailsAria = {
     attach: function () {
       $('body').once('detailsAria').on('click.detailsAria', 'summary', function (event) {

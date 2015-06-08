@@ -2,6 +2,7 @@
  * @file
  * Adds default classes to buttons for styling purposes.
  */
+
 (function ($) {
 
   "use strict";

@@ -7,6 +7,11 @@
 
   "use strict";
 
+  /**
+   * Initialize dialogs for Ajax purposes.
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.dialog = {
     attach: function (context, settings) {
       var $context = $(context);
@@ -46,9 +51,10 @@
     /**
      * Scan a dialog for any primary buttons and move them to the button area.
      *
-     * @param $dialog
+     * @param {jQuery} $dialog
      *   An jQuery object containing the element that is the dialog target.
-     * @return
+     *
+     * @return {Array}
      *   An array of buttons that need to be added to the button area.
      */
     prepareDialogButtons: function ($dialog) {
@@ -81,6 +87,12 @@
 
   /**
    * Command to open a dialog.
+   *
+   * @param {Drupal.Ajax} ajax
+   * @param {object} response
+   * @param {number} [status]
+   *
+   * @return {bool|undefined}
    */
   Drupal.AjaxCommands.prototype.openDialog = function (ajax, response, status) {
     if (!response.selector) {
@@ -107,7 +119,7 @@
       response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
 
-    // Bind dialogButtonsChange
+    // Bind dialogButtonsChange.
     $dialog.on('dialogButtonsChange', function () {
       var buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
       $dialog.dialog('option', 'buttons', buttons);
@@ -131,6 +143,12 @@
    * Command to close a dialog.
    *
    * If no selector is given, it defaults to trying to close the modal.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {string} response.selector
+   * @param {bool} response.persist
+   * @param {number} [status]
    */
   Drupal.AjaxCommands.prototype.closeDialog = function (ajax, response, status) {
     var $dialog = $(response.selector);
@@ -141,14 +159,21 @@
       }
     }
 
-    // Unbind dialogButtonsChange
+    // Unbind dialogButtonsChange.
     $dialog.off('dialogButtonsChange');
   };
 
   /**
    * Command to set a dialog property.
    *
-   * jQuery UI specific way of setting dialog options.
+   * JQuery UI specific way of setting dialog options.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {string} response.selector
+   * @param {string} response.optionsName
+   * @param {string} response.optionValue
+   * @param {number} [status]
    */
   Drupal.AjaxCommands.prototype.setDialogOption = function (ajax, response, status) {
     var $dialog = $(response.selector);
@@ -159,6 +184,11 @@
 
   /**
    * Binds a listener on dialog creation to handle the cancel link.
+   *
+   * @param {jQuery.Event} e
+   * @param {Drupal.dialog~dialogDefinition} dialog
+   * @param {jQuery} $element
+   * @param {object} settings
    */
   $(window).on('dialog:aftercreate', function (e, dialog, $element, settings) {
     $element.on('click.dialog', '.dialog-cancel', function (e) {
@@ -170,6 +200,10 @@
 
   /**
    * Removes all 'dialog' listeners.
+   *
+   * @param {jQuery.Event} e
+   * @param {Drupal.dialog~dialogDefinition} dialog
+   * @param {jQuery} $element
    */
   $(window).on('dialog:beforeclose', function (e, dialog, $element) {
     $element.off('.dialog');

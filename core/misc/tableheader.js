@@ -1,9 +1,16 @@
+/**
+ * @file
+ * Sticky table headers.
+ */
+
 (function ($, Drupal, displace) {
 
   "use strict";
 
   /**
    * Attaches sticky table headers.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.tableHeader = {
     attach: function (context) {
@@ -48,26 +55,36 @@
 
   // Bind event that need to change all tables.
   $(window).on({
+
     /**
      * When resizing table width can change, recalculate everything.
+     *
+     * @ignore
      */
     'resize.TableHeader': tableHeaderResizeHandler,
 
     /**
      * Bind only one event to take care of calling all scroll callbacks.
+     *
+     * @ignore
      */
     'scroll.TableHeader': tableHeaderOnScrollHandler
   });
   // Bind to custom Drupal events.
   $(document).on({
+
     /**
      * Recalculate columns width when window is resized and when show/hide
      * weight is triggered.
+     *
+     * @ignore
      */
     'columnschange.TableHeader': tableHeaderResizeHandler,
 
     /**
-     * Recalculate TableHeader.topOffset when viewport is resized
+     * Recalculate TableHeader.topOffset when viewport is resized.
+     *
+     * @ignore
      */
     'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
   });
@@ -78,19 +95,37 @@
    * TableHeader will make the current table header stick to the top of the page
    * if the table is very long.
    *
-   * @param table
+   * @constructor Drupal.TableHeader
+   *
+   * @param {HTMLElement} table
    *   DOM object for the table to add a sticky header to.
    *
-   * @constructor
+   * @listens event:columnschange
    */
   function TableHeader(table) {
     var $table = $(table);
 
+    /**
+     * @name Drupal.TableHeader#$originalTable
+     *
+     * @type {HTMLElement}
+     */
     this.$originalTable = $table;
-    this.$originalHeader = $table.children('thead');
-    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
-    this.displayWeight = null;
 
+    /**
+     * @type {jQuery}
+     */
+    this.$originalHeader = $table.children('thead');
+
+    /**
+     * @type {jQuery}
+     */
+    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
+
+    /**
+     * @type {null|bool}
+     */
+    this.displayWeight = null;
     this.$originalTable.addClass('sticky-table');
     this.tableHeight = $table[0].clientHeight;
     this.tableOffset = this.$originalTable.offset();
@@ -111,11 +146,12 @@
   /**
    * Store the state of TableHeader.
    */
-  $.extend(TableHeader, {
+  $.extend(TableHeader, /** @lends Drupal.TableHeader */{
+
     /**
      * This will store the state of all processed tables.
      *
-     * @type {Array}
+     * @type {Array.<Drupal.TableHeader>}
      */
     tables: []
   });
@@ -123,24 +159,33 @@
   /**
    * Extend TableHeader prototype.
    */
-  $.extend(TableHeader.prototype, {
+  $.extend(TableHeader.prototype, /** @lends Drupal.TableHeader# */{
+
     /**
      * Minimum height in pixels for the table to have a sticky header.
+     *
+     * @type {number}
      */
     minHeight: 100,
 
     /**
      * Absolute position of the table on the page.
+     *
+     * @type {?Drupal~displaceOffset}
      */
     tableOffset: null,
 
     /**
      * Absolute position of the table on the page.
+     *
+     * @type {?number}
      */
     tableHeight: null,
 
     /**
      * Boolean storing the sticky header visibility state.
+     *
+     * @type {bool}
      */
     stickyVisible: false,
 
@@ -169,8 +214,10 @@
     /**
      * Set absolute position of sticky.
      *
-     * @param offsetTop
-     * @param offsetLeft
+     * @param {number} offsetTop
+     * @param {number} offsetLeft
+     *
+     * @return {jQuery}
      */
     stickyPosition: function (offsetTop, offsetLeft) {
       var css = {};
@@ -185,6 +232,8 @@
 
     /**
      * Returns true if sticky is currently visible.
+     *
+     * @return {bool}
      */
     checkStickyVisible: function () {
       var scrollTop = scrollValue('scrollTop');
@@ -203,9 +252,10 @@
     /**
      * Check if sticky header should be displayed.
      *
-     * This function is throttled to once every 250ms to avoid unnecessary calls.
+     * This function is throttled to once every 250ms to avoid unnecessary
+     * calls.
      *
-     * @param event
+     * @param {jQuery.Event} e
      */
     onScroll: function (e) {
       this.checkStickyVisible();
@@ -217,7 +267,7 @@
     /**
      * Event handler: recalculates position of the sticky table header.
      *
-     * @param event
+     * @param {jQuery.Event} event
      *   Event being triggered.
      */
     recalculateSticky: function (event) {

@@ -18,6 +18,8 @@
    *
    * Does not discriminate based on element type, so allows you to set the
    * is-active class on any element: a, li…
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.activeLinks = {
     attach: function (context) {
@@ -28,7 +30,8 @@
       var originalSelectors = ['[data-drupal-link-system-path="' + path.currentPath + '"]'];
       var selectors;
 
-      // If this is the front page, we have to check for the <front> path as well.
+      // If this is the front page, we have to check for the <front> path as
+      // well.
       if (path.isFront) {
         originalSelectors.push('[data-drupal-link-system-path="<front>"]');
       }

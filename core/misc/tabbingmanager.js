@@ -3,42 +3,76 @@
  * Manages page tabbing modifications made by modules.
  */
 
+/**
+ * Allow modules to respond to the constrain event.
+ *
+ * @event drupalTabbingConstrained
+ */
+
+/**
+ * Allow modules to respond to the tabbingContext release event.
+ *
+ * @event drupalTabbingContextReleased
+ */
+
+/**
+ * Allow modules to respond to the constrain event.
+ *
+ * @event drupalTabbingContextActivated
+ */
+
+/**
+ * Allow modules to respond to the constrain event.
+ *
+ * @event drupalTabbingContextDeactivated
+ */
+
 (function ($, Drupal) {
 
   "use strict";
 
   /**
    * Provides an API for managing page tabbing order modifications.
+   *
+   * @constructor Drupal~TabbingManager
    */
   function TabbingManager() {
-    // Tabbing sets are stored as a stack. The active set is at the top of the
-    // stack. We use a JavaScript array as if it were a stack; we consider the
-    // first element to be the bottom and the last element to be the top. This
-    // allows us to use JavaScript's built-in Array.push() and Array.pop()
-    // methods.
+
+    /**
+     * Tabbing sets are stored as a stack. The active set is at the top of the
+     * stack. We use a JavaScript array as if it were a stack; we consider the
+     * first element to be the bottom and the last element to be the top. This
+     * allows us to use JavaScript's built-in Array.push() and Array.pop()
+     * methods.
+     *
+     * @type {Array.<Drupal~TabbingContext>}
+     */
     this.stack = [];
   }
 
   /**
    * Add public methods to the TabbingManager class.
    */
-  $.extend(TabbingManager.prototype, {
+  $.extend(TabbingManager.prototype, /** @lends Drupal~TabbingManager# */{
+
     /**
      * Constrain tabbing to the specified set of elements only.
      *
-     * Makes elements outside of the specified set of elements unreachable via the
-     * tab key.
+     * Makes elements outside of the specified set of elements unreachable via
+     * the tab key.
      *
-     * @param jQuery elements
-     *   The set of elements to which tabbing should be constrained. Can also be
-     *   a jQuery-compatible selector string.
+     * @param {jQuery} elements
+     *   The set of elements to which tabbing should be constrained. Can also
+     *   be a jQuery-compatible selector string.
      *
-     * @return TabbingContext
+     * @return {Drupal~TabbingContext}
+     *
+     * @fires event:drupalTabbingConstrained
      */
     constrain: function (elements) {
       // Deactivate all tabbingContexts to prepare for the new constraint. A
-      // tabbingContext instance will only be reactivated if the stack is unwound
-      // to it in the _unwindStack() method.
+      // tabbingContext instance will only be reactivated if the stack is
+      // unwound to it in the _unwindStack() method.
       var il = this.stack.length;
       for (var i = 0; i < il; i++) {
         this.stack[i].deactivate();
@@ -68,14 +102,15 @@
     },
 
     /**
-     * Restores a former tabbingContext when an active tabbingContext is released.
+     * Restores a former tabbingContext when an active one is released.
      *
-     * The TabbingManager stack of tabbingContext instances will be unwound from
-     * the top-most released tabbingContext down to the first non-released
+     * The TabbingManager stack of tabbingContext instances will be unwound
+     * from the top-most released tabbingContext down to the first non-released
      * tabbingContext instance. This non-released instance is then activated.
      */
     release: function () {
-      // Unwind as far as possible: find the topmost non-released tabbingContext.
+      // Unwind as far as possible: find the topmost non-released
+      // tabbingContext.
       var toActivate = this.stack.length - 1;
       while (toActivate >= 0 && this.stack[toActivate].released) {
         toActivate--;
@@ -94,11 +129,11 @@
     /**
      * Makes all elements outside the of the tabbingContext's set untabbable.
      *
-     * Elements made untabbable have their original tabindex and autofocus values
-     * stored so that they might be restored later when this tabbingContext
-     * is deactivated.
+     * Elements made untabbable have their original tabindex and autofocus
+     * values stored so that they might be restored later when this
+     * tabbingContext is deactivated.
      *
-     * @param TabbingContext tabbingContext
+     * @param {Drupal~TabbingContext} tabbingContext
      *   The TabbingContext instance that has been activated.
      */
     activate: function (tabbingContext) {
@@ -115,17 +150,18 @@
       for (var i = 0; i < il; i++) {
         this.recordTabindex($disabledSet.eq(i), level);
       }
-      // Make all tabbable elements outside of the active tabbing set unreachable.
+      // Make all tabbable elements outside of the active tabbing set
+      // unreachable.
       $disabledSet
         .prop('tabindex', -1)
         .prop('autofocus', false);
 
-      // Set focus on an element in the tabbingContext's set of tabbable elements.
-      // First, check if there is an element with an autofocus attribute. Select
-      // the last one from the DOM order.
+      // Set focus on an element in the tabbingContext's set of tabbable
+      // elements. First, check if there is an element with an autofocus
+      // attribute. Select the last one from the DOM order.
       var $hasFocus = $set.filter('[autofocus]').eq(-1);
-      // If no element in the tabbable set has an autofocus attribute, select the
-      // first element in the set.
+      // If no element in the tabbable set has an autofocus attribute, select
+      // the first element in the set.
       if ($hasFocus.length === 0) {
         $hasFocus = $set.eq(0);
       }
@@ -135,10 +171,10 @@
     /**
      * Restores that tabbable state of a tabbingContext's disabled elements.
      *
-     * Elements that were made untabbable have their original tabindex and autofocus
-     * values restored.
+     * Elements that were made untabbable have their original tabindex and
+     * autofocus values restored.
      *
-     * @param TabbingContext tabbingContext
+     * @param {Drupal~TabbingContext} tabbingContext
      *   The TabbingContext instance that has been deactivated.
      */
     deactivate: function (tabbingContext) {
@@ -153,9 +189,9 @@
     /**
      * Records the tabindex and autofocus values of an untabbable element.
      *
-     * @param jQuery $set
+     * @param {jQuery} $el
      *   The set of elements that have been disabled.
-     * @param Number level
+     * @param {number} level
      *   The stack level for which the tabindex attribute should be recorded.
      */
     recordTabindex: function ($el, level) {
@@ -170,9 +206,9 @@
     /**
      * Restores the tabindex and autofocus values of a reactivated element.
      *
-     * @param jQuery $el
+     * @param {jQuery} $el
      *   The element that is being reactivated.
-     * @param Number level
+     * @param {number} level
      *   The stack level for which the tabindex attribute should be restored.
      */
     restoreTabindex: function ($el, level) {
@@ -214,26 +250,53 @@
    *
    * This constraint can be removed with the release() method.
    *
-   * @param Object options
-   *   A set of initiating values that include:
-   *   - Number level: The level in the TabbingManager's stack of this
-   *   tabbingContext.
-   *   - jQuery $tabbableElements: The DOM elements that should be reachable via
-   *   the tab key when this tabbingContext is active.
-   *   - jQuery $disabledElements: The DOM elements that should not be reachable
-   *   via the tab key when this tabbingContext is active.
-   *   - Boolean released: A released tabbingContext can never be activated again.
-   *   It will be cleaned up when the TabbingManager unwinds its stack.
-   *   - Boolean active: When true, the tabbable elements of this tabbingContext
-   *   will be reachable via the tab key and the disabled elements will not. Only
-   *   one tabbingContext can be active at a time.
+   * @constructor Drupal~TabbingContext
+   *
+   * @param {object} options
+   *   A set of initiating values
+   * @param {number} options.level
+   *   The level in the TabbingManager's stack of this tabbingContext.
+   * @param {jQuery} options.$tabbableElements
+   *   The DOM elements that should be reachable via the tab key when this
+   *   tabbingContext is active.
+   * @param {jQuery} options.$disabledElements
+   *   The DOM elements that should not be reachable via the tab key when this
+   *   tabbingContext is active.
+   * @param {bool} options.released
+   *   A released tabbingContext can never be activated again. It will be
+   *   cleaned up when the TabbingManager unwinds its stack.
+   * @param {bool} options.active
+   *   When true, the tabbable elements of this tabbingContext will be reachable
+   *   via the tab key and the disabled elements will not. Only one
+   *   tabbingContext can be active at a time.
    */
   function TabbingContext(options) {
-    $.extend(this, {
+
+    $.extend(this, /** @lends Drupal~TabbingContext# */{
+
+      /**
+       * @type {?number}
+       */
       level: null,
+
+      /**
+       * @type {jQuery}
+       */
       $tabbableElements: $(),
+
+      /**
+       * @type {jQuery}
+       */
       $disabledElements: $(),
+
+      /**
+       * @type {bool}
+       */
       released: false,
+
+      /**
+       * @type {bool}
+       */
       active: false
     }, options);
   }
@@ -241,11 +304,15 @@
   /**
    * Add public methods to the TabbingContext class.
    */
-  $.extend(TabbingContext.prototype, {
+  $.extend(TabbingContext.prototype, /** @lends Drupal~TabbingContext# */{
+
     /**
      * Releases this TabbingContext.
      *
-     * Once a TabbingContext object is released, it can never be activated again.
+     * Once a TabbingContext object is released, it can never be activated
+     * again.
+     *
+     * @fires event:drupalTabbingContextReleased
      */
     release: function () {
       if (!this.released) {
@@ -259,6 +326,8 @@
 
     /**
      * Activates this TabbingContext.
+     *
+     * @fires event:drupalTabbingContextActivated
      */
     activate: function () {
       // A released TabbingContext object can never be activated again.
@@ -272,6 +341,8 @@
 
     /**
      * Deactivates this TabbingContext.
+     *
+     * @fires event:drupalTabbingContextDeactivated
      */
     deactivate: function () {
       if (this.active) {
@@ -288,6 +359,10 @@
   if (Drupal.tabbingManager) {
     return;
   }
+
+  /**
+   * @type {Drupal~TabbingManager}
+   */
   Drupal.tabbingManager = new TabbingManager();
 
 }(jQuery, Drupal));

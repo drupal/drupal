@@ -1,9 +1,16 @@
+/**
+ * @file
+ * Timezone detection.
+ */
+
 (function ($) {
 
   "use strict";
 
   /**
    * Set the client's system time zone as default values of form fields.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.setTimezone = {
     attach: function (context, settings) {
@@ -45,10 +52,11 @@
           isDaylightSavingTime = 0;
         }
 
-        // Submit request to the system/timezone callback and set the form field
-        // to the response time zone. The client date is passed to the callback
-        // for debugging purposes. Submit a synchronous request to avoid database
-        // errors associated with concurrent requests during install.
+        // Submit request to the system/timezone callback and set the form
+        // field to the response time zone. The client date is passed to the
+        // callback for debugging purposes. Submit a synchronous request to
+        // avoid database errors associated with concurrent requests
+        // during install.
         var path = 'system/timezone/' + abbreviation + '/' + offsetNow + '/' + isDaylightSavingTime;
         $.ajax({
           async: false,

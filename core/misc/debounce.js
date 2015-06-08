@@ -1,7 +1,10 @@
 /**
- * Limits the invocations of a function in a given time frame.
- *
+ * @file
  * Adapted from underscore.js with the addition Drupal namespace.
+ */
+
+/**
+ * Limits the invocations of a function in a given time frame.
  *
  * The debounce function wrapper should be used sparingly. One clear use case
  * is limiting the invocation of a callback attached to the window resize event.
@@ -11,13 +14,17 @@
  * function can be written in such a way that it is only invoked under specific
  * conditions.
  *
- * @param {Function} callback
+ * @param {function} func
  *   The function to be invoked.
- *
- * @param {Number} wait
+ * @param {number} wait
  *   The time period within which the callback function should only be
  *   invoked once. For example if the wait period is 250ms, then the callback
  *   will only be called at most 4 times per second.
+ * @param {bool} immediate
+ *   Whether we wait at the beginning or end to execute the function.
+ *
+ * @return {function}
+ *   The debounced function.
  */
 Drupal.debounce = function (func, wait, immediate) {
 

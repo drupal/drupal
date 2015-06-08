@@ -1,12 +1,16 @@
 /**
+ * @file
  * Drupal's batch API.
  */
+
 (function ($, Drupal) {
 
   "use strict";
 
   /**
    * Attaches the batch behavior to progress bars.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.batch = {
     attach: function (context, settings) {

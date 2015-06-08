@@ -1,6 +1,8 @@
 /**
+ * @file
  * Drupal's states library.
  */
+
 (function ($) {
 
   "use strict";
@@ -10,14 +12,21 @@
    *
    * Having the local states variable allows us to use the States namespace
    * without having to always declare "Drupal.states".
+   *
+   * @namespace Drupal.states
    */
   var states = Drupal.states = {
-    // An array of functions that should be postponed.
+
+    /**
+     * An array of functions that should be postponed.
+     */
     postponed: []
   };
 
   /**
    * Attaches the states.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.states = {
     attach: function (context, settings) {
@@ -48,13 +57,18 @@
   /**
    * Object representing an element that depends on other elements.
    *
-   * @param args
-   *   Object with the following keys (all of which are required):
-   *   - element: A jQuery object of the dependent element
-   *   - state: A State object describing the state that is dependent
-   *   - constraints: An object with dependency specifications. Lists all elements
-   *     that this element depends on. It can be nested and can contain arbitrary
-   *     AND and OR clauses.
+   * @constructor Drupal.states.Dependent
+   *
+   * @param {object} args
+   *   Object with the following keys (all of which are required)
+   * @param {jQuery} args.element
+   *   A jQuery object of the dependent element
+   * @param {Drupal.states.State} args.state
+   *   A State object describing the state that is dependent
+   * @param {object} args.constraints
+   *   An object with dependency specifications. Lists all elements that this
+   *   element depends on. It can be nested and can contain
+   *   arbitrary AND and OR clauses.
    */
   states.Dependent = function (args) {
     $.extend(this, {values: {}, oldValue: null}, args);
@@ -71,6 +85,12 @@
    * Comparison functions for comparing the value of an element with the
    * specification from the dependency settings. If the object type can't be
    * found in this list, the === operator is used by default.
+   *
+   * @name Drupal.states.Dependent.comparisons
+   *
+   * @prop {function} RegExp
+   * @prop {function} Function
+   * @prop {function} Number
    */
   states.Dependent.comparisons = {
     'RegExp': function (reference, value) {
@@ -81,21 +101,25 @@
       return reference(value);
     },
     'Number': function (reference, value) {
-      // If "reference" is a number and "value" is a string, then cast reference
-      // as a string before applying the strict comparison in compare(). Otherwise
-      // numeric keys in the form's #states array fail to match string values
-      // returned from jQuery's val().
+      // If "reference" is a number and "value" is a string, then cast
+      // reference as a string before applying the strict comparison in
+      // compare().
+      // Otherwise numeric keys in the form's #states array fail to match
+      // string values returned from jQuery's val().
       return (typeof value === 'string') ? compare(reference.toString(), value) : compare(reference, value);
     }
   };
 
   states.Dependent.prototype = {
+
     /**
      * Initializes one of the elements this dependent depends on.
      *
-     * @param selector
+     * @memberof Drupal.states.Dependent#
+     *
+     * @param {string} selector
      *   The CSS selector describing the dependee.
-     * @param dependeeStates
+     * @param {object} dependeeStates
      *   The list of states that have to be monitored for tracking the
      *   dependee's compliance status.
      */
@@ -113,7 +137,8 @@
       for (var i in dependeeStates) {
         if (dependeeStates.hasOwnProperty(i)) {
           state = dependeeStates[i];
-          // Make sure we're not initializing this selector/state combination twice.
+          // Make sure we're not initializing this selector/state combination
+          // twice.
           if ($.inArray(state, dependeeStates) === -1) {
             continue;
           }
@@ -135,14 +160,16 @@
     /**
      * Compares a value with a reference value.
      *
-     * @param reference
+     * @memberof Drupal.states.Dependent#
+     *
+     * @param {object} reference
      *   The value used for reference.
-     * @param selector
+     * @param {string} selector
      *   CSS selector describing the dependee.
-     * @param state
+     * @param {Drupal.states.State} state
      *   A State object describing the dependee's updated state.
      *
-     * @return
+     * @return {bool}
      *   true or false.
      */
     compare: function (reference, selector, state) {
@@ -160,11 +187,13 @@
     /**
      * Update the value of a dependee's state.
      *
-     * @param selector
+     * @memberof Drupal.states.Dependent#
+     *
+     * @param {string} selector
      *   CSS selector describing the dependee.
-     * @param state
+     * @param {Drupal.states.state} state
      *   A State object describing the dependee's updated state.
-     * @param value
+     * @param {string} value
      *   The new value for the dependee's updated state.
      */
     update: function (selector, state, value) {
@@ -177,6 +206,8 @@
 
     /**
      * Triggers change events in case a state changed.
+     *
+     * @memberof Drupal.states.Dependent#
      */
     reevaluate: function () {
       // Check whether any constraint for this dependent state is satisfied.
@@ -200,14 +231,16 @@
     /**
      * Evaluates child constraints to determine if a constraint is satisfied.
      *
-     * @param constraints
+     * @memberof Drupal.states.Dependent#
+     *
+     * @param {object|Array} constraints
      *   A constraint object or an array of constraints.
-     * @param selector
+     * @param {string} selector
      *   The selector for these constraints. If undefined, there isn't yet a
      *   selector that these constraints apply to. In that case, the keys of the
      *   object are interpreted as the selector if encountered.
      *
-     * @return
+     * @return {bool}
      *   true or false, depending on whether these constraints are satisfied.
      */
     verifyConstraints: function (constraints, selector) {
@@ -219,8 +252,8 @@
         for (var i = 0; i < len; i++) {
           if (constraints[i] !== 'xor') {
             var constraint = this.checkConstraints(constraints[i], selector, i);
-            // Return if this is OR and we have a satisfied constraint or if this
-            // is XOR and we have a second satisfied constraint.
+            // Return if this is OR and we have a satisfied constraint or if
+            // this is XOR and we have a second satisfied constraint.
             if (constraint && (hasXor || result)) {
               return hasXor;
             }
@@ -229,15 +262,15 @@
         }
       }
       // Make sure we don't try to iterate over things other than objects. This
-      // shouldn't normally occur, but in case the condition definition is bogus,
-      // we don't want to end up with an infinite loop.
+      // shouldn't normally occur, but in case the condition definition is
+      // bogus, we don't want to end up with an infinite loop.
       else if ($.isPlainObject(constraints)) {
         // This constraint is an object (AND).
         for (var n in constraints) {
           if (constraints.hasOwnProperty(n)) {
             result = ternary(result, this.checkConstraints(constraints[n], selector, n));
-            // False and anything else will evaluate to false, so return when any
-            // false condition is found.
+            // False and anything else will evaluate to false, so return when
+            // any false condition is found.
             if (result === false) { return false; }
           }
         }
@@ -248,27 +281,28 @@
     /**
      * Checks whether the value matches the requirements for this constraint.
      *
-     * @param value
+     * @memberof Drupal.states.Dependent#
+     *
+     * @param {string|Array|object} value
      *   Either the value of a state or an array/object of constraints. In the
      *   latter case, resolving the constraint continues.
-     * @param selector
+     * @param {string} [selector]
      *   The selector for this constraint. If undefined, there isn't yet a
-     *   selector that this constraint applies to. In that case, the state key is
-     *   propagates to a selector and resolving continues.
-     * @param state
+     *   selector that this constraint applies to. In that case, the state key
+     *   is propagates to a selector and resolving continues.
+     * @param {Drupal.states.State} [state]
      *   The state to check for this constraint. If undefined, resolving
-     *   continues.
-     *   If both selector and state aren't undefined and valid non-numeric
-     *   strings, a lookup for the actual value of that selector's state is
-     *   performed. This parameter is not a State object but a pristine state
-     *   string.
+     *   continues. If both selector and state aren't undefined and valid
+     *   non-numeric strings, a lookup for the actual value of that selector's
+     *   state is performed. This parameter is not a State object but a pristine
+     *   state string.
      *
-     * @return
+     * @return {bool}
      *   true or false, depending on whether this constraint is satisfied.
      */
     checkConstraints: function (value, selector, state) {
-      // Normalize the last parameter. If it's non-numeric, we treat it either as
-      // a selector (in case there isn't one yet) or as a trigger/state.
+      // Normalize the last parameter. If it's non-numeric, we treat it either
+      // as a selector (in case there isn't one yet) or as a trigger/state.
       if (typeof state !== 'string' || (/[0-9]/).test(state[0])) {
         state = null;
       }
@@ -279,7 +313,7 @@
       }
 
       if (state !== null) {
-        // constraints is the actual constraints of an element to check for.
+        // Constraints is the actual constraints of an element to check for.
         state = states.State.sanitize(state);
         return invert(this.compare(value, selector, state), state.invert);
       }
@@ -291,11 +325,15 @@
 
     /**
      * Gathers information about all required triggers.
+     *
+     * @memberof Drupal.states.Dependent#
+     *
+     * @return {object}
      */
     getDependees: function () {
       var cache = {};
-      // Swivel the lookup function so that we can record all available selector-
-      // state combinations for initialization.
+      // Swivel the lookup function so that we can record all available
+      // selector- state combinations for initialization.
       var _compare = this.compare;
       this.compare = function (reference, selector, state) {
         (cache[selector] || (cache[selector] = [])).push(state.name);
@@ -317,6 +355,11 @@
     }
   };
 
+  /**
+   * @constructor Drupal.states.Trigger
+   *
+   * @param {object} args
+   */
   states.Trigger = function (args) {
     $.extend(this, args);
 
@@ -332,6 +375,10 @@
   };
 
   states.Trigger.prototype = {
+
+    /**
+     * @memberof Drupal.states.Trigger#
+     */
     initialize: function () {
       var trigger = states.Trigger.states[this.state];
 
@@ -351,6 +398,12 @@
       this.element.data('trigger:' + this.state, true);
     },
 
+    /**
+     * @memberof Drupal.states.Trigger#
+     *
+     * @param {jQuery.Event} event
+     * @param {function} valueFn
+     */
     defaultTrigger: function (event, valueFn) {
       var oldValue = valueFn.call(this.element);
 
@@ -376,9 +429,16 @@
    * of an element. Whenever an element depends on the state of another element,
    * one of these trigger functions is added to the dependee so that the
    * dependent element can be updated.
+   *
+   * @name Drupal.states.Trigger.states
+   *
+   * @prop empty
+   * @prop checked
+   * @prop value
+   * @prop collapsed
    */
   states.Trigger.states = {
-    // 'empty' describes the state to be monitored
+    // 'empty' describes the state to be monitored.
     empty: {
       // 'keyup' is the (native DOM) event that we watch for.
       'keyup': function () {
@@ -390,9 +450,9 @@
 
     checked: {
       'change': function () {
-        // prop() and attr() only takes the first element into account. To support
-        // selectors matching multiple checkboxes, iterate over all and return
-        // whether any is checked.
+        // prop() and attr() only takes the first element into account. To
+        // support selectors matching multiple checkboxes, iterate over all and
+        // return whether any is checked.
         var checked = false;
         this.each(function () {
           // Use prop() here as we want a boolean of the checkbox state.
@@ -434,9 +494,16 @@
 
   /**
    * A state object is used for describing the state and performing aliasing.
+   *
+   * @constructor Drupal.states.State
+   *
+   * @param {string} state
    */
   states.State = function (state) {
-    // We may need the original unresolved name later.
+
+    /**
+     * Original unresolved name.
+     */
     this.pristine = this.name = state;
 
     // Normalize the state name.
@@ -460,6 +527,12 @@
 
   /**
    * Creates a new State object by sanitizing the passed value.
+   *
+   * @name Drupal.states.State.sanitize
+   *
+   * @param {string|Drupal.states.State} state
+   *
+   * @return {Drupal.states.state}
    */
   states.State.sanitize = function (state) {
     if (state instanceof states.State) {
@@ -471,8 +544,10 @@
   };
 
   /**
-   * This list of aliases is used to normalize states and associates negated names
-   * with their respective inverse state.
+   * This list of aliases is used to normalize states and associates negated
+   * names with their respective inverse state.
+   *
+   * @name Drupal.states.State.aliases
    */
   states.State.aliases = {
     'enabled': '!disabled',
@@ -490,10 +565,18 @@
   };
 
   states.State.prototype = {
+
+    /**
+     * @memberof Drupal.states.State#
+     */
     invert: false,
 
     /**
      * Ensures that just using the state object returns the name.
+     *
+     * @memberof Drupal.states.State#
+     *
+     * @return {string}
      */
     toString: function () {
       return this.name;
@@ -563,6 +646,13 @@
 
   /**
    * Bitwise AND with a third undefined state.
+   *
+   * @function Drupal.states~ternary
+   *
+   * @param {*} a
+   * @param {*} b
+   *
+   * @return {bool}
    */
   function ternary(a, b) {
     if (typeof a === 'undefined') {
@@ -578,6 +668,13 @@
 
   /**
    * Inverts a (if it's not undefined) when invertState is true.
+   *
+   * @function Drupal.states~invert
+   *
+   * @param {*} a
+   * @param {bool} invertState
+   *
+   * @return {bool}
    */
   function invert(a, invertState) {
     return (invertState && typeof a !== 'undefined') ? !a : a;
@@ -585,6 +682,13 @@
 
   /**
    * Compares two values while ignoring undefined values.
+   *
+   * @function Drupal.states~compare
+   *
+   * @param {*} a
+   * @param {*} b
+   *
+   * @return {bool}
    */
   function compare(a, b) {
     if (a === b) {
