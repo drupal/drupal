@@ -469,7 +469,7 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *     $groups['Block'] => array(
  *       'BlockTestCase' => array(
  *         'name' => 'Block functionality',
- *         'description' => 'Add, edit and delete custom block...',
+ *         'description' => 'Add, edit and delete custom block.',
  *         'group' => 'Block',
  *       ),
  *     );

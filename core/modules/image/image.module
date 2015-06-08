@@ -177,7 +177,7 @@ function image_file_download($uri) {
       // Confirm there's at least one module granting access and none denying access.
       if (!empty($headers) && !in_array(-1, $headers)) {
         return array(
-          // Send headers describing the image's size, and MIME-type...
+          // Send headers describing the image's size, and MIME-type.
           'Content-Type' => $image->getMimeType(),
           'Content-Length' => $image->getFileSize(),
           // By not explicitly setting them here, this uses normal Drupal

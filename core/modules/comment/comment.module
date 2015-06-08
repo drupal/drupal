@@ -250,7 +250,7 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment object.
  * @param $view_mode
- *   (optional) View mode, e.g. 'full', 'teaser'... Defaults to 'full'.
+ *   (optional) View mode; e.g., 'full', 'teaser', etc. Defaults to 'full'.
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
@@ -268,7 +268,7 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  * @param $comments
  *   An array of comments as returned by entity_load_multiple().
  * @param $view_mode
- *   View mode, e.g. 'full', 'teaser'...
+ *   View mode; e.g., 'full', 'teaser', etc.
  * @param $langcode
  *   (optional) A string indicating the language field values are to be shown
  *   in. If no language is provided the current content language is used.

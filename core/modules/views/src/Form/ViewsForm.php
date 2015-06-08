@@ -130,7 +130,8 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
 
     $options = array('query' => $query);
     $form['#action'] = $view->hasUrl() ? $view->getUrl()->setOptions($options)->toString() : Url::fromRoute('<current>')->setOptions($options)->toString();
-    // Tell the preprocessor whether it should hide the header, footer, pager...
+    // Tell the preprocessor whether it should hide the header, footer, pager,
+    // etc.
     $form['show_view_elements'] = array(
       '#type' => 'value',
       '#value' => ($step == 'views_form_views_form') ? TRUE : FALSE,

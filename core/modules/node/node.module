@@ -567,7 +567,7 @@ function node_theme_suggestions_node(array $variables) {
  *   An associative array containing:
  *   - elements: An array of elements to display in view mode.
  *   - node: The node object.
- *   - view_mode: View mode; e.g., 'full', 'teaser'...
+ *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
  */
 function template_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
@@ -785,7 +785,7 @@ function node_get_recent($number = 10) {
  * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  * @param $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
+ *   (optional) View mode, e.g., 'full', 'teaser', etc. Defaults to 'full.'
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to NULL which is
  *   the global content language of the current request.
@@ -803,7 +803,7 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  * @param $nodes
  *   An array of nodes as returned by Node::loadMultiple().
  * @param $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser.'
+ *   (optional) View mode, e.g., 'full', 'teaser', etc. Defaults to 'teaser.'
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.

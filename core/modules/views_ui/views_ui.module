@@ -322,7 +322,7 @@ function views_ui_views_analyze(ViewExecutable $view) {
 }
 
 /**
- * Truncate strings to a set length and provide a ... if they truncated.
+ * Truncate strings to a set length and provide a '...' if they truncated.
  *
  * This is often used in the UI to ensure long strings fit.
  */

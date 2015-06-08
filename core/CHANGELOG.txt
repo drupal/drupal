@@ -96,7 +96,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Added language selectors to most configuration options (views, menus,
         etc.)
       * Added a configuration translation user interface that works with any
-        configuration with translatable values (blocks, views, fields, etc).
+        configuration with translatable values (blocks, views, fields, etc.).
       * Added language options to block visibility.
     * Much improved language APIs for developers:
       * Added simple APIs and hooks to save/delete/update languages.
@@ -682,7 +682,7 @@ Drupal 4.7.0, 2006-05-01
 - Added support for PHP5's 'mysqli' extension.
 - Search module:
     * Made indexer smarter and more robust.
-    * Added advanced search operators (e.g. phrase, node type, ...).
+    * Added advanced search operators (e.g., phrase, node type, etc.).
     * Added customizable result ranking.
 - PostgreSQL support:
     * Removed dependency on PL/pgSQL procedural language.
@@ -1059,7 +1059,7 @@ Drupal 4.0.0, 2002-06-15
     * Made each cloud site have its own settings.
     * Modules and themes can now be enabled/disabled using the administration pages.
     * Added URL abstraction for links.
-    * Usability changes (renamed links, better UI, etc).
+    * Usability changes (renamed links, better UI, etc.).
 - Collaboratively revised and expanded the Drupal documentation.
 
 Drupal 3.0.1, 2001-10-15

@@ -90,7 +90,7 @@ class PluginInstanceTest extends ViewUnitTestBase {
         if ($reflection->isSubclassOf('Drupal\views\Plugin\views\PluginBase')) {
           // Create a plugin instance and check what it is. This is not just
           // good to check they can be created but for throwing any notices for
-          // method signatures etc... too.
+          // method signatures etc. too.
           $instance = $manager->createInstance($id);
           $this->assertTrue($instance instanceof $definition['class'], format_string('Instance of @type:@id created', array('@type' => $type, '@id' => $id)));
         }

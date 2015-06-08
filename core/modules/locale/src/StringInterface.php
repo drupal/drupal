@@ -156,7 +156,7 @@ interface StringInterface {
    *
    * Locations are arbitrary pairs of type and name strings, used to store
    * information about the origins of the string, like the file name it
-   * was found on, the path on which it was discovered, etc...
+   * was found on, the path on which it was discovered, etc.
    *
    * A string can have any number of locations since the same string may be
    * found on different places of Drupal code and configuration.
@@ -179,7 +179,7 @@ interface StringInterface {
    * @param string $name
    *   Location name. Drupal path in case of online discovered translations,
    *   file path in case of imported strings, configuration name for strings
-   *   that come from configuration, etc...
+   *   that come from configuration, etc.
    *
    * @return $this
    */

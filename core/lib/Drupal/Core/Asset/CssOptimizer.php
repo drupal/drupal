@@ -176,8 +176,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     $directory = $directory == '.' ? '' : $directory .'/';
 
     // Alter all internal url() paths. Leave external paths alone. We don't need
-    // to normalize absolute paths here (i.e. remove folder/... segments)
-    // because that will be done later.
+    // to normalize absolute paths here because that will be done later.
     return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+)([^\'")]+)([\'"]?)\s*\)/i', 'url(\1' . $directory . '\2\3)', $file);
   }
 

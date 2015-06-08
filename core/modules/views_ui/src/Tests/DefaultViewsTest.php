@@ -200,7 +200,7 @@ class DefaultViewsTest extends UITestBase {
    * @param $unique_href_part
    *   A unique string that is expected to occur within the href of the desired
    *   link. For example, if the link URL is expected to look like
-   *   "admin/structure/views/view/glossary/...", then "/glossary/" could be
+   *   "admin/structure/views/view/glossary/*", then "/glossary/" could be
    *   passed as the expected unique string.
    *
    * @return

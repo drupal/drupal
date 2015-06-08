@@ -260,7 +260,7 @@ class Schema extends DatabaseSchema {
     $schema = $this->introspectSchema($table);
 
     // SQLite doesn't allow you to rename tables outside of the current
-    // database. So the syntax '...RENAME TO database.table' would fail.
+    // database. So the syntax '... RENAME TO database.table' would fail.
     // So we must determine the full table name here rather than surrounding
     // the table with curly braces in case the db_prefix contains a reference
     // to a database outside of our existing database.

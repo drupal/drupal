@@ -179,7 +179,7 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
  * @param \Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term object.
  * @param string $view_mode
- *   View mode, e.g. 'full', 'teaser'...
+ *   View mode; e.g., 'full', 'teaser', etc.
  * @param string $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
@@ -197,7 +197,7 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  * @param array $terms
  *   An array of taxonomy terms as returned by Term::loadMultiple().
  * @param string $view_mode
- *   View mode, e.g. 'full', 'teaser'...
+ *   View mode; e.g., 'full', 'teaser', etc.
  * @param string $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.

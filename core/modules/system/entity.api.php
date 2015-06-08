@@ -1516,7 +1516,7 @@ function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\Ent
  *   An associative array containing:
  *   - entity_type: The entity type, e.g., 'node' or 'user'.
  *   - bundle: The bundle, e.g., 'page' or 'article'.
- *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ *   - view_mode: The view mode, e.g., 'full', 'teaser', etc.
  *
  * @ingroup entity_crud
  */
@@ -1625,7 +1625,7 @@ function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $enti
  *   An associative array containing:
  *   - entity_type: The entity type, e.g., 'node' or 'user'.
  *   - bundle: The bundle, e.g., 'page' or 'article'.
- *   - form_mode: The form mode, e.g. 'default', 'profile', 'register'...
+ *   - form_mode: The form mode; e.g., 'default', 'profile', 'register', etc.
  *
  * @ingroup entity_crud
  */

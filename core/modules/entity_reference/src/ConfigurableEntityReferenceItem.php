@@ -131,9 +131,9 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
     $handlers_options = array();
     foreach (array_keys($selection_plugins) as $selection_group_id) {
-      // We only display base plugins (e.g. 'default', 'views', ...) and not
-      // entity type specific plugins (e.g. 'default:node', 'default:user',
-      // ...).
+      // We only display base plugins (e.g., 'default', 'views', etc.) and not
+      // entity type specific plugins (e.g., 'default:node', 'default:user',
+      // etc.).
       if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
         $handlers_options[$selection_group_id] = SafeMarkup::checkPlain($selection_plugins[$selection_group_id][$selection_group_id]['label']);
       }

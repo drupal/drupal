@@ -41,7 +41,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   // widget is 'single-value' (provides the input for one field value,
    *   // most common case), and will therefore be repeated as many times as
    *   // needed, or 'multiple-values' (one single widget allows the input of
-   *   // several values, e.g checkboxes, select box...).
+   *   // several values; e.g., checkboxes, select box, etc.).
    *   'field_foo' => array(
    *     '#access' => TRUE if the current user has 'edit' grants for the field,
    *       FALSE if not.

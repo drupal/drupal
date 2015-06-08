@@ -1408,7 +1408,7 @@ class Sql extends QueryPluginBase {
       $count_query = $count_query->countQuery();
 
       // Add additional arguments as a fake condition.
-      // XXX: this doesn't work... because PDO mandates that all bound arguments
+      // XXX: this doesn't work, because PDO mandates that all bound arguments
       // are used on the query. TODO: Find a better way to do this.
       if (!empty($additional_arguments)) {
         // $query->where('1 = 1', $additional_arguments);

@@ -97,14 +97,14 @@ AddEncoding gzip svgz
   # URL, either WITH or WITHOUT the 'www.' prefix. Choose ONLY one option:
   #
   # To redirect all users to access the site WITH the 'www.' prefix,
-  # (http://example.com/... will be redirected to http://www.example.com/...)
+  # (http://example.com/foo will be redirected to http://www.example.com/foo)
   # uncomment the following:
   # RewriteCond %{HTTP_HOST} .
   # RewriteCond %{HTTP_HOST} !^www\. [NC]
   # RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
-  # (http://www.example.com/... will be redirected to http://example.com/...)
+  # (http://www.example.com/foo will be redirected to http://example.com/foo)
   # uncomment the following:
   # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
   # RewriteRule ^ http%{ENV:protossl}://%1%{REQUEST_URI} [L,R=301]

@@ -66,18 +66,18 @@ interface WidgetInterface extends WidgetBaseInterface {
    * hook_field_widget_WIDGET_TYPE_form_alter().
    *
    * The FAPI element callbacks (such as #process, #element_validate,
-   * #value_callback...) used by the widget do not have access to the original
-   * $field_definition passed to the widget's constructor. Therefore, if any
-   * information is needed from that definition by those callbacks, the widget
-   * implementing this method, or a hook_field_widget[_WIDGET_TYPE]_form_alter()
-   * implementation, must extract the needed properties from the field
-   * definition and set them as ad-hoc $element['#custom'] properties, for later
-   * use by its element callbacks.
+   * #value_callback, etc.) used by the widget do not have access to the
+   * original $field_definition passed to the widget's constructor. Therefore,
+   * if any information is needed from that definition by those callbacks, the
+   * widget implementing this method, or a
+   * hook_field_widget[_WIDGET_TYPE]_form_alter() implementation, must extract
+   * the needed properties from the field definition and set them as ad-hoc
+   * $element['#custom'] properties, for later use by its element callbacks.
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   Array of default values for this field.
    * @param int $delta
-   *   The order of this item in the array of sub-elements (0, 1, 2, etc).
+   *   The order of this item in the array of sub-elements (0, 1, 2, etc.).
    * @param array $element
    *   A form element array containing basic properties for the widget:
    *   - #field_parents: The 'parents' space for the field in the form. Most

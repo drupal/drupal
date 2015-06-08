@@ -385,7 +385,7 @@ class BlockForm extends EntityForm {
     }, $block_ids);
 
     // Iterate through potential IDs until we get a new one. E.g.
-    // 'plugin', 'plugin_2', 'plugin_3'...
+    // 'plugin', 'plugin_2', 'plugin_3', etc.
     $count = 1;
     $machine_default = $suggestion;
     while (in_array($machine_default, $block_ids)) {

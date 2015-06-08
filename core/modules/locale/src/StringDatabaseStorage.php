@@ -433,7 +433,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       }
     }
 
-    // Process other options, string filter, query limit, etc...
+    // Process other options, string filter, query limit, etc.
     if (!empty($options['filters'])) {
       if (count($options['filters']) > 1) {
         $filter = db_or();

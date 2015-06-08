@@ -883,7 +883,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  * @param \Drupal\user\UserInterface[] $account
  *   An array of user accounts as returned by User::loadMultiple().
  * @param string $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser'.
+ *   (optional) View mode, e.g., 'full', 'teaser', etc. Defaults to 'teaser.'
  * @param string|null $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
