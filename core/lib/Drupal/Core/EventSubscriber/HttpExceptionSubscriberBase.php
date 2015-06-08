@@ -86,11 +86,12 @@ abstract class HttpExceptionSubscriberBase implements EventSubscriberInterface {
     $exception = $event->getException();
 
     // Make the exception available for example when rendering a block.
-    $event->getRequest()->attributes->set('exception', $exception);
+    $request = $event->getRequest();
+    $request->attributes->set('exception', $exception);
 
     $handled_formats = $this->getHandledFormats();
 
-    $format = $event->getRequest()->getRequestFormat();
+    $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
 
     if ($exception instanceof HttpExceptionInterface && (empty($handled_formats) || in_array($format, $handled_formats))) {
       $method = 'on' . $exception->getStatusCode();

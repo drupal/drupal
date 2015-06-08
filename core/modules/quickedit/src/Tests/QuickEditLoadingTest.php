@@ -12,7 +12,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\file\Entity\File;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
@@ -106,7 +107,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
     // Retrieving the metadata should result in an empty 403 response.
     $post = array('fields[0]' => 'node/1/body/en/full');
-    $response = $this->drupalPost('quickedit/metadata', 'application/json', $post);
+    $response = $this->drupalPostWithFormat(Url::fromRoute('quickedit.metadata'), 'json', $post);
     $this->assertIdentical('{"message":""}', $response);
     $this->assertResponse(403);
 
@@ -114,11 +115,11 @@ class QuickEditLoadingTest extends WebTestBase {
     // was empty as above, but we need to make sure that malicious users aren't
     // able to use any of the other endpoints either.
     $post = array('editors[0]' => 'form') + $this->getAjaxPageStatePostData();
-    $response = $this->drupalPost('quickedit/attachments', 'application/vnd.drupal-ajax', $post);
+    $response = $this->drupalPost('quickedit/attachments', '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
-    $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', $post);
+    $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
     $edit = array();
@@ -129,11 +130,11 @@ class QuickEditLoadingTest extends WebTestBase {
     $edit['body[0][value]'] = '<p>Malicious content.</p>';
     $edit['body[0][format]'] = 'filtered_html';
     $edit['op'] = t('Save');
-    $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', $edit);
+    $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', '', $edit, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
     $post = array('nocssjs' => 'true');
-    $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
+    $response = $this->drupalPostWithFormat('quickedit/entity/' . 'node/1', 'json', $post);
     $this->assertIdentical('{"message":""}', $response);
     $this->assertResponse(403);
   }
@@ -166,7 +167,7 @@ class QuickEditLoadingTest extends WebTestBase {
     // Retrieving the metadata should result in a 200 JSON response.
     $htmlPageDrupalSettings = $this->drupalSettings;
     $post = array('fields[0]' => 'node/1/body/en/full');
-    $response = $this->drupalPost('quickedit/metadata', 'application/json', $post);
+    $response = $this->drupalPostWithFormat('quickedit/metadata', 'json', $post);
     $this->assertResponse(200);
     $expected = array(
       'node/1/body/en/full' => array(
@@ -239,7 +240,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
       // Save the entity by moving the PrivateTempStore values to entity storage.
       $post = array('nocssjs' => 'true');
-      $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
+      $response = $this->drupalPostWithFormat('quickedit/entity/' . 'node/1', 'json', $post);
       $this->assertResponse(200);
       $ajax_commands = Json::decode($response);
       $this->assertIdentical(1, count($ajax_commands), 'The entity submission HTTP request results in one AJAX command.');
@@ -293,7 +294,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
       // Save the entity.
       $post = array('nocssjs' => 'true');
-      $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
+      $response = $this->drupalPostWithFormat('quickedit/entity/' . 'node/1', 'json', $post);
       $this->assertResponse(200);
       $ajax_commands = Json::decode($response);
       $this->assertIdentical(1, count($ajax_commands));
@@ -325,7 +326,7 @@ class QuickEditLoadingTest extends WebTestBase {
     // Retrieving the metadata should result in a 200 JSON response.
     $htmlPageDrupalSettings = $this->drupalSettings;
     $post = array('fields[0]' => 'node/1/title/en/full');
-    $response = $this->drupalPost('quickedit/metadata', 'application/json', $post);
+    $response = $this->drupalPostWithFormat('quickedit/metadata', 'json', $post);
     $this->assertResponse(200);
     $expected = array(
       'node/1/title/en/full' => array(
@@ -383,7 +384,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
       // Save the entity by moving the PrivateTempStore values to entity storage.
       $post = array('nocssjs' => 'true');
-      $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
+      $response = $this->drupalPostWithFormat('quickedit/entity/' . 'node/1', 'json', $post);
       $this->assertResponse(200);
       $ajax_commands = Json::decode($response);
       $this->assertIdentical(1, count($ajax_commands), 'The entity submission HTTP request results in one AJAX command.');

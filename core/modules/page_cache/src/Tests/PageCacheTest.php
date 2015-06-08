@@ -79,15 +79,16 @@ class PageCacheTest extends WebTestBase {
   }
 
   /**
-   * Tests support for different cache items with different Accept headers.
+   * Tests support for different cache items with different request formats
+   * specified via a query parameter.
    */
-  function testAcceptHeaderRequests() {
+  function testQueryParameterFormatRequests() {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();
 
     $accept_header_cache_url = Url::fromRoute('system_test.page_cache_accept_header');
-    $json_accept_header = array('Accept: application/json');
+    $accept_header_cache_url_with_json = Url::fromRoute('system_test.page_cache_accept_header', ['_format' => 'json']);
 
     $this->drupalGet($accept_header_cache_url);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'HTML page was not yet cached.');
@@ -95,9 +96,9 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'HTML page was cached.');
     $this->assertRaw('<p>oh hai this is html.</p>', 'The correct HTML response was returned.');
 
-    $this->drupalGet($accept_header_cache_url, array(), $json_accept_header);
+    $this->drupalGet($accept_header_cache_url_with_json);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Json response was not yet cached.');
-    $this->drupalGet($accept_header_cache_url, array(), $json_accept_header);
+    $this->drupalGet($accept_header_cache_url_with_json);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Json response was cached.');
     $this->assertRaw('{"content":"oh hai this is json"}', 'The correct Json response was returned.');
 
@@ -105,8 +106,8 @@ class PageCacheTest extends WebTestBase {
     \Drupal::service('module_installer')->install(['node', 'rest', 'hal']);
     $this->drupalCreateContentType(['type' => 'article']);
     $node = $this->drupalCreateNode(['type' => 'article']);
-    $node_uri = 'node/' . $node->id();
-    $hal_json_accept_header = ['Accept: application/hal+json'];
+    $node_uri = $node->urlInfo();
+    $node_url_with_hal_json_format = $node->urlInfo('canonical')->setRouteParameter('_format', 'hal_json');
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load('anonymous');
     $role->grantPermission('restful get entity:node');
@@ -121,20 +122,20 @@ class PageCacheTest extends WebTestBase {
 
     // Now request a HAL page, we expect that the first request is a cache miss
     // and it serves HTML.
-    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->drupalGet($node_url_with_hal_json_format);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
     $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
-    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->drupalGet($node_url_with_hal_json_format);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
 
     // Clear the page cache. After that request a HAL request, followed by an
     // ordinary HTML one.
     \Drupal::cache('render')->deleteAll();
-    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->drupalGet($node_url_with_hal_json_format);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
     $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
-    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->drupalGet($node_url_with_hal_json_format);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
 

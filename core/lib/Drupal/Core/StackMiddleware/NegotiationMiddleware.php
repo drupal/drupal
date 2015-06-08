@@ -38,7 +38,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
    *
    * @var array
    */
-  protected $formats;
+  protected $formats = [];
 
   /**
    * Constructs a new NegotiationMiddleware.
@@ -57,10 +57,12 @@ class NegotiationMiddleware implements HttpKernelInterface {
    * {@inheritdoc}
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
+    // Register available mime types.
     foreach ($this->formats as $format => $mime_type) {
       $request->setFormat($format, $mime_type);
     }
 
+    // Determine the request format using the negotiator.
     $request->setRequestFormat($this->negotiator->getContentType($request));
     return $this->app->handle($request, $type, $catch);
   }

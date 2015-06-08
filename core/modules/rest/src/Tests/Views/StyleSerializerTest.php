@@ -76,7 +76,7 @@ class StyleSerializerTest extends PluginTestBase {
     $view->initDisplay();
     $this->executeView($view);
 
-    $actual_json = $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
+    $actual_json = $this->drupalGetWithFormat('test/serialize/field', 'json');
     $this->assertResponse(200);
     $this->assertCacheTags($view->getCacheTags());
     // @todo Due to https://www.drupal.org/node/2352009 we can't yet test the
@@ -125,7 +125,7 @@ class StyleSerializerTest extends PluginTestBase {
 
     $expected = $serializer->serialize($entities, 'json');
 
-    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/json'));
+    $actual_json = $this->drupalGetWithFormat('test/serialize/entity', 'json');
     $this->assertResponse(200);
     $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
     $expected_cache_tags = $view->getCacheTags();
@@ -137,7 +137,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->assertCacheTags($expected_cache_tags);
 
     $expected = $serializer->serialize($entities, 'hal_json');
-    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/hal+json'));
+    $actual_json = $this->drupalGetWithFormat('test/serialize/entity', 'hal_json');
     $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
     $this->assertCacheTags($expected_cache_tags);
 
@@ -171,10 +171,10 @@ class StyleSerializerTest extends PluginTestBase {
     ));
     $view->save();
     $expected = $serializer->serialize($entities, 'json');
-    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/json'));
+    $actual_json = $this->drupalGetWithFormat('test/serialize/entity', 'json');
     $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
     $expected = $serializer->serialize($entities, 'xml');
-    $actual_xml = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/xml'));
+    $actual_xml = $this->drupalGetWithFormat('test/serialize/entity', 'xml');
     $this->assertIdentical($actual_xml, $expected, 'The expected XML output was found.');
   }
 
@@ -191,10 +191,10 @@ class StyleSerializerTest extends PluginTestBase {
     $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Should return a 406.
-    $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
+    $this->drupalGetWithFormat('test/serialize/field', 'json');
     $this->assertResponse(406, 'A 406 response was returned when JSON was requested.');
      // Should return a 200.
-    $this->drupalGet('test/serialize/field', array(), array('Accept: application/xml'));
+    $this->drupalGetWithFormat('test/serialize/field', 'xml');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested.');
 
     // Add 'json' as an accepted format, so we have multiple.
@@ -203,7 +203,7 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Should return a 200.
     // @todo This should be fixed when we have better content negotiation.
-    $this->drupalGet('test/serialize/field', array(), array('Accept: */*'));
+    $this->drupalGet('test/serialize/field');
     $this->assertResponse(200, 'A 200 response was returned when any format was requested.');
 
     // Should return a 200. Emulates a sample Firefox header.
@@ -211,14 +211,27 @@ class StyleSerializerTest extends PluginTestBase {
     $this->assertResponse(200, 'A 200 response was returned when a browser accept header was requested.');
 
     // Should return a 200.
-    $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
+    $this->drupalGetWithFormat('test/serialize/field', 'json');
     $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
     // Should return a 200.
-    $this->drupalGet('test/serialize/field', array(), array('Accept: application/xml'));
+    $this->drupalGetWithFormat('test/serialize/field', 'xml');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested');
     // Should return a 406.
-    $this->drupalGet('test/serialize/field', array(), array('Accept: application/html'));
-    $this->assertResponse(406, 'A 406 response was returned when HTML was requested.');
+    $this->drupalGetWithFormat('test/serialize/field', 'html');
+    $this->assertResponse(200, 'A 200 response was returned when HTML was requested.');
+
+    // Now configure now format, so all of them should be allowed.
+    $this->drupalPostForm($style_options, array('style_options[formats][json]' => '0', 'style_options[formats][xml]' => '0'), t('Apply'));
+
+    // Should return a 200.
+    $this->drupalGetWithFormat('test/serialize/field', 'json');
+    $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
+    // Should return a 200.
+    $this->drupalGetWithFormat('test/serialize/field', 'xml');
+    $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+    // Should return a 200.
+    $this->drupalGetWithFormat('test/serialize/field', 'html');
+    $this->assertResponse(200, 'A 200 response was returned when HTML was requested.');
   }
 
   /**

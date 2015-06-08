@@ -83,11 +83,18 @@
         var pb = this;
         // When doing a post request, you need non-null data. Otherwise a
         // HTTP 411 or HTTP 406 (with Apache mod_security) error may result.
+        var uri = this.uri;
+        if (uri.indexOf('?') === -1) {
+          uri += '?';
+        }
+        else {
+          uri += '&';
+        }
+        uri += '_format=json';
         $.ajax({
           type: this.method,
-          url: this.uri,
+          url: uri,
           data: '',
-          dataType: 'json',
           success: function (progress) {
             // Display errors.
             if (progress.status === 0) {

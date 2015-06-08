@@ -38,7 +38,7 @@ class AuthTest extends RESTTestBase {
     $entity->save();
 
     // Try to read the resource as an anonymous user, which should not work.
-    $this->httpRequest($entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo()->setRouteParameter('_format', $this->defaultFormat), 'GET');
     $this->assertResponse('401', 'HTTP response code is 401 when the request is not authenticated and the user is anonymous.');
     $this->assertRaw(json_encode(['message' => 'A fatal error occurred: No authentication credentials provided.']));
 
@@ -55,7 +55,7 @@ class AuthTest extends RESTTestBase {
 
     // Try to read the resource with session cookie authentication, which is
     // not enabled and should not work.
-    $this->httpRequest($entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo()->setRouteParameter('_format', $this->defaultFormat), 'GET');
     $this->assertResponse('403', 'HTTP response code is 403 when the request was authenticated by the wrong authentication provider.');
 
     // Ensure that cURL settings/headers aren't carried over to next request.
@@ -63,7 +63,7 @@ class AuthTest extends RESTTestBase {
 
     // Now read it with the Basic authentication which is enabled and should
     // work.
-    $this->basicAuthGet($entity->urlInfo(), $account->getUsername(), $account->pass_raw, $this->defaultMimeType);
+    $this->basicAuthGet($entity->urlInfo()->setRouteParameter('_format', $this->defaultFormat), $account->getUsername(), $account->pass_raw);
     $this->assertResponse('200', 'HTTP response code is 200 for successfully authenticated requests.');
     $this->curlClose();
   }

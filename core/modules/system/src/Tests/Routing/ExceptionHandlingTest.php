@@ -39,8 +39,8 @@ class ExceptionHandlingTest extends KernelTestBase {
    */
   public function testJson403() {
     $request = Request::create('/router_test/test15');
-    $request->headers->set('Accept', 'application/json');
-    $request->setFormat('json', ['application/json']);
+    $request->query->set('_format', 'json');
+    $request->setRequestFormat('json');
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     $kernel = \Drupal::getContainer()->get('http_kernel');
@@ -56,8 +56,8 @@ class ExceptionHandlingTest extends KernelTestBase {
    */
   public function testJson404() {
     $request = Request::create('/not-found');
-    $request->headers->set('Accept', 'application/json');
-    $request->setFormat('json', ['application/json']);
+    $request->query->set('_format', 'json');
+    $request->setRequestFormat('json');
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     $kernel = \Drupal::getContainer()->get('http_kernel');
@@ -73,7 +73,6 @@ class ExceptionHandlingTest extends KernelTestBase {
    */
   public function testHtml403() {
     $request = Request::create('/router_test/test15');
-    $request->headers->set('Accept', 'text/html');
     $request->setFormat('html', ['text/html']);
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
@@ -89,7 +88,6 @@ class ExceptionHandlingTest extends KernelTestBase {
    */
   public function testHtml404() {
     $request = Request::create('/not-found');
-    $request->headers->set('Accept', 'text/html');
     $request->setFormat('html', ['text/html']);
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
@@ -108,7 +106,6 @@ class ExceptionHandlingTest extends KernelTestBase {
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
 
     $request = Request::create('/router_test/test17');
-    $request->headers->set('Accept', 'text/html');
     $request->setFormat('html', ['text/html']);
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */

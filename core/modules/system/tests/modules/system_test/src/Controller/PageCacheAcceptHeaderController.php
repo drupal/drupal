@@ -25,7 +25,7 @@ class PageCacheAcceptHeaderController {
    * @return mixed
    */
   public function content(Request $request) {
-    if ($request->headers->get('Accept') == 'application/json') {
+    if ($request->getRequestFormat() === 'json') {
       return new JsonResponse(array('content' => 'oh hai this is json'));
     }
     else {

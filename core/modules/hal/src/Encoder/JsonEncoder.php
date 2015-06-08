@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder as SymfonyJsonEncoder;
 /**
  * Encodes HAL data in JSON.
  *
- * Simply respond to application/hal+json requests using the JSON encoder.
+ * Simply respond to hal_json format requests using the JSON encoder.
  */
 class JsonEncoder extends SymfonyJsonEncoder {
 

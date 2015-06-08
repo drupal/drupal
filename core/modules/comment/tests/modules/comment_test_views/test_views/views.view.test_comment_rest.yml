@@ -386,6 +386,7 @@ display:
           uses_fields: false
           formats:
             json: json
+            hal_json: hal_json
       row:
         type: data_field
         options:

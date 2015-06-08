@@ -181,7 +181,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
 
       // Save the entity.
       $post = array('nocssjs' => 'true');
-      $response = $this->drupalPost('quickedit/entity/node/' . $this->node->id(), 'application/json', $post);
+      $response = $this->drupalPostWithFormat('quickedit/entity/node/' . $this->node->id(), 'json', $post);
       $this->assertResponse(200);
 
       // The full node display should now link to all entities, with the new

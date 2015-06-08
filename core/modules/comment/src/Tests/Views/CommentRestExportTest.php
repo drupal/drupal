@@ -55,7 +55,7 @@ class CommentRestExportTest extends CommentTestBase {
    * Test comment row.
    */
   public function testCommentRestExport() {
-    $this->drupalGet(sprintf('node/%d/comments', $this->nodeUserCommented->id()), [], ['Accept' => 'application/hal+json']);
+    $this->drupalGetWithFormat(sprintf('node/%d/comments', $this->nodeUserCommented->id()), 'hal_json');
     $this->assertResponse(200);
     $contents = Json::decode($this->getRawContent());
     $this->assertEqual($contents[0]['subject'], 'How much wood would a woodchuck chuck');

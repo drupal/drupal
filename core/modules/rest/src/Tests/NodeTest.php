@@ -51,14 +51,14 @@ class NodeTest extends RESTTestBase {
 
     $node = $this->entityCreate('node');
     $node->save();
-    $this->httpRequest($node->urlInfo(), 'GET', NULL, $this->defaultMimeType);
+    $this->httpRequest($node->urlInfo()->setRouteParameter('_format', $this->defaultFormat), 'GET');
     $this->assertResponse(200);
     $this->assertHeader('Content-type', $this->defaultMimeType);
 
     // Also check that JSON works and the routing system selects the correct
     // REST route.
     $this->enableService('entity:node', 'GET', 'json');
-    $this->httpRequest($node->urlInfo(), 'GET', NULL, 'application/json');
+    $this->httpRequest($node->urlInfo()->setRouteParameter('_format', 'json'), 'GET');
     $this->assertResponse(200);
     $this->assertHeader('Content-type', 'application/json');
 

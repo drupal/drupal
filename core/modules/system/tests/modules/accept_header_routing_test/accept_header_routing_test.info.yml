@@ -1,0 +1,3 @@
+name: Accept header based routing test
+core: 8.x
+type: module

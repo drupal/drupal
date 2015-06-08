@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\AcceptHeaderMatcher.
+ * Contains \Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher.
  */
 
-namespace Drupal\Core\Routing;
+namespace Drupal\accept_header_routing_test\Routing;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Routing\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Route;

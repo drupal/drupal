@@ -10,10 +10,7 @@ namespace Drupal\Core;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class is a central library for content type negotiation.
- *
- * @todo Replace this class with a real content negotiation library based on
- *   mod_negotiation. Development of that is a work in progress.
+ * Provides content negotation based upon query parameters.
  */
 class ContentNegotiation {
 
@@ -36,21 +33,8 @@ class ContentNegotiation {
       return 'iframeupload';
     }
 
-    // Check all formats, if priority format is found return it.
-    $first_found_format = FALSE;
-    foreach ($request->getAcceptableContentTypes() as $mime_type) {
-      $format = $request->getFormat($mime_type);
-      if ($format === 'html') {
-        return $format;
-      }
-      if (!is_null($format) && !$first_found_format) {
-        $first_found_format = $format;
-      }
-    }
-
-    // No HTML found, return first found.
-    if ($first_found_format) {
-      return $first_found_format;
+    if ($request->query->has('_format')) {
+      return $request->query->get('_format');
     }
 
     if ($request->isXmlHttpRequest()) {

@@ -62,7 +62,7 @@ class ResponseGeneratorTest extends RESTTestBase {
     $this->enableService('entity:node', 'GET', 'json');
 
     // Tests to see if this also works for a non-html request
-    $this->httpRequest($node->urlInfo(), 'GET', NULL, 'application/json');
+    $this->httpRequest($node->urlInfo()->setOption('query', ['_format' => 'json']), 'GET');
     $this->assertResponse(200);
     $this->assertEqual('application/json', $this->drupalGetHeader('Content-Type'));
     $this->assertEqual($expectedGeneratorHeader, $this->drupalGetHeader('X-Generator'));

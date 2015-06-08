@@ -1,0 +1,5 @@
+services:
+  accept_header_matcher:
+    class: Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher
+    tags:
+      - { name: route_filter }

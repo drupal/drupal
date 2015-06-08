@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Routing\AcceptHeaderMatcherTest.
+ * Contains \Drupal\Tests\accept_header_routing_test\Unit\Routing\AcceptHeaderMatcherTest.
  */
 
-namespace Drupal\Tests\Core\Routing;
+namespace Drupal\Tests\accept_header_routing_teste\Unit\Routing;
 
-use Drupal\Core\Routing\AcceptHeaderMatcher;
+use Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,14 +22,14 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
   /**
    * A collection of shared fixture data for tests.
    *
-   * @var RoutingFixtures
+   * @var \Drupal\Tests\Core\Routing\RoutingFixtures
    */
   protected $fixtures;
 
   /**
    * The matcher object that is going to be tested.
    *
-   * @var \Drupal\Core\Routing\AcceptHeaderMatcher
+   * @var \Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher
    */
   protected $matcher;
 

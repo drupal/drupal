@@ -1395,8 +1395,27 @@ abstract class WebTestBase extends TestBase {
    * Requests a Drupal path in JSON format, and JSON decodes the response.
    */
   protected function drupalGetJSON($path, array $options = array(), array $headers = array()) {
-    $headers[] = 'Accept: application/json';
-    return Json::decode($this->drupalGet($path, $options, $headers));
+    return Json::decode($this->drupalGetWithFormat($path, 'json', $options, $headers));
+  }
+
+  /**
+   * Retrieves a Drupal path or an absolute path for a given format.
+   *
+   * @param string $path
+   *   Path to request AJAX from.
+   * @param string $format
+   *   The wanted request format.
+   * @param array $options
+   *   Array of URL options.
+   * @param array $headers
+   *   Array of headers.
+   *
+   * @return mixed
+   *   The result of the request.
+   */
+  protected function drupalGetWithFormat($path, $format, array $options = [], array $headers = []) {
+    $options += ['query' => ['_format' => $format]];
+    return $this->drupalGet($path, $options, $headers);
   }
 
   /**
@@ -1888,6 +1907,34 @@ abstract class WebTestBase extends TestBase {
         'Content-Type: application/x-www-form-urlencoded',
       ),
     ));
+  }
+
+  /**
+   * Performs a POST HTTP request with a specific format.
+   *
+   * @param string $path
+   *   Drupal path where the request should be POSTed to. Will be transformed
+   *   into an absolute path automatically.
+   * @param string $format
+   *   The request format.
+   * @param array $post
+   *   The POST data. When making a 'application/vnd.drupal-ajax' request, the
+   *   Ajax page state data should be included. Use getAjaxPageStatePostData()
+   *   for that.
+   * @param array $options
+   *   (optional) Options to be forwarded to the url generator. The 'absolute'
+   *   option will automatically be enabled.
+   *
+   * @return string
+   *   The content returned from the call to curl_exec().
+   *
+   * @see WebTestBase::drupalPost
+   * @see WebTestBase::getAjaxPageStatePostData()
+   * @see WebTestBase::curlExec()
+   */
+  protected function drupalPostWithFormat($path, $format, array $post, $options = []) {
+    $options['query']['_format'] = $format;
+    return $this->drupalPost($path, '', $post, $options);
   }
 
   /**
@@ -2616,6 +2663,9 @@ abstract class WebTestBase extends TestBase {
    */
   protected function buildUrl($path, array $options = array()) {
     if ($path instanceof Url) {
+      $url_options = $path->getOptions();
+      $options = $url_options + $options;
+      $path->setOptions($options);
       return $path->setAbsolute()->toString();
     }
     // The URL generator service is not necessarily available yet; e.g., in

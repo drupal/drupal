@@ -8,6 +8,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\rest\LinkManager\LinkManagerInterface;
@@ -195,14 +196,19 @@ class ContentEntityNormalizer extends NormalizerBase {
   /**
    * Constructs the entity URI.
    *
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface
    *   The entity.
-   *
    * @return string
    *   The entity URI.
    */
-  protected function getEntityUri($entity) {
-    return $entity->url('canonical', array('absolute' => TRUE));
+  protected function getEntityUri(EntityInterface $entity) {
+    // Some entity types don't provide a canonical link template, at least call
+    // out to ->url().
+    if ($entity->isNew() || !$entity->hasLinkTemplate('canonical')) {
+      return $entity->url('canonical', []);
+    }
+    $url = $entity->urlInfo('canonical', ['absolute' => TRUE]);
+    return $url->setRouteParameter('_format', 'hal_json')->toString();
   }
 
   /**

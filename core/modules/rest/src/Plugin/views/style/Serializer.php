@@ -146,11 +146,7 @@ class Serializer extends StylePluginBase {
    *   An array of formats.
    */
   public function getFormats() {
-    if (!empty($this->options['formats'])) {
-      return $this->options['formats'];
-    }
-
-    return $this->formats;
+    return $this->options['formats'];
   }
 
 }

@@ -10,6 +10,7 @@ namespace Drupal\Core\Routing;
 use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface as BaseRouteFilterInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -95,7 +96,9 @@ class LazyRouteFilter implements BaseRouteFilterInterface, ContainerAwareInterfa
 
     if (isset($filter_ids)) {
       foreach ($filter_ids as $filter_id) {
-        $collection = $this->container->get($filter_id)->filter($collection, $request);
+        if ($filter = $this->container->get($filter_id, ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
+          $collection = $filter->filter($collection, $request);
+        }
       }
     }
     return $collection;

@@ -560,10 +560,6 @@ services:
   http_middleware.negotiation:
     class: Drupal\Core\StackMiddleware\NegotiationMiddleware
     arguments: ['@http_negotiation.format_negotiator']
-    calls:
-      - [registerFormat, ['drupal_ajax', ['application/vnd.drupal-ajax']]]
-      - [registerFormat, ['drupal_dialog', ['application/vnd.drupal-dialog']]]
-      - [registerFormat, ['drupal_modal', ['application/vnd.drupal-modal']]]
     tags:
       - { name: http_middleware, priority: 400 }
   http_middleware.reverse_proxy:
@@ -758,8 +754,8 @@ services:
   password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
-  accept_header_matcher:
-    class: Drupal\Core\Routing\AcceptHeaderMatcher
+  request_format_route_filter:
+    class: Drupal\Core\Routing\RequestFormatRouteFilter
     tags:
       - { name: route_filter }
   content_type_header_matcher:

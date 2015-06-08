@@ -7,6 +7,7 @@
 
 namespace Drupal\hal\Tests;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 
 /**
@@ -169,14 +170,15 @@ class NormalizeTest extends NormalizerTestBase {
   /**
    * Constructs the entity URI.
    *
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
    * @return string
    *   The entity URI.
    */
-  protected function getEntityUri($entity) {
-    return $entity->url('canonical', array('absolute' => TRUE));
+  protected function getEntityUri(EntityInterface $entity) {
+    $url = $entity->urlInfo('canonical', ['absolute' => TRUE]);
+    return $url->setRouteParameter('_format', 'hal_json')->toString();
   }
 
 }

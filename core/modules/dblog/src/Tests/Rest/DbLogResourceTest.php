@@ -8,6 +8,7 @@
 namespace Drupal\dblog\Tests\Rest;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Url;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
@@ -45,7 +46,7 @@ class DbLogResourceTest extends RESTTestBase {
     $account = $this->drupalCreateUser(array('restful get dblog'));
     $this->drupalLogin($account);
 
-    $response = $this->httpRequest("dblog/$id", 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest(Url::fromRoute('rest.dblog.GET.' . $this->defaultFormat, ['id' => $id, '_format' => $this->defaultFormat]), 'GET');
     $this->assertResponse(200);
     $this->assertHeader('content-type', $this->defaultMimeType);
     $log = Json::decode($response);
@@ -54,7 +55,7 @@ class DbLogResourceTest extends RESTTestBase {
     $this->assertEqual($log['message'], 'Test message', 'Log message text is correct.');
 
     // Request an unknown log entry.
-    $response = $this->httpRequest("dblog/9999", 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest(Url::fromRoute('rest.dblog.GET.' . $this->defaultFormat, ['id' => 9999, '_format' => $this->defaultFormat]), 'GET');
     $this->assertResponse(404);
     $decoded = Json::decode($response);
     $this->assertEqual($decoded['error'], 'Log entry with ID 9999 was not found', 'Response message is correct.');

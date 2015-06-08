@@ -266,10 +266,13 @@ class RestExport extends PathPluginBase {
       $route->setMethods(['GET']);
 
       // Format as a string using pipes as a delimiter.
-      $requirements['_format'] = implode('|', $style_plugin->getFormats());
-
-      // Add the new requirements to the route.
-      $route->addRequirements($requirements);
+      if ($formats = $style_plugin->getFormats()) {
+        // Allow a REST Export View to be returned with an HTML-only accept
+        // format. That allows browsers or other non-compliant systems to access
+        // the view, as it is unlikely to have a conflicting HTML representation
+        // anyway.
+        $route->setRequirement('_format', implode('|', $formats + ['html']));
+      }
     }
   }
 

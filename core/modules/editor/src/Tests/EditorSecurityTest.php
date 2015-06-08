@@ -409,7 +409,7 @@ class EditorSecurityTest extends WebTestBase {
           'value' => self::$sampleContent,
           'original_format_id' => $case['format'],
         );
-        $response = $this->drupalPost('editor/filter_xss/' . $format, 'application/json', $post);
+        $response = $this->drupalPostWithFormat('editor/filter_xss/' . $format, 'json', $post);
         $this->assertResponse(200);
         $json = Json::decode($response);
         $this->assertIdentical($json, $expected_filtered_value, 'The value was correctly filtered for XSS attack vectors.');
