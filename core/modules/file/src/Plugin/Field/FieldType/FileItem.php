@@ -192,7 +192,6 @@ class FileItem extends EntityReferenceItem {
       '#title' => t('Enable <em>Description</em> field'),
       '#default_value' => isset($settings['description_field']) ? $settings['description_field'] : '',
       '#description' => t('The description field allows users to enter a description about the uploaded file.'),
-      '#parents' => array('instance', 'settings', 'description_field'),
       '#weight' => 11,
     );
 

@@ -120,4 +120,44 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->assertFieldByXPath('//input[@type="checkbox" and @name="' . $field_name . '[0][display]"]', NULL, 'Default file display checkbox field exists.');
     $this->assertFieldByXPath('//input[@type="checkbox" and @name="' . $field_name . '[0][display]" and not(@checked)]', NULL, 'Default file display is off.');
   }
+
+  /**
+   * Tests description toggle for field instance configuration.
+   */
+  function testDescToggle() {
+    $type_name = 'test';
+    $field_type = 'file';
+    $field_name = strtolower($this->randomMachineName());
+    // Use the UI to add a new content type that also contains a file field.
+    $edit = array(
+      'name' => $type_name,
+      'type' => $type_name,
+    );
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
+    $edit = array(
+      'new_storage_type' => $field_type,
+      'field_name' => $field_name,
+      'label' => $this->randomString(),
+    );
+    $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, t('Save and continue'));
+    $this->drupalPostForm(NULL, array(), t('Save field settings'));
+    // Ensure the description field is selected on the field instance settings
+    // form. That's what this test is all about.
+    $edit = array(
+      'settings[description_field]' => TRUE,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    // Add a node of our new type and upload a file to it.
+    $file = current($this->drupalGetTestFiles('text'));
+    $title = $this->randomString();
+    $edit = array(
+      'title[0][value]' => $title,
+      'files[field_' . $field_name . '_0]' => drupal_realpath($file->uri),
+    );
+    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
+    $node = $this->drupalGetNodeByTitle($title);
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertText(t('The description may be used as the label of the link to the file.'));
+  }
+
 }
