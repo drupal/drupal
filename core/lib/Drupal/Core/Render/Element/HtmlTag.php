@@ -69,6 +69,9 @@ class HtmlTag extends RenderElement {
    *     wrapper prefix.
    *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
    *     wrapper suffix.
+   *   - #noscript: (optional) If TRUE, the markup (including any prefix or
+   *     suffix) will be wrapped in a <noscript> element. (Note that passing
+   *     any non-empty value here will add the <noscript> tag.)
    *
    * @return array
    */
