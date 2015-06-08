@@ -9,7 +9,10 @@ namespace Drupal\rest\Tests\Views;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
 use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -79,6 +82,7 @@ class StyleSerializerTest extends PluginTestBase {
     $actual_json = $this->drupalGetWithFormat('test/serialize/field', 'json');
     $this->assertResponse(200);
     $this->assertCacheTags($view->getCacheTags());
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'request_format']);
     // @todo Due to https://www.drupal.org/node/2352009 we can't yet test the
     // propagation of cache max-age.
 
@@ -135,6 +139,7 @@ class StyleSerializerTest extends PluginTestBase {
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, $entity->getCacheTags());
     }
     $this->assertCacheTags($expected_cache_tags);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'entity_test_view_grants', 'request_format']);
 
     $expected = $serializer->serialize($entities, 'hal_json');
     $actual_json = $this->drupalGetWithFormat('test/serialize/entity', 'hal_json');
@@ -156,6 +161,7 @@ class StyleSerializerTest extends PluginTestBase {
     $expected = $serializer->serialize($entities, 'xml');
     $actual_xml = $this->drupalGet('test/serialize/entity');
     $this->assertIdentical($actual_xml, $expected, 'The expected XML output was found.');
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'entity_test_view_grants', 'request_format']);
 
     // Allow multiple formats.
     $view->setDisplay('rest_export_1');
@@ -179,6 +185,111 @@ class StyleSerializerTest extends PluginTestBase {
   }
 
   /**
+   * Sets up a request on the request stack with a specified format.
+   *
+   * @param string $format
+   *   The new request format.
+   */
+  protected function addRequestWithFormat($format) {
+    $request = \Drupal::request();
+    $request = clone $request;
+    $request->setRequestFormat($format);
+
+    \Drupal::requestStack()->push($request);
+  }
+
+  /**
+   * Tests REST export with views render caching enabled.
+   */
+  public function testRestRenderCaching() {
+    $this->drupalLogin($this->adminUser);
+    /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
+    $render_cache = \Drupal::service('render_cache');
+
+    // Enable render caching for the views.
+    /** @var \Drupal\views\ViewEntityInterface $storage */
+    $storage = View::load('test_serializer_display_entity');
+    $options = &$storage->getDisplay('default');
+    $options['display_options']['cache'] = [
+      'type' => 'tag',
+    ];
+    $storage->save();
+
+    $original = DisplayPluginBase::buildBasicRenderable('test_serializer_display_entity', 'rest_export_1');
+
+    // Ensure that there is no corresponding render cache item yet.
+    $original['#cache'] += ['contexts' => []];
+    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+
+    $cache_tags = [
+      'config:views.view.test_serializer_display_entity',
+      'entity_test:1',
+      'entity_test:10',
+      'entity_test:2',
+      'entity_test:3',
+      'entity_test:4',
+      'entity_test:5',
+      'entity_test:6',
+      'entity_test:7',
+      'entity_test:8',
+      'entity_test:9',
+      'entity_test_list'
+    ];
+    $cache_contexts = [
+      'entity_test_view_grants',
+      'languages:language_interface',
+      'theme',
+      'request_format',
+    ];
+
+    $this->assertFalse($render_cache->get($original));
+
+    // Request the page, once in XML and once in JSON to ensure that the caching
+    // varies by it.
+    $result1 = $this->drupalGetJSON('test/serialize/entity');
+    $this->addRequestWithFormat('json');
+    $this->assertHeader('content-type', 'application/json');
+    $this->assertCacheContexts($cache_contexts);
+    $this->assertCacheTags($cache_tags);
+    $this->assertTrue($render_cache->get($original));
+
+    $result_xml = $this->drupalGetWithFormat('test/serialize/entity', 'xml');
+    $this->addRequestWithFormat('xml');
+    $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
+    $this->assertCacheContexts($cache_contexts);
+    $this->assertCacheTags($cache_tags);
+    $this->assertTrue($render_cache->get($original));
+
+    // Ensure that the XML output is different from the JSON one.
+    $this->assertNotEqual($result1, $result_xml);
+
+    // Ensure that the cached page works.
+    $result2 = $this->drupalGetJSON('test/serialize/entity');
+    $this->addRequestWithFormat('json');
+    $this->assertHeader('content-type', 'application/json');
+    $this->assertEqual($result2, $result1);
+    $this->assertCacheContexts($cache_contexts);
+    $this->assertCacheTags($cache_tags);
+    $this->assertTrue($render_cache->get($original));
+
+    // Create a new entity and ensure that the cache tags are taken over.
+    EntityTest::create(['name' => 'test_11', 'user_id' => $this->adminUser->id()])->save();
+    $result3 = $this->drupalGetJSON('test/serialize/entity');
+    $this->addRequestWithFormat('json');
+    $this->assertHeader('content-type', 'application/json');
+    $this->assertNotEqual($result3, $result2);
+
+    // Add the new entity cache tag and remove the first one, because we just
+    // show 10 items in total.
+    $cache_tags[] = 'entity_test:11';
+    unset($cache_tags[array_search('entity_test:1', $cache_tags)]);
+
+    $this->assertCacheContexts($cache_contexts);
+    $this->assertCacheTags($cache_tags);
+    $this->assertTrue($render_cache->get($original));
+  }
+
+  /**
    * Tests the response format configuration.
    */
   public function testResponseFormatConfiguration() {
@@ -192,9 +303,11 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Should return a 406.
     $this->drupalGetWithFormat('test/serialize/field', 'json');
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(406, 'A 406 response was returned when JSON was requested.');
      // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'xml');
+    $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested.');
 
     // Add 'json' as an accepted format, so we have multiple.
@@ -204,20 +317,31 @@ class StyleSerializerTest extends PluginTestBase {
     // Should return a 200.
     // @todo This should be fixed when we have better content negotiation.
     $this->drupalGet('test/serialize/field');
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when any format was requested.');
 
     // Should return a 200. Emulates a sample Firefox header.
     $this->drupalGet('test/serialize/field', array(), array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'));
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when a browser accept header was requested.');
 
     // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'json');
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
+    $headers = $this->drupalGetHeaders();
+    $this->assertEqual($headers['content-type'], 'application/json', 'The header Content-type is correct.');
     // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'xml');
+    $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+    $headers = $this->drupalGetHeaders();
+    $this->assertTrue(strpos($headers['content-type'], 'text/xml') !== FALSE, 'The header Content-type is correct.');
     // Should return a 406.
     $this->drupalGetWithFormat('test/serialize/field', 'html');
+    // We want to show the first format by default, see
+    // \Drupal\rest\Plugin\views\style\Serializer::render.
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when HTML was requested.');
 
     // Now configure now format, so all of them should be allowed.
@@ -225,12 +349,17 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'json');
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
     // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'xml');
+    $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
     $this->assertResponse(200, 'A 200 response was returned when XML was requested');
     // Should return a 200.
     $this->drupalGetWithFormat('test/serialize/field', 'html');
+    // We want to show the first format by default, see
+    // \Drupal\rest\Plugin\views\style\Serializer::render.
+    $this->assertHeader('content-type', 'application/json');
     $this->assertResponse(200, 'A 200 response was returned when HTML was requested.');
   }
 
@@ -381,7 +510,7 @@ class StyleSerializerTest extends PluginTestBase {
   }
 
   /**
-   * Tests the views interface for rest export displays.
+   * Tests the views interface for REST export displays.
    */
   public function testSerializerViewsUI() {
     $this->drupalLogin($this->adminUser);

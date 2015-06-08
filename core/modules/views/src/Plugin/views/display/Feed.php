@@ -8,6 +8,8 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -28,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   returns_response = TRUE
  * )
  */
-class Feed extends PathPluginBase {
+class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
 
   /**
    * Whether the display allows the use of AJAX or not.
@@ -68,22 +70,40 @@ class Feed extends PathPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::execute().
+   * {@inheritdoc}
    */
-  public function execute() {
-    parent::execute();
+  public static function buildResponse($view_id, $display_id, array $args = []) {
+    $build = static::buildBasicRenderable($view_id, $display_id, $args);
 
-    $output = $this->view->render();
+    // Set up an empty response, so for example RSS can set the proper
+    // Content-Type header.
+    $response = new CacheableResponse('', 200);
+    $build['#response'] = $response;
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $output = $renderer->renderRoot($build);
 
     if (empty($output)) {
       throw new NotFoundHttpException();
     }
 
-    $response = $this->view->getResponse();
-
-    $response->setContent(drupal_render_root($output));
+    $response->setContent($output);
+    $cache_metadata = CacheableMetadata::createFromRenderArray($build);
+    $response->addCacheableDependency($cache_metadata);
 
     return $response;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function execute() {
+    parent::execute();
+
+    return $this->view->render();
   }
 
   /**
@@ -107,7 +127,11 @@ class Feed extends PathPluginBase {
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::render().
    */
   public function render() {
-    return $this->view->style_plugin->render($this->view->result);
+    $build = $this->view->style_plugin->render($this->view->result);
+
+    $this->applyDisplayCachablityMetadata($build);
+
+    return $build;
   }
 
   /**

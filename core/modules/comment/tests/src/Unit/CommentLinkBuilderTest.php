@@ -154,18 +154,6 @@ class CommentLinkBuilderTest extends UnitTestCase {
     else {
       $this->assertSame($links, $expected);
     }
-    if ($context['view_mode'] == 'rss' && $node->get('comment')->status) {
-      $found = FALSE;
-      if ($node->get('comment')->status) {
-        foreach ($node->rss_elements as $element) {
-          if ($element['key'] == 'comments') {
-            $found = TRUE;
-            break;
-          }
-        }
-      }
-      $this->assertTrue($found);
-    }
   }
 
   /**

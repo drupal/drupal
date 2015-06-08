@@ -2368,6 +2368,29 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Check if a HTTP response header exists and has the expected value.
+   *
+   * @param string $header
+   *   The header key, example: Content-Type
+   * @param string $value
+   *   The header value.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
+   * @param string $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertHeader($header, $value, $message = '', $group = 'Browser') {
+    $header_value = $this->drupalGetHeader($header);
+    return $this->assertTrue($header_value == $value, $message ? $message : 'HTTP response header ' . $header . ' with value ' . $value . ' found, actual value: ' . $header_value, $group);
+  }
+
+  /**
    * Gets an array containing all emails sent during this test case.
    *
    * @param $filter
@@ -2639,6 +2662,9 @@ abstract class WebTestBase extends TestBase {
     $server = array_merge($server, $override_server_vars);
 
     $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
+    // Ensure the the request time is REQUEST_TIME to ensure that API calls
+    // in the test use the right timestamp.
+    $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $this->container->get('request_stack')->push($request);
 
     // The request context is normally set by the router_listener from within

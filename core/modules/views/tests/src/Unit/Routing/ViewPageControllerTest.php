@@ -43,6 +43,18 @@ class ViewPageControllerTest extends UnitTestCase {
    */
   protected $executableFactory;
 
+  /**
+   * A render array expected for every page controller render array result.
+   *
+   * @var array
+   */
+  protected $defaultRenderArray = [
+    '#cache_properties' => ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'],
+    '#view_id' => 'test_page_view',
+    '#view_display_plugin_id' => NULL,
+    '#view_display_show_admin_links' => NULL,
+  ];
+
   protected function setUp() {
     $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
@@ -58,52 +70,30 @@ class ViewPageControllerTest extends UnitTestCase {
    * Tests the page controller.
    */
   public function testPageController() {
-    $view = $this->getMock('Drupal\views\ViewEntityInterface');
-
-    $this->storage->expects($this->once())
-      ->method('load')
-      ->with('test_page_view')
-      ->will($this->returnValue($view));
-
-    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->expects($this->once())
-      ->method('setDisplay')
-      ->with('default');
-    $executable->expects($this->once())
-      ->method('initHandlers');
-
-    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $views_display->expects($this->any())
-      ->method('getDefinition')
-      ->willReturn([]);
-    $executable->display_handler = $views_display;
+    $this->storage->expects($this->never())
+      ->method('load');
 
     $build = [
       '#type' => 'view',
       '#name' => 'test_page_view',
-      '#display_id' => 'default'
-    ];
-    $executable->expects($this->once())
-      ->method('buildRenderable')
-      ->with('default', [])
-      ->will($this->returnValue($build));
-
-    $this->executableFactory->expects($this->any())
-      ->method('get')
-      ->with($view)
-      ->will($this->returnValue($executable));
+      '#display_id' => 'default',
+      '#embed' => FALSE,
+      '#arguments' => [],
+      '#cache' => [
+        'keys' => ['view', 'test_page_view', 'display', 'default'],
+      ],
+    ] + $this->defaultRenderArray;
 
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'default');
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test', ['view_id' => 'test_page_view', 'display_id' => 'default']));
+    $options = [
+      '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
+    ];
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
-    $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
+    $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
     $this->assertInternalType('array', $output);
     $this->assertEquals($build, $output);
   }
@@ -112,54 +102,35 @@ class ViewPageControllerTest extends UnitTestCase {
    * Tests the page controller with arguments on a non overridden page view.
    */
   public function testHandleWithArgumentsWithoutOverridden() {
-    $view = $this->getMock('Drupal\views\ViewEntityInterface');
-
-    $this->storage->expects($this->once())
-      ->method('load')
-      ->with('test_page_view')
-      ->will($this->returnValue($view));
-
-    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->expects($this->once())
-      ->method('setDisplay')
-      ->with('page_1');
-    $executable->expects($this->once())
-      ->method('initHandlers');
-
-    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $views_display->expects($this->any())
-      ->method('getDefinition')
-      ->willReturn([]);
-    $executable->display_handler = $views_display;
-
-    // Manually setup a argument handler.
-    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->argument['test_id'] = $argument;
-
-    $executable->expects($this->once())
-      ->method('buildRenderable')
-      ->with('page_1', array('test-argument'));
-
-    $this->executableFactory->expects($this->any())
-      ->method('get')
-      ->with($view)
-      ->will($this->returnValue($executable));
+    $this->storage->expects($this->never())
+      ->method('load');
 
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('arg_0', 'test-argument');
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{arg_0}', ['view_id' => 'test_page_view', 'display_id' => 'default']));
+    $options = [
+      '_view_argument_map' => ['arg_0' => 'arg_0'],
+      '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
+    ];
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{arg_0}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
-    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
+    $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
+
+    $build = [
+      '#type' => 'view',
+      '#name' => 'test_page_view',
+      '#display_id' => 'page_1',
+      '#embed' => FALSE,
+      '#arguments' => ['test-argument'],
+      '#cache' => [
+        'keys' => ['view', 'test_page_view', 'display', 'page_1', 'args', 'test-argument'],
+      ],
+    ] + $this->defaultRenderArray;
+
+    $this->assertEquals($build, $result);
   }
 
   /**
@@ -168,56 +139,37 @@ class ViewPageControllerTest extends UnitTestCase {
    * Note: This test does not care about upcasting for now.
    */
   public function testHandleWithArgumentsOnOverriddenRoute() {
-    $view = $this->getMock('Drupal\views\ViewEntityInterface');
-
-    $this->storage->expects($this->once())
-      ->method('load')
-      ->with('test_page_view')
-      ->will($this->returnValue($view));
-
-    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->expects($this->once())
-      ->method('setDisplay')
-      ->with('page_1');
-    $executable->expects($this->once())
-      ->method('initHandlers');
-
-    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $views_display->expects($this->any())
-      ->method('getDefinition')
-      ->willReturn([]);
-    $executable->display_handler = $views_display;
-
-    // Manually setup a argument handler.
-    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->argument['test_id'] = $argument;
-
-    $executable->expects($this->once())
-      ->method('buildRenderable')
-      ->with('page_1', array('test-argument'));
-
-    $this->executableFactory->expects($this->any())
-      ->method('get')
-      ->with($view)
-      ->will($this->returnValue($executable));
+    $this->storage->expects($this->never())
+      ->method('load');
 
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('parameter', 'test-argument');
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{parameter}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], ['_view_argument_map' => [
-      'arg_0' => 'parameter',
-    ]]));
+    $options = [
+      '_view_argument_map' => [
+        'arg_0' => 'parameter',
+      ],
+      '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
+    ];
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{parameter}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
-    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
+    $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
+
+    $build = [
+      '#type' => 'view',
+      '#name' => 'test_page_view',
+      '#display_id' => 'page_1',
+      '#embed' => FALSE,
+      '#arguments' => ['test-argument'],
+      '#cache' => [
+        'keys' => ['view', 'test_page_view', 'display', 'page_1', 'args', 'test-argument'],
+      ],
+      ] + $this->defaultRenderArray;
+
+    $this->assertEquals($build, $result);
   }
 
   /**
@@ -227,44 +179,8 @@ class ViewPageControllerTest extends UnitTestCase {
    * are pulled in.
    */
   public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting() {
-    $view = $this->getMock('Drupal\views\ViewEntityInterface');
-
-    $this->storage->expects($this->once())
-      ->method('load')
-      ->with('test_page_view')
-      ->will($this->returnValue($view));
-
-    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->expects($this->once())
-      ->method('setDisplay')
-      ->with('page_1');
-    $executable->expects($this->once())
-      ->method('initHandlers');
-
-    $views_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $views_display->expects($this->any())
-      ->method('getDefinition')
-      ->willReturn([]);
-    $executable->display_handler = $views_display;
-
-    // Manually setup a argument handler.
-    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $executable->argument['test_id'] = $argument;
-
-    $executable->expects($this->once())
-      ->method('buildRenderable')
-      ->with('page_1', array('example_id'));
-
-    $this->executableFactory->expects($this->any())
-      ->method('get')
-      ->with($view)
-      ->will($this->returnValue($executable));
+    $this->storage->expects($this->never())
+      ->method('load');
 
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
@@ -273,29 +189,29 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('test_entity', $this->getMock('Drupal\Core\Entity\EntityInterface'));
     $raw_variables = new ParameterBag(array('test_entity' => 'example_id'));
     $request->attributes->set('_raw_variables', $raw_variables);
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{test_entity}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], ['_view_argument_map' => [
-      'arg_0' => 'test_entity',
-    ]]));
+    $options = [
+      '_view_argument_map' => [
+        'arg_0' => 'test_entity',
+      ],
+      '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
+    ];
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{test_entity}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
-    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
-  }
+    $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
 
-  /**
-   * Tests handle with a non existing view.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   */
-  public function testHandleWithNotExistingView() {
-    // Pass in a non existent view.
-    $random_view_id = $this->randomMachineName();
+    $build = [
+      '#type' => 'view',
+      '#name' => 'test_page_view',
+      '#display_id' => 'page_1',
+      '#embed' => FALSE,
+      '#arguments' => ['example_id'],
+      '#cache' => [
+        'keys' => ['view', 'test_page_view', 'display', 'page_1', 'args', 'example_id'],
+      ],
+      ] + $this->defaultRenderArray;
 
-    $request = new Request();
-    $request->attributes->set('view_id', $random_view_id);
-    $request->attributes->set('display_id', 'default');
-    $route_match = RouteMatch::createFromRequest($request);
-
-    $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $request, $route_match);
+    $this->assertEquals($build, $result);
   }
 
 }

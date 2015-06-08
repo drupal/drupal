@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
 
 /**
@@ -60,12 +61,15 @@ class CacheWebTest extends PluginTestBase {
     $view->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
 
-    $output_key = $view->getDisplay()->getPlugin('cache')->generateOutputKey();
-    $this->assertFalse(\Drupal::cache('render')->get($output_key));
+    /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
+    $render_cache = \Drupal::service('render_cache');
+    $cache_element = DisplayPluginBase::buildBasicRenderable('test_display', 'page_1');
+    $cache_element['#cache'] += ['contexts' => $this->container->getParameter('renderer.config')['required_cache_contexts']];
+    $this->assertFalse($render_cache->get($cache_element));
 
     $this->drupalGet('test-display');
     $this->assertResponse(200);
-    $this->assertTrue(\Drupal::cache('render')->get($output_key));
+    $this->assertTrue($render_cache->get($cache_element));
     $cache_tags = [
       'config:user.role.anonymous',
       'config:views.view.test_display',
@@ -76,7 +80,7 @@ class CacheWebTest extends PluginTestBase {
 
     $this->drupalGet('test-display');
     $this->assertResponse(200);
-    $this->assertTrue(\Drupal::cache('render')->get($output_key));
+    $this->assertTrue($render_cache->get($cache_element));
     $this->assertCacheTags($cache_tags);
   }
 

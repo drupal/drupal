@@ -42,7 +42,7 @@ interface RenderCacheInterface {
    * @param array $elements
    *   A renderable array.
    *
-   * @return array
+   * @return array|false
    *   A renderable array, with the original element and all its children pre-
    *   rendered, or FALSE if no cached copy of the element is available.
    *

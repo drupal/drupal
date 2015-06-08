@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
@@ -26,10 +28,17 @@ class SortRandomTest extends ViewUnitTestBase {
 
   /**
    * Add more items to the test set, to make the order tests more robust.
+   *
+   * In total we have then 60 entries, which makes a probability of a collision
+   * of 1/60!, which is around 1/1E80, which is higher than the estimated amount
+   * of protons / electrons in the observable universe, also called the
+   * eddington number.
+   *
+   * @see http://en.wikipedia.org/wiki/Eddington_number
    */
   protected function dataSet() {
     $data = parent::dataSet();
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 55; $i++) {
       $data[] = array(
         'name' => 'name_' . $i,
         'age' => $i,
@@ -94,6 +103,42 @@ class SortRandomTest extends ViewUnitTestBase {
       'views_test_data_name' => 'views_test_data_name',
       'views_test_data_age' => 'views_test_data_name',
     ));
+  }
+
+  /**
+   * Tests random ordering with tags based caching.
+   *
+   * The random sorting should opt out of caching by defining a max age of 0.
+   * At the same time, the row render caching still works.
+   */
+  public function testRandomOrderingWithRenderCaching() {
+    $view_random = $this->getBasicRandomView();
+
+    $display = &$view_random->storage->getDisplay('default');
+    $display['display_options']['cache'] = [
+      'type' => 'tag',
+    ];
+
+    $view_random->storage->save();
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
+    $render_cache = \Drupal::service('render_cache');
+
+    $original = $build = DisplayPluginBase::buildBasicRenderable($view_random->id(), 'default');
+    $result = $renderer->renderPlain($build);
+
+    $original['#cache'] += ['contexts' => []];
+    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+
+    $this->assertFalse($render_cache->get($original), 'Ensure there is no render cache entry.');
+
+    $build = DisplayPluginBase::buildBasicRenderable($view_random->id(), 'default');
+    $result2 = $renderer->renderPlain($build);
+
+    // Ensure that the random ordering works and don't produce the same result.
+    $this->assertNotEqual($result, $result2);
   }
 
 }

@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\style;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -109,7 +108,7 @@ class Rss extends StylePluginBase {
       debug('Drupal\views\Plugin\views\style\Rss: Missing row plugin');
       return array();
     }
-    $rows = '';
+    $rows = [];
 
     // This will be filled in by the row plugin and is used later on in the
     // theming output.
@@ -126,14 +125,14 @@ class Rss extends StylePluginBase {
 
     foreach ($this->view->result as $row_index => $row) {
       $this->view->row_index = $row_index;
-      $rows .= $this->view->rowPlugin->render($row);
+      $rows[] = $this->view->rowPlugin->render($row);
     }
 
     $build = array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
-      '#rows' => SafeMarkup::set($rows),
+      '#rows' => $rows,
     );
     unset($this->view->row_index);
     return $build;

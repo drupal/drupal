@@ -58,6 +58,13 @@ class ViewsBlockTest extends UnitTestCase {
   protected $account;
 
   /**
+   * The mocked display handler.
+   *
+   * @var \Drupal\views\Plugin\views\display\Block|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $displayHandler;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -78,6 +85,9 @@ class ViewsBlockTest extends UnitTestCase {
       ->method('setDisplay')
       ->with('block_1')
       ->will($this->returnValue(TRUE));
+    $this->executable->expects($this->any())
+      ->method('getShowAdminLinks')
+      ->willReturn(FALSE);
 
     $this->executable->display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\Block')
       ->disableOriginalConstructor()
@@ -87,6 +97,10 @@ class ViewsBlockTest extends UnitTestCase {
     $this->view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->view->expects($this->any())
+      ->method('id')
+      ->willReturn('test_view');
+    $this->executable->storage = $this->view;
 
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
       ->disableOriginalConstructor()
@@ -95,6 +109,19 @@ class ViewsBlockTest extends UnitTestCase {
       ->method('get')
       ->with($this->view)
       ->will($this->returnValue($this->executable));
+
+    $this->displayHandler = $this->getMockBuilder('Drupal\views\Plugin\views\display\Block')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->displayHandler->expects($this->any())
+      ->method('blockSettings')
+      ->willReturn([]);
+
+    $this->displayHandler->expects($this->any())
+      ->method('getPluginId')
+      ->willReturn('block');
+    $this->executable->display_handler = $this->displayHandler;
 
     $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
@@ -114,7 +141,7 @@ class ViewsBlockTest extends UnitTestCase {
    */
   public function testBuild() {
     $output = $this->randomMachineName(100);
-    $build = array('#markup' => $output);
+    $build = array('#markup' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block');
     $this->executable->expects($this->once())
       ->method('buildRenderable')
       ->with('block_1', [])

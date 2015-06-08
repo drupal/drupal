@@ -463,16 +463,40 @@ interface DisplayPluginInterface {
    */
   public function execute();
 
+
+  /**
+   * Builds a basic render array which can be properly render cached.
+   *
+   * In order to be rendered cached, it includes cache keys as well as the data
+   * required to load the view on cache misses.
+   *
+   * @param string $view_id
+   *   The view ID.
+   * @param string $display_id
+   *   The display ID.
+   * @param array $args
+   *   (optional) The view arguments.
+   *
+   * @return array
+   *   The view render array.
+   */
+  public static function buildBasicRenderable($view_id, $display_id, array $args = []);
+
   /**
    * Builds a renderable array of the view.
    *
    * Note: This does not yet contain the executed view, but just the loaded view
    * executable.
    *
+   * @param array $args
+   *   (optional) Arguments of the view.
+   * @param bool $cache
+   *   (optional) Specify FALSE in order to opt out of render caching.
+   *
    * @return array
    *   The render array of a view.
    */
-  public function buildRenderable(array $args = []);
+  public function buildRenderable(array $args = [], $cache = TRUE);
 
   /**
    * Renders the display for the purposes of a live preview.

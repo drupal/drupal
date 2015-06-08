@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
@@ -2132,19 +2133,29 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       // Assigned by reference so anything added in $element['#attached'] will
       // be available on the view.
       '#attached' => &$this->view->element['#attached'],
-      '#cache' => &$this->view->element['#cache'],
     );
 
-    if (!isset($element['#cache'])) {
-      $element['#cache'] = [];
-    }
-    $element['#cache'] += ['tags' => []];
-
-    // If the output is a render array, add cache tags, regardless of whether
-    // caching is enabled or not; cache tags must always be set.
-    $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $this->view->getCacheTags());
+    $this->applyDisplayCachablityMetadata($this->view->element);
 
     return $element;
+  }
+
+  /**
+   * Applies the cacheability of the current display to the given render array.
+   *
+   * @param array $element
+   *   The render array with updated cacheability metadata.
+   */
+  protected function applyDisplayCachablityMetadata(array &$element) {
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
+    $cache = $this->getPlugin('cache');
+
+    (new CacheableMetadata())
+      ->setCacheTags($this->view->getCacheTags())
+      ->setCacheContexts(isset($this->display['cache_metadata']['contexts']) ? $this->display['cache_metadata']['contexts'] : [])
+      ->setCacheMaxAge($cache->getCacheMaxAge())
+      ->merge(CacheableMetadata::createFromRenderArray($element))
+      ->applyTo($element);
   }
 
   /**
@@ -2313,18 +2324,59 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function buildRenderable(array $args = []) {
-    return [
+  public function buildRenderable(array $args = [], $cache = TRUE) {
+    $this->view->element += [
       '#type' => 'view',
       '#name' => $this->view->storage->id(),
       '#display_id' => $this->display['id'],
       '#arguments' => $args,
       '#embed' => FALSE,
       '#view' => $this->view,
+      '#cache_properties' => ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'],
+    ];
+
+    if ($cache) {
+      $this->view->element['#cache'] += ['keys' => []];
+      // Places like \Drupal\views\ViewExecutable::setCurrentPage() set up an
+      // additional cache context.
+      $this->view->element['#cache']['keys'] = array_merge(['views', 'display', $this->view->element['#name'], $this->view->element['#display_id']], $this->view->element['#cache']['keys']);
+
+      $this->applyDisplayCachablityMetadata($this->view->element);
+    }
+    else {
+      // Remove the cache keys, to ensure render caching is not triggered. We
+      // don't unset the other #cache values, to allow cacheability metadata to
+      // still be bubbled.
+      unset($this->view->element['#cache']['keys']);
+    }
+
+    return $this->view->element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function buildBasicRenderable($view_id, $display_id, array $args = []) {
+    $build = [
+      '#type' => 'view',
+      '#name' => $view_id,
+      '#display_id' => $display_id,
+      '#arguments' => $args,
+      '#embed' => FALSE,
       '#cache' => [
-        'contexts' => isset($this->display['cache_metadata']['contexts']) ?  $this->display['cache_metadata']['contexts'] : [],
+        'keys' => ['view', $view_id, 'display', $display_id],
       ],
     ];
+
+    if ($args) {
+      $build['#cache']['keys'][] = 'args';
+      $build['#cache']['keys'][] = implode(',', $args);
+    }
+
+    $build['#cache_properties'] =  ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'];
+
+    return $build;
+
   }
 
   /**

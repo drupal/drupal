@@ -29,7 +29,7 @@ class ViewsBlock extends ViewsBlockBase {
   public function build() {
     $this->view->display_handler->preBlockBuild($this);
 
-    if ($output = $this->view->buildRenderable($this->displayID)) {
+    if ($output = $this->view->buildRenderable($this->displayID, [], FALSE)) {
       // Override the label to the dynamic title configured in the view.
       if (empty($this->configuration['views_label']) && $this->view->getTitle()) {
         $output['#title'] = Xss::filterAdmin($this->view->getTitle());

@@ -917,7 +917,12 @@ function template_preprocess_views_view_row_rss(&$variables) {
   $item = $variables['row'];
   $variables['title'] = $item->title;
   $variables['link'] = $item->link;
-  $variables['description'] = $item->description;
+
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+  // We render the item description. It might contain entities, which attach rss
+  // elements via hook_entity_view, see comment_entity_view().
+  $variables['description'] = is_array($item->description) ? $renderer->render($item->description) : $item->description;
   $variables['item_elements'] = array();
   foreach ($item->elements as $element) {
     if (isset($element['attributes']) && is_array($element['attributes'])) {

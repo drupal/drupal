@@ -8,15 +8,11 @@
 namespace Drupal\rest\Plugin\views\display;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\State\StateInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -33,7 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
  *   returns_response = TRUE
  * )
  */
-class RestExport extends PathPluginBase {
+class RestExport extends PathPluginBase implements ResponseDisplayPluginInterface {
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesAJAX.
@@ -73,49 +69,6 @@ class RestExport extends PathPluginBase {
    * @var string
    */
   protected $mimeType;
-
-  /**
-   * The renderer
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * Constructs a Drupal\rest\Plugin\ResourceBase object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state key value store.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, RendererInterface $renderer) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
-
-    $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('router.route_provider'),
-      $container->get('state'),
-      $container->get('renderer')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -279,15 +232,49 @@ class RestExport extends PathPluginBase {
   /**
    * {@inheritdoc}
    */
+  public static function buildResponse($view_id, $display_id, array $args = []) {
+    $build = static::buildBasicRenderable($view_id, $display_id, $args);
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $output = $renderer->renderRoot($build);
+
+    $response = new CacheableResponse($output, 200);
+    $cache_metadata = CacheableMetadata::createFromRenderArray($build);
+    $response->addCacheableDependency($cache_metadata);
+
+    $response->headers->set('Content-type', $build['#content_type']);
+
+    return $response;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     parent::execute();
 
-    $output = $this->view->render();
+    return $this->view->render();
+  }
 
-    $header = [];
-    $header['Content-type'] = $this->getMimeType();
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $build = array();
+    $build['#markup'] = $this->view->style_plugin->render();
 
-    if ($this->view->getRequest()->getFormat($header['Content-type']) !== 'html') {
+    $this->view->element['#content_type'] = $this->getMimeType();
+    $this->view->element['#cache_properties'][] = '#content_type';
+
+      // Wrap the output in a pre tag if this is for a live preview.
+    if (!empty($this->view->live_preview)) {
+      $build['#prefix'] = '<pre>';
+      $build['#markup'] = SafeMarkup::checkPlain($build['#markup']);
+      $build['#suffix'] = '</pre>';
+    }
+    elseif ($this->view->getRequest()->getFormat($this->view->element['#content_type']) !== 'html') {
       // This display plugin is primarily for returning non-HTML formats.
       // However, we still invoke the renderer to collect cacheability metadata.
       // Because the renderer is designed for HTML rendering, it filters
@@ -298,40 +285,10 @@ class RestExport extends PathPluginBase {
       // executed by an HTML agent.
       // @todo Decide how to support non-HTML in the render API in
       //   https://www.drupal.org/node/2501313.
-      $output['#markup'] = SafeMarkup::set($output['#markup']);
+      $build['#markup'] = SafeMarkup::set($build['#markup']);
     }
 
-    $response = new CacheableResponse($this->renderer->renderRoot($output), 200);
-    $cache_metadata = CacheableMetadata::createFromRenderArray($output);
-
-    $response->addCacheableDependency($cache_metadata);
-
-    return $response;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    $build = array();
-    $build['#markup'] = $this->view->style_plugin->render();
-
-    // Wrap the output in a pre tag if this is for a live preview.
-    if (!empty($this->view->live_preview)) {
-      $build['#prefix'] = '<pre>';
-      $build['#markup'] = SafeMarkup::checkPlain($build['#markup']);
-      $build['#suffix'] = '</pre>';
-    }
-
-    // Defaults for bubbleable rendering metadata.
-    $build['#cache']['tags'] = isset($build['#cache']['tags']) ? $build['#cache']['tags'] : array();
-    $build['#cache']['max-age'] = isset($build['#cache']['max-age']) ? $build['#cache']['max-age'] : Cache::PERMANENT;
-
-    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
-    $cache = $this->getPlugin('cache');
-
-    $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $cache->getCacheTags());
-    $build['#cache']['max-age'] = Cache::mergeMaxAges($build['#cache']['max-age'], $cache->getCacheMaxAge());
+    parent::applyDisplayCachablityMetadata($build);
 
     return $build;
   }

@@ -211,6 +211,31 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
 }
 
 /**
+ * Implements hook_entity_view().
+ */
+function comment_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode) {
+  if ($entity instanceof FieldableEntityInterface && $view_mode == 'rss' && $display->getComponent('links')) {
+    /** @var \Drupal\comment\CommentManagerInterface $comment_manager */
+    $comment_manager = \Drupal::service('comment.manager');
+    $fields = $comment_manager->getFields($entity->getEntityTypeId());
+    foreach ($fields as $field_name => $detail) {
+      if ($entity->hasField($field_name) && $entity->get($field_name)->status != CommentItemInterface::HIDDEN) {
+        // Add a comments RSS element which is a URL to the comments of this
+        // entity.
+        $options = array(
+          'fragment' => 'comments',
+          'absolute' => TRUE,
+        );
+        $entity->rss_elements[] = array(
+          'key' => 'comments',
+          'value' => $entity->url('canonical', $options),
+        );
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_view_alter() for node entities.
  */
 function comment_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {

@@ -11,7 +11,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\ViewExecutable;
@@ -24,7 +23,6 @@ use Drupal\views\Views;
  */
 class FrontPageTest extends ViewTestBase {
 
-  use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
 
   /**
@@ -293,6 +291,7 @@ class FrontPageTest extends ViewTestBase {
       'timezone',
     ]);
 
+    $this->pass('First page');
     // First page.
     $first_page_result_cache_tags = [
       'config:views.view.frontpage',
@@ -329,6 +328,7 @@ class FrontPageTest extends ViewTestBase {
     );
 
     // Second page.
+    $this->pass('Second page');
     $this->assertPageCacheContextsAndTags(Url::fromRoute('view.frontpage.page_1', [], ['query' => ['page' => 1]]), $cache_contexts, [
       // The cache tags for the listed nodes.
       'node:1',

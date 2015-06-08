@@ -27,7 +27,9 @@ class EntityTestViewGrantsCacheContext implements CacheContextInterface {
    * {@inheritdoc}
    */
   public function getContext() {
-    return hash('sha256', REQUEST_TIME);
+    // Return a constant value, so we can fetch render cache both in actual
+    // requests and test code itself.
+    return '299792458';
   }
 
 }

@@ -103,13 +103,6 @@ class User extends ArgumentDefaultPluginBase implements CacheablePluginInterface
         return $node->getOwnerId();
       }
     }
-
-    // If the current page is a view that takes uid as an argument.
-    $view = views_get_page_view();
-
-    if ($view && isset($view->argument['uid'])) {
-      return $view->argument['uid']->argument;
-    }
   }
 
   /**

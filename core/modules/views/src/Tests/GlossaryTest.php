@@ -10,7 +10,6 @@ namespace Drupal\views\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 
 /**
@@ -20,7 +19,6 @@ use Drupal\views\Views;
  */
 class GlossaryTest extends ViewTestBase {
 
-  use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
 
   /**

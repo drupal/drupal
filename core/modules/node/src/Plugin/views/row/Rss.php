@@ -111,7 +111,7 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $item_text = '';
+    $description_build = [];
 
     $node->link = $node->url('canonical', array('absolute' => TRUE));
     $node->rss_namespaces = array();
@@ -154,22 +154,25 @@ class Rss extends RssPluginBase {
 
     if ($display_mode != 'title') {
       // We render node contents.
-      $item_text .= drupal_render_root($build);
+      $description_build = $build;
     }
 
     $item = new \stdClass();
-    $item->description = SafeMarkup::set($item_text);
+    $item->description = $description_build;
     $item->title = $node->label();
     $item->link = $node->link;
-    $item->elements = $node->rss_elements;
+    // Provide a reference so that the render call in
+    // template_preprocess_views_view_row_rss() can still access it.
+    $item->elements = &$node->rss_elements;
     $item->nid = $node->id();
-    $theme_function = array(
+    $build = array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
       '#row' => $item,
     );
-    return drupal_render_root($theme_function);
+
+    return $build;
   }
 
 }

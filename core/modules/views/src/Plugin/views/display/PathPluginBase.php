@@ -138,6 +138,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       '_controller' => 'Drupal\views\Routing\ViewPageController::handle',
       'view_id' => $view_id,
       'display_id' => $display_id,
+      '_view_display_show_admin_links' => $this->getOption('show_admin_links'),
     );
 
     // @todo How do we apply argument validation?
@@ -161,6 +162,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         // handler.
         $arg_id = 'arg_' . $arg_counter++;
         $bits[$pos] = '{' . $arg_id . '}';
+        $argument_map[$arg_id] = $arg_id;
       }
       elseif (strpos($bit, '%') === 0) {
         // Use the name defined in the path.
@@ -178,6 +180,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       // In contrast to the previous loop add the defaults here, as % was not
       // specified, which means the argument is optional.
       $defaults[$arg_id] = NULL;
+      $argument_map[$arg_id] = $arg_id;
       $bits[] = $bit;
     }
 
@@ -203,6 +206,12 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     // Set the argument map, in order to support named parameters.
     $route->setOption('_view_argument_map', $argument_map);
+    $route->setOption('_view_display_plugin_id', $this->getPluginId());
+    $route->setOption('_view_display_plugin_class', get_called_class());
+    $route->setOption('_view_display_show_admin_links', $this->getOption('show_admin_links'));
+
+    // Store whether the view will return a response.
+    $route->setOption('returns_response', !empty($this->getPluginDefinition()['returns_response']));
 
     return $route;
   }

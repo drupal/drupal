@@ -15,6 +15,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Route;
 
 /**
  * The plugin that handles a full page.
@@ -33,6 +34,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * )
  */
 class Page extends PathPluginBase {
+
+  /**
+   * The current page render array.
+   *
+   * @var array
+   */
+  protected static $pageRenderArray;
 
   /**
    * Whether the display allows attachments.
@@ -84,6 +92,34 @@ class Page extends PathPluginBase {
   }
 
   /**
+   * Sets the current page views render array.
+   *
+   * @param array $element
+   *   (optional) A render array. If not specified the previous element is
+   *   returned.
+   *
+   * @return array
+   *   The page render array.
+   */
+  public static function &setPageRenderArray(array &$element = NULL) {
+    if (isset($element)) {
+      static::$pageRenderArray = &$element;
+    }
+
+    return static::$pageRenderArray;
+  }
+
+  /**
+   * Gets the current views page render array.
+   *
+   * @return array
+   *   The page render array.
+   */
+  public static function &getPageRenderArray() {
+    return static::$pageRenderArray;
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::defineOptions().
    */
   protected function defineOptions() {
@@ -113,13 +149,28 @@ class Page extends PathPluginBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function buildBasicRenderable($view_id, $display_id, array $args = [], Route $route = NULL) {
+    $build = parent::buildBasicRenderable($view_id, $display_id, $args);
+
+    if ($route) {
+      $build['#view_id'] = $route->getDefault('view_id');
+      $build['#view_display_plugin_id'] = $route->getOption('_view_display_plugin_id');
+      $build['#view_display_show_admin_links'] = $route->getOption('_view_display_show_admin_links');
+    }
+    else {
+      throw new \BadFunctionCallException('Missing route parameters.');
+    }
+
+    return $build;
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::execute().
    */
   public function execute() {
     parent::execute();
-
-    // Let the world know that this is the page view we're using.
-    views_set_page_view($this->view);
 
     // And now render the view.
     $render = $this->view->render();

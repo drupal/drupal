@@ -76,9 +76,21 @@ trait AssertPageCacheContextsAndTagsTrait {
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);
     $this->assertEqual($cache_entry->tags, $expected_tags);
-    if ($cache_entry->tags !== $expected_tags) {
-      debug('Missing cache tags: ' . implode(',', array_diff($cache_entry->tags, $expected_tags)));
-      debug('Unwanted cache tags: ' . implode(',', array_diff($expected_tags, $cache_entry->tags)));
+    $this->debugCacheTags($cache_entry->tags, $expected_tags);
+  }
+
+  /**
+   * Provides debug information for cache tags.
+   *
+   * @param string[] $actual_tags
+   *   The actual cache tags.
+   * @param string[] $expected_tags
+   *   The expected cache tags.
+   */
+  protected function debugCacheTags(array $actual_tags, array $expected_tags) {
+    if ($actual_tags !== $expected_tags) {
+      debug('Missing cache tags: ' . implode(',', array_diff($expected_tags, $actual_tags)));
+      debug('Unwanted cache tags: ' . implode(',', array_diff($actual_tags, $expected_tags)));
     }
   }
 
@@ -90,11 +102,10 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertCacheTags(array $expected_tags) {
     $actual_tags = $this->getCacheHeaderValues('X-Drupal-Cache-Tags');
+    sort($expected_tags);
+    sort($actual_tags);
     $this->assertIdentical($actual_tags, $expected_tags);
-    if ($actual_tags !== $expected_tags) {
-      debug('Missing cache tags: ' . implode(',', array_diff($actual_tags, $expected_tags)));
-      debug('Unwanted cache tags: ' . implode(',', array_diff($expected_tags, $actual_tags)));
-    }
+    $this->debugCacheTags($actual_tags, $expected_tags);
   }
 
   /**

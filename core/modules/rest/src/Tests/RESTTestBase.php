@@ -261,29 +261,6 @@ abstract class RESTTestBase extends WebTestBase {
   }
 
   /**
-   * Check if a HTTP response header exists and has the expected value.
-   *
-   * @param string $header
-   *   The header key, example: Content-Type
-   * @param string $value
-   *   The header value.
-   * @param string $message
-   *   (optional) A message to display with the assertion.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertHeader($header, $value, $message = '', $group = 'Browser') {
-    $header_value = $this->drupalGetHeader($header);
-    return $this->assertTrue($header_value == $value, $message ? $message : 'HTTP response header ' . $header . ' with value ' . $value . ' found.', $group);
-  }
-
-  /**
    * {@inheritdoc}
    *
    * This method is overridden to deal with a cURL quirk: the usage of

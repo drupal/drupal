@@ -406,7 +406,8 @@ class ViewExecutable implements \Serializable {
     '#attached' => [
       'library' => [],
       'drupalSettings' => [],
-    ]
+    ],
+    '#cache' => [],
   ];
 
   /**
@@ -490,21 +491,33 @@ class ViewExecutable implements \Serializable {
   }
 
   /**
+   * Expands the list of used cache contexts for the view.
+   *
+   * @param string $cache_context
+   *   The additional cache context.
+   *
+   * @return $this
+   */
+  public function addCacheContext($cache_context) {
+    $this->element['#cache']['contexts'][] = $cache_context;
+
+    return $this;
+  }
+
+  /**
    * Change/Set the current page for the pager.
    *
    * @param int $page
    *   The current page.
-   * @param bool $keep_cacheability
-   *   (optional) Keep the cacheability. By default we mark the view as not
-   *   cacheable. The reason for this parameter is that we do not know what the
-   *   passed in value varies by. For example, it could be per role. Defaults to
-   *   FALSE.
    */
-  public function setCurrentPage($page, $keep_cacheability = FALSE) {
+  public function setCurrentPage($page) {
     $this->current_page = $page;
 
-    if (!$keep_cacheability) {
-      $this->element['#cache']['max-age'] = 0;
+    // Calls like ::unserialize() might call this method without a proper $page.
+    // Also check whether the element is pre rendered. At that point, the cache
+    // keys cannot longer be manipulated.
+    if ($page !== NULL && empty($this->element['#pre_rendered'])) {
+      $this->element['#cache']['keys'][] = 'page:' . $page;
     }
 
     // If the pager is already initialized, pass it through to the pager.
@@ -546,22 +559,14 @@ class ViewExecutable implements \Serializable {
    *
    * @param int $items_per_page
    *   The items per page.
-   * @param bool $keep_cacheability
-   *   (optional) Keep the cacheability. By default we mark the view as not
-   *   cacheable. The reason for this parameter is that we do not know what the
-   *   passed in value varies by. For example, it could be per role. Defaults to
-   *   FALSE.
    */
-  public function setItemsPerPage($items_per_page, $keep_cacheability = FALSE) {
+  public function setItemsPerPage($items_per_page) {
+    $this->element['#cache']['keys'][] = 'items_per_page:' . $items_per_page;
     $this->items_per_page = $items_per_page;
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       $this->pager->setItemsPerPage($items_per_page);
-    }
-
-    if (!$keep_cacheability) {
-      $this->element['#cache']['max-age'] = 0;
     }
   }
 
@@ -584,22 +589,14 @@ class ViewExecutable implements \Serializable {
    *
    * @param int $offset
    *   The pager offset.
-   * @param bool $keep_cacheability
-   *   (optional) Keep the cacheability. By default we mark the view as not
-   *   cacheable. The reason for this parameter is that we do not know what the
-   *   passed in value varies by. For example, it could be per role. Defaults to
-   *   FALSE.
    */
-  public function setOffset($offset, $keep_cacheability = FALSE) {
+  public function setOffset($offset) {
+    $this->element['#cache']['keys'][] = 'offset:' . $offset;
     $this->offset = $offset;
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       $this->pager->setOffset($offset);
-    }
-
-    if (!$keep_cacheability) {
-      $this->element['#cache']['max-age'] = 0;
     }
   }
 
@@ -1379,71 +1376,59 @@ class ViewExecutable implements \Serializable {
       $cache = FALSE;
     }
     else {
+      /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
       $cache = $this->display_handler->getPlugin('cache');
     }
 
-    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
-    if ($cache && $cache->cacheGet('output')) {
+    // Run preRender for the pager as it might change the result.
+    if (!empty($this->pager)) {
+      $this->pager->preRender($this->result);
     }
-    else {
-      if ($cache) {
-        $cache->cacheStart();
-      }
 
-      // Run preRender for the pager as it might change the result.
-      if (!empty($this->pager)) {
-        $this->pager->preRender($this->result);
-      }
+    // Initialize the style plugin.
+    $this->initStyle();
 
-      // Initialize the style plugin.
-      $this->initStyle();
+    if (!isset($this->response)) {
+      // Set the response so other parts can alter it.
+      $this->response = new Response('', 200);
+    }
 
-      if (!isset($this->response)) {
-        // Set the response so other parts can alter it.
-        $this->response = new Response('', 200);
-      }
-
-      // Give field handlers the opportunity to perform additional queries
-      // using the entire resultset prior to rendering.
-      if ($this->style_plugin->usesFields()) {
-        foreach ($this->field as $id => $handler) {
-          if (!empty($this->field[$id])) {
-            $this->field[$id]->preRender($this->result);
-          }
+    // Give field handlers the opportunity to perform additional queries
+    // using the entire resultset prior to rendering.
+    if ($this->style_plugin->usesFields()) {
+      foreach ($this->field as $id => $handler) {
+        if (!empty($this->field[$id])) {
+          $this->field[$id]->preRender($this->result);
         }
-      }
-
-      $this->style_plugin->preRender($this->result);
-
-      // Let each area handler have access to the result set.
-      $areas = array('header', 'footer');
-      // Only call preRender() on the empty handlers if the result is empty.
-      if (empty($this->result)) {
-        $areas[] = 'empty';
-      }
-      foreach ($areas as $area) {
-        foreach ($this->{$area} as $handler) {
-          $handler->preRender($this->result);
-        }
-      }
-
-      // Let modules modify the view just prior to rendering it.
-      $module_handler->invokeAll('views_pre_render', array($this));
-
-      // Let the themes play too, because pre render is a very themey thing.
-      foreach ($themes as $theme_name) {
-        $function = $theme_name . '_views_pre_render';
-        if (function_exists($function)) {
-          $function($this);
-        }
-      }
-
-      $this->display_handler->output = $this->display_handler->render();
-
-      if ($cache) {
-        $cache->cacheSet('output');
       }
     }
+
+    $this->style_plugin->preRender($this->result);
+
+    // Let each area handler have access to the result set.
+    $areas = array('header', 'footer');
+    // Only call preRender() on the empty handlers if the result is empty.
+    if (empty($this->result)) {
+      $areas[] = 'empty';
+    }
+    foreach ($areas as $area) {
+      foreach ($this->{$area} as $handler) {
+        $handler->preRender($this->result);
+      }
+    }
+
+    // Let modules modify the view just prior to rendering it.
+    $module_handler->invokeAll('views_pre_render', array($this));
+
+    // Let the themes play too, because pre render is a very themey thing.
+    foreach ($themes as $theme_name) {
+      $function = $theme_name . '_views_pre_render';
+      if (function_exists($function)) {
+        $function($this);
+      }
+    }
+
+    $this->display_handler->output = $this->display_handler->render();
 
     $exposed_form->postRender($this->display_handler->output);
 
@@ -1492,12 +1477,14 @@ class ViewExecutable implements \Serializable {
    *   The display ID.
    * @param array $args
    *   An array of arguments passed along to the view.
+   * @param bool $cache
+   *   (optional) Should the result be render cached.
    *
    * @return array|null
    *   A renderable array with #type 'view' or NULL if the display ID was
    *   invalid.
    */
-  public function buildRenderable($display_id = NULL, $args = array()) {
+  public function buildRenderable($display_id = NULL, $args = array(), $cache = TRUE) {
     // @todo Extract that into a generic method.
     if (empty($this->current_display) || $this->current_display != $this->chooseDisplay($display_id)) {
       if (!$this->setDisplay($display_id)) {
@@ -1505,7 +1492,7 @@ class ViewExecutable implements \Serializable {
       }
     }
 
-    return $this->display_handler->buildRenderable($args);
+    return $this->display_handler->buildRenderable($args, $cache);
   }
 
   /**
@@ -2399,7 +2386,7 @@ class ViewExecutable implements \Serializable {
 
     $this->setDisplay($current_display);
     $this->setArguments($args);
-    $this->setCurrentPage($current_page, TRUE);
+    $this->setCurrentPage($current_page);
     $this->setExposedInput($exposed_input);
     $this->exposed_data = $exposed_data;
     $this->exposed_raw_input = $exposed_raw_input;

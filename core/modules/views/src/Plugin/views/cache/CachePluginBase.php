@@ -41,13 +41,6 @@ abstract class CachePluginBase extends PluginBase {
   var $storage = array();
 
   /**
-   * Which cache bin to store the rendered output in.
-   *
-   * @var string
-   */
-  protected $outputBin = 'render';
-
-  /**
    * Which cache bin to store query results in.
    *
    * @var string
@@ -64,16 +57,6 @@ abstract class CachePluginBase extends PluginBase {
    * @see \Drupal\views\Plugin\views\cache\CachePluginBase::generateResultsKey()
    */
   protected $resultsKey;
-
-  /**
-   * Stores the cache ID used for the output cache, once generateOutputKey() got
-   * executed.
-   *
-   * @var string
-   *
-   * @see \Drupal\views\Plugin\views\cache\CachePluginBase::generateOutputKey()
-   */
-  protected $outputKey;
 
   /**
    * The HTML renderer.
@@ -124,16 +107,6 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Returns the outputKey property.
-   *
-   * @return string
-   *   The outputKey property.
-   */
-  public function getOutputKey() {
-    return $this->outputKey;
-  }
-
-  /**
    * Returns the resultsKey property.
    *
    * @return string
@@ -157,7 +130,7 @@ abstract class CachePluginBase extends PluginBase {
    * Plugins must override this to implement expiration.
    *
    * @param $type
-   *   The cache type, either 'query', 'result' or 'output'.
+   *   The cache type, either 'query', 'result'.
    */
   protected function cacheExpire($type) {
   }
@@ -169,9 +142,9 @@ abstract class CachePluginBase extends PluginBase {
    * Plugins must override this to implement expiration in the cache table.
    *
    * @param $type
-   *   The cache type, either 'query', 'result' or 'output'.
+   *   The cache type, either 'query', 'result'.
    */
-  protected function cacheSetExpire($type) {
+  protected function cacheSetMaxAge($type) {
     return Cache::PERMANENT;
   }
 
@@ -191,20 +164,8 @@ abstract class CachePluginBase extends PluginBase {
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
         );
-        \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
-        break;
-      case 'output':
-        // Make a copy of the output so it is not modified. If we render the
-        // display output directly an empty string will be returned when the
-        // view is actually rendered. If we try to set '#printed' to FALSE there
-        // are problems with asset bubbling.
-        $output = $this->view->display_handler->output;
-        $this->renderer->render($output);
-        // Also assign the cacheable render array back to the display handler so
-        // that is used to render the view for this request and rendering does
-        // not happen twice.
-        $this->storage = $this->view->display_handler->output = $this->renderCache->getCacheableRenderArray($output);
-        \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), Cache::mergeTags($this->storage['#cache']['tags'], ['rendered']));
+        $expire = ($this->cacheSetMaxAge($type) === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->view->getRequest()->server->get('REQUEST_TIME') + $this->cacheSetMaxAge($type);
+        \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $expire, $this->getCacheTags());
         break;
     }
   }
@@ -231,17 +192,6 @@ abstract class CachePluginBase extends PluginBase {
             $this->view->total_rows = $cache->data['total_rows'];
             $this->view->setCurrentPage($cache->data['current_page'], TRUE);
             $this->view->execute_time = 0;
-            return TRUE;
-          }
-        }
-        return FALSE;
-      case 'output':
-        if ($cache = \Drupal::cache($this->outputBin)->get($this->generateOutputKey())) {
-          if (!$cutoff || $cache->created > $cutoff) {
-            $this->storage = $cache->data;
-            $this->view->display_handler->output = $this->storage;
-            $this->view->element['#attached'] = &$this->view->display_handler->output['#attached'];
-            $this->view->element['#cache']['tags'] = &$this->view->display_handler->output['#cache']['tags'];
             return TRUE;
           }
         }
@@ -277,11 +227,6 @@ abstract class CachePluginBase extends PluginBase {
    * so all ids used in the query should be discoverable.
    */
   public function postRender(&$output) { }
-
-  /**
-   * Start caching the html head.
-   */
-  public function cacheStart() { }
 
   /**
    * Calculates and sets a cache ID used for the result cache.
@@ -325,30 +270,6 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Calculates and sets a cache ID used for the output cache.
-   *
-   * @return string
-   *   The generated cache ID.
-   */
-  public function generateOutputKey() {
-    if (!isset($this->outputKey)) {
-      $user = \Drupal::currentUser();
-      $key_data = array(
-        'result' => $this->view->result,
-        'roles' => $user->getRoles(),
-        'super-user' => $user->id() == 1, // special caching for super user.
-        'theme' => \Drupal::theme()->getActiveTheme()->getName(),
-        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
-        'base_url' => $GLOBALS['base_url'],
-      );
-
-      $this->outputKey = $this->view->storage->id() . ':' . $this->displayHandler->display['id'] . ':output:' . hash('sha256', serialize($key_data));
-    }
-
-    return $this->outputKey;
-  }
-
-  /**
    * Gets an array of cache tags for the current view.
    *
    * @return string[]
@@ -358,7 +279,7 @@ abstract class CachePluginBase extends PluginBase {
     $tags = $this->view->storage->getCacheTags();
 
     // The list cache tags for the entity types listed in this view.
-    $entity_information = $this->view->query->getEntityTableInfo();
+    $entity_information = $this->view->getQuery()->getEntityTableInfo();
 
     if (!empty($entity_information)) {
       // Add the list cache tags for each entity type used by this view.

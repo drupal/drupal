@@ -43,6 +43,9 @@ class CacheTest extends ViewUnitTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
+
+    // Setup the current time properly.
+    \Drupal::request()->server->set('REQUEST_TIME', time());
   }
 
   /**
@@ -276,14 +279,18 @@ class CacheTest extends ViewUnitTestBase {
       )
     ));
 
-    $output = $view->preview();
-    \Drupal::service('renderer')->render($output);
+    $output = $view->buildRenderable();
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    $renderer->render($output);
+
     unset($view->pre_render_called);
     $view->destroy();
 
     $view->setDisplay();
-    $output = $view->preview();
-    \Drupal::service('renderer')->render($output);
+    $output = $view->buildRenderable();
+    $renderer->render($output);
+
     $this->assertTrue(in_array('views_test_data/test', $output['#attached']['library']), 'Make sure libraries are added for cached views.');
     $this->assertEqual(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
     // Note: views_test_data_views_pre_render() adds some cache tags.

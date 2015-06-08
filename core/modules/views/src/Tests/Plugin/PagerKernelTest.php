@@ -47,29 +47,26 @@ class PagerKernelTest extends ViewUnitTestBase {
    */
   public function testSetPagerMethods() {
     $view = Views::getView('test_pager_full');
+
+    // Mark the view as cacheable in order have the cache checking working
+    // below.
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['cache']['type'] = 'tag';
+    $view->storage->save();
+
     $output = $view->preview();
 
     \Drupal::service('renderer')->renderPlain($output);
     $this->assertIdentical(CacheBackendInterface::CACHE_PERMANENT, $output['#cache']['max-age']);
 
     foreach (['setItemsPerPage', 'setOffset', 'setCurrentPage'] as $method) {
-      // Without $keep_cacheablity.
       $view = Views::getView('test_pager_full');
       $view->setDisplay('default');
       $view->{$method}(1);
       $output = $view->preview();
 
       \Drupal::service('renderer')->renderPlain($output);
-      $this->assertIdentical(0, $output['#cache']['max-age'], 'Max age set to 0 without $keep_cacheablity.');
-
-      // With $keep_cacheablity.
-      $view = Views::getView('test_pager_full');
-      $view->setDisplay('default');
-      $view->{$method}(1, TRUE);
-      $output = $view->preview();
-
-      \Drupal::service('renderer')->renderPlain($output);
-      $this->assertIdentical(CacheBackendInterface::CACHE_PERMANENT, $output['#cache']['max-age'], 'Max age unchanged with $keep_cacheablity.');
+      $this->assertIdentical(CacheBackendInterface::CACHE_PERMANENT, $output['#cache']['max-age'], 'Max age kept.');
     }
 
   }

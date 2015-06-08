@@ -19,6 +19,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\Core\Template\AttributeArray;
+use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
@@ -313,11 +314,14 @@ function views_element_info_alter(&$types) {
  * #pre_render callback to set contextual links for views using a Page display.
  */
 function views_page_display_pre_render(array $element) {
+  if (!\Drupal::moduleHandler()->moduleExists('contextual')) {
+    return $element;
+  }
   // If the main content of this page contains a view, attach its contextual
   // links to the overall page array. This allows them to be rendered directly
   // next to the page title.
-  if ($view = views_get_page_view()) {
-    views_add_contextual_links($element, 'page', $view, $view->current_display);
+  if ($render_array = Page::getPageRenderArray()) {
+    views_add_contextual_links($element, 'page', $render_array['#display_id'], $render_array);
   }
   return $element;
 }
@@ -401,24 +405,35 @@ function views_preprocess_html(&$variables) {
  *   also need to set 'contextual_links_locations' in your plugin annotation to
  *   indicate which view displays support having their contextual links
  *   rendered in the location you have defined.
- * @param $view
- *   The view whose contextual links will be added.
- * @param $display_id
+ * @param string $display_id
  *   The ID of the display within $view whose contextual links will be added.
+ * @param array $view_element
+ *   The render array of the view. It should contain the following properties:
+ *     - #view_id: The ID of the view.
+ *     - #view_display_show_admin_links: A boolean whether the admin links
+ *       should be shown.
+ *     - #view_display_plugin_id: The plugin ID of the display.
  *
  * @see \Drupal\views\Plugin\block\block\ViewsBlock::addContextualLinks()
  * @see views_preprocess_page()
  * @see template_preprocess_views_view()
  */
-function views_add_contextual_links(&$render_element, $location, ViewExecutable $view, $display_id) {
+function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
+  if (!isset($view_element)) {
+    $view_element = $render_element;
+  }
+  $view_element['#cache_properties'] = ['view_id', 'view_display_show_admin_links', 'view_display_plugin_id'];
+  $view_id = $view_element['#view_id'];
+  $show_admin_links = $view_element['#view_display_show_admin_links'];
+  $display_plugin_id = $view_element['#view_display_plugin_id'];
+
   // Do not do anything if the view is configured to hide its administrative
   // links or if the Contextual Links module is not enabled.
-  if (\Drupal::moduleHandler()->moduleExists('contextual') && $view->getShowAdminLinks()) {
+  if (\Drupal::moduleHandler()->moduleExists('contextual') && $show_admin_links) {
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
-    $plugin_id = $view->displayHandlers->get($display_id)->getPluginId();
-    $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
+    $plugin = Views::pluginManager('display')->getDefinition($display_plugin_id);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
@@ -441,17 +456,20 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
         $args = array();
         $valid = TRUE;
         if (!empty($link['route_parameters_names'])) {
+          $view_storage = \Drupal::entityManager()
+            ->getStorage('view')
+            ->load($view_id);
           foreach ($link['route_parameters_names'] as $parameter_name => $property) {
             // If the plugin is trying to create an invalid contextual link
             // (for example, "path/to/{$view->storage->property}", where
             // $view->storage->{property} does not exist), we cannot construct
             // the link, so we skip it.
-            if (!property_exists($view->storage, $property)) {
+            if (!property_exists($view_storage, $property)) {
               $valid = FALSE;
               break;
             }
             else {
-              $args[$parameter_name] = $view->storage->get($property);
+              $args[$parameter_name] = $view_storage->get($property);
             }
           }
         }
@@ -463,13 +481,14 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
             'route_parameters' => $args,
             'metadata' => array(
               'location' => $location,
-              'name' => $view->storage->id(),
+              'name' => $view_id,
               'display_id' => $display_id,
             ),
           );
           // If we're setting contextual links on a page, for a page view, for a
           // user that may use contextual links, attach Views' contextual links
           // JavaScript.
+          $render_element['#cache']['contexts'][] = 'user.permissions';
           if ($location === 'page' && $render_element['#type'] === 'page' && \Drupal::currentUser()->hasPermission('access contextual links')) {
             $render_element['#attached']['library'][] = 'views/views.contextual-links';
           }
@@ -519,32 +538,6 @@ function views_invalidate_cache() {
 
   // Allow modules to respond to the Views cache being cleared.
   $module_handler->invokeAll('views_invalidate_cache');
-}
-
-/**
- * Set the current 'page view' that is being displayed so that it is easy
- * for other modules or the theme to identify.
- */
-function &views_set_page_view($view = NULL) {
-  static $cache = NULL;
-  if (isset($view)) {
-    $cache = $view;
-  }
-
-  return $cache;
-}
-
-/**
- * Find out what, if any, page view is currently in use.
- *
- * Note that this returns a reference, so be careful! You can unintentionally
- * modify the $view object.
- *
- * @return \Drupal\views\ViewExecutable
- *   A fully formed, empty $view object.
- */
-function &views_get_page_view() {
-  return views_set_page_view();
 }
 
 /**

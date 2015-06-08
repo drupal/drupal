@@ -101,7 +101,7 @@ class Time extends CachePluginBase {
     parent::buildOptionsForm($form, $form_state);
     $options = array(60, 300, 1800, 3600, 21600, 518400);
     $options = array_map(array($this->dateFormatter, 'formatInterval'), array_combine($options, $options));
-    $options = array(-1 => $this->t('Never cache')) + $options + array('custom' => $this->t('Custom'));
+    $options = array(0 => $this->t('Never cache')) + $options + array('custom' => $this->t('Custom'));
 
     $form['results_lifespan'] = array(
       '#type' => 'select',
@@ -177,10 +177,13 @@ class Time extends CachePluginBase {
     }
   }
 
-  protected function cacheSetExpire($type) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function cacheSetMaxAge($type) {
     $lifespan = $this->getLifespan($type);
     if ($lifespan) {
-      return time() + $lifespan;
+      return $lifespan;
     }
     else {
       return Cache::PERMANENT;
@@ -193,7 +196,7 @@ class Time extends CachePluginBase {
   protected function getDefaultCacheMaxAge() {
     // The max age, unless overridden by some other piece of the rendered code
     // is determined by the output time setting.
-    return $this->cacheSetExpire('output');
+    return (int) $this->cacheSetMaxAge('output');
   }
 
 }

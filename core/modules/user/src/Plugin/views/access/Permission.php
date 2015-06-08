@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -27,7 +28,7 @@ use Symfony\Component\Routing\Route;
  *   help = @Translation("Access will be granted to users with the specified permission string.")
  * )
  */
-class Permission extends AccessPluginBase {
+class Permission extends AccessPluginBase implements CacheablePluginInterface {
 
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
@@ -130,6 +131,20 @@ class Permission extends AccessPluginBase {
       '#default_value' => $this->options['perm'],
       '#description' => $this->t('Only users with the selected permission flag will be able to access this display.'),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['user.permissions'];
   }
 
 }

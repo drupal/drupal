@@ -51,6 +51,15 @@ display:
           plugin_id: standard
           entity_type: entity_test
           entity_field: name
+      arguments:
+        id:
+          id: id
+          table: entity_test
+          field: id
+          plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
+          default_action: 'ignore'
       sorts:
         id:
           table: entity_test

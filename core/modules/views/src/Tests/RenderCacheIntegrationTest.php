@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Views;
@@ -90,16 +91,21 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $view = Views::getview('entity_test_fields');
 
     // Empty result (no entities yet).
+    $this->pass('Test without entities');
     $base_tags =  ['config:views.view.entity_test_fields', 'entity_test_list'];
     $this->assertViewsCacheTags($view, $base_tags, $do_assert_views_caches, $base_tags);
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $base_tags, $do_assert_views_caches);
 
 
     // Non-empty result (1 entity).
+    /** @var \Drupal\Core\Entity\EntityInterface[] $entities */
     $entities[] = $entity = EntityTest::create();
     $entity->save();
 
+    $this->pass('Test with entities');
     $tags_with_entity = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
     $this->assertViewsCacheTags($view, $tags_with_entity, $do_assert_views_caches, $tags_with_entity);
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_with_entity, $do_assert_views_caches);
 
 
     // Paged result (more entities than the items-per-page limit).
@@ -107,29 +113,79 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
       $entities[] = $entity = EntityTest::create();
       $entity->save();
     }
+
     // Page 1.
+    $this->pass('Test pager');
+    $this->pass('Page 1');
+    \Drupal::request()->query->set('page', 0);
     $tags_page_1 = Cache::mergeTags($base_tags, $entities[1]->getCacheTags(), $entities[2]->getCacheTags(), $entities[3]->getCacheTags(), $entities[4]->getCacheTags(), $entities[5]->getCacheTags());
     $this->assertViewsCacheTags($view, $tags_page_1, $do_assert_views_caches, $tags_page_1);
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_1, $do_assert_views_caches);
     $view->destroy();
     // Page 2.
+    $this->pass('Page 2');
     $view->setCurrentPage(1);
+    \Drupal::request()->query->set('page', 1);
     $tags_page_2 = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
     $this->assertViewsCacheTags($view, $tags_page_2, $do_assert_views_caches, $tags_page_2);
     $view->destroy();
 
     // Ensure that invalidation works on both pages.
+    $this->pass('Page invalidations');
+    $this->pass('Page 2');
     $view->setCurrentPage(1);
+    \Drupal::request()->query->set('page', 1);
     $entities[0]->name->value = $random_name = $this->randomMachineName();
     $entities[0]->save();
     $build = $this->assertViewsCacheTags($view, $tags_page_2, $do_assert_views_caches, $tags_page_2);
+    // @todo Static render arrays don't support different pages yet, see
+    //   https://www.drupal.org/node/2500701.
+    // $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_2, $do_assert_views_caches);
     $this->assertTrue(strpos($build['#markup'], $random_name) !== FALSE);
     $view->destroy();
 
+    $this->pass('Page 1');
     $view->setCurrentPage(0);
+    \Drupal::request()->query->set('page', 0);
     $entities[1]->name->value = $random_name = $this->randomMachineName();
     $entities[1]->save();
     $build = $this->assertViewsCacheTags($view, $tags_page_1, $do_assert_views_caches, $tags_page_1);
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_1, $do_assert_views_caches);
     $this->assertTrue(strpos($build['#markup'], $random_name) !== FALSE);
+    $view->destroy();
+
+    // Setup arguments to ensure that render caching also varies by them.
+    $this->pass('Test arguments');
+
+    // Custom assert for a single result row.
+    $single_entity_assertions = function(array $build, EntityInterface $entity) {
+      $this->setRawContent($build['#markup']);
+
+      $result = $this->cssSelect('div.views-row');
+      $count = count($result);
+      $this->assertEqual($count, 1);
+
+      $this->assertEqual((string) $result[0]->div->span, (string) $entity->id());
+    };
+
+    // Execute the view once with a static renderable and one with a full
+    // prepared render array.
+    $tags_argument = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
+    $view->setArguments([$entities[0]->id()]);
+    $build = $this->assertViewsCacheTags($view, $tags_argument, $do_assert_views_caches, $tags_argument);
+    $single_entity_assertions($build, $entities[0]);
+
+    $view->setArguments([$entities[0]->id()]);
+    $build = $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_argument, $do_assert_views_caches);
+    $single_entity_assertions($build, $entities[0]);
+
+    // Set a different argument and ensure that the result is different.
+    $tags2_argument = Cache::mergeTags($base_tags, $entities[1]->getCacheTags());
+    $view->setArguments([$entities[1]->id()]);
+    $build = $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags2_argument, $do_assert_views_caches);
+    $single_entity_assertions($build, $entities[1]);
+
+    $view->destroy();
   }
 
   /**
@@ -179,7 +235,7 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     // Empty result (no entities yet).
     $base_tags = $base_render_tags = ['config:views.view.entity_test_row', 'entity_test_list'];
     $this->assertViewsCacheTags($view, $base_tags, $do_assert_views_caches, $base_tags);
-
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $base_tags, $do_assert_views_caches);
 
     // Non-empty result (1 entity).
     $entities[] = $entity = EntityTest::create();
@@ -188,6 +244,7 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $result_tags_with_entity = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
     $render_tags_with_entity = Cache::mergeTags($base_render_tags, $entities[0]->getCacheTags(), ['entity_test_view']);
     $this->assertViewsCacheTags($view, $result_tags_with_entity, $do_assert_views_caches, $render_tags_with_entity);
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $render_tags_with_entity, $do_assert_views_caches);
 
 
     // Paged result (more entities than the items-per-page limit).
@@ -200,6 +257,7 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $result_tags_page_1 = Cache::mergeTags($base_tags, $new_entities_cache_tags);
     $render_tags_page_1 = Cache::mergeTags($base_render_tags, $new_entities_cache_tags, ['entity_test_view']);
     $this->assertViewsCacheTags($view, $result_tags_page_1, $do_assert_views_caches, $render_tags_page_1);
+    $this->assertViewsCacheTagsFromStaticRenderArray($view, $render_tags_page_1, $do_assert_views_caches);
   }
 
   /**
@@ -208,11 +266,11 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
   public function testBuildRenderableWithCacheContexts() {
     $view = View::load('test_view');
     $display =& $view->getDisplay('default');
-    $display['cache_metadata']['contexts'] = ['beatles'];
+    $display['cache_metadata']['contexts'] = ['views_test_cache_context'];
     $executable = $view->getExecutable();
 
     $build = $executable->buildRenderable();
-    $this->assertEqual(['beatles'], $build['#cache']['contexts']);
+    $this->assertEqual(['views_test_cache_context'], $build['#cache']['contexts']);
   }
 
   /**
@@ -222,7 +280,7 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $view = View::load('test_display');
     $view->save();
 
-    $this->assertEqual(['languages:' . LanguageInterface::TYPE_CONTENT, 'languages:' . LanguageInterface::TYPE_INTERFACE, 'url.query_args.pagers:0', 'user.node_grants:view'], $view->getDisplay('default')['cache_metadata']['contexts']);
+    $this->assertEqual(['languages:' . LanguageInterface::TYPE_CONTENT, 'languages:' . LanguageInterface::TYPE_INTERFACE, 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions'], $view->getDisplay('default')['cache_metadata']['contexts']);
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\user\Plugin\views\access\Role;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -90,6 +91,39 @@ class AccessRoleTest extends AccessTestBase {
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('test-role');
     $this->assertResponse(200);
+  }
+
+  /**
+   * Tests access on render caching.
+   */
+  public function testRenderCaching() {
+    $view = Views::getView('test_access_role');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['cache'] = [
+      'type' => 'tag',
+    ];
+    $display['display_options']['access']['options']['role'] = array(
+      $this->normalRole => $this->normalRole,
+    );
+    $view->save();
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    $account_switcher = \Drupal::service('account_switcher');
+
+
+    // First access as user without access.
+    $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');
+    $account_switcher->switchTo($this->normalUser);
+    $result = $renderer->renderPlain($build);
+    $this->assertNotEqual($result, '');
+
+    // Then with access.
+    $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');
+    $account_switcher->switchTo($this->webUser);
+    $result = $renderer->renderPlain($build);
+    $this->assertEqual($result, '');
   }
 
 }

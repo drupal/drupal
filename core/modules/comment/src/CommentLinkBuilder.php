@@ -82,11 +82,12 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
   public function buildCommentedEntityLinks(FieldableEntityInterface $entity, array &$context) {
     $entity_links = array();
     $view_mode = $context['view_mode'];
-    if ($view_mode == 'search_index' || $view_mode == 'search_result' || $view_mode == 'print') {
+    if ($view_mode == 'search_index' || $view_mode == 'search_result' || $view_mode == 'print' || $view_mode == 'rss') {
       // Do not add any links if the entity is displayed for:
       // - search indexing.
       // - constructing a search result excerpt.
       // - print.
+      // - rss.
       return array();
     }
 
@@ -101,19 +102,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
       if ($commenting_status != CommentItemInterface::HIDDEN) {
         // Entity has commenting status open or closed.
         $field_definition = $entity->getFieldDefinition($field_name);
-        if ($view_mode == 'rss') {
-          // Add a comments RSS element which is a URL to the comments of this
-          // entity.
-          $options = array(
-            'fragment' => 'comments',
-            'absolute' => TRUE,
-          );
-          $entity->rss_elements[] = array(
-            'key' => 'comments',
-            'value' => $entity->url('canonical', $options),
-          );
-        }
-        elseif ($view_mode == 'teaser') {
+        if ($view_mode == 'teaser') {
           // Teaser view: display the number of comments that have been posted,
           // or a link to add new comments if the user has permission, the
           // entity is open to new comments, and there currently are none.

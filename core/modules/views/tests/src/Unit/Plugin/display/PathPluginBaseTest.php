@@ -28,7 +28,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * The tested path plugin base.
    *
-   * @var \Drupal\views\Plugin\views\display\PathPluginBase
+   * @var \Drupal\views\Plugin\views\display\PathPluginBase|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $pathPlugin;
 
@@ -107,6 +107,90 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertTrue($route instanceof Route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertSame(FALSE, $route->getOption('returns_response'));
+  }
+
+  /**
+   * Tests the collectRoutes method with a display returning a response.
+   *
+   * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
+   */
+  public function testCollectRoutesWithDisplayReturnResponse() {
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route',
+    );
+    $this->pathPlugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
+      ->setConstructorArgs(array(array(), 'path_base', array('returns_response' => TRUE), $this->routeProvider, $this->state))
+      ->setMethods(NULL)
+      ->getMock();
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $collection = new RouteCollection();
+    $this->pathPlugin->collectRoutes($collection);
+    $route = $collection->get('view.test_id.page_1');
+    $this->assertSame(TRUE, $route->getOption('returns_response'));
+  }
+
+  /**
+   * Tests the collectRoutes method with arguments.
+   *
+   * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
+   */
+  public function testCollectRoutesWithArguments() {
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route/%/example',
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $collection = new RouteCollection();
+    $result = $this->pathPlugin->collectRoutes($collection);
+    $this->assertEquals(array('test_id.page_1' => 'view.test_id.page_1'), $result);
+
+    $route = $collection->get('view.test_id.page_1');
+    $this->assertTrue($route instanceof Route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertEquals(array('arg_0' => 'arg_0'), $route->getOption('_view_argument_map'));
+  }
+
+  /**
+   * Tests the collectRoutes method with arguments not specified in the path.
+   *
+   * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
+   */
+  public function testCollectRoutesWithArgumentsNotSpecifiedInPath() {
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_with_arguments',
+    );
+    $display['display_options']['arguments'] = array(
+      'test_id' => array(),
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $collection = new RouteCollection();
+    $result = $this->pathPlugin->collectRoutes($collection);
+    $this->assertEquals(array('test_id.page_1' => 'view.test_id.page_1'), $result);
+
+    $route = $collection->get('view.test_id.page_1');
+    $this->assertTrue($route instanceof Route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertEquals(array('arg_0' => 'arg_0'), $route->getOption('_view_argument_map'));
   }
 
   /**

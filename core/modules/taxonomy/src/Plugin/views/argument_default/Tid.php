@@ -211,13 +211,6 @@ class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface 
         }
       }
     }
-
-    // If the current page is a view that takes tid as an argument,
-    // find the tid argument and return it.
-    $views_page = views_get_page_view();
-    if ($views_page && isset($views_page->argument['tid'])) {
-      return $views_page->argument['tid']->argument;
-    }
   }
 
   /**
