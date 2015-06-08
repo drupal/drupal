@@ -21,7 +21,7 @@ use Drupal\Core\Render\Element;
 function template_preprocess_image_widget(&$variables) {
   $element = $variables['element'];
 
-  $variables['attributes'] = array('class' => array('image-widget', 'form-managed-file', 'clearfix'));
+  $variables['attributes'] = array('class' => array('image-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix'));
 
   if (!empty($element['fids']['#value'])) {
     $file = reset($element['#files']);

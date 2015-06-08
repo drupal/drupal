@@ -10,6 +10,12 @@
  * @see template_preprocess_file_managed_file()
  */
 #}
-<div{{ attributes.addClass('form-managed-file') }}>
+{%
+  set classes = [
+    'js-form-managed-file',
+    'form-managed-file',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
   {{ element }}
 </div>

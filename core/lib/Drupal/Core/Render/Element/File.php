@@ -65,7 +65,7 @@ class File extends FormElement {
   public static function preRenderFile($element) {
     $element['#attributes']['type'] = 'file';
     Element::setAttributes($element, array('id', 'name', 'size'));
-    static::setAttributes($element, array('form-file'));
+    static::setAttributes($element, array('js-form-file', 'form-file'));
 
     return $element;
   }
