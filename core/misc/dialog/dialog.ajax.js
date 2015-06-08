@@ -76,7 +76,7 @@
           'text': $originalButton.html() || $originalButton.attr('value'),
           'class': $originalButton.attr('class'),
           'click': function (e) {
-            $originalButton.trigger('mousedown').trigger('click').trigger('mouseup');
+            $originalButton.trigger('mousedown').trigger('mouseup').trigger('click');
             e.preventDefault();
           }
         });
