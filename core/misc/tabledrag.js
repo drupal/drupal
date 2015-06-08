@@ -457,7 +457,7 @@
       self.indentCount = Math.max($item.find('.js-indentation').length, self.indentCount);
     }
     else {
-      $item.find('td:first-of-type').prepend(handle);
+      $item.find('td').eq(0).prepend(handle);
     }
 
     if (Modernizr.touch) {
