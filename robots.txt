@@ -14,7 +14,6 @@
 # http://www.robotstxt.org/robotstxt.html
 
 User-agent: *
-Crawl-delay: 10
 # JS/CSS
 Allow: /core/*.css$
 Allow: /core/*.js$
