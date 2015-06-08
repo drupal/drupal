@@ -63,11 +63,7 @@ function book_theme() {
       'variables' => array('book_link' => NULL),
     ),
     'book_tree' => array(
-      'render element' => 'tree',
-    ),
-    'book_link' => array(
-      'render element' => 'element',
-      'function' => 'theme_book_link',
+      'variables' => array('items' => array(), 'attributes' => array()),
     ),
     'book_export_html' => array(
       'variables' => array('title' => NULL, 'contents' => NULL, 'depth' => NULL),
@@ -497,37 +493,6 @@ function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
   $variables['title'] = SafeMarkup::checkPlain($variables['node']->label());
   $variables['content'] = $variables['node']->rendered;
-}
-
-/**
- * Implements template_preprocess_HOOK() for book-tree.html.twig.
- */
-function template_preprocess_book_tree(&$variables) {
-  $variables['tree'] = $variables['tree']['#children'];
-}
-
-/**
- * Returns HTML for a book link and subtree.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: Structured array data for a book link.
- *
- * @ingroup themeable
- */
-function theme_book_link(array $variables) {
-  $element = $variables['element'];
-  $sub_menu = '';
-
-  if ($element['#below']) {
-    $sub_menu = drupal_render($element['#below']);
-  }
-  $element['#localized_options']['set_active_class'] = TRUE;
-  /** @var \Drupal\Core\Url $url */
-  $url = $element['#url'];
-  $url->setOptions($element['#localized_options'] + $url->getOptions());
-  $output = \Drupal::l($element['#title'], $url);
-  return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 
 /**
