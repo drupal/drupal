@@ -13,8 +13,12 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for a drop-down menu or scrolling selection box.
  *
- * See #empty_option and #empty_value for an explanation of various settings for
- * a select element, including behavior if #required is TRUE or FALSE.
+ * Properties:
+ * - #options: An associative array, where the keys are the retured values for
+ *   each option, and the values are the options to be shown in the drop-down
+ *   list.
+ * - #empty_option: The label that will be displayed to denote no selection.
+ * - #empty_value: The value of the option that is used to denote no selection.
  *
  * @FormElement("select")
  */

@@ -12,6 +12,8 @@ use Drupal\Core\Language\LanguageInterface;
 /**
  * Provides a form element for selecting a language.
  *
+ * @see \Drupal\Core\Render\Element\Select
+ *
  * @FormElement("language_select")
  */
 class LanguageSelect extends FormElement {

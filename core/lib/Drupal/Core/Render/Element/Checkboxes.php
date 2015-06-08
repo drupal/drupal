@@ -12,9 +12,21 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Provides a form element for a set of checkboxes.
  *
- * #options is an associative array, where the key is the #return_value of the
- * checkbox and the value is displayed. The #options array cannot have a 0 key,
- * as it would not be possible to discern checked and unchecked states.
+ * Properties:
+ * - #options: An associative array whose keys are the values returned for each
+ *   checkbox, and whose values are the labels next to each checkbox. The
+ *   #options array cannot have a 0 key, as it would not be possible to discern
+ *   checked and unchecked states.
+ *
+ * Usage example:
+ * @code
+ * $form['high_school']['tests_taken'] = array(
+ *   '#type' => 'checkboxes',
+ *   '#options' => array('SAT' => t('SAT'), 'ACT' => t('ACT'))),
+ *   '#title' => t('What standardized tests did you take?'),
+ *   ...
+ * );
+ * @endcode
  *
  * @see \Drupal\Core\Render\Element\Radios
  * @see \Drupal\Core\Render\Element\Checkbox
