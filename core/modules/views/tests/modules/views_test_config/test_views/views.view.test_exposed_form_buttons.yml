@@ -17,7 +17,7 @@ display:
       access:
         type: none
       cache:
-        type: none
+        type: tag
       exposed_form:
         options:
           reset_button: true

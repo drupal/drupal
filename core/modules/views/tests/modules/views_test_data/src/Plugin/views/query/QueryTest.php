@@ -10,6 +10,7 @@ namespace Drupal\views_test_data\Plugin\views\query;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -114,7 +115,7 @@ class QueryTest extends QueryPluginBase {
         if ($this->fields) {
           $element = array_intersect_key($element, $this->fields);
         }
-        $result[] = (object) $element;
+        $result[] = new ResultRow($element);
       }
     }
     $this->view->result = $result;

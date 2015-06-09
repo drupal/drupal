@@ -20,7 +20,7 @@ display:
           perm: 'access user profiles'
         type: perm
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       fields:

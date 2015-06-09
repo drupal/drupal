@@ -27,7 +27,7 @@ display:
           entity_type: entity_test
           entity_field: name
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       fields:

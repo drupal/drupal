@@ -19,7 +19,7 @@ display:
       access:
         type: perm
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       fields:

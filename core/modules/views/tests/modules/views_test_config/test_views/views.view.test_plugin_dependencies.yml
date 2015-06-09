@@ -22,7 +22,7 @@ display:
       access:
         type: test_static
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       fields:

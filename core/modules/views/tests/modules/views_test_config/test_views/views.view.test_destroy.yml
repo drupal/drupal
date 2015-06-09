@@ -41,7 +41,7 @@ display:
           plugin_id: date_month
           entity_type: node
       cache:
-        type: none
+        type: tag
       empty:
         area:
           empty: false

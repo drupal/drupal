@@ -20,7 +20,7 @@ display:
         options:
           perm: 'access content overview'
       cache:
-        type: none
+        type: tag
       query:
         type: views_query
       exposed_form:

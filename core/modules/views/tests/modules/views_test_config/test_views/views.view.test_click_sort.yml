@@ -33,7 +33,7 @@ display:
       access:
         type: none
       cache:
-        type: none
+        type: tag
       style:
         type: table
         options:

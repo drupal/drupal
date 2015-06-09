@@ -24,7 +24,7 @@ display:
         options:
           perm: 'access files overview'
       cache:
-        type: none
+        type: tag
         options: {  }
       query:
         type: views_query

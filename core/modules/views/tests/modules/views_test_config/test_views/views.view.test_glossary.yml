@@ -34,7 +34,7 @@ display:
           entity_type: node
           entity_field: title
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       fields:

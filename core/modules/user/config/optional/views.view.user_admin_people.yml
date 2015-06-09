@@ -23,7 +23,7 @@ display:
         options:
           perm: 'administer users'
       cache:
-        type: none
+        type: tag
       query:
         type: views_query
         options:

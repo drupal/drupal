@@ -34,7 +34,7 @@ display:
           plugin_id: argument_comment_user_uid
           entity_type: node
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       fields:

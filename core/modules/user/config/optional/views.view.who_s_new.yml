@@ -23,7 +23,7 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: none
+        type: tag
         options: {  }
       query:
         type: views_query

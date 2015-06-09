@@ -48,7 +48,7 @@ display:
           entity_type: taxonomy_term
           entity_field: tid
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       pager:

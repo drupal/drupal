@@ -47,7 +47,7 @@ display:
           entity_type: node
           entity_field: field_no_view_access
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       pager:

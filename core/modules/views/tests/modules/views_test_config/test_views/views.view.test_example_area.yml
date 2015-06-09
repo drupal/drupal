@@ -14,7 +14,7 @@ display:
       access:
         type: none
       cache:
-        type: none
+        type: tag
       header:
         test_example:
           field: test_example

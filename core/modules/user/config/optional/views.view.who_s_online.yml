@@ -23,7 +23,7 @@ display:
         options:
           perm: 'access user profiles'
       cache:
-        type: none
+        type: tag
         options: {  }
       query:
         type: views_query

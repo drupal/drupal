@@ -795,7 +795,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function defaultDisplayOptions() {
     $display_options = array();
     $display_options['access']['type'] = 'none';
-    $display_options['cache']['type'] = 'none';
+    $display_options['cache']['type'] = 'tag';
     $display_options['query']['type'] = 'views_query';
     $display_options['exposed_form']['type'] = 'basic';
     $display_options['pager']['type'] = 'full';

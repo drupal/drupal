@@ -25,7 +25,7 @@ display:
             type: user_name
           plugin_id: 'null'
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       pager:

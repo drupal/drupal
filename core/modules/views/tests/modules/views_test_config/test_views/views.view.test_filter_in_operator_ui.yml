@@ -14,7 +14,7 @@ display:
       access:
         type: none
       cache:
-        type: none
+        type: tag
       exposed_form:
         type: basic
       filters:

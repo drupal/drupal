@@ -561,7 +561,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       ),
       'cache' => array(
         'contains' => array(
-          'type' => array('default' => 'none'),
+          'type' => array('default' => 'tag'),
           'options' => array('default' => array()),
         ),
         'merge_defaults' => array($this, 'mergePlugin'),
@@ -2311,7 +2311,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   public function getCacheMetadata() {
     if (!isset($this->display['cache_metadata'])) {
-      $this->display['cache_metadata'] = $this->calculateCacheMetadata();
+      list($this->display['cache_metadata']['cacheable'], $this->display['cache_metadata']['contexts']) = $this->calculateCacheMetadata();
     }
     return $this->display['cache_metadata'];
   }

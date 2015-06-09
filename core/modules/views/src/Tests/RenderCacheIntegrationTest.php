@@ -47,6 +47,12 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
    * Tests a field-based view's cache tags when using the "none" cache plugin.
    */
   public function testFieldBasedViewCacheTagsWithCachePluginNone() {
+    $view = Views::getview('entity_test_fields');
+    $view->getDisplay()->overrideOption('cache', [
+      'type' => 'none',
+    ]);
+    $view->save();
+
     $this->assertCacheTagsForFieldBasedView(FALSE);
   }
 
@@ -192,6 +198,12 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
    * Tests a entity-based view's cache tags when using the "none" cache plugin.
    */
   public function testEntityBasedViewCacheTagsWithCachePluginNone() {
+    $view = Views::getview('entity_test_row');
+    $view->getDisplay()->overrideOption('cache', [
+      'type' => 'none',
+    ]);
+    $view->save();
+
     $this->assertCacheTagsForEntityBasedView(FALSE);
   }
 

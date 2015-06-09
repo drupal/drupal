@@ -20,7 +20,7 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: none
+        type: tag
         options: {  }
       pager:
         type: full
