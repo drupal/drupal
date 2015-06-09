@@ -46,10 +46,10 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
   }
-  if ($route_name == 'entity.menu.add_form' && \Drupal::moduleHandler()->moduleExists('block')) {
+  if ($route_name == 'entity.menu.add_form' && \Drupal::moduleHandler()->moduleExists('block') && \Drupal::currentUser()->hasPermission('administer blocks')) {
     return '<p>' . t('You can enable the newly-created block for this menu on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
-  elseif ($route_name == 'entity.menu.collection' && \Drupal::moduleHandler()->moduleExists('block')) {
+  elseif ($route_name == 'entity.menu.collection' && \Drupal::moduleHandler()->moduleExists('block') && \Drupal::currentUser()->hasPermission('administer blocks')) {
     return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
 }
