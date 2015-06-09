@@ -31,7 +31,7 @@ class DummyStreamWrapper extends LocalStream {
   }
 
   function getDirectoryPath() {
-    return conf_path() . '/files';
+    return \Drupal::service('site.path') . '/files';
   }
 
   /**

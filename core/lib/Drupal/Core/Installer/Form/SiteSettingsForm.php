@@ -11,11 +11,38 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form to configure and rewrite settings.php.
  */
 class SiteSettingsForm extends FormBase {
+
+  /**
+   * The site path.
+   *
+   * @var string
+   */
+  protected $sitePath;
+
+  /**
+   * Constructs a new SiteSettingsForm.
+   *
+   * @param string $site_path
+   *   The site path.
+   */
+  public function __construct($site_path) {
+    $this->sitePath = $site_path;
+}
+
+  /**
+    * {@inheritdoc}
+    */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('site.path')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -28,8 +55,7 @@ class SiteSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $conf_path = './' . conf_path(FALSE);
-    $settings_file = $conf_path . '/settings.php';
+    $settings_file = './' . $this->sitePath . '/settings.php';
 
     $form['#title'] = $this->t('Database configuration');
 

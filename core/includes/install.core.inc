@@ -367,7 +367,7 @@ function install_begin_request($class_loader, &$install_state) {
 
   // Determine whether base system services are ready to operate.
   $install_state['config_verified'] = install_ensure_config_directory(CONFIG_ACTIVE_DIRECTORY) && install_ensure_config_directory(CONFIG_STAGING_DIRECTORY);
-  $install_state['database_verified'] = install_verify_database_settings();
+  $install_state['database_verified'] = install_verify_database_settings($site_path);
   $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'];
 
   // Install factory tables only after checking the database.
@@ -1077,11 +1077,17 @@ function install_verify_completed_task() {
 
 /**
  * Verifies that settings.php specifies a valid database connection.
+ *
+ * @param string $site_path
+ *  The site path.
+ *
+ * @return bool
+ *  TRUE if there are no database errors.
  */
-function install_verify_database_settings() {
+function install_verify_database_settings($site_path) {
   if ($database = Database::getConnectionInfo()) {
     $database = $database['default'];
-    $settings_file = './' . conf_path(FALSE) . '/settings.php';
+    $settings_file = './' . $site_path . '/settings.php';
     $errors = install_database_errors($database, $settings_file);
     if (empty($errors)) {
       return TRUE;
@@ -1902,8 +1908,9 @@ function install_check_translations($langcode, $server_pattern) {
   $readable = FALSE;
   $writable = FALSE;
   // @todo: Make this configurable.
-  $files_directory = conf_path() . '/files';
-  $translations_directory = conf_path() . '/files/translations';
+  $site_path = \Drupal::service('site.path');
+  $files_directory =  $site_path . '/files';
+  $translations_directory = $site_path . '/files/translations';
   $translations_directory_exists = FALSE;
   $translation_available = FALSE;
   $online = FALSE;
@@ -2081,12 +2088,12 @@ function install_check_requirements($install_state) {
   foreach ($default_files as $default_file_info) {
     $readable = FALSE;
     $writable = FALSE;
-    $conf_path = './' . conf_path(FALSE);
-    $file = $conf_path . "/{$default_file_info['file']}";
+    $site_path = './' . \Drupal::service('site.path');
+    $file = $site_path . "/{$default_file_info['file']}";
     $default_file = "./sites/default/{$default_file_info['file_default']}";
     $exists = FALSE;
     // Verify that the directory exists.
-    if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
+    if (drupal_verify_install_file($site_path, FILE_EXIST, 'dir')) {
       if (drupal_verify_install_file($file, FILE_EXIST)) {
         // If it does, make sure it is writable.
         $readable = drupal_verify_install_file($file, FILE_READABLE);
@@ -2111,7 +2118,7 @@ function install_check_requirements($install_state) {
     // Otherwise, if $file does not exist yet, we can try to copy
     // $default_file to create it.
     elseif (!$exists) {
-      $copied = drupal_verify_install_file($conf_path, FILE_EXIST | FILE_WRITABLE, 'dir') && @copy($default_file, $file);
+      $copied = drupal_verify_install_file($site_path, FILE_EXIST | FILE_WRITABLE, 'dir') && @copy($default_file, $file);
       if ($copied) {
         // If the new $file file has the same owner as $default_file this means
         // $default_file is owned by the webserver user. This is an inherent

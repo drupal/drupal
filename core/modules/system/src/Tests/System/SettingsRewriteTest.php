@@ -21,6 +21,7 @@ class SettingsRewriteTest extends KernelTestBase {
    */
   function testDrupalRewriteSettings() {
     include_once \Drupal::root() . '/core/includes/install.inc';
+    $site_path = $this->container->get('site.path');
     $tests = array(
       array(
         'original' => '$no_index_value_scalar = TRUE;',
@@ -99,7 +100,7 @@ EXPECTED
       ),
     );
     foreach ($tests as $test) {
-      $filename = Settings::get('file_public_path', conf_path() . '/files') . '/mock_settings.php';
+      $filename = Settings::get('file_public_path', $site_path . '/files') . '/mock_settings.php';
       file_put_contents(\Drupal::root() . '/' . $filename, "<?php\n" . $test['original'] . "\n");
       drupal_rewrite_settings($test['settings'], $filename);
       $this->assertEqual(file_get_contents(\Drupal::root() . '/' . $filename), "<?php\n" . $test['expected'] . "\n");
@@ -117,7 +118,7 @@ EXPECTED
       'expected' => '$no_index = true;'
     );
     // Make an empty file.
-    $filename = Settings::get('file_public_path', conf_path() . '/files') . '/mock_settings.php';
+    $filename = Settings::get('file_public_path', $site_path . '/files') . '/mock_settings.php';
     file_put_contents(\Drupal::root() . '/' . $filename, "");
 
     // Write the setting to the file.

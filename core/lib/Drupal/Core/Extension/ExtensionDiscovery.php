@@ -8,8 +8,10 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Discovers available extensions in the filesystem.
@@ -162,8 +164,16 @@ class ExtensionDiscovery {
       $searchdirs[static::ORIGIN_PARENT_SITE] = $parent_site;
     }
 
-    // Search the site-specific directory.
-    $searchdirs[static::ORIGIN_SITE] = conf_path();
+    // Find the site-specific directory to search. Since we are using this
+    // method to discover extensions including profiles, we might be doing this
+    // at install time. Therefore Kernel service is not always available, but is
+    // preferred.
+    if (\Drupal::hasService('kernel')) {
+      $searchdirs[static::ORIGIN_SITE] = \Drupal::service('site.path');
+    }
+    else {
+      $searchdirs[static::ORIGIN_SITE] = DrupalKernel::findSitePath(Request::createFromGlobals());
+    }
 
     // Unless an explicit value has been passed, manually check whether we are
     // in a test environment, in which case test extensions must be included.

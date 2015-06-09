@@ -117,7 +117,6 @@ final class Settings {
     $config = array();
     $databases = array();
 
-    // Make conf_path() available as local variable in settings.php.
     if (is_readable($app_root . '/' . $site_path . '/settings.php')) {
       require $app_root . '/' . $site_path . '/settings.php';
     }

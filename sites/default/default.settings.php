@@ -48,7 +48,7 @@
  * sites/8080.www.drupal.org.mysite.test/.
  *
  * @see example.sites.php
- * @see conf_path()
+ * @see \Drupal\Core\DrupalKernel::getSitePath()
  *
  * In addition to customizing application settings through variables in
  * settings.php, you can create a services.yml file in the same directory to

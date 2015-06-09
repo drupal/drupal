@@ -10,11 +10,13 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\system\SystemRequirements;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_requirements().
@@ -250,12 +252,19 @@ function system_requirements($phase) {
   // Test configuration files and directory for writability.
   if ($phase == 'runtime') {
     $conf_errors = array();
-    $conf_path = conf_path();
-    if (!drupal_verify_install_file($conf_path, FILE_NOT_WRITABLE, 'dir')) {
-      $conf_errors[] = t("The directory %file is not protected from modifications and poses a security risk. You must change the directory's permissions to be non-writable.", array('%file' => $conf_path));
+    // Find the site path. Kernel service is not always available at this point,
+    // but is preferred, when available.
+    if (\Drupal::hasService('kernel')) {
+      $site_path = \Drupal::service('site.path');
+    }
+    else {
+      $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
+    }
+    if (!drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir')) {
+      $conf_errors[] = t("The directory %file is not protected from modifications and poses a security risk. You must change the directory's permissions to be non-writable.", array('%file' => $site_path));
     }
     foreach (array('settings.php', 'settings.local.php', 'services.yml') as $conf_file) {
-      $full_path = $conf_path . '/' . $conf_file;
+      $full_path = $site_path . '/' . $conf_file;
       if (file_exists($full_path) && !drupal_verify_install_file($full_path, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
         $conf_errors[] = t("The file %file is not protected from modifications and poses a security risk. You must change the file's permissions to be non-writable.", array('%file' => $full_path));
       }
@@ -391,7 +400,9 @@ function system_requirements($phase) {
     else {
       // If we are installing Drupal, the settings.php file might not exist yet
       // in the intended site directory, so don't require it.
-      $directories[] = conf_path(FALSE) . '/files';
+      $request = Request::createFromGlobals();
+      $site_path = DrupalKernel::findSitePath($request);
+      $directories[] = $site_path . '/files';
     }
     if ($file_private_path = Settings::get('file_private_path')) {
       $directories[] = $file_private_path;
@@ -418,7 +429,7 @@ function system_requirements($phase) {
     $requirements['config directories'] = array(
       'title' => t('Configuration directories'),
       'value' => t('Not present'),
-      'description' => t('Your %file file must define the $config_directories variable as an array containing the name of a directories in which configuration files can be written.', array('%file' => conf_path() . '/settings.php')),
+      'description' => t('Your %file file must define the $config_directories variable as an array containing the name of a directories in which configuration files can be written.', array('%file' => $site_path . '/settings.php')),
       'severity' => REQUIREMENT_ERROR,
     );
   }

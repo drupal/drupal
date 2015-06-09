@@ -136,7 +136,7 @@ services:
     arguments: ['@database', '@cache_tags.invalidator.checksum']
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
-    arguments: ['@app.root', '@cache_tags.invalidator.checksum']
+    arguments: ['@app.root', '@site.path', '@cache_tags.invalidator.checksum']
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
     arguments: ['@cache_tags.invalidator.checksum']
@@ -543,6 +543,15 @@ services:
       - { name: parameter_service }
   app.root.factory:
     class: Drupal\Core\AppRootFactory
+    arguments: ['@kernel']
+    public: false
+  site.path:
+    class: SplString
+    factory: site.path.factory:get
+    tags:
+      - { name: parameter_service }
+  site.path.factory:
+    class: Drupal\Core\SitePathFactory
     arguments: ['@kernel']
     public: false
   controller_resolver:

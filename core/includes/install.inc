@@ -197,7 +197,7 @@ function drupal_get_database_types() {
  */
 function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
   if (!isset($settings_file)) {
-    $settings_file = conf_path(FALSE) . '/settings.php';
+    $settings_file = \Drupal::service('site.path') . '/settings.php';
   }
   // Build list of setting names and insert the values into the global namespace.
   $variable_names = array();
@@ -470,13 +470,13 @@ function drupal_install_config_directories() {
   $config_directories_hash = Crypt::randomBytesBase64(55);
   if (empty($config_directories[CONFIG_ACTIVE_DIRECTORY])) {
     $settings['config_directories'][CONFIG_ACTIVE_DIRECTORY] = (object) [
-      'value' => conf_path() . '/files/config_' . $config_directories_hash . '/active',
+      'value' => \Drupal::service('site.path') . '/files/config_' . $config_directories_hash . '/active',
       'required' => TRUE,
     ];
   }
   if (empty($config_directories[CONFIG_STAGING_DIRECTORY])) {
     $settings['config_directories'][CONFIG_STAGING_DIRECTORY] = (object) [
-      'value' => conf_path() . '/files/config_' . $config_directories_hash . '/staging',
+      'value' => \Drupal::service('site.path') . '/files/config_' . $config_directories_hash . '/staging',
       'required' => TRUE,
     ];
   }
