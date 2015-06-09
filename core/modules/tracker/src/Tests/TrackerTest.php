@@ -91,7 +91,7 @@ class TrackerTest extends WebTestBase {
 
     $this->drupalGet('activity');
     $this->assertText($node->label(), 'Published node shows up in the tracker listing.');
-    $this->assertText(\Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getChangedTime()), 'The changed time was displayed on the tracker listing.');
+    $this->assertText(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()), 'The changed time was displayed on the tracker listing.');
   }
 
   /**

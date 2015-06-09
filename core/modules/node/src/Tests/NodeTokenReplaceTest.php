@@ -73,8 +73,8 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     $tests['[node:author]'] = SafeMarkup::checkPlain($account->getUsername());
     $tests['[node:author:uid]'] = $node->getOwnerId();
     $tests['[node:author:name]'] = SafeMarkup::checkPlain($account->getUsername());
-    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getCreatedTime(), 2, $this->interfaceLanguage->getId());
-    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getChangedTime(), 2, $this->interfaceLanguage->getId());
+    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), array('langcode' => $this->interfaceLanguage->getId()));
+    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), array('langcode' => $this->interfaceLanguage->getId()));
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

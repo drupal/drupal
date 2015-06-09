@@ -359,7 +359,7 @@ function system_requirements($phase) {
     }
 
     // Set summary and description based on values determined above.
-    $summary = t('Last run !time ago', array('!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $cron_last)));
+    $summary = t('Last run !time ago', array('!time' => \Drupal::service('date.formatter')->formatTimeDiffSince($cron_last)));
     $description = '';
     if ($severity != REQUIREMENT_INFO) {
       $description = t('Cron has not run recently.') . ' ' . $help;

@@ -154,7 +154,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     $tests['[date:medium]'] = $date_formatter->format($date, 'medium', '', NULL, $this->interfaceLanguage->getId());
     $tests['[date:long]'] = $date_formatter->format($date, 'long', '', NULL, $this->interfaceLanguage->getId());
     $tests['[date:custom:m/j/Y]'] = $date_formatter->format($date, 'custom', 'm/j/Y', NULL, $this->interfaceLanguage->getId());
-    $tests['[date:since]'] = $date_formatter->formatInterval(REQUEST_TIME - $date, 2, $this->interfaceLanguage->getId());
+    $tests['[date:since]'] = $date_formatter->formatTimeDiffSince($date, array('langcode' => $this->interfaceLanguage->getId()));
     $tests['[date:raw]'] = Xss::filter($date);
 
     // Test to make sure that we generated something for each token.

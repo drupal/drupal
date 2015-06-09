@@ -60,8 +60,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:langcode]'] = SafeMarkup::checkPlain($comment->language()->getId());
     $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
-    $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->getId());
-    $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getChangedTimeAcrossTranslations(), 2, $language_interface->getId());
+    $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), array('langcode' => $language_interface->getId()));
+    $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), array('langcode' => $language_interface->getId()));
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
     $tests['[comment:parent:title]'] = SafeMarkup::checkPlain($parent_comment->getSubject());
     $tests['[comment:entity]'] = SafeMarkup::checkPlain($node->getTitle());

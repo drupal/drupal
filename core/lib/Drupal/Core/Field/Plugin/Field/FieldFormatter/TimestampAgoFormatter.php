@@ -87,7 +87,7 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
 
     foreach ($items as $delta => $item) {
       if ($item->value) {
-        $updated = $this->t('@time ago', array('@time' => $this->dateFormatter->formatInterval(REQUEST_TIME - $item->value)));
+        $updated = $this->t('@time ago', array('@time' => $this->dateFormatter->formatTimeDiffSince($item->value)));
       }
       else {
         $updated = $this->t('never');

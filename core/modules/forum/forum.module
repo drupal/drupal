@@ -633,5 +633,5 @@ function template_preprocess_forum_submitted(&$variables) {
     $username = array('#theme' => 'username', '#account' => User::load($variables['topic']->uid));
     $variables['author'] = drupal_render($username);
   }
-  $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $variables['topic']->created) : '';
+  $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date.formatter')->formatTimeDiffSince($variables['topic']->created) : '';
 }

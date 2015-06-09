@@ -574,7 +574,7 @@ function _update_project_status_sort($a, $b) {
  * @see theme_update_report()
  */
 function template_preprocess_update_last_check(&$variables) {
-  $variables['time'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $variables['last']);
+  $variables['time'] = \Drupal::service('date.formatter')->formatTimeDiffSince($variables['last']);
   $variables['link'] = \Drupal::l(t('Check manually'), new Url('update.manual_status', array(), array('query' => \Drupal::destination()->getAsArray())));
 }
 

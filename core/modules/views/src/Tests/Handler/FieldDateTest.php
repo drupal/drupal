@@ -121,19 +121,19 @@ class FieldDateTest extends ViewUnitTestBase {
     }
 
     // Check times in the past.
-    $test = $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2);
+    $time_since = $this->container->get('date.formatter')->formatTimeDiffSince($time);
     $intervals = array(
-      'raw time ago' => $test,
-      'time ago' => t('%time ago', array('%time' => $test)),
-      'raw time span' => $test,
-      'inverse time span' => -$test,
-      'time span' => t('%time ago', array('%time' => $test)),
+      'raw time ago' => $time_since,
+      'time ago' => t('%time ago', array('%time' => $time_since)),
+      'raw time span' => $time_since,
+      'inverse time span' => -$time_since,
+      'time span' => t('%time ago', array('%time' => $time_since)),
     );
     $this->assertRenderedDatesEqual($view, $intervals);
 
     // Check times in the future.
     $time = gmmktime(0, 0, 0, 1, 1, 2050);
-    $formatted = $this->container->get('date.formatter')->formatInterval($time - REQUEST_TIME, 2);
+    $formatted = $this->container->get('date.formatter')->formatTimeDiffUntil($time);
     $intervals = array(
       'raw time span' => -$formatted,
       'time span' => t('%time hence', array(

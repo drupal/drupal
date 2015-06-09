@@ -114,7 +114,7 @@ function tracker_page($account = NULL) {
         ),
         'last updated' => array(
           'data' => t('!time ago', array(
-            '!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->last_activity),
+            '!time' => \Drupal::service('date.formatter')->formatTimeDiffSince($node->last_activity),
           )),
         ),
       );
