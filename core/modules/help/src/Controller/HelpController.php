@@ -68,9 +68,7 @@ class HelpController extends ControllerBase {
   protected function helpLinksAsList() {
     $modules = array();
     foreach ($this->moduleHandler()->getImplementations('help') as $module) {
-      if ($this->moduleHandler()->invoke($module, 'help', array("help.page.$module", $this->routeMatch))) {
-        $modules[$module] = $this->moduleHandler->getName($module);
-      }
+      $modules[$module] = $this->moduleHandler->getName($module);
     }
     asort($modules);
 

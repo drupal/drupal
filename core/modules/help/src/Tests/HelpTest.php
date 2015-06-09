@@ -19,11 +19,16 @@ class HelpTest extends WebTestBase {
   /**
    * Modules to enable.
    *
+   * The help_test module implements hook_help() but does not provide a module
+   * overview page.
+   *
    * @var array.
    */
-  public static $modules = array('shortcut');
+  public static $modules = array('help_test');
 
-  // Tests help implementations of many arbitrary core modules.
+  /**
+   * Use the Standard profile to test help implementations of many core modules.
+   */
   protected $profile = 'standard';
 
   /**
@@ -71,6 +76,11 @@ class HelpTest extends WebTestBase {
     foreach ($this->getModuleList() as $module => $name) {
       $this->assertLink($name, 0, format_string('Link properly added to @name (admin/help/@module)', array('@module' => $module, '@name' => $name)));
     }
+
+    // Ensure that module which does not provide an module overview page is
+    // handled correctly.
+    $this->clickLink(\Drupal::moduleHandler()->getName('help_test'));
+    $this->assertRaw(t('No help is available for module %module.', array('%module' => \Drupal::moduleHandler()->getName('help_test'))));
   }
 
   /**

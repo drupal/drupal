@@ -255,17 +255,17 @@ class ModulesListForm extends FormBase {
     $row['description']['#markup'] = $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
-    // Generate link for module's help page, if there is one.
+    // Generate link for module's help page. Assume that if a hook_help()
+    // implementation exists then the module provides an overview page, rather
+    // than checking to see if the page exists, which is costly.
     $row['links']['help'] = array();
     if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
-      if ($this->moduleHandler->invoke($module->getName(), 'help', array('help.page.' . $module->getName(), $this->routeMatch))) {
-        $row['links']['help'] = array(
-          '#type' => 'link',
-          '#title' => $this->t('Help'),
-          '#url' => Url::fromRoute('help.page', ['name' => $module->getName()]),
-          '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
-        );
-      }
+      $row['links']['help'] = array(
+        '#type' => 'link',
+        '#title' => $this->t('Help'),
+        '#url' => Url::fromRoute('help.page', ['name' => $module->getName()]),
+        '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
+      );
     }
 
     // Generate link for module's permission, if the user has access to it.
