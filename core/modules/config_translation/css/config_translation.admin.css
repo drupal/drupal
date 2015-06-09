@@ -7,38 +7,18 @@
  * Hide the label, in an accessible way, for responsive screens which show the
  * form in one column.
  */
-.config-translation-form .translation-element-wrapper .translation label {
-  position: absolute !important;
+.translation-set__translated label {
   clip: rect(1px, 1px, 1px, 1px);
-  overflow: hidden;
   height: 1px;
+  overflow: hidden;
+  position: absolute;
   width: 1px;
 }
 
-/**
- * For wider screens, show the label and display source and translation side by
- * side.
- */
-@media all and (min-width: 851px) {
-  .config-translation-form .translation-element-wrapper .source {
-    width: 48%;
-    float: left; /* LTR */
-  }
-  [dir="rtl"] .config-translation-form .translation-element-wrapper .source {
-    float: right;
-  }
-  .config-translation-form .translation-element-wrapper .translation {
-    width: 48%;
-    float: right; /* LTR */
-  }
-  [dir="rtl"] .config-translation-form .translation-element-wrapper .translation {
-    float: left;
-  }
-  .config-translation-form .translation-element-wrapper .translation label {
-    position: static !important;
-    clip: auto;
-    overflow: visible;
+@media screen and (min-width: 38em) {
+  .translation-set__translated label {
     height: auto;
+    position: inherit;
     width: auto;
   }
 }
