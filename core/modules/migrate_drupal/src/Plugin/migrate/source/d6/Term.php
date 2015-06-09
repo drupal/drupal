@@ -32,7 +32,8 @@ class Term extends DrupalSqlBase {
       ->fields('td', array('tid', 'vid', 'name', 'description', 'weight'))
     // This works, but we cannot test that, because there is no support for
     // distinct() in FakeSelect, yet.
-      ->distinct();
+      ->distinct()
+      ->orderBy('tid');
     if (isset($this->configuration['vocabulary'])) {
       $query->condition('vid', $this->configuration['vocabulary'], 'IN');
     }
