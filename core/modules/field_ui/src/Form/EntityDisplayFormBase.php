@@ -238,9 +238,9 @@ abstract class EntityDisplayFormBase extends EntityForm {
       '#type' => 'submit',
       '#value' => $this->t('Refresh'),
       '#op' => 'refresh_table',
-      '#submit' => array(array($this, 'multistepSubmit')),
+      '#submit' => array('::multistepSubmit'),
       '#ajax' => array(
-        'callback' => array($this, 'multistepAjax'),
+        'callback' => '::multistepAjax',
         'wrapper' => 'field-display-overview-wrapper',
         'effect' => 'fade',
         // The button stays hidden, so we hide the Ajax spinner too. Ad-hoc
@@ -316,7 +316,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#attributes' => array('class' => array('field-name')),
         ),
       ),
-
     );
 
     $field_row['plugin'] = array(
@@ -332,27 +331,14 @@ abstract class EntityDisplayFormBase extends EntityForm {
       'settings_edit_form' => array(),
     );
 
-    // Check the currently selected plugin, and merge persisted values for its
-    // settings.
-    if ($display_type = $form_state->getValue(array('fields', $field_name, 'type'))) {
-      $display_options['type'] = $display_type;
-    }
-    $plugin_settings = $form_state->get('plugin_settings');
-    if (isset($plugin_settings[$field_name]['settings'])) {
-      $display_options['settings'] = $plugin_settings[$field_name]['settings'];
-    }
-    if (isset($plugin_settings[$field_name]['third_party_settings'])) {
-      $display_options['third_party_settings'] = $plugin_settings[$field_name]['third_party_settings'];
-    }
-
     // Get the corresponding plugin object.
-    $plugin = $this->getPlugin($field_definition, $display_options);
+    $plugin = $this->entity->getRenderer($field_name);
 
     // Base button element for the various plugin settings actions.
     $base_button = array(
-      '#submit' => array(array($this, 'multistepSubmit')),
+      '#submit' => array('::multistepSubmit'),
       '#ajax' => array(
-        'callback' => array($this, 'multistepAjax'),
+        'callback' => '::multistepAjax',
         'wrapper' => 'field-display-overview-wrapper',
         'effect' => 'fade',
       ),
@@ -517,6 +503,13 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // If the main "Save" button was submitted while a field settings subform
+    // was being edited, update the new incoming settings when rebuilding the
+    // entity, just as if the subform's "Update" button had been submitted.
+    if ($edit_field = $form_state->get('plugin_settings_edit')) {
+      $form_state->set('plugin_settings_update', $edit_field);
+    }
+
     parent::submitForm($form, $form_state);
     $form_values = $form_state->getValues();
 
@@ -562,57 +555,30 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Collect data for 'regular' fields.
     foreach ($form['#fields'] as $field_name) {
-      // Retrieve the stored field settings to merge with the incoming
-      // values.
       $values = $form_values['fields'][$field_name];
 
       if ($values['type'] == 'hidden') {
         $entity->removeComponent($field_name);
       }
       else {
-        // Get plugin settings. They lie either directly in submitted form
-        // values (if the whole form was submitted while some plugin settings
-        // were being edited), or have been persisted in $form_state.
-        $plugin_settings = $form_state->get('plugin_settings');
-        $settings = array();
-        if (isset($values['settings_edit_form']['settings'])) {
-          $settings = $values['settings_edit_form']['settings'];
-        }
-        elseif (isset($plugin_settings[$field_name]['settings'])) {
-          $settings = $plugin_settings[$field_name]['settings'];
-        }
-        elseif ($current_options = $entity->getComponent($field_name)) {
-          $settings = $current_options['settings'];
-        }
-        $third_party_settings = array();
-        if (isset($values['settings_edit_form']['third_party_settings'])) {
-          $third_party_settings = $values['settings_edit_form']['third_party_settings'];
-        }
-        elseif (isset($plugin_settings[$field_name]['third_party_settings'])) {
-          $third_party_settings = $plugin_settings[$field_name]['third_party_settings'];
-        }
-        elseif (($current_options = $entity->getComponent($field_name)) && isset($current_options['third_party_settings'])) {
-          $third_party_settings = $current_options['third_party_settings'];
+        $options = $entity->getComponent($field_name);
+
+        // Update field settings only if the submit handler told us to.
+        if ($form_state->get('plugin_settings_update') === $field_name) {
+          // Only store settings actually used by the selected plugin.
+          $default_settings = $this->pluginManager->getDefaultSettings($options['type']);
+          $options['settings'] = array_intersect_key($values['settings_edit_form']['settings'], $default_settings);
+          $options['third_party_settings'] = isset($values['settings_edit_form']['third_party_settings']) ? $values['settings_edit_form']['third_party_settings'] : [];
+          $form_state->set('plugin_settings_update', NULL);
         }
 
-        // Only save settings actually used by the selected plugin.
-        $default_settings = $this->pluginManager->getDefaultSettings($values['type']);
-        $settings = array_intersect_key($settings, $default_settings);
-
-        // Default component values.
-        $component_values = array(
-          'type' => $values['type'],
-          'weight' => $values['weight'],
-          'settings' => $settings,
-          'third_party_settings' => $third_party_settings,
-        );
-
+        $options['type'] = $values['type'];
+        $options['weight'] = $values['weight'];
         // Only formatters have configurable label visibility.
         if (isset($values['label'])) {
-          $component_values['label'] = $values['label'];
+          $options['label'] = $values['label'];
         }
-
-        $entity->setComponent($field_name, $component_values);
+        $entity->setComponent($field_name, $options);
       }
     }
 
@@ -644,15 +610,12 @@ abstract class EntityDisplayFormBase extends EntityForm {
         break;
 
       case 'update':
-        // Store the saved settings, and set the field back to 'non edit' mode.
+        // Set the field back to 'non edit' mode, and update $this->entity with
+        // the new settings fro the next rebuild.
         $field_name = $trigger['#field_name'];
-        if ($plugin_settings = $form_state->getValue(array('fields', $field_name, 'settings_edit_form', 'settings'))) {
-          $form_state->set(['plugin_settings', $field_name, 'settings'], $plugin_settings);
-        }
-        if ($plugin_third_party_settings = $form_state->getValue(array('fields', $field_name, 'settings_edit_form', 'third_party_settings'))) {
-          $form_state->set(['plugin_settings', $field_name, 'third_party_settings'], $plugin_third_party_settings);
-        }
         $form_state->set('plugin_settings_edit', NULL);
+        $form_state->set('plugin_settings_update', $field_name);
+        $this->entity = $this->buildEntity($form, $form_state);
         break;
 
       case 'cancel':
@@ -666,7 +629,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
         $updated_rows = explode(' ', $form_state->getValue('refresh_rows'));
         $plugin_settings_edit = $form_state->get('plugin_settings_edit');
         if ($plugin_settings_edit && in_array($plugin_settings_edit, $updated_rows)) {
-
           $form_state->set('plugin_settings_edit', NULL);
         }
         break;
@@ -855,19 +817,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
    *   An entity display.
    */
   abstract protected function getEntityDisplay($entity_type_id, $bundle, $mode);
-
-  /**
-   * Returns the widget or formatter plugin for a field.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field.
-   * @param array $configuration
-   *   The plugin configuration
-   *
-   * @return object
-   *   The corresponding plugin.
-   */
-  abstract protected function getPlugin(FieldDefinitionInterface $field_definition, $configuration);
 
   /**
    * Returns an array of widget or formatter options for a field.

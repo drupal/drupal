@@ -62,23 +62,6 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPlugin(FieldDefinitionInterface $field_definition, $configuration) {
-    $plugin = NULL;
-
-    if ($configuration && $configuration['type'] != 'hidden') {
-      $plugin = $this->pluginManager->getInstance(array(
-        'field_definition' => $field_definition,
-        'form_mode' => $this->entity->getMode(),
-        'configuration' => $configuration
-      ));
-    }
-
-    return $plugin;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getDefaultPlugin($field_type) {
     return isset($this->fieldTypes[$field_type]['default_widget']) ? $this->fieldTypes[$field_type]['default_widget'] : NULL;
   }
