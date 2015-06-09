@@ -17,21 +17,6 @@ use Drupal\Component\Plugin\Exception\PluginException;
 abstract class ExecutablePluginBase extends ContextAwarePluginBase implements ExecutableInterface {
 
   /**
-   * The condition manager to proxy execute calls through.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $executableManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setExecutableManager(ExecutableManagerInterface $executableManager) {
-    $this->executableManager = $executableManager;
-    return $this;
-  }
-
-  /**
    * Gets an array of definitions of available configuration options.
    *
    * @todo: This needs to go into an interface.
