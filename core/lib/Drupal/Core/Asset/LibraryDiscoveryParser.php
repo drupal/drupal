@@ -213,7 +213,7 @@ class LibraryDiscoveryParser {
   }
 
   /**
-   * Parses a given library file and allows module to alter it.
+   * Parses a given library file and allows modules and themes to alter it.
    *
    * This method sets the parsed information onto the library property.
    *

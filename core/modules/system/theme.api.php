@@ -847,22 +847,26 @@ function hook_js_settings_alter(array &$settings, \Drupal\Core\Asset\AttachedAss
 }
 
 /**
- * Alters the JavaScript/CSS library registry.
+ * Alter libraries provided by an extension.
  *
- * Allows certain, contributed modules to update libraries to newer versions
- * while ensuring backwards compatibility. In general, such manipulations should
- * only be done by designated modules, since most modules that integrate with a
- * certain library also depend on the API of a certain library version.
+ * Allows modules and themes to change libraries' definitions; mostly used to
+ * update a library to a newer version, while ensuring backward compatibility.
+ * In general, such manipulations should only be done to extend the library's
+ * functionality in a backward-compatible way, to avoid breaking other modules
+ * and themes that may be using the library.
  *
- * @param $libraries
- *   The JavaScript/CSS libraries provided by $module. Keyed by internal library
- *   name and passed by reference.
- * @param $module
- *   The name of the module that registered the libraries.
+ * @param array $libraries
+ *   An associative array of libraries registered by $extension. Keyed by
+ *   internal library name and passed by reference.
+ * @param string $extension
+ *   Can either be 'core' or the machine name of the extension that registered
+ *   the libraries.
+ *
+ * @see \Drupal\Core\Asset\LibraryDiscoveryParser::parseLibraryInfo()
  */
-function hook_library_info_alter(&$libraries, $module) {
+function hook_library_info_alter(&$libraries, $extension) {
   // Update Farbtastic to version 2.0.
-  if ($module == 'core' && isset($libraries['jquery.farbtastic'])) {
+  if ($extension == 'core' && isset($libraries['jquery.farbtastic'])) {
     // Verify existing version is older than the one we are updating to.
     if (version_compare($libraries['jquery.farbtastic']['version'], '2.0', '<')) {
       // Update the existing Farbtastic to version 2.0.
