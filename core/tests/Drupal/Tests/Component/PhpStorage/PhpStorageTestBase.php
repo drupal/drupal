@@ -54,7 +54,7 @@ abstract class PhpStorageTestBase extends UnitTestCase {
     $this->assertTrue($php->exists($name), 'Exists works correctly');
 
     // Delete the file, and then ensure exists() returns FALSE.
-    $this->assertTrue($php->delete($name), 'Delete suceeded');
+    $this->assertTrue($php->delete($name), 'Delete succeeded');
     $this->assertFalse($php->exists($name), 'Delete deleted file');
 
     // Ensure delete() can be called on a non-existing file. It should return

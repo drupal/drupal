@@ -188,7 +188,7 @@ class PageCacheTest extends WebTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
     $this->assertResponse(200, 'Conditional request returned 200 OK for authenticated user.');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Absense of Page was not cached.');
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
   }
 
   /**
