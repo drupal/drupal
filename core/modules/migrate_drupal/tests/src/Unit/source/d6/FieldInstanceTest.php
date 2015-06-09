@@ -21,20 +21,20 @@ class FieldInstanceTest extends MigrateSqlSourceTestCase {
   const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\FieldInstance';
 
   // The fake Migration configuration entity.
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     // The id of the entity, can be any string.
     'id' => 'test_fieldinstance',
     // Leave it empty for now.
-    'idlist' => array(),
-    'source' => array(
-      'plugin' => 'd6_fieldinstance',
-    ),
-  );
+    'idlist' => [],
+    'source' => [
+      'plugin' => 'd6_field_instance',
+    ],
+  ];
 
   // We need to set up the database contents; it's easier to do that below.
   // These are sample result queries.
-  protected $expectedResults = array(
-    array(
+  protected $expectedResults = [
+    [
       'field_name' => 'field_body',
       'type_name' => 'page',
       'weight' => 1,
@@ -47,50 +47,51 @@ class FieldInstanceTest extends MigrateSqlSourceTestCase {
       'widget_active' => 1,
       'required' => 1,
       'active' => 1,
-      'global_settings' => array(),
-    ),
-  );
+      'global_settings' => [],
+    ],
+  ];
 
   /**
    * Prepopulate contents with results.
    */
   protected function setUp() {
-    $this->expectedResults[0]['widget_settings'] = array(
+    $this->expectedResults[0]['widget_settings'] = [
       'rows' => 5,
       'size' => 60,
-      'default_value' => array(
-        array(
+      'default_value' => [
+        [
           'value' => '',
           '_error_element' => 'default_value_widget][field_body][0][value',
           'default_value_php' => '',
-        ),
-      ),
-    );
-    $this->expectedResults[0]['display_settings'] = array(
-      'label' => array(
+        ],
+      ],
+    ];
+    $this->expectedResults[0]['display_settings'] = [
+      'label' => [
         'format' => 'above',
         'exclude' => 0,
-      ),
-      'teaser' => array(
+      ],
+      'teaser' => [
         'format' => 'default',
         'exclude' => 0,
-      ),
-      'full' => array(
+      ],
+      'full' => [
         'format' => 'default',
         'exclude' => 0,
-      ),
-    );
+      ],
+    ];
     $this->databaseContents['content_node_field_instance'] = $this->expectedResults;
     $this->databaseContents['content_node_field_instance'][0]['widget_settings'] = serialize($this->expectedResults[0]['widget_settings']);
     $this->databaseContents['content_node_field_instance'][0]['display_settings'] = serialize($this->expectedResults[0]['display_settings']);
+    $this->databaseContents['content_node_field_instance'][0]['global_settings'] = 'a:0:{}';
 
-    $this->databaseContents['content_node_field'][0] = array(
+    $this->databaseContents['content_node_field'][0] = [
       'field_name' => 'field_body',
       'required' => 1,
       'type' => 'text',
       'active' => 1,
-      'global_settings' => serialize(array()),
-    );
+      'global_settings' => serialize([]),
+    ];
     parent::setUp();
   }
 

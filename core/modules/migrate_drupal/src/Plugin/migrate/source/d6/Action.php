@@ -22,8 +22,7 @@ class Action extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->database
-      ->select('actions', 'a')
+    $query = $this->select('actions', 'a')
       ->fields('a', array(
         'aid',
         'type',

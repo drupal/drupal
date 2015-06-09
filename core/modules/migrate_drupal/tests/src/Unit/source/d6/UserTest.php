@@ -75,7 +75,14 @@ class UserTest extends MigrateSqlSourceTestCase {
     foreach ($this->expectedResults as $k => $row) {
       $this->databaseContents['users'][$k] = $row;
     }
-    $this->databaseContents['users_roles'] = array();
+    // getDatabase() will not create empty tables, so we need to insert data
+    // even if it's irrelevant to the test.
+    $this->databaseContents['users_roles'] = array(
+      array(
+        'uid' => 99,
+        'rid' => 99,
+      ),
+    );
     parent::setUp();
   }
 

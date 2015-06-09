@@ -19,18 +19,18 @@ class VocabularyTest extends MigrateSqlSourceTestCase {
   const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Vocabulary';
 
   // The fake Migration configuration entity.
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     // The ID of the entity, can be any string.
     'id' => 'test',
     // Leave it empty for now.
-    'idlist' => array(),
-    'source' => array(
+    'idlist' => [],
+    'source' => [
       'plugin' => 'd6_vocabulary',
-    ),
-  );
+    ],
+  ];
 
-  protected $expectedResults = array(
-    array(
+  protected $expectedResults = [
+    [
       'vid' => 1,
       'name' => 'Tags',
       'description' => 'Tags description.',
@@ -42,9 +42,9 @@ class VocabularyTest extends MigrateSqlSourceTestCase {
       'tags' => 1,
       'module' => 'taxonomy',
       'weight' => 0,
-      'node_types' => array('page', 'article'),
-    ),
-    array(
+      'node_types' => ['page', 'article'],
+    ],
+    [
       'vid' => 2,
       'name' => 'Categories',
       'description' => 'Categories description.',
@@ -56,20 +56,20 @@ class VocabularyTest extends MigrateSqlSourceTestCase {
       'tags' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'node_types' => array('article'),
-    ),
-  );
+      'node_types' => ['article'],
+    ],
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
-    foreach ($this->expectedResults as $row) {
+    foreach ($this->expectedResults as &$row) {
       foreach ($row['node_types'] as $type) {
-        $this->databaseContents['vocabulary_node_types'][] = array(
+        $this->databaseContents['vocabulary_node_types'][] = [
           'type' => $type,
           'vid' => $row['vid'],
-        );
+        ];
       }
       unset($row['node_types']);
     }

@@ -7,15 +7,16 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Database\Driver\fake\FakeConnection;
 
 /**
  * Provides setup and helper methods for Migrate module tests.
  */
 abstract class MigrateTestCase extends UnitTestCase {
 
-  protected $migrationConfiguration = array();
+  protected $migrationConfiguration = [];
 
   /**
    * Retrieve a mocked migration.
@@ -54,21 +55,59 @@ abstract class MigrateTestCase extends UnitTestCase {
   }
 
   /**
-   * Get a fake database connection object for use in tests.
+   * Get an SQLite database connection object for use in tests.
    *
    * @param array $database_contents
    *   The database contents faked as an array. Each key is a table name, each
    *   value is a list of table rows, an associative array of field => value.
    * @param array $connection_options
-   *   (optional) The array of connection options for the database.
-   * @param string $prefix
-   *   (optional) The table prefix on the database.
+   *  (optional) Options for the database connection.
    *
-   * @return \Drupal\Core\Database\Driver\fake\FakeConnection
+   * @return \Drupal\Core\Database\Driver\sqlite\Connection
    *   The database connection.
    */
-  protected function getDatabase(array $database_contents, $connection_options = array(), $prefix = '') {
-    return new FakeConnection($database_contents, $connection_options, $prefix);
+  protected function getDatabase(array $database_contents, $connection_options = []) {
+    if (extension_loaded('pdo_sqlite')) {
+      $connection_options['database'] = ':memory:';
+      $pdo = Connection::open($connection_options);
+      $connection = new Connection($pdo, $connection_options);
+    }
+    else {
+      throw new \Exception('pdo_sqlite extension is required.');
+    }
+
+    // Initialize the DIC with a fake module handler for alterable queries.
+    $container = new ContainerBuilder();
+    $container->set('module_handler', $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface'));
+    \Drupal::setContainer($container);
+
+    // Create the tables and load them up with data, skipping empty ones.
+    foreach (array_filter($database_contents) as $table => $rows) {
+      $pilot_row = reset($rows);
+      $connection->schema()->createTable($table, $this->createSchemaFromRow($pilot_row));
+
+      $insert = $connection->insert($table)->fields(array_keys($pilot_row));
+      array_walk($rows, [$insert, 'values']);
+      $insert->execute();
+    }
+
+    return $connection;
+  }
+
+  /**
+   * Generates a table schema from a row.
+   *
+   * @param array $row
+   *  The reference row on which to base the schema.
+   *
+   * @return array
+   *  The Schema API-ready table schema.
+   */
+  protected function createSchemaFromRow(array $row) {
+    // SQLite uses loose ("affinity") typing, so it's OK for every column
+    // to be a text field.
+    $fields = array_map(function() { return ['type' => 'text']; }, $row);
+    return ['fields' => $fields];
   }
 
   /**
