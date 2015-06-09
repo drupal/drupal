@@ -311,7 +311,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!$script_name) {
       $script_name = $request->server->get('SCRIPT_FILENAME');
     }
-    $http_host = $request->getHost();
+    $http_host = $request->getHttpHost();
 
     $sites = array();
     include DRUPAL_ROOT . '/sites/sites.php';
