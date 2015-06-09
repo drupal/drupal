@@ -755,7 +755,7 @@ class ConfigImporter {
   protected function processConfiguration($collection, $op, $name) {
     try {
       $processed = FALSE;
-      if ($this->configManager->supportsConfigurationEntities($collection)) {
+      if ($collection == StorageInterface::DEFAULT_COLLECTION) {
         $processed = $this->importInvokeOwner($collection, $op, $name);
       }
       if (!$processed) {

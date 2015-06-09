@@ -355,13 +355,6 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function supportsConfigurationEntities($collection) {
-    return $collection == StorageInterface::DEFAULT_COLLECTION;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConfigCollectionInfo() {
     if (!isset($this->configCollectionInfo)) {
       $this->configCollectionInfo = new ConfigCollectionInfo();

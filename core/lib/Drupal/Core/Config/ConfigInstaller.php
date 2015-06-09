@@ -175,49 +175,39 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $profile_storage = NULL;
     }
 
-    $collection_info = $this->configManager->getConfigCollectionInfo();
     $enabled_extensions = $this->getEnabledExtensions();
+    $existing_config = $this->getActiveStorages()->listAll();
 
-    foreach ($collection_info->getCollectionNames() as $collection) {
-      if (!$this->configManager->supportsConfigurationEntities($collection)) {
-        continue;
+    $list = array_filter($storage->listAll(), function($config_name) use ($existing_config) {
+      // Only list configuration that:
+      // - does not already exist
+      // - is a configuration entity (this also excludes config that has an
+      //   implicit dependency on modules that are not yet installed)
+      return !in_array($config_name, $existing_config) && $this->configManager->getEntityTypeIdByName($config_name);
+    });
+
+    $all_config = array_merge($existing_config, $list);
+    $config_to_create = $storage->readMultiple($list);
+    // Check to see if the corresponding override storage has any overrides.
+    if ($profile_storage) {
+      $config_to_create = $profile_storage->readMultiple($list) + $config_to_create;
+    }
+    foreach ($config_to_create as $config_name => $data) {
+      // Exclude configuration where its dependencies cannot be met.
+      if (!$this->validateDependencies($config_name, $data, $enabled_extensions, $all_config)) {
+        unset($config_to_create[$config_name]);
       }
-      $existing_config = $this->getActiveStorages($collection)->listAll();
-
-      $list = array_filter($storage->listAll(), function($config_name) use ($existing_config) {
-        // Only list configuration that:
-        // - does not already exist
-        // - is a configuration entity (this also excludes config that has an
-        //   implicit dependency on modules that are not yet installed)
-        return !in_array($config_name, $existing_config) && $this->configManager->getEntityTypeIdByName($config_name);
-      });
-
-      $all_config = array_merge($existing_config, $list);
-      $config_to_create = $storage->readMultiple($list);
-      // Check to see if the corresponding override storage has any overrides.
-      if ($profile_storage) {
-        if ($profile_storage->getCollectionName() != $collection) {
-          $profile_storage = $profile_storage->createCollection($collection);
-        }
-        $config_to_create = $profile_storage->readMultiple($list) + $config_to_create;
-      }
-      foreach ($config_to_create as $config_name => $data) {
-        // Exclude configuration where its dependencies cannot be met.
-        if (!$this->validateDependencies($config_name, $data, $enabled_extensions, $all_config)) {
+      // Exclude configuration that does not have a matching dependency.
+      elseif (!empty($dependency)) {
+        // Create a light weight dependency object to check dependencies.
+        $config_entity = new ConfigEntityDependency($config_name, $data);
+        if (!$config_entity->hasDependency(key($dependency), reset($dependency))) {
           unset($config_to_create[$config_name]);
         }
-        // Exclude configuration that does not have a matching dependency.
-        elseif (!empty($dependency)) {
-          // Create a light weight dependency object to check dependencies.
-          $config_entity = new ConfigEntityDependency($config_name, $data);
-          if (!$config_entity->hasDependency(key($dependency), reset($dependency))) {
-            unset($config_to_create[$config_name]);
-          }
-        }
       }
-      if (!empty($config_to_create)) {
-        $this->createConfiguration($collection, $config_to_create, TRUE);
-      }
+    }
+    if (!empty($config_to_create)) {
+      $this->createConfiguration(StorageInterface::DEFAULT_COLLECTION, $config_to_create, TRUE);
     }
   }
 
@@ -261,8 +251,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    */
   protected function createConfiguration($collection, array $config_to_create) {
     // Order the configuration to install in the order of dependencies.
-    $config_entity_support = $this->configManager->supportsConfigurationEntities($collection);
-    if ($config_entity_support) {
+    if ($collection == StorageInterface::DEFAULT_COLLECTION) {
       $dependency_manager = new ConfigDependencyManager();
       $config_names = $dependency_manager
         ->setData($config_to_create)
@@ -285,7 +274,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       if ($config_to_create[$name] !== FALSE) {
         $new_config->setData($config_to_create[$name]);
       }
-      if ($config_entity_support && $entity_type = $this->configManager->getEntityTypeIdByName($name)) {
+      if ($collection == StorageInterface::DEFAULT_COLLECTION && $entity_type = $this->configManager->getEntityTypeIdByName($name)) {
         // If we are syncing do not create configuration entities. Pluggable
         // configuration entities can have dependencies on modules that are
         // not yet enabled. This approach means that any code that expects

@@ -162,17 +162,6 @@ interface ConfigManagerInterface {
   public function getConfigEntitiesToChangeOnDependencyRemoval($type, array $names, $dry_run = TRUE);
 
   /**
-   * Determines if the provided collection supports configuration entities.
-   *
-   * @param string $collection
-   *   The collection to check.
-   *
-   * @return bool
-   *   TRUE if the collection support configuration entities, FALSE if not.
-   */
-  public function supportsConfigurationEntities($collection);
-
-  /**
    * Gets available collection information using the event system.
    *
    * @return \Drupal\Core\Config\ConfigCollectionInfo

@@ -212,7 +212,7 @@ class StorageComparer implements StorageComparerInterface {
       $this->addChangelistUpdate($collection);
       $this->addChangelistDelete($collection);
       // Only collections that support configuration entities can have renames.
-      if ($this->configManager->supportsConfigurationEntities($collection)) {
+      if ($collection == StorageInterface::DEFAULT_COLLECTION) {
         $this->addChangelistRename($collection);
       }
     }
@@ -415,7 +415,7 @@ class StorageComparer implements StorageComparerInterface {
     $source_data = $source_storage->readMultiple($source_names);
     // If the collection only supports simple configuration do not use
     // configuration dependencies.
-    if ($this->configManager->supportsConfigurationEntities($collection)) {
+    if ($collection == StorageInterface::DEFAULT_COLLECTION) {
       $dependency_manager = new ConfigDependencyManager();
       $this->targetNames[$collection] = $dependency_manager->setData($target_data)->sortAll();
       $this->sourceNames[$collection] = $dependency_manager->setData($source_data)->sortAll();
