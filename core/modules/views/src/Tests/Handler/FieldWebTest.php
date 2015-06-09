@@ -222,8 +222,6 @@ class FieldWebTest extends HandlerTestBase {
 
     // Some generic test code adapted from the UrlTest class, which tests
     // mostly the different options for the path.
-    global $base_url, $script_path;
-
     foreach (array(FALSE, TRUE) as $absolute) {
       $alter = &$id_field->options['alter'];
       $alter['path'] = 'node/123';

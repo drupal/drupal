@@ -232,7 +232,6 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
       unset($fields[$entity_type_key]);
     }
 
-    $field_definition = $this->getFieldDefinition();
     if ($use_groupby) {
       // Add the fields that we're actually grouping on.
       $options = array();

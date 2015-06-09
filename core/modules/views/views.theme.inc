@@ -1042,7 +1042,6 @@ function template_preprocess_views_mini_pager(&$variables) {
     $variables['items']['previous']['attributes'] = new Attribute();
   }
 
-  $li_next = array();
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
