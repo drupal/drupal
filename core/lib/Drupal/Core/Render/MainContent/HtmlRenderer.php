@@ -220,8 +220,8 @@ class HtmlRenderer implements MainContentRendererInterface {
 
     // $page is now fully built. Find all non-empty page regions, and add a
     // theme wrapper function that allows them to be consistently themed.
-    $regions = system_region_list(\Drupal::theme()->getActiveTheme()->getName());
-    foreach (array_keys($regions) as $region) {
+    $regions = \Drupal::theme()->getActiveTheme()->getRegions();
+    foreach ($regions as $region) {
       if (!empty($page[$region])) {
         $page[$region]['#theme_wrappers'][] = 'region';
         $page[$region]['#region'] = $region;

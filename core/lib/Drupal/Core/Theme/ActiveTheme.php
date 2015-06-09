@@ -74,6 +74,13 @@ class ActiveTheme {
   protected $libraries;
 
   /**
+   * The regions provided by the theme.
+   *
+   * @var array
+   */
+  protected $regions;
+
+  /**
    * Constructs an ActiveTheme object.
    *
    * @param array $values
@@ -88,6 +95,7 @@ class ActiveTheme {
       'libraries' => [],
       'extension' => 'html.twig',
       'base_themes' => [],
+      'regions' => [],
     ];
 
     $this->name = $values['name'];
@@ -98,6 +106,7 @@ class ActiveTheme {
     $this->libraries = $values['libraries'];
     $this->extension = $values['extension'];
     $this->baseThemes = $values['base_themes'];
+    $this->regions = $values['regions'];
   }
 
   /**
@@ -175,6 +184,18 @@ class ActiveTheme {
    */
   public function getBaseThemes() {
     return $this->baseThemes;
+  }
+
+  /**
+   * The regions used by the theme.
+   *
+   * @return string[]
+   *   The list of region machine names supported by the theme.
+   *
+   * @see system_region_list()
+   */
+  public function getRegions() {
+    return array_keys($this->regions);
   }
 
 }

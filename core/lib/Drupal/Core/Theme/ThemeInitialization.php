@@ -214,6 +214,9 @@ class ThemeInitialization implements ThemeInitializationInterface {
     }
 
     $values['base_themes'] = $base_active_themes;
+    if (!empty($theme->info['regions'])) {
+      $values['regions'] = $theme->info['regions'];
+    }
 
     return new ActiveTheme($values);
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\block\Unit;
 
+use Drupal\block\BlockRepository;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Tests\UnitTestCase;
@@ -49,6 +50,13 @@ class BlockRepositoryTest extends UnitTestCase {
     $active_theme->expects($this->atLeastOnce())
       ->method('getName')
       ->willReturn($this->theme);
+    $active_theme->expects($this->atLeastOnce())
+      ->method('getRegions')
+      ->willReturn([
+        'top',
+        'center',
+        'bottom',
+      ]);
 
     $theme_manager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
     $theme_manager->expects($this->once())
@@ -62,17 +70,7 @@ class BlockRepositoryTest extends UnitTestCase {
       ->method('getStorage')
       ->willReturn($this->blockStorage);
 
-    $this->blockRepository = $this->getMockBuilder('Drupal\block\BlockRepository')
-      ->setConstructorArgs([$entity_manager, $theme_manager, $this->contextHandler])
-      ->setMethods(['getRegionNames'])
-      ->getMock();
-    $this->blockRepository->expects($this->once())
-      ->method('getRegionNames')
-      ->willReturn([
-        'top' => 'Top',
-        'center' => 'Center',
-        'bottom' => 'Bottom',
-      ]);
+    $this->blockRepository = new BlockRepository($entity_manager, $theme_manager, $this->contextHandler);
   }
 
   /**

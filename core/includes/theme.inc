@@ -1362,9 +1362,9 @@ function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['title'] = $variables['page']['#title'];
 
-  foreach (system_region_list(\Drupal::theme()->getActiveTheme()->getName()) as $region_key => $region_name) {
-    if (!isset($variables['page'][$region_key])) {
-      $variables['page'][$region_key] = array();
+  foreach (\Drupal::theme()->getActiveTheme()->getRegions() as $region) {
+    if (!isset($variables['page'][$region])) {
+      $variables['page'][$region] = array();
     }
   }
 
