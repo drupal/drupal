@@ -334,7 +334,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $reason_message[] = implode(', ', $reason);
       }
       throw new ModuleUninstallValidatorException(format_string('The following reasons prevents the modules from being uninstalled: @reasons', array(
-        '@reasons' => implode(', ', $reason_message),
+        '@reasons' => implode('; ', $reason_message),
       )));
     }
     // Set the actual module weights.

@@ -1,0 +1,7 @@
+services:
+  field.uninstall_validator:
+    class: Drupal\field\FieldUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@entity.manager', '@string_translation']
+    lazy: true

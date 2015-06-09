@@ -1,0 +1,15 @@
+<?php
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * Manipulate module dependencies to test dependency chains.
+ */
+function module_required_test_system_info_alter(&$info, Extension $file, $type) {
+  if ($file->getName() == 'module_required_test' && \Drupal::state()->get('module_required_test.hook_system_info_alter')) {
+    $info['required'] = TRUE;
+    $info['explanation'] = 'Testing hook_system_info_alter()';
+  }
+}

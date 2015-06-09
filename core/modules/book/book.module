@@ -19,7 +19,6 @@ use Drupal\node\Entity\Node;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Extension\Extension;
 
 /**
  * Implements hook_help().
@@ -534,35 +533,5 @@ function book_node_type_update(NodeTypeInterface $type) {
       $config->set('child_type', $type->id());
     }
     $config->save();
-  }
-}
-
-/**
- * Implements hook_system_info_alter().
- *
- * Prevents book module from being uninstalled whilst any book nodes exist or
- * there are any book outline stored.
- */
-function book_system_info_alter(&$info, Extension $file, $type) {
-  // It is not safe use the entity query service during maintenance mode.
-  if ($type == 'module' && !defined('MAINTENANCE_MODE') && $file->getName() == 'book') {
-    if (\Drupal::service('book.outline_storage')->hasBooks()) {
-      $info['required'] = TRUE;
-      $info['explanation'] = t('To uninstall Book, delete all content that is part of a book.');
-    }
-    else {
-      // The book node type is provided by the Book module. Prevent uninstall if
-      // there are any nodes of that type.
-      $factory = \Drupal::service('entity.query');
-      $nodes = $factory->get('node')
-        ->condition('type', 'book')
-        ->accessCheck(FALSE)
-        ->range(0, 1)
-        ->execute();
-      if (!empty($nodes)) {
-        $info['required'] = TRUE;
-        $info['explanation'] = t('To uninstall Book, delete all content that has the Book content type.');
-      }
-    }
   }
 }

@@ -303,16 +303,22 @@ function theme_system_modules_uninstall($variables) {
   // Display table.
   $rows = array();
   foreach (Element::children($form['modules']) as $module) {
-    $disabled_message = '';
+    $disabled_header = '';
+    $disabled_reasons = '';
     // Add the modules requiring the module in question as a validation reason.
     if (!empty($form['modules'][$module]['#required_by'])) {
       $form['modules'][$module]['#validation_reasons'][] = \Drupal::translation()->translate('Required by: @modules', array('@modules' => implode(', ',$form['modules'][$module]['#required_by'])));
     }
     if (!empty($form['modules'][$module]['#validation_reasons'])) {
-      $disabled_message = \Drupal::translation()->formatPlural(count($form['modules'][$module]['#validation_reasons']),
-        'The following reason prevents @module from being uninstalled: @reasons',
-        'The following reasons prevents @module from being uninstalled: @reasons',
-        array('@module' => $form['modules'][$module]['#module_name'], '@reasons' => implode('; ', $form['modules'][$module]['#validation_reasons'])));
+      $disabled_reasons = [
+        '#theme' => 'item_list',
+        '#items' => $form['modules'][$module]['#validation_reasons'],
+      ];
+      $disabled_reasons = drupal_render($disabled_reasons);
+      $disabled_header = \Drupal::translation()->formatPlural(count($form['modules'][$module]['#validation_reasons']),
+        'The following reason prevents @module from being uninstalled:',
+        'The following reasons prevents @module from being uninstalled:',
+        array('@module' => $form['modules'][$module]['#module_name']));
     }
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
@@ -326,10 +332,11 @@ function theme_system_modules_uninstall($variables) {
       array(
         'data' => array(
           '#type' => 'inline_template',
-          '#template' => '{{ module_description }} {% if disabled_message is not empty %} <div class="admin-requirements">{{ disabled_message }}</div> {% endif %}',
+          '#template' => '{{ module_description }} {% if disabled_header is not empty %} <div class="admin-requirements">{{ disabled_header }}{{ disabled_reasons }}</div> {% endif %}',
           '#context' => array(
             'module_description' => drupal_render($form['modules'][$module]['description']),
-            'disabled_message' => $disabled_message,
+            'disabled_header' => $disabled_header,
+            'disabled_reasons' => $disabled_reasons,
           ),
         ),
         'class' => array('description'),

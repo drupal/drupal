@@ -49,10 +49,6 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
   if ($file->getName() == 'seven' && $type == 'theme') {
     $info['regions']['test_region'] = t('Test region');
   }
-  if ($file->getName() == 'module_test' && \Drupal::state()->get('module_test.hook_system_info_alter')) {
-    $info['required'] = TRUE;
-    $info['explanation'] = 'Testing hook_system_info_alter()';
-  }
 }
 
 /**

@@ -74,8 +74,7 @@ class ForumUninstallTest extends WebTestBase {
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is required.
     $this->assertNoFieldByName('uninstall[forum]');
-    $this->drupalGet('admin/modules');
-    $this->assertText('To uninstall Forum first delete all Forum content');
+    $this->assertText('To uninstall Forum, first delete all Forum content');
 
     // Delete the node.
     $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
@@ -84,8 +83,7 @@ class ForumUninstallTest extends WebTestBase {
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is still required.
     $this->assertNoFieldByName('uninstall[forum]');
-    $this->drupalGet('admin/modules');
-    $this->assertText('To uninstall Forum first delete all Forums terms');
+    $this->assertText('To uninstall Forum, first delete all Forums terms');
 
     // Delete any forum terms.
     $vid = $this->config('forum.settings')->get('vocabulary');
@@ -102,8 +100,6 @@ class ForumUninstallTest extends WebTestBase {
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is no longer required.
     $this->assertFieldByName('uninstall[forum]');
-    $this->drupalGet('admin/modules');
-    $this->assertNoText('To uninstall Forum first delete all Forum content');
     $this->drupalPostForm('admin/modules/uninstall', array(
       'uninstall[forum]' => 1,
     ), t('Uninstall'));
@@ -141,6 +137,13 @@ class ForumUninstallTest extends WebTestBase {
     // Check that the field is now deleted.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNull($field_storage, 'The taxonomy_forums field storage has been deleted.');
+
+    // Delete all terms in the Forums vocabulary. Uninstalling the forum module
+    // will fail unless this is done.
+    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => 'forums'));
+    foreach($terms as $term) {
+      $term->delete();
+    }
 
     // Ensure that uninstallation succeeds even if the field has already been
     // deleted manually beforehand.

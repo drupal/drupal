@@ -56,7 +56,8 @@ class UninstallTest extends WebTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->assertTitle(t('Uninstall') . ' | Drupal');
 
-    $this->assertText(\Drupal::translation()->translate('The following reasons prevents Node from being uninstalled: There is content for the entity type: Content'), 'Content prevents uninstalling node module.');
+    $this->assertText(\Drupal::translation()->translate('The following reason prevents Node from being uninstalled:'));
+    $this->assertText(\Drupal::translation()->translate('There is content for the entity type: Content'));
     // Delete the node to allow node to be uninstalled.
     $node->delete();
 

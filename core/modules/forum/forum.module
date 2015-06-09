@@ -11,11 +11,8 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Drupal\user\Entity\User;
 
 /**
@@ -637,64 +634,4 @@ function template_preprocess_forum_submitted(&$variables) {
     $variables['author'] = drupal_render($username);
   }
   $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $variables['topic']->created) : '';
-}
-
-/**
- * Implements hook_system_info_alter().
- *
- * Prevents forum module from being uninstalled whilst any forum nodes exist
- * or there are any terms in the forum vocabulary.
- */
-function forum_system_info_alter(&$info, Extension $file, $type) {
-  // It is not safe use the entity query service during maintenance mode.
-  if ($type == 'module' && !defined('MAINTENANCE_MODE') && $file->getName() == 'forum') {
-    $factory = \Drupal::service('entity.query');
-    $nodes = $factory->get('node')
-      ->condition('type', 'forum')
-      ->accessCheck(FALSE)
-      ->range(0, 1)
-      ->execute();
-    if (!empty($nodes)) {
-      $info['required'] = TRUE;
-      $info['explanation'] = t('To uninstall Forum first delete all <em>Forum</em> content.');
-    }
-    $vid = \Drupal::config('forum.settings')->get('vocabulary');
-    $terms = $factory->get('taxonomy_term')
-      ->condition('vid', $vid)
-      ->accessCheck(FALSE)
-      ->range(0, 1)
-      ->execute();
-    if (!empty($terms)) {
-      $vocabulary = Vocabulary::load($vid);
-      $info['required'] = TRUE;
-      try {
-        if (!empty($info['explanation'])) {
-          if ($vocabulary->access('view')) {
-            $info['explanation'] = t('To uninstall Forum first delete all <em>Forum</em> content and <a href="!url">%vocabulary</a> terms.', [
-              '%vocabulary' => $vocabulary->label(),
-              '!url' => $vocabulary->url('overview-form'),
-            ]);
-          }
-          else {
-            $info['explanation'] = t('To uninstall Forum first delete all <em>Forum</em> content and %vocabulary terms.', [
-              '%vocabulary' => $vocabulary->label()
-            ]);
-          }
-        }
-        else {
-          $info['explanation'] = t('To uninstall Forum first delete all <a href="!url">%vocabulary</a> terms.', [
-            '%vocabulary' => $vocabulary->label(),
-            '!url' => $vocabulary->url('overview-form'),
-          ]);
-        }
-      }
-      catch (RouteNotFoundException $e) {
-        // Route rebuilding might not have occurred before this hook is fired.
-        // Just use an explanation without a link for the time being.
-        $info['explanation'] = t('To uninstall Forum first delete all <em>Forum</em> content and %vocabulary terms.', [
-          '%vocabulary' => $vocabulary->label()
-        ]);
-      }
-    }
-  }
 }

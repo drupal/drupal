@@ -28,3 +28,10 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context}
+
+  book.uninstall_validator:
+    class: Drupal\book\BookUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@book.outline_storage', '@entity.query', '@string_translation']
+    lazy: true

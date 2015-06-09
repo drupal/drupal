@@ -10,7 +10,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -81,44 +80,6 @@ function filter_theme() {
       ),
     )
   );
-}
-
-/**
- * Implements hook_system_info_alter().
- *
- * Prevents uninstallation of modules that provide filter plugins that are being
- * used in a filter format.
- */
-function filter_system_info_alter(&$info, Extension $file, $type) {
-  // It is not safe to call filter_formats() during maintenance mode.
-  if ($type == 'module' && !defined('MAINTENANCE_MODE')) {
-    // Get filter plugins supplied by this module.
-    $filter_plugins = array_filter(\Drupal::service('plugin.manager.filter')->getDefinitions(), function ($definition) use ($file) {
-      return $definition['provider'] == $file->getName();
-    });
-    if (!empty($filter_plugins)) {
-      $used_in = [];
-      // Find out if any filter formats have the plugin enabled.
-      foreach (filter_formats() as $filter_format) {
-        $filters = $filter_format->filters();
-        // Typically, all formats will contain settings for all filter plugins,
-        // even if they are disabled. However, if a module which provides filter
-        // plugins is being enabled right now, that won't be the case, so we
-        // still check to see if this format has this filter before we check
-        // the filter status.
-       foreach ($filter_plugins as $filter_plugin) {
-          if ($filters->has($filter_plugin['id']) && $filters->get($filter_plugin['id'])->status) {
-            $used_in[] = $filter_format->label();
-            $info['required'] = TRUE;
-            break;
-          }
-        }
-      }
-      if (!empty($used_in)) {
-        $info['explanation'] = t('Provides a filter plugin that is in use in the following filter formats: %formats', array('%formats' => implode(', ', $used_in)));
-      }
-    }
-  }
 }
 
 /**

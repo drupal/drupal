@@ -20,6 +20,10 @@ interface ModuleUninstallValidatorInterface {
    *
    * @return string[]
    *   An array of reasons the module can not be uninstalled, empty if it can.
+   *   Each reason should not end with any punctuation since multiple reasons
+   *   can be displayed together.
+   *
+   * @see theme_system_modules_uninstall()
    */
   public function validate($module);
 }

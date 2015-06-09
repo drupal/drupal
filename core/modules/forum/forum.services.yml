@@ -19,3 +19,10 @@ services:
     arguments: ['@database', '@forum_manager']
     tags:
       - { name: backend_overridable }
+
+  forum.uninstall_validator:
+    class: Drupal\forum\ForumUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@entity.manager', '@entity.query', '@config.factory', '@string_translation']
+    lazy: true

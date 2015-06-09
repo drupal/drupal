@@ -18,6 +18,13 @@ class ContentUninstallValidator implements ModuleUninstallValidatorInterface {
   use StringTranslationTrait;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * Constructs a new ContentUninstallValidator.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager

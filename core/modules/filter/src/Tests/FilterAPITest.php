@@ -417,18 +417,6 @@ class FilterAPITest extends EntityUnitTestBase {
     $this->installSchema('user', array('users_data'));
     $filter_format = \Drupal\filter\Entity\FilterFormat::load('filtered_html');
 
-    // Enable the filter_test_restrict_tags_and_attributes filter plugin on the
-    // filtered_html filter format.
-    $filter_config = [
-      'weight' => 10,
-      'status' => 1,
-    ];
-    $filter_format->setFilterConfig('filter_test_restrict_tags_and_attributes', $filter_config)->save();
-
-    $module_data = _system_rebuild_module_data();
-    $this->assertTrue($module_data['filter_test']->info['required'], 'The filter_test module is required.');
-    $this->assertEqual($module_data['filter_test']->info['explanation'], SafeMarkup::format('Provides a filter plugin that is in use in the following filter formats: %formats', array('%formats' => $filter_format->label())));
-
     // Disable the filter_test_restrict_tags_and_attributes filter plugin but
     // have custom configuration so that the filter plugin is still configured
     // in filtered_html the filter format.

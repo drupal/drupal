@@ -168,8 +168,8 @@ class DependencyTest extends ModuleTestBase {
 
     // Check that the comment module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');
-    $checkbox = $this->xpath('//input[@type="checkbox" and @name="uninstall[comment]"]');
-    $this->assert(count($checkbox) == 0, 'Checkbox for uninstalling the comment module not found.');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @name="uninstall[comment]" and @disabled="disabled"]');
+    $this->assert(count($checkbox) == 1, 'Checkbox for uninstalling the comment module is disabled.');
 
     // Delete any forum terms.
     $vid = $this->config('forum.settings')->get('vocabulary');

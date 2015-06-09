@@ -92,10 +92,10 @@ class reEnableModuleFieldTest extends WebTestBase {
     // for it's fields.
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
-    $this->drupalGet('admin/modules');
+    $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Fields type(s) in use');
     $field_storage->delete();
-    $this->drupalGet('admin/modules');
+    $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Fields pending deletion');
     $this->cronRun();
     $this->assertNoText('Fields type(s) in use');

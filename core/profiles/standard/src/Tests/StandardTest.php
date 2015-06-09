@@ -9,6 +9,7 @@ namespace Drupal\standard\Tests;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\ContactForm;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\Role;
 
@@ -125,6 +126,14 @@ class StandardTest extends WebTestBase {
     // The installer does not have this limitation since it ensures that all of
     // the install profiles dependencies are installed before creating the
     // editor configuration.
+    foreach (FilterFormat::loadMultiple() as $filter) {
+      // Ensure that editor can be uninstalled by removing use in filter
+      // formats. It is necessary to prime the filter collection before removing
+      // the filter.
+      $filter->filters();
+      $filter->removeFilter('editor_file_reference');
+      $filter->save();
+    }
     \Drupal::service('module_installer')->uninstall(array('editor', 'ckeditor'));
     $this->rebuildContainer();
     \Drupal::service('module_installer')->install(array('editor'));

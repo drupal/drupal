@@ -8,8 +8,10 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\StorageComparer;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Module\ModuleTestBase;
 use Drupal\shortcut\Entity\Shortcut;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the largest configuration import possible with all available modules.
@@ -83,12 +85,13 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Purge the data.
     field_purge_batch(1000);
 
-    // Delete any forum terms so it can be uninstalled.
-    $vid = $this->config('forum.settings')->get('vocabulary');
-    $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
-    foreach ($terms as $term) {
-      $term->delete();
-    }
+    // Delete all terms.
+    $terms = Term::loadMultiple();
+    entity_delete_multiple('taxonomy_term', array_keys($terms));
+
+    // Delete all filter formats.
+    $filters = FilterFormat::loadMultiple();
+    entity_delete_multiple('filter_format', array_keys($filters));
 
     // Delete any shortcuts so the shortcut module can be uninstalled.
     $shortcuts = Shortcut::loadMultiple();
@@ -97,7 +100,11 @@ class ConfigImportAllTest extends ModuleTestBase {
     system_list_reset();
     $all_modules = system_rebuild_module_data();
 
-    $modules_to_uninstall = array_filter($all_modules, function ($module) {
+    // Ensure that only core required modules and the install profile can not be uninstalled.
+    $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
+    $this->assertEqual(['standard', 'system', 'user'], array_keys($validation_reasons));
+
+    $modules_to_uninstall = array_filter($all_modules, function ($module) use ($validation_reasons) {
       // Filter required and not enabled modules.
       if (!empty($module->info['required']) || $module->status == FALSE) {
         return FALSE;
@@ -109,6 +116,8 @@ class ConfigImportAllTest extends ModuleTestBase {
     unset($modules_to_uninstall['config']);
 
     $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
+    $this->assertTrue(isset($modules_to_uninstall['file']), 'The File module will be disabled');
+    $this->assertTrue(isset($modules_to_uninstall['editor']), 'The Editor module will be disabled');
 
     // Uninstall all modules that can be uninstalled.
     \Drupal::service('module_installer')->uninstall(array_keys($modules_to_uninstall));
