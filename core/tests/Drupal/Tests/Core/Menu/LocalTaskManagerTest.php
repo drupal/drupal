@@ -50,13 +50,6 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected $routeProvider;
 
   /**
-   * The mocked route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $routeBuilder;
-
-  /**
    * The mocked plugin discovery.
    *
    * @var \PHPUnit_Framework_MockObject_MockObject
@@ -100,7 +93,6 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
     $this->request = new Request();
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->routeBuilder = $this->getMock('Drupal\Core\Routing\RouteBuilderInterface');
     $this->pluginDiscovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
@@ -219,9 +211,6 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->cacheBackend->expects($this->never())
       ->method('set');
 
-    $this->routeBuilder->expects($this->never())
-      ->method('rebuild');
-
     $result = $this->getLocalTasksForRouteResult($mock_plugin);
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
     $this->assertEquals($result, $local_tasks);
@@ -261,7 +250,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeMatch, $this->routeProvider, $this->routeBuilder, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $account);
+    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $account);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);

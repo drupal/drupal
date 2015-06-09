@@ -11,7 +11,6 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -19,7 +18,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
-use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -91,13 +89,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $routeProvider;
 
   /**
-   * The route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
    * The access manager.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface
@@ -122,8 +113,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *   The current route match.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
-   *   The route builder.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -135,7 +124,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     $this->discovery = new YamlDiscovery('links.task', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
@@ -143,7 +132,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->requestStack = $request_stack;
     $this->routeMatch = $route_match;
     $this->routeProvider = $route_provider;
-    $this->routeBuilder = $route_builder;
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->moduleHandler = $module_handler;

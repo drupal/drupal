@@ -498,7 +498,7 @@ services:
     arguments: ['@controller_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
-    arguments: ['@controller_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@router.builder', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
+    arguments: ['@controller_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
   plugin.manager.menu.contextual_link:
     class: Drupal\Core\Menu\ContextualLinkManager
     arguments: ['@controller_resolver', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user', '@request_stack']
