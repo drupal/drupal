@@ -10,45 +10,16 @@
 [dir="rtl"] .toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
   float: left;
 }
-.toolbar .tour-toolbar-tab button {
-  padding-bottom: 1em;
-  padding-top: 1em;
-  color: #fff;
-  font-weight: bold;
-}
-.toolbar .tour-toolbar-tab button.is-active {
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-}
-.tour-toolbar-tab button:focus {
-  outline: thin dotted;
-}
-
-/* @todo Remove once https://www.drupal.org/node/1916690 is resolved. */
-.toolbar .tour-toolbar-tab.toolbar-tab.hidden {
-  display: none;
-}
 
 /* Override placement of the tour progress indicator. */
 .tour-progress {
   position: absolute;
-  /* Equals paddings from .joyride-content-wrapper */
-  bottom: 0;
-  right: 0; /* LTR */
+  bottom: 20px;
+  right: 20px; /* LTR */
 }
 [dir="rtl"] .tour-progress {
   right: auto;
-  left: 0;
-}
-
-/* @todo Remove once https://www.drupal.org/node/1916690 is resolved. */
-.toolbar .tour-toolbar-tab.toolbar-tab.hidden {
-  display: none;
-}
-
-/* JoyRide Styles. */
-#joyRideTipContent {
-  display: none;
+  left: 20px;
 }
 
 /* Default styles for the container */
@@ -58,30 +29,22 @@
   background: #fff;
   width: 300px;
   z-index: 101;
-  top: 0; /* keeps the page from scrolling when calculating position. */
+  top: 0;
   left: 0;
-  padding: 1em 1em 1.5em 1.5em; /* LTR */
 }
-[dir="rtl"] .joyride-tip-guide {
-  padding: 1em 1.5em 1.5em 1em;
-}
-
-.joyride-content-wrapper {
-  /* Apply padding from parent .joyride-tip-guide to absolutely positioned children. */
-  position: relative;
-  padding-right: 1em; /* LTR */
-}
-[dir="rtl"] .joyride-content-wrapper {
-  padding-right: 0;
-  padding-left: 1em;
-}
-
-/* Mobile */
 @media only screen and (max-width: 767px) {
   .joyride-tip-guide {
     width: 85%;
     left: 2.5%;
   }
+}
+
+.joyride-content-wrapper {
+  position: relative;
+  padding: 20px 50px 20px 20px;  /* LTR */
+}
+[dir="rtl"] .joyride-content-wrapper {
+  padding: 20px 20px 20px 50px;
 }
 
 /* Add a little css triangle pip, older browser just miss out on the fanciness of it. */
@@ -123,6 +86,10 @@
   right: 28px;
 }
 
+.joyride-tip-guide .tour-tip-label {
+  margin-top: 0;
+}
+
 .joyride-tip-guide p {
   margin: 0 0 1.4em;
 }
@@ -142,11 +109,12 @@
 
 .joyride-close-tip {
   position: absolute;
-  right: 0; /* LTR */
-  top: 0;
+  line-height: 1em;
+  right: 20px; /* LTR */
+  top: 20px;
 }
 [dir="rtl"] .joyride-close-tip {
-  left: 0;
+  left: 20px;
   right: auto;
 }
 
