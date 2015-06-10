@@ -11,8 +11,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait;
@@ -26,10 +29,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("bulk_form")
  */
-class BulkForm extends FieldPluginBase {
+class BulkForm extends FieldPluginBase implements CacheablePluginInterface {
 
   use RedirectDestinationTrait;
   use UncacheableFieldHandlerTrait;
+  use EntityTranslationRenderTrait;
 
   /**
    * The entity manager.
@@ -53,6 +57,13 @@ class BulkForm extends FieldPluginBase {
   protected $actions = array();
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a new BulkForm object.
    *
    * @param array $configuration
@@ -63,19 +74,28 @@ class BulkForm extends FieldPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
     $this->actionStorage = $entity_manager->getStorage('action');
+    $this->languageManager = $language_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager'),
+      $container->get('language_manager')
+    );
   }
 
   /**
@@ -89,6 +109,50 @@ class BulkForm extends FieldPluginBase {
     $this->actions = array_filter($this->actionStorage->loadMultiple(), function ($action) use ($entity_type) {
       return $action->getType() == $entity_type;
     });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    // @todo Consider making the bulk operation form cacheable. See
+    //   https://www.drupal.org/node/2503009.
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return $this->languageManager->isMultilingual() ? $this->getEntityTranslationRenderer()->getCacheContexts() : [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityTypeId() {
+    return $this->getEntityType();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityManager() {
+    return $this->entityManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getLanguageManager() {
+    return $this->languageManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getView() {
+    return $this->view;
   }
 
   /**
@@ -178,15 +242,20 @@ class BulkForm extends FieldPluginBase {
    *   The current state of the form.
    */
   public function viewsForm(&$form, FormStateInterface $form_state) {
+    // Make sure we do not accidentally cache this form.
+    // @todo Evaluate this again in https://www.drupal.org/node/2503009.
+    $form['#cache']['max-age'] = 0;
+
     // Add the tableselect javascript.
     $form['#attached']['library'][] = 'core/drupal.tableselect';
+    $use_revision = array_key_exists('revision', $this->view->getQuery()->getEntityTableInfo());
 
     // Only add the bulk form options and buttons if there are results.
     if (!empty($this->view->result)) {
       // Render checkboxes for all rows.
       $form[$this->options['id']]['#tree'] = TRUE;
       foreach ($this->view->result as $row_index => $row) {
-        $entity = $this->getEntity($row);
+        $entity = $this->getEntityTranslation($this->getEntity($row), $row);
 
         $form[$this->options['id']][$row_index] = array(
           '#type' => 'checkbox',
@@ -195,7 +264,7 @@ class BulkForm extends FieldPluginBase {
           '#title' => $this->t('Update this item'),
           '#title_display' => 'invisible',
           '#default_value' => !empty($form_state->getValue($this->options['id'])[$row_index]) ? 1 : NULL,
-          '#return_value' => $this->calculateEntityBulkFormKey($entity),
+          '#return_value' => $this->calculateEntityBulkFormKey($entity, $use_revision),
         );
       }
 
@@ -294,7 +363,7 @@ class BulkForm extends FieldPluginBase {
 
         $count++;
 
-        $entities[$entity->id()] = $entity;
+        $entities[$bulk_form_key] = $entity;
       }
 
       $action->execute($entities);
@@ -343,6 +412,9 @@ class BulkForm extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function query() {
+    if ($this->languageManager->isMultilingual()) {
+      $this->getEntityTranslationRenderer()->query($this->query, $this->relationship);
+    }
   }
 
   /**
@@ -368,6 +440,9 @@ class BulkForm extends FieldPluginBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to calculate a bulk form key for.
+   * @param bool $use_revision
+   *   Whether the revision id should be added to the bulk form key. This should
+   *   be set to TRUE only if the view is listing entity revisions.
    *
    * @return string
    *   The bulk form key representing the entity's id, language and revision (if
@@ -375,10 +450,10 @@ class BulkForm extends FieldPluginBase {
    *
    * @see self::loadEntityFromBulkFormKey()
    */
-  protected function calculateEntityBulkFormKey(EntityInterface $entity) {
+  protected function calculateEntityBulkFormKey(EntityInterface $entity, $use_revision) {
     $key_parts = [$entity->language()->getId(), $entity->id()];
 
-    if ($entity instanceof RevisionableInterface) {
+    if ($entity instanceof RevisionableInterface && $use_revision) {
       $key_parts[] = $entity->getRevisionId();
     }
 
@@ -398,23 +473,20 @@ class BulkForm extends FieldPluginBase {
    */
   protected function loadEntityFromBulkFormKey($bulk_form_key) {
     $key_parts = explode('-', $bulk_form_key);
-    $vid = NULL;
+    $revision_id = NULL;
 
     // If there are 3 items, vid will be last.
     if (count($key_parts) === 3) {
-      $vid = array_pop($key_parts);
+      $revision_id = array_pop($key_parts);
     }
 
     // The first two items will always be langcode and ID.
     $id = array_pop($key_parts);
     $langcode = array_pop($key_parts);
 
-    if ($vid) {
-      $entity = $this->entityManager->getStorage($this->getEntityType())->loadRevision($vid);
-    }
-    else {
-      $entity = $this->entityManager->getStorage($this->getEntityType())->load($id);
-    }
+    // Load the entity or a specific revision depending on the given key.
+    $storage = $this->entityManager->getStorage($this->getEntityType());
+    $entity = $revision_id ? $storage->loadRevision($revision_id) : $storage->load($id);
 
     if ($entity instanceof TranslatableInterface) {
       $entity = $entity->getTranslation($langcode);

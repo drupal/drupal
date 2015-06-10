@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -109,24 +108,27 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       return $this->redirect('entity.user.collection');
     }
 
+    $root = NULL;
     $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-    foreach ($accounts as $uid => $account) {
+    foreach ($accounts as $account) {
+      $uid = $account->id();
       // Prevent user 1 from being canceled.
       if ($uid <= 1) {
+        $root = intval($uid) === 1 ? $account : $root;
         continue;
       }
       $form['accounts'][$uid] = array(
         '#type' => 'hidden',
         '#value' => $uid,
         '#prefix' => '<li>',
-        '#suffix' => SafeMarkup::checkPlain($account->label()) . "</li>\n",
+        '#suffix' => $account->label() . "</li>\n",
       );
     }
 
     // Output a notice that user 1 cannot be canceled.
-    if (isset($accounts[1])) {
+    if (isset($root)) {
       $redirect = (count($accounts) == 1);
-      $message = $this->t('The user account %name cannot be canceled.', array('%name' => $accounts[1]->label()));
+      $message = $this->t('The user account %name cannot be canceled.', array('%name' => $root->label()));
       drupal_set_message($message, $redirect ? 'error' : 'warning');
       // If only user 1 was selected, redirect to the overview.
       if ($redirect) {

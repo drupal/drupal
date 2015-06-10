@@ -263,24 +263,4 @@ class EntityFieldRenderer extends RendererBase {
     return $field_ids;
   }
 
-  /**
-   * Returns the entity translation matching the configured row language.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object the field value being processed is attached to.
-   * @param \Drupal\views\ResultRow $row
-   *   The result row the field value being processed belongs to.
-   *
-   * @return \Drupal\Core\Entity\FieldableEntityInterface
-   *   The entity translation object for the specified row.
-   */
-  public function getEntityTranslation(EntityInterface $entity, ResultRow $row) {
-    // We assume the same language should be used for all entity fields
-    // belonging to a single row, even if they are attached to different entity
-    // types. Below we apply language fallback to ensure a valid value is always
-    // picked.
-    $langcode = $this->getEntityTranslationRenderer()->getLangcode($row);
-    return $this->entityManager->getTranslationFromContext($entity, $langcode);
-  }
-
 }

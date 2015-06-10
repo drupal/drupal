@@ -972,20 +972,22 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       }
 
       // Retrieve language fallback candidates to perform the entity language
-      // negotiation.
-      $context['data'] = $entity;
-      $context += array('operation' => 'entity_view', 'langcode' => $langcode);
-      $candidates = $this->languageManager->getFallbackCandidates($context);
+      // negotiation, unless the current translation is already the desired one.
+      if ($entity->language()->getId() != $langcode) {
+        $context['data'] = $entity;
+        $context += array('operation' => 'entity_view', 'langcode' => $langcode);
+        $candidates = $this->languageManager->getFallbackCandidates($context);
 
-      // Ensure the default language has the proper language code.
-      $default_language = $entity->getUntranslated()->language();
-      $candidates[$default_language->getId()] = LanguageInterface::LANGCODE_DEFAULT;
+        // Ensure the default language has the proper language code.
+        $default_language = $entity->getUntranslated()->language();
+        $candidates[$default_language->getId()] = LanguageInterface::LANGCODE_DEFAULT;
 
-      // Return the most fitting entity translation.
-      foreach ($candidates as $candidate) {
-        if ($entity->hasTranslation($candidate)) {
-          $translation = $entity->getTranslation($candidate);
-          break;
+        // Return the most fitting entity translation.
+        foreach ($candidates as $candidate) {
+          if ($entity->hasTranslation($candidate)) {
+            $translation = $entity->getTranslation($candidate);
+            break;
+          }
         }
       }
     }

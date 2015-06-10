@@ -25,6 +25,9 @@ class SaveNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
+    // We need to change at least one value, otherwise the changed timestamp
+    // will not be updated.
+    $entity->changed = 0;
     $entity->save();
   }
 

@@ -1106,7 +1106,7 @@ class EntityManagerTest extends UnitTestCase {
   public function testGetTranslationFromContext() {
     $this->setUpEntityManager();
 
-    $this->languageManager->expects($this->exactly(2))
+    $this->languageManager->expects($this->exactly(1))
       ->method('getFallbackCandidates')
       ->will($this->returnCallback(function (array $context = array()) {
         $candidates = array();
@@ -1117,17 +1117,17 @@ class EntityManagerTest extends UnitTestCase {
       }));
 
     $entity = $this->getMock('Drupal\Tests\Core\Entity\TestContentEntityInterface');
-    $entity->expects($this->exactly(2))
+    $entity->expects($this->exactly(1))
       ->method('getUntranslated')
       ->will($this->returnValue($entity));
     $language = $this->getMock('\Drupal\Core\Language\LanguageInterface');
     $language->expects($this->any())
       ->method('getId')
       ->will($this->returnValue('en'));
-    $entity->expects($this->exactly(2))
+    $entity->expects($this->exactly(3))
       ->method('language')
       ->will($this->returnValue($language));
-    $entity->expects($this->exactly(2))
+    $entity->expects($this->exactly(1))
       ->method('hasTranslation')
       ->will($this->returnValueMap(array(
         array(LanguageInterface::LANGCODE_DEFAULT, FALSE),
