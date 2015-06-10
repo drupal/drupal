@@ -33,11 +33,12 @@ class HWLDFWordAccumulator {
   protected function _flushGroup($new_tag) {
     if ($this->group !== '') {
       if ($this->tag == 'mark') {
-        $this->line .= '<span class="diffchange">' . SafeMarkup::checkPlain($this->group) . '</span>';
+        $format_string = '@original_line<span class="diffchange">@group</span>';
       }
       else {
-        $this->line .= SafeMarkup::checkPlain($this->group);
+        $format_string = '@original_line@group';
       }
+      $this->line = SafeMarkup::format($format_string, ['@original_line' => $this->line, '@group' => $this->group]);
     }
     $this->group = '';
     $this->tag = $new_tag;
@@ -46,9 +47,7 @@ class HWLDFWordAccumulator {
   protected function _flushLine($new_tag) {
     $this->_flushGroup($new_tag);
     if ($this->line != '') {
-      // @todo This is probably not the right place to do this. To be
-      //   addressed in https://www.drupal.org/node/2280963.
-      array_push($this->lines, SafeMarkup::set($this->line));
+      array_push($this->lines, $this->line);
     }
     else {
       // make empty lines visible by inserting an NBSP
