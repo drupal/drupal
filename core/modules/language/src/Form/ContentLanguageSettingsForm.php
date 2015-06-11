@@ -88,6 +88,9 @@ class ContentLanguageSettingsForm extends FormBase {
           'language/drupal.language.admin',
         ),
       ),
+      '#attributes' => array(
+        'class' => 'language-content-settings-form',
+      ),
     );
 
     $form['entity_types'] = array(

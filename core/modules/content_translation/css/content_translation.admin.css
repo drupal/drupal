@@ -3,31 +3,31 @@
  * Styles for the content language administration page.
  */
 
-#language-content-settings-form table .bundle {
+.language-content-settings-form .bundle {
   width: 24%;
 }
-#language-content-settings-form table .field {
+.language-content-settings-form .field {
   padding-left: 3em; /* LTR */
   width: 24%;
 }
-[dir="rtl"] #language-content-settings-form table .field {
+[dir="rtl"] .language-content-settings-form .field {
   padding-right: 3em;
   padding-left: 1em;
 }
-#language-content-settings-form table .column {
+.language-content-settings-form .column {
   padding-left: 5em; /* LTR */
 }
-[dir="rtl"] #language-content-settings-form table .column {
+[dir="rtl"] .language-content-settings-form .column {
   padding-right: 5em;
   padding-left: 1em;
 }
-#language-content-settings-form table .field label,
-#language-content-settings-form table .column label {
+.language-content-settings-form .field label,
+.language-content-settings-form .column label {
   font-weight: normal;
 }
-#language-content-settings-form table .translatable {
+.language-content-settings-form .translatable {
   width: 1%;
 }
-#language-content-settings-form table .operations {
+.language-content-settings-form .operations {
   width: 75%;
 }
