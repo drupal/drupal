@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Datetime\Date.
+ * Contains \Drupal\Core\Datetime\DateFormatter.
  */
 
 namespace Drupal\Core\Datetime;
