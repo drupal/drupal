@@ -109,6 +109,7 @@
    * @return {object}
    */
   Drupal.evaluatePasswordStrength = function (password, translate) {
+    password = password.trim();
     var indicatorText;
     var indicatorClass;
     var weaknesses = 0;
