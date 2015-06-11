@@ -1006,22 +1006,24 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.viewsUiChangeDefaultWidget = {
-    attach: function () {
+    attach: function (context) {
+      var $context = $(context);
+
       function changeDefaultWidget(event) {
         if ($(event.target).prop('checked')) {
-          $('input.default-radios').hide();
-          $('td.any-default-radios-row').parent().hide();
-          $('input.default-checkboxes').show();
+          $context.find('input.default-radios').parent().hide();
+          $context.find('td.any-default-radios-row').parent().hide();
+          $context.find('input.default-checkboxes').parent().show();
         }
         else {
-          $('input.default-checkboxes').hide();
-          $('td.any-default-radios-row').parent().show();
-          $('input.default-radios').show();
+          $context.find('input.default-checkboxes').parent().hide();
+          $context.find('td.any-default-radios-row').parent().show();
+          $context.find('input.default-radios').parent().show();
         }
       }
 
       // Update on widget change.
-      $('input[name="options[group_info][multiple]"]')
+      $context.find('input[name="options[group_info][multiple]"]')
         .on('change', changeDefaultWidget)
         // Update the first time the form is rendered.
         .trigger('change');
