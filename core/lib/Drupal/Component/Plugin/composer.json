@@ -1,5 +1,5 @@
 {
-    "name": "drupal/plugin",
+    "name": "drupal/core-plugin",
     "description": "Base building block for a scalable and extensible plug-in system for PHP components and application framework extensions.",
     "keywords": ["drupal", "plugin", "plugins"],
     "homepage": "https://www.drupal.org/project/drupal",

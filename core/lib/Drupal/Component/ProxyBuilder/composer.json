@@ -1,5 +1,5 @@
 {
-  "name": "drupal/proxy-builder",
+  "name": "drupal/core-proxy-builder",
   "description": "Provides a lightweight mechanism to provide lazy loaded proxies.",
   "keywords": ["drupal", "proxy"],
   "homepage": "https://www.drupal.org/project/drupal",
