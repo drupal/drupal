@@ -230,6 +230,11 @@
     }
   };
 
+  // Moves the dialog to the top of the CKEDITOR stack.
+  $(window).on('dialogcreate', function (e, dialog, $element, settings) {
+    $('.editor-dialog').css("zIndex", CKEDITOR.config.baseFloatZIndex + 1);
+  });
+
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
   $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
     $('.ckeditor-dialog-loading').animate({top: '-40px'}, function () {
