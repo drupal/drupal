@@ -118,26 +118,6 @@ class VocabularyForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, FormStateInterface $form_state) {
-    // If we are displaying the delete confirmation skip the regular actions.
-    if (!$form_state->get('confirm_delete')) {
-      $actions = parent::actions($form, $form_state);
-      // We cannot leverage the regular submit handler definition because we
-      // have button-specific ones here. Hence we need to explicitly set it for
-      // the submit action, otherwise it would be ignored.
-      if ($this->moduleHandler->moduleExists('content_translation')) {
-        array_unshift($actions['submit']['#submit'], 'content_translation_language_configuration_element_submit');
-      }
-      return $actions;
-    }
-    else {
-      return array();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $vocabulary = $this->entity;
 
