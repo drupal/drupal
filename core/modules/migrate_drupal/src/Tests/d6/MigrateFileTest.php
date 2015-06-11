@@ -49,7 +49,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $migration = entity_load('migration', 'd6_file');
     $source = $migration->get('source');
-    $source['conf_path'] = 'core/modules/simpletest';
+    $source['site_path'] = 'core/modules/simpletest';
     $migration->set('source', $source);
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
