@@ -113,10 +113,10 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function setTemporary();
 
   /**
-   * Returns the node creation timestamp.
+   * Returns the file entity creation timestamp.
    *
    * @return int
-   *   Creation timestamp of the node.
+   *   Creation timestamp of the file entity.
    */
   public function getCreatedTime();
 }
