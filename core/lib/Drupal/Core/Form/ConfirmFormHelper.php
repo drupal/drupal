@@ -34,7 +34,7 @@ class ConfirmFormHelper {
     if ($query->has('destination')) {
       $options = UrlHelper::parse($query->get('destination'));
       // @todo Revisit this in https://www.drupal.org/node/2418219.
-      $url = Url::fromUserInput('/' . $options['path'], $options);
+      $url = Url::fromUserInput('/' . ltrim($options['path'], '/'), $options);
     }
     // Check for a route-based cancel link.
     else {
