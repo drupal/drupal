@@ -28,12 +28,12 @@ class FieldFieldTest extends ViewUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field', 'entity_test', 'user'];
+  public static $modules = ['field', 'entity_test', 'user', 'views_test_formatter'];
 
   /**
    * {@inheritdoc}
    */
-  public static $testViews = ['test_field_field_test', 'test_field_alias_test', 'test_field_field_complex_test', 'test_field_field_revision_test', 'test_field_field_revision_complex_test'];
+  public static $testViews = ['test_field_field_test', 'test_field_alias_test', 'test_field_field_complex_test', 'test_field_field_attachment_test', 'test_field_field_revision_test', 'test_field_field_revision_complex_test'];
 
   /**
    * The stored test entities.
@@ -263,6 +263,30 @@ class FieldFieldTest extends ViewUnitTestBase {
     $this->assertEqual(5, $executable->getStyle()->getField(3, 'field_test'));
     $this->assertEqual(5, $executable->getStyle()->getField(4, 'id'));
     $this->assertEqual(6, $executable->getStyle()->getField(4, 'field_test'));
+  }
+
+  /**
+   * Tests that formatter's #attached assets are correctly preserved.
+   *
+   * @see \Drupal\views_test_formatter\Plugin\Field\FieldFormatter\AttachmentTestFormatter::viewElements()
+   */
+  public function testAttachedRender() {
+    $executable = Views::getView('test_field_field_attachment_test');
+    $executable->execute();
+
+    // Check that the attachments added by AttachmentTestFormatter have been
+    // preserved in the render array.
+    $render = $executable->display_handler->render();
+    $expected_attachments = [
+      'library' => [
+        'views/views.module'
+      ]
+    ];
+    foreach ($this->entities as $entity) {
+      $expected_attachments['library'][] = 'foo/fake_library';
+      $expected_attachments['drupalSettings']['AttachmentIntegerFormatter'][$entity->id()] = $entity->id();
+    }
+    $this->assertEqual($expected_attachments, $render['#attached']);
   }
 
   /**

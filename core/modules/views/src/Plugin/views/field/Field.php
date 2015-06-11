@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss as CoreXss;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -18,6 +17,7 @@ use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -832,17 +832,19 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
 
     // Render using the formatted data itself.
     $items = [];
+    // Each item is extracted and rendered separately, the top-level formatter
+    // render array itself is never rendered, so we extract its bubbleable
+    // metadata and add it to each child individually.
+    $bubbleable = BubbleableMetadata::createFromRenderArray($build_list);
     foreach (Element::children($build_list) as $delta) {
-      $items[$delta]['rendered'] = $build_list[$delta];
-      // Merge the cacheability metadata of the top-level render array into
-      // each child because they will most likely be rendered individually.
-      if (isset($build_list['#cache'])) {
-        CacheableMetadata::createFromRenderArray($build_list)
-          ->merge(CacheableMetadata::createFromRenderArray($items[$delta]['rendered']))
-          ->applyTo($items[$delta]['rendered']);
-      }
-      // Add the raw field items (for use in tokens).
-      $items[$delta]['raw'] = $build_list['#items'][$delta];
+      BubbleableMetadata::createFromRenderArray($build_list[$delta])
+        ->merge($bubbleable)
+        ->applyTo($build_list[$delta]);
+      $items[$delta] = [
+        'rendered' => $build_list[$delta],
+        // Add the raw field items (for use in tokens).
+        'raw' => $build_list['#items'][$delta],
+      ];
     }
     return $items;
   }
