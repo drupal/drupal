@@ -12,6 +12,8 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
@@ -50,11 +52,19 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
   protected $term;
 
   /**
+   * The test entity with a string ID.
+   *
+   * @var \Drupal\entity_test\Entity\EntityTestStringId
+   */
+  protected $entityStringId;
+
+  /**
    * Sets up the test.
    */
   protected function setUp() {
     parent::setUp();
 
+    $this->installEntitySchema('entity_test_string_id');
     $this->installEntitySchema('taxonomy_term');
 
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
@@ -71,8 +81,14 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     ));
     $this->term->save();
 
+    $this->entityStringId = EntityTestStringId::create([
+      'id' => $this->randomMachineName(),
+    ]);
+    $this->entityStringId->save();
+
     // Use the util to create an instance.
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_entity_test_string_id', 'Test content entity reference with string ID', 'entity_test_string_id');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
   }
 
@@ -150,6 +166,18 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy_term->generateSampleItems();
     $entity->field_test_taxonomy_vocabulary->generateSampleItems();
     $this->entityValidateAndSave($entity);
+  }
+
+  /**
+   * Tests referencing content entities with string IDs.
+   */
+  public function testContentEntityReferenceItemWithStringId() {
+    $entity = EntityTest::create();
+    $entity->field_test_entity_test_string_id->target_id = $this->entityStringId->id();
+    $entity->save();
+    $storage = \Drupal::entityManager()->getStorage('entity_test');
+    $storage->resetCache();
+    $this->assertEqual($this->entityStringId->id(), $storage->load($entity->id())->field_test_entity_test_string_id->target_id);
   }
 
   /**
