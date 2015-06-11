@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks if a user name is unique on the site.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "UserNameUnique",
  *   label = @Translation("User name unique", context = "Validation"),
  * )

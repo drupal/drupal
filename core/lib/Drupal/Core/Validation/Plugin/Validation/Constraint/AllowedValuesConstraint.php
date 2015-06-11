@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Validation\Constraint\AllowedValuesConstraint.
+ * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint.
  */
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Choice;
 /**
  * Checks for the value being allowed.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "AllowedValues",
  *   label = @Translation("Allowed values", context = "Validation")
  * )

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\NotEqualTo;
 /**
  * Checks if a value is not equal.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "TestField",
  *   label = @Translation("Test Field", context = "Validation"),
  *   type = { "integer" }

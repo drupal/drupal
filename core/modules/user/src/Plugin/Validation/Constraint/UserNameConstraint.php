@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks if a value is a valid user name.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "UserName",
  *   label = @Translation("User name", context = "Validation"),
  * )

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Supports validating feed URLs.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "FeedUrl",
  *   label = @Translation("Feed URL", context = "Validation")
  * )

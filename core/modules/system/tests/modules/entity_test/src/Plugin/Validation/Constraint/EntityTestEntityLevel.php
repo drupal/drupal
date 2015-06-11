@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Constraint on entity entity level.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "EntityTestEntityLevel",
  *   label = @Translation("Constraint on the entity level."),
  *   type = "entity"

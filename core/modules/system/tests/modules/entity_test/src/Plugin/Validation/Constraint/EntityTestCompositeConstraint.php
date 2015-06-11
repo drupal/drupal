@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 /**
  * Constraint with multiple fields.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "EntityTestComposite",
  *   label = @Translation("Constraint with multiple fields."),
  *   type = "entity"

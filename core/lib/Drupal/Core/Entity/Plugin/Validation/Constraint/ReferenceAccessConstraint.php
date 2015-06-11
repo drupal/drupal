@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * Verifies that referenced entities are valid.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "ReferenceAccess",
  *   label = @Translation("Entity Reference reference access", context = "Validation")
  * )

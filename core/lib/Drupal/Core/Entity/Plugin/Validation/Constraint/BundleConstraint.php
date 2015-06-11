@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks if a value is a valid entity type.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "Bundle",
  *   label = @Translation("Bundle", context = "Validation"),
  *   type = { "entity", "entity_reference" }

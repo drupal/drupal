@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\Length;
  *
  * @todo: Move this below the TypedData core component.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "Length",
  *   label = @Translation("Length", context = "Validation"),
  *   type = { "string" }

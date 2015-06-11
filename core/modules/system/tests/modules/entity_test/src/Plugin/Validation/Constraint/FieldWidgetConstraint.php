@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Supports validating widget constraints.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "FieldWidgetConstraint",
  *   label = @Translation("Field widget constraint.")
  * )

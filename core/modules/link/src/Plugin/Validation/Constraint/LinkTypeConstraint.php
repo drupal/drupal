@@ -15,7 +15,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * Validation constraint for links receiving data allowed by its settings.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "LinkType",
  *   label = @Translation("Link data valid for link type.", context = "Validation"),
  * )

@@ -1968,6 +1968,19 @@ function hook_config_schema_info_alter(&$definitions) {
 }
 
 /**
+ * Alter validation constraint plugin definitions.
+ *
+ * @param array[] $definitions
+ *   The array of validation constraint definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\Core\Validation\ConstraintManager
+ * @see \Drupal\Core\Validation\Annotation\Constraint
+ */
+function hook_validation_constraint_alter(array &$definitions) {
+  $definitions['Null']['class'] = '\Drupal\mymodule\Validator\Constraints\MyClass';
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
 

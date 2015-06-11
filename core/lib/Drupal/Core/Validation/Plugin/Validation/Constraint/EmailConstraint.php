@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\Email;
  *
  * Overrides the symfony constraint to use the strict setting.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "Email",
  *   label = @Translation("Email", context = "Validation")
  * )

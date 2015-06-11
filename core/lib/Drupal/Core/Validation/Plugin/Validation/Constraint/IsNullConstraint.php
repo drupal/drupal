@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\IsNull;
  *
  * Overrides the symfony constraint to handle empty Typed Data structures.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "Null",
  *   label = @Translation("Null", context = "Validation"),
  *   type = false

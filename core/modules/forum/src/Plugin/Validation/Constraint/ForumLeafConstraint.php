@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks that the node is assigned only a "leaf" term in the forum taxonomy.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "ForumLeaf",
  *   label = @Translation("Forum leaf", context = "Validation"),
  * )

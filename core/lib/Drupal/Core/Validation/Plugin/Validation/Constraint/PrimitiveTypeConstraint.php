@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Supports validating all primitive types.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "PrimitiveType",
  *   label = @Translation("Primitive type", context = "Validation")
  * )

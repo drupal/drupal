@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 /**
  * Supports validating comment author names.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "CommentName",
  *   label = @Translation("Comment author name", context = "Validation"),
  *   type = "entity:comment"

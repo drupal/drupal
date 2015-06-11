@@ -19,7 +19,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * and the user performing the edit has 'administer users' permission.
  * This allows users without email address to be edited and deleted.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "UserMailRequired",
  *   label = @Translation("User email required", context = "Validation")
  * )

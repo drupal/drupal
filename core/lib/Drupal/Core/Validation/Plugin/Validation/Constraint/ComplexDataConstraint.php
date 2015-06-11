@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\CollectionConstraint.
+ * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\ComplexDataConstraint.
  */
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * Validates properties of complex data structures.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "ComplexData",
  *   label = @Translation("Complex data", context = "Validation")
  * )

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Supports validating feed titles.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "FeedTitle",
  *   label = @Translation("Feed title", context = "Validation")
  * )

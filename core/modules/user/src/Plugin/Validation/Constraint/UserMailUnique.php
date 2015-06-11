@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks if a user's email address is unique on the site.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "UserMailUnique",
  *   label = @Translation("User email unique", context = "Validation")
  * )

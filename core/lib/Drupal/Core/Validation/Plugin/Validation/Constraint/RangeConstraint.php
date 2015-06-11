@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\Range;
  *
  * @todo: Move this below the TypedData core component.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "Range",
  *   label = @Translation("Range", context = "Validation"),
  *   type = { "integer", "float" }
