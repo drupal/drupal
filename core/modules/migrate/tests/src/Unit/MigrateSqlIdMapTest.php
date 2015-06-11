@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -742,17 +743,17 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * Tests the getQualifiedMapTable method with a prefixed database.
    */
   public function testGetQualifiedMapTablePrefix() {
-    $this->database = $this->getDatabase([], ['database' => 'source_database', 'prefix' => 'prefix']);
+    $connection_options = [
+      'database' => ':memory:',
+      'prefix' => 'prefix',
+    ];
+    $pdo = Connection::open($connection_options);
+    $this->database = new Connection($pdo, $connection_options);
     $qualified_map_table = $this->getIdMap()->getQualifiedMapTableName();
     // The SQLite driver is a special flower. It will prefix tables with
     // PREFIX.TABLE, instead of the standard PREFIXTABLE.
     // @see \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
-    if ($this->database->driver() == 'sqlite') {
-      $this->assertEquals('prefix.migrate_map_sql_idmap_test', $qualified_map_table);
-    }
-    else {
-      $this->assertEquals('source_database.prefixmigrate_map_sql_idmap_test', $qualified_map_table);
-    }
+    $this->assertEquals('prefix.migrate_map_sql_idmap_test', $qualified_map_table);
   }
 
   /**
