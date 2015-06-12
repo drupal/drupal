@@ -65,32 +65,6 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
 }
 
 /**
- * Prepares variables for Views UI View info templates.
- *
- * Default template: views-ui-view-info.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - view: The View object.
- */
-function template_preprocess_views_ui_view_info(&$variables) {
-  $variables['title'] = $variables['view']->label();
-  if (empty($variables['displays'])) {
-    $displays = t('None');
-  }
-  else {
-    $displays = \Drupal::translation()->formatPlural(count($variables['displays']), 'Display', 'Displays') . ': <em>';
-    $separator = '';
-    foreach ($variables['displays'] as $displays_item) {
-      $displays .= $separator . SafeMarkup::escape($displays_item);
-      $separator = ', ';
-    }
-    $displays = SafeMarkup::set($displays . '</em>');
-  }
-  $variables['displays'] = $displays;
-}
-
-/**
  * Theme the build group filter form.
  *
  * @ingroup themeable
