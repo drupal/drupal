@@ -256,10 +256,10 @@ class FileItem extends EntityReferenceItem {
   /**
    * Determines the URI for a file field.
    *
-   * @param $data
+   * @param array $data
    *   An array of token objects to pass to token_replace().
    *
-   * @return
+   * @return string
    *   A file directory URI with tokens replaced.
    *
    * @see token_replace()
@@ -277,7 +277,7 @@ class FileItem extends EntityReferenceItem {
   /**
    * Retrieves the upload validators for a file field.
    *
-   * @return
+   * @return array
    *   An array suitable for passing to file_save_upload() or the file field
    *   element's '#upload_validators' property.
    */

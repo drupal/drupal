@@ -45,11 +45,11 @@ function file_test_reset() {
  * Get the arguments passed to invocation of a given hook since
  * file_test_reset() was last called.
  *
- * @param $op
+ * @param string $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'insert', 'update', 'copy', 'move', 'delete'.
  *
- * @return
+ * @return array
  *   Array of the parameters passed to each call.
  *
  * @see _file_test_log_call()
@@ -75,10 +75,10 @@ function file_test_get_all_calls() {
 /**
  * Store the values passed to a hook invocation.
  *
- * @param $op
+ * @param string $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
  *   'insert', 'update', 'copy', 'move', 'delete'.
- * @param $args
+ * @param array $args
  *   Values passed to hook.
  *
  * @see file_test_get_calls()
@@ -95,10 +95,10 @@ function _file_test_log_call($op, $args) {
 /**
  * Load the appropriate return value.
  *
- * @param $op
+ * @param string $op
  *   One of the hook_file_[validate,download] operations.
  *
- * @return
+ * @return mixed
  *   Value set by file_test_set_return().
  *
  * @see file_test_set_return()
@@ -112,9 +112,9 @@ function _file_test_get_return($op) {
 /**
  * Assign a return value for a given operation.
  *
- * @param $op
+ * @param string $op
  *   One of the hook_file_[validate,download] operations.
- * @param $value
+ * @param mixed $value
  *   Value for the hook to return.
  *
  * @see _file_test_get_return()
@@ -317,9 +317,9 @@ function file_test_validator(File $file, $errors) {
  * When the function is called with no $filepath parameter, the results are
  * returned.
  *
- * @param $filepath
+ * @param string|NULL $filepath
  *   File path
- * @return
+ * @return array
  *   If $filepath is NULL, an array of all previous $filepath parameters
  */
 function file_test_file_scan_callback($filepath = NULL) {

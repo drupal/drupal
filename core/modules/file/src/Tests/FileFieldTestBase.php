@@ -61,17 +61,17 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Creates a new file field.
    *
-   * @param $name
+   * @param string $name
    *   The name of the new field (all lowercase), exclude the "field_" prefix.
-   * @param $entity_type
+   * @param string $entity_type
    *   The entity type.
-   * @param $bundle
+   * @param string $bundle
    *   The bundle that this field will be added to.
-   * @param $storage_settings
+   * @param array $storage_settings
    *   A list of field storage settings that will be added to the defaults.
-   * @param $field_settings
+   * @param array $field_settings
    *   A list of instance settings that will be added to the instance defaults.
-   * @param $widget_settings
+   * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
   function createFileField($name, $entity_type, $bundle, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
@@ -91,15 +91,15 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Attaches a file field to an entity.
    *
-   * @param $name
+   * @param string $name
    *   The name of the new field (all lowercase), exclude the "field_" prefix.
-   * @param $entity_type
+   * @param string $entity_type
    *   The entity type this field will be added to.
-   * @param $bundle
+   * @param string $bundle
    *   The bundle this field will be added to.
-   * @param $field_settings
+   * @param array $field_settings
    *   A list of field settings that will be added to the defaults.
-   * @param $widget_settings
+   * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
   function attachFileField($name, $entity_type, $bundle, $field_settings = array(), $widget_settings = array()) {

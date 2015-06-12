@@ -18,7 +18,7 @@
  *
  * @param \Drupal\file\FileInterface $file
  *   The file entity being validated.
- * @return
+ * @return array
  *   An array of error messages. If there are no problems with the file return
  *   an empty array.
  *

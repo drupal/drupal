@@ -45,7 +45,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    * Assert that all of the specified hook_file_* hooks were called once, other
    * values result in failure.
    *
-   * @param $expected
+   * @param array $expected
    *   Array with string containing with the hook name, e.g. 'load', 'save',
    *   'insert', etc.
    */
@@ -77,11 +77,11 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
   /**
    * Assert that a hook_file_* hook was called a certain number of times.
    *
-   * @param $hook
+   * @param string $hook
    *   String with the hook name, e.g. 'load', 'save', 'insert', etc.
-   * @param $expected_count
+   * @param int $expected_count
    *   Optional integer count.
-   * @param $message
+   * @param string $message
    *   Optional translated string message.
    */
   function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
@@ -149,13 +149,13 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    * Create a file and save it to the files table and assert that it occurs
    * correctly.
    *
-   * @param $filepath
+   * @param string $filepath
    *   Optional string specifying the file path. If none is provided then a
    *   randomly named file will be created in the site's files directory.
-   * @param $contents
+   * @param string $contents
    *   Optional contents to save into the file. If a NULL value is provided an
    *   arbitrary string will be used.
-   * @param $scheme
+   * @param string $scheme
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
    * @return \Drupal\file\FileInterface
