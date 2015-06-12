@@ -72,3 +72,8 @@ display:
     position: null
     display_options:
       path: test-comment-rss
+      defaults:
+        row: false
+      row:
+        type: comment_rss
+        options: {}

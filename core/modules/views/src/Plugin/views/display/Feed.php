@@ -47,22 +47,6 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   protected $usesPager = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::initDisplay().
-   */
-  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
-    parent::initDisplay($view, $display, $options);
-
-    // Set the default row style. Ideally this would be part of the option
-    // definition, but in this case it's dependent on the view's base table,
-    // which we don't know until init().
-    $row_plugins = Views::fetchPluginNames('row', $this->getType(), array($view->storage->get('base_table')));
-    $default_row_plugin = key($row_plugins);
-    if (empty($this->options['row']['type'])) {
-      $this->options['row']['type'] = $default_row_plugin;
-    }
-  }
-
-  /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
    */
   protected function getType() {
@@ -166,11 +150,30 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     $options['style']['contains']['type']['default'] = 'rss';
     $options['style']['contains']['options']['default']  = array('description' => '');
     $options['sitename_title']['default'] = FALSE;
-    $options['row']['contains']['type']['default'] = '';
+    $options['row']['contains']['type']['default'] = 'rss_fields';
     $options['defaults']['default']['style'] = FALSE;
     $options['defaults']['default']['row'] = FALSE;
 
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function newDisplay() {
+    parent::newDisplay();
+
+    // Set the default row style. Ideally this would be part of the option
+    // definition, but in this case it's dependent on the view's base table,
+    // which we don't know until init().
+    if (empty($this->options['row']['type']) || $this->options['row']['type'] === 'rss_fields') {
+      $row_plugins = Views::fetchPluginNames('row', $this->getType(), array($this->view->storage->get('base_table')));
+      $default_row_plugin = key($row_plugins);
+
+      $options = $this->getOption('row');
+      $options['type'] = $default_row_plugin;
+      $this->setOption('row', $options);
+    }
   }
 
   /**
