@@ -90,7 +90,7 @@ class AddHandler extends ViewsFormBase {
       $form['override']['controls'] = array(
         '#theme_wrappers' => array('container'),
         '#id' => 'views-filterable-options-controls',
-        '#attributes' => ['class' => ['form--inline']],
+        '#attributes' => ['class' => ['form--inline', 'views-filterable-options-controls']],
       );
       $form['override']['controls']['options_search'] = array(
         '#type' => 'textfield',
@@ -171,7 +171,7 @@ class AddHandler extends ViewsFormBase {
       '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
       '#theme_wrappers' => array('form_element', 'views_ui_container'),
       '#attributes' => array(
-        'class' => array('container-inline', 'views-add-form-selected'),
+        'class' => array('container-inline', 'views-add-form-selected', 'views-offset-bottom'),
         'data-drupal-views-offset' => 'bottom',
       ),
     );

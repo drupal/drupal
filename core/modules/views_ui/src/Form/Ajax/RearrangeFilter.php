@@ -215,6 +215,9 @@ class RearrangeFilter extends ViewsFormBase {
       '#value' => $this->t('Create new filter group'),
       '#id' => 'views-add-group',
       '#group' => 'add',
+      '#attributes' => array(
+        'class' => array('views-add-group'),
+      ),
       '#ajax' => ['url' => NULL],
     );
 

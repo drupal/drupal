@@ -123,9 +123,9 @@ class ViewEditForm extends ViewFormBase {
     $form['#attached']['library'][] = 'views_ui/admin.styling';
 
     $form['#attached']['drupalSettings']['views']['ajax'] = [
-      'id' => '#views-ajax-body',
-      'title' => '#views-ajax-title',
-      'popup' => '#views-ajax-popup',
+      'id' => '.views-ajax-body',
+      'title' => '.views-ajax-title',
+      'popup' => '.views-ajax-popup',
       'defaultForm' => $view->getDefaultAJAXMessage(),
     ];
 
@@ -190,6 +190,9 @@ class ViewEditForm extends ViewFormBase {
       $form['displays']['settings'] = array(
         '#type' => 'container',
         '#id' => 'edit-display-settings',
+        '#attributes' => array(
+          'class' => array('edit-display-settings'),
+        ),
       );
 
       // Add a text that the display is disabled.
@@ -222,14 +225,18 @@ class ViewEditForm extends ViewFormBase {
       // The content of the popup dialog.
       $form['ajax-area'] = array(
         '#type' => 'container',
-        '#id' => 'views-ajax-popup',
+        '#attributes' => array(
+          'class' => array('views-ajax-popup'),
+        ),
       );
       $form['ajax-area']['ajax-title'] = array(
-        '#markup' => '<div id="views-ajax-title"></div>',
+        '#markup' => '<div class="views-ajax-title"></div>',
       );
       $form['ajax-area']['ajax-body'] = array(
         '#type' => 'container',
-        '#id' => 'views-ajax-body',
+        '#attributes' => array(
+          'class' => array('views-ajax-body'),
+        ),
       );
     }
 
@@ -404,7 +411,7 @@ class ViewEditForm extends ViewFormBase {
     if ($display['id'] != 'default') {
       $build['top']['#theme_wrappers'] = array('container');
       $build['top']['#attributes']['id'] = 'edit-display-settings-top';
-      $build['top']['#attributes']['class'] = array('views-ui-display-tab-actions', 'views-ui-display-tab-bucket', 'clearfix');
+      $build['top']['#attributes']['class'] = array('views-ui-display-tab-actions', 'edit-display-settings-top', 'views-ui-display-tab-bucket', 'clearfix');
 
       // The Delete, Duplicate and Undo Delete buttons.
       $build['top']['actions'] = array(

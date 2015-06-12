@@ -21,7 +21,7 @@ class ViewPreviewForm extends ViewFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
 
-    $form['#prefix'] = '<div id="views-preview-wrapper" class="views-admin clearfix">';
+    $form['#prefix'] = '<div id="views-preview-wrapper" class="views-preview-wrapper views-admin clearfix">';
     $form['#suffix'] = '</div>';
     $form['#id'] = 'views-ui-preview-form';
 
@@ -61,7 +61,7 @@ class ViewPreviewForm extends ViewFormBase {
       $form['preview'] = array(
         '#weight' => 110,
         '#theme_wrappers' => array('container'),
-        '#attributes' => array('id' => 'views-live-preview'),
+        '#attributes' => array('id' => 'views-live-preview', 'class' => 'views-live-preview'),
         'preview' => $view->renderPreview($this->displayID, $args),
       );
     }
@@ -80,6 +80,7 @@ class ViewPreviewForm extends ViewFormBase {
     return array(
       '#attributes' => array(
         'id' => 'preview-submit-wrapper',
+        'class' => array('preview-submit-wrapper')
       ),
       'button' => array(
         '#type' => 'submit',

@@ -223,7 +223,7 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
   // @todo Move this to a separate function if it's needed on any forms that
   // don't have the display dropdown.
   $form['override'] = array(
-    '#prefix' => '<div class="views-override clearfix form--inline" data-drupal-views-offset="top">',
+    '#prefix' => '<div class="views-override clearfix form--inline views-offset-top" data-drupal-views-offset="top">',
     '#suffix' => '</div>',
     '#weight' => -1000,
     '#tree' => TRUE,
@@ -231,7 +231,7 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 
   // Add the "2 of 3" progress indicator.
   if ($form_progress = $view->getFormProgress()) {
-    $form['progress']['#markup'] = '<div id="views-progress-indicator">' . t('@current of @total', array('@current' => $form_progress['current'], '@total' => $form_progress['total'])) . '</div>';
+    $form['progress']['#markup'] = '<div id="views-progress-indicator" class="views-progress-indicator">' . t('@current of @total', array('@current' => $form_progress['current'], '@total' => $form_progress['total'])) . '</div>';
     $form['progress']['#weight'] = -1001;
   }
 

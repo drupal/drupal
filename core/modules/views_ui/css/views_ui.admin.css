@@ -1,30 +1,19 @@
 /**
+ * @file
  * The .admin.css file is intended to only contain positioning and size
  * declarations. For example: display, position, float, clear, and overflow.
  */
 
-/* @group Resets */
-
 .views-admin ul,
 .views-admin menu,
 .views-admin dir {
-  padding-left: 0; /* LTR for IE */
-  /* padding-start is used so that RTL works out of the box */
-  -moz-padding-start: 0;
-  -webkit-padding-start: 0;
-  padding-start: 0;
+  padding: 0;
 }
-
 .views-admin pre {
   margin-bottom: 0;
   margin-top: 0;
   white-space: pre-wrap;
 }
-
-/* @end */
-
-/* @group Columns */
-
 .views-left-25 {
   float: left; /* LTR */
   width: 25%;
@@ -32,7 +21,6 @@
 [dir="rtl"] .views-left-25 {
   float: right;
 }
-
 .views-left-30 {
   float: left; /* LTR */
   width: 30%;
@@ -40,7 +28,6 @@
 [dir="rtl"] .views-left-30 {
   float: right;
 }
-
 .views-left-40 {
   float: left; /* LTR */
   width: 40%;
@@ -48,7 +35,6 @@
 [dir="rtl"] .views-left-40 {
   float: right;
 }
-
 .views-left-50 {
   float: left; /* LTR */
   width: 50%;
@@ -56,7 +42,6 @@
 [dir="rtl"] .views-left-50 {
   float: right;
 }
-
 .views-left-75 {
   float: left; /* LTR */
   width: 75%;
@@ -64,7 +49,6 @@
 [dir="rtl"] .views-left-75 {
   float: right;
 }
-
 .views-right-50 {
   float: right; /* LTR */
   width: 50%;
@@ -72,7 +56,6 @@
 [dir="rtl"] .views-right-50 {
   float: left;
 }
-
 .views-right-60 {
   float: right; /* LTR */
   width: 60%;
@@ -80,7 +63,6 @@
 [dir="rtl"] .views-right-60 {
   float: left;
 }
-
 .views-right-70 {
   float: right; /* LTR */
   width: 70%;
@@ -88,16 +70,12 @@
 [dir="rtl"] .views-right-70 {
   float: left;
 }
-
 .views-group-box .form-item {
   margin-left: 3px;
   margin-right: 3px;
 }
 
-/* @end */
-
-/* @group Attachment details
- *
+/*
  * The attachment details section, its tabs for each section and the buttons
  * to add a new section
  */
@@ -105,104 +83,66 @@
   clear: both;
 }
 
-/* @end */
-
-/* @group Attachment details tabs
- *
- * The tabs that switch between sections
- */
- .views-displays .secondary {
-   border-bottom: 0 none;
-   margin: 0;
-   overflow: visible;
-   padding: 0;
- }
-
-.views-displays .secondary > li {
+/* The tabs that switch between sections */
+.views-displays .tabs {
+  border-bottom: 0 none;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+}
+.views-displays .tabs > li {
   border-right: 0 none; /* LTR */
-  display: inline-block;
   float: left; /* LTR */
   padding: 0;
 }
-[dir="rtl"] .views-displays .secondary > li {
+[dir="rtl"] .views-displays .tabs > li {
   float: right;
   border-left: 0 none;
   border-right: 1px solid #bfbfbf;
 }
-
-.views-displays .secondary .open > a {
+.views-displays .tabs .open > a {
   position: relative;
   z-index: 51;
 }
-
-.views-displays .secondary .views-display-deleted-link {
+.views-displays .tabs .views-display-deleted-link {
   text-decoration: line-through;
 }
-
 .views-display-deleted > details > summary,
 .views-display-deleted .details-wrapper > .views-ui-display-tab-bucket > *,
 .views-display-deleted .views-display-columns {
   opacity: 0.25;
 }
-
 .views-display-disabled > details > summary,
 .views-display-disabled .details-wrapper > .views-ui-display-tab-bucket > *,
 .views-display-disabled .views-display-columns {
   opacity: 0.5;
 }
-
 .views-display-tab .details-wrapper > .views-ui-display-tab-bucket .actions {
   opacity: 1.0;
 }
-
-.js .views-ui-display-tab-bucket:first-of-type {
-  border-top: none;
-}
-
-/* @end */
-
-/* @group Attachment details new section button */
-
-.views-displays .secondary li.add {
+.views-displays .tabs .add {
   position: relative;
 }
-
-.views-displays .secondary .action-list {
+.views-displays .tabs .action-list {
   left: 0; /* LTR */
   margin: 0;
   position: absolute;
   top: 23px;
   z-index: 50;
 }
-[dir="rtl"] .views-displays .secondary .action-list {
+[dir="rtl"] .views-displays .tabs .action-list {
   left: auto;
   right: 0;
 }
-
-.views-displays .secondary .action-list  li {
+.views-displays .tabs .action-list li {
   display: block;
 }
-
-/* @end */
-
-/* @group Attachment collapsible details */
-
 .views-display-columns .details-wrapper {
   padding: 0;
 }
-
 .views-display-column {
   box-sizing: border-box;
 }
-
-.js .views-display-column details.collapsed {
-  height: auto;
-}
-
-/* @end */
-
-/* @group Attachment configuration columns */
-
 .views-display-columns > * {
   margin-bottom: 2em;
 }
@@ -219,7 +159,6 @@
     margin-left: 0;
     margin-right: 2%;
   }
-
   .views-display-columns > *:first-child {
     margin-left: 0; /* LTR */
   }
@@ -228,32 +167,14 @@
   }
 }
 
-/* @end */
-
-.views-ui-dialog #views-ajax-popup {
-  padding: 0;
-  overflow: hidden;
-}
-
-.views-ui-dialog #views-ajax-body {
-  margin: 0;
-  padding: 0;
-}
-
-.views-ui-dialog #views-ajax-popup {
-  overflow: hidden;
-}
-
 .views-ui-dialog .scroll {
   overflow: auto;
   padding: 1em;
 }
-
-#views-filterable-options-controls {
+.views-filterable-options-controls {
   display: none;
 }
-
-.views-ui-dialog #views-filterable-options-controls {
+.views-ui-dialog .views-filterable-options-controls {
   display: inline;
 }
 
@@ -262,46 +183,26 @@
   max-height: 200px;
   overflow: auto;
 }
-
-/* @end */
-
-/* @group Settings forms */
-
 .views-display-setting .label,
 .views-display-setting .views-ajax-link {
-  display: inline-block;
   float: left; /* LTR */
 }
 [dir="rtl"] .views-display-setting .label,
 [dir="rtl"] .views-display-setting .views-ajax-link {
   float: right;
 }
-
-/* @end */
-
-/* @group Filter Settings form */
-
-div.form-item-options-value-all {
+.form-item-options-value-all {
   display: none;
 }
-/* @end */
-
-/* @group Javascript dependent styling */
-
 .js-only {
   display: none;
 }
-
 html.js .js-only {
   display: inherit;
 }
-
 html.js span.js-only {
   display: inline;
 }
-
-/* @end */
-
 .js .views-edit-view .dropbutton-wrapper {
   width: auto;
 }
