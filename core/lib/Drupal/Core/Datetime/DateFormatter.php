@@ -401,7 +401,7 @@ class DateFormatter {
         $granularity--;
       }
 
-      if ($granularity == 0) {
+      if ($granularity <= 0) {
         break;
       }
     }

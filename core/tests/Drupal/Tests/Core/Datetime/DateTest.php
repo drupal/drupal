@@ -376,6 +376,9 @@ class DateTest extends UnitTestCase {
       // Checks the non-strict option vs. strict (default).
       array('1 second', $this->createTimestamp('2013-12-11 10:09:08'), $this->createTimestamp('2013-12-11 10:09:07'), $non_strict),
       array('0 seconds', $this->createTimestamp('2013-12-11 10:09:08'), $this->createTimestamp('2013-12-11 10:09:07')),
+
+      // Checks granularity limit.
+      array('2 years 3 months 1 week', $this->createTimestamp('2011-08-30 11:15:57'), $request_time, $granularity_3),
     );
 
     return $data;
