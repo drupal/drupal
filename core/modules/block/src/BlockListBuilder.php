@@ -311,7 +311,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       '#markup' => '<h3>' . t('Place blocks') . '</h3>',
       '#attributes' => array(
         'class' => array(
-          'entity-meta-header',
+          'entity-meta__header',
         ),
       ),
     );

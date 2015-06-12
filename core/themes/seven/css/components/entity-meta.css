@@ -3,48 +3,46 @@
  */
 .entity-meta {
   background-color: #ececec;
-  border-bottom: 0;
   border-left: 1px solid #bfbfbf;
   border-right: 1px solid #bfbfbf;
-  border-top: 0;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, .15);
-  margin-top: 0;
-  padding-top: 0;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.15);
 }
-.entity-meta-header,
+.entity-meta__header,
 .entity-meta details {
   background-color: #f7f7f7;
   border-top: 1px solid #bfbfbf;
   border-bottom: 1px solid #bfbfbf;
 }
-.entity-meta-header {
+.entity-meta__header {
   padding: 1em 1.5em;
 }
-.entity-meta-header .form-item {
-  margin: .25em 0;
-}
-.entity-meta-header .published {
-  font-size: 1.231em;
-  font-weight: bold;
+.entity-meta__title {
   text-shadow: 0 1px 0 #fff;
+  margin: 0.25em 0;
 }
-.entity-meta-header .changed {
+.entity-meta__header .form-item {
+  margin: 0.25em 0;
+}
+.entity-meta__last-saved {
   font-style: italic; /* As-designed, but really: why is this italic? */
 }
 .entity-meta details {
   border-left: 0;
   border-right: 0;
-  border-top: 1px solid #ffffff;
+  border-top: 1px solid #fff;
   margin: 0;
+}
+.entity-meta details:first-child {
+  border-top-color: #bfbfbf;
 }
 .entity-meta details[open] {
   background-color: transparent;
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, .125), transparent 4px);
-  background-image:         linear-gradient(to bottom, rgba(0, 0, 0, .125), transparent 4px);
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.125), transparent 4px);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.125), transparent 4px);
   border-top-width: 0;
   padding-top: 1px;
 }
-.entity-meta details[open] + [open] {
+.entity-meta details[open] + details[open] {
   background-image: none;
   border-top-width: 1px;
   padding-top: 0;

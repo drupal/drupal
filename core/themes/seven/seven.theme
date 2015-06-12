@@ -173,19 +173,22 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['advanced']['#type'] = 'container';
   $is_new = !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet');
   $form['meta'] = array(
-    '#attributes' => array('class' => array('entity-meta-header')),
+    '#attributes' => array('class' => array('entity-meta__header')),
     '#type' => 'container',
     '#group' => 'advanced',
     '#weight' => -100,
     'published' => array(
-      '#type' => 'item',
-      '#wrapper_attributes' => array('class' => array('published')),
-      '#markup' => $node->isPublished() ? t('Published') : t('Not published'),
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => $node->isPublished() ? t('Published') : t('Not published'),
       '#access' => !$node->isNew(),
+      '#attributes' => array(
+        'class' => 'entity-meta__title',
+      ),
     ),
     'changed' => array(
       '#type' => 'item',
-      '#wrapper_attributes' => array('class' => array('changed', 'container-inline')),
+      '#wrapper_attributes' => array('class' => array('entity-meta__last-saved', 'container-inline')),
       '#markup' => '<h4 class="label inline">' . t('Last saved') . '</h4> ' . $is_new,
     ),
     'author' => array(
