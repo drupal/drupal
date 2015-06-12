@@ -72,23 +72,23 @@ class ToolbarCacheContextsTest extends WebTestBase {
 
     // Test without user toolbar tab. User module is a required module so we have to
     // manually remove the user toolbar tab.
-    $this->installModules(['toolbar_disable_user_toolbar']);
+    $this->installExtraModules(['toolbar_disable_user_toolbar']);
     $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found without user toolbar tab.');
 
     // Test with the toolbar and contextual enabled.
-    $this->installModules(['contextual']);
+    $this->installExtraModules(['contextual']);
     $this->adminUser2 = $this->drupalCreateUser(array_merge($this->perms, ['access contextual links']));
     $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found with contextual module enabled.');
     \Drupal::service('module_installer')->uninstall(['contextual']);
 
     // Test with the tour module enabled.
-    $this->installModules(['tour']);
+    $this->installExtraModules(['tour']);
     $this->adminUser2 = $this->drupalCreateUser(array_merge($this->perms, ['access tour']));
     $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found with tour module enabled.');
     \Drupal::service('module_installer')->uninstall(['tour']);
 
     // Test with shortcut module enabled.
-    $this->installModules(['shortcut']);
+    $this->installExtraModules(['shortcut']);
     $this->adminUser2 = $this->drupalCreateUser(array_merge($this->perms, ['access shortcuts', 'administer shortcuts']));
     $this->assertToolbarCacheContexts(['user'], 'Expected cache contexts found with shortcut module enabled.');
   }
@@ -138,7 +138,7 @@ class ToolbarCacheContextsTest extends WebTestBase {
    * @param string[] $module_list
    *   An array of module names.
    */
-  protected function installModules(array $module_list) {
+  protected function installExtraModules(array $module_list) {
     \Drupal::service('module_installer')->install($module_list);
 
     // Installing modules updates the container and needs a router rebuild.
