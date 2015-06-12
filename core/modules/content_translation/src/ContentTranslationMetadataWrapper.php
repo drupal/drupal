@@ -83,12 +83,8 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    * {@inheritdoc}
    */
   public function setAuthor(UserInterface $account) {
-    if ($this->translation->hasField('content_translation_uid')) {
-      $this->translation->set('content_translation_uid', $account->id());
-    }
-    else {
-      $this->translation->setOwner($account);
-    }
+    $field_name = $this->translation->hasField('content_translation_uid') ? 'content_translation_uid' : 'uid';
+    $this->setFieldOnlyIfTranslatable($field_name, $account->id());
     return $this;
   }
 
@@ -105,7 +101,7 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    */
   public function setPublished($published) {
     $field_name = $this->translation->hasField('content_translation_status') ? 'content_translation_status' : 'status';
-    $this->translation->set($field_name, $published);
+    $this->setFieldOnlyIfTranslatable($field_name, $published);
     return $this;
   }
 
@@ -122,7 +118,7 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    */
   public function setCreatedTime($timestamp) {
     $field_name = $this->translation->hasField('content_translation_created') ? 'content_translation_created' : 'created';
-    $this->translation->set($field_name, $timestamp);
+    $this->setFieldOnlyIfTranslatable($field_name, $timestamp);
     return $this;
   }
 
@@ -138,8 +134,21 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    */
   public function setChangedTime($timestamp) {
     $field_name = $this->translation->hasField('content_translation_changed') ? 'content_translation_changed' : 'changed';
-    $this->translation->set($field_name, $timestamp);
+    $this->setFieldOnlyIfTranslatable($field_name, $timestamp);
     return $this;
   }
 
+  /**
+   * Updates a field value, only if the field is translatable.
+   *
+   * @param string $field_name
+   *   The name of the field.
+   * @param mixed $value
+   *   The field value to be set.
+   */
+  protected function setFieldOnlyIfTranslatable($field_name, $value) {
+    if ($this->translation->getFieldDefinition($field_name)->isTranslatable()) {
+      $this->translation->set($field_name, $value);
+    }
+  }
 }

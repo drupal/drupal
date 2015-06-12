@@ -57,7 +57,16 @@ class ContentTranslationController extends ControllerBase {
   public function prepareTranslation(ContentEntityInterface $entity, LanguageInterface $source, LanguageInterface $target) {
     /* @var \Drupal\Core\Entity\ContentEntityInterface $source_translation */
     $source_translation = $entity->getTranslation($source->getId());
-    $entity->addTranslation($target->getId(), $source_translation->toArray());
+    $target_translation = $entity->addTranslation($target->getId(), $source_translation->toArray());
+
+    /** @var \Drupal\user\UserInterface $user */
+    $user = $this->entityManager()->getStorage('user')->load($this->currentUser()->id());
+    $metadata = $this->manager->getTranslationMetadata($target_translation);
+
+    // Update the translation author to current user, as well the translation
+    // creation time.
+    $metadata->setAuthor($user);
+    $metadata->setCreatedTime(REQUEST_TIME);
   }
 
   /**

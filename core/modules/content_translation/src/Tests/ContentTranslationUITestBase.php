@@ -12,6 +12,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Tests the Content Translation UI.
@@ -53,7 +54,12 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     // Create a new test entity with original values in the default language.
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
+    // Create the entity with the editor as owner, so that afterwards a new
+    // translation is created by the translator and the translation author is
+    // tested.
+    $this->drupalLogin($this->editor);
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
+    $this->drupalLogin($this->translator);
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $this->assertTrue($entity, 'Entity found in the database.');
     $this->drupalGet($entity->urlInfo());
@@ -80,6 +86,36 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       'target' => $langcode
     ], array('language' => $language));
     $this->drupalPostForm($add_url, $this->getEditValues($values, $langcode), $this->getFormSubmitActionForNewTranslation($entity, $langcode));
+
+    // Get the entity and reset its cache, so that the new translation gets the
+    // updated values.
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+    $metadata_source_translation = $this->manager->getTranslationMetadata($entity->getTranslation($default_langcode));
+    $metadata_target_translation = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
+
+    $author_field_name = $entity->hasField('content_translation_uid') ? 'content_translation_uid' : 'uid';
+    if ($entity->getFieldDefinition($author_field_name)->isTranslatable()) {
+      $this->assertEqual($metadata_target_translation->getAuthor()->id(), $this->translator->id(),
+        SafeMarkup::format('Author of the target translation @langcode correctly stored for translatable owner field.', array('@langcode' => $langcode)));
+
+      $this->assertNotEqual($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
+        SafeMarkup::format('Author of the target translation @target different from the author of the source translation @source for translatable owner field.',
+          array('@target' => $langcode, '@source' => $default_langcode)));
+    }
+    else {
+      $this->assertEqual($metadata_target_translation->getAuthor()->id(), $this->editor->id(), 'Author of the entity remained untouched after translation for non translatable owner field.');
+    }
+
+    $created_field_name = $entity->hasField('content_translation_created') ? 'content_translation_created' : 'created';
+    if ($entity->getFieldDefinition($created_field_name)->isTranslatable()) {
+      $this->assertTrue($metadata_target_translation->getCreatedTime() > $metadata_source_translation->getCreatedTime(),
+        SafeMarkup::format('Translation creation timestamp of the target translation @target is newer than the creation timestamp of the source translation @source for translatable created field.',
+          array('@target' => $langcode, '@source' => $default_langcode)));
+    }
+    else {
+      $this->assertEqual($metadata_target_translation->getCreatedTime(), $metadata_source_translation->getCreatedTime(), 'Creation timestamp of the entity remained untouched after translation for non translatable created field.');
+    }
+
     if ($this->testLanguageSelector) {
       $this->assertNoFieldByXPath('//select[@id="edit-langcode-0-value"]', NULL, 'Language selector correctly disabled on translations.');
     }
