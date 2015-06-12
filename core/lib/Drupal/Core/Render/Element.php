@@ -142,7 +142,7 @@ class Element {
       }
 
       // Skip value and hidden elements, since they are not rendered.
-      if (isset($child['#type']) && in_array($child['#type'], array('value', 'hidden'))) {
+      if (!static::isVisibleElement($child)) {
         continue;
       }
 
@@ -150,6 +150,19 @@ class Element {
     }
 
     return array_keys($visible_children);
+  }
+
+  /**
+   * Determines if an element is visible.
+   *
+   * @param array $element
+   *   The element to check for visibility.
+   *
+   * @return bool
+   *   TRUE if the element is visible, otherwise FALSE.
+   */
+  public static function isVisibleElement($element) {
+    return (!isset($element['#type']) || !in_array($element['#type'], ['value', 'hidden', 'token'])) && (!isset($element['#access']) || $element['#access']);
   }
 
   /**

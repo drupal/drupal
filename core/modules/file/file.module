@@ -1163,7 +1163,7 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   $destination = isset($element['#upload_location']) ? $element['#upload_location'] : NULL;
   if (isset($destination) && !file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
     \Drupal::logger('file')->notice('The upload directory %directory for the file field !name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', array('%directory' => $destination, '!name' => $element['#field_name']));
-    $form_state->setErrorByName($upload_name, t('The file could not be uploaded.'));
+    $form_state->setError($element, t('The file could not be uploaded.'));
     return FALSE;
   }
 
@@ -1173,7 +1173,7 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   if ($files_uploaded) {
     if (!$files = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
       \Drupal::logger('file')->notice('The file upload failed. %upload', array('%upload' => $upload_name));
-      $form_state->setErrorByName($upload_name, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
+      $form_state->setError($element, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
       return array();
     }
 

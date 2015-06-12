@@ -7,7 +7,9 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -206,17 +208,33 @@ class ValidationTest extends WebTestBase {
     $edit = array();
     $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
+    $messages = [];
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
         $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
-        $this->assertText($form[$key]['#required_error']);
+        $messages[] = [
+          'title' => $form[$key]['#title'],
+          'message' => $form[$key]['#required_error'],
+          'key' => $key,
+        ];
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
         $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
-        $this->assertText($form[$key]['#form_test_required_error']);
+        $messages[] = [
+          'title' => $form[$key]['#title'],
+          'message' => $form[$key]['#form_test_required_error'],
+          'key' => $key,
+        ];
+      }
+      elseif (!empty($form[$key]['#required'])) {
+        $messages[] = [
+          'title' => $form[$key]['#title'],
+          'message' => t('!name field is required.', ['!name' => $form[$key]['#title']]),
+          'key' => $key,
+        ];
       }
     }
-    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+    $this->assertErrorMessages($messages);
 
     // Verify that no custom validation error appears with valid values.
     $edit = array(
@@ -226,6 +244,7 @@ class ValidationTest extends WebTestBase {
     );
     $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
+    $messages = [];
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
         $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
@@ -235,7 +254,49 @@ class ValidationTest extends WebTestBase {
         $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
         $this->assertNoText($form[$key]['#form_test_required_error']);
       }
+      elseif (!empty($form[$key]['#required'])) {
+        $messages[] = [
+          'title' => $form[$key]['#title'],
+          'message' => t('!name field is required.', ['!name' => $form[$key]['#title']]),
+          'key' => $key,
+        ];
+      }
     }
+    $this->assertErrorMessages($messages);
+  }
+
+  /**
+   * Asserts that the given error messages are displayed.
+   *
+   * @param array $messages
+   *   An associative array of error messages keyed by the order they appear on
+   *   the page, with the following key-value pairs:
+   *   - title: The human readable form element title.
+   *   - message: The error message for this form element.
+   *   - key: The key used for the form element.
+   */
+  protected function assertErrorMessages($messages) {
+    $element = $this->xpath('//div[@class = "form-error-message"]/strong');
+    $this->assertIdentical(count($messages), count($element));
+
+    $error_links = [];
+    foreach ($messages as $delta => $message) {
+      // Ensure the message appears in the correct place.
+      if (!isset($element[$delta])) {
+        $this->fail(format_string('The error message for the "@title" element with key "@key" was not found.', ['@title' => $message['title'], '@key' => $message['key']]));
+      }
+      else {
+        $this->assertIdentical($message['message'], (string) $element[$delta]);
+      }
+
+      // Gather the element for checking the jump link section.
+      $error_links[] = \Drupal::l($message['title'], Url::fromRoute('<none>', [], ['fragment' => 'edit-' . str_replace('_', '-', $message['key']), 'external' => TRUE]));
+    }
+    $top_message = \Drupal::translation()->formatPlural(count($error_links), '1 error has been found: !errors', '@count errors have been found: !errors', [
+      '!errors' => SafeMarkup::set(implode(', ', $error_links))
+    ]);
+    $this->assertRaw($top_message);
     $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
   }
+
 }

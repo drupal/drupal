@@ -267,6 +267,7 @@ class Datetime extends DateElementBase {
         '#attributes' => $element['#attributes'] + $extra_attributes,
         '#required' => $element['#required'],
         '#size' => max(12, strlen($element['#value']['date'])),
+        '#error_no_message' => TRUE,
       );
 
       // Allows custom callbacks to alter the element.
@@ -298,6 +299,7 @@ class Datetime extends DateElementBase {
         '#attributes' => $element['#attributes'] + $extra_attributes,
         '#required' => $element['#required'],
         '#size' => 12,
+        '#error_no_message' => TRUE,
       );
 
       // Allows custom callbacks to alter the element.

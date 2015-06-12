@@ -5,6 +5,7 @@
  *
  * Available variables:
  * - attributes: HTML attributes for the fieldset element.
+ * - errors: (optional) Any errors for this fieldset element, may not be set.
  * - required: Boolean indicating whether the fieldeset element is required.
  * - legend: The legend element containing the following properties:
  *   - title: Title of the fieldset, intended for use as the text of the legend.
@@ -33,6 +34,11 @@
     <span{{ legend_span.attributes.addClass(legend_span_classes) }}>{{ legend.title }}</span>
   </legend>
   <div class="fieldset-wrapper">
+    {% if errors %}
+      <div>
+        {{ errors }}
+      </div>
+    {% endif %}
     {% if prefix %}
       <span class="field-prefix">{{ prefix }}</span>
     {% endif %}

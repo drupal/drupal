@@ -269,3 +269,13 @@ input.form-submit:focus {
   margin-left: 0.6em;
   margin-right: 0;
 }
+
+/* Form error styles. */
+.form-item textarea.error + .cke {
+  border: 2px solid red;
+}
+
+/* Form error message styles. */
+.form-error-message {
+  color: #ea2800;
+}

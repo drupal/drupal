@@ -188,7 +188,7 @@ class FormTest extends WebTestBase {
     }
 
     // Check the page for error messages.
-    $errors = $this->xpath('//div[contains(@class, "error")]//li');
+    $errors = $this->xpath('//div[contains(@class, "form-error-message")]//strong');
     foreach ($errors as $error) {
       $expected_key = array_search($error[0], $expected);
       // If the error message is not one of the expected messages, fail.

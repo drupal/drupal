@@ -233,6 +233,7 @@ class ManagedFile extends FormElement {
       '#multiple' => $element['#multiple'],
       '#theme_wrappers' => [],
       '#weight' => -10,
+      '#error_no_message' => TRUE,
     ];
 
     if (!empty($fids) && $element['#files']) {
@@ -328,7 +329,7 @@ class ManagedFile extends FormElement {
 
     // Check required property based on the FID.
     if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, ['upload_button', 'remove_button'])) {
-      $form_state->setError($element['upload'], t('!name field is required.', ['!name' => $element['#title']]));
+      $form_state->setError($element, t('!name is required.', ['!name' => $element['#title']]));
     }
 
     // Consolidate the array value of this field to array of FIDs.

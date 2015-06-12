@@ -55,7 +55,6 @@ label[for] {
 .form-disabled label {
   color: #737373;
 }
-
 .form-disabled input.form-text,
 .form-disabled input.form-tel,
 .form-disabled input.form-email,
@@ -70,15 +69,18 @@ label[for] {
   background-color: hsla(0, 0%, 0%, .08);
   box-shadow: none;
 }
-
 .form-item input.error,
 .form-item textarea.error,
 .form-item select.error {
-  border-width: 2px;
+  border-width: 1px;
   border-color: #e62600;
   background-color: hsla(15, 75%, 97%, 1);
   box-shadow: inset 0 5px 5px -5px #b8b8b8;
   color: #a51b00;
+}
+.form-item textarea.error + .cke {
+  border-width: 1px;
+  border-color: #e62600;
 }
 .form-item input.error:focus,
 .form-item textarea.error:focus,
@@ -94,6 +96,19 @@ label[for] {
   width: 7px;
   height: 7px;
 }
+.form-error-message {
+  margin-top: 0.15em;
+  color: #ea2800;
+}
+.fieldset-wrapper > .form-error-message {
+  margin-top: 0;
+}
+.text-format-wrapper .form-error-message {
+  border: solid #ccc;
+  border-width: 0 1px;
+  margin: 0;
+  padding: 0.25em 0.666em 0;
+}
 
 
 /* Filter */
@@ -105,6 +120,7 @@ div.description,
   font-size: 0.95em;
 }
 .form-item .description.error {
+  margin-top: 0;
   color: #a51b00;
 }
 
@@ -183,15 +199,6 @@ textarea.form-textarea {
   width: auto;
 }
 
-.form-item .password-suggestions {
-  float: left; /* LTR */
-  clear: left; /* LTR */
-  width: 100%;
-}
-[dir="rtl"] .form-item .password-suggestions {
-  float: right;
-  clear: right;
-}
 .form-item-pass .description {
   clear: both;
 }

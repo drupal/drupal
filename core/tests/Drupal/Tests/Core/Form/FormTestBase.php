@@ -178,9 +178,10 @@ abstract class FormTestBase extends UnitTestCase {
     $this->requestStack = new RequestStack();
     $this->requestStack->push($this->request);
     $this->logger = $this->getMock('Drupal\Core\Logger\LoggerChannelInterface');
+    $form_error_handler = $this->getMock('Drupal\Core\Form\FormErrorHandlerInterface');
     $this->formValidator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
-      ->setConstructorArgs(array($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger))
-      ->setMethods(array('drupalSetMessage'))
+      ->setConstructorArgs([$this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler])
+      ->setMethods(NULL)
       ->getMock();
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
       ->setConstructorArgs(array($this->requestStack, $this->urlGenerator))

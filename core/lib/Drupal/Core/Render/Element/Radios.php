@@ -83,6 +83,8 @@ class Radios extends FormElement {
           '#parents' => $element['#parents'],
           '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $parents_for_id)),
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+          // Errors should only be shown on the parent radios element.
+          '#error_no_message' => TRUE,
           '#weight' => $weight,
         );
       }

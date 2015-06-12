@@ -265,6 +265,7 @@ class Datelist extends DateElementBase {
         '#attributes' => $element['#attributes'],
         '#options' => $options,
         '#required' => $element['#required'],
+        '#error_no_message' => TRUE,
       );
     }
 

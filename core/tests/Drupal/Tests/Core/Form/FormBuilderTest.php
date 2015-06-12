@@ -370,15 +370,11 @@ class FormBuilderTest extends FormTestBase {
       ->method('buildForm')
       ->will($this->returnValue($expected_form));
 
-    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(array('drupalSetMessage'))
-      ->getMock();
+    $form_state = new FormState();
     $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
     $this->assertSame('test-form-id', $form['#id']);
 
-    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(array('drupalSetMessage'))
-      ->getMock();
+    $form_state = new FormState();
     $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
     $this->assertSame('test-form-id--2', $form['#id']);
   }

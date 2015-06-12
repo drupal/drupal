@@ -500,6 +500,12 @@ function template_preprocess_datetime_wrapper(&$variables) {
     $variables['title'] = $element['#title'];
   }
 
+  // Display any error messages.
+  $variables['errors'] = NULL;
+  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
+    $variables['errors'] = $element['#errors'];
+  }
+
   if (!empty($element['#description'])) {
     $variables['description'] = $element['#description'];
   }

@@ -45,6 +45,13 @@ class FormValidator implements FormValidatorInterface {
   protected $logger;
 
   /**
+   * The form error handler.
+   *
+   * @var \Drupal\Core\Form\FormErrorHandlerInterface
+   */
+  protected $formErrorHandler;
+
+  /**
    * Constructs a new FormValidator.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -55,12 +62,15 @@ class FormValidator implements FormValidatorInterface {
    *   The CSRF token generator.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Form\FormErrorHandlerInterface $form_error_handler
+   *   The form error handler.
    */
-  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger) {
+  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, FormErrorHandlerInterface $form_error_handler) {
     $this->requestStack = $request_stack;
     $this->stringTranslation = $string_translation;
     $this->csrfToken = $csrf_token;
     $this->logger = $logger;
+    $this->formErrorHandler = $form_error_handler;
   }
 
   /**
@@ -184,8 +194,9 @@ class FormValidator implements FormValidatorInterface {
    *   The unique string identifying the form.
    */
   protected function finalizeValidation(&$form, FormStateInterface &$form_state, $form_id) {
-    // After validation, loop through and assign each element its errors.
-    $this->setElementErrorsFromFormState($form, $form_state);
+    // Delegate handling of form errors to a service.
+    $this->formErrorHandler->handleFormErrors($form, $form_state);
+
     // Mark this form as validated.
     $form_state->setValidationComplete();
   }
@@ -392,28 +403,6 @@ class FormValidator implements FormValidatorInterface {
     else {
       return NULL;
     }
-  }
-
-  /**
-   * Stores the errors of each element directly on the element.
-   *
-   * We must provide a way for non-form functions to check the errors for a
-   * specific element. The most common usage of this is a #pre_render callback.
-   *
-   * @param array $elements
-   *   An associative array containing the structure of a form element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  protected function setElementErrorsFromFormState(array &$elements, FormStateInterface &$form_state) {
-    // Recurse through all children.
-    foreach (Element::children($elements) as $key) {
-      if (isset($elements[$key]) && $elements[$key]) {
-        $this->setElementErrorsFromFormState($elements[$key], $form_state);
-      }
-    }
-    // Store the errors for this element on the element directly.
-    $elements['#errors'] = $form_state->getError($elements);
   }
 
 }

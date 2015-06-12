@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -43,6 +44,16 @@ class UserBlocksTest extends WebTestBase {
    * Test the user login block.
    */
   function testUserLoginBlock() {
+    // Make sure the validation error is displayed when try to login with
+    // invalid username/password.
+    $edit['name'] = $this->randomMachineName();
+    $edit['pass'] = $this->randomMachineName();
+    $this->drupalPostForm('node', $edit, t('Log in'));
+    $this->assertRaw(\Drupal::translation()->formatPlural(1, '1 error has been found: !errors', '@count errors have been found: !errors', [
+      '!errors' => SafeMarkup::set('<a href="#edit-name">Username</a>')
+    ]));
+    $this->assertText(t('Sorry, unrecognized username or password.'));
+
     // Create a user with some permission that anonymous users lack.
     $user = $this->drupalCreateUser(array('administer permissions'));
 

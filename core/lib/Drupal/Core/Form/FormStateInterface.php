@@ -417,7 +417,8 @@ interface FormStateInterface {
    * indicate which element needs to be changed and provide an error message.
    * This causes the Form API to not execute the form submit handlers, and
    * instead to re-display the form to the user with the corresponding elements
-   * rendered with an 'error' CSS class (shown as red by default).
+   * rendered with an 'error' CSS class (shown as red by default) and the error
+   * message near the element.
    *
    * The standard behavior of this method can be changed if a button provides
    * the #limit_validation_errors property. Multistep forms not wanting to

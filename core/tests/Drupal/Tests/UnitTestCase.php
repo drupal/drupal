@@ -9,6 +9,7 @@ namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Random;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
@@ -208,6 +209,11 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     $translation->expects($this->any())
       ->method('translate')
       ->will($this->returnCallback('Drupal\Component\Utility\SafeMarkup::format'));
+    $translation->expects($this->any())
+      ->method('formatPlural')
+      ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) {
+        return $count === 1 ? SafeMarkup::format($singular, $args) : SafeMarkup::format($plural, $args + ['@count' => $count]);
+      });
     return $translation;
   }
 

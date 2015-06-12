@@ -113,6 +113,17 @@ abbr.ajax-changed {
   margin-right: 0;
 }
 
+/* Inline error messages. */
+.form-error-message:before {
+  content: '';
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  vertical-align: sub;
+  background: url(../../../misc/icons/ea2800/error.svg) no-repeat;
+  background-size: contain;
+}
+
 /**
  * Inline items.
  */
