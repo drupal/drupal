@@ -818,6 +818,11 @@ services:
     class: Drupal\Core\EventSubscriber\AjaxSubscriber
     tags:
       - { name: event_subscriber }
+  form_ajax_subscriber:
+    class: Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber
+    arguments: ['@form_ajax_response_builder']
+    tags:
+      - { name: event_subscriber }
   route_enhancer.lazy_collector:
     class: Drupal\Core\Routing\LazyRouteEnhancer
     tags:
@@ -888,6 +893,9 @@ services:
   controller.entity_form:
     class: Drupal\Core\Entity\HtmlEntityFormController
     arguments: ['@controller_resolver', '@form_builder', '@entity.manager']
+  form_ajax_response_builder:
+    class: Drupal\Core\Form\FormAjaxResponseBuilder
+    arguments: ['@main_content_renderer.ajax', '@current_route_match']
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:

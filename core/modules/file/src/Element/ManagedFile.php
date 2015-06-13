@@ -145,6 +145,7 @@ class ManagedFile extends FormElement {
     $element['#tree'] = TRUE;
 
     $ajax_settings = [
+      // @todo Remove this in https://www.drupal.org/node/2500527.
       'url' => Url::fromRoute('file.ajax_upload'),
       'options' => [
         'query' => [

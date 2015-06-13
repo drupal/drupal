@@ -96,7 +96,7 @@ class RebuildTest extends WebTestBase {
     // submission and verify it worked by ensuring the updated page has two text
     // field items in the field for which we just added an item.
     $this->drupalGet('node/add/page');
-    $this->drupalPostAjaxForm(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), 'system/ajax', array(), array(), 'node-page-form');
+    $this->drupalPostAjaxForm(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), NULL, array(), array(), 'node-page-form');
     $this->assert(count($this->xpath('//div[contains(@class, "field-name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
 
     // Submit the form with the non-Ajax "Save" button, leaving the title field
@@ -113,6 +113,9 @@ class RebuildTest extends WebTestBase {
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');
-    $this->assert(count($forms) == 1 && $forms[0]['action'] == Url::fromRoute('node.add', ['node_type' => 'page'])->toString(), 'Re-rendered form contains the correct action value.');
+    $this->assertEqual(1, count($forms));
+    // Strip query params off the action before asserting.
+    $url = parse_url($forms[0]['action'])['path'];
+    $this->assertEqual(Url::fromRoute('node.add', ['node_type' => 'page'])->toString(), $url);
   }
 }

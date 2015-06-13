@@ -51,6 +51,11 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   // Add the AJAX behavior to the triggering element.
   $triggering_element = &$wrapping_element[$trigger_key];
   $triggering_element['#ajax']['callback'] = 'views_ui_ajax_update_form';
+
+  // Specify the #ajax URL in order to retain form caching.
+  // @todo Remove this in https://www.drupal.org/node/2500523.
+  $triggering_element['#ajax']['url'] = Url::fromRoute('system.ajax');
+
   // We do not use \Drupal\Component\Utility\Html::getUniqueId() to get an ID
   // for the AJAX wrapper, because it remembers IDs across AJAX requests (and
   // won't reuse them), but in our case we need to use the same ID from request

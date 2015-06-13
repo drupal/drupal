@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Ajax;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Url;
 
 /**
@@ -146,11 +147,11 @@ class DialogTest extends AjaxTestBase {
     $this->assertTrue($dialog_js_exists, 'Drupal dialog JS added to the page.');
 
     // Check that the response matches the expected value.
-    $this->assertEqual($modal_expected_response, $ajax_result[3], 'POST request modal dialog JSON response matches.');
+    $this->assertEqual($modal_expected_response, $ajax_result[4], 'POST request modal dialog JSON response matches.');
 
     // Abbreviated test for "normal" dialogs, testing only the difference.
     $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button2');
-    $this->assertEqual($normal_expected_response, $ajax_result[3], 'POST request normal dialog JSON response matches.');
+    $this->assertEqual($normal_expected_response, $ajax_result[4], 'POST request normal dialog JSON response matches.');
 
     // Check that requesting a form dialog without JS goes to a page.
     $this->drupalGet('ajax-test/dialog-form');
@@ -165,7 +166,10 @@ class DialogTest extends AjaxTestBase {
       'edit-preview' => [
         'callback' => '::preview',
         'event' => 'click',
-        'url' => Url::fromRoute('system.ajax')->toString(),
+        'url' => Url::fromRoute('ajax_test.dialog_form', [], ['query' => [
+            MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal',
+            FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+          ]])->toString(),
         'dialogType' => 'ajax',
         'submit' => [
           '_triggering_element_name' => 'op',

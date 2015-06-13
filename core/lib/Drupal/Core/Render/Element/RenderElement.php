@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Render\Element;
@@ -128,7 +129,10 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    */
   public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
     $element = static::preRenderAjaxForm($element);
-    if (!empty($element['#ajax_processed'])) {
+
+    // If the element was processed as an #ajax element, and a custom URL was
+    // provided, set the form to be cached.
+    if (!empty($element['#ajax_processed']) && !empty($element['#ajax']['url'])) {
       $form_state->setCached();
     }
     return $element;
@@ -236,12 +240,22 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       // to be substantially different for a JavaScript triggered submission.
       // One such substantial difference is form elements that use
       // #ajax['callback'] for determining which part of the form needs
-      // re-rendering. For that, we have a special 'system/ajax' route.
-      $settings += array(
-        'url' => isset($settings['callback']) ? Url::fromRoute('system.ajax') : NULL,
-        'options' => array(),
+      // re-rendering. For that, we have a special 'system.ajax' route which
+      // must be manually set.
+      $settings += [
+        'url' => NULL,
+        'options' => ['query' => []],
         'dialogType' => 'ajax',
-      );
+      ];
+      if (array_key_exists('callback', $settings) && !isset($settings['url'])) {
+        $settings['url'] = Url::fromRoute('<current>');
+        // Add all the current query parameters in order to ensure that we build
+        // the same form on the AJAX POST requests. For example,
+        // \Drupal\user\AccountForm takes query parameters into account in order
+        // to hide the password field dynamically.
+        $settings['options']['query'] += \Drupal::request()->query->all();
+        $settings['options']['query'][FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
+      }
 
       // @todo Legacy support. Remove in Drupal 8.
       if (isset($settings['method']) && $settings['method'] == 'replace') {

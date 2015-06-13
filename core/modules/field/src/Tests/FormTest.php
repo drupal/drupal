@@ -435,7 +435,7 @@ class FormTest extends FieldTestBase {
     // Press 'add more' button through Ajax, and place the expected HTML result
     // as the tested content.
     $commands = $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_add_more');
-    $this->setRawContent($commands[1]['data']);
+    $this->setRawContent($commands[2]['data']);
 
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       $this->assertFieldByName("{$field_name}[$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
