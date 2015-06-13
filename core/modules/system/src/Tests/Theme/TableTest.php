@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Theme\TableTest.
+ * Contains \Drupal\system\Tests\Theme\TableTest.
  */
 
 namespace Drupal\system\Tests\Theme;
@@ -237,4 +237,75 @@ class TableTest extends KernelTestBase {
     $this->assertRaw('<td>6</td>', 'Cell 3: no priority classes were applied.');
   }
 
+  /**
+   * Tests header elements with a mix of string and render array values.
+   */
+  public function testThemeTableHeaderRenderArray() {
+    $header = array(
+      array (
+        'data' => array(
+          '#markup' => 'one',
+        ),
+      ),
+      'two',
+      array (
+        'data' => array(
+          '#type' => 'html_tag',
+          '#tag' => 'b',
+          '#value' => 'three',
+        ),
+      ),
+    );
+    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $table = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#responsive' => FALSE,
+    );
+    $this->render($table);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<thead><tr><th>one</th><th>two</th><th><b>three</b></th></tr>', 'Table header found.');
+  }
+
+  /**
+   * Tests row elements with a mix of string and render array values.
+   */
+  public function testThemeTableRowRenderArray() {
+    $header = array('one', 'two', 'three');
+    $rows = array(
+      array(
+        '1-one',
+        array(
+          'data' => '1-two'
+        ),
+        '1-three',
+      ),
+      array(
+        array (
+          'data' => array(
+            '#markup' => '2-one',
+          ),
+        ),
+        '2-two',
+        array (
+          'data' => array(
+            '#type' => 'html_tag',
+            '#tag' => 'b',
+            '#value' => '2-three',
+          ),
+        ),
+      ),
+    );
+    $table = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#responsive' => FALSE,
+    );
+    $this->render($table);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<tbody><tr><td>1-one</td><td>1-two</td><td>1-three</td></tr>', 'Table row 1 found.');
+    $this->assertRaw('<tr><td>2-one</td><td>2-two</td><td><b>2-three</b></td></tr></tbody>', 'Table row 2 found.');
+  }
 }
