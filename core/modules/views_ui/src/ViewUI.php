@@ -7,7 +7,6 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
@@ -680,13 +679,17 @@ class ViewUI implements ViewEntityInterface {
               ),
             );
             if (!empty($this->additionalQueries)) {
-              $queries = '<strong>' . t('These queries were run during view rendering:') . '</strong>';
+              $queries[] = array(
+                '#prefix' => '<strong>',
+                '#markup' => t('These queries were run during view rendering:'),
+                '#suffix' => '</strong>',
+              );
               foreach ($this->additionalQueries as $query) {
-                if ($queries) {
-                  $queries .= "\n";
-                }
                 $query_string = strtr($query['query'], $query['args']);
-                $queries .= t('[@time ms] @query', array('@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string));
+                $queries[] = array(
+                  '#prefix' => "\n",
+                  '#markup' => t('[@time ms] @query', array('@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string)),
+                );
               }
 
               $rows['query'][] = array(
@@ -696,7 +699,13 @@ class ViewUI implements ViewEntityInterface {
                     '#template' => "<strong>{% trans 'Other queries' %}</strong>",
                   ),
                 ),
-                SafeMarkup::set('<pre>' . $queries . '</pre>'),
+                array(
+                  'data' => array(
+                    '#prefix' => '<pre>',
+                     'queries' => $queries,
+                     '#suffix' => '</pre>',
+                    ),
+                ),
               );
             }
           }
@@ -718,9 +727,21 @@ class ViewUI implements ViewEntityInterface {
             else {
               $path = t('This display has no path.');
             }
-            $rows['query'][] = array(SafeMarkup::set('<strong>' . t('Path') . '</strong>'), $path);
+            $rows['query'][] = array(
+              array(
+                'data' => array(
+                  '#prefix' => '<strong>',
+                  '#markup' => t('Path'),
+                  '#suffix' => '</strong>',
+                ),
+              ),
+              array(
+                'data' => array(
+                  '#markup' => $path,
+                ),
+              )
+            );
           }
-
           if ($show_stats) {
             $rows['statistics'][] = array(
               array(
@@ -758,10 +779,36 @@ class ViewUI implements ViewEntityInterface {
           // No query was run. Display that information in place of either the
           // query or the performance statistics, whichever comes first.
           if ($combined || ($show_location === 'above')) {
-            $rows['query'] = array(array(SafeMarkup::set('<strong>' . t('Query') . '</strong>'), t('No query was run')));
+            $rows['query'][] = array(
+              array(
+                'data' => array(
+                  '#prefix' => '<strong>',
+                  '#markup' => t('Query'),
+                  '#suffix' => '</strong>',
+                ),
+              ),
+              array(
+                'data' => array(
+                  '#markup' => t('No query was run'),
+                ),
+              ),
+            );
           }
           else {
-            $rows['statistics'] = array(array(SafeMarkup::set('<strong>' . t('Query') . '</strong>'), t('No query was run')));
+            $rows['statistics'][] = array(
+              array(
+                'data' => array(
+                  '#prefix' => '<strong>',
+                  '#markup' => t('Query'),
+                  '#suffix' => '</strong>',
+                ),
+              ),
+              array(
+                'data' => array(
+                  '#markup' => t('No query was run'),
+                ),
+              ),
+            );
           }
         }
       }
