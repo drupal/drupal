@@ -424,7 +424,6 @@ class Schema extends DatabaseSchema {
    *   Name of the table.
    * @return
    *   An array representing the schema, from drupal_get_schema().
-   * @see drupal_get_schema()
    */
   protected function introspectSchema($table) {
     $mapped_fields = array_flip($this->getFieldTypeMap());

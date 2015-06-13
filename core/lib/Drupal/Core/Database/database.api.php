@@ -474,8 +474,6 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  *   array, the key is a table name and the value is a table structure
  *   definition.
  *
- * @see hook_schema_alter()
- *
  * @ingroup schemaapi
  */
 function hook_schema() {
@@ -532,31 +530,6 @@ function hook_schema() {
     'primary key' => array('nid'),
   );
   return $schema;
-}
-
-/**
- * Perform alterations to existing database schemas.
- *
- * When a module modifies the database structure of another module (by
- * changing, adding or removing fields, keys or indexes), it should
- * implement hook_schema_alter() to update the default $schema to take its
- * changes into account.
- *
- * See hook_schema() for details on the schema definition structure.
- *
- * @param $schema
- *   Nested array describing the schemas for all modules.
- *
- * @ingroup schemaapi
- */
-function hook_schema_alter(&$schema) {
-  // Add field to existing schema.
-  $schema['users']['fields']['timezone_id'] = array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-    'description' => 'Per-user timezone configuration.',
-  );
 }
 
 /**

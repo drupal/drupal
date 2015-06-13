@@ -59,7 +59,7 @@ abstract class ModuleTestBase extends WebTestBase {
    *   The name of the module.
    */
   function assertModuleTablesExist($module) {
-    $tables = array_keys(drupal_get_schema_unprocessed($module));
+    $tables = array_keys(drupal_get_module_schema($module));
     $tables_exist = TRUE;
     foreach ($tables as $table) {
       if (!db_table_exists($table)) {
@@ -76,7 +76,7 @@ abstract class ModuleTestBase extends WebTestBase {
    *   The name of the module.
    */
   function assertModuleTablesDoNotExist($module) {
-    $tables = array_keys(drupal_get_schema_unprocessed($module));
+    $tables = array_keys(drupal_get_module_schema($module));
     $tables_exist = FALSE;
     foreach ($tables as $table) {
       if (db_table_exists($table)) {

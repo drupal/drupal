@@ -120,7 +120,6 @@ class DbDumpTest extends KernelTestBase {
       'config',
       'cache_discovery',
       'cache_bootstrap',
-      'cache_default',
       'file_managed',
       'key_value_expire',
       'menu_link_content',

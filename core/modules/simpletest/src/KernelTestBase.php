@@ -405,7 +405,7 @@ EOD;
    *   found in the module specified.
    */
   protected function installSchema($module, $tables) {
-    // drupal_get_schema_unprocessed() is technically able to install a schema
+    // drupal_get_module_schema() is technically able to install a schema
     // of a non-enabled module, but its ability to load the module's .install
     // file depends on many other factors. To prevent differences in test
     // behavior and non-reproducible test failures, we only allow the schema of
@@ -417,7 +417,7 @@ EOD;
     }
     $tables = (array) $tables;
     foreach ($tables as $table) {
-      $schema = drupal_get_schema_unprocessed($module, $table);
+      $schema = drupal_get_module_schema($module, $table);
       if (empty($schema)) {
         throw new \RuntimeException(format_string("Unknown '@table' table schema in '@module' module.", array(
           '@module' => $module,
@@ -426,10 +426,6 @@ EOD;
       }
       $this->container->get('database')->schema()->createTable($table, $schema);
     }
-    // We need to refresh the schema cache, as any call to drupal_get_schema()
-    // would not know of/return the schema otherwise.
-    // @todo Refactor Schema API to make this obsolete.
-    drupal_get_schema(NULL, TRUE);
     $this->pass(format_string('Installed %module tables: %tables.', array(
       '%tables' => '{' . implode('}, {', $tables) . '}',
       '%module' => $module,

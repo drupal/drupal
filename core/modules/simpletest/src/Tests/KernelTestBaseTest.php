@@ -108,8 +108,6 @@ EOS;
     $this->assertFalse(in_array($module, $list), "{$module}_hook_info() in \Drupal::moduleHandler()->getImplementations() not found.");
 
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
-    $schema = drupal_get_schema($table, TRUE);
-    $this->assertFalse($schema, "'$table' table schema not found.");
 
     // Install the module.
     \Drupal::service('module_installer')->install(array($module));
@@ -122,7 +120,7 @@ EOS;
     $this->assertTrue(in_array($module, $list), "{$module}_hook_info() in \Drupal::moduleHandler()->getImplementations() found.");
 
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
-    $schema = drupal_get_schema($table);
+    $schema = drupal_get_module_schema($module, $table);
     $this->assertTrue($schema, "'$table' table schema found.");
   }
 
@@ -154,9 +152,7 @@ EOS;
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
 
     // Verify that the schema is known to Schema API.
-    $schema = drupal_get_schema();
-    $this->assertTrue($schema[$table], "'$table' table found in schema.");
-    $schema = drupal_get_schema($table);
+    $schema = drupal_get_module_schema($module, $table);
     $this->assertTrue($schema, "'$table' table schema found.");
 
     // Verify that a unknown table from an enabled module throws an error.
@@ -169,7 +165,7 @@ EOS;
       $this->pass('Exception for non-retrievable schema found.');
     }
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
-    $schema = drupal_get_schema($table);
+    $schema = drupal_get_module_schema($module, $table);
     $this->assertFalse($schema, "'$table' table schema not found.");
 
     // Verify that a table from a unknown module cannot be installed.
@@ -183,14 +179,14 @@ EOS;
       $this->pass('Exception for non-retrievable schema found.');
     }
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
-    $schema = drupal_get_schema($table);
-    $this->assertFalse($schema, "'$table' table schema not found.");
+    $schema = drupal_get_module_schema($module, $table);
+    $this->assertTrue($schema, "'$table' table schema found.");
 
     // Verify that the same table can be installed after enabling the module.
     $this->enableModules(array($module));
     $this->installSchema($module, $table);
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
-    $schema = drupal_get_schema($table);
+    $schema = drupal_get_module_schema($module, $table);
     $this->assertTrue($schema, "'$table' table schema found.");
   }
 

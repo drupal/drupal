@@ -552,7 +552,7 @@ function simpletest_clean_environment() {
  */
 function simpletest_clean_database() {
   $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
-  $schema = drupal_get_schema_unprocessed('simpletest');
+  $schema = drupal_get_module_schema('simpletest');
   $count = 0;
   foreach (array_diff_key($tables, $schema) as $table) {
     // Strip the prefix and skip tables without digits following "simpletest",
