@@ -126,7 +126,6 @@ class ViewEditForm extends ViewFormBase {
       'id' => '.views-ajax-body',
       'title' => '.views-ajax-title',
       'popup' => '.views-ajax-popup',
-      'defaultForm' => $view->getDefaultAJAXMessage(),
     ];
 
     $form += array(

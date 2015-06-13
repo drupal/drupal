@@ -198,10 +198,6 @@ class ViewUI implements ViewEntityInterface {
     }
   }
 
-  public static function getDefaultAJAXMessage() {
-    return SafeMarkup::set('<div class="message">' . t("Click on an item to edit that item's details.") . '</div>');
-  }
-
   /**
    * {@inheritdoc}
    */
