@@ -125,26 +125,26 @@ class LinkGenerator implements LinkGeneratorInterface {
     // Allow other modules to modify the structure of the link.
     $this->moduleHandler->alter('link', $variables);
 
-    // Move attributes out of options. generateFromRoute(() doesn't need them.
-    $attributes = new Attribute($variables['options']['attributes']);
+    // Move attributes out of options since generateFromRoute() doesn't need
+    // them. Include a placeholder for the href.
+    $attributes = array('href' => '') + $variables['options']['attributes'];
     unset($variables['options']['attributes']);
     $url->setOptions($variables['options']);
 
-    // The result of the url generator is a plain-text URL. Because we are using
-    // it here in an HTML argument context, we need to encode it properly.
     if (!$collect_cacheability_metadata) {
-      $url = SafeMarkup::checkPlain($url->toString($collect_cacheability_metadata));
+      $url_string = $url->toString($collect_cacheability_metadata);
     }
     else {
       $generated_url = $url->toString($collect_cacheability_metadata);
-      $url = SafeMarkup::checkPlain($generated_url->getGeneratedUrl());
+      $url_string = $generated_url->getGeneratedUrl();
       $generated_link = GeneratedLink::createFromObject($generated_url);
     }
+    // The result of the URL generator is a plain-text URL to use as the href
+    // attribute, and it is escaped by \Drupal\Core\Template\Attribute.
+    $attributes['href'] = $url_string;
 
-    // Make sure the link text is sanitized.
-    $safe_text = SafeMarkup::escape($variables['text']);
+    $result = SafeMarkup::format('<a@attributes>@text</a>', array('@attributes' => new Attribute($attributes), '@text' => $variables['text']));
 
-    $result = SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $safe_text . '</a>');
     return $collect_cacheability_metadata ? $generated_link->setGeneratedLink($result) : $result;
   }
 

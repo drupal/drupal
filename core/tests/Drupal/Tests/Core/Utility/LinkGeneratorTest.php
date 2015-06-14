@@ -14,6 +14,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Utility\LinkGenerator
@@ -181,6 +182,37 @@ class LinkGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * Tests the generate() method with a url containing double quotes.
+   *
+   * @covers ::generate
+   */
+  public function testGenerateUrlWithQuotes() {
+    $this->urlAssembler->expects($this->once())
+      ->method('assemble')
+      ->with('base:example', array('query' => array('foo' => '"bar"', 'zoo' => 'baz')) + $this->defaultOptions)
+      ->will($this->returnValue('/example?foo=%22bar%22&zoo=baz'));
+
+    $path_validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $container_builder = new ContainerBuilder();
+    $container_builder->set('path.validator', $path_validator);
+    \Drupal::setContainer($container_builder);
+
+    $path = '/example?foo="bar"&zoo=baz';
+    $url = Url::fromUserInput($path);
+    $url->setUrlGenerator($this->urlGenerator);
+    $url->setUnroutedUrlAssembler($this->urlAssembler);
+
+    $result = $this->linkGenerator->generate('Drupal', $url);
+
+    $this->assertLink(array(
+      'attributes' => array(
+        'href' => '/example?foo=%22bar%22&zoo=baz',
+      ),
+      'content' => 'Drupal',
+    ), $result, 1);
+  }
+
+  /**
    * Tests the link method with additional attributes.
    *
    * @see \Drupal\Core\Utility\LinkGenerator::generate()
@@ -332,7 +364,9 @@ class LinkGeneratorTest extends UnitTestCase {
       ),
     ), $result);
 
-    // Test that safe HTML is output inside the anchor tag unescaped.
+    // Test that safe HTML is output inside the anchor tag unescaped. The
+    // SafeMarkup::set() call is an intentional unit test for the interaction
+    // between SafeMarkup and the LinkGenerator.
     $url = new Url('test_route_5', array());
     $url->setUrlGenerator($this->urlGenerator);
     $result = $this->linkGenerator->generate(SafeMarkup::set('<em>HTML output</em>'), $url);
@@ -342,6 +376,7 @@ class LinkGeneratorTest extends UnitTestCase {
         'tag' => 'em',
       ),
     ), $result);
+    $this->assertTrue(strpos($result, '<em>HTML output</em>') !== FALSE);
   }
 
   /**

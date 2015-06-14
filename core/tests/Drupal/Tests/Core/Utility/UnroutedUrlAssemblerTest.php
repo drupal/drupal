@@ -125,6 +125,8 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     return [
       ['base:example', [], FALSE, '/example'],
       ['base:example', ['query' => ['foo' => 'bar']], FALSE, '/example?foo=bar'],
+      ['base:example', ['query' => ['foo' => '"bar"']], FALSE, '/example?foo=%22bar%22'],
+      ['base:example', ['query' => ['foo' => '"bar"', 'zoo' => 'baz']], FALSE, '/example?foo=%22bar%22&zoo=baz'],
       ['base:example', ['fragment' => 'example', ], FALSE, '/example#example'],
       ['base:example', [], TRUE, '/subdir/example'],
       ['base:example', ['query' => ['foo' => 'bar']], TRUE, '/subdir/example?foo=bar'],
