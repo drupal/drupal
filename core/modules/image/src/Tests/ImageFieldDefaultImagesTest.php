@@ -298,7 +298,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     $non_image = $this->drupalGetTestFiles('text');
     $this->drupalPostForm(NULL, array('files[settings_default_image_uuid]' => drupal_realpath($non_image[0]->uri)), t("Upload"));
-    $this->assertText(t('The specified file text-0.txt could not be uploaded. Only files with the following extensions are allowed: png gif jpg jpeg.'), 'Non-image file cannot be used as default image.');
+    $this->assertText('The specified file text-0.txt could not be uploaded.');
+    $this->assertText('Only files with the following extensions are allowed: png gif jpg jpeg.');
 
     // Confirm the default image is shown on the node form.
     $file = File::load($default_images['field_new']->id());

@@ -850,18 +850,18 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
 
     // Check for errors.
     if (!empty($errors)) {
-      $message = t('The specified file %name could not be uploaded.', array('%name' => $file->getFilename()));
-      if (count($errors) > 1) {
-        $item_list = array(
+      $message = array(
+        'error' => array(
+          '#markup' => t('The specified file %name could not be uploaded.', array('%name' => $file->getFilename())),
+        ),
+        'item_list' => array(
           '#theme' => 'item_list',
           '#items' => $errors,
-        );
-        $message = SafeMarkup::set($message . drupal_render($item_list));
-      }
-      else {
-        $message = SafeMarkup::set($message . ' ' . SafeMarkup::escape(array_pop($errors)));
-      }
-      drupal_set_message($message, 'error');
+        ),
+      );
+      // @todo Add support for render arrays in drupal_set_message()? See
+      //  https://www.drupal.org/node/2505497.
+      drupal_set_message(\Drupal::service('renderer')->render($message), 'error');
       $files[$i] = FALSE;
       continue;
     }
