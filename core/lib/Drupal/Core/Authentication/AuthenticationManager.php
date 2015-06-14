@@ -229,9 +229,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   /**
    * Returns the sorted array of authentication providers.
    *
-   * @todo Replace with a list of providers sorted during compile time in
-   *   https://www.drupal.org/node/2432585.
-   *
    * @return \Drupal\Core\Authentication\AuthenticationProviderInterface[]
    *   An array of authentication provider objects.
    */
