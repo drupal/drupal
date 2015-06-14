@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * Defines the base class for an attribute type.
  *
@@ -57,7 +55,7 @@ abstract class AttributeValueBase {
   public function render() {
     $value = (string) $this;
     if (isset($this->value) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
-      return SafeMarkup::checkPlain($this->name) . '="' . $value . '"';
+      return htmlspecialchars($this->name, ENT_QUOTES, 'UTF-8') . '="' . $value . '"';
     }
   }
 

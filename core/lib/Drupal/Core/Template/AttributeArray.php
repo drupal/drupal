@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * A class that defines a type of Attribute that can be added to as an array.
  *
@@ -76,7 +74,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   public function __toString() {
     // Filter out any empty values before printing.
     $this->value = array_unique(array_filter($this->value));
-    return SafeMarkup::checkPlain(implode(' ', $this->value));
+    return htmlspecialchars(implode(' ', $this->value), ENT_QUOTES, 'UTF-8');
   }
 
   /**

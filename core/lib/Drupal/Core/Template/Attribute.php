@@ -40,7 +40,7 @@ use Drupal\Component\Utility\SafeMarkup;
  * @endcode
  *
  * The attribute keys and values are automatically sanitized for output with
- * \Drupal\Component\Utility\SafeMarkup::checkPlain().
+ * htmlspecialchars() and the entire attribute string is marked safe for output.
  */
 class Attribute implements \ArrayAccess, \IteratorAggregate {
 
@@ -252,12 +252,16 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
    */
   public function __toString() {
     $return = '';
+    /** @var \Drupal\Core\Template\AttributeValueBase $value */
     foreach ($this->storage as $name => $value) {
       $rendered = $value->render();
       if ($rendered) {
         $return .= ' ' . $rendered;
       }
     }
+    // The implementations of AttributeValueBase::render() call
+    // htmlspecialchars() on the attribute name and value so we are confident
+    // that the return value can be set as safe.
     return SafeMarkup::set($return);
   }
 

@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * A class that defines a type of boolean HTML attribute.
  *
@@ -42,7 +40,7 @@ class AttributeBoolean extends AttributeValueBase {
    * Implements the magic __toString() method.
    */
   public function __toString() {
-    return $this->value === FALSE ? '' : SafeMarkup::checkPlain($this->name);
+    return $this->value === FALSE ? '' : htmlspecialchars($this->name, ENT_QUOTES, 'UTF-8');
   }
 
 }
