@@ -148,7 +148,7 @@ function taxonomy_theme() {
  *   An integer that represents the level of the vocabulary's hierarchy.
  */
 function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $changed_term) {
-  $tree = taxonomy_get_tree($vocabulary->id());
+  $tree = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vocabulary->id());
   $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparison.

@@ -85,6 +85,9 @@ class TermKernelTest extends KernelTestBase {
       $term[$i] = $this->createTerm($vocabulary);
     }
 
+    // Get the taxonomy storage.
+    $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+
     // Set the weight on $term[1] so it appears before $term[5] when fetching
     // the parents for $term[2], in order to test for a regression on
     // \Drupal\taxonomy\TermStorageInterface::loadAllParents().
@@ -113,11 +116,11 @@ class TermKernelTest extends KernelTestBase {
      * ------ term[3] | depth: 3
      */
     // Count $term[1] parents with $max_depth = 1.
-    $tree = taxonomy_get_tree($vocabulary->id(), $term[1]->id(), 1);
+    $tree = $taxonomy_storage->loadTree($vocabulary->id(), $term[1]->id(), 1);
     $this->assertEqual(1, count($tree), 'We have one parent with depth 1.');
 
     // Count all vocabulary tree elements.
-    $tree = taxonomy_get_tree($vocabulary->id());
+    $tree = $taxonomy_storage->loadTree($vocabulary->id());
     $this->assertEqual(8, count($tree), 'We have all vocabulary tree elements.');
 
     // Count elements in every tree depth.

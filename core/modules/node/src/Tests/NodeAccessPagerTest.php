@@ -78,7 +78,7 @@ class NodeAccessPagerTest extends WebTestBase {
     $this->assertTrue($vid, 'Forum navigation vocabulary ID is set.');
 
     // Look up the general discussion term.
-    $tree = taxonomy_get_tree($vid, 0, 1);
+    $tree = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vid, 0, 1);
     $tid = reset($tree)->tid;
     $this->assertTrue($tid, 'General discussion term is found in the forum vocabulary.');
 

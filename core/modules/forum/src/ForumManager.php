@@ -405,7 +405,7 @@ class ForumManager implements ForumManagerInterface {
       return $this->forumChildren[$tid];
     }
     $forums = array();
-    $_forums = taxonomy_get_tree($vid, $tid, NULL, TRUE);
+    $_forums = $this->entityManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
     foreach ($_forums as $forum) {
       // Merge in the topic and post counters.
       if (($count = $this->getForumStatistics($forum->id()))) {

@@ -390,9 +390,7 @@ class OverviewTerms extends FormBase {
     $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
     $changed_terms = array();
-    // @todo taxonomy_get_tree needs to be converted to a service and injected.
-    //   Will be fixed in https://www.drupal.org/node/1976298.
-    $tree = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE);
+    $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, TRUE);
 
     if (empty($tree)) {
       return;

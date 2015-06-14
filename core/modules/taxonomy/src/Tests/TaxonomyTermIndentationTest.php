@@ -43,6 +43,9 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     $term2 = $this->createTerm($this->vocabulary);
     $term3 = $this->createTerm($this->vocabulary);
 
+    // Get the taxonomy storage.
+    $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+
     // Indent the second term under the first one.
     $edit = array(
       'terms[tid:' . $term2->id() . ':0][term][tid]' => 2,
@@ -56,7 +59,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     $this->assertPattern('|<div class="js-indentation indentation">&nbsp;</div>|');
 
     // Check explicitly that term 2's parent is term 1.
-    $parents = taxonomy_term_load_parents($term2->id());
+    $parents = $taxonomy_storage->loadParents($term2->id());
     $this->assertEqual(key($parents), 1, 'Term 1 is the term 2\'s parent');
 
     // Move the second term back out to the root level.
@@ -73,7 +76,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
 
     // Check explicitly that term 2 has no parents.
     \Drupal::entityManager()->getStorage('taxonomy_term')->resetCache();
-    $parents = taxonomy_term_load_parents($term2->id());
+    $parents = $taxonomy_storage->loadParents($term2->id());
     $this->assertTrue(empty($parents), 'Term 2 has no parents now');
   }
 

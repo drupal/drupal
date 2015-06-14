@@ -177,7 +177,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
     else {
       if (!empty($this->options['hierarchy']) && $this->options['limit']) {
-        $tree = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE);
+        $tree = $this->termStorage->loadTree($vocabulary->id(), 0, NULL, TRUE);
         $options = array();
 
         if ($tree) {

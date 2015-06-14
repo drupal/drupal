@@ -102,7 +102,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       }
       else {
         $parents = array();
-        foreach (taxonomy_term_load_parents($tid) as $parent) {
+        foreach (\Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid) as $parent) {
           $parents[] = (int) $parent->id();
         }
         $this->assertIdentical($parents, $values['parent']);

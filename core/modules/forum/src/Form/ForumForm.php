@@ -128,8 +128,8 @@ class ForumForm extends TermForm {
    *   A select form element.
    */
   protected function forumParentSelect($tid, $title) {
-    // @todo Inject a taxonomy service when one exists.
-    $parents = taxonomy_term_load_parents($tid);
+    $taxonomy_storage = $this->entityManager->getStorage('taxonomy_term');
+    $parents = $taxonomy_storage->loadParents($tid);
     if ($parents) {
       $parent = array_shift($parents);
       $parent = $parent->id();
@@ -139,8 +139,7 @@ class ForumForm extends TermForm {
     }
 
     $vid = $this->config('forum.settings')->get('vocabulary');
-    // @todo Inject a taxonomy service when one exists.
-    $children = taxonomy_get_tree($vid, $tid, NULL, TRUE);
+    $children = $taxonomy_storage->loadTree($vid, $tid, NULL, TRUE);
 
     // A term can't be the child of itself, nor of its children.
     foreach ($children as $child) {
@@ -148,8 +147,7 @@ class ForumForm extends TermForm {
     }
     $exclude[] = $tid;
 
-    // @todo Inject a taxonomy service when one exists.
-    $tree = taxonomy_get_tree($vid, 0, NULL, TRUE);
+    $tree = $taxonomy_storage->loadTree($vid, 0, NULL, TRUE);
     $options[0] = '<' . $this->t('root') . '>';
     if ($tree) {
       foreach ($tree as $term) {
