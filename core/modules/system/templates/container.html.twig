@@ -17,4 +17,10 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes.addClass(has_parent ? 'form-wrapper') }}>{{ children }}</div>
+{%
+  set classes = [
+    has_parent ? 'js-form-wrapper',
+    has_parent ? 'form-wrapper',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>{{ children }}</div>

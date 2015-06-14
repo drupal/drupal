@@ -596,7 +596,7 @@
     if (e.trigger) {
       $(e.target)
         .prop('disabled', e.value)
-        .closest('.form-item, .js-form-submit, .form-wrapper').toggleClass('form-disabled', e.value)
+        .closest('.form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value)
         .find('select, input, textarea').prop('disabled', e.value);
 
       // Note: WebKit nightlies don't reflect that change correctly.
@@ -607,21 +607,21 @@
   $(document).on('state:required', function (e) {
     if (e.trigger) {
       if (e.value) {
-        var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.form-item, .form-wrapper').find('label');
+        var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.form-item, .js-form-wrapper').find('label');
         // Avoids duplicate required markers on initialization.
         if (!$label.hasClass('form-required').length) {
           $label.addClass('form-required');
         }
       }
       else {
-        $(e.target).removeAttr('required aria-required').closest('.form-item, .form-wrapper').find('label.form-required').removeClass('form-required');
+        $(e.target).removeAttr('required aria-required').closest('.form-item, .js-form-wrapper').find('label.form-required').removeClass('form-required');
       }
     }
   });
 
   $(document).on('state:visible', function (e) {
     if (e.trigger) {
-      $(e.target).closest('.form-item, .js-form-submit, .form-wrapper').toggle(e.value);
+      $(e.target).closest('.form-item, .js-form-submit, .js-form-wrapper').toggle(e.value);
     }
   });
 

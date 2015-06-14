@@ -71,7 +71,7 @@ class ViewElementTest extends ViewTestBase {
     // Test a form.
     $this->drupalGet('views_test_data_element_form');
 
-    $xpath = $this->xpath('//div[@class="views-element-container form-wrapper"]');
+    $xpath = $this->xpath('//div[@class="views-element-container js-form-wrapper form-wrapper"]');
     $this->assertTrue($xpath, 'The view container has been found on the form.');
 
     $xpath = $this->xpath('//div[@class="view-content"]');
@@ -138,7 +138,7 @@ class ViewElementTest extends ViewTestBase {
     // Test a form.
     $this->drupalGet('views_test_data_element_embed_form');
 
-    $xpath = $this->xpath('//div[@class="views-element-container form-wrapper"]');
+    $xpath = $this->xpath('//div[@class="views-element-container js-form-wrapper form-wrapper"]');
     $this->assertTrue($xpath, 'The view container has been found on the form.');
 
     $xpath = $this->xpath('//div[@class="view-content"]');

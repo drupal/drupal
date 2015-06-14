@@ -20,7 +20,14 @@
  * @see template_preprocess_fieldset()
  */
 #}
-<fieldset{{ attributes.addClass('form-item', 'form-wrapper') }}>
+{%
+  set classes = [
+    'form-item',
+    'js-form-wrapper',
+    'form-wrapper',
+  ]
+%}
+<fieldset{{ attributes.addClass(classes) }}>
   {%
     set legend_span_classes = [
       'fieldset-legend',

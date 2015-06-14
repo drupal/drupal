@@ -54,9 +54,9 @@ class Details extends RenderElement {
   public static function preRenderDetails($element) {
     Element::setAttributes($element, array('id'));
 
-    // The .form-wrapper class is required for #states to treat details like
+    // The .js-form-wrapper class is required for #states to treat details like
     // containers.
-    static::setAttributes($element, array('form-wrapper'));
+    static::setAttributes($element, array('js-form-wrapper', 'form-wrapper'));
 
     // Collapsible details.
     $element['#attached']['library'][] = 'core/drupal.collapse';
