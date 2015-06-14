@@ -73,7 +73,7 @@ abstract class MigrateTestCase extends UnitTestCase {
       $connection = new Connection($pdo, $connection_options);
     }
     else {
-      throw new \Exception('pdo_sqlite extension is required.');
+      $this->markTestSkipped('The pdo_sqlite extension is not available.');
     }
 
     // Initialize the DIC with a fake module handler for alterable queries.
