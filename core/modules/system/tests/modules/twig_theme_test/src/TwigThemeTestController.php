@@ -31,6 +31,16 @@ class TwigThemeTestController {
   }
 
   /**
+   * Controller for testing the twig placeholder filter outside of {% trans %}
+   */
+  public function placeholderOutsideTransRender() {
+    return [
+      '#theme' => 'twig_theme_test_placeholder_outside_trans',
+      '#var' => '<script>alert(123);</script>',
+    ];
+  }
+
+  /**
    * Renders for testing url_generator functions in a Twig template.
    */
   public function urlGeneratorRender() {

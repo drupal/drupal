@@ -12,6 +12,13 @@ twig_theme_test.trans:
   requirements:
     _access: 'TRUE'
 
+twig_theme_test.placeholder_outside_trans:
+  path: '/twig-theme-test/placeholder_outside_trans'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::placeholderOutsideTransRender'
+  requirements:
+    _access: 'TRUE'
+
 twig_theme_test_url_generator:
   path: '/twig-theme-test/url-generator'
   defaults:

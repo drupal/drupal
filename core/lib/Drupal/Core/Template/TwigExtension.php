@@ -132,7 +132,7 @@ class TwigExtension extends \Twig_Extension {
       // be used in "trans" tags.
       // @see TwigNodeTrans::compileString()
       new \Twig_SimpleFilter('passthrough', 'twig_raw_filter', array('is_safe' => array('html'))),
-      new \Twig_SimpleFilter('placeholder', 'twig_raw_filter', array('is_safe' => array('html'))),
+      new \Twig_SimpleFilter('placeholder', [$this, 'escapePlaceholder'], array('is_safe' => array('html'), 'needs_environment' => TRUE)),
 
       // Replace twig's escape filter with our own.
       new \Twig_SimpleFilter('drupal_escape', [$this, 'escapeFilter'], array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
@@ -348,6 +348,21 @@ class TwigExtension extends \Twig_Extension {
     // bubbleable metadata on the render stack.
     $template_attached = ['#attached' => ['library' => [$library]]];
     $this->renderer->render($template_attached);
+  }
+
+  /**
+   * Provides a placeholder wrapper around ::escapeFilter.
+   *
+   * @param \Twig_Environment $env
+   *   A Twig_Environment instance.
+   * @param mixed $string
+   *   The value to be escaped.
+   *
+   * @return string|null
+   *   The escaped, rendered output, or NULL if there is no valid output.
+   */
+  public function escapePlaceholder($env, $string) {
+    return '<em class="placeholder">' . $this->escapeFilter($env, $string) . '</em>';
   }
 
   /**

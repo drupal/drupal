@@ -7,7 +7,9 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
@@ -173,6 +175,20 @@ class TwigTransTest extends WebTestBase {
 
     // Ensure debug output is printed.
     $this->checkForDebugMarkup(TRUE);
+  }
+
+  /**
+   * Tests rendering a placeholder outside of translate.
+   *
+   * This test ensures that the security problem described in
+   * https://www.drupal.org/node/2495179 doesn't exist.
+   */
+  public function testPlaceholderOutsideOfTrans() {
+    $this->drupalGet(Url::fromRoute('twig_theme_test.placeholder_outside_trans'));
+
+    $script = '<script>alert(123);</script>';
+    $this->assertNoRaw($script);
+    $this->assertEqual(2, substr_count($this->getRawContent(), '<em class="placeholder">' . SafeMarkup::checkPlain($script) . '</em>'));
   }
 
   /**
