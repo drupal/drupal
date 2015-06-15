@@ -71,7 +71,15 @@ class Connection extends DatabaseConnection {
         // Only attach the database once.
         if (!isset($this->attachedDatabases[$prefix])) {
           $this->attachedDatabases[$prefix] = $prefix;
-          $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix));
+          if ($connection_options['database'] === ':memory:') {
+            // In memory database use ':memory:' as database name. According to
+            // http://www.sqlite.org/inmemorydb.html it will open a unique
+            // database so attaching it twice is not a problem.
+            $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'], ':prefix' => $prefix));
+          }
+          else {
+            $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix));
+          }
         }
 
         // Add a ., so queries become prefix.table, which is proper syntax for
