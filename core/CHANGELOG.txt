@@ -587,7 +587,7 @@ Drupal 4.7.9, 2007-12-05
 - fixed a security issue (SQL injection), see SA-2007-031
 
 Drupal 4.7.8, 2007-10-17
-----------------------
+------------------------
 - fixed a security issue (HTTP response splitting), see SA-2007-024
 - fixed a security issue (Cross site scripting via uploads), see SA-2007-026
 - fixed a security issue (API handling of unpublished comment), see SA-2007-030
@@ -700,7 +700,7 @@ Drupal 4.6.11, 2007-01-05
 - Fixed security issue (DoS), see SA-2007-002
 
 Drupal 4.6.10, 2006-10-18
-------------------------
+-------------------------
 - Fixed security issue (XSS), see SA-2006-024
 - Fixed security issue (CSRF), see SA-2006-025
 - Fixed security issue (Form action attribute injection), see SA-2006-026
