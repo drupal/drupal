@@ -27,7 +27,7 @@ class ForumIndexTest extends WebTestBase {
     parent::setUp();
 
     // Create a test user.
-    $web_user = $this->drupalCreateUser(array('create forum content', 'edit own forum content', 'edit any forum content', 'administer nodes'));
+    $web_user = $this->drupalCreateUser(['create forum content', 'edit own forum content', 'edit any forum content', 'administer nodes', 'administer forums']);
     $this->drupalLogin($web_user);
   }
 
@@ -55,9 +55,25 @@ class ForumIndexTest extends WebTestBase {
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue(!empty($node), 'New forum node found in database.');
 
+    // Create a child forum.
+    $edit = array(
+      'name[0][value]' => $this->randomMachineName(20),
+      'description[0][value]' => $this->randomMachineName(200),
+      'parent[0]' => $tid,
+    );
+    $this->drupalPostForm('admin/structure/forum/add/forum', $edit, t('Save'));
+    $tid_child = $tid + 1;
+
     // Verify that the node appears on the index.
     $this->drupalGet('forum/' . $tid);
     $this->assertText($title, 'Published forum topic appears on index.');
+    $this->assertCacheTag('node_list');
+    $this->assertCacheTag('config:node.type.forum');
+    $this->assertCacheTag('comment_list');
+    $this->assertCacheTag('node:' . $node->id());
+    $this->assertCacheTag('taxonomy_term:' . $tid);
+    $this->assertCacheTag('taxonomy_term:' . $tid_child);
+
 
     // Unpublish the node.
     $this->drupalPostForm('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
