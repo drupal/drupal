@@ -309,69 +309,6 @@ function taxonomy_vocabulary_get_names() {
 }
 
 /**
- * Finds all parents of a given term ID.
- *
- * @param $tid
- *   A taxonomy term ID.
- *
- * @return
- *   An array of term objects which are the parents of the term $tid, or an
- *   empty array if parents are not found.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\taxonomy\TermStorageController::loadParents()
- */
-function taxonomy_term_load_parents($tid) {
-  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid);
-}
-
-/**
- * Finds all children of a term ID.
- *
- * @param $tid
- *   A taxonomy term ID.
- *
- * @return
- *   An array of term objects that are the children of the term $tid, or an
- *   empty array when no children exist.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\taxonomy\TermStorageController::loadChildren()
- */
-function taxonomy_term_load_children($tid) {
-  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadChildren($tid);
-}
-
-/**
- * Create a hierarchical representation of a vocabulary.
- *
- * @param $vid
- *   The vocabulary ID to generate the tree for.
- * @param $parent
- *   The term ID under which to generate the tree. If 0, generate the tree
- *   for the entire vocabulary.
- * @param $max_depth
- *   The number of levels of the tree to return. Leave NULL to return all levels.
- * @param $load_entities
- *   If TRUE, a full entity load will occur on the term objects. Otherwise they
- *   are partial objects queried directly from the {taxonomy_term_field_data}
- *   table to save execution time and memory consumption when listing large
- *   numbers of terms. Defaults to FALSE.
- *
- * @return
- *   An array of all term objects in the tree. Each term object is extended
- *   to have "depth" and "parents" attributes in addition to its normal ones.
- *   Results are statically cached. Term objects will be partial or complete
- *   depending on the $load_entities parameter.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\taxonomy\TermStorageController::loadTree()
- */
-function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE) {
-  return \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vid, $parent, $max_depth, $load_entities);
-}
-
-/**
  * Try to map a string to an existing term, as for glossary use.
  *
  * Provides a case-insensitive and trimmed mapping, to maximize the
