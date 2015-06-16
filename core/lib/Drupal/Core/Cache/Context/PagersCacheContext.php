@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\PagersCacheContext.
+ * Contains \Drupal\Core\Cache\Context\PagersCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines a cache context for "per page in a pager" caching.

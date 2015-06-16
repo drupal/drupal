@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\CookiesCacheContext.
+ * Contains \Drupal\Core\Cache\Context\CookiesCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the CookiesCacheContext service, for "per cookie" caching.

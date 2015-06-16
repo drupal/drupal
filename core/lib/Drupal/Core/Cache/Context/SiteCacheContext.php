@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\SiteCacheContext.
+ * Contains \Drupal\Core\Cache\Context\SiteCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the SiteCacheContext service, for "per site" caching.

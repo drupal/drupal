@@ -57,7 +57,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $this->user = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')
       ->getMock();
 
-    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
     $container = new ContainerBuilder();

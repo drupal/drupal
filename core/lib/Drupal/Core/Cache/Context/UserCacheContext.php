@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\UserCacheContext.
+ * Contains \Drupal\Core\Cache\Context\UserCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 use Drupal\Core\Session\AccountInterface;
 

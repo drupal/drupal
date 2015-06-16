@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\CacheContextsManager.
+ * Contains \Drupal\Core\Cache\Context\CacheContextsManager.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,9 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Note that this maps exactly to HTTP's Vary header semantics:
  * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.44
  *
- * @see \Drupal\Core\Cache\CacheContextInterface
- * @see \Drupal\Core\Cache\CalculatedCacheContextInterface
- * @see \Drupal\Core\Cache\CacheContextsPass
+ * @see \Drupal\Core\Cache\Context\CacheContextInterface
+ * @see \Drupal\Core\Cache\Context\CalculatedCacheContextInterface
+ * @see \Drupal\Core\Cache\Context\CacheContextsPass
  */
 class CacheContextsManager {
 
@@ -188,7 +188,7 @@ class CacheContextsManager {
    *   The context ID, which together with the service ID prefix allows the
    *   corresponding cache context service to be retrieved.
    *
-   * @return \Drupal\Core\Cache\CacheContextInterface
+   * @return \Drupal\Core\Cache\Context\CacheContextInterface
    *   The requested cache context service.
    */
   protected function getService($context_id) {
@@ -231,7 +231,7 @@ class CacheContextsManager {
    *
    * @throws \LogicException
    *
-   * @see \Drupal\Core\Cache\CacheContextsManager::parseTokens()
+   * @see \Drupal\Core\Cache\Context\CacheContextsManager::parseTokens()
    */
   public function validateTokens(array $context_tokens = []) {
     if (empty($context_tokens)) {

@@ -7,7 +7,7 @@
 
 namespace Drupal\book\Cache;
 
-use Drupal\Core\Cache\CacheContextInterface;
+use Drupal\Core\Cache\Context\CacheContextInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RequestStack;
 

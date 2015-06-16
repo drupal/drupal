@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\HeadersCacheContext.
+ * Contains \Drupal\Core\Cache\Context\HeadersCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the HeadersCacheContext service, for "per header" caching.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\LanguagesCacheContext.
+ * Contains \Drupal\Core\Cache\Context\LanguagesCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 use Drupal\Core\Language\LanguageManagerInterface;
 

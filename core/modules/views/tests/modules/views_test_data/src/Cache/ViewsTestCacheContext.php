@@ -7,7 +7,7 @@
 
 namespace Drupal\views_test_data\Cache;
 
-use Drupal\Core\Cache\CacheContextInterface;
+use Drupal\Core\Cache\Context\CacheContextInterface;
 
 /**
  * Test cache context which uses a dynamic context coming from state.

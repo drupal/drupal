@@ -5,17 +5,17 @@
  * Contains \Drupal\Tests\Core\Cache\CacheContextsTest.
  */
 
-namespace Drupal\Tests\Core\Cache;
+namespace Drupal\Tests\Core\Cache\Context;
 
-use Drupal\Core\Cache\CacheContextsManager;
-use Drupal\Core\Cache\CacheContextInterface;
-use Drupal\Core\Cache\CalculatedCacheContextInterface;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\Cache\Context\CacheContextInterface;
+use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\CacheContextsManager
+ * @coversDefaultClass \Drupal\Core\Cache\Context\CacheContextsManager
  * @group Cache
  */
 class CacheContextsManagerTest extends UnitTestCase {

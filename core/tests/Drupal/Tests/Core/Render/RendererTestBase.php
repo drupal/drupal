@@ -48,7 +48,7 @@ class RendererTestBase extends UnitTestCase {
   protected $cacheFactory;
 
   /**
-   * @var \Drupal\Core\Cache\CacheContextsManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $cacheContexts;
 
@@ -101,7 +101,7 @@ class RendererTestBase extends UnitTestCase {
     $this->elementInfo = $this->getMock('Drupal\Core\Render\ElementInfoManagerInterface');
     $this->requestStack = new RequestStack();
     $this->cacheFactory = $this->getMock('Drupal\Core\Cache\CacheFactoryInterface');
-    $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
     $this->cacheContextsManager->expects($this->any())

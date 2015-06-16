@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\UrlCacheContext.
+ * Contains \Drupal\Core\Cache\Context\UrlCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the UrlCacheContext service, for "per page" caching.

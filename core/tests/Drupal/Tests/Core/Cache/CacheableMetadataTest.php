@@ -32,7 +32,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
    */
   public function testMerge(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected) {
-    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
     $container = new ContainerBuilder();

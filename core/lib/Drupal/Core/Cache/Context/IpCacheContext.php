@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\IpCacheContext.
+ * Contains \Drupal\Core\Cache\Context\IpCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the IpCacheContext service, for "per IP address" caching.

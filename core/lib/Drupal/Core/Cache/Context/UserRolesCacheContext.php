@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\UserRolesCacheContext.
+ * Contains \Drupal\Core\Cache\Context\UserRolesCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the UserRolesCacheContext service, for "per role" caching.

@@ -7,8 +7,8 @@
 
 namespace Drupal\node\Cache;
 
-use Drupal\Core\Cache\CalculatedCacheContextInterface;
-use Drupal\Core\Cache\UserCacheContext;
+use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
+use Drupal\Core\Cache\Context\UserCacheContext;
 
 /**
  * Defines the node access view cache context service.

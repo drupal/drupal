@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\CacheContextInterface.
+ * Contains \Drupal\Core\Cache\Context\CacheContextInterface.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Provides an interface for defining a cache context service.

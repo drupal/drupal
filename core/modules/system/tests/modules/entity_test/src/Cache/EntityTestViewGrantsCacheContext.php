@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_test\Cache;
 
-use Drupal\Core\Cache\CacheContextInterface;
+use Drupal\Core\Cache\Context\CacheContextInterface;
 
 /**
  * Defines the entity_test view grants cache context service.

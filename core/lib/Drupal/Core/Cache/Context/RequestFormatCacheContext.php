@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\RequestFormatCacheContext.
+ * Contains \Drupal\Core\Cache\Context\RequestFormatCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the RequestFormatCacheContext service, for "per format" caching.

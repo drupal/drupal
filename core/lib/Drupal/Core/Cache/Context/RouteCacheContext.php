@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\RouteCacheContext.
+ * Contains \Drupal\Core\Cache\Context\RouteCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 use Drupal\Core\Routing\RouteMatchInterface;
 

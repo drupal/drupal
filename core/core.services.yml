@@ -10,59 +10,59 @@ parameters:
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
-    class: Drupal\Core\Cache\IpCacheContext
+    class: Drupal\Core\Cache\Context\IpCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.headers:
-    class: Drupal\Core\Cache\HeadersCacheContext
+    class: Drupal\Core\Cache\Context\HeadersCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.cookies:
-    class: Drupal\Core\Cache\CookiesCacheContext
+    class: Drupal\Core\Cache\Context\CookiesCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.request_format:
-    class: Drupal\Core\Cache\RequestFormatCacheContext
+    class: Drupal\Core\Cache\Context\RequestFormatCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.url:
-    class: Drupal\Core\Cache\UrlCacheContext
+    class: Drupal\Core\Cache\Context\UrlCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.url.site:
-    class: Drupal\Core\Cache\SiteCacheContext
+    class: Drupal\Core\Cache\Context\SiteCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.url.query_args:
-    class: Drupal\Core\Cache\QueryArgsCacheContext
+    class: Drupal\Core\Cache\Context\QueryArgsCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
   cache_context.url.query_args.pagers:
-    class: Drupal\Core\Cache\PagersCacheContext
+    class: Drupal\Core\Cache\Context\PagersCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
 
   # Complex cache contexts, that depend on the routing system.
   cache_context.route:
-    class: Drupal\Core\Cache\RouteCacheContext
+    class: Drupal\Core\Cache\Context\RouteCacheContext
     arguments: ['@current_route_match']
     tags:
       - { name: cache.context }
   cache_context.route.name:
-    class: Drupal\Core\Cache\RouteNameCacheContext
+    class: Drupal\Core\Cache\Context\RouteNameCacheContext
     arguments: ['@current_route_match']
     tags:
       - { name: cache.context }
   cache_context.route.menu_active_trails:
-    class: Drupal\Core\Cache\MenuActiveTrailsCacheContext
+    class: Drupal\Core\Cache\Context\MenuActiveTrailsCacheContext
     calls:
       - [setContainer, ['@service_container']]
     tags:
@@ -72,37 +72,37 @@ services:
   # multiple aspects of the request context plus additional logic. Hence they
   # are their own roots.
   cache_context.user:
-    class: Drupal\Core\Cache\UserCacheContext
+    class: Drupal\Core\Cache\Context\UserCacheContext
     arguments: ['@current_user']
     tags:
       - { name: cache.context}
   cache_context.user.permissions:
-    class: Drupal\Core\Cache\AccountPermissionsCacheContext
+    class: Drupal\Core\Cache\Context\AccountPermissionsCacheContext
     arguments: ['@current_user', '@user_permissions_hash_generator']
     tags:
       - { name: cache.context}
   cache_context.user.roles:
-    class: Drupal\Core\Cache\UserRolesCacheContext
+    class: Drupal\Core\Cache\Context\UserRolesCacheContext
     arguments: ['@current_user']
     tags:
       - { name: cache.context}
   cache_context.user.is_super_user:
-    class: Drupal\Core\Cache\IsSuperUserCacheContext
+    class: Drupal\Core\Cache\Context\IsSuperUserCacheContext
     arguments: ['@current_user']
     tags:
       - { name: cache.context}
   cache_context.languages:
-    class: Drupal\Core\Cache\LanguagesCacheContext
+    class: Drupal\Core\Cache\Context\LanguagesCacheContext
     arguments: ['@language_manager']
     tags:
       - { name: cache.context}
   cache_context.theme:
-    class: Drupal\Core\Cache\ThemeCacheContext
+    class: Drupal\Core\Cache\Context\ThemeCacheContext
     arguments: ['@theme.manager']
     tags:
       - { name: cache.context}
   cache_context.timezone:
-    class: Drupal\Core\Cache\TimeZoneCacheContext
+    class: Drupal\Core\Cache\Context\TimeZoneCacheContext
     tags:
       - { name: cache.context}
 
@@ -112,7 +112,7 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   cache_contexts_manager:
-    class: Drupal\Core\Cache\CacheContextsManager
+    class: Drupal\Core\Cache\Context\CacheContextsManager
     arguments: ['@service_container', '%cache_contexts%' ]
   cache_tags.invalidator:
     parent: container.trait

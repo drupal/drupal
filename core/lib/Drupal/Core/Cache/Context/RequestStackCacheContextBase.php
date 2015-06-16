@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\RequestStackCacheContextBase.
+ * Contains \Drupal\Core\Cache\Context\RequestStackCacheContextBase.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 

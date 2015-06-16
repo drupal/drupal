@@ -9,7 +9,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Cache\CacheableResponseInterface;
-use Drupal\Core\Cache\CacheContextsManager;
+use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -61,7 +61,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * The cache contexts manager service.
    *
-   * @var \Drupal\Core\Cache\CacheContextsManager
+   * @var \Drupal\Core\Cache\Context\CacheContextsManager
    */
   protected $cacheContexts;
 
@@ -76,7 +76,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   A policy rule determining the cacheability of a request.
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of a response.
-   * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
    *   The cache contexts manager service.
    */
   public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager) {

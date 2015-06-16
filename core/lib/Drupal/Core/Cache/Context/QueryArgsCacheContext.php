@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\QueryArgsCacheContext.
+ * Contains \Drupal\Core\Cache\Context\QueryArgsCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the QueryArgsCacheContext service, for "per query args" caching.

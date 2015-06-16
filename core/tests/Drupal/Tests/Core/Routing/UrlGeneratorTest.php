@@ -59,7 +59,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
     $container = new ContainerBuilder();

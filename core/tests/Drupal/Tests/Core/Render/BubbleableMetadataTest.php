@@ -53,7 +53,7 @@ class BubbleableMetadataTest extends UnitTestCase {
         ->getMock();
     }
 
-    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
     $container = new ContainerBuilder();

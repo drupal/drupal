@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\RouteNameCacheContext.
+ * Contains \Drupal\Core\Cache\Context\RouteNameCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the RouteCacheContext service, for "per route name" caching.

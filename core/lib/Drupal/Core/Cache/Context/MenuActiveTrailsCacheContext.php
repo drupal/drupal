@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\MenuActiveTrailsCacheContext.
+ * Contains \Drupal\Core\Cache\Context\MenuActiveTrailsCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 

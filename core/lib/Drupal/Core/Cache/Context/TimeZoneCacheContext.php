@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\TimeZoneCacheContext.
+ * Contains \Drupal\Core\Cache\Context\TimeZoneCacheContext.
  */
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the TimeZoneCacheContext service, for "per time zone" caching.
