@@ -186,15 +186,6 @@ class AccountSettingsForm extends ConfigFormBase {
       }
     }
 
-    // Account settings.
-    $filter_exists = $this->moduleHandler->moduleExists('filter');
-    $form['personalization'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Personalization'),
-      '#open' => TRUE,
-      '#access' => $filter_exists,
-    );
-
     // Default notifications address.
     $form['mail_notification_address'] = array(
       '#type' => 'email',
