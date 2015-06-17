@@ -241,10 +241,34 @@ function openid_complete($response = array()) {
         if (openid_verify_assertion($service, $response)) {
           // If the returned claimed_id is different from the session claimed_id,
           // then we need to do discovery and make sure the op_endpoint matches.
-          if ($service['version'] == 2 && $response['openid.claimed_id'] != $claimed_id) {
-            $disco = openid_discovery($response['openid.claimed_id']);
-            if ($disco[0]['uri'] != $service['uri']) {
-              return $response;
+          if ($service['version'] == 2) {
+            // Returned Claimed Identifier could contain unique fragment
+            // identifier to allow identifier recycling so we need to preserve
+            // it in the response.
+            $response_claimed_id = _openid_normalize($response['openid.claimed_id']);
+
+            if ($response_claimed_id != $claimed_id || $response_claimed_id != $response['openid.identity']) {
+              $disco = openid_discovery($response['openid.claimed_id']);
+
+              if ($disco[0]['uri'] != $service['uri']) {
+                return $response;
+              }
+
+              if (!empty($disco[0]['localid'])) {
+                $identity = $disco[0]['localid'];
+              }
+              else if (!empty($disco[0]['delegate'])) {
+                $identity = $disco[0]['delegate'];
+              }
+              else {
+                $identity = FALSE;
+              }
+
+              // The OP-Local Identifier (if different than the Claimed
+              // Identifier) must be present in the XRDS document.
+              if ($response_claimed_id != $response['openid.identity'] && (!$identity || $identity != $response['openid.identity'])) {
+                return $response;
+              }
             }
           }
           else {
