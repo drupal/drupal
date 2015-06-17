@@ -1,4 +1,8 @@
 
+Drupal 6.36, 2015-06-17
+-----------------------
+- Fixed security issues (OpenID impersonation). See SA-CORE-2015-002.
+
 Drupal 6.35, 2015-03-18
 ----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2015-001.
