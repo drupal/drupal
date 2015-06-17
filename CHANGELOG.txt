@@ -1,4 +1,8 @@
 
+Drupal 7.38, 2015-06-17
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2015-002.
+
 Drupal 7.37, 2015-05-07
 -----------------------
 - Fixed a regression in Drupal 7.36 which caused certain kinds of content types

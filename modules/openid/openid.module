@@ -365,14 +365,20 @@ function openid_complete($response = array()) {
             // to the OpenID Provider, we need to do discovery on the returned
             // identififer to make sure that the provider is authorized to
             // respond on behalf of this.
-            if ($response_claimed_id != $claimed_id) {
+            if ($response_claimed_id != $claimed_id || $response_claimed_id != $response['openid.identity']) {
               $discovery = openid_discovery($response['openid.claimed_id']);
+              $uris = array();
               if ($discovery && !empty($discovery['services'])) {
-                $uris = array();
                 foreach ($discovery['services'] as $discovered_service) {
-                  if (in_array('http://specs.openid.net/auth/2.0/server', $discovered_service['types']) || in_array('http://specs.openid.net/auth/2.0/signon', $discovered_service['types'])) {
-                    $uris[] = $discovered_service['uri'];
+                  if (!in_array('http://specs.openid.net/auth/2.0/server', $discovered_service['types']) && !in_array('http://specs.openid.net/auth/2.0/signon', $discovered_service['types'])) {
+                    continue;
                   }
+                  // The OP-Local Identifier (if different than the Claimed
+                  // Identifier) must be present in the XRDS document.
+                  if ($response_claimed_id != $response['openid.identity'] && (!isset($discovered_service['identity']) || $discovered_service['identity'] != $response['openid.identity'])) {
+                    continue;
+                  }
+                  $uris[] = $discovered_service['uri'];
                 }
               }
               if (!in_array($service['uri'], $uris)) {

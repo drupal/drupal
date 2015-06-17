@@ -150,6 +150,7 @@ function openid_test_yadis_xrds() {
           <Service priority="20">
             <Type>http://specs.openid.net/auth/2.0/server</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
+            <LocalID>' . url('openid-test/yadis/xrds/server', array('absolute' => TRUE)) . '</LocalID>
           </Service>';
     }
     elseif (arg(3) == 'delegate') {
