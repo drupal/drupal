@@ -445,6 +445,19 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
     $this->assertUrl($url, array(), 'Stayed on the same page.');
   }
+
+  /**
+   * Tests that external URLs in the 'destinations' query parameter are blocked.
+   */
+  function testExternalDestinations() {
+    $path = 'admin/structure/types/manage/article/fields/field_tags/field-settings';
+    $options = array(
+      'query' => array('destinations' => array('http://example.com')),
+    );
+    $this->drupalPost($path, NULL, t('Save field settings'), $options);
+
+    $this->assertUrl('admin/structure/types/manage/article/fields', array(), 'Stayed on the same site.');
+  }
 }
 
 /**

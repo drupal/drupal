@@ -2105,6 +2105,10 @@ function field_ui_next_destination($entity_type, $bundle) {
   $destinations = !empty($_REQUEST['destinations']) ? $_REQUEST['destinations'] : array();
   if (!empty($destinations)) {
     unset($_REQUEST['destinations']);
+  }
+  // Remove any external URLs.
+  $destinations = array_diff($destinations, array_filter($destinations, 'url_is_external'));
+  if ($destinations) {
     return field_ui_get_destinations($destinations);
   }
   $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);

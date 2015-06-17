@@ -94,7 +94,7 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE, 'fragment' => $this->randomName()));
     // Tell openid_test.module to respond with this identifier. If the fragment
     // part is present in the identifier, it should be retained.
-    variable_set('openid_test_response', array('openid.claimed_id' => $identity));
+    variable_set('openid_test_response', array('openid.claimed_id' => $identity, 'openid.identity' => openid_normalize($identity)));
     $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, 'http://specs.openid.net/auth/2.0/identifier_select', $identity);
     variable_set('openid_test_response', array());
 

@@ -390,6 +390,27 @@ Drupal.overlay.isExternalLink = function (url) {
 };
 
 /**
+ * Constructs an internal URL (relative to this site) from the provided path.
+ *
+ * For example, if the provided path is 'admin' and the site is installed at
+ * http://example.com/drupal, this function will return '/drupal/admin'.
+ *
+ * @param path
+ *   The internal path, without any leading slash.
+ *
+ * @return
+ *   The internal URL derived from the provided path, or null if a valid
+ *   internal path cannot be constructed (for example, if an attempt to create
+ *   an external link is detected).
+ */
+Drupal.overlay.getInternalUrl = function (path) {
+  var url = Drupal.settings.basePath + path;
+  if (!this.isExternalLink(url)) {
+    return url;
+  }
+};
+
+/**
  * Event handler: resizes overlay according to the size of the parent window.
  *
  * @param event
@@ -577,7 +598,7 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
       // If the link contains the overlay-restore class and the overlay-context
       // state is set, also update the parent window's location.
       var parentLocation = ($target.hasClass('overlay-restore') && typeof $.bbq.getState('overlay-context') == 'string')
-        ? Drupal.settings.basePath + $.bbq.getState('overlay-context')
+        ? this.getInternalUrl($.bbq.getState('overlay-context'))
         : null;
       href = this.fragmentizeLink($target.get(0), parentLocation);
       // Only override default behavior when left-clicking and user is not
@@ -657,11 +678,15 @@ Drupal.overlay.eventhandlerOperateByURLFragment = function (event) {
   }
 
   // Get the overlay URL from the current URL fragment.
+  var internalUrl = null;
   var state = $.bbq.getState('overlay');
   if (state) {
+    internalUrl = this.getInternalUrl(state);
+  }
+  if (internalUrl) {
     // Append render variable, so the server side can choose the right
     // rendering and add child frame code to the page if needed.
-    var url = $.param.querystring(Drupal.settings.basePath + state, { render: 'overlay' });
+    var url = $.param.querystring(internalUrl, { render: 'overlay' });
 
     this.open(url);
     this.resetActiveClass(this.getPath(Drupal.settings.basePath + state));
