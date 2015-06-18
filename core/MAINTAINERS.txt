@@ -513,5 +513,4 @@ it easier for new contributors to get involved. The mentoring leads are:
 
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Cathy Theys 'YesCT' https://www.drupal.org/u/yesct
-- Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
 - Andrea Soper 'ZenDoodles' https://www.drupal.org/u/zendoodles
