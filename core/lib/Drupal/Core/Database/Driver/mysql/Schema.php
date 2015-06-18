@@ -32,6 +32,19 @@ class Schema extends DatabaseSchema {
   const COMMENT_MAX_COLUMN = 255;
 
   /**
+   * @var array
+   *   List of MySQL string types.
+   */
+  protected $mysqlStringTypes = array(
+    'VARCHAR',
+    'CHAR',
+    'TINYTEXT',
+    'MEDIUMTEXT',
+    'LONGTEXT',
+    'TEXT',
+  );
+
+  /**
    * Get information about the table and database name from the prefix.
    *
    * @return
@@ -87,7 +100,7 @@ class Schema extends DatabaseSchema {
     // Provide defaults if needed.
     $table += array(
       'mysql_engine' => 'InnoDB',
-      'mysql_character_set' => 'utf8',
+      'mysql_character_set' => 'utf8mb4',
     );
 
     $sql = "CREATE TABLE {" . $name . "} (\n";
@@ -108,8 +121,8 @@ class Schema extends DatabaseSchema {
 
     $sql .= 'ENGINE = ' . $table['mysql_engine'] . ' DEFAULT CHARACTER SET ' . $table['mysql_character_set'];
     // By default, MySQL uses the default collation for new tables, which is
-    // 'utf8_general_ci' for utf8. If an alternate collation has been set, it
-    // needs to be explicitly specified.
+    // 'utf8mb4_general_ci' for utf8mb4. If an alternate collation has been
+    // set, it needs to be explicitly specified.
     // @see DatabaseConnection_mysql
     if (!empty($info['collation'])) {
       $sql .= ' COLLATE ' . $info['collation'];
@@ -129,15 +142,15 @@ class Schema extends DatabaseSchema {
    * Before passing a field out of a schema definition into this function it has
    * to be processed by _db_process_field().
    *
-   * @param $name
+   * @param string $name
    *   Name of the field.
-   * @param $spec
+   * @param array $spec
    *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
     $sql = "`" . $name . "` " . $spec['mysql_type'];
 
-    if (in_array($spec['mysql_type'], array('VARCHAR', 'CHAR', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT'))) {
+    if (in_array($spec['mysql_type'], $this->mysqlStringTypes)) {
       if (isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
@@ -271,12 +284,70 @@ class Schema extends DatabaseSchema {
       }
     }
     if (!empty($spec['indexes'])) {
-      foreach ($spec['indexes'] as $index => $fields) {
+      $indexes = $this->getNormalizedIndexes($spec);
+      foreach ($indexes as $index => $fields) {
         $keys[] = 'INDEX `' . $index . '` (' . $this->createKeySql($fields) . ')';
       }
     }
 
     return $keys;
+  }
+
+  /**
+   * Gets normalized indexes from a table specification.
+   *
+   * Shortens indexes to 191 characters if they apply to utf8mb4-encoded
+   * fields, in order to comply with the InnoDB index limitation of 756 bytes.
+   *
+   * @param $spec
+   *   The table specification.
+   *
+   * @return array
+   *   List of shortened indexes.
+   */
+  protected function getNormalizedIndexes($spec) {
+    $indexes = $spec['indexes'];
+    foreach ($indexes as $index_name => $index_fields) {
+      foreach ($index_fields as $index_key => $index_field) {
+        // Get the name of the field from the index specification.
+        $field_name = is_array($index_field) ? $index_field[0] : $index_field;
+        // Check whether the field is defined in the table specification.
+        if (isset($spec['fields'][$field_name])) {
+          // Get the MySQL type from the processed field.
+          $mysql_field = $this->processField($spec['fields'][$field_name]);
+          if (in_array($mysql_field['mysql_type'], $this->mysqlStringTypes)) {
+            // Check whether we need to shorten the index.
+            if ((!isset($mysql_field['type']) || $mysql_field['type'] != 'varchar_ascii') && (!isset($mysql_field['length']) || $mysql_field['length'] > 191)) {
+              // Limit the index length to 191 characters.
+              $this->shortenIndex($indexes[$index_name][$index_key]);
+            }
+          }
+        }
+      }
+    }
+    return $indexes;
+  }
+
+  /**
+   * Helper function for normalizeIndexes().
+   *
+   * Shortens an index to 191 characters.
+   *
+   * @param array $index
+   *   The index array to be used in createKeySql.
+   *
+   * @see Drupal\Core\Database\Driver\mysql\Schema::createKeySql()
+   * @see Drupal\Core\Database\Driver\mysql\Schema::normalizeIndexes()
+   */
+  protected function shortenIndex(&$index) {
+    if (is_array($index)) {
+      if ($index[1] > 191) {
+        $index[1] = 191;
+      }
+    }
+    else {
+      $index = array($index, 191);
+    }
   }
 
   protected function createKeySql($fields) {

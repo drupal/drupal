@@ -252,7 +252,8 @@ class File extends ContentEntityBase implements FileInterface {
       ->setLabel(t('URI'))
       ->setDescription(t('The URI to access the file (either local or remote).'))
       ->setSetting('max_length', 255)
-      ->setSetting('case_sensitive', TRUE);
+      ->setSetting('case_sensitive', TRUE)
+      ->addConstraint('FileUriUnique');
 
     $fields['filemime'] = BaseFieldDefinition::create('string')
       ->setLabel(t('File MIME type'))

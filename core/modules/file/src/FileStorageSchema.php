@@ -30,7 +30,7 @@ class FileStorageSchema extends SqlContentEntityStorageSchema {
           break;
 
         case 'uri':
-          $this->addSharedTableFieldUniqueKey($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
           break;
       }
     }

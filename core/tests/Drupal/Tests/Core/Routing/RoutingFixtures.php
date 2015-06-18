@@ -172,7 +172,7 @@ class RoutingFixtures {
       'fields' => array(
         'name' => array(
           'description' => 'Primary Key: Machine name of this route',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',

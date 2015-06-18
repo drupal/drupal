@@ -33,7 +33,7 @@ class FeedStorageSchema extends SqlContentEntityStorageSchema {
           break;
 
         case 'title':
-          $this->addSharedTableFieldUniqueKey($storage_definition, $schema);
+          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
           break;
       }
     }
