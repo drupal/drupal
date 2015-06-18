@@ -472,6 +472,10 @@ Bartik theme
 - Jen Simmons 'jensimmons' https://www.drupal.org/u/jensimmons
 - Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
 
+Classy theme
+- David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
+- Morten Birch Heide-Jørgensen 'mortendk' https://www.drupal.org/u/mortendk
+
 Seven theme
 - Lewis Nyman 'LewisNyman' https://www.drupal.org/u/lewisnyman
 
