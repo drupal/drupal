@@ -77,7 +77,7 @@ interface QueueInterface {
    * Deletes a finished item from the queue.
    *
    * @param $item
-   *   The item returned by Drupal\Core\Queue\QueueInterface::claimItem().
+   *   The item returned by \Drupal\Core\Queue\QueueInterface::claimItem().
    */
   public function deleteItem($item);
 
@@ -87,7 +87,7 @@ interface QueueInterface {
    * Another worker can come in and process it before the timeout expires.
    *
    * @param $item
-   *   The item returned by Drupal\Core\Queue\QueueInterface::claimItem().
+   *   The item returned by \Drupal\Core\Queue\QueueInterface::claimItem().
    *
    * @return boolean
    *   TRUE if the item has been released, FALSE otherwise.
