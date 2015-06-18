@@ -159,6 +159,8 @@ Migrate
 - Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
 
 Menu system
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
 
 Node Access
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
@@ -356,11 +358,12 @@ Language module
 Link module
 - Weber Macedo 'Mac_Weber' https://www.drupal.org/u/mac_weber
 
+Menu link content module
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
+
 Menu UI module
 - ?
-
-Menu Link module
-- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
 
 Migrate module
 - Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
