@@ -82,7 +82,7 @@ class SafeMarkup {
   /**
    * Checks if a string is safe to output.
    *
-   * @param string $string
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $string
    *   The content to be checked.
    * @param string $strategy
    *   The escaping strategy. See self::set(). Defaults to 'html'.
@@ -91,7 +91,9 @@ class SafeMarkup {
    *   TRUE if the string has been marked secure, FALSE otherwise.
    */
   public static function isSafe($string, $strategy = 'html') {
-    return isset(static::$safeStrings[(string) $string][$strategy]) ||
+    // Do the instanceof checks first to save unnecessarily casting the object
+    // to a string.
+    return $string instanceOf SafeStringInterface || isset(static::$safeStrings[(string) $string][$strategy]) ||
       isset(static::$safeStrings[(string) $string]['all']);
   }
 

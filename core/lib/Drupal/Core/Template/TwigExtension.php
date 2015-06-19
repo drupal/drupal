@@ -13,6 +13,7 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -397,7 +398,7 @@ class TwigExtension extends \Twig_Extension {
     }
 
     // Keep Twig_Markup objects intact to support autoescaping.
-    if ($autoescape && $arg instanceOf \Twig_Markup) {
+    if ($autoescape && ($arg instanceOf \Twig_Markup || $arg instanceOf SafeStringInterface)) {
       return $arg;
     }
 

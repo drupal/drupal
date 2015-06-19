@@ -70,6 +70,18 @@ class SafeMarkupTest extends UnitTestCase {
   }
 
   /**
+   * Tests SafeMarkup::isSafe() with different objects.
+   *
+   * @covers ::isSafe
+   */
+  public function testIsSafe() {
+    $safe_string = $this->getMock('\Drupal\Component\Utility\SafeStringInterface');
+    $this->assertTrue(SafeMarkup::isSafe($safe_string));
+    $string_object = new SafeMarkupTestString('test');
+    $this->assertFalse(SafeMarkup::isSafe($string_object));
+  }
+
+  /**
    * Tests SafeMarkup::setMultiple().
    *
    * @covers ::setMultiple
@@ -255,6 +267,20 @@ class SafeMarkupTest extends UnitTestCase {
     ];
 
     return $tests;
+  }
+
+}
+
+class SafeMarkupTestString {
+
+  protected $string;
+
+  public function __construct($string) {
+    $this->string = $string;
+  }
+
+  public function __toString() {
+    return $this->string;
   }
 
 }
