@@ -169,8 +169,8 @@ class FormCache implements FormCacheInterface {
           require_once $this->root . '/' . $file;
         }
       }
-      // Retrieve the list of previously known safe strings and store it for
-      // this request.
+      // Retrieve the list of safe strings and store it for this request. The
+      // safety of these strings has already been determined in ::setCache().
       // @todo Ensure we are not storing an excessively large string list
       //   in: https://www.drupal.org/node/2295823
       $build_info += ['safe_strings' => []];
