@@ -35,8 +35,8 @@ class TestThemeNegotiator implements ThemeNegotiatorInterface {
       return \Drupal::config('system.theme')->get('admin');
     }
     // Test using a theme that exists, but may or may not be installed.
-    elseif ($argument == 'use-stark-theme') {
-      return 'stark';
+    elseif ($argument == 'use-test-theme') {
+      return 'test_theme';
     }
     // Test using a theme that does not exist.
     elseif ($argument == 'use-fake-theme') {

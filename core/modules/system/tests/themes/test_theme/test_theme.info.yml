@@ -16,6 +16,8 @@ base theme: classy
 core: 8.x
 stylesheets-remove:
   - '@system/css/system.module.css'
+libraries:
+  - test_theme/global-styling
 regions:
   content: Content
   left: Left

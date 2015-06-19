@@ -296,19 +296,19 @@ class MenuRouterTest extends WebTestBase {
    */
   protected function doTestThemeCallbackOptionalTheme() {
     // Request a theme that is not installed.
-    $this->drupalGet('menu-test/theme-callback/use-stark-theme');
+    $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when a theme that is not installed is requested.');
     $this->assertRaw('bartik/css/base/elements.css', "The default theme's CSS appears on the page.");
 
     // Now install the theme and request it again.
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install(array('stark'));
+    $theme_handler->install(array('test_theme'));
 
-    $this->drupalGet('menu-test/theme-callback/use-stark-theme');
-    $this->assertText('Active theme: stark. Actual theme: stark.', 'The theme negotiation system uses an optional theme once it has been installed.');
-    $this->assertRaw('stark/css/layout.css', "The optional theme's CSS appears on the page.");
+    $this->drupalGet('menu-test/theme-callback/use-test-theme');
+    $this->assertText('Active theme: test_theme. Actual theme: test_theme.', 'The theme negotiation system uses an optional theme once it has been installed.');
+    $this->assertRaw('test_theme/kitten.css', "The optional theme's CSS appears on the page.");
 
-    $theme_handler->uninstall(array('stark'));
+    $theme_handler->uninstall(array('test_theme'));
   }
 
   /**
