@@ -10,13 +10,14 @@ namespace Drupal\Tests\Component\Transliteration;
 use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Component\Utility\Random;
 use Drupal\Tests\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests Transliteration component functionality.
  *
  * @group Transliteration
  *
- * @coversClass \Drupal\Component\Transliteration\PhpTransliteration
+ * @coversDefaultClass \Drupal\Component\Transliteration\PhpTransliteration
  */
 class PhpTransliterationTest extends UnitTestCase {
 
@@ -168,4 +169,24 @@ class PhpTransliterationTest extends UnitTestCase {
     $this->assertSame($trunc_output, $transliteration->transliterate($input, 'de', '?', 18), 'Truncating to 18 characters works');
   }
 
+  /**
+   * Tests inclusion is safe.
+   *
+   * @covers ::readLanguageOverrides
+   */
+  public function testSafeInclude() {
+    // The overrides in the transliteration data directory transliterates 0x82
+    // into "safe" but the overrides one directory higher transliterates the
+    // same character into "security hole". So by using "../index" as the
+    // language code we can test the ../ is stripped from the langcode.
+    vfsStream::setup('transliteration', NULL, [
+      'index.php' => '<?php $overrides = ["../index" => [0x82 => "security hole"]];',
+      'dir' => [
+        'index.php' => '<?php $overrides = ["../index" => [0x82 => "safe"]];',
+      ],
+    ]);
+    $transliteration = new PhpTransliteration(vfsStream::url('transliteration/dir'));
+    $transliterated = $transliteration->transliterate(chr(0xC2) . chr(0x82), '../index');
+    $this->assertSame($transliterated, 'safe');
+  }
 }
