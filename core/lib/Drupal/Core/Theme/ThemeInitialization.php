@@ -7,10 +7,10 @@
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\State\StateInterface;
 
 /**
  * Provides the theme initialization logic.
@@ -25,11 +25,11 @@ class ThemeInitialization implements ThemeInitializationInterface {
   protected $themeHandler;
 
   /**
-   * The state.
+   * The cache backend to use for the active theme.
    *
-   * @var \Drupal\Core\State\StateInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $state;
+  protected $cache;
 
   /**
    * The app root.
@@ -52,15 +52,15 @@ class ThemeInitialization implements ThemeInitializationInterface {
    *   The app root.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to use to load modules.
    */
-  public function __construct($root, ThemeHandlerInterface $theme_handler, StateInterface $state, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler) {
     $this->root = $root;
     $this->themeHandler = $theme_handler;
-    $this->state = $state;
+    $this->cache = $cache;
     $this->moduleHandler = $module_handler;
   }
 
@@ -78,8 +78,8 @@ class ThemeInitialization implements ThemeInitializationInterface {
    * {@inheritdoc}
    */
   public function getActiveThemeByName($theme_name) {
-    if ($active_theme = $this->state->get('theme.active_theme.' . $theme_name)) {
-      return $active_theme;
+    if ($cached = $this->cache->get('theme.active_theme.' . $theme_name)) {
+      return $cached->data;
     }
     $themes = $this->themeHandler->listInfo();
 
@@ -114,7 +114,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
 
     $active_theme = $this->getActiveTheme($themes[$theme_name], $base_themes);
 
-    $this->state->set('theme.active_theme.' . $theme_name, $active_theme);
+    $this->cache->set('theme.active_theme.' . $theme_name, $active_theme);
     return $active_theme;
   }
 

@@ -1216,7 +1216,7 @@ services:
       - [setThemeRegistry, ['@theme.registry']]
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
-    arguments: ['@app.root', '@theme_handler', '@state', '@module_handler']
+    arguments: ['@app.root', '@theme_handler', '@cache.bootstrap', '@module_handler']
   theme.registry:
     class: Drupal\Core\Theme\Registry
     arguments: ['@app.root', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization']

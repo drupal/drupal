@@ -1304,13 +1304,6 @@ function drupal_flush_all_caches() {
   /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
   $theme_handler = \Drupal::service('theme_handler');
   $theme_handler->refreshInfo();
-  // Remove the cache of the active theme's info file information in state.
-  // @see \Drupal\Core\Theme\ThemeInitialization::getActiveByThemeName()
-  $keys = [];
-  foreach ($theme_handler->listInfo() as $theme_name => $theme) {
-    $keys[] = 'theme.active_theme.' . $theme_name;
-  }
-  \Drupal::state()->deleteMultiple($keys);
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.
   \Drupal::theme()->resetActiveTheme();
