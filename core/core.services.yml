@@ -1318,7 +1318,7 @@ services:
     arguments: ['@library.discovery']
   asset.resolver:
     class: Drupal\Core\Asset\AssetResolver
-    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager']
+    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
   twig:

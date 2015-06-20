@@ -175,7 +175,7 @@ class AjaxResponse extends JsonResponse {
     // Resolve the attached libraries into asset collections.
     $assets = new AttachedAssets();
     $assets->setLibraries(isset($this->attachments['library']) ? $this->attachments['library'] : [])
-      ->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [])
+      ->setAlreadyLoadedLibraries(isset($ajax_page_state['libraries']) ? explode(',', $ajax_page_state['libraries']) : [])
       ->setSettings(isset($this->attachments['drupalSettings']) ? $this->attachments['drupalSettings'] : []);
     $asset_resolver = \Drupal::service('asset.resolver');
     $css_assets = $asset_resolver->getCssAssets($assets, $optimize_css);

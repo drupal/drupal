@@ -2053,9 +2053,13 @@ abstract class WebTestBase extends TestBase {
   protected function getAjaxPageStatePostData() {
     $post = array();
     $drupal_settings = $this->drupalSettings;
-    if (isset($drupal_settings['ajaxPageState'])) {
+    if (isset($drupal_settings['ajaxPageState']['theme'])) {
       $post['ajax_page_state[theme]'] = $drupal_settings['ajaxPageState']['theme'];
+    }
+    if (isset($drupal_settings['ajaxPageState']['theme_token'])) {
       $post['ajax_page_state[theme_token]'] = $drupal_settings['ajaxPageState']['theme_token'];
+    }
+    if (isset($drupal_settings['ajaxPageState']['libraries'])) {
       $post['ajax_page_state[libraries]'] = $drupal_settings['ajaxPageState']['libraries'];
     }
     return $post;

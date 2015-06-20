@@ -130,7 +130,7 @@ class CommentCSSTest extends CommentTestBase {
       if ($case['comment_status'] == CommentInterface::PUBLISHED || $case['user'] == 'admin') {
         $this->assertIdentical(1, count($this->xpath('//*[contains(@class, "comment")]/*[@data-comment-timestamp="' . $comment->getChangedTime() . '"]')), 'data-comment-timestamp attribute is set on comment');
         $expectedJS = ($case['user'] !== 'anonymous');
-        $this->assertIdentical($expectedJS, isset($settings['ajaxPageState']) && in_array('comment/drupal.comment-new-indicator', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.comment-new-indicator library is present.');
+        $this->assertIdentical($expectedJS, isset($settings['ajaxPageState']['libraries']) && in_array('comment/drupal.comment-new-indicator', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.comment-new-indicator library is present.');
       }
     }
   }

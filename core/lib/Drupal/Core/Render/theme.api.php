@@ -826,6 +826,27 @@ function hook_library_info_build() {
 }
 
 /**
+ * Modify the JavaScript settings (drupalSettings).
+ *
+ * @param array &$settings
+ *   An array of all JavaScript settings (drupalSettings) being presented on the
+ *   page.
+ * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
+ *   The assets attached to the current response.
+ *
+ * @see \Drupal\Core\Asset\AssetResolver
+ *
+ * The results of this hook are cached, however modules may use
+ * hook_js_settings_alter() to dynamically alter settings.
+ */
+function hook_js_settings_build(array &$settings, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+  // Manipulate settings.
+  if (isset($settings['dialog'])) {
+    $settings['dialog']['autoResize'] = FALSE;
+  }
+}
+
+/**
  * Perform necessary alterations to the JavaScript settings (drupalSettings).
  *
  * @param array &$settings
