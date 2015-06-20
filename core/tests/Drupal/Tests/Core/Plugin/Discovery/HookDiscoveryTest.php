@@ -80,9 +80,9 @@ class HookDiscoveryTest extends UnitTestCase {
     $this->assertEquals($definitions['test_id_3']['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry');
 
     // Ensure that the module was set.
-    $this->assertEquals($definitions['test_id_1']['module'], 'hook_discovery_test');
-    $this->assertEquals($definitions['test_id_2']['module'], 'hook_discovery_test');
-    $this->assertEquals($definitions['test_id_3']['module'], 'hook_discovery_test2');
+    $this->assertEquals($definitions['test_id_1']['provider'], 'hook_discovery_test');
+    $this->assertEquals($definitions['test_id_2']['provider'], 'hook_discovery_test');
+    $this->assertEquals($definitions['test_id_3']['provider'], 'hook_discovery_test2');
   }
 
   /**
@@ -108,15 +108,15 @@ class HookDiscoveryTest extends UnitTestCase {
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_1');
     $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple');
-    $this->assertEquals($plugin_definition['module'], 'hook_discovery_test');
+    $this->assertEquals($plugin_definition['provider'], 'hook_discovery_test');
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_2');
     $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange');
-    $this->assertEquals($plugin_definition['module'], 'hook_discovery_test');
+    $this->assertEquals($plugin_definition['provider'], 'hook_discovery_test');
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_3');
     $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry');
-    $this->assertEquals($plugin_definition['module'], 'hook_discovery_test2');
+    $this->assertEquals($plugin_definition['provider'], 'hook_discovery_test2');
   }
 
   /**
