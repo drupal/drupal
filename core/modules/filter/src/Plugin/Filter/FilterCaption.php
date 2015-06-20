@@ -80,7 +80,7 @@ class FilterCaption extends FilterBase {
       }
 
       $result->setProcessedText(Html::serialize($dom))
-        ->addAssets(array(
+        ->addAttachments(array(
           'library' => array(
             'filter/caption',
           ),

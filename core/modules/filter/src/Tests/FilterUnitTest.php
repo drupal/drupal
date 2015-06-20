@@ -123,7 +123,7 @@ class FilterUnitTest extends KernelTestBase {
     $expected = '<figure><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // Empty data-caption attribute.
     $input = '<img src="llama.jpg" data-caption="" />';
@@ -135,14 +135,14 @@ class FilterUnitTest extends KernelTestBase {
     $expected = '<figure><img src="llama.jpg" /><figcaption>“Loquacious llama!”</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // HTML encoded as HTML entities in data-caption attribute.
     $input = '<img src="llama.jpg" data-caption="&lt;em&gt;Loquacious llama!&lt;/em&gt;" />';
     $expected = '<figure><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // HTML (not encoded as HTML entities) in data-caption attribute, which is
     // not allowed by the HTML spec, but may happen when people manually write
@@ -151,33 +151,33 @@ class FilterUnitTest extends KernelTestBase {
     $expected = '<figure><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // Security test: attempt an XSS.
     $input = '<img src="llama.jpg" data-caption="<script>alert(\'Loquacious llama!\')</script>" />';
     $expected = '<figure><img src="llama.jpg" /><figcaption>alert(\'Loquacious llama!\')</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // Ensure the filter also works with uncommon yet valid attribute quoting.
     $input = '<img src=llama.jpg data-caption=\'Loquacious llama!\' />';
     $expected = '<figure><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // Finally, ensure that this also works on any other tag.
     $input = '<video src="llama.jpg" data-caption="Loquacious llama!" />';
     $expected = '<figure><video src="llama.jpg"></video><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
     $input = '<foobar data-caption="Loquacious llama!">baz</foobar>';
     $expected = '<figure><foobar>baz</foobar><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // So far we've tested that the caption filter works correctly. But we also
     // want to make sure that it works well in tandem with the "Limit allowed
@@ -271,17 +271,17 @@ class FilterUnitTest extends KernelTestBase {
     $expected = '<figure class="align-left"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" />';
     $expected = '<figure class="align-center"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="right" />';
     $expected = '<figure class="align-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
 
     // Both data-caption and data-align attributes, but a disallowed data-align
     // attribute value.
@@ -289,7 +289,7 @@ class FilterUnitTest extends KernelTestBase {
     $expected = '<figure><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAssets());
+    $this->assertIdentical($attached_library, $output->getAttachments());
   }
 
   /**

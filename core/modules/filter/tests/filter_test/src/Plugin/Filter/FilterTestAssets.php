@@ -27,7 +27,7 @@ class FilterTestAssets extends FilterBase {
    */
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
-    $result->addAssets(array(
+    $result->addAttachments(array(
       'library' => array(
         'filter/caption',
       ),
