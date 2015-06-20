@@ -183,10 +183,6 @@ class CommentAdminOverview extends FormBase {
     foreach ($comments as $comment) {
       /** @var $commented_entity \Drupal\Core\Entity\EntityInterface */
       $commented_entity = $commented_entities[$comment->getCommentedEntityTypeId()][$comment->getCommentedEntityId()];
-      $username = array(
-        '#theme' => 'username',
-        '#account' => $comment->getOwner(),
-      );
       $body = '';
       if (!empty($comment->comment_body->value)) {
         $body = $comment->comment_body->value;
@@ -204,7 +200,12 @@ class CommentAdminOverview extends FormBase {
             '#url' => $comment_permalink,
           ),
         ),
-        'author' => drupal_render($username),
+        'author' => array(
+          'data' => array(
+            '#theme' => 'username',
+            '#account' => $comment->getOwner(),
+          ),
+        ),
         'posted_in' => array(
           'data' => array(
             '#type' => 'link',
