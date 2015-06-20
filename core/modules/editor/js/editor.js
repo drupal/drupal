@@ -168,13 +168,11 @@
         // When there is no text editor for this text format, still track changes,
         // because the user has the ability to switch to some text editor, other-
         // wise this code would not be executed.
-        else {
-          $(field).on('change.editor keypress.editor', function () {
-            field.setAttribute('data-editor-value-is-changed', 'true');
-            // Just knowing that the value was changed is enough, stop tracking.
-            $(field).off('.editor');
-          });
-        }
+        $(field).on('change.editor keypress.editor', function () {
+          field.setAttribute('data-editor-value-is-changed', 'true');
+          // Just knowing that the value was changed is enough, stop tracking.
+          $(field).off('.editor');
+        });
 
         // Attach onChange handler to text format selector element.
         if ($this.is('select')) {
