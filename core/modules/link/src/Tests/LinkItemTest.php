@@ -101,6 +101,35 @@ class LinkItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test->title, $new_title);
     $this->assertEqual($entity->field_test->options['attributes']['class'], $new_class);
 
+    // Check that if we only set uri the default values for title and options
+    // are also initialized.
+    $entity->field_test = ['uri' => 'internal:/node/add'];
+    $this->assertEqual($entity->field_test->uri, 'internal:/node/add');
+    $this->assertNull($entity->field_test->title);
+    $this->assertIdentical($entity->field_test->options, []);
+
+    // Check that if set uri and serialize options then the default values are
+    // properly initialized.
+    $entity->field_test = [
+      'uri' => 'internal:/node/add',
+      'options' => serialize(['query' => NULL]),
+    ];
+    $this->assertEqual($entity->field_test->uri, 'internal:/node/add');
+    $this->assertNull($entity->field_test->title);
+    $this->assertNull($entity->field_test->options['query']);
+
+    // Check that if we set the direct value of link field it correctly set the
+    // uri and the default values of the field.
+    $entity->field_test = 'internal:/node/add';
+    $this->assertEqual($entity->field_test->uri, 'internal:/node/add');
+    $this->assertNull($entity->field_test->title);
+    $this->assertIdentical($entity->field_test->options, []);
+
+    // Check that setting LinkItem value NULL doesn't generate any error or
+    // warning.
+    $entity->field_test[0] = NULL;
+    $this->assertNull($entity->field_test[0]->getValue());
+
     // Test the generateSampleValue() method.
     $entity = entity_create('entity_test');
     $entity->field_test->generateSampleItems();
