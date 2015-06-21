@@ -44,3 +44,17 @@ abstract class VariableMultiRowTestBase extends MigrateSqlSourceTestCase {
   );
 
 }
+
+namespace Drupal\Tests\migrate_drupal\Unit\source;
+
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+
+class TestVariableMultiRow extends \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow {
+  public function setDatabase(Connection $database) {
+    $this->database = $database;
+  }
+  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
+}
