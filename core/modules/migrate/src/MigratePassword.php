@@ -8,7 +8,6 @@
 namespace Drupal\migrate;
 
 use Drupal\Core\Password\PasswordInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Replaces the original 'password' service in order to prefix the MD5 re-hashed
@@ -42,15 +41,15 @@ class MigratePassword implements PasswordInterface {
   /**
    * {@inheritdoc}
    */
-  public function check($password, UserInterface $account) {
-    return $this->originalPassword->check($password, $account);
+  public function check($password, $hash) {
+    return $this->originalPassword->check($password, $hash);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function userNeedsNewHash(UserInterface $account) {
-    return $this->originalPassword->userNeedsNewHash($account);
+  public function needsRehash($hash) {
+    return $this->originalPassword->needsRehash($hash);
   }
 
   /**

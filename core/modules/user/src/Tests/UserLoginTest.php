@@ -144,6 +144,7 @@ class UserLoginTest extends WebTestBase {
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
     $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
+    $this->assertTrue($password_hasher->check($password, $account->getPassword()));
   }
 
   /**

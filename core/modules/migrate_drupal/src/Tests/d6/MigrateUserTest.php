@@ -156,6 +156,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
         $roles[] = reset($role);
       }
 
+      /** @var \Drupal\user\UserInterface $user */
       $user = User::load($source->uid);
       $this->assertIdentical($source->uid, $user->id());
       $this->assertIdentical($source->name, $user->label());
@@ -183,7 +184,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
 
       // Use the API to check if the password has been salted and re-hashed to
       // conform the Drupal >= 7.
-      $this->assertTrue(\Drupal::service('password')->check($source->pass_plain, $user));
+      $this->assertTrue(\Drupal::service('password')->check($source->pass_plain, $user->getPassword()));
     }
   }
 

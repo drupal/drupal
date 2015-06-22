@@ -393,7 +393,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function checkExistingPassword(UserInterface $account_unchanged) {
-    return !empty($this->get('pass')->existing) && \Drupal::service('password')->check(trim($this->get('pass')->existing), $account_unchanged);
+    return !empty($this->get('pass')->existing) && \Drupal::service('password')->check(trim($this->get('pass')->existing), $account_unchanged->getPassword());
   }
 
   /**

@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Password;
 
 use Drupal\Core\Password\PhpassHashedPassword;
+use Drupal\Core\Password\PasswordInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -37,7 +38,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @var string
    */
-  protected $md5Password;
+  protected $md5HashedPassword;
 
   /**
    * The hashed password.
@@ -58,10 +59,10 @@ class PasswordHashingTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->user = $this->getMockBuilder('Drupal\user\Entity\User')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->password = $this->randomMachineName();
     $this->passwordHasher = new PhpassHashedPassword(1);
+    $this->hashedPassword = $this->passwordHasher->hash($this->password);
+    $this->md5HashedPassword = 'U' . $this->passwordHasher->hash(md5($this->password));
   }
 
   /**
@@ -79,14 +80,11 @@ class PasswordHashingTest extends UnitTestCase {
   /**
    * Test a password needs update.
    *
-   * @covers ::userNeedsNewHash
+   * @covers ::needsRehash
    */
   public function testPasswordNeedsUpdate() {
-    $this->user->expects($this->any())
-      ->method('getPassword')
-      ->will($this->returnValue($this->md5Password));
     // The md5 password should be flagged as needing an update.
-    $this->assertTrue($this->passwordHasher->userNeedsNewHash($this->user), 'User with md5 password needs a new hash.');
+    $this->assertTrue($this->passwordHasher->needsRehash($this->md5HashedPassword), 'Upgraded md5 password hash needs a new hash.');
   }
 
   /**
@@ -95,19 +93,16 @@ class PasswordHashingTest extends UnitTestCase {
    * @covers ::hash
    * @covers ::getCountLog2
    * @covers ::check
-   * @covers ::userNeedsNewHash
+   * @covers ::needsRehash
    */
   public function testPasswordHashing() {
-    $this->hashedPassword = $this->passwordHasher->hash($this->password);
-    $this->user->expects($this->any())
-      ->method('getPassword')
-      ->will($this->returnValue($this->hashedPassword));
     $this->assertSame($this->passwordHasher->getCountLog2($this->hashedPassword), PhpassHashedPassword::MIN_HASH_COUNT, 'Hashed password has the minimum number of log2 iterations.');
-    $this->assertNotEquals($this->hashedPassword, $this->md5Password, 'Password hash changed.');
-    $this->assertTrue($this->passwordHasher->check($this->password, $this->user), 'Password check succeeds.');
+    $this->assertNotEquals($this->hashedPassword, $this->md5HashedPassword, 'Password hashes not the same.');
+    $this->assertTrue($this->passwordHasher->check($this->password, $this->md5HashedPassword), 'Password check succeeds.');
+    $this->assertTrue($this->passwordHasher->check($this->password, $this->hashedPassword), 'Password check succeeds.');
     // Since the log2 setting hasn't changed and the user has a valid password,
     // userNeedsNewHash() should return FALSE.
-    $this->assertFalse($this->passwordHasher->userNeedsNewHash($this->user), 'User does not need a new hash.');
+    $this->assertFalse($this->passwordHasher->needsRehash($this->hashedPassword), 'Does not need a new hash.');
   }
 
   /**
@@ -116,25 +111,21 @@ class PasswordHashingTest extends UnitTestCase {
    * @covers ::hash
    * @covers ::getCountLog2
    * @covers ::check
-   * @covers ::userNeedsNewHash
+   * @covers ::needsRehash
    */
   public function testPasswordRehashing() {
-
     // Increment the log2 iteration to MIN + 1.
-    $this->passwordHasher = new PhpassHashedPassword(PhpassHashedPassword::MIN_HASH_COUNT + 1);
-    $this->assertTrue($this->passwordHasher->userNeedsNewHash($this->user), 'User needs a new hash after incrementing the log2 count.');
+    $password_hasher = new PhpassHashedPassword(PhpassHashedPassword::MIN_HASH_COUNT + 1);
+    $this->assertTrue($password_hasher->needsRehash($this->hashedPassword), 'Needs a new hash after incrementing the log2 count.');
     // Re-hash the password.
-    $rehashed_password = $this->passwordHasher->hash($this->password);
-
-    $this->user->expects($this->any())
-      ->method('getPassword')
-      ->will($this->returnValue($rehashed_password));
-    $this->assertSame($this->passwordHasher->getCountLog2($rehashed_password), PhpassHashedPassword::MIN_HASH_COUNT + 1, 'Re-hashed password has the correct number of log2 iterations.');
+    $rehashed_password = $password_hasher->hash($this->password);
+    $this->assertSame($password_hasher->getCountLog2($rehashed_password), PhpassHashedPassword::MIN_HASH_COUNT + 1, 'Re-hashed password has the correct number of log2 iterations.');
     $this->assertNotEquals($rehashed_password, $this->hashedPassword, 'Password hash changed again.');
 
     // Now the hash should be OK.
-    $this->assertFalse($this->passwordHasher->userNeedsNewHash($this->user), 'Re-hashed password does not need a new hash.');
-    $this->assertTrue($this->passwordHasher->check($this->password, $this->user), 'Password check succeeds with re-hashed password.');
+    $this->assertFalse($password_hasher->needsRehash($rehashed_password), 'Re-hashed password does not need a new hash.');
+    $this->assertTrue($password_hasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password.');
+    $this->assertTrue($this->passwordHasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password with original hasher.');
   }
 
   /**
@@ -161,19 +152,21 @@ class PasswordHashingTest extends UnitTestCase {
    */
   public function providerLongPasswords() {
     // '512 byte long password is allowed.'
-    $passwords['allowed'] = array(str_repeat('x', 512), TRUE);
+    $passwords['allowed'] = array(str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE);
     // 513 byte long password is not allowed.
-    $passwords['too_long'] = array(str_repeat('x', 513), FALSE);
+    $passwords['too_long'] = array(str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE);
 
     // Check a string of 3-byte UTF-8 characters, 510 byte long password is
     // allowed.
-    $passwords['utf8'] = array(str_repeat('€', 170), TRUE);
+    $len = floor(PasswordInterface::PASSWORD_MAX_LENGTH / 3);
+    $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
+    $passwords['utf8'] = array(str_repeat('€', $len), TRUE);
     // 512 byte long password is allowed.
-    $passwords['ut8_extended'] = array($passwords['utf8'][0] . 'xx', TRUE);
+    $passwords['ut8_extended'] = array($passwords['utf8'][0] . str_repeat('x', $diff), TRUE);
 
     // Check a string of 3-byte UTF-8 characters, 513 byte long password is
     // allowed.
-    $passwords['utf8_too_long'] = array(str_repeat('€', 171), FALSE);
+    $passwords['utf8_too_long'] = array(str_repeat('€', $len + 1), FALSE);
     return $passwords;
   }
 

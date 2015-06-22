@@ -8,7 +8,6 @@
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Password\PasswordInterface;
 
 /**
@@ -24,7 +23,7 @@ class UserAuth implements UserAuthInterface {
   protected $entityManager;
 
   /**
-   * The password service.
+   * The password hashing service.
    *
    * @var \Drupal\Core\Password\PasswordInterface
    */
@@ -33,8 +32,8 @@ class UserAuth implements UserAuthInterface {
   /**
    * Constructs a UserAuth object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The user storage.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    * @param \Drupal\Core\Password\PasswordInterface $password_checker
    *   The password service.
    */
@@ -53,12 +52,12 @@ class UserAuth implements UserAuthInterface {
       $account_search = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $username));
 
       if ($account = reset($account_search)) {
-        if ($this->passwordChecker->check($password, $account)) {
+        if ($this->passwordChecker->check($password, $account->getPassword())) {
           // Successful authentication.
           $uid = $account->id();
 
           // Update user to new password scheme if needed.
-          if ($this->passwordChecker->userNeedsNewHash($account)) {
+          if ($this->passwordChecker->needsRehash($account->getPassword())) {
             $account->setPassword($password);
             $account->save();
           }

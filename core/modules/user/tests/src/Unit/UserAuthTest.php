@@ -52,7 +52,7 @@ class UserAuthTest extends UnitTestCase {
   protected $username = 'test_user';
 
   /**
-   * The test password
+   * The test password.
    *
    * @var string
    */
@@ -74,7 +74,7 @@ class UserAuthTest extends UnitTestCase {
 
     $this->testUser = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(array('id', 'setPassword', 'save'))
+      ->setMethods(array('id', 'setPassword', 'save', 'getPassword'))
       ->getMock();
 
     $this->userAuth = new UserAuth($entity_manager, $this->passwordService);
@@ -135,7 +135,7 @@ class UserAuthTest extends UnitTestCase {
 
     $this->passwordService->expects($this->once())
       ->method('check')
-      ->with($this->password, $this->testUser)
+      ->with($this->password, $this->testUser->getPassword())
       ->will($this->returnValue(FALSE));
 
     $this->assertFalse($this->userAuth->authenticate($this->username, $this->password));
@@ -158,7 +158,7 @@ class UserAuthTest extends UnitTestCase {
 
     $this->passwordService->expects($this->once())
       ->method('check')
-      ->with($this->password, $this->testUser)
+      ->with($this->password, $this->testUser->getPassword())
       ->will($this->returnValue(TRUE));
 
     $this->assertsame(1, $this->userAuth->authenticate($this->username, $this->password));
@@ -186,11 +186,11 @@ class UserAuthTest extends UnitTestCase {
 
     $this->passwordService->expects($this->once())
       ->method('check')
-      ->with($this->password, $this->testUser)
+      ->with($this->password, $this->testUser->getPassword())
       ->will($this->returnValue(TRUE));
     $this->passwordService->expects($this->once())
-      ->method('userNeedsNewHash')
-      ->with($this->testUser)
+      ->method('needsRehash')
+      ->with($this->testUser->getPassword())
       ->will($this->returnValue(TRUE));
 
     $this->assertsame(1, $this->userAuth->authenticate($this->username, $this->password));
