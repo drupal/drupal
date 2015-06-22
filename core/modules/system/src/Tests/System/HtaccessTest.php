@@ -44,6 +44,9 @@ class HtaccessTest extends WebTestBase {
       $file_paths[] = "$path/access_test.$file_ext";
     }
 
+    // Try and access a non PHP file in the vendor directory.
+    $file_paths[] = 'core/vendor/composer/installed.json';
+
     return $file_paths;
   }
 

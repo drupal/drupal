@@ -106,8 +106,8 @@ EOF;
 <IfModule !mod_authz_core.c>
   Deny from all
 </IfModule>
-EOF
-      . $lines;
+$lines
+EOF;
     }
 
     return $lines;

@@ -145,6 +145,7 @@
     "autoloader-suffix": "Drupal8"
   },
   "scripts": {
-    "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
+    "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
+    "post-autoload-dump": "Drupal\\Core\\Composer\\Composer::ensureHtaccess"
   }
 }
