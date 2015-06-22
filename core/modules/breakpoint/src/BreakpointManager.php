@@ -106,14 +106,23 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
    *   The string translation service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
-    $this->discovery = new YamlDiscovery('breakpoints', $module_handler->getModuleDirectories() + $theme_handler->getThemeDirectories());
-    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
     $this->setStringTranslation($string_translation);
     $this->alterInfo('breakpoints');
     $this->setCacheBackend($cache_backend, 'breakpoints', array('breakpoints'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDiscovery() {
+    if (!isset($this->discovery)) {
+      $this->discovery = new YamlDiscovery('breakpoints', $this->moduleHandler->getModuleDirectories() + $this->themeHandler->getThemeDirectories());
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+    }
+    return $this->discovery;
   }
 
   /**

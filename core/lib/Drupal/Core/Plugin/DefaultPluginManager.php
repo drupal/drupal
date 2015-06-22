@@ -88,6 +88,28 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $useCaches = TRUE;
 
   /**
+   * The name of the annotation that contains the plugin definition.
+   *
+   * @var string
+   */
+  protected $pluginDefinitionAnnotationName;
+
+  /**
+   * The interface each plugin should implement.
+   *
+   * @var string|null
+   */
+  protected $pluginInterface;
+
+  /**
+   * An object that implements \Traversable which contains the root paths
+   * keyed by the corresponding namespace to look for plugin implementations.
+   *
+   * @var \Traversable
+   */
+  protected $namespaces;
+
+  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -105,9 +127,9 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   public function __construct($subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, $plugin_interface = NULL, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
     $this->subdir = $subdir;
-    $this->discovery = new AnnotatedClassDiscovery($subdir, $namespaces, $plugin_definition_annotation_name);
-    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
-    $this->factory = new ContainerFactory($this, $plugin_interface);
+    $this->namespaces = $namespaces;
+    $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
+    $this->pluginInterface = $plugin_interface;
     $this->moduleHandler = $module_handler;
   }
 
@@ -252,13 +274,34 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getDiscovery() {
+    if (!$this->discovery) {
+      $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName);
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
+    }
+    return $this->discovery;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFactory() {
+    if (!$this->factory) {
+      $this->factory = new ContainerFactory($this, $this->pluginInterface);
+    }
+    return $this->factory;
+  }
+
+  /**
    * Finds plugin definitions.
    *
    * @return array
    *   List of definitions to store in cache.
    */
   protected function findDefinitions() {
-    $definitions = $this->discovery->getDefinitions();
+    $definitions = $this->getDiscovery()->getDefinitions();
     foreach ($definitions as $plugin_id => &$definition) {
       $this->processDefinition($definition, $plugin_id);
     }

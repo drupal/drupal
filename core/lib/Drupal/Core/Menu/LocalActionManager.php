@@ -125,8 +125,6 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
-    $this->discovery = new YamlDiscovery('links.action', $module_handler->getModuleDirectories());
-    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this, 'Drupal\Core\Menu\LocalActionInterface');
     $this->controllerResolver = $controller_resolver;
     $this->requestStack = $request_stack;
@@ -137,6 +135,17 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $this->account = $account;
     $this->alterInfo('menu_local_actions');
     $this->setCacheBackend($cache_backend, 'local_action_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('local_action'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDiscovery() {
+    if (!isset($this->discovery)) {
+      $this->discovery = new YamlDiscovery('links.action', $this->moduleHandler->getModuleDirectories());
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+    }
+    return $this->discovery;
   }
 
   /**

@@ -46,10 +46,21 @@ class ConstraintManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Validation/Constraint', $namespaces, $module_handler, NULL, 'Drupal\Core\Validation\Annotation\Constraint');
-    $this->discovery = new StaticDiscoveryDecorator($this->discovery, array($this, 'registerDefinitions'));
     $this->alterInfo('validation_constraint');
     $this->setCacheBackend($cache_backend, 'validation_constraint_plugins');
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDiscovery() {
+    if (!isset($this->discovery)) {
+      $this->discovery = parent::getDiscovery();
+      $this->discovery = new StaticDiscoveryDecorator($this->discovery, [$this, 'registerDefinitions']);
+    }
+    return $this->discovery;
+  }
+
 
   /**
    * Creates a validation constraint.
@@ -79,22 +90,22 @@ class ConstraintManager extends DefaultPluginManager {
    * @see ConstraintManager::__construct()
    */
   public function registerDefinitions() {
-    $this->discovery->setDefinition('Callback', array(
+    $this->getDiscovery()->setDefinition('Callback', array(
       'label' => new TranslationWrapper('Callback'),
       'class' => '\Symfony\Component\Validator\Constraints\Callback',
       'type' => FALSE,
     ));
-    $this->discovery->setDefinition('Blank', array(
+    $this->getDiscovery()->setDefinition('Blank', array(
       'label' => new TranslationWrapper('Blank'),
       'class' => '\Symfony\Component\Validator\Constraints\Blank',
       'type' => FALSE,
     ));
-    $this->discovery->setDefinition('NotBlank', array(
+    $this->getDiscovery()->setDefinition('NotBlank', array(
       'label' => new TranslationWrapper('Not blank'),
       'class' => '\Symfony\Component\Validator\Constraints\NotBlank',
       'type' => FALSE,
     ));
-    $this->discovery->setDefinition('Email', array(
+    $this->getDiscovery()->setDefinition('Email', array(
       'label' => new TranslationWrapper('Email'),
       'class' => '\Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint',
       'type' => array('string'),

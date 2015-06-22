@@ -230,7 +230,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   protected function findDefinitions() {
-    $definitions = $this->discovery->getDefinitions();
+    $definitions = $this->getDiscovery()->getDefinitions();
 
     // Directly call the hook implementations to pass the definitions to them
     // by reference, so new entity types can be added.

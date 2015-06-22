@@ -125,8 +125,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *   The current user.
    */
   public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
-    $this->discovery = new YamlDiscovery('links.task', $module_handler->getModuleDirectories());
-    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
     $this->controllerResolver = $controller_resolver;
     $this->requestStack = $request_stack;
@@ -137,6 +135,17 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->moduleHandler = $module_handler;
     $this->alterInfo('local_tasks');
     $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('local_task'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDiscovery() {
+    if (!isset($this->discovery)) {
+      $this->discovery = new YamlDiscovery('links.task', $this->moduleHandler->getModuleDirectories());
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+    }
+    return $this->discovery;
   }
 
   /**

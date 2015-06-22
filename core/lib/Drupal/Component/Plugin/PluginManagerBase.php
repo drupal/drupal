@@ -39,17 +39,35 @@ abstract class PluginManagerBase implements PluginManagerInterface {
   protected $mapper;
 
   /**
+   * Gets the plugin discovery.
+   *
+   * @return \Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   */
+  protected function getDiscovery() {
+    return $this->discovery;
+  }
+
+  /**
+   * Gets the plugin factory.
+   *
+   * @return \Drupal\Component\Plugin\Factory\FactoryInterface
+   */
+  protected function getFactory() {
+    return $this->factory;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
-    return $this->discovery->getDefinition($plugin_id, $exception_on_invalid);
+    return $this->getDiscovery()->getDefinition($plugin_id, $exception_on_invalid);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefinitions() {
-    return $this->discovery->getDefinitions();
+    return $this->getDiscovery()->getDefinitions();
   }
 
   /**
@@ -60,15 +78,15 @@ abstract class PluginManagerBase implements PluginManagerInterface {
     // PluginNotFoundExceptions.
     if ($this instanceof FallbackPluginManagerInterface) {
       try {
-        return $this->factory->createInstance($plugin_id, $configuration);
+        return $this->getFactory()->createInstance($plugin_id, $configuration);
       }
       catch (PluginNotFoundException $e) {
         $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
-        return $this->factory->createInstance($fallback_id, $configuration);
+        return $this->getFactory()->createInstance($fallback_id, $configuration);
       }
     }
     else {
-      return $this->factory->createInstance($plugin_id, $configuration);
+      return $this->getFactory()->createInstance($plugin_id, $configuration);
     }
   }
 
