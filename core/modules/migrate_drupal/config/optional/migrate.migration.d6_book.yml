@@ -10,7 +10,8 @@ process:
   'book/weight': weight
   'book/pid':
     -
-      plugin: skip_process_on_empty
+      plugin: skip_on_empty
+      method: process
       source: plid
     -
       plugin: migration

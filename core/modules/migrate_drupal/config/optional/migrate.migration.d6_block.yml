@@ -8,7 +8,8 @@ process:
   # Drupal 8 does not have a status but it doesn't matter; this is here to
   # skip disabled blocks.
   status:
-    plugin: skip_row_on_empty
+    plugin: skip_on_empty
+    method: row
     source: status
   id:
     # We need something unique, so aggregator, aggregator_1 etc will do.

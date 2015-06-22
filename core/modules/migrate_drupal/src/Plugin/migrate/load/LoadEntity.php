@@ -141,7 +141,10 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         'source' => $format_key,
         'map' => [0 => NULL]
       ],
-      ['plugin' => 'skip_process_on_empty'],
+      [
+        'plugin' => 'skip_on_empty',
+        'method' => 'process',
+      ],
       [
         'plugin' => 'migration',
         'migration' => 'd6_filter_format',

@@ -22,7 +22,8 @@ process:
       index:
         - 1
     -
-      plugin: skip_row_on_empty
+      plugin: skip_on_empty
+      method: row
   entity_type: 'constants/entity_type'
   bundle: type_name
   view_mode:

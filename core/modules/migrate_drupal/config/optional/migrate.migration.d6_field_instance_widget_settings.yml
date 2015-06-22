@@ -23,7 +23,8 @@ process:
       index:
         - 1
     -
-      plugin: skip_row_on_empty
+      plugin: skip_on_empty
+      method: row
   bundle: type_name
   form_mode: 'constants/form_mode'
   field_name: field_name
