@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Schema
+ * Contains \Drupal\Core\Database\Schema.
  */
 
 namespace Drupal\Core\Database;
@@ -11,6 +11,9 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
 
+/**
+ * Provides a base implementation for Database Schema.
+ */
 abstract class Schema implements PlaceholderInterface {
 
   protected $connection;
