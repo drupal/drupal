@@ -638,37 +638,4 @@ class Renderer implements RendererInterface {
     $meta_a->merge($meta_b)->applyTo($elements);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function mergeAttachments(array $a, array $b) {
-    // If both #attached arrays contain drupalSettings, then merge them
-    // correctly; adding the same settings multiple times needs to behave
-    // idempotently.
-    if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
-      $drupalSettings = NestedArray::mergeDeepArray(array($a['drupalSettings'], $b['drupalSettings']), TRUE);
-      // No need for re-merging them.
-      unset($a['drupalSettings']);
-      unset($b['drupalSettings']);
-    }
-    // Optimize merging of placeholders: no need for deep merging.
-    if (!empty($a['placeholders']) && !empty($b['placeholders'])) {
-      $placeholders = $a['placeholders'] + $b['placeholders'];
-      // No need for re-merging them.
-      unset($a['placeholders']);
-      unset($b['placeholders']);
-    }
-    // Apply the normal merge.
-    $a = array_merge_recursive($a, $b);
-    if (isset($drupalSettings)) {
-      // Save the custom merge for the drupalSettings.
-      $a['drupalSettings'] = $drupalSettings;
-    }
-    if (isset($placeholders)) {
-      // Save the custom merge for the placeholders.
-      $a['placeholders'] = $placeholders;
-    }
-    return $a;
-  }
-
 }

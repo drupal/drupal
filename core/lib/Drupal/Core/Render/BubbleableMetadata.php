@@ -97,7 +97,10 @@ class BubbleableMetadata extends CacheableMetadata {
    * @return $this
    */
   public function addAttachments(array $attachments) {
-    $this->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $attachments);
+    $other = (new BubbleableMetadata())->setAttachments($attachments);
+    $result = $other->merge($this);
+
+    $this->attached = $result->getAttachments();
     return $this;
   }
 

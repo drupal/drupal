@@ -31,8 +31,12 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
-   * @see \Drupal\system\Tests\Common\MergeAttachmentsTest
    * @see \Drupal\Tests\Core\Render\RendererPlaceholdersTest
+   * @see testMergeAttachmentsLibraryMerging()
+   * @see testMergeAttachmentsFeedMerging()
+   * @see testMergeAttachmentsHtmlHeadMerging()
+   * @see testMergeAttachmentsHtmlHeadLinkMerging()
+   * @see testMergeAttachmentsHttpHeaderMerging()
    */
   public function testMerge(BubbleableMetadata $a, CacheableMetadata $b, BubbleableMetadata $expected) {
     // Verify that if the second operand is a CacheableMetadata object, not a
@@ -98,6 +102,37 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::addAttachments
+   * @covers ::setAttachments
+   * @dataProvider providerTestAddAttachments
+   *
+   * This only tests at a high level, because it reuses existing logic. Detailed
+   * tests exist for the existing logic:
+   *
+   * @see testMergeAttachmentsLibraryMerging()
+   * @see testMergeAttachmentsFeedMerging()
+   * @see testMergeAttachmentsHtmlHeadMerging()
+   * @see testMergeAttachmentsHtmlHeadLinkMerging()
+   * @see testMergeAttachmentsHttpHeaderMerging()
+   */
+  public function testAddAttachments(BubbleableMetadata $initial, $attachments, BubbleableMetadata $expected) {
+    $test = $initial;
+    $test->addAttachments($attachments);
+    $this->assertEquals($expected, $test);
+  }
+
+  /**
+   * Provides test data for testAddAttachments().
+   */
+  public function providerTestAddAttachments() {
+    return [
+      [new BubbleableMetadata(), [], new BubbleableMetadata()],
+      [new BubbleableMetadata(), ['library' => ['core/foo']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']])],
+      [(new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]), ['library' => ['core/bar']], (new BubbleableMetadata())->setAttachments(['library' => ['core/bar', 'core/foo']])],
+    ];
+  }
+
+  /**
    * @covers ::applyTo
    * @dataProvider providerTestApplyTo
    */
@@ -107,7 +142,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * Provides test data for apply().
+   * Provides test data for testApplyTo().
    *
    * @return array
    */
@@ -494,7 +529,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @dataProvider providerTestMergeAttachementsHtmlHeadLinkMerging
    */
-  function testMergeAttachementsHtmlHeadLinkMerging($a, $b, $expected) {
+  function testMergeAttachmentsHtmlHeadLinkMerging($a, $b, $expected) {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -503,7 +538,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestMergeAttachementsHtmlHeadLinkMerging() {
+  public function providerTestMergeAttachmentsHtmlHeadLinkMerging() {
     $rel =         [
       'rel' => 'rel',
       'href' => 'http://rel.example.com',
