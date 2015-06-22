@@ -62,8 +62,8 @@ class AjaxFormCacheTest extends AjaxTestBase {
 
     $this->drupalGet('');
     $this->drupalPostAjaxForm(NULL, ['test1' => 'option1'], 'test1');
-    $this->assertOptionSelected('edit-test1--2', 'option1');
-    $this->assertOption('edit-test1--2', 'option3');
+    $this->assertOptionSelectedWithDrupalSelector('edit-test1', 'option1');
+    $this->assertOptionWithDrupalSelector('edit-test1', 'option3');
     $this->drupalPostForm($this->getUrl(), ['test1' => 'option1'], 'Submit');
     $this->assertText('Submission successful.');
   }

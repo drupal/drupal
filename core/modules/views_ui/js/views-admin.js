@@ -21,7 +21,7 @@
     attach: function () {
       // Only show the SQL rewrite warning when the user has chosen the
       // corresponding checkbox.
-      $('#edit-query-options-disable-sql-rewrite').on('click', function () {
+      $('[data-drupal-selector="edit-query-options-disable-sql-rewrite"]').on('click', function () {
         $('.sql-rewrite-warning').toggleClass('js-hide');
       });
     }
@@ -412,7 +412,7 @@
     /**
      * Add a keyup handler to the search box.
      */
-    this.$searchBox = this.$form.find('#edit-override-controls-options-search');
+    this.$searchBox = this.$form.find('[data-drupal-selector="edit-override-controls-options-search"]');
     this.$searchBox.on('keyup', $.proxy(this.handleKeyup, this));
 
     /**
@@ -950,25 +950,27 @@
    */
   Drupal.behaviors.viewsFilterConfigSelectAll = {
     attach: function (context) {
-      // Show the select all checkbox.
-      $(context).find('#views-ui-handler-form div.form-item-options-value-all').once('filterConfigSelectAll')
-        .show()
-        .find('input[type=checkbox]')
-        .on('click', function () {
-          var checked = $(this).is(':checked');
+      var $context = $(context);
+
+      var $selectAll = $context.find('.form-item-options-value-all').once('filterConfigSelectAll');
+      var $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
+      var $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.form-item-options-value-all) input[type="checkbox"]');
+
+      if ($selectAll.length) {
+         // Show the select all checkbox.
+        $selectAll.show();
+        $selectAllCheckbox.on('click', function () {
           // Update all checkbox beside the select all checkbox.
-          $(this).parents('.form-checkboxes').find('input[type=checkbox]').each(function () {
-            $(this).attr('checked', checked);
-          });
+          $checkboxes.prop('checked', $(this).is(':checked'));
         });
-      // Uncheck the select all checkbox if any of the others are unchecked.
-      $('#views-ui-handler-form').find('div.js-form-type-checkbox').not($('.form-item-options-value-all'))
-        .find('input[type=checkbox]')
-        .on('click', function () {
+
+        // Uncheck the select all checkbox if any of the others are unchecked.
+        $checkboxes.on('click', function () {
           if ($(this).is('checked') === false) {
-            $('#edit-options-value-all').prop('checked', false);
+            $selectAllCheckbox.prop('checked', false);
           }
         });
+      }
     }
   };
 
@@ -990,7 +992,7 @@
    */
   Drupal.behaviors.viewsUiCheckboxify = {
     attach: function (context, settings) {
-      var $buttons = $('#edit-options-expose-button-button, #edit-options-group-button-button').once('views-ui-checkboxify');
+      var $buttons = $('[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]').once('views-ui-checkboxify');
       var length = $buttons.length;
       var i;
       for (i = 0; i < length; i++) {
@@ -1068,7 +1070,7 @@
    */
   Drupal.behaviors.viewsUiOverrideSelect = {
     attach: function (context) {
-      $(context).find('#edit-override-dropdown').once('views-ui-override-button-text').each(function () {
+      $(context).find('[data-drupal-selector="edit-override-dropdown"]').once('views-ui-override-button-text').each(function () {
         // Closures! :(
         var $context = $(context);
         var $submit = $context.find('[id^=edit-submit]');

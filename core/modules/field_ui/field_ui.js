@@ -12,7 +12,7 @@
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach: function (context) {
-      var $form = $(context).find('#field-ui-field-storage-add-form').once('field_ui_add');
+      var $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
       if ($form.length) {
         // Add a few 'form-required' css classes here. We can not use the Form
         // API '#required' property because both label elements for "add new"
@@ -214,7 +214,7 @@
 
         // Fire the Ajax update.
         $('input[name=refresh_rows]').val(rowNames.join(' '));
-        $('input#edit-refresh').trigger('mousedown');
+        $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
 
         // Disabled elements do not appear in POST ajax data, so we mark the
         // elements disabled only after firing the request.

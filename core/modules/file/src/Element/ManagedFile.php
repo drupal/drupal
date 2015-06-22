@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Element;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\Url;
@@ -130,9 +131,6 @@ class ManagedFile extends FormElement {
    * support for a default value.
    */
   public static function processManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
-    // Append the '-upload' to the #id so the field label's 'for' attribute
-    // corresponds with the file element.
-    $element['#id'] .= '-upload';
 
     // This is used sometimes so let's implode it just once.
     $parents_prefix = implode('_', $element['#parents']);
@@ -144,6 +142,9 @@ class ManagedFile extends FormElement {
     $element['#files'] = !empty($fids) ? File::loadMultiple($fids) : FALSE;
     $element['#tree'] = TRUE;
 
+    // Generate a unique wrapper HTML ID.
+    $ajax_wrapper_id = Html::getUniqueId('ajax-wrapper');
+
     $ajax_settings = [
       // @todo Remove this in https://www.drupal.org/node/2500527.
       'url' => Url::fromRoute('file.ajax_upload'),
@@ -153,7 +154,7 @@ class ManagedFile extends FormElement {
           'form_build_id' => $complete_form['form_build_id']['#value'],
         ],
       ],
-      'wrapper' => $element['#id'] . '-ajax-wrapper',
+      'wrapper' => $ajax_wrapper_id,
       'effect' => 'fade',
       'progress' => [
         'type' => $element['#progress_indicator'],
@@ -261,8 +262,12 @@ class ManagedFile extends FormElement {
       $element['upload']['#attached']['drupalSettings']['file']['elements']['#' . $element['#id']] = $extension_list;
     }
 
+    // Let #id point to the file element, so the field label's 'for' corresponds
+    // with it.
+    $element['#id'] = &$element['upload']['#id'];
+
     // Prefix and suffix used for Ajax replacement.
-    $element['#prefix'] = '<div id="' . $element['#id'] . '-ajax-wrapper">';
+    $element['#prefix'] = '<div id="' . $ajax_wrapper_id . '">';
     $element['#suffix'] = '</div>';
 
     return $element;

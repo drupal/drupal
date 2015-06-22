@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.ckeditorDrupalImageSettingsSummary = {
     attach: function () {
-      $('#edit-editor-settings-plugins-drupalimage').drupalSetSummary(function (context) {
+      $('[data-ckeditor-plugin-id="drupalimage"]').drupalSetSummary(function (context) {
         var root = 'input[name="editor[settings][plugins][drupalimage][image_upload]';
         var $status = $(root + '[status]"]');
         var $maxFileSize = $(root + '[max_size]"]');

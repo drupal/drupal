@@ -19,6 +19,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\EventSubscriber\AjaxSubscriber;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Render\Element;
@@ -1800,13 +1801,7 @@ abstract class WebTestBase extends TestBase {
         $extra_post[$key] = $value;
       }
     }
-    $ajax_html_ids = array();
-    foreach ($this->xpath('//*[@id]') as $element) {
-      $ajax_html_ids[] = (string) $element['id'];
-    }
-    if (!empty($ajax_html_ids)) {
-      $extra_post['ajax_html_ids'] = implode(' ', $ajax_html_ids);
-    }
+    $extra_post[AjaxSubscriber::AJAX_REQUEST_PARAMETER] = 1;
     $extra_post += $this->getAjaxPageStatePostData();
     // Now serialize all the $extra_post values, and prepend it with an '&'.
     $extra_post = '&' . $this->serializePostValues($extra_post);

@@ -125,6 +125,10 @@ class DialogTest extends AjaxTestBase {
       // Don't send a target.
       'submit' => array()
     ));
+    // Make sure the selector ID starts with the right string.
+    $this->assert(strpos($ajax_result[3]['selector'], $no_target_expected_response['selector']) === 0, 'Selector starts with right string.');
+    unset($ajax_result[3]['selector']);
+    unset($no_target_expected_response['selector']);
     $this->assertEqual($no_target_expected_response, $ajax_result[3], 'Normal dialog with no target JSON response matches.');
 
     // Emulate closing the dialog via an AJAX request. There is no non-JS

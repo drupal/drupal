@@ -143,19 +143,25 @@ class HtmlTest extends UnitTestCase {
    *   The expected result.
    * @param string $source
    *   The string being transformed to an ID.
-   * @param bool $reset
-   *   (optional) If TRUE, reset the list of seen IDs. Defaults to FALSE.
    *
    * @dataProvider providerTestHtmlGetUniqueIdWithAjaxIds
    *
    * @covers ::getUniqueId
    */
-  public function testHtmlGetUniqueIdWithAjaxIds($expected, $source, $reset = FALSE) {
-    if ($reset) {
-      Html::resetSeenIds();
+  public function testHtmlGetUniqueIdWithAjaxIds($expected, $source) {
+    Html::setIsAjax(TRUE);
+    $id = Html::getUniqueId($source);
+
+    // Note, we truncate two hyphens at the end.
+    // @see \Drupal\Component\Utility\Html::getId()
+    if (strpos($source, '--') !== FALSE) {
+      $random_suffix = substr($id, strlen($source) + 1);
     }
-    Html::setAjaxHtmlIds('test-unique-id1 test-unique-id2--3');
-    $this->assertSame($expected, Html::getUniqueId($source));
+    else {
+      $random_suffix = substr($id, strlen($source) + 2);
+    }
+    $expected = $expected . $random_suffix;
+    $this->assertSame($expected, $id);
   }
 
   /**
@@ -166,10 +172,11 @@ class HtmlTest extends UnitTestCase {
    */
   public function providerTestHtmlGetUniqueIdWithAjaxIds() {
     return array(
-      array('test-unique-id1--2', 'test-unique-id1', TRUE),
-      array('test-unique-id1--3', 'test-unique-id1'),
-      array('test-unique-id2--4', 'test-unique-id2', TRUE),
-      array('test-unique-id2--5', 'test-unique-id2'),
+      array('test-unique-id1--', 'test-unique-id1'),
+      // Note, we truncate two hyphens at the end.
+      // @see \Drupal\Component\Utility\Html::getId()
+      array('test-unique-id1---', 'test-unique-id1--'),
+      array('test-unique-id2--', 'test-unique-id2'),
     );
   }
 
@@ -186,6 +193,7 @@ class HtmlTest extends UnitTestCase {
    * @covers ::getId
    */
   public function testHtmlGetId($expected, $source) {
+    Html::setIsAjax(FALSE);
     $this->assertSame($expected, Html::getId($source));
   }
 

@@ -35,11 +35,11 @@ class Html {
   protected static $seenIds;
 
   /**
-   * Contains the current AJAX HTML IDs.
+   * Stores whether the current request was sent via AJAX.
    *
-   * @var string
+   * @var bool
    */
-  protected static $ajaxHTMLIDs;
+  protected static $isAjax = FALSE;
 
   /**
    * Prepares a string for use as a valid class name.
@@ -102,13 +102,13 @@ class Html {
   }
 
   /**
-   * Sets the AJAX HTML IDs.
+   * Sets if this request is an Ajax request.
    *
-   * @param string $ajax_html_ids
-   *   The AJAX HTML IDs, probably coming from the current request.
+   * @param bool $is_ajax
+   *   TRUE if this request is an Ajax request, FALSE otherwise.
    */
-  public static function setAjaxHtmlIds($ajax_html_ids = '') {
-    static::$ajaxHTMLIDs = $ajax_html_ids;
+  public static function setIsAjax($is_ajax) {
+    static::$isAjax = $is_ajax;
   }
 
   /**
@@ -142,43 +142,15 @@ class Html {
   public static function getUniqueId($id) {
     // If this is an Ajax request, then content returned by this page request
     // will be merged with content already on the base page. The HTML IDs must
-    // be unique for the fully merged content. Therefore, initialize $seen_ids
-    // to take into account IDs that are already in use on the base page.
+    // be unique for the fully merged content. Therefore use unique IDs.
+    if (static::$isAjax) {
+      return static::getId($id) . '--' . Crypt::randomBytesBase64(8);
+    }
+
+    // @todo Remove all that code once we switch over to random IDs only,
+    // see https://www.drupal.org/node/1090592.
     if (!isset(static::$seenIdsInit)) {
-      // Ideally, Drupal would provide an API to persist state information about
-      // prior page requests in the database, and we'd be able to add this
-      // function's $seen_ids static variable to that state information in order
-      // to have it properly initialized for this page request. However, no such
-      // page state API exists, so instead, ajax.js adds all of the in-use HTML
-      // IDs to the POST data of Ajax submissions. Direct use of $_POST is
-      // normally not recommended as it could open up security risks, but
-      // because the raw POST data is cast to a number before being returned by
-      // this function, this usage is safe.
-      if (empty(static::$ajaxHTMLIDs)) {
-        static::$seenIdsInit = array();
-      }
-      else {
-        // This function ensures uniqueness by appending a counter to the base
-        // id requested by the calling function after the first occurrence of
-        // that requested id. $_POST['ajax_html_ids'] contains the ids as they
-        // were returned by this function, potentially with the appended
-        // counter, so we parse that to reconstruct the $seen_ids array.
-        $ajax_html_ids = explode(' ', static::$ajaxHTMLIDs);
-        foreach ($ajax_html_ids as $seen_id) {
-          // We rely on '--' being used solely for separating a base id from the
-          // counter, which this function ensures when returning an id.
-          $parts = explode('--', $seen_id, 2);
-          if (!empty($parts[1]) && is_numeric($parts[1])) {
-            list($seen_id, $i) = $parts;
-          }
-          else {
-            $i = 1;
-          }
-          if (!isset(static::$seenIdsInit[$seen_id]) || ($i > static::$seenIdsInit[$seen_id])) {
-            static::$seenIdsInit[$seen_id] = $i;
-          }
-        }
-      }
+      static::$seenIdsInit = array();
     }
     if (!isset(static::$seenIds)) {
       static::$seenIds = static::$seenIdsInit;

@@ -20,13 +20,21 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class AjaxSubscriber implements EventSubscriberInterface {
 
   /**
-   * Sets the AJAX HTML IDs from the current request.
+   * Request parameter to indicate that a request is a Drupal Ajax request.
+   */
+  const AJAX_REQUEST_PARAMETER = '_drupal_ajax';
+
+  /**
+   * Sets the AJAX parameter from the current request.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The response event, which contains the current request.
    */
   public function onRequest(GetResponseEvent $event) {
-    Html::setAjaxHtmlIds($event->getRequest()->request->get('ajax_html_ids', ''));
+    // Pass to the Html class that the current request is an Ajax request.
+    if ($event->getRequest()->request->get(static::AJAX_REQUEST_PARAMETER)) {
+      Html::setIsAjax(TRUE);
+    }
   }
 
   /**

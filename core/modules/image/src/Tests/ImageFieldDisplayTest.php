@@ -251,15 +251,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
-    $image_style = array(
-      '#theme' => 'image_style',
-      '#uri' => $file->getFileUri(),
-      '#width' => 40,
-      '#height' => 20,
-      '#style_name' => 'medium',
-    );
-    $default_output = drupal_render($image_style);
-    $this->assertRaw($default_output, "Preview image is displayed using 'medium' style.");
+
+    $url = file_create_url(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
+    $this->assertTrue($this->cssSelect('img[width=40][height=20][class=image-style-medium][src="' . $url . '"]'));
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image = array(

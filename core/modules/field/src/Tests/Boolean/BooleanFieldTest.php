@@ -171,7 +171,7 @@ class BooleanFieldTest extends WebTestBase {
       t('Display setting checkbox is available')
     );
     $this->assertFieldByXPath(
-      '*//input[@id="edit-fields-' . $field_name . '-settings-edit-form-settings-display-label" and @value="1"]',
+      '*//input[starts-with(@id, "edit-fields-' . $field_name . '-settings-edit-form-settings-display-label") and @value="1"]',
       TRUE,
       t('Display label changes label of the checkbox')
     );

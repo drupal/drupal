@@ -822,14 +822,13 @@ trait AssertContentTrait {
   }
 
   /**
-   * Asserts that a field exists in the current page by the given XPath.
+   * Asserts that a field exists in the current page with a given Xpath result.
    *
-   * @param string $xpath
-   *   XPath used to find the field.
+   * @param \SimpleXmlElement[] $fields
+   *   Xml elements.
    * @param string $value
-   *   (optional) Value of the field to assert. You may pass in NULL (default)
-   *   to skip checking the actual value, while still checking that the field
-   *   exists.
+   *   (optional) Value of the field to assert. You may pass in NULL (default) to skip
+   *   checking the actual value, while still checking that the field exists.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
@@ -843,9 +842,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value = NULL, $message = '', $group = 'Other') {
-    $fields = $this->xpath($xpath);
-
+  protected function assertFieldsByValue($fields, $value = NULL, $message = '', $group = 'Other') {
     // If value specified then check array for match.
     $found = TRUE;
     if (isset($value)) {
@@ -878,6 +875,34 @@ trait AssertContentTrait {
       }
     }
     return $this->assertTrue($fields && $found, $message, $group);
+  }
+
+  /**
+   * Asserts that a field exists in the current page by the given XPath.
+   *
+   * @param string $xpath
+   *   XPath used to find the field.
+   * @param string $value
+   *   (optional) Value of the field to assert. You may pass in NULL (default)
+   *   to skip checking the actual value, while still checking that the field
+   *   exists.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   * @param string $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertFieldByXPath($xpath, $value = NULL, $message = '', $group = 'Other') {
+    $fields = $this->xpath($xpath);
+
+    return $this->assertFieldsByValue($fields, $value, $message, $group);
   }
 
   /**
@@ -1134,6 +1159,31 @@ trait AssertContentTrait {
   }
 
   /**
+   * Asserts that a select option in the current page exists.
+   *
+   * @param string $drupal_selector
+   *   The data drupal selector of select field to assert.
+   * @param string $option
+   *   Option to assert.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   * @param string $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
+    $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', array(':data_drupal_selector' => $drupal_selector, ':option' => $option));
+    return $this->assertTrue(isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @data_drupal_selector exists.', array('@option' => $option, '@data_drupal_selector' => $drupal_selector)), $group);
+  }
+
+  /**
    * Asserts that a select option in the current page does not exist.
    *
    * @param string $id
@@ -1184,6 +1234,33 @@ trait AssertContentTrait {
   protected function assertOptionSelected($id, $option, $message = '', $group = 'Browser') {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
     return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @id is selected.', array('@option' => $option, '@id' => $id)), $group);
+  }
+
+  /**
+   * Asserts that a select option in the current page is checked.
+   *
+   * @param string $drupal_selector
+   *   The data drupal selector of select field to assert.
+   * @param string $option
+   *   Option to assert.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   * @param string $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   *
+   * @todo $id is unusable. Replace with $name.
+   */
+  protected function assertOptionSelectedWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
+    $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', array(':data_drupal_selector' => $drupal_selector, ':option' => $option));
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @data_drupal_selector is selected.', array('@option' => $option, '@data_drupal_selector' => $drupal_selector)), $group);
   }
 
   /**

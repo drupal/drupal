@@ -9,7 +9,6 @@ namespace Drupal\file\Tests;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
@@ -86,7 +85,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), 'After clicking the "Remove" button, it is no longer displayed.');
       $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), 'After clicking the "Remove" button, the "Upload" button is displayed.');
       // Test label has correct 'for' attribute.
-      $label = $this->xpath("//label[@for='edit-" . Html::cleanCssIdentifier($field_name) . "-0-upload']");
+      $input = $this->xpath('//input[@name="files[' . $field_name . '_0]"]');
+      $label = $this->xpath('//label[@for="' . (string) $input[0]['id'] . '"]');
       $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.

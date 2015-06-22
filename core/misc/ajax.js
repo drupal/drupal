@@ -456,6 +456,13 @@
   Drupal.ajax.WRAPPER_FORMAT = '_wrapper_format';
 
   /**
+   * Request parameter to indicate that a request is a Drupal Ajax request.
+   *
+   * @const
+   */
+  Drupal.Ajax.AJAX_REQUEST_PARAMETER = '_drupal_ajax';
+
+  /**
    * Execute the ajax request.
    *
    * Allows developers to execute an Ajax request manually without specifying
@@ -580,16 +587,8 @@
       Drupal.detachBehaviors(this.$form.get(0), settings, 'serialize');
     }
 
-    // Prevent duplicate HTML ids in the returned markup.
-    // @see \Drupal\Component\Utility\Html::getUniqueId()
-    var ids = document.querySelectorAll('[id]');
-    var ajaxHtmlIds = [];
-    var il = ids.length;
-    for (var i = 0; i < il; i++) {
-      ajaxHtmlIds.push(ids[i].id);
-    }
-    // Join IDs to minimize request size.
-    options.data.ajax_html_ids = ajaxHtmlIds.join(' ');
+    // Inform Drupal that this is an AJAX request.
+    options.data[Drupal.Ajax.AJAX_REQUEST_PARAMETER] = 1;
 
     // Allow Drupal to return new JavaScript and CSS files to load without
     // returning the ones already loaded.
