@@ -653,7 +653,7 @@ services:
     arguments: ['@current_route_match']
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
-    arguments: ['@database', '@state', '@path.current']
+    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager']
     tags:
       - { name: event_subscriber }
       - { name: backend_overridable }
@@ -961,7 +961,7 @@ services:
     class: Drupal\Core\EventSubscriber\PathSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@path.alias_manager', '@path_processor_manager', '@path.current']
+    arguments: ['@path.alias_manager', '@path.current']
   route_access_response_subscriber:
     class: Drupal\Core\EventSubscriber\RouteAccessResponseSubscriber
     tags:

@@ -9,10 +9,9 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -29,13 +28,6 @@ class PathSubscriber implements EventSubscriberInterface {
   protected $aliasManager;
 
   /**
-   * A path processor manager for resolving the system path.
-   *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
-   */
-  protected $pathProcessor;
-
-  /**
    * The current path.
    *
    * @var \Drupal\Core\Path\CurrentPathStack
@@ -46,31 +38,27 @@ class PathSubscriber implements EventSubscriberInterface {
    * Constructs a new PathSubscriber instance.
    *
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
+   *   The alias manager.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path.
    */
-  public function __construct(AliasManagerInterface $alias_manager, InboundPathProcessorInterface $path_processor, CurrentPathStack $current_path) {
+  public function __construct(AliasManagerInterface $alias_manager, CurrentPathStack $current_path) {
     $this->aliasManager = $alias_manager;
-    $this->pathProcessor = $path_processor;
     $this->currentPath = $current_path;
   }
 
   /**
-   * Converts the request path to a system path.
+   * Sets the cache key on the alias manager cache decorator.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * KernelEvents::CONTROLLER is used in order to be executed after routing.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
    *   The Event to process.
    */
-  public function onKernelRequestConvertPath(GetResponseEvent $event) {
-    $request = $event->getRequest();
-    $path = trim($request->getPathInfo(), '/');
-    $path = $this->pathProcessor->processInbound($path, $request);
-    $this->currentPath->setPath('/' . $path, $request);
-
+  public function onKernelController(FilterControllerEvent $event) {
     // Set the cache key on the alias manager cache decorator.
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-      $this->aliasManager->setCacheKey($path);
+      $this->aliasManager->setCacheKey(trim($this->currentPath->getPath($event->getRequest()), '/'));
     }
   }
 
@@ -88,7 +76,7 @@ class PathSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestConvertPath', 200);
+    $events[KernelEvents::CONTROLLER][] = array('onKernelController', 200);
     $events[KernelEvents::TERMINATE][] = array('onKernelTerminate', 200);
     return $events;
   }

@@ -98,6 +98,10 @@ class FormatDateTest extends WebTestBase {
     $this->config('system.site')->set('default_langcode', static::LANGCODE)->save();
     date_default_timezone_set('America/Los_Angeles');
 
+    // Reset the language manager so new negotiations attempts will fall back on
+    // on the new language.
+    $this->container->get('language_manager')->reset();
+
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', 'Test a different language.');
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London'), 'Monday, 26-Mar-07 01:00:00 BST', 'Test a different time zone.');
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T'), 'domingo, 25-Mar-07 17:00:00 PDT', 'Test custom date format.');

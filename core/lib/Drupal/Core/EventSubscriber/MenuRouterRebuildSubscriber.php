@@ -86,7 +86,8 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[RoutingEvents::FINISHED][] = array('onRouterRebuild', 200);
+    // Run after CachedRouteRebuildSubscriber.
+    $events[RoutingEvents::FINISHED][] = array('onRouterRebuild', 100);
     return $events;
   }
 

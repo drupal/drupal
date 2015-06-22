@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\EventSubscriber\ThemeSettingsCacheTag.
+ * Contains \Drupal\system\EventSubscriber\ConfigCacheTag.
  */
 
 namespace Drupal\system\EventSubscriber;
@@ -15,9 +15,9 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * A subscriber invalidating the 'rendered' cache tag when saving theme settings.
+ * A subscriber invalidating cache tags when system config objects are saved.
  */
-class ThemeSettingsCacheTag implements EventSubscriberInterface {
+class ConfigCacheTag implements EventSubscriberInterface {
 
   /**
    * The theme handler.
@@ -34,7 +34,7 @@ class ThemeSettingsCacheTag implements EventSubscriberInterface {
   protected $cacheTagsInvalidator;
 
   /**
-   * Constructs a ThemeSettingsCacheTag object.
+   * Constructs a ConfigCacheTag object.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
@@ -47,12 +47,19 @@ class ThemeSettingsCacheTag implements EventSubscriberInterface {
   }
 
   /**
-   * Invalidate the 'rendered' cache tag whenever a theme setting is modified.
+   * Invalidate cache tags when particular system config objects are saved.
    *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The Event to process.
    */
   public function onSave(ConfigCrudEvent $event) {
+    // Changing the site settings may mean a different route is selected for the
+    // front page. Additionally a change to the site name or similar must
+    // invalidate the render cache since this could be used anywhere.
+    if ($event->getConfig()->getName() === 'system.site') {
+      $this->cacheTagsInvalidator->invalidateTags(['route_match', 'rendered']);
+    }
+
     // Global theme settings.
     if ($event->getConfig()->getName() === 'system.theme.global') {
       $this->cacheTagsInvalidator->invalidateTags(['rendered']);

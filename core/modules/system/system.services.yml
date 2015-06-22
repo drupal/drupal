@@ -42,8 +42,8 @@ services:
     arguments: ['@cron', '@config.factory', '@state']
     tags:
       - { name: event_subscriber }
-  system.theme_settings_cache_tag:
-    class: Drupal\system\EventSubscriber\ThemeSettingsCacheTag
+  system.config_cache_tag:
+    class: Drupal\system\EventSubscriber\ConfigCacheTag
     arguments: ['@theme_handler', '@cache_tags.invalidator']
     tags:
       - { name: event_subscriber }

@@ -185,7 +185,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
     // @todo Use the RequestHelper once https://www.drupal.org/node/2090293 is
     //   fixed.
-    $request = Request::create($this->context->getCompleteBaseUrl() . '/' . $path);
+    $request = Request::create('/' . $path);
     // Performance optimization: set a short accept header to reduce overhead in
     // AcceptHeaderMatcher when matching the request.
     $request->headers->set('Accept', 'text/html');

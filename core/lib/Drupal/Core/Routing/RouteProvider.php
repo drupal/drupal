@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Cmf\Component\Routing\PagedRouteCollection;
 use Symfony\Cmf\Component\Routing\PagedRouteProviderInterface;
@@ -67,6 +69,20 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
   protected $currentPath;
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * A path processor manager for resolving the system path.
+   *
+   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
+   */
+  protected $pathProcessor;
+
+  /**
    * Constructs a new PathMatcher.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -74,15 +90,21 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
-   *   THe current path.
+   *   The current path.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
+   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
+   *   The path processor.
    * @param string $table
    *   The table in the database to use for matching.
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, $table = 'router') {
     $this->connection = $connection;
     $this->state = $state;
     $this->tableName = $table;
     $this->currentPath = $current_path;
+    $this->cache = $cache_backend;
+    $this->pathProcessor = $path_processor;
   }
 
   /**
@@ -107,13 +129,31 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * @return \Symfony\Component\Routing\RouteCollection with all urls that
    *      could potentially match $request. Empty collection if nothing can
    *      match.
-   *
-   * @todo Should this method's found routes also be included in the cache?
    */
   public function getRouteCollectionForRequest(Request $request) {
-    $path = $this->currentPath->getPath($request);
-
-    return $this->getRoutesByPath(rtrim($path, '/'));
+    // Cache both the system path as well as route parameters and matching
+    // routes.
+    $cid = 'route:' . $request->getPathInfo() . ':' .  $request->getQueryString();
+    if ($cached = $this->cache->get($cid)) {
+      $this->currentPath->setPath($cached->data['path'], $request);
+      $request->query->replace($cached->data['query']);
+      return $cached->data['routes'];
+    }
+    else {
+      $path = trim($request->getPathInfo(), '/');
+      $path = $this->pathProcessor->processInbound($path, $request);
+      $this->currentPath->setPath('/' . $path, $request);
+      // Incoming path processors may also set query parameters.
+      $query_parameters = $request->query->all();
+      $routes = $this->getRoutesByPath('/' . rtrim($path, '/'));
+      $cache_value = [
+        'path' => '/' . $path,
+        'query' => $query_parameters,
+        'routes' => $routes,
+      ];
+      $this->cache->set($cid, $cache_value, CacheBackendInterface::CACHE_PERMANENT, ['route_match']);
+      return $routes;
+    }
   }
 
   /**
