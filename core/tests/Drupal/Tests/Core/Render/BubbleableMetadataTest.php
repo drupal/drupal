@@ -527,14 +527,14 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @covers ::mergeAttachments
    *
-   * @dataProvider providerTestMergeAttachementsHtmlHeadLinkMerging
+   * @dataProvider providerTestMergeAttachmentsHtmlHeadLinkMerging
    */
   function testMergeAttachmentsHtmlHeadLinkMerging($a, $b, $expected) {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
   /**
-   * Data provider for testMergeAttachementsHtmlHeadLinkMerging
+   * Data provider for testMergeAttachmentsHtmlHeadLinkMerging
    *
    * @return array
    */
