@@ -105,6 +105,7 @@ class Comments extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("comments")->fields(array(
       'cid',
@@ -171,4 +172,4 @@ class Comments extends DrupalDumpBase {
   }
 
 }
-#8c1753bf890ededa04bcc9ca759d0d01
+#8ee26900ad900de3abde3e74f89d6765

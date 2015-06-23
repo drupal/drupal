@@ -44,7 +44,7 @@ class FieldDataFieldTermReference extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldDataFieldTermReference extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_term_reference")->fields(array(
       'entity_type',
@@ -102,4 +103,4 @@ class FieldDataFieldTermReference extends DrupalDumpBase {
   }
 
 }
-#bd6a1e3b400e5d54d9414f069e9ffd78
+#f33077a408305fb71bf8c18542882cd6

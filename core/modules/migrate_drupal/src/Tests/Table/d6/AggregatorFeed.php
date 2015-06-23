@@ -89,6 +89,7 @@ class AggregatorFeed extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("aggregator_feed")->fields(array(
       'fid',
@@ -119,4 +120,4 @@ class AggregatorFeed extends DrupalDumpBase {
   }
 
 }
-#57eeb4c900631cda398a543689a156cb
+#662f4470777c1bda31d407bb5ba21346

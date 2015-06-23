@@ -43,9 +43,10 @@ class CtoolsCssCache extends DrupalDumpBase {
         'filter' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("ctools_css_cache")->fields(array(
       'cid',
@@ -57,4 +58,4 @@ class CtoolsCssCache extends DrupalDumpBase {
   }
 
 }
-#3a1f1b6c213289483ef89e7562f0124a
+#1287287b2278e94ff6fe63c141cfc3de

@@ -34,9 +34,11 @@ class SearchTotal extends DrupalDumpBase {
         'count' => array(
           'type' => 'numeric',
           'not null' => FALSE,
-          'length' => 100,
+          'precision' => '10',
+          'scale' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("search_total")->fields(array(
       'word',
@@ -44,99 +46,99 @@ class SearchTotal extends DrupalDumpBase {
     ))
     ->values(array(
       'word' => '1',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => '1192015',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => '19',
-      'count' => '0.176091',
+      'count' => '0',
     ))->values(array(
       'word' => '2015',
-      'count' => '0.176091',
+      'count' => '0',
     ))->values(array(
       'word' => '2215',
-      'count' => '0.176091',
+      'count' => '0',
     ))->values(array(
       'word' => '2218',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => '9',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => '99999999',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'abc5xyz',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'admin',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'another',
-      'count' => '0.0377886',
+      'count' => '0',
     ))->values(array(
       'word' => 'click',
-      'count' => '0.0377886',
+      'count' => '0',
     ))->values(array(
       'word' => 'comment',
-      'count' => '0.0157943',
+      'count' => '0',
     ))->values(array(
       'word' => 'comments',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'default',
-      'count' => '0.0377886',
+      'count' => '0',
     ))->values(array(
       'word' => 'examplecom',
-      'count' => '0.0193052',
+      'count' => '0',
     ))->values(array(
       'word' => 'here',
-      'count' => '0.0377886',
+      'count' => '0',
     ))->values(array(
       'word' => 'january',
-      'count' => '0.176091',
+      'count' => '0',
     ))->values(array(
       'word' => 'monday',
-      'count' => '0.176091',
+      'count' => '0',
     ))->values(array(
       'word' => 'more',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'node',
-      'count' => '0.0163904',
+      'count' => '0',
     ))->values(array(
       'word' => 'permalink',
-      'count' => '0.0377886',
+      'count' => '0',
     ))->values(array(
       'word' => 'post',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'prefix',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'register',
-      'count' => '0.162727',
+      'count' => '0',
     ))->values(array(
       'word' => 'some',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'submitted',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'text',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'this',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'value',
-      'count' => '0.30103',
+      'count' => '0',
     ))->values(array(
       'word' => 'value120suffix',
-      'count' => '0.30103',
+      'count' => '0',
     ))->execute();
   }
 
 }
-#b0a1f9cd3e748132f5861416093877cf
+#7ef964179b2e8308418e09f4ef322854

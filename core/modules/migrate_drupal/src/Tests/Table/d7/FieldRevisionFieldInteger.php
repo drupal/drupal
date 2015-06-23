@@ -45,7 +45,7 @@ class FieldRevisionFieldInteger extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldRevisionFieldInteger extends DrupalDumpBase {
           'length' => '11',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_integer")->fields(array(
       'entity_type',
@@ -102,4 +103,4 @@ class FieldRevisionFieldInteger extends DrupalDumpBase {
   }
 
 }
-#e8e41f2e62bbb822a90794d0e7e6eb90
+#75fce538f2e8202830e30771132bde34

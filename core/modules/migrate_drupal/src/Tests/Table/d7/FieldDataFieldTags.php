@@ -44,7 +44,7 @@ class FieldDataFieldTags extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldDataFieldTags extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_tags")->fields(array(
       'entity_type',
@@ -93,4 +94,4 @@ class FieldDataFieldTags extends DrupalDumpBase {
   }
 
 }
-#47fae1cae2e87753c7cf27d43e884edd
+#9e0f85739f8ae8d2c27054edb43f388d

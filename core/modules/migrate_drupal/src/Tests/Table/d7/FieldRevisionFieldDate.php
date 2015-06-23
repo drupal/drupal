@@ -45,7 +45,7 @@ class FieldRevisionFieldDate extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldRevisionFieldDate extends DrupalDumpBase {
           'length' => '100',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_date")->fields(array(
       'entity_type',
@@ -102,4 +103,4 @@ class FieldRevisionFieldDate extends DrupalDumpBase {
   }
 
 }
-#9a10cb625cbfdb87b0d8e7ba2f6e363a
+#7a496d6829348725dd37aaa48989ba36

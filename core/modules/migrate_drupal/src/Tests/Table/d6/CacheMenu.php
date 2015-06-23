@@ -60,6 +60,7 @@ class CacheMenu extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_menu")->fields(array(
       'cid',
@@ -73,4 +74,4 @@ class CacheMenu extends DrupalDumpBase {
   }
 
 }
-#ce732ace4abb70c89febc7c07f1d7165
+#8619c81798239c1dacaaef75f55ee4be

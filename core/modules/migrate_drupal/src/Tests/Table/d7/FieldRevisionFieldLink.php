@@ -45,7 +45,7 @@ class FieldRevisionFieldLink extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -88,6 +88,7 @@ class FieldRevisionFieldLink extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_link")->fields(array(
       'entity_type',
@@ -116,4 +117,4 @@ class FieldRevisionFieldLink extends DrupalDumpBase {
   }
 
 }
-#d8e901785d58770e29e1c9d2192cbd2b
+#8bd85e5a9460172be79c50b43a35e68b

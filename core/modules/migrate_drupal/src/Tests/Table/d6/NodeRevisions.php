@@ -78,6 +78,7 @@ class NodeRevisions extends DrupalDumpBase {
       'primary key' => array(
         'vid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_revisions")->fields(array(
       'nid',
@@ -204,4 +205,4 @@ class NodeRevisions extends DrupalDumpBase {
   }
 
 }
-#d3c03811fc5ee9b9b9e57ea430ecaa40
+#8448741f18a4f40eec7bf466dcab82c1

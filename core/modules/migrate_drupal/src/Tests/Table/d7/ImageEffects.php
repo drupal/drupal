@@ -55,6 +55,7 @@ class ImageEffects extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("image_effects")->fields(array(
       'ieid',
@@ -67,4 +68,4 @@ class ImageEffects extends DrupalDumpBase {
   }
 
 }
-#a9ad7344cf818347e8074c68c88f882b
+#02b95b18fd065377d10d2eb5db756894

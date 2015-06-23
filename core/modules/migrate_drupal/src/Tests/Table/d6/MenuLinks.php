@@ -185,6 +185,7 @@ class MenuLinks extends DrupalDumpBase {
       'primary key' => array(
         'mlid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("menu_links")->fields(array(
       'menu_name',
@@ -5157,4 +5158,4 @@ class MenuLinks extends DrupalDumpBase {
   }
 
 }
-#772778397f0cab72b529312c65596781
+#a594b05a60a1a549e86f4c190c2f2f4e

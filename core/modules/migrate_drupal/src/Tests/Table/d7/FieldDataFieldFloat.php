@@ -44,7 +44,7 @@ class FieldDataFieldFloat extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -74,9 +74,11 @@ class FieldDataFieldFloat extends DrupalDumpBase {
         'field_float_value' => array(
           'type' => 'numeric',
           'not null' => FALSE,
-          'length' => 100,
+          'precision' => '10',
+          'scale' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_float")->fields(array(
       'entity_type',
@@ -96,9 +98,9 @@ class FieldDataFieldFloat extends DrupalDumpBase {
       'revision_id' => '1',
       'language' => 'und',
       'delta' => '0',
-      'field_float_value' => '1.2',
+      'field_float_value' => '1',
     ))->execute();
   }
 
 }
-#099854befef1b9e7fd22e294181313f0
+#5d7f9e708e357b3f15e5d5eb55cb2366

@@ -44,7 +44,7 @@ class FieldDataFieldDate extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -77,6 +77,7 @@ class FieldDataFieldDate extends DrupalDumpBase {
           'length' => '100',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_date")->fields(array(
       'entity_type',
@@ -101,4 +102,4 @@ class FieldDataFieldDate extends DrupalDumpBase {
   }
 
 }
-#58f839d311cfb07b3330ee13794c8dfd
+#d38bdfa344cb3c6b0750c6be42f0af9e

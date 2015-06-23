@@ -45,7 +45,7 @@ class FieldRevisionFieldImage extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -101,6 +101,7 @@ class FieldRevisionFieldImage extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_image")->fields(array(
       'entity_type',
@@ -120,4 +121,4 @@ class FieldRevisionFieldImage extends DrupalDumpBase {
   }
 
 }
-#a544da1e4f40a1c4bc865dc5a14dc6f6
+#f79a72a32b1944ed709480b52fcf0bd1

@@ -101,6 +101,10 @@ class {{CLASS_NAME}} extends DrupalDumpBase {
   // Generate a list of tables.
   $tables = $connection->query('SHOW TABLES')->fetchCol();
 
+  // Get all character sets, keyed by table name.
+  $character_sets = $connection->query('SELECT T.TABLE_NAME, CCSA.CHARACTER_SET_NAME FROM information_schema.TABLES T INNER JOIN information_schema.COLLATION_CHARACTER_SET_APPLICABILITY CCSA ON CCSA.COLLATION_NAME = T.TABLE_COLLATION WHERE T.TABLE_SCHEMA = \'' . $connection_info['database'] . '\'')
+  ->fetchAllKeyed();
+
   foreach ($tables as $table) {
     // Generate the class name.
     $class = Inflector::classify($table);
@@ -183,6 +187,9 @@ class {{CLASS_NAME}} extends DrupalDumpBase {
 
     }
     $fields = Variable::export(array_keys($definition['fields']), '    ');
+    if ($connection->driver() == 'mysql') {
+      $definition['mysql_character_set'] = $character_sets[$table];
+    }
     $definition = Variable::export($definition, '    ');
 
     // Do our substitutions.

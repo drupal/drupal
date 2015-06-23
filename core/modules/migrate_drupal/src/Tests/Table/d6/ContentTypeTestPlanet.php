@@ -39,6 +39,7 @@ class ContentTypeTestPlanet extends DrupalDumpBase {
       'primary key' => array(
         'vid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_type_test_planet")->fields(array(
       'nid',
@@ -69,4 +70,4 @@ class ContentTypeTestPlanet extends DrupalDumpBase {
   }
 
 }
-#2f3598809df1de9649ba0f556886687b
+#d824be8bf53956e1f6e275f010eb1b86

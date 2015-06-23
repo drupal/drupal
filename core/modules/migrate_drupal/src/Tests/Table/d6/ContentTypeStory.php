@@ -172,6 +172,7 @@ class ContentTypeStory extends DrupalDumpBase {
       'primary key' => array(
         'vid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_type_story")->fields(array(
       'nid',
@@ -318,4 +319,4 @@ class ContentTypeStory extends DrupalDumpBase {
   }
 
 }
-#9a56fc4e90fa0eecfefb64eeaee69dfd
+#e355803b63e8cbefe404f59e30bbf793

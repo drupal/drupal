@@ -49,6 +49,7 @@ class FilterFormats extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("filter_formats")->fields(array(
       'format',
@@ -75,4 +76,4 @@ class FilterFormats extends DrupalDumpBase {
   }
 
 }
-#bc3c85fe411e79820e50f12d39e1e938
+#bbec2c10ac788fac1807d23774b34b49

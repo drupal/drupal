@@ -140,6 +140,7 @@ class MenuRouter extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("menu_router")->fields(array(
       'path',
@@ -7286,4 +7287,4 @@ class MenuRouter extends DrupalDumpBase {
   }
 
 }
-#19aef86dbdc4dccee05e1871b5587337
+#fb802acc1b7c3aa4152fc3f17c404852

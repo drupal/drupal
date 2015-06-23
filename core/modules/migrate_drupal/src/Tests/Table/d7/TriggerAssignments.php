@@ -45,6 +45,7 @@ class TriggerAssignments extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("trigger_assignments")->fields(array(
       'hook',
@@ -59,4 +60,4 @@ class TriggerAssignments extends DrupalDumpBase {
   }
 
 }
-#5d757148ffae33413bb7681a38cccb04
+#ded4156a5c9b777c9008a952ce666ca4

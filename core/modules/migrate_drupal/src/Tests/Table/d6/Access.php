@@ -49,6 +49,7 @@ class Access extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("access")->fields(array(
       'aid',
@@ -60,4 +61,4 @@ class Access extends DrupalDumpBase {
   }
 
 }
-#906d752540b89c65dcab417eeb749669
+#131cb9eb08548867ec92c3373ac67a42

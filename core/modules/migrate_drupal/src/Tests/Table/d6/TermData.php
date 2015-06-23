@@ -56,6 +56,7 @@ class TermData extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("term_data")->fields(array(
       'tid',
@@ -104,4 +105,4 @@ class TermData extends DrupalDumpBase {
   }
 
 }
-#a392bc00314b5ac5a418fb00a52cb821
+#5bd3c3673e6cc04e09db9b3d3f601c73

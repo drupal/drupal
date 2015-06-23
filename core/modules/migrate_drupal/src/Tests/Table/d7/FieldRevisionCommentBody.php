@@ -45,7 +45,7 @@ class FieldRevisionCommentBody extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -83,6 +83,7 @@ class FieldRevisionCommentBody extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_comment_body")->fields(array(
       'entity_type',
@@ -109,4 +110,4 @@ class FieldRevisionCommentBody extends DrupalDumpBase {
   }
 
 }
-#6f0d3a06aebbd3dddfa962163249bd8e
+#c3196f37793be4c3a67a5fabbe96d638

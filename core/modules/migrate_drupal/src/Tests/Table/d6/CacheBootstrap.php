@@ -73,6 +73,7 @@ class CacheBootstrap extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_bootstrap")->fields(array(
       'cid',
@@ -88,4 +89,4 @@ class CacheBootstrap extends DrupalDumpBase {
   }
 
 }
-#fca41159793677ed4462364018ae2af2
+#61ee75983133914b8b02a29869f7ced7

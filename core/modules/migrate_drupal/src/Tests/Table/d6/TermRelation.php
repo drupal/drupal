@@ -45,6 +45,7 @@ class TermRelation extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("term_relation")->fields(array(
       'trid',
@@ -55,4 +56,4 @@ class TermRelation extends DrupalDumpBase {
   }
 
 }
-#008e1b937f330389e84d1b5604ed3b95
+#a5ad4b081bfc203e4428bb943e24948a

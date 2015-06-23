@@ -54,6 +54,7 @@ class ContentFieldMultivalue extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_field_multivalue")->fields(array(
       'vid',
@@ -75,4 +76,4 @@ class ContentFieldMultivalue extends DrupalDumpBase {
   }
 
 }
-#6e171ee9ca107b88bf7395989816972b
+#3c8ab8a4159f22b3d38be702b6eaa647

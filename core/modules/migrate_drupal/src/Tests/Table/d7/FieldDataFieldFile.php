@@ -44,7 +44,7 @@ class FieldDataFieldFile extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -80,7 +80,7 @@ class FieldDataFieldFile extends DrupalDumpBase {
         'field_file_display' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '1',
           'unsigned' => TRUE,
         ),
@@ -90,6 +90,7 @@ class FieldDataFieldFile extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_file")->fields(array(
       'entity_type',
@@ -107,4 +108,4 @@ class FieldDataFieldFile extends DrupalDumpBase {
   }
 
 }
-#1aaddda3b8a128af343595d750bd3502
+#5b4f01cbd8c2bdba462a4899dc2ea6b7

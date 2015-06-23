@@ -39,7 +39,7 @@ class TaxonomyIndex extends DrupalDumpBase {
         'sticky' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'created' => array(
@@ -49,6 +49,7 @@ class TaxonomyIndex extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("taxonomy_index")->fields(array(
       'nid',
@@ -65,4 +66,4 @@ class TaxonomyIndex extends DrupalDumpBase {
   }
 
 }
-#b4d7ca5b3adaf8e6e3938a7a6f43bd33
+#8204d7c1b294ccb506b5106f410bfa37

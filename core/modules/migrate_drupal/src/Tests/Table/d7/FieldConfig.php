@@ -49,7 +49,7 @@ class FieldConfig extends DrupalDumpBase {
         'active' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'storage_type' => array(
@@ -66,13 +66,13 @@ class FieldConfig extends DrupalDumpBase {
         'storage_active' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'locked' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'data' => array(
@@ -83,22 +83,23 @@ class FieldConfig extends DrupalDumpBase {
         'cardinality' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'translatable' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_config")->fields(array(
       'id',
@@ -399,4 +400,4 @@ class FieldConfig extends DrupalDumpBase {
   }
 
 }
-#fcabbf0d86874983e6fdc8bf74d051dd
+#73e7228808dbee3c78a696d6dc299e8a

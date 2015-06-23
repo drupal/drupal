@@ -50,6 +50,7 @@ class Permission extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("permission")->fields(array(
       'pid',
@@ -91,4 +92,4 @@ class Permission extends DrupalDumpBase {
   }
 
 }
-#4b13b70647b513732a91cd7132b08c01
+#c9d81025ccba3af28983d7e3bbe38802

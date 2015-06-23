@@ -45,7 +45,7 @@ class ForumIndex extends DrupalDumpBase {
         'sticky' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'created' => array(
@@ -69,6 +69,7 @@ class ForumIndex extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("forum_index")->fields(array(
       'nid',
@@ -83,4 +84,4 @@ class ForumIndex extends DrupalDumpBase {
   }
 
 }
-#1f59c5b563ba76fa2c75495f33f57e11
+#a1a3b65a0b88c88bd22e60963cffe5a2

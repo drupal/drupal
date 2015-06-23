@@ -45,7 +45,7 @@ class FieldRevisionFieldDateWithEndTime extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -83,6 +83,7 @@ class FieldRevisionFieldDateWithEndTime extends DrupalDumpBase {
           'length' => '11',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_date_with_end_time")->fields(array(
       'entity_type',
@@ -109,4 +110,4 @@ class FieldRevisionFieldDateWithEndTime extends DrupalDumpBase {
   }
 
 }
-#b718d97ffca3feca611e4b64546c01a2
+#2cf39b7ef226459966b7bee448ec5123

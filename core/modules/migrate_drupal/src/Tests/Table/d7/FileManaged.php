@@ -59,14 +59,14 @@ class FileManaged extends DrupalDumpBase {
         'filesize' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '20',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'timestamp' => array(
@@ -77,6 +77,7 @@ class FileManaged extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("file_managed")->fields(array(
       'fid',
@@ -101,4 +102,4 @@ class FileManaged extends DrupalDumpBase {
   }
 
 }
-#230395ef69d748c973a4f2d421856fcf
+#56e60ddebedd173968ca05c1c87b0f20

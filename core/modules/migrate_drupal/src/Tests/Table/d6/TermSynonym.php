@@ -44,6 +44,7 @@ class TermSynonym extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("term_synonym")->fields(array(
       'tsid',
@@ -54,4 +55,4 @@ class TermSynonym extends DrupalDumpBase {
   }
 
 }
-#aaa34560b144351e9a738a70325d69a6
+#f872b9f69bd357799c9aebbfc65dd736

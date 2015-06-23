@@ -45,7 +45,7 @@ class FieldRevisionFieldBoolean extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldRevisionFieldBoolean extends DrupalDumpBase {
           'length' => '11',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_boolean")->fields(array(
       'entity_type',
@@ -102,4 +103,4 @@ class FieldRevisionFieldBoolean extends DrupalDumpBase {
   }
 
 }
-#33c7cfb7956140a5e30a4ab65c94c968
+#714689a7cd3018aca920b2545fecca3f

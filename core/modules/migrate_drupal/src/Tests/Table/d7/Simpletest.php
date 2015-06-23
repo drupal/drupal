@@ -78,6 +78,7 @@ class Simpletest extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("simpletest")->fields(array(
       'message_id',
@@ -94,4 +95,4 @@ class Simpletest extends DrupalDumpBase {
   }
 
 }
-#429a47cf9df8c04272ca64ddeece0da4
+#88369dad7154203ce0fa1eee7f392942

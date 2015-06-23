@@ -45,6 +45,7 @@ class RolePermission extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("role_permission")->fields(array(
       'rid',
@@ -415,4 +416,4 @@ class RolePermission extends DrupalDumpBase {
   }
 
 }
-#250f49f0121123b59282926cbe8b7d00
+#f2497ea0a9b301afa3b03fea57bcf71a

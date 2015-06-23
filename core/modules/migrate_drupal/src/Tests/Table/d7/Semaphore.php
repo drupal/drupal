@@ -40,9 +40,11 @@ class Semaphore extends DrupalDumpBase {
         'expire' => array(
           'type' => 'numeric',
           'not null' => TRUE,
-          'length' => 100,
+          'precision' => '10',
+          'scale' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("semaphore")->fields(array(
       'name',
@@ -53,4 +55,4 @@ class Semaphore extends DrupalDumpBase {
   }
 
 }
-#2a687fbf97f600464a9297e3b027312d
+#d0b2a55e7780f49f970dd2b3e73cafe0

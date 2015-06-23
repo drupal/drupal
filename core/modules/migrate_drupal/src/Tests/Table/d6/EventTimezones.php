@@ -62,6 +62,7 @@ class EventTimezones extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("event_timezones")->fields(array(
       'timezone',
@@ -3302,4 +3303,4 @@ class EventTimezones extends DrupalDumpBase {
   }
 
 }
-#6b7541b69fbd9ffb83e93348c4ba479e
+#5e6c6fb6a7c2da1e9b5a3d940ea00007

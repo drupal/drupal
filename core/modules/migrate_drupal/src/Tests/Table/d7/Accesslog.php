@@ -78,6 +78,7 @@ class Accesslog extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("accesslog")->fields(array(
       'aid',
@@ -124,4 +125,4 @@ class Accesslog extends DrupalDumpBase {
   }
 
 }
-#3977151b031051142a610811b1e41d20
+#1aaa5fa899c08cfc6607be2b0599ef46

@@ -51,7 +51,7 @@ class Block extends DrupalDumpBase {
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'weight' => array(
@@ -69,13 +69,13 @@ class Block extends DrupalDumpBase {
         'custom' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'visibility' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'pages' => array(
@@ -92,10 +92,11 @@ class Block extends DrupalDumpBase {
         'cache' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '1',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("block")->fields(array(
       'bid',
@@ -687,4 +688,4 @@ class Block extends DrupalDumpBase {
   }
 
 }
-#50042dc7ad6299c9db8f127565cd40d7
+#74042b5093754da56e33ac51a867f531

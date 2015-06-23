@@ -73,25 +73,25 @@ class MenuLinks extends DrupalDumpBase {
         'hidden' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'external' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'has_children' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'expanded' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'weight' => array(
@@ -103,13 +103,13 @@ class MenuLinks extends DrupalDumpBase {
         'depth' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'customized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'p1' => array(
@@ -178,13 +178,14 @@ class MenuLinks extends DrupalDumpBase {
         'updated' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
       'primary key' => array(
         'mlid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("menu_links")->fields(array(
       'menu_name',
@@ -9967,4 +9968,4 @@ class MenuLinks extends DrupalDumpBase {
   }
 
 }
-#ca122da186154af8876df1b67e92d2d7
+#8e0b0e21959e36a659b7ac2c4206fecd

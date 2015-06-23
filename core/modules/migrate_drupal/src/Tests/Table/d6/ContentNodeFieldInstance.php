@@ -84,6 +84,7 @@ class ContentNodeFieldInstance extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_node_field_instance")->fields(array(
       'field_name',
@@ -332,4 +333,4 @@ class ContentNodeFieldInstance extends DrupalDumpBase {
   }
 
 }
-#017d067779f912426f8b1c61a06736d7
+#18e0592c55879f37c24ea67f76ade69a

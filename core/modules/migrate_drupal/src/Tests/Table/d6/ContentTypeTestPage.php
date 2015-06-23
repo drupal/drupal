@@ -51,6 +51,7 @@ class ContentTypeTestPage extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_type_test_page")->fields(array(
       'vid',
@@ -62,4 +63,4 @@ class ContentTypeTestPage extends DrupalDumpBase {
   }
 
 }
-#dc14376a79c7efc3a0615ef67fa65021
+#cc8cbe99b5941aeb7e2ae8f0a5099945

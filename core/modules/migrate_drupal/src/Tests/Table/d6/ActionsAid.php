@@ -32,6 +32,7 @@ class ActionsAid extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("actions_aid")->fields(array(
       'aid',
@@ -40,4 +41,4 @@ class ActionsAid extends DrupalDumpBase {
   }
 
 }
-#1c907838b8bafd88d0d3141fe32b41f6
+#a58e383f81c657ac36eabc980e148fbd

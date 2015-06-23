@@ -88,7 +88,7 @@ class Users extends DrupalDumpBase {
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'timezone' => array(
@@ -120,6 +120,7 @@ class Users extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("users")->fields(array(
       'uid',
@@ -143,4 +144,4 @@ class Users extends DrupalDumpBase {
   }
 
 }
-#bb60d488e9420b75be9bb507fc35df8b
+#c4f52bf31f5fe27b4742639dea21039a

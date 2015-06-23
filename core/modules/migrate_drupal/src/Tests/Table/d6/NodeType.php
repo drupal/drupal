@@ -106,6 +106,7 @@ class NodeType extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_type")->fields(array(
       'type',
@@ -292,4 +293,4 @@ class NodeType extends DrupalDumpBase {
   }
 
 }
-#eed184e2169278835cffc9a9284bd8a1
+#ce6e29f5a41cf28d10fe3cf149cda559

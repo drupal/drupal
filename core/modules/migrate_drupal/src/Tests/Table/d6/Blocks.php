@@ -102,6 +102,7 @@ class Blocks extends DrupalDumpBase {
           'default' => '1',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("blocks")->fields(array(
       'bid',
@@ -402,4 +403,4 @@ class Blocks extends DrupalDumpBase {
   }
 
 }
-#1f4dbdf6b524a1b4ddea8cbb306caf19
+#aecc8e1067d73824c43bfaf26f9ebf8c

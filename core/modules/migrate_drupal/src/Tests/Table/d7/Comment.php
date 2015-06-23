@@ -75,7 +75,7 @@ class Comment extends DrupalDumpBase {
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '1',
           'unsigned' => TRUE,
         ),
@@ -106,6 +106,7 @@ class Comment extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("comment")->fields(array(
       'cid',
@@ -142,4 +143,4 @@ class Comment extends DrupalDumpBase {
   }
 
 }
-#a4c31706927b4da91d649feee8242c65
+#4b150a65a3b6d7fce31a6d2673085e13

@@ -51,10 +51,11 @@ class CachePage extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_page")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CachePage extends DrupalDumpBase {
   }
 
 }
-#63f141668969e909792a022ca6ce3df3
+#10dc9b8e587fb6f256a34741267fc168

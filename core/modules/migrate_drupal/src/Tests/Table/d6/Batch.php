@@ -47,6 +47,7 @@ class Batch extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("batch")->fields(array(
       'bid',
@@ -58,4 +59,4 @@ class Batch extends DrupalDumpBase {
   }
 
 }
-#28b4106c5eefd0a82f2fdc6d870fde78
+#7e3b35a2ee513385c7a63500e1a588c6

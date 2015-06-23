@@ -42,7 +42,7 @@ class TrackerUser extends DrupalDumpBase {
         'published' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'changed' => array(
@@ -53,6 +53,7 @@ class TrackerUser extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("tracker_user")->fields(array(
       'nid',
@@ -69,4 +70,4 @@ class TrackerUser extends DrupalDumpBase {
   }
 
 }
-#be294122e162b08491a204fc40bc1978
+#6fb17f49221d202409a1298360628d70

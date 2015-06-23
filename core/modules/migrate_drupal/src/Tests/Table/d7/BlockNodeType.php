@@ -43,6 +43,7 @@ class BlockNodeType extends DrupalDumpBase {
           'length' => '32',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("block_node_type")->fields(array(
       'module',
@@ -53,4 +54,4 @@ class BlockNodeType extends DrupalDumpBase {
   }
 
 }
-#ce1a1b08704bfe8d6df7a78d95327ff5
+#2e37638985a1b6e4e9734f60ecd857e5

@@ -53,6 +53,7 @@ class NodeCounter extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_counter")->fields(array(
       'nid',
@@ -64,4 +65,4 @@ class NodeCounter extends DrupalDumpBase {
   }
 
 }
-#3590d51296a05c25015308dfde590034
+#f1e838ae00ed337fca5d80787d9d0748

@@ -51,10 +51,11 @@ class CacheImage extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_image")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CacheImage extends DrupalDumpBase {
   }
 
 }
-#57ffeedbabeae7bfcd93e3c3b3d4eb37
+#2e1bdb0edde7fb364ccf6968e45c0d14

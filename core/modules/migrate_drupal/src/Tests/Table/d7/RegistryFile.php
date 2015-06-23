@@ -36,6 +36,7 @@ class RegistryFile extends DrupalDumpBase {
           'length' => '64',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("registry_file")->fields(array(
       'filename',
@@ -882,4 +883,4 @@ class RegistryFile extends DrupalDumpBase {
   }
 
 }
-#f31c4b35f9f220844db24b8a67b06dd5
+#1ac8dbfd83515be9880101dbf6939b62

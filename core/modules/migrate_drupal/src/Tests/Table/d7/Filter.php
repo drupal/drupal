@@ -61,6 +61,7 @@ class Filter extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("filter")->fields(array(
       'format',
@@ -214,4 +215,4 @@ class Filter extends DrupalDumpBase {
   }
 
 }
-#e6349349e505a04f97f17e2080d68135
+#26810a92f8dcd637a67b91e218441083

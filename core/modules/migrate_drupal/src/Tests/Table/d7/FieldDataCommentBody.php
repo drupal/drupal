@@ -44,7 +44,7 @@ class FieldDataCommentBody extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -82,6 +82,7 @@ class FieldDataCommentBody extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_comment_body")->fields(array(
       'entity_type',
@@ -108,4 +109,4 @@ class FieldDataCommentBody extends DrupalDumpBase {
   }
 
 }
-#313262182d98146f9b2209e767d6203e
+#706dc70c9b8aeae86a0d723c0a76f089

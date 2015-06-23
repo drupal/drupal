@@ -111,6 +111,7 @@ class Node extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node")->fields(array(
       'nid',
@@ -147,4 +148,4 @@ class Node extends DrupalDumpBase {
   }
 
 }
-#8de631972a15be4dd8adca896abf0909
+#ad72334d15f155644075803c26757ee5

@@ -42,6 +42,7 @@ class DateFormatLocale extends DrupalDumpBase {
         'type',
         'language',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("date_format_locale")->fields(array(
       'format',
@@ -52,4 +53,4 @@ class DateFormatLocale extends DrupalDumpBase {
   }
 
 }
-#6e387a5e7422422cef12532b9c153f4b
+#a9092bf2a65e6797eb144166d7a27ddf

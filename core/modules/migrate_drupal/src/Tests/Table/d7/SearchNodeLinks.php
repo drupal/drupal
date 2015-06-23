@@ -53,6 +53,7 @@ class SearchNodeLinks extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("search_node_links")->fields(array(
       'sid',
@@ -64,4 +65,4 @@ class SearchNodeLinks extends DrupalDumpBase {
   }
 
 }
-#df80aaa3c30f6070f6cf85c15416cfb5
+#abf1aa9d6fa48042800c0f61eab16902

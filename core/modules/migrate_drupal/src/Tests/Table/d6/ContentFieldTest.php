@@ -51,6 +51,7 @@ class ContentFieldTest extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_field_test")->fields(array(
       'vid',
@@ -82,4 +83,4 @@ class ContentFieldTest extends DrupalDumpBase {
   }
 
 }
-#2bb195409b310fb0707508fb07eb6e1e
+#e7860a4b52cecdb1a6d2fed28665d5e4

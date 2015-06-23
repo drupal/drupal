@@ -38,6 +38,7 @@ class BlockedIps extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("blocked_ips")->fields(array(
       'iid',
@@ -50,4 +51,4 @@ class BlockedIps extends DrupalDumpBase {
   }
 
 }
-#c9067ecae8a01a9ae2f2e260c258de23
+#745ba653652c85af65809eb2dfb9a9e1

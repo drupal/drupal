@@ -50,25 +50,26 @@ class NodeAccess extends DrupalDumpBase {
         'grant_view' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
         'grant_update' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
         'grant_delete' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_access")->fields(array(
       'nid',
@@ -89,4 +90,4 @@ class NodeAccess extends DrupalDumpBase {
   }
 
 }
-#b6bdd1c18807874da0ebd2e93eba4ed3
+#2677e6dc730eb5cf3f1c9346d6233b21

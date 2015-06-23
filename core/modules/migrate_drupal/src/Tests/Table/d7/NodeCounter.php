@@ -34,14 +34,14 @@ class NodeCounter extends DrupalDumpBase {
         'totalcount' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '20',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
         'daycount' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '8',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
@@ -53,6 +53,7 @@ class NodeCounter extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_counter")->fields(array(
       'nid',
@@ -69,4 +70,4 @@ class NodeCounter extends DrupalDumpBase {
   }
 
 }
-#0005dc0257e2c4a3fc4f44469ba70274
+#f2d6ef67cb9e076d80baa83d50c00d45

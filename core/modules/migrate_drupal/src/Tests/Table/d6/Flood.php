@@ -49,6 +49,7 @@ class Flood extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("flood")->fields(array(
       'fid',
@@ -60,4 +61,4 @@ class Flood extends DrupalDumpBase {
   }
 
 }
-#d2c30c15c28a1c63666a476c2e790efd
+#45aa7dba444d7433ed402ede2f8c3ed4

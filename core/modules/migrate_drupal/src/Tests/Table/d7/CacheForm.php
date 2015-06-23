@@ -51,10 +51,11 @@ class CacheForm extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_form")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CacheForm extends DrupalDumpBase {
   }
 
 }
-#01b2dd3cbb61fc97f2d1d9f24ffc58fa
+#6367344b44c244f02dfb6a31981c3ff9

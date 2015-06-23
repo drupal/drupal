@@ -55,6 +55,7 @@ class Queue extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("queue")->fields(array(
       'item_id',
@@ -79,4 +80,4 @@ class Queue extends DrupalDumpBase {
   }
 
 }
-#eecf98cbf23da768edfd6590f4f93a5a
+#1041c7ebc45ffcc5952a6a089ff29e65

@@ -51,10 +51,11 @@ class CacheFilter extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_filter")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CacheFilter extends DrupalDumpBase {
   }
 
 }
-#fbe86d7806627ea6c2017f5ea88ba7b9
+#be9484fabd472f2deb008a7f3face1e7

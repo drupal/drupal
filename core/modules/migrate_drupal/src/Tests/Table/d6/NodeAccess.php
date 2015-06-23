@@ -69,6 +69,7 @@ class NodeAccess extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_access")->fields(array(
       'nid',
@@ -89,4 +90,4 @@ class NodeAccess extends DrupalDumpBase {
   }
 
 }
-#ea5aa2d533514421c4f17709b52df802
+#47b68125af5c4b5deaffc0e19fb29dfb

@@ -61,10 +61,11 @@ class FieldConfigInstance extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_config_instance")->fields(array(
       'id',
@@ -327,4 +328,4 @@ class FieldConfigInstance extends DrupalDumpBase {
   }
 
 }
-#edb455536fc9c336da2b6caaa2e5b52f
+#ea8328aa1c61b4b70488ffec419d0b0e

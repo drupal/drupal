@@ -43,6 +43,7 @@ class ImageStyles extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("image_styles")->fields(array(
       'isid',
@@ -53,4 +54,4 @@ class ImageStyles extends DrupalDumpBase {
   }
 
 }
-#7ecb9ebd26f1483f745e63add7af334f
+#64077dfb27e8f49e53f6d40a40b6d36d

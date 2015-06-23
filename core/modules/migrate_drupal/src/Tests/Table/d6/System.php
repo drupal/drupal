@@ -26,7 +26,7 @@ class System extends DrupalDumpBase {
       ),
       'fields' => array(
         'filename' => array(
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'not null' => TRUE,
           'length' => '255',
           'default' => '',
@@ -85,6 +85,7 @@ class System extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("system")->fields(array(
       'filename',
@@ -916,4 +917,4 @@ class System extends DrupalDumpBase {
   }
 
 }
-#e15f00f5d9b1c571ee015c40f8fc7b00
+#f48594e66407fef659b575523a75c6e6

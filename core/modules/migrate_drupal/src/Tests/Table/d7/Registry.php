@@ -56,6 +56,7 @@ class Registry extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("registry")->fields(array(
       'name',
@@ -4832,4 +4833,4 @@ class Registry extends DrupalDumpBase {
   }
 
 }
-#295b783603e1bc54a6b6991a35712737
+#2077b4198fa9daf33a05eca8820c25a1

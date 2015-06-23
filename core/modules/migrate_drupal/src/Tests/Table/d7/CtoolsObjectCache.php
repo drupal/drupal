@@ -55,6 +55,7 @@ class CtoolsObjectCache extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("ctools_object_cache")->fields(array(
       'sid',
@@ -67,4 +68,4 @@ class CtoolsObjectCache extends DrupalDumpBase {
   }
 
 }
-#ffb2022818224704fc2119666a2f0646
+#01ce463b43b947d78749d7d8456f768a

@@ -48,6 +48,7 @@ class BlockCustom extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("block_custom")->fields(array(
       'bid',
@@ -59,4 +60,4 @@ class BlockCustom extends DrupalDumpBase {
   }
 
 }
-#d9db7a71db465804d2918e248ee6e194
+#bcecada721307d09075575d51819ab41

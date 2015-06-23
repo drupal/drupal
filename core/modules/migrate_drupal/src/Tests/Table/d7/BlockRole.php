@@ -44,6 +44,7 @@ class BlockRole extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("block_role")->fields(array(
       'module',
@@ -54,4 +55,4 @@ class BlockRole extends DrupalDumpBase {
   }
 
 }
-#3a1c4d0c41c1359cc23f4114311138d1
+#3ac5281aec06873398b6cde3ca21d461

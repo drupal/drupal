@@ -50,6 +50,7 @@ class UrlAlias extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("url_alias")->fields(array(
       'pid',
@@ -71,4 +72,4 @@ class UrlAlias extends DrupalDumpBase {
   }
 
 }
-#53edf1a42f14feb4d3281c52486aa03a
+#8aa75592c75220bfb2ad948f7528f943

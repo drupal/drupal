@@ -60,6 +60,7 @@ class Cache extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache")->fields(array(
       'cid',
@@ -73,4 +74,4 @@ class Cache extends DrupalDumpBase {
   }
 
 }
-#a2937f7bc1d1a464b3497945341caba4
+#67029a22a76da3708c39edc1ea19e8da

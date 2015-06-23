@@ -61,6 +61,7 @@ class TaxonomyTermData extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("taxonomy_term_data")->fields(array(
       'tid',
@@ -130,4 +131,4 @@ class TaxonomyTermData extends DrupalDumpBase {
   }
 
 }
-#f076457dafa9a438fa258458d507546b
+#77a4e5089be7384cbdf2b8c42efc2707

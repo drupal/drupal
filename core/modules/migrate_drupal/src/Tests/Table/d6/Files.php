@@ -77,6 +77,7 @@ class Files extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("files")->fields(array(
       'fid',
@@ -137,4 +138,4 @@ class Files extends DrupalDumpBase {
   }
 
 }
-#8f1133f1395422b45b92652531e2456e
+#a36145ffe53b2dd78475b37d99e72612

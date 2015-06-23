@@ -88,6 +88,7 @@ class Watchdog extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("watchdog")->fields(array(
       'wid',
@@ -106,4 +107,4 @@ class Watchdog extends DrupalDumpBase {
   }
 
 }
-#ba51a62a7ab597e9b3cbff8ada36b788
+#9106430c43c9a1d732e1b44bce21781b

@@ -44,7 +44,7 @@ class FieldDataFieldBoolean extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -77,6 +77,7 @@ class FieldDataFieldBoolean extends DrupalDumpBase {
           'length' => '11',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_boolean")->fields(array(
       'entity_type',
@@ -101,4 +102,4 @@ class FieldDataFieldBoolean extends DrupalDumpBase {
   }
 
 }
-#1b1a17e53267098d8155b608c6e4b8b6
+#1f4a0a75e3ee7dfbb50d05bc88b11ba2

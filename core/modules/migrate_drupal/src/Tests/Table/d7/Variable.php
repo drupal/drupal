@@ -37,6 +37,7 @@ class Variable extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("variable")->fields(array(
       'name',
@@ -418,4 +419,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#d17f3e6a80f5f51c105acf809f1b4851
+#dfc4cdd451a6575677b8c10442893d26

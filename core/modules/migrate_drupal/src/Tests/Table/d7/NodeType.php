@@ -59,7 +59,7 @@ class NodeType extends DrupalDumpBase {
         'has_title' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'unsigned' => TRUE,
         ),
         'title_label' => array(
@@ -71,25 +71,25 @@ class NodeType extends DrupalDumpBase {
         'custom' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'modified' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'locked' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'disabled' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'orig_type' => array(
@@ -99,6 +99,7 @@ class NodeType extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_type")->fields(array(
       'type',
@@ -203,4 +204,4 @@ class NodeType extends DrupalDumpBase {
   }
 
 }
-#15fbbd92f266d6c9c10eb9c0ba9346b2
+#c3cc0500356b35e3e6b106aabf2c7aac

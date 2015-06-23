@@ -45,6 +45,7 @@ class History extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("history")->fields(array(
       'uid',
@@ -55,4 +56,4 @@ class History extends DrupalDumpBase {
   }
 
 }
-#0e3dbc6441f7ccb22ba83da817602b7c
+#67ec5e178454878819a02345fabb68fd

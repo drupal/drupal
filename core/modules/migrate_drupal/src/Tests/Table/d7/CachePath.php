@@ -51,10 +51,11 @@ class CachePath extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_path")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CachePath extends DrupalDumpBase {
   }
 
 }
-#477fe1973a4ecd3c6c822e5e79ff6d4e
+#df048fd5e208226ed75f14e4b6be8e17

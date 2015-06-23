@@ -37,6 +37,7 @@ class SimpletestTestId extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("simpletest_test_id")->fields(array(
       'test_id',
@@ -46,4 +47,4 @@ class SimpletestTestId extends DrupalDumpBase {
   }
 
 }
-#21eab8b1e116cf2cb8633ddc1a9ce170
+#8ee6808713104a181d069645521d0ca5

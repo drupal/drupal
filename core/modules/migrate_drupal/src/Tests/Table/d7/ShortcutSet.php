@@ -38,6 +38,7 @@ class ShortcutSet extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("shortcut_set")->fields(array(
       'set_name',
@@ -50,4 +51,4 @@ class ShortcutSet extends DrupalDumpBase {
   }
 
 }
-#8d5940dd6f1121e12799ffb19e0ac2ba
+#b3fff732e065eff0eff212928ce45a0c

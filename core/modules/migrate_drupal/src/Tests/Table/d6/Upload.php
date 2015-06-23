@@ -67,6 +67,7 @@ class Upload extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("upload")->fields(array(
       'fid',
@@ -115,4 +116,4 @@ class Upload extends DrupalDumpBase {
   }
 
 }
-#adb3ab1babf69826197c48bfaa0804ab
+#16d0b4721b6b58f5ac90214e6b508843

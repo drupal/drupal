@@ -56,10 +56,11 @@ class Contact extends DrupalDumpBase {
         'selected' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("contact")->fields(array(
       'cid',
@@ -80,4 +81,4 @@ class Contact extends DrupalDumpBase {
   }
 
 }
-#04f57d5c840ff51e75617ce50b184b81
+#27579d49086a502aa85c5daae22b3a61

@@ -48,6 +48,7 @@ class AggregatorCategory extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("aggregator_category")->fields(array(
       'cid',
@@ -59,4 +60,4 @@ class AggregatorCategory extends DrupalDumpBase {
   }
 
 }
-#f9b4a42a7a6c1f7bd027bd95c1a4ef83
+#836a3ecaf192c09b996431f0c4b71fe6

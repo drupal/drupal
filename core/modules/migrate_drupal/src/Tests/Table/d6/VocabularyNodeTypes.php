@@ -40,6 +40,7 @@ class VocabularyNodeTypes extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("vocabulary_node_types")->fields(array(
       'vid',
@@ -64,4 +65,4 @@ class VocabularyNodeTypes extends DrupalDumpBase {
   }
 
 }
-#b427f4114483acbc05cf2e6dff8bfe0f
+#b62db0b4fcc3389a5da405b703632d5a

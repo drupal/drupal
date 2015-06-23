@@ -51,10 +51,11 @@ class CacheBootstrap extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_bootstrap")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CacheBootstrap extends DrupalDumpBase {
   }
 
 }
-#a181fb630f0306dfbd12822f146587be
+#bce318334cd67a6b2ae9acb5d6375e86

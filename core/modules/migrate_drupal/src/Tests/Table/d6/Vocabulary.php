@@ -96,6 +96,7 @@ class Vocabulary extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("vocabulary")->fields(array(
       'vid',
@@ -174,4 +175,4 @@ class Vocabulary extends DrupalDumpBase {
   }
 
 }
-#92bb32cf1586d6e70e769372e30aaba1
+#94130b73f1ac1038218716a57d465163

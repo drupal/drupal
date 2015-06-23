@@ -50,6 +50,7 @@ class Authmap extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("authmap")->fields(array(
       'aid',
@@ -61,4 +62,4 @@ class Authmap extends DrupalDumpBase {
   }
 
 }
-#291a74a5eac3448929eccb583ec5b6bb
+#265fd37faf94406aa5ae64f834c0c09c

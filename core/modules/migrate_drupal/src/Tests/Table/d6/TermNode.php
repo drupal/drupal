@@ -48,6 +48,7 @@ class TermNode extends DrupalDumpBase {
         'vid',
         'tid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("term_node")->fields(array(
       'nid',
@@ -78,4 +79,4 @@ class TermNode extends DrupalDumpBase {
   }
 
 }
-#73e5dd147f084c8ff3cf2bcd17ce5f97
+#5aba7dc704d20cec864b7ba64af4c48c

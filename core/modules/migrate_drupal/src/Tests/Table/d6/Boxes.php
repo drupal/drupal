@@ -49,6 +49,7 @@ class Boxes extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("boxes")->fields(array(
       'bid',
@@ -70,4 +71,4 @@ class Boxes extends DrupalDumpBase {
   }
 
 }
-#fc7fbf9ec57c0c76fceab84ab55b9da8
+#2210f6e6a50ddd9c00900cc7e54a5b43

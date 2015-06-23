@@ -55,6 +55,7 @@ class ContentFieldImage extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_field_image")->fields(array(
       'vid',
@@ -85,4 +86,4 @@ class ContentFieldImage extends DrupalDumpBase {
   }
 
 }
-#4e8dc9935bae5fbba4b2364a54cd3cda
+#2db0e7aa8c758996467e5920e6cc888b

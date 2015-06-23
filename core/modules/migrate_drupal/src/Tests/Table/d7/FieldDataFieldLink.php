@@ -44,7 +44,7 @@ class FieldDataFieldLink extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -87,6 +87,7 @@ class FieldDataFieldLink extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_link")->fields(array(
       'entity_type',
@@ -115,4 +116,4 @@ class FieldDataFieldLink extends DrupalDumpBase {
   }
 
 }
-#34821b2528b8037ca3189302a3e62e31
+#42a36f1848e88c2f215633df201ebb94

@@ -38,10 +38,11 @@ class DateFormatType extends DrupalDumpBase {
         'locked' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("date_format_type")->fields(array(
       'type',
@@ -64,4 +65,4 @@ class DateFormatType extends DrupalDumpBase {
   }
 
 }
-#6dea95587332bbefb15bbb41e27c8a44
+#b98dd4bc95a628f170a74f088f5a0d5c

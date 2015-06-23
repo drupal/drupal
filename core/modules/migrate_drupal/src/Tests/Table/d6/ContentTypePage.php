@@ -45,6 +45,7 @@ class ContentTypePage extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_type_page")->fields(array(
       'vid',
@@ -63,4 +64,4 @@ class ContentTypePage extends DrupalDumpBase {
   }
 
 }
-#6452fe645487c928706d25c8299671f2
+#a22194f55d9c79d0c83e97ee7c96714b

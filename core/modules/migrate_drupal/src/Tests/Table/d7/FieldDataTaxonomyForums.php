@@ -44,7 +44,7 @@ class FieldDataTaxonomyForums extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldDataTaxonomyForums extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_taxonomy_forums")->fields(array(
       'entity_type',
@@ -93,4 +94,4 @@ class FieldDataTaxonomyForums extends DrupalDumpBase {
   }
 
 }
-#ef9f9f600a41e494fbd71867dd916279
+#2c9b0464383ed785dd3d5b2bbc263d13

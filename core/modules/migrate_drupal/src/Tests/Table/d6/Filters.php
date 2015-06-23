@@ -55,6 +55,7 @@ class Filters extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("filters")->fields(array(
       'fid',
@@ -133,4 +134,4 @@ class Filters extends DrupalDumpBase {
   }
 
 }
-#701758e13dac19daf43516e8e4fda93e
+#e4ed25d991f88bc73a10b840dcc1b004

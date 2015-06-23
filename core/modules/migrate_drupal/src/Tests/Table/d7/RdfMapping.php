@@ -42,6 +42,7 @@ class RdfMapping extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("rdf_mapping")->fields(array(
       'type',
@@ -72,4 +73,4 @@ class RdfMapping extends DrupalDumpBase {
   }
 
 }
-#88175bf8e5264ca22749e0539a9a40dd
+#ed8a8cd42f79b6dfd27bb9d2cd617ed2

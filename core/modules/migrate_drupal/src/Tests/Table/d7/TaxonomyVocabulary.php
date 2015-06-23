@@ -51,7 +51,7 @@ class TaxonomyVocabulary extends DrupalDumpBase {
         'hierarchy' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
@@ -68,6 +68,7 @@ class TaxonomyVocabulary extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("taxonomy_vocabulary")->fields(array(
       'vid',
@@ -106,4 +107,4 @@ class TaxonomyVocabulary extends DrupalDumpBase {
   }
 
 }
-#3e939a42e961bc13f4cc5688b2c06b4b
+#1125d5a340e10ab0abc40880a92fd366

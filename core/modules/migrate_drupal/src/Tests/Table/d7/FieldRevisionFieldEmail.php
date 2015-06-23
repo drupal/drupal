@@ -45,7 +45,7 @@ class FieldRevisionFieldEmail extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldRevisionFieldEmail extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_email")->fields(array(
       'entity_type',
@@ -111,4 +112,4 @@ class FieldRevisionFieldEmail extends DrupalDumpBase {
   }
 
 }
-#92a57f1f49bf3413e02aa5d68fd6f294
+#e84fd6f7a1b5c2004e5e5e086fdd7718

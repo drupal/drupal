@@ -48,9 +48,11 @@ class SearchIndex extends DrupalDumpBase {
         'score' => array(
           'type' => 'numeric',
           'not null' => FALSE,
-          'length' => 100,
+          'precision' => '10',
+          'scale' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("search_index")->fields(array(
       'word',
@@ -182,7 +184,7 @@ class SearchIndex extends DrupalDumpBase {
       'word' => 'register',
       'sid' => '1',
       'type' => 'node',
-      'score' => '2.2',
+      'score' => '2',
     ))->values(array(
       'word' => 'some',
       'sid' => '1',
@@ -217,4 +219,4 @@ class SearchIndex extends DrupalDumpBase {
   }
 
 }
-#0e6123f2a2fffe419965e1e7bc51fb63
+#1373fb71f1f3a2652a1d5b7dc76c9a77

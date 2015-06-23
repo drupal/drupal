@@ -95,10 +95,11 @@ class AggregatorFeed extends DrupalDumpBase {
         'block' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("aggregator_feed")->fields(array(
       'fid',
@@ -119,4 +120,4 @@ class AggregatorFeed extends DrupalDumpBase {
   }
 
 }
-#db694861ff0144c032783423b1b2a095
+#8e8447ae5f187d54c5849399ea7f0983

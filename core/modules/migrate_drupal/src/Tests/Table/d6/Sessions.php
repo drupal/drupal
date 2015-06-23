@@ -61,6 +61,7 @@ class Sessions extends DrupalDumpBase {
       'primary key' => array(
         'sid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("sessions")->fields(array(
       'uid',
@@ -74,4 +75,4 @@ class Sessions extends DrupalDumpBase {
   }
 
 }
-#6a29834b2e78b58e3f7297351782a489
+#b7a70fcb91c8af507894a3593f34b7b4

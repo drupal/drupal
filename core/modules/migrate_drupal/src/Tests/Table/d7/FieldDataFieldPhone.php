@@ -44,7 +44,7 @@ class FieldDataFieldPhone extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -77,6 +77,7 @@ class FieldDataFieldPhone extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_phone")->fields(array(
       'entity_type',
@@ -101,4 +102,4 @@ class FieldDataFieldPhone extends DrupalDumpBase {
   }
 
 }
-#ef95a41d41ada8bc1f985eeb693e7730
+#cbed59f2783b244b73cb8f8d044b672d

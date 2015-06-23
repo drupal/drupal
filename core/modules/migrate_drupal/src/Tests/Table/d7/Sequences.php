@@ -32,6 +32,7 @@ class Sequences extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("sequences")->fields(array(
       'value',
@@ -42,4 +43,4 @@ class Sequences extends DrupalDumpBase {
   }
 
 }
-#70fff22240dc6fb1391da11b38b60bd1
+#09fb20ca43790e7429303f3ae35779b0

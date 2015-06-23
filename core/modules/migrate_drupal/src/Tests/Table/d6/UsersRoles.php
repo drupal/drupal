@@ -41,6 +41,7 @@ class UsersRoles extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("users_roles")->fields(array(
       'uid',
@@ -77,4 +78,4 @@ class UsersRoles extends DrupalDumpBase {
   }
 
 }
-#160988416b8b1403cc0ad78c4c1e944b
+#6cffea4f67e621d7c498bba3ead7d305

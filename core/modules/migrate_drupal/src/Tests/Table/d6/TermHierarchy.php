@@ -41,6 +41,7 @@ class TermHierarchy extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("term_hierarchy")->fields(array(
       'tid',
@@ -71,4 +72,4 @@ class TermHierarchy extends DrupalDumpBase {
   }
 
 }
-#fe08d615c3ac3c59bd3242c55498dba2
+#4f464394161d2c548911856110c52388

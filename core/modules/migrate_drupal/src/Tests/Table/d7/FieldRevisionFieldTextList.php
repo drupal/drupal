@@ -45,7 +45,7 @@ class FieldRevisionFieldTextList extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -78,6 +78,7 @@ class FieldRevisionFieldTextList extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_text_list")->fields(array(
       'entity_type',
@@ -102,4 +103,4 @@ class FieldRevisionFieldTextList extends DrupalDumpBase {
   }
 
 }
-#2882f6e15d23ce65477789922039ebee
+#2796d3ff2cb7fa661d9fbdec572d9231

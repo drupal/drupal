@@ -42,6 +42,7 @@ class DateFormatTypes extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("date_format_types")->fields(array(
       'type',
@@ -64,4 +65,4 @@ class DateFormatTypes extends DrupalDumpBase {
   }
 
 }
-#7c97d55d743dc7b85be8bfec1a62b542
+#8eb9b527c9223036f223beecea90c1e1

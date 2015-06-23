@@ -73,6 +73,7 @@ class CacheDiscovery extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_discovery")->fields(array(
       'cid',
@@ -88,4 +89,4 @@ class CacheDiscovery extends DrupalDumpBase {
   }
 
 }
-#f3ada35da76a5f007b180bb4d541ec4a
+#2bea5eb7dd5defc47c3bfb5fe004b0ed

@@ -70,6 +70,7 @@ class AggregatorItem extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("aggregator_item")->fields(array(
       'iid',
@@ -94,4 +95,4 @@ class AggregatorItem extends DrupalDumpBase {
   }
 
 }
-#1164613d3b2596dfdfddefdc52da8bc7
+#70ab48fd0f8a2fca2f51df61fdef0443

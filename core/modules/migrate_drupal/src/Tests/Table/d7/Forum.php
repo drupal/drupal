@@ -47,6 +47,7 @@ class Forum extends DrupalDumpBase {
       'primary key' => array(
         'vid',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("forum")->fields(array(
       'nid',
@@ -57,4 +58,4 @@ class Forum extends DrupalDumpBase {
   }
 
 }
-#bc8e99796f2ec3d9244d12adcbf448d9
+#7cf66382d8b9f4f02726d56bf0068911

@@ -44,7 +44,7 @@ class FieldDataFieldDateWithEndTime extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -82,6 +82,7 @@ class FieldDataFieldDateWithEndTime extends DrupalDumpBase {
           'length' => '11',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_date_with_end_time")->fields(array(
       'entity_type',
@@ -108,4 +109,4 @@ class FieldDataFieldDateWithEndTime extends DrupalDumpBase {
   }
 
 }
-#4e2bea2cfa0c14c5d0220b48e8a862d2
+#93c47bd3fbf7f21a429ed2a472f34617

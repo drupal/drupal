@@ -44,7 +44,7 @@ class FieldDataFieldEmail extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -77,6 +77,7 @@ class FieldDataFieldEmail extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_email")->fields(array(
       'entity_type',
@@ -110,4 +111,4 @@ class FieldDataFieldEmail extends DrupalDumpBase {
   }
 
 }
-#9f58f910f072f4fa81c462c79934ce9f
+#62a1492fb44a25096a74e38632ac952a

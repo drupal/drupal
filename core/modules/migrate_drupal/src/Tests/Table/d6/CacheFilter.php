@@ -60,6 +60,7 @@ class CacheFilter extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_filter")->fields(array(
       'cid',
@@ -73,4 +74,4 @@ class CacheFilter extends DrupalDumpBase {
   }
 
 }
-#6e167566ed12156e16a618cf6437ae71
+#2af467369782b455803a601b8b0b2ee7

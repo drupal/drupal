@@ -51,6 +51,7 @@ class SearchDataset extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("search_dataset")->fields(array(
       'sid',
@@ -67,4 +68,4 @@ class SearchDataset extends DrupalDumpBase {
   }
 
 }
-#1347bb4f56e9cdf19e54efc2f8837783
+#a0b45149240219877fea6a4c421dc266

@@ -44,6 +44,7 @@ class Config extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("config")->fields(array(
       'collection',
@@ -58,4 +59,4 @@ class Config extends DrupalDumpBase {
   }
 
 }
-#c4098c1fa12512d761fcb57f8d540a69
+#9e924a1aaaf751c5b1db9fb69a9fa7dd

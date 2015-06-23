@@ -44,6 +44,7 @@ class Cachetags extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cachetags")->fields(array(
       'tag',
@@ -54,4 +55,4 @@ class Cachetags extends DrupalDumpBase {
   }
 
 }
-#618a5d0e2f6bb7fbd27a98ec94c37cc5
+#ffd63ebb3a715c44aeb48e88bde508fa

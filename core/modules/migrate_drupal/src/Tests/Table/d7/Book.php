@@ -47,6 +47,7 @@ class Book extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("book")->fields(array(
       'mlid',
@@ -57,4 +58,4 @@ class Book extends DrupalDumpBase {
   }
 
 }
-#1beb26f2dacfd20f487eff98597bd70e
+#6e968781e0397c89e6589d738c8fcc21

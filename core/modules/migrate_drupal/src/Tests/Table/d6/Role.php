@@ -38,6 +38,7 @@ class Role extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("role")->fields(array(
       'rid',
@@ -62,4 +63,4 @@ class Role extends DrupalDumpBase {
   }
 
 }
-#fd210b6b350be0cadc42941b1c4af505
+#de28ef60b89f3517fe56e03c4d2c1f95

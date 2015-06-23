@@ -45,7 +45,7 @@ class FieldRevisionFieldFile extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -81,7 +81,7 @@ class FieldRevisionFieldFile extends DrupalDumpBase {
         'field_file_display' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '1',
           'unsigned' => TRUE,
         ),
@@ -91,6 +91,7 @@ class FieldRevisionFieldFile extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_revision_field_file")->fields(array(
       'entity_type',
@@ -108,4 +109,4 @@ class FieldRevisionFieldFile extends DrupalDumpBase {
   }
 
 }
-#e341b310bb60da3fcc916f0bdd290e3f
+#5cf9c6ff7da8c55d1c4da2f44bc43001

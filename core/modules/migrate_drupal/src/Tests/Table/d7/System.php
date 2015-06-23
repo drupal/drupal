@@ -64,7 +64,7 @@ class System extends DrupalDumpBase {
         'schema_version' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '-1',
         ),
         'weight' => array(
@@ -79,6 +79,7 @@ class System extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("system")->fields(array(
       'filename',
@@ -1375,4 +1376,4 @@ class System extends DrupalDumpBase {
   }
 
 }
-#615353765db4ea118faf01e7e3ff1bff
+#e7dc5c5dd785541f0628f2d5b9e57978

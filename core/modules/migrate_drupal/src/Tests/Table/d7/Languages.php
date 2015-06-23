@@ -92,6 +92,7 @@ class Languages extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("languages")->fields(array(
       'language',
@@ -122,4 +123,4 @@ class Languages extends DrupalDumpBase {
   }
 
 }
-#21577acb7a0204018673c292983e0f57
+#458e20ce6a713188fcd8d1efb9e82c3d

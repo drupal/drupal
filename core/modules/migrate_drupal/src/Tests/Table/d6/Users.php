@@ -161,6 +161,7 @@ class Users extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("users")->fields(array(
       'uid',
@@ -311,4 +312,4 @@ class Users extends DrupalDumpBase {
   }
 
 }
-#b032f0c73ae282735a94cedc02252629
+#ce6d7264b7ef5ed1ffe854326893e1e0

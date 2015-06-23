@@ -57,6 +57,7 @@ class LocalesTarget extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("locales_target")->fields(array(
       'lid',
@@ -69,4 +70,4 @@ class LocalesTarget extends DrupalDumpBase {
   }
 
 }
-#a8df04af5270adb1ba16a8a007d5fb01
+#7ff0b157a9ff000fdf8ebd77dcda662a

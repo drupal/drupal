@@ -51,10 +51,11 @@ class CacheViewsData extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '1',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_views_data")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CacheViewsData extends DrupalDumpBase {
   }
 
 }
-#f77e8f16bdd13efe2d0c6169b6021e2a
+#31b91a79165c60367b295312f6d9a27d

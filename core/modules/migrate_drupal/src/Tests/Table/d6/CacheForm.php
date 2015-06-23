@@ -60,6 +60,7 @@ class CacheForm extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_form")->fields(array(
       'cid',
@@ -73,4 +74,4 @@ class CacheForm extends DrupalDumpBase {
   }
 
 }
-#71bde276580282fc3514e06f974e965a
+#bfd409b58ceabeddabf389a8efe8d332

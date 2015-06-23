@@ -73,6 +73,7 @@ class CacheConfig extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_config")->fields(array(
       'cid',
@@ -88,4 +89,4 @@ class CacheConfig extends DrupalDumpBase {
   }
 
 }
-#f438fd9400357de86c6fd107fc245404
+#27adbbdaf170149b5b6f3f9d35fa9225

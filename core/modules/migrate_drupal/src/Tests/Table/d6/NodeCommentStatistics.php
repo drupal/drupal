@@ -57,6 +57,7 @@ class NodeCommentStatistics extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("node_comment_statistics")->fields(array(
       'nid',
@@ -81,4 +82,4 @@ class NodeCommentStatistics extends DrupalDumpBase {
   }
 
 }
-#ef7d3494e2e6e8244b4642db7a6fd80b
+#402ff86fc05564bf2275c27f01c922af

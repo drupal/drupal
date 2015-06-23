@@ -41,6 +41,7 @@ class TaxonomyTermHierarchy extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("taxonomy_term_hierarchy")->fields(array(
       'tid',
@@ -74,4 +75,4 @@ class TaxonomyTermHierarchy extends DrupalDumpBase {
   }
 
 }
-#a623d83a32b1d6b859052f16d295666f
+#ea3220ca740097f9251ba194e9bd736d

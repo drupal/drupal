@@ -35,7 +35,7 @@ class TrackerNode extends DrupalDumpBase {
         'published' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'changed' => array(
@@ -46,6 +46,7 @@ class TrackerNode extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("tracker_node")->fields(array(
       'nid',
@@ -60,4 +61,4 @@ class TrackerNode extends DrupalDumpBase {
   }
 
 }
-#315c7b27e9e15f6954f59b858fb22fcd
+#64524b94e5b88c9e2be2d4db8b98155d

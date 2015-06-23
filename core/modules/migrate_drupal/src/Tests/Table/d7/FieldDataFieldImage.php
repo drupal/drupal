@@ -44,7 +44,7 @@ class FieldDataFieldImage extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -100,6 +100,7 @@ class FieldDataFieldImage extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_field_image")->fields(array(
       'entity_type',
@@ -119,4 +120,4 @@ class FieldDataFieldImage extends DrupalDumpBase {
   }
 
 }
-#aeac4c5233be08e500b15d54bbd19d3f
+#94218b4078939e740248ae3c2324354e

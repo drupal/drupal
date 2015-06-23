@@ -61,6 +61,7 @@ class FileUsage extends DrupalDumpBase {
           'unsigned' => TRUE,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("file_usage")->fields(array(
       'fid',
@@ -79,4 +80,4 @@ class FileUsage extends DrupalDumpBase {
   }
 
 }
-#9487016b893e8c923d60d751a1875230
+#718d3fda4b0b3593c7ee6b1bef93e229

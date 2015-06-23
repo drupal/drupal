@@ -97,6 +97,7 @@ class ProfileFields extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("profile_fields")->fields(array(
       'fid',
@@ -215,4 +216,4 @@ class ProfileFields extends DrupalDumpBase {
   }
 
 }
-#5b52398061f1ff1fd90ffb8fb91059a2
+#59b9afb9195888ed98c5b2dc0c35305c

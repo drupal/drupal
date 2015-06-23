@@ -44,7 +44,7 @@ class FieldDataBody extends DrupalDumpBase {
         'deleted' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'entity_id' => array(
@@ -87,6 +87,7 @@ class FieldDataBody extends DrupalDumpBase {
           'length' => '255',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("field_data_body")->fields(array(
       'entity_type',
@@ -104,4 +105,4 @@ class FieldDataBody extends DrupalDumpBase {
   }
 
 }
-#3f6f29484eb92e2b2ec4b9c42bd55cd3
+#58f5b8a4637fcf4163189ea05cf087f7

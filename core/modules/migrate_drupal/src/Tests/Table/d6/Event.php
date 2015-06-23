@@ -73,6 +73,7 @@ class Event extends DrupalDumpBase {
           'default' => '1',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("event")->fields(array(
       'nid',
@@ -88,4 +89,4 @@ class Event extends DrupalDumpBase {
   }
 
 }
-#9dec797ecb37e0c7c7de1563eb2997eb
+#78a4722634eb7f3ca00a7ced49953072

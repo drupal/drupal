@@ -51,10 +51,11 @@ class Cache extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class Cache extends DrupalDumpBase {
   }
 
 }
-#08f145d95d39e32a027c725dc5eec5c0
+#c6b7a610594a8b4fd36d62d69154f2c5

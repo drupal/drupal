@@ -51,10 +51,11 @@ class CacheBlock extends DrupalDumpBase {
         'serialized' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("cache_block")->fields(array(
       'cid',
@@ -67,4 +68,4 @@ class CacheBlock extends DrupalDumpBase {
   }
 
 }
-#1ccef4e703d0eba13f5ea2bb76ccbec6
+#d024638ddc87fafc2b9ff165072cf5b5

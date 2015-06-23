@@ -62,6 +62,7 @@ class ContentGroup extends DrupalDumpBase {
         'type_name',
         'group_name',
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("content_group")->fields(array(
       'group_type',
@@ -75,4 +76,4 @@ class ContentGroup extends DrupalDumpBase {
   }
 
 }
-#b47ad3b4a122b061a21b30afde0d1a7d
+#7e70933ab00570caa7341dab6424469a

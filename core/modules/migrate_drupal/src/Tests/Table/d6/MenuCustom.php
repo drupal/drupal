@@ -43,6 +43,7 @@ class MenuCustom extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("menu_custom")->fields(array(
       'menu_name',
@@ -65,4 +66,4 @@ class MenuCustom extends DrupalDumpBase {
   }
 
 }
-#9c671dfb6963883b73f601e2e80739ed
+#64ae8b573b728a37ea2e345106286576

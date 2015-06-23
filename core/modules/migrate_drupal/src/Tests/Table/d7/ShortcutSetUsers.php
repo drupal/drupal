@@ -39,6 +39,7 @@ class ShortcutSetUsers extends DrupalDumpBase {
           'default' => '',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("shortcut_set_users")->fields(array(
       'uid',
@@ -48,4 +49,4 @@ class ShortcutSetUsers extends DrupalDumpBase {
   }
 
 }
-#29056f57d584c37c6a0691aa5b5a0465
+#56b71631616c8eae6cc71b0ae443426a
