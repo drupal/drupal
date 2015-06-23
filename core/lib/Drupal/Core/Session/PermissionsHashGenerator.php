@@ -51,6 +51,12 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    * Cached by role, invalidated whenever permissions change.
    */
   public function generate(AccountInterface $account) {
+    // User 1 is the super user, and can always access all permissions. Use a
+    // different, unique identifier for the hash.
+    if ($account->id() == 1) {
+      return $this->hash('is-super-user');
+    }
+
     $sorted_roles = $account->getRoles();
     sort($sorted_roles);
     $role_list = implode(',', $sorted_roles);
@@ -81,9 +87,28 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
     $permissions_by_role = user_role_permissions($roles);
     foreach ($permissions_by_role as $role => $permissions) {
       sort($permissions);
+      // Note that for admin roles (\Drupal\user\RoleInterface::isAdmin()), the
+      // permissions returned will be empty ($permissions = []). Therefore the
+      // presence of the role ID as a key in $permissions_by_role is essential
+      // to ensure that the hash correctly recognizes admin roles. (If the hash
+      // was based solely on the union of $permissions, the admin roles would
+      // effectively be no-ops, allowing for hash collisions.)
       $permissions_by_role[$role] = $permissions;
     }
-    return hash('sha256', $this->privateKey->get() . Settings::getHashSalt() . serialize($permissions_by_role));
+    return $this->hash(serialize($permissions_by_role));
+  }
+
+  /**
+   * Hashes the given string.
+   *
+   * @param string $identifier
+   *   The string to be hashed.
+   *
+   * @return string
+   *   The hash.
+   */
+  protected function hash($identifier) {
+    return hash('sha256', $this->privateKey->get() . Settings::getHashSalt() . $identifier);
   }
 
 }

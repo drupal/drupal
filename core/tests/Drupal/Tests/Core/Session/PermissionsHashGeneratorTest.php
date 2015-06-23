@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Session\PermissionsHashTest.
+ * Contains \Drupal\Tests\Core\Session\PermissionsHashGeneratorTest.
  */
 
 namespace Drupal\Tests\Core\Session {
@@ -17,28 +17,35 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\Core\Session\PermissionsHashGenerator
  * @group Session
  */
-class PermissionsHashTest extends UnitTestCase {
+class PermissionsHashGeneratorTest extends UnitTestCase {
 
   /**
-   * A mocked account.
+   * The mocked super user account.
    *
    * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $account1;
 
   /**
+   * A mocked account.
+   *
+   * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $account2;
+
+  /**
    * An "updated" mocked account.
    *
    * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $account1Updated;
+  protected $account2Updated;
 
   /**
    * A different account.
    *
    * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $account2;
+  protected $account3;
 
   /**
    * The mocked private key service.
@@ -69,35 +76,55 @@ class PermissionsHashTest extends UnitTestCase {
 
     new Settings(array('hash_salt' => 'test'));
 
-    // Account 1: 'administrator' and 'authenticated' roles.
-    $roles_1 = array('administrator', 'authenticated');
+    // The mocked super user account, with the same roles as Account 2.
     $this->account1 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(array('getRoles'))
+      ->setMethods(array('getRoles', 'id'))
       ->getMock();
     $this->account1->expects($this->any())
-      ->method('getRoles')
-      ->will($this->returnValue($roles_1));
+      ->method('id')
+      ->willReturn(1);
+    $this->account1->expects($this->never())
+      ->method('getRoles');
 
-    // Account 2: 'authenticated' and 'administrator' roles (different order).
-    $roles_2 = array('authenticated', 'administrator');
+    // Account 2: 'administrator' and 'authenticated' roles.
+    $roles_1 = array('administrator', 'authenticated');
     $this->account2 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(array('getRoles'))
+      ->setMethods(array('getRoles', 'id'))
       ->getMock();
     $this->account2->expects($this->any())
       ->method('getRoles')
-      ->will($this->returnValue($roles_2));
+      ->will($this->returnValue($roles_1));
+    $this->account2->expects($this->any())
+      ->method('id')
+      ->willReturn(2);
 
-    // Updated account 1: now also 'editor' role.
-    $roles_1_updated = array('editor', 'administrator', 'authenticated');
-    $this->account1Updated = $this->getMockBuilder('Drupal\user\Entity\User')
+    // Account 3: 'authenticated' and 'administrator' roles (different order).
+    $roles_3 = array('authenticated', 'administrator');
+    $this->account3 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(array('getRoles'))
+      ->setMethods(array('getRoles', 'id'))
       ->getMock();
-    $this->account1Updated->expects($this->any())
+    $this->account3->expects($this->any())
       ->method('getRoles')
-      ->will($this->returnValue($roles_1_updated));
+      ->will($this->returnValue($roles_3));
+    $this->account3->expects($this->any())
+      ->method('id')
+      ->willReturn(3);
+
+    // Updated account 2: now also 'editor' role.
+    $roles_2_updated = array('editor', 'administrator', 'authenticated');
+    $this->account2Updated = $this->getMockBuilder('Drupal\user\Entity\User')
+      ->disableOriginalConstructor()
+      ->setMethods(array('getRoles', 'id'))
+      ->getMock();
+    $this->account2Updated->expects($this->any())
+      ->method('getRoles')
+      ->will($this->returnValue($roles_2_updated));
+    $this->account2Updated->expects($this->any())
+      ->method('id')
+      ->willReturn(2);
 
     // Mocked private key + cache services.
     $random = Crypt::randomBytesBase64(55);
@@ -119,14 +146,19 @@ class PermissionsHashTest extends UnitTestCase {
    * Tests the generate() method.
    */
   public function testGenerate() {
+    // Ensure that the super user (user 1) always gets the same hash.
+    $super_user_hash = $this->permissionsHash->generate($this->account1);
+
     // Ensure that two user accounts with the same roles generate the same hash.
-    $hash_1 = $this->permissionsHash->generate($this->account1);
     $hash_2 = $this->permissionsHash->generate($this->account2);
-    $this->assertSame($hash_1, $hash_2, 'Different users with the same roles generate the same permissions hash.');
+    $hash_3 = $this->permissionsHash->generate($this->account3);
+    $this->assertSame($hash_2, $hash_3, 'Different users with the same roles generate the same permissions hash.');
+
+    $this->assertNotSame($hash_2, $super_user_hash, 'User 1 has a different hash despite having the same roles');
 
     // Compare with hash for user account 1 with an additional role.
-    $updated_hash_1 = $this->permissionsHash->generate($this->account1Updated);
-    $this->assertNotSame($hash_1, $updated_hash_1, 'Same user with updated roles generates different permissions hash.');
+    $updated_hash_2 = $this->permissionsHash->generate($this->account2Updated);
+    $this->assertNotSame($hash_2, $updated_hash_2, 'Same user with updated roles generates different permissions hash.');
   }
 
   /**
@@ -146,7 +178,7 @@ class PermissionsHashTest extends UnitTestCase {
     $this->cache->expects($this->never())
       ->method('set');
 
-    $this->permissionsHash->generate($this->account1);
+    $this->permissionsHash->generate($this->account2);
   }
 
   /**
@@ -164,7 +196,7 @@ class PermissionsHashTest extends UnitTestCase {
       ->method('set')
       ->with($expected_cid, $this->isType('string'));
 
-    $this->permissionsHash->generate($this->account1);
+    $this->permissionsHash->generate($this->account2);
   }
 
 }

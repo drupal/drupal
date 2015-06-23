@@ -9,6 +9,9 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the UserRolesCacheContext service, for "per role" caching.
+ *
+ * Only use this cache context when checking explicitly for certain roles. Use
+ * user.permissions for anything that checks permissions.
  */
 class UserRolesCacheContext extends UserCacheContext implements CalculatedCacheContextInterface{
 
@@ -23,6 +26,13 @@ class UserRolesCacheContext extends UserCacheContext implements CalculatedCacheC
    * {@inheritdoc}
    */
   public function getContext($role = NULL) {
+    // User 1 does not actually have any special behavior for roles, this is
+    // added as additional security and BC compatibility for SA-CORE-2015-002.
+    // user.
+    // @todo Remove in Drupal 9.0.0.
+    if ($this->user->id() == 1) {
+      return 'is-super-user';
+    }
     if ($role === NULL) {
       return 'r.' . implode(',', $this->user->getRoles());
     }
