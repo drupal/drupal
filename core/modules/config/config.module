@@ -24,6 +24,11 @@ function config_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<p>' . t('Import configuration that is placed in your staging directory. All changes, deletions, renames, and additions are listed below.') . '</p>';
       return $output;
+
+    case 'config.import_full':
+      $output = '';
+      $output .= '<p>' . t('After uploading a configuration archive, you will be able to examine the changes and import them.') . '</p>';
+      return $output;
   }
 }
 
