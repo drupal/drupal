@@ -120,6 +120,9 @@ function language_theme() {
 
 /**
  * Implements hook_element_info_alter().
+ *
+ * @see \Drupal\Core\Render\Element\LanguageSelect
+ * @see \Drupal\Core\Render\Element\Select
  */
 function language_element_info_alter(&$type) {
   // Alter the language_select element so that it will be rendered like a select
