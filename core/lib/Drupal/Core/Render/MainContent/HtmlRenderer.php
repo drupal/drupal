@@ -8,22 +8,27 @@
 namespace Drupal\Core\Render\MainContent;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\RenderEvents;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default main content renderer for HTML requests.
+ *
+ * For attachment handling of HTML responses:
+ * @see template_preprocess_html()
+ * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface
+ * @see \Drupal\Core\Render\BareHtmlPageRenderer
+ * @see \Drupal\Core\Render\HtmlResponse
+ * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor
  */
 class HtmlRenderer implements MainContentRendererInterface {
 
@@ -119,39 +124,18 @@ class HtmlRenderer implements MainContentRendererInterface {
     // page.html.twig, hence add them here, just before rendering html.html.twig.
     $this->buildPageTopAndBottom($html);
 
-    // The three parts of rendered markup in html.html.twig (page_top, page and
-    // page_bottom) must be rendered with drupal_render_root(), so that their
-    // placeholders are replaced (which may attach additional assets).
-    // html.html.twig must be able to render the final list of attached assets,
-    // and hence may not replace any placeholders (because they might add yet
-    // more assets to be attached), and therefore it must be rendered with
-    // drupal_render(), not drupal_render_root().
-    $this->renderer->render($html['page'], TRUE);
-    if (isset($html['page_top'])) {
-      $this->renderer->render($html['page_top'], TRUE);
-    }
-    if (isset($html['page_bottom'])) {
-      $this->renderer->render($html['page_bottom'], TRUE);
-    }
-    $content = $this->renderer->render($html);
-
-    $response = new CacheableResponse($content, 200,[
-      'Content-Type' => 'text/html; charset=UTF-8',
-    ]);
-
-    // Bubble the cacheability metadata associated with the rendered render
-    // arrays to the response.
-    foreach (['page_top', 'page', 'page_bottom'] as $region) {
-      if (isset($html[$region])) {
-        $response->addCacheableDependency(CacheableMetadata::createFromRenderArray($html[$region]));
-      }
-    }
+    // @todo https://www.drupal.org/node/2495001 Make renderRoot return a
+    //       cacheable render array directly.
+    $this->renderer->renderRoot($html);
+    $content = $this->renderCache->getCacheableRenderArray($html);
 
     // Also associate the "rendered" cache tag. This allows us to invalidate the
     // entire render cache, regardless of the cache bin.
-    $default = new CacheableMetadata();
-    $default->setCacheTags(['rendered']);
-    $response->addCacheableDependency($default);
+    $content['#cache']['tags'][] = 'rendered';
+
+    $response = new HtmlResponse($content, 200, [
+      'Content-Type' => 'text/html; charset=UTF-8',
+    ]);
 
     return $response;
   }

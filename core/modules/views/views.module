@@ -301,38 +301,18 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
 }
 
 /**
- * Implements hook_element_info_alter().
- *
- * @see views_page_display_pre_render()
- * @see views_preprocess_page()
+ * Implements MODULE_preprocess_HOOK().
  */
-function views_element_info_alter(&$types) {
-  $types['page']['#pre_render'][] = 'views_page_display_pre_render';
-}
-
-/**
- * #pre_render callback to set contextual links for views using a Page display.
- */
-function views_page_display_pre_render(array $element) {
+function views_preprocess_html(&$variables) {
   if (!\Drupal::moduleHandler()->moduleExists('contextual')) {
-    return $element;
+    return;
   }
+
   // If the main content of this page contains a view, attach its contextual
   // links to the overall page array. This allows them to be rendered directly
   // next to the page title.
   if ($render_array = Page::getPageRenderArray()) {
-    views_add_contextual_links($element, 'page', $render_array['#display_id'], $render_array);
-  }
-  return $element;
-}
-
-/**
- * Implements MODULE_preprocess_HOOK().
- */
-function views_preprocess_html(&$variables) {
-  // Early-return to prevent adding unnecessary JavaScript.
-  if (!\Drupal::moduleHandler()->moduleExists('contextual') || !\Drupal::currentUser()->hasPermission('access contextual links')) {
-    return;
+    views_add_contextual_links($variables['page'], 'page', $render_array['#display_id'], $render_array);
   }
 
   // If the page contains a view as its main content, contextual links may have

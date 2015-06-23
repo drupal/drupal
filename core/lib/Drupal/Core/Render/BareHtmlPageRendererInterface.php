@@ -59,8 +59,8 @@ interface BareHtmlPageRendererInterface {
    *   Additional regions to add to the page. May also be used to pass the
    *   #show_messages property for #type 'page'.
    *
-   * @return string
-   *   The rendered HTML page.
+   * @return \Drupal\Core\Render\HtmlResponse
+   *   The rendered HTML response, ready to be sent.
    */
   public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = []);
 

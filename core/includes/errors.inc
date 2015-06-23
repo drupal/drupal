@@ -9,7 +9,6 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Utility\Error;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Maps PHP error constants to watchdog severity levels.
@@ -241,12 +240,11 @@ function _drupal_log_error($error, $fatal = FALSE) {
           '#markup' => $message,
         );
         install_display_output($output, $GLOBALS['install_state']);
-      }
-      else {
-        $output = \Drupal::service('bare_html_page_renderer')->renderBarePage(['#markup' => $message], 'Error', 'maintenance_page');
+        exit;
       }
 
-      $response = new Response($output, 500);
+      $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
+      $response = $bare_html_page_renderer->renderBarePage(['#markup' => $message], 'Error', 'maintenance_page');
       $response->setStatusCode(500, '500 Service unavailable (with message)');
       // An exception must halt script execution.
       $response->send();

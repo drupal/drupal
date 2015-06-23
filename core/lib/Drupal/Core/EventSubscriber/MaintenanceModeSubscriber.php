@@ -18,7 +18,6 @@ use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -107,8 +106,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         $content = Xss::filterAdmin(SafeMarkup::format($this->config->get('system.maintenance')->get('message'), array(
           '@site' => $this->config->get('system.site')->get('name'),
         )));
-        $output = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Site under maintenance'), 'maintenance_page');
-        $response = new Response($output, 503);
+        $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Site under maintenance'), 'maintenance_page');
+        $response->setStatusCode(503);
         $event->setResponse($response);
       }
       else {

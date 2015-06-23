@@ -8,6 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\quickedit\EditorSelector;
 use Drupal\quickedit\MetadataGenerator;
@@ -16,6 +17,8 @@ use Drupal\quickedit\Tests\QuickEditTestBase;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
 use Drupal\editor\EditorController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests Edit module integration (Editor module's inline editing support).
@@ -214,7 +217,18 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
         'data' => 'Test',
       )
     );
-    $this->assertEqual(Json::encode($expected), $response->prepare($request)->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
+
+    $ajax_response_attachments_processor = \Drupal::service('ajax_response.attachments_processor');
+    $subscriber = new AjaxResponseSubscriber($ajax_response_attachments_processor);
+    $event = new FilterResponseEvent(
+      \Drupal::service('http_kernel'),
+      $request,
+      HttpKernelInterface::MASTER_REQUEST,
+      $response
+    );
+    $subscriber->onResponse($event);
+
+    $this->assertEqual(Json::encode($expected), $response->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
   }
 
 }

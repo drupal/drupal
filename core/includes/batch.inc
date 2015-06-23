@@ -137,9 +137,14 @@ function _batch_progress_page() {
     // additional HTML output by PHP shows up inside the page rather than below
     // it. While this causes invalid HTML, the same would be true if we didn't,
     // as content is not allowed to appear after </html> anyway.
-    $fallback = \Drupal::service('bare_html_page_renderer')->renderBarePage(['#markup' => $fallback], $current_set['title'], 'maintenance_page', array(
+    $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
+    $response = $bare_html_page_renderer->renderBarePage(['#markup' => $fallback], $current_set['title'], 'maintenance_page', array(
       '#show_messages' => FALSE,
     ));
+
+    // Just use the content of the response.
+    $fallback = $response->getContent();
+
     list($fallback) = explode('<!--partial-->', $fallback);
     print $fallback;
 

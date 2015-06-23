@@ -15,14 +15,9 @@ use Drupal\Core\Cache\CacheableMetadata;
  *
  * @see \Drupal\Core\Render\RendererInterface::render()
  */
-class BubbleableMetadata extends CacheableMetadata {
+class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterface {
 
-  /**
-   * Attached assets.
-   *
-   * @var string[][]
-   */
-  protected $attached = [];
+  use AttachmentsTrait;
 
   /**
    * Merges the values of another bubbleable metadata object with this one.
@@ -39,14 +34,14 @@ class BubbleableMetadata extends CacheableMetadata {
     // This is called many times per request, so avoid merging unless absolutely
     // necessary.
     if ($other instanceof BubbleableMetadata) {
-      if (empty($this->attached)) {
-        $result->attached = $other->attached;
+      if (empty($this->attachments)) {
+        $result->attachments = $other->attachments;
       }
-      elseif (empty($other->attached)) {
-        $result->attached = $this->attached;
+      elseif (empty($other->attachments)) {
+        $result->attachments = $this->attachments;
       }
       else {
-        $result->attached = static::mergeAttachments($this->attached, $other->attached);
+        $result->attachments = static::mergeAttachments($this->attachments, $other->attachments);
       }
     }
 
@@ -61,7 +56,7 @@ class BubbleableMetadata extends CacheableMetadata {
    */
   public function applyTo(array &$build) {
     parent::applyTo($build);
-    $build['#attached'] = $this->attached;
+    $build['#attached'] = $this->attachments;
   }
 
   /**
@@ -74,47 +69,8 @@ class BubbleableMetadata extends CacheableMetadata {
    */
   public static function createFromRenderArray(array $build) {
     $meta = parent::createFromRenderArray($build);
-    $meta->attached = (isset($build['#attached'])) ? $build['#attached'] : [];
+    $meta->attachments = (isset($build['#attached'])) ? $build['#attached'] : [];
     return $meta;
-  }
-
-  /**
-   * Gets attachments.
-   *
-   * @return array
-   *   The attachments
-   */
-  public function getAttachments() {
-    return $this->attached;
-  }
-
-  /**
-   * Adds attachments.
-   *
-   * @param array $attachments
-   *   The attachments to add.
-   *
-   * @return $this
-   */
-  public function addAttachments(array $attachments) {
-    $other = (new BubbleableMetadata())->setAttachments($attachments);
-    $result = $other->merge($this);
-
-    $this->attached = $result->getAttachments();
-    return $this;
-  }
-
-  /**
-   * Sets attachments.
-   *
-   * @param array $attachments
-   *   The attachments to set.
-   *
-   * @return $this
-   */
-  public function setAttachments(array $attachments) {
-    $this->attached = $attachments;
-    return $this;
   }
 
   /**
@@ -125,7 +81,7 @@ class BubbleableMetadata extends CacheableMetadata {
    * @deprecated Use ::getAttachments() instead. To be removed before Drupal 8.0.0.
    */
   public function getAssets() {
-    return $this->attached;
+    return $this->attachments;
   }
 
   /**
@@ -153,7 +109,7 @@ class BubbleableMetadata extends CacheableMetadata {
    * @deprecated Use ::setAttachments() instead. To be removed before Drupal 8.0.0.
    */
   public function setAssets(array $assets) {
-    $this->attached = $assets;
+    $this->attachments = $assets;
     return $this;
   }
 

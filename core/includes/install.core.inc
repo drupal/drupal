@@ -984,7 +984,8 @@ function install_display_output($output, $install_state) {
     $regions['sidebar_first'] = $task_list;
   }
 
-  $response = new Response();
+  $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
+  $response = $bare_html_page_renderer->renderBarePage($output, $output['#title'], 'install_page', $regions);
   $default_headers = array(
     'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
     'Last-Modified' => gmdate(DATE_RFC1123, REQUEST_TIME),
@@ -992,7 +993,6 @@ function install_display_output($output, $install_state) {
     'ETag' => '"' . REQUEST_TIME . '"',
   );
   $response->headers->add($default_headers);
-  $response->setContent(\Drupal::service('bare_html_page_renderer')->renderBarePage($output, $output['#title'], 'install_page', $regions));
   $response->send();
   exit;
 }

@@ -62,6 +62,16 @@ function twig_render_template($template_file, array $variables) {
   catch (\Twig_Error_Loader $e) {
     drupal_set_message($e->getMessage(), 'error');
   }
+  catch (\Twig_Error_Runtime $e) {
+    // In case there is a previous exception, re-throw the previous exception,
+    // so that the original exception is shown, rather than
+    // \Twig_Template::displayWithErrorHandling()'s exception.
+    $previous_exception = $e->getPrevious();
+    if ($previous_exception) {
+      throw $previous_exception;
+    }
+    throw $e;
+  }
   if ($twig_service->isDebug()) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
     $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . SafeMarkup::checkPlain($variables['theme_hook_original']) . "' -->";

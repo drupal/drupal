@@ -128,7 +128,7 @@ class BubbleableMetadataTest extends UnitTestCase {
     return [
       [new BubbleableMetadata(), [], new BubbleableMetadata()],
       [new BubbleableMetadata(), ['library' => ['core/foo']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']])],
-      [(new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]), ['library' => ['core/bar']], (new BubbleableMetadata())->setAttachments(['library' => ['core/bar', 'core/foo']])],
+      [(new BubbleableMetadata())->setAttachments(['library' => ['core/foo']]), ['library' => ['core/bar']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo', 'core/bar']])],
     ];
   }
 
