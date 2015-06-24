@@ -7,7 +7,10 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -148,6 +151,75 @@ class UserRegistrationTest extends WebTestBase {
 
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('The email address @email is already taken.', array('@email' => $duplicate_user->getEmail())), 'Supplying a duplicate email address with added whitespace displays an error message');
+  }
+
+  /**
+   * Tests that UUID isn't cached in form state on register form.
+   *
+   * This is a regression test for https://www.drupal.org/node/2500527 to ensure
+   * that the form is not cached on GET requests.
+   */
+  public function testUuidFormState() {
+    \Drupal::service('module_installer')->install(['image']);
+    \Drupal::service('router.builder')->rebuild();
+
+    // Add a picture field in order to ensure that no form cache is written,
+    // which breaks registration of more than 1 user every 6 hours.
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'user_picture',
+      'entity_type' => 'user',
+      'type' => 'image',
+    ]);
+    $field_storage->save();
+
+    $field = FieldConfig::create([
+      'field_name' => 'user_picture',
+      'entity_type' => 'user',
+      'bundle' => 'user',
+    ]);
+    $field->save();
+
+    $form_display = EntityFormDisplay::create([
+      'targetEntityType' => 'user',
+      'bundle' => 'user',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $form_display->setComponent('user_picture', [
+      'type' => 'image_image',
+    ]);
+    $form_display->save();
+
+    // Don't require email verification and allow registration by site visitors
+    // without administrator approval.
+    $this->config('user.settings')
+      ->set('verify_mail', FALSE)
+      ->set('register', USER_REGISTER_VISITORS)
+      ->save();
+
+    $edit = [];
+    $edit['name'] = $this->randomMachineName();
+    $edit['mail'] = $edit['name'] . '@example.com';
+    $edit['pass[pass2]'] = $edit['pass[pass1]'] = $this->randomMachineName();
+
+    // Create one account.
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
+    $this->assertResponse(200);
+
+    $user_storage = \Drupal::entityManager()->getStorage('user');
+
+    $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
+    $this->drupalLogout();
+
+    // Create a second account.
+    $edit['name'] = $this->randomMachineName();
+    $edit['mail'] = $edit['name'] . '@example.com';
+    $edit['pass[pass2]'] = $edit['pass[pass1]'] = $this->randomMachineName();
+
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
+    $this->assertResponse(200);
+
+    $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
   }
 
   function testRegistrationDefaultValues() {
