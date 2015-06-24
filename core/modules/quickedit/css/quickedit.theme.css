@@ -159,7 +159,11 @@
   white-space: nowrap;
 }
 .quickedit-toolbar-label .field:after {
-  content: ' → ';
+  content: ' → '; /* LTR */
+}
+
+[dir="rtl"] .quickedit-toolbar-label .field:after {
+  content: ' ← ';
 }
 
 /* The toolbar; these are not necessarily visible. */
