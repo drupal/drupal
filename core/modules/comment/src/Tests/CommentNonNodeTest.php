@@ -100,13 +100,16 @@ class CommentNonNodeTest extends WebTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface|null $entity
    *   Entity to post comment on or NULL to post to the previously loaded page.
-   * @param $comment
+   * @param string $comment
    *   Comment body.
-   * @param $subject
+   * @param string $subject
    *   Comment subject.
-   * @param $contact
+   * @param mixed $contact
    *   Set to NULL for no contact info, TRUE to ignore success checking, and
    *   array of values to set contact info.
+   *
+   * @return \Drupal\comment\CommentInterface
+   *   The new comment entity.
    */
   function postComment(EntityInterface $entity, $comment, $subject = '', $contact = NULL) {
     $edit = array();
@@ -436,9 +439,28 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertFieldChecked('edit-field-foobar-0-status-2');
     $this->assertNoField('edit-field-foobar-0-status-0');
 
+    // @todo Check proper url and form https://www.drupal.org/node/2458323
     $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());
     $this->assertNoFieldByName('subject[0][value]', '', 'Subject field found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field found.');
+
+    // Test removal of comment_body field.
+    $limited_user = $this->drupalCreateUser(array(
+      'administer entity_test fields',
+      'post comments',
+      'administer comment fields',
+      'administer comment types',
+    ));
+    $this->drupalLogin($limited_user);
+
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
+    $this->assertFieldByName('comment_body[0][value]', '', 'Comment body field found.');
+    $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings');
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
+    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment body field not found.');
+    // Set subject field to autogenerate it.
+    $edit = ['subject[0][value]' => ''];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
   }
 
   /**

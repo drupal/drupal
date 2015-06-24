@@ -495,8 +495,8 @@ function rdf_preprocess_comment(&$variables) {
       $variables['rdf_metadata_attributes'][] = $parent_comment_attributes;
     }
   }
-  // Adds RDF metadata markup above comment body.
-  if (!empty($variables['rdf_metadata_attributes'])) {
+  // Adds RDF metadata markup above comment body if any.
+  if (!empty($variables['rdf_metadata_attributes']) && isset($variables['content']['comment_body'])) {
     $rdf_metadata = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => $variables['rdf_metadata_attributes'],

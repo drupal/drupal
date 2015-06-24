@@ -183,14 +183,12 @@ class CommentAdminOverview extends FormBase {
     foreach ($comments as $comment) {
       /** @var $commented_entity \Drupal\Core\Entity\EntityInterface */
       $commented_entity = $commented_entities[$comment->getCommentedEntityTypeId()][$comment->getCommentedEntityId()];
-      $body = '';
-      if (!empty($comment->comment_body->value)) {
-        $body = $comment->comment_body->value;
-      }
       $comment_permalink = $comment->permalink();
-      $attributes = $comment_permalink->getOption('attributes') ?: array();
-      $attributes += array('title' => Unicode::truncate($body, 128));
-      $comment_permalink->setOption('attributes', $attributes);
+      if ($comment->hasField('comment_body') && ($body = $comment->get('comment_body')->value)) {
+        $attributes = $comment_permalink->getOption('attributes') ?: array();
+        $attributes += array('title' => Unicode::truncate($body, 128));
+        $comment_permalink->setOption('attributes', $attributes);
+      }
       $options[$comment->id()] = array(
         'title' => array('data' => array('#title' => $comment->getSubject() ?: $comment->id())),
         'subject' => array(
