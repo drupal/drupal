@@ -1,5 +1,5 @@
 /*!
- * jQuery Once v2.0.1 - http://github.com/robloach/jquery-once
+ * jQuery Once v2.0.2 - http://github.com/robloach/jquery-once
  * @license MIT, GPL-2.0
  *   http://opensource.org/licenses/MIT
  *   http://opensource.org/licenses/GPL-2.0

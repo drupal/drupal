@@ -386,10 +386,10 @@ jquery.joyride:
 
 jquery.once:
   remote: https://github.com/RobLoach/jquery-once
-  version: "2.0.1"
+  version: "2.0.2"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/RobLoach/jquery-once/blob/2.0.1/LICENSE.md
+    url: https://github.com/RobLoach/jquery-once/blob/2.0.2/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
