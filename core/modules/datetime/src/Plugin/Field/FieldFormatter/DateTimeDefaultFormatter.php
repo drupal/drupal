@@ -7,18 +7,12 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Field\FormatterBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'datetime_default' formatter.
+ * Plugin implementation of the 'Default' formatter for 'datetime' fields.
  *
  * @FieldFormatter(
  *   id = "datetime_default",
@@ -28,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+class DateTimeDefaultFormatter extends DateTimeFormatterBase {
 
   /**
    * {@inheritdoc}
@@ -40,89 +34,28 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
   }
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatter
-   */
-  protected $dateFormatter;
-
-  /**
-   * The date storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $dateStorage;
-
-  /**
-   * Constructs a new DateTimeDefaultFormatter.
-   *
-   * @param string $plugin_id
-   *   The plugin_id for the formatter.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the formatter is associated.
-   * @param array $settings
-   *   The formatter settings.
-   * @param string $label
-   *   The formatter label display setting.
-   * @param string $view_mode
-   *   The view mode.
-   * @param array $third_party_settings
-   *   Third party settings.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
-   *   The date formatter service.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $date_storage
-   *   The date storage.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, DateFormatter $date_formatter, EntityStorageInterface $date_storage) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-
-    $this->dateFormatter = $date_formatter;
-    $this->dateStorage = $date_storage;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('date.formatter'),
-      $container->get('entity.manager')->getStorage('date_format')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
-
     $elements = array();
 
     foreach ($items as $delta => $item) {
-
-      $formatted_date = '';
+      $output = '';
       $iso_date = '';
 
       if ($item->date) {
+        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
         $date = $item->date;
         // Create the ISO date in Universal Time.
         $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
 
-        // The formatted output will be in local time.
-        $date->setTimeZone(timezone_open(drupal_get_user_timezone()));
         if ($this->getFieldSetting('datetime_type') == 'date') {
           // A date without time will pick up the current time, use the default.
           datetime_date_default_time($date);
         }
-        $formatted_date = $this->dateFormat($date);
+        $this->setTimeZone($date);
+
+        $output = $this->formatDate($date);
       }
 
       // Display the date using theme datetime.
@@ -133,7 +66,8 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
           ],
         ],
         '#theme' => 'time',
-        '#text' => $formatted_date,
+        '#text' => $output,
+        '#html' => FALSE,
         '#attributes' => array(
           'datetime' => $iso_date,
         ),
@@ -151,31 +85,29 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
   }
 
   /**
-   * Creates a formatted date value as a string.
-   *
-   * @param object $date
-   *   A date object.
-   *
-   * @return string
-   *   A formatted date string using the chosen format.
+   * {@inheritdoc}
    */
-  function dateFormat($date) {
+  protected function formatDate($date) {
     $format_type = $this->getSetting('format_type');
-    return $this->dateFormatter->format($date->getTimestamp(), $format_type);
+    $timezone = $this->getSetting('timezone_override');
+    return $this->dateFormatter->format($date->getTimestamp(), $format_type, '', $timezone != '' ? $timezone : NULL);
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+
     $time = new DrupalDateTime();
-    $format_types = $this->dateStorage->loadMultiple();
+    $format_types = $this->dateFormatStorage->loadMultiple();
+    $options = [];
     foreach ($format_types as $type => $type_info) {
       $format = $this->dateFormatter->format($time->format('U'), $type);
       $options[$type] = $type_info->label() . ' (' . $format . ')';
     }
 
-    $elements['format_type'] = array(
+    $form['format_type'] = array(
       '#type' => 'select',
       '#title' => t('Date format'),
       '#description' => t("Choose a format for displaying the date. Be sure to set a format appropriate for the field, i.e. omitting time for a field that only has a date."),
@@ -183,16 +115,18 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
       '#default_value' => $this->getSetting('format_type'),
     );
 
-    return $elements;
+    return $form;
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = parent::settingsSummary();
+
     $date = new DrupalDateTime();
-    $summary[] = t('Format: @display', array('@display' => $this->dateFormat($date, FALSE)));
+    $summary[] = t('Format: @display', array('@display' => $this->formatDate($date, $this->getFormatSettings())));
+
     return $summary;
   }
 

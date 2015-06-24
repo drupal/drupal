@@ -232,14 +232,19 @@ process:
         date:
           default:
             format_type: fallback
+            timezone_override: ''
           format_interval:
             format_type: fallback
+            timezone_override: ''
           long:
             format_type: long
+            timezone_override: ''
           medium:
             format_type: medium
+            timezone_override: ''
           short:
             format_type: short
+            timezone_override: ''
         text:
           trimmed:
             trim_length: 600

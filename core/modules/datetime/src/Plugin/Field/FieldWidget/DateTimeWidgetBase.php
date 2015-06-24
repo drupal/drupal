@@ -43,12 +43,12 @@ class DateTimeWidgetBase extends WidgetBase {
       $date = $items[$delta]->date;
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.
-      $date->setTimezone(new \DateTimeZone($element['value']['#date_timezone']));
       if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
         // A date without time will pick up the current time, use the default
         // time.
         datetime_date_default_time($date);
       }
+      $date->setTimezone(new \DateTimeZone($element['value']['#date_timezone']));
       $element['value']['#default_value'] = $date;
     }
 

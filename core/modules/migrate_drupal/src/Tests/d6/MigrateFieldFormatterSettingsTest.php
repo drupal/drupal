@@ -196,9 +196,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical($expected, $component);
 
     // Test date field.
+    $defaults = array('format_type' => 'fallback', 'timezone_override' => '',);
     $expected['weight'] = 10;
     $expected['type'] = 'datetime_default';
-    $expected['settings'] = array('format_type' => 'fallback');
+    $expected['settings'] = array('format_type' => 'fallback') + $defaults;
     $component = $display->getComponent('field_test_date');
     $this->assertIdentical($expected, $component);
     $display = entity_load('entity_view_display', 'node.story.default');
@@ -212,13 +213,13 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $component = $display->getComponent('field_test_datestamp');
     $this->assertIdentical($expected, $component);
     $display = entity_load('entity_view_display', 'node.story.teaser');
-    $expected['settings'] = array('format_type' => 'medium');
+    $expected['settings'] = array('format_type' => 'medium') + $defaults;
     $component = $display->getComponent('field_test_datestamp');
     $this->assertIdentical($expected, $component);
 
     // Test datetime field.
     $expected['weight'] = 12;
-    $expected['settings'] = array('format_type' => 'short');
+    $expected['settings'] = array('format_type' => 'short') + $defaults;
     $component = $display->getComponent('field_test_datetime');
     $this->assertIdentical($expected, $component);
     $display = entity_load('entity_view_display', 'node.story.default');

@@ -304,9 +304,33 @@ field.formatter.settings.uri_link:
   type: mapping
   label: 'URI as link display format settings'
 
+field.formatter.settings.timestamp:
+  type: mapping
+  label: 'Timestamp display format settings'
+  mapping:
+    date_format:
+      type: string
+      label: 'Date format'
+    custom_date_format:
+      type: string
+      label: 'Custom date format'
+    timezone:
+      type: string
+      label: 'Time zone'
+
 field.formatter.settings.timestamp_ago:
   type: mapping
   label: 'Timestamp ago display format settings'
+  mapping:
+    future_format:
+      type: string
+      label: 'Future format'
+    past_format:
+      type: string
+      label: 'Past format'
+    granularity:
+      type: integer
+      label: 'Granularity'
 
 field.formatter.settings.entity_reference_entity_view:
   type: mapping

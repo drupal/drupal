@@ -23,8 +23,15 @@ field.value.datetime:
       type: string
       label: 'Default date value'
 
-field.formatter.settings.datetime_default:
+field.formatter.settings.datetime_base:
   type: mapping
+  mapping:
+    timezone_override:
+      type: string
+      label: 'Time zone override'
+
+field.formatter.settings.datetime_default:
+  type: field.formatter.settings.datetime_base
   label: 'Datetime default display format settings'
   mapping:
     format_type:
@@ -32,8 +39,32 @@ field.formatter.settings.datetime_default:
       label: 'Date format'
 
 field.formatter.settings.datetime_plain:
-  type: mapping
+  type: field.formatter.settings.datetime_base
   label: 'Datetime plain display format settings'
+
+field.formatter.settings.datetime_custom:
+  type: field.formatter.settings.datetime_base
+  label: 'Datetime custom display format settings'
+  mapping:
+    date_format:
+      type: string
+      label: 'Date/time format'
+      translatable: true
+      translation context: 'PHP date format'
+
+field.formatter.settings.datetime_time_ago:
+  type: mapping
+  label: 'Datetime time ago display format settings'
+  mapping:
+    future_format:
+      type: string
+      label: 'Future format'
+    past_format:
+      type: string
+      label: 'Past format'
+    granularity:
+      type: integer
+      label: 'Granularity'
 
 field.widget.settings.datetime_datelist:
   type: mapping

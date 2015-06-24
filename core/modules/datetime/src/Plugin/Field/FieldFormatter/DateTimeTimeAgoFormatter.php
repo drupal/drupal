@@ -2,35 +2,34 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampAgoFormatter.
+ * Contains \Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeTimeAgoFormatter.
  */
 
-namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
+namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'timestamp' formatter as time ago.
+ * Plugin implementation of the 'Time ago' formatter for 'datetime' fields.
  *
  * @FieldFormatter(
- *   id = "timestamp_ago",
+ *   id = "datetime_time_ago",
  *   label = @Translation("Time ago"),
  *   field_types = {
- *     "timestamp",
- *     "created",
- *     "changed",
+ *     "datetime"
  *   }
  * )
  */
-class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+class DateTimeTimeAgoFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   /**
    * The date formatter service.
@@ -40,14 +39,14 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
   protected $dateFormatter;
 
   /**
-    * The current Request object.
-    *
-    * @var \Symfony\Component\HttpFoundation\Request
-    */
+   * The current Request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
   protected $request;
 
   /**
-   * Constructs a TimestampAgoFormatter object.
+   * Constructs a DateTimeTimeAgoFormatter object.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
@@ -62,7 +61,7 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
    * @param string $view_mode
    *   The view mode.
    * @param array $third_party_settings
-   *   Any third party settings.
+   *   Third party settings.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -78,8 +77,20 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    $settings = array(
+      'future_format' => '@interval hence',
+      'past_format' => '@interval ago',
+      'granularity' => 2,
+    ) + parent::defaultSettings();
+
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    // @see \Drupal\Core\Field\FormatterPluginManager::createInstance().
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -96,19 +107,30 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
-    return array(
-      'future_format' => '@interval hence',
-      'past_format' => '@interval ago',
-      'granularity' => 2,
-    ) + parent::defaultSettings();
+  public function viewElements(FieldItemListInterface $items) {
+    $elements = array();
+
+    foreach ($items as $delta => $item) {
+      $date = $item->date;
+      $output = '';
+      if (!empty($item->date)) {
+        if ($this->getFieldSetting('datetime_type') == 'date') {
+          // A date without time will pick up the current time, use the default.
+          datetime_date_default_time($date);
+        }
+        $output = $this->formatDate($date);
+      }
+      $elements[$delta] = array('#markup' => $output);
+    }
+
+    return $elements;
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $elements = parent::settingsForm($form, $form_state);
+    $form = parent::settingsForm($form, $form_state);
 
     $form['future_format'] = array(
       '#type' => 'textfield',
@@ -124,16 +146,14 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
       '#description' => $this->t('Use <em>@interval</em> where you want the formatted interval text to appear.'),
     );
 
-    $elements['granularity'] = array(
+    $form['granularity'] = array(
       '#type' => 'number',
       '#title' => $this->t('Granularity'),
-      '#description' => $this->t('How many time interval units should be shown in the formatted output.'),
-      '#default_value' => $this->getSetting('granularity') ?: 2,
-      '#min' => 1,
-      '#max' => 6,
+      '#default_value' => $this->getSetting('granularity'),
+      '#description' => $this->t('How many time units should be shown in the formatted output.'),
     );
 
-    return $elements;
+    return $form;
   }
 
   /**
@@ -142,45 +162,26 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $future_date = strtotime('1 year 1 month 1 week 1 day 1 hour 1 minute');
-    $past_date = strtotime('-1 year -1 month -1 week -1 day -1 hour -1 minute');
-    $summary[] = $this->t('Future date: %display', array('%display' => $this->formatTimestamp($future_date)));
-    $summary[] = $this->t('Past date: %display', array('%display' => $this->formatTimestamp($past_date)));
+    $future_date = new DrupalDateTime('1 year 1 month 1 week 1 day 1 hour 1 minute');
+    $past_date = new DrupalDateTime('-1 year -1 month -1 week -1 day -1 hour -1 minute');
+    $summary[] = t('Future date: %display', array('%display' => $this->formatDate($future_date)));
+    $summary[] = t('Past date: %display', array('%display' => $this->formatDate($past_date)));
 
     return $summary;
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function viewElements(FieldItemListInterface $items) {
-    $elements = array();
-
-    foreach ($items as $delta => $item) {
-      if ($item->value) {
-        $updated = $this->formatTimestamp($item->value);
-      }
-      else {
-        $updated = $this->t('never');
-      }
-
-      $elements[$delta] = array('#markup' => $updated);
-    }
-
-    return $elements;
-  }
-
-  /**
-   * Formats a timestamp.
+   * Formats a date/time as a time interval.
    *
-   * @param int $timestamp
-   *   A UNIX timestamp to format.
+   * @param \Drupal\Core\Datetime\DrupalDateTime|object $date
+   *   A date/time object.
    *
    * @return string
-   *   The formatted timestamp string using the past or future format setting.
+   *   The formatted date/time string using the past or future format setting.
    */
-  protected function formatTimestamp($timestamp) {
+  protected function formatDate(DrupalDateTime $date) {
     $granularity = $this->getSetting('granularity');
+    $timestamp = $date->getTimestamp();
     $options = ['granularity' => $granularity];
 
     if ($this->request->server->get('REQUEST_TIME') > $timestamp) {
