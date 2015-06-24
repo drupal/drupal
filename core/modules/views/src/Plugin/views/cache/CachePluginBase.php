@@ -8,8 +8,6 @@
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Render\RenderCacheInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
 use Drupal\views\ResultRow;
@@ -57,54 +55,6 @@ abstract class CachePluginBase extends PluginBase {
    * @see \Drupal\views\Plugin\views\cache\CachePluginBase::generateResultsKey()
    */
   protected $resultsKey;
-
-  /**
-   * The HTML renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The render cache service.
-   *
-   * @var \Drupal\Core\Render\RenderCacheInterface
-   */
-  protected $renderCache;
-
-  /**
-   * Constructs a CachePluginBase object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The HTML renderer.
-   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
-   *   The render cache service.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer, RenderCacheInterface $render_cache) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->renderer = $renderer;
-    $this->renderCache = $render_cache;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('renderer'),
-      $container->get('render_cache')
-    );
-  }
 
   /**
    * Returns the resultsKey property.
