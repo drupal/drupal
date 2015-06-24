@@ -74,46 +74,6 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
   }
 
   /**
-   * Gets assets.
-   *
-   * @return array
-   *
-   * @deprecated Use ::getAttachments() instead. To be removed before Drupal 8.0.0.
-   */
-  public function getAssets() {
-    return $this->attachments;
-  }
-
-  /**
-   * Adds assets.
-   *
-   * @param array $assets
-   *   The associated assets to be attached.
-   *
-   * @return $this
-   *
-   * @deprecated Use ::addAttachments() instead. To be removed before Drupal 8.0.0.
-   */
-  public function addAssets(array $assets) {
-    return $this->addAttachments($assets);
-  }
-
-  /**
-   * Sets assets.
-   *
-   * @param array $assets
-   *   The associated assets to be attached.
-   *
-   * @return $this
-   *
-   * @deprecated Use ::setAttachments() instead. To be removed before Drupal 8.0.0.
-   */
-  public function setAssets(array $assets) {
-    $this->attachments = $assets;
-    return $this;
-  }
-
-  /**
    * Merges two attachments arrays (which live under the '#attached' key).
    *
    * The values under the 'drupalSettings' key are merged in a special way, to
