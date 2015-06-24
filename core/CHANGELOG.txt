@@ -129,6 +129,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * Added a serialization module using the Symfony serialization component.
     * Added a Hypertext Application Language (HAL) serialization module.
     * Added a HTTP Basic authentication provider module.
+- When using MySQL, the MyISAM engine is no longer supported.
 
 Drupal 7.0, 2011-01-05
 ----------------------
