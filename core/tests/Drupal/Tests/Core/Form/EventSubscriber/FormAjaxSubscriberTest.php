@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Form\EventSubscriber;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormAjaxException;
@@ -43,13 +44,6 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   protected $httpKernel;
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $renderer;
-
-  /**
    * The mocked string translation.
    *
    * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -64,9 +58,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
     $this->httpKernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $this->formAjaxResponseBuilder = $this->getMock('Drupal\Core\Form\FormAjaxResponseBuilderInterface');
-    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
-    $this->subscriber = new FormAjaxSubscriber($this->formAjaxResponseBuilder, $this->renderer, $this->stringTranslation);
+    $this->subscriber = new FormAjaxSubscriber($this->formAjaxResponseBuilder, $this->stringTranslation);
   }
 
   /**
@@ -160,7 +153,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $this->formAjaxResponseBuilder->expects($this->never())
       ->method('buildResponse');
     $this->subscriber = $this->getMockBuilder('\Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber')
-      ->setConstructorArgs([$this->formAjaxResponseBuilder, $this->renderer, $this->getStringTranslationStub()])
+      ->setConstructorArgs([$this->formAjaxResponseBuilder, $this->getStringTranslationStub()])
       ->setMethods(['drupalSetMessage', 'formatSize'])
       ->getMock();
     $this->subscriber->expects($this->once())
@@ -171,9 +164,19 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with(32 * 1e6)
       ->willReturn('32M');
     $rendered_output = 'the rendered output';
-    $this->renderer->expects($this->once())
+    // CommandWithAttachedAssetsTrait::getRenderedContent() will call the
+    // renderer service via the container.
+    $renderer = $this->getMock('Drupal\Core\Render\RendererInterface');
+    $renderer->expects($this->once())
       ->method('renderRoot')
-      ->willReturn($rendered_output);
+      ->with()
+      ->willReturnCallback(function (&$elements) use ($rendered_output) {
+        $elements['#attached'] = [];
+        return $rendered_output;
+      });
+    $container = new ContainerBuilder();
+    $container->set('renderer', $renderer);
+    \Drupal::setContainer($container);
 
     $exception = new BrokenPostRequestException(32 * 1e6);
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);

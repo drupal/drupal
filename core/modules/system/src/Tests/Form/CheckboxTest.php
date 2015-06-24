@@ -33,7 +33,7 @@ class CheckboxTest extends WebTestBase {
       // @see \Drupal\Core\Render\Element\Checkbox::processCheckbox().
       foreach (array('0', '', 1, '1', 'foobar', '1foobar') as $return_value) {
         $form_array = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestCheckboxTypeJugglingForm', $default_value, $return_value);
-        $form = drupal_render($form_array);
+        $form = \Drupal::service('renderer')->renderRoot($form_array);
         if ($default_value === TRUE) {
           $checked = TRUE;
         }

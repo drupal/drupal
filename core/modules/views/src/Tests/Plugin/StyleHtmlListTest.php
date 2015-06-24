@@ -31,7 +31,7 @@ class StyleHtmlListTest extends ViewUnitTestBase {
   function testDefaultRowClasses() {
     $view = Views::getView('test_style_html_list');
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
 
     // Check that an empty class attribute is not added if the wrapper class is
     // not set.
@@ -46,7 +46,7 @@ class StyleHtmlListTest extends ViewUnitTestBase {
     $view->style_plugin->options['wrapper_class'] = 'wrapper-class';
 
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
 
     // Check that class attribute is present if the wrapper class is set.
     $this->assertTrue(strpos($output, '<div class="wrapper-class">') !== FALSE, 'Class is added to DIV');

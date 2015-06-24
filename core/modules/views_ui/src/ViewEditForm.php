@@ -685,12 +685,12 @@ class ViewEditForm extends ViewFormBase {
     // Regenerate the main display area.
     $build = $this->getDisplayTab($view);
     static::addMicroweights($build);
-    $response->addCommand(new HtmlCommand('#views-tab-' . $display_id, drupal_render($build)));
+    $response->addCommand(new HtmlCommand('#views-tab-' . $display_id, $build));
 
     // Regenerate the top area so changes to display names and order will appear.
     $build = $this->renderDisplayTop($view);
     static::addMicroweights($build);
-    $response->addCommand(new ReplaceCommand('#views-display-top', drupal_render($build)));
+    $response->addCommand(new ReplaceCommand('#views-display-top', $build));
   }
 
   /**

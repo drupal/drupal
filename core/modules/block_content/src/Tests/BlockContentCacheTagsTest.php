@@ -84,7 +84,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     //   Drupal\Core\Render\Renderer.
     $request_stack = $this->container->get('request_stack');
     $request_stack->push(new Request());
-    $this->container->get('renderer')->render($build);
+    $this->container->get('renderer')->renderRoot($build);
     $request_stack->pop();
 
     // Expected keys, contexts, and tags for the block.

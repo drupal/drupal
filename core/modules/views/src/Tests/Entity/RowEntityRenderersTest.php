@@ -220,7 +220,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     foreach ($expected as $index => $expected_output) {
       if (!empty($view->result[$index])) {
         $build = $view->rowPlugin->render($view->result[$index]);
-        $output = drupal_render($build);
+        $output = \Drupal::service('renderer')->renderRoot($build);
         $result = strpos($output, $expected_output) !== FALSE;
         if (!$result) {
           break;

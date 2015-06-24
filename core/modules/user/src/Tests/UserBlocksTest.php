@@ -105,7 +105,7 @@ class UserBlocksTest extends WebTestBase {
     // Test block output.
     \Drupal::currentUser()->setAccount($user1);
     $content = entity_view($block, 'block');
-    $this->setRawContent(render($content));
+    $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));
     $this->assertRaw(t('2 users'), 'Correct number of online users (2 users).');
     $this->assertText($user1->getUsername(), 'Active user 1 found in online list.');
     $this->assertText($user2->getUsername(), 'Active user 2 found in online list.');

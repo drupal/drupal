@@ -87,7 +87,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
 
     // Render the teaser.
     $node_render_array = node_view($this->node, 'teaser');
-    $html = drupal_render($node_render_array);
+    $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parse the teaser.
     $parser = new \EasyRdf_Parser_Rdfa();

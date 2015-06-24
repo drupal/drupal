@@ -121,7 +121,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
           '#theme' => 'item_list',
           '#items' => $items,
         );
-        $output .= drupal_render($item_list);
+        $output .= \Drupal::service('renderer')->renderPlain($item_list);
         $output .= '</dd>';
       }
 

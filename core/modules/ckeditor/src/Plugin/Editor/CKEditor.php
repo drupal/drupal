@@ -13,6 +13,7 @@ use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor as EditorEntity;
@@ -56,6 +57,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $ckeditorPluginManager;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a Drupal\Component\Plugin\PluginBase object.
    *
    * @param array $configuration
@@ -70,12 +78,15 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -88,7 +99,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $plugin_definition,
       $container->get('plugin.manager.ckeditor.plugin'),
       $container->get('module_handler'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('renderer')
     );
   }
 
@@ -145,7 +157,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
         'library' => array('ckeditor/drupal.ckeditor.admin'),
         'drupalSettings' => [
           'ckeditor' => [
-            'toolbarAdmin' => drupal_render($ckeditor_settings_toolbar),
+            'toolbarAdmin' => $this->renderer->renderPlain($ckeditor_settings_toolbar),
           ],
         ],
       ),

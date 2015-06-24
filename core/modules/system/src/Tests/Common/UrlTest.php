@@ -57,13 +57,14 @@ class UrlTest extends WebTestBase {
 
     foreach ($cases as $case) {
       list($title, $uri, $options, $expected_cacheability) = $case;
+      $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme']);
       $link = [
         '#type' => 'link',
         '#title' => $title,
         '#options' => $options,
         '#url' => Url::fromUri($uri),
       ];
-      drupal_render($link);
+      \Drupal::service('renderer')->renderRoot($link);
       $this->pass($title);
       $this->assertEqual($expected_cacheability, $link['#cache']);
     }
@@ -73,6 +74,9 @@ class UrlTest extends WebTestBase {
    * Tests that default and custom attributes are handled correctly on links.
    */
   function testLinkAttributes() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     // Test that hreflang is added when a link has a known language.
     $language = new Language(array('id' => 'fr', 'name' => 'French'));
     $hreflang_link = array(
@@ -90,10 +94,10 @@ class UrlTest extends WebTestBase {
     $hreflang_override_link = $hreflang_link;
     $hreflang_override_link['#options']['attributes']['hreflang'] = 'foo';
 
-    $rendered = drupal_render($hreflang_link);
+    $rendered = $renderer->renderRoot($hreflang_link);
     $this->assertTrue($this->hasAttribute('hreflang', $rendered, $langcode), format_string('hreflang attribute with value @langcode is present on a rendered link when langcode is provided in the render array.', array('@langcode' => $langcode)));
 
-    $rendered = drupal_render($hreflang_override_link);
+    $rendered = $renderer->renderRoot($hreflang_override_link);
     $this->assertTrue($this->hasAttribute('hreflang', $rendered, 'foo'), format_string('hreflang attribute with value @hreflang is present on a rendered link when @hreflang is provided in the render array.', array('@hreflang' => 'foo')));
 
     // Test the active class in links produced by _l() and #type 'link'.
@@ -149,7 +153,7 @@ class UrlTest extends WebTestBase {
         ),
       ),
     );
-    $link_theme = drupal_render($type_link);
+    $link_theme = $renderer->renderRoot($type_link);
     $this->assertTrue($this->hasAttribute('class', $link_theme, $class_theme), format_string('Custom class @class is present on link when requested by #type', array('@class' => $class_theme)));
   }
 
@@ -157,6 +161,9 @@ class UrlTest extends WebTestBase {
    * Tests that link functions support render arrays as 'text'.
    */
   function testLinkRenderArrayText() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     // Build a link with _l() for reference.
     $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
 
@@ -171,7 +178,7 @@ class UrlTest extends WebTestBase {
       '#title' => 'foo',
       '#url' => Url::fromUri('https://www.drupal.org'),
     );
-    $type_link_plain = drupal_render($type_link_plain_array);
+    $type_link_plain = $renderer->renderRoot($type_link_plain_array);
     $this->assertEqual($type_link_plain, $l);
 
     // Build a themed link with renderable 'text'.
@@ -180,7 +187,7 @@ class UrlTest extends WebTestBase {
       '#title' => array('#markup' => 'foo'),
       '#url' => Url::fromUri('https://www.drupal.org'),
     );
-    $type_link_nested = drupal_render($type_link_nested_array);
+    $type_link_nested = $renderer->renderRoot($type_link_nested_array);
     $this->assertEqual($type_link_nested, $l);
   }
 

@@ -122,9 +122,11 @@ class AreaEntityTest extends ViewUnitTestBase {
    *   The entities.
    */
   public function doTestRender($entities) {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $view = Views::getView('test_entity_area');
     $preview = $view->preview('default', [$entities[1]->id()]);
-    $this->setRawContent(\Drupal::service('renderer')->render($preview));
+    $this->setRawContent(\Drupal::service('renderer')->renderRoot($preview));
     $view_class = 'js-view-dom-id-' . $view->dom_id;
     $header_xpath = '//div[@class = "' . $view_class . '"]/div[1]';
     $footer_xpath = '//div[@class = "' . $view_class . '"]/div[3]';
@@ -138,7 +140,7 @@ class AreaEntityTest extends ViewUnitTestBase {
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     $preview = $view->preview('default', array($entities[1]->id()));
-    $this->setRawContent(drupal_render($preview));
+    $this->setRawContent($renderer->renderRoot($preview));
 
     $result = $this->xpath($header_xpath);
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
@@ -160,7 +162,7 @@ class AreaEntityTest extends ViewUnitTestBase {
     $view->setHandler('default', 'header', 'entity_entity_test', $item);
 
     $preview = $view->preview('default', array($entities[1]->id()));
-    $this->setRawContent(drupal_render($preview));
+    $this->setRawContent($renderer->renderRoot($preview));
     $view_class = 'js-view-dom-id-' . $view->dom_id;
     $result = $this->xpath('//div[@class = "' . $view_class . '"]/div[1]');
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
@@ -169,7 +171,7 @@ class AreaEntityTest extends ViewUnitTestBase {
     // Test entity access.
     $view = Views::getView('test_entity_area');
     $preview = $view->preview('default', array($entities[2]->id()));
-    $this->setRawContent(drupal_render($preview));
+    $this->setRawContent($renderer->renderRoot($preview));
     $view_class = 'js-view-dom-id-' . $view->dom_id;
     $result = $this->xpath('//div[@class = "' . $view_class . '"]/div[3]');
     $this->assertTrue(strpos($result[0], $entities[2]->label()) === FALSE, 'The rendered entity does not appear in the footer of the view.');

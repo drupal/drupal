@@ -243,7 +243,7 @@ class ImageDimensionsTest extends WebTestBase {
    * re-rendered each time.
    */
   protected function getImageTag($variables) {
-    return str_replace("\n", NULL, drupal_render($variables));
+    return str_replace("\n", NULL, \Drupal::service('renderer')->renderRoot($variables));
   }
 
 }

@@ -287,7 +287,7 @@ function toolbar_get_rendered_subtrees() {
     $link = $element->link;
     if ($element->subtree) {
       $subtree = $menu_tree->build($element->subtree);
-      $output = drupal_render($subtree);
+      $output = \Drupal::service('renderer')->renderPlain($subtree);
     }
     else {
       $output = '';

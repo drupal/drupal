@@ -342,6 +342,8 @@ class FieldWebTest extends HandlerTestBase {
    * Tests the field/label/wrapper classes.
    */
   public function testFieldClasses() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $view = Views::getView('test_field_classes');
     $view->initHandlers();
 
@@ -352,13 +354,13 @@ class FieldWebTest extends HandlerTestBase {
     // Setup some kind of label by default.
     $id_field->options['label'] = $this->randomMachineName();
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field-content')));
     $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field-label')));
 
     $id_field->options['element_default_classes'] = TRUE;
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     // Per default the label and the element of the field are spans.
     $this->assertTrue($this->xpathContent($output, '//span[contains(@class, :class)]', array(':class' => 'field-content')));
     $this->assertTrue($this->xpathContent($output, '//span[contains(@class, :class)]', array(':class' => 'views-label')));
@@ -374,13 +376,13 @@ class FieldWebTest extends HandlerTestBase {
       // Set a custom wrapper element css class.
       $id_field->options['element_wrapper_class'] = $random_class;
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = $renderer->renderRoot($output);
       $this->assertTrue($this->xpathContent($output, "//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
 
       // Set no custom css class.
       $id_field->options['element_wrapper_class'] = '';
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = $renderer->renderRoot($output);
       $this->assertFalse($this->xpathContent($output, "//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]/{$element_type}"));
     }
@@ -394,13 +396,13 @@ class FieldWebTest extends HandlerTestBase {
       // Set a custom label element css class.
       $id_field->options['element_label_class'] = $random_class;
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = $renderer->renderRoot($output);
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
 
       // Set no custom css class.
       $id_field->options['element_label_class'] = '';
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = $renderer->renderRoot($output);
       $this->assertFalse($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}"));
     }
@@ -414,13 +416,13 @@ class FieldWebTest extends HandlerTestBase {
       // Set a custom label element css class.
       $id_field->options['element_class'] = $random_class;
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = $renderer->renderRoot($output);
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
 
       // Set no custom css class.
       $id_field->options['element_class'] = '';
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = $renderer->renderRoot($output);
       $this->assertFalse($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}"));
     }

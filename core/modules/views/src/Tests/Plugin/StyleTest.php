@@ -46,6 +46,9 @@ class StyleTest extends ViewTestBase {
    * Tests the general rendering of styles.
    */
   public function testStyle() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     // This run use the test row plugin and render with it.
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -65,7 +68,7 @@ class StyleTest extends ViewTestBase {
     $view->rowPlugin->setOutput($random_text);
 
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Make sure that the rendering of the row plugin appears in the output of the view.');
 
     // Test without row plugin support.
@@ -85,7 +88,7 @@ class StyleTest extends ViewTestBase {
     // rendered.
     $view->style_plugin->setOutput($random_text);
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Make sure that the rendering of the style plugin appears in the output of the view.');
   }
 
@@ -229,7 +232,7 @@ class StyleTest extends ViewTestBase {
     $view->style_plugin->options['row_class'] = $random_name . " test-token-{{ name }}";
 
     $output = $view->preview();
-    $this->storeViewPreview(drupal_render($output));
+    $this->storeViewPreview(\Drupal::service('renderer')->renderRoot($output));
 
     $rows = $this->elements->body->div->div->div;
     $count = 0;

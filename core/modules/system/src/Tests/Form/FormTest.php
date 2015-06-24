@@ -124,7 +124,7 @@ class FormTest extends WebTestBase {
           // when you try to render them like this, so we ignore those for
           // testing the required marker.
           // @todo Fix this work-around (https://www.drupal.org/node/588438).
-          $form_output = ($type == 'radios') ? '' : drupal_render($form);
+          $form_output = ($type == 'radios') ? '' : \Drupal::service('renderer')->renderRoot($form);
           if ($required) {
             // Make sure we have a form error for this element.
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");

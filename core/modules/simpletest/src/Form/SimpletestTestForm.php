@@ -11,11 +11,39 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * List tests arranged in groups that can be selected and run.
  */
 class SimpletestTestForm extends FormBase {
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer')
+    );
+  }
+
+  /**
+   * Constructs a new SimpletestTestForm.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
+   */
+  public function __construct(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
 
   /**
    * {@inheritdoc}
@@ -99,8 +127,8 @@ class SimpletestTestForm extends FormBase {
       '#suffix' => '<a href="#" class="simpletest-collapse">(' . $this->t('Collapse') . ')</a>',
     );
     $form['tests']['#attached']['drupalSettings']['simpleTest']['images'] = [
-      drupal_render($image_collapsed),
-      drupal_render($image_extended),
+      $this->renderer->renderPlain($image_collapsed),
+      $this->renderer->renderPlain($image_extended),
     ];
 
     // Generate the list of tests arranged by group.

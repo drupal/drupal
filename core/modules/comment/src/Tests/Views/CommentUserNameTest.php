@@ -142,7 +142,7 @@ class CommentUserNameTest extends ViewUnitTestBase {
     $account_switcher->switchTo($this->adminUser);
     $executable = Views::getView($view_id);
     $build = $executable->preview();
-    $this->setRawContent($renderer->render($build));
+    $this->setRawContent($renderer->renderRoot($build));
     $this->verbose($this->getRawContent());
 
     $this->assertLink('My comment title');
@@ -155,7 +155,7 @@ class CommentUserNameTest extends ViewUnitTestBase {
     $executable->storage->invalidateCaches();
 
     $build = $executable->preview();
-    $this->setRawContent($renderer->render($build));
+    $this->setRawContent($renderer->renderRoot($build));
 
     // No access to user-profiles, so shouldn't be able to see links.
     $this->assertNoLink($this->adminUser->label());

@@ -21,6 +21,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -101,6 +102,13 @@ class ConfigSync extends FormBase {
   protected $moduleInstaller;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $staging_storage
@@ -123,8 +131,10 @@ class ConfigSync extends FormBase {
    *   The module installer.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
+   * @param \Drupal\Core\Render\RendererInterface
+   *   The renderer.
    */
-  public function __construct(StorageInterface $staging_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler) {
+  public function __construct(StorageInterface $staging_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer) {
     $this->stagingStorage = $staging_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -135,6 +145,7 @@ class ConfigSync extends FormBase {
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
     $this->themeHandler = $theme_handler;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -151,7 +162,8 @@ class ConfigSync extends FormBase {
       $container->get('config.typed'),
       $container->get('module_handler'),
       $container->get('module_installer'),
-      $container->get('theme_handler')
+      $container->get('theme_handler'),
+      $container->get('renderer')
     );
   }
 
@@ -209,7 +221,7 @@ class ConfigSync extends FormBase {
           '#theme' => 'item_list',
           '#items' => $change_list,
         );
-        $change_list_html = drupal_render($change_list_render);
+        $change_list_html = $this->renderer->renderPlain($change_list_render);
         drupal_set_message($this->t('The following items in your active configuration have changes since the last import that may be lost on the next import. !changes', array('!changes' => $change_list_html)), 'warning');
       }
     }

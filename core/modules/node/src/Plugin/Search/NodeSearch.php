@@ -329,7 +329,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       // Fetch comment count for snippet.
       $rendered = SafeMarkup::set(
-        $this->renderer->render($build) . ' ' .
+        $this->renderer->renderPlain($build) . ' ' .
         SafeMarkup::escape($this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode)))
       );
 
@@ -354,7 +354,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       if ($type->displaySubmitted()) {
         $result += array(
-          'user' => $this->renderer->render($username),
+          'user' => $this->renderer->renderPlain($username),
           'date' => $node->getChangedTime(),
         );
       }
@@ -443,7 +443,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $build = $node_render->view($node, 'search_index', $language->getId());
 
       unset($build['#theme']);
-      $rendered = $this->renderer->render($build);
+      $rendered = $this->renderer->renderPlain($build);
 
       $text = '<h1>' . SafeMarkup::checkPlain($node->label($language->getId())) . '</h1>' . $rendered;
 

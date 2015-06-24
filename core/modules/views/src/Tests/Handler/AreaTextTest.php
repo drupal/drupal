@@ -35,6 +35,8 @@ class AreaTextTest extends ViewUnitTestBase {
   }
 
   public function testAreaText() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -56,18 +58,18 @@ class AreaTextTest extends ViewUnitTestBase {
 
     $view->display_handler->handlers['header']['area']->options['content']['format'] = $this->randomString();
     $build = $view->display_handler->handlers['header']['area']->render();
-    $this->assertEqual('', drupal_render($build), 'Nonexistent format should return empty markup.');
+    $this->assertEqual('', $renderer->renderRoot($build), 'Nonexistent format should return empty markup.');
 
     $view->display_handler->handlers['header']['area']->options['content']['format'] = filter_default_format();
     $build = $view->display_handler->handlers['header']['area']->render();
-    $this->assertEqual(check_markup($string), drupal_render($build), 'Existent format should return something');
+    $this->assertEqual(check_markup($string), $renderer->renderRoot($build), 'Existent format should return something');
 
     // Empty results, and it shouldn't be displayed .
     $this->assertEqual(array(), $view->display_handler->handlers['header']['area']->render(TRUE), 'No result should lead to no header');
     // Empty results, and it should be displayed.
     $view->display_handler->handlers['header']['area']->options['empty'] = TRUE;
     $build = $view->display_handler->handlers['header']['area']->render(TRUE);
-    $this->assertEqual(check_markup($string), drupal_render($build), 'No result, but empty enabled lead to a full header');
+    $this->assertEqual(check_markup($string), $renderer->renderRoot($build), 'No result, but empty enabled lead to a full header');
   }
 
 }

@@ -861,7 +861,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
       );
       // @todo Add support for render arrays in drupal_set_message()? See
       //  https://www.drupal.org/node/2505497.
-      drupal_set_message(\Drupal::service('renderer')->render($message), 'error');
+      drupal_set_message(\Drupal::service('renderer')->renderPlain($message), 'error');
       $files[$i] = FALSE;
       continue;
     }

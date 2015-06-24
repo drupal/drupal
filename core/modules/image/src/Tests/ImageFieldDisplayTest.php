@@ -48,6 +48,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    * Test image formatters on node display.
    */
   function _testImageFieldFormatters($scheme) {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
     $field_settings = array('alt_field_required' => 0);
@@ -103,7 +105,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     );
-    $default_output = str_replace("\n", NULL, drupal_render($image));
+    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Test the image linked to file formatter.
@@ -122,7 +124,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     );
-    $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
+    $default_output = '<a href="' . file_create_url($image_uri) . '">' . $renderer->renderRoot($image) . '</a>';
     $this->drupalGet('node/' . $nid);
     $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
@@ -188,7 +190,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#style_name' => 'thumbnail',
       '#alt' => $alt,
     );
-    $default_output = drupal_render($image_style);
+    $default_output = $renderer->renderRoot($image_style);
     $this->drupalGet('node/' . $nid);
     $image_style = ImageStyle::load('thumbnail');
     $this->assertCacheTag($image_style->getCacheTags()[0]);
@@ -206,6 +208,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    * Tests for image field settings.
    */
   function testImageFieldSettings() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $test_image = current($this->drupalGetTestFiles('image'));
     list(, $test_image_extension) = explode('.', $test_image->filename);
@@ -269,7 +273,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][title]' => $image['#title'],
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
-    $default_output = str_replace("\n", NULL, drupal_render($image));
+    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
     // Verify that alt/title longer than allowed results in a validation error.
@@ -319,6 +323,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    * Test use of a default image with an image field.
    */
   function testImageFieldDefaultImage() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create a new image field.
     $field_name = strtolower($this->randomMachineName());
@@ -358,7 +365,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = str_replace("\n", NULL, drupal_render($image));
+    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
@@ -382,7 +389,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     );
-    $image_output = str_replace("\n", NULL, drupal_render($image));
+    $image_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
     $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
@@ -430,7 +437,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = str_replace("\n", NULL, drupal_render($image));
+    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');

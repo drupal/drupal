@@ -117,7 +117,7 @@ class FileItemTest extends FieldUnitTestBase {
     $entity->file_test = array('entity' => $file3);
     $uri = $file3->getFileUri();
     $output = entity_view($entity, 'default');
-    drupal_render($output);
+    \Drupal::service('renderer')->renderRoot($output);
     $this->assertTrue(!empty($entity->file_test->entity));
     $this->assertEqual($entity->file_test->entity->getFileUri(), $uri);
   }

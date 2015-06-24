@@ -98,7 +98,7 @@ class ImageWidget extends FileWidget {
       // If there's only one field, return it as delta 0.
       if (empty($elements[0]['#default_value']['fids'])) {
         $file_upload_help['#description'] = $this->fieldFilterXss($this->fieldDefinition->getDescription());
-        $elements[0]['#description'] = drupal_render($file_upload_help);
+        $elements[0]['#description'] = \Drupal::service('renderer')->renderPlain($file_upload_help);
       }
     }
     else {

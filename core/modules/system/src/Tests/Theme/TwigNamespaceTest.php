@@ -58,7 +58,7 @@ class TwigNamespaceTest extends WebTestBase {
   public function testTwigNamespaces() {
     // Test twig @extends and @include in template files.
     $test = array('#theme' => 'twig_namespace_test');
-    $this->setRawContent(drupal_render($test));
+    $this->setRawContent(\Drupal::service('renderer')->renderRoot($test));
 
     $this->assertText('This line is from twig_namespace_a/templates/test.html.twig');
     $this->assertText('This line is from twig_namespace_b/templates/test.html.twig');

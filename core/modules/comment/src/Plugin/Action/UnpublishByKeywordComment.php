@@ -28,7 +28,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
    */
   public function execute($comment = NULL) {
     $build = comment_view($comment);
-    $text = drupal_render($build);
+    $text = \Drupal::service('renderer')->renderPlain($build);
     foreach ($this->configuration['keywords'] as $keyword) {
       if (strpos($text, $keyword) !== FALSE) {
         $comment->setPublished(FALSE);

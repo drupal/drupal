@@ -30,7 +30,7 @@ class StyleUnformattedTest extends StyleTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $output = $view->preview();
-    $this->storeViewPreview(drupal_render($output));
+    $this->storeViewPreview(\Drupal::service('renderer')->renderRoot($output));
 
     $rows = $this->elements->body->div->div->div;
     $count = 0;

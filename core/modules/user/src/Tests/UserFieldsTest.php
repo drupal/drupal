@@ -48,7 +48,7 @@ class UserFieldsTest extends KernelTestBase {
       'mail' => 'foobar@example.com',
     ]);
     $build = user_view($user);
-    $output = \Drupal::service('renderer')->render($build);
+    $output = \Drupal::service('renderer')->renderRoot($build);
     $this->setRawContent($output);
     $userEmail = $user->getEmail();
     $this->assertText($userEmail, "User's mail field is found in the twig template");

@@ -422,7 +422,7 @@ class QuickEditLoadingTest extends WebTestBase {
       'label' => 'inline',
     );
     $build = $node->body->view($display_settings);
-    $output = drupal_render($build);
+    $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertFalse(strpos($output, 'data-quickedit-field-id'), 'data-quickedit-field-id attribute not added when rendering field using dynamic display options.');
   }
 

@@ -61,12 +61,12 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       );
       $container = array(
         '#theme' => 'container',
-        '#children' => drupal_render($more_help_link),
+        '#children' => $more_help_link,
         '#attributes' => array(
           'class' => array('more-link'),
         ),
       );
-      $output .= drupal_render($container);
+      $output .= \Drupal::service('renderer')->renderPlain($container);
       return $output;
 
     case 'forum.add_container':

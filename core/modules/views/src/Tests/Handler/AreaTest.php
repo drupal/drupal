@@ -108,7 +108,7 @@ class AreaTest extends HandlerTestBase {
 
     // Check whether the strings exist in the output and are sanitized.
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $this->container->get('renderer')->renderRoot($output);
     $this->assertTrue(strpos($output, Xss::filterAdmin($header_string)) !== FALSE, 'Views header exists in the output and is sanitized');
     $this->assertTrue(strpos($output, Xss::filterAdmin($footer_string)) !== FALSE, 'Views footer exists in the output and is sanitized');
     $this->assertTrue(strpos($output, Xss::filterAdmin($empty_string)) !== FALSE, 'Views empty exists in the output and is sanitized');
@@ -127,7 +127,7 @@ class AreaTest extends HandlerTestBase {
     $this->assertEqual(0, count($handlers));
 
     $output = $view->preview();
-    $output = \Drupal::service('renderer')->render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
     // The area output should not be present since access was denied.
     $this->assertFalse(strpos($output, 'a custom string') !== FALSE);
     $view->destroy();
@@ -149,7 +149,7 @@ class AreaTest extends HandlerTestBase {
     $handlers = $view->display_handler->getHandlers('empty');
 
     $output = $view->preview();
-    $output = \Drupal::service('renderer')->render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
     $this->assertTrue(strpos($output, 'a custom string') !== FALSE);
     $this->assertEqual(1, count($handlers));
   }
@@ -187,7 +187,7 @@ class AreaTest extends HandlerTestBase {
 
     // Test we have the site:name token in the output.
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $this->container->get('renderer')->renderRoot($output);
     $expected = \Drupal::token()->replace('[site:name]');
     $this->assertTrue(strpos($output, $expected) !== FALSE);
   }

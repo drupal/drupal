@@ -195,7 +195,7 @@ function drupal_get_html_head($render = TRUE) {
   $elements = _drupal_add_html_head();
   \Drupal::moduleHandler()->alter('html_head', $elements);
   if ($render) {
-    return drupal_render($elements);
+    return \Drupal::service('renderer')->renderPlain($elements);
   }
   else {
     return $elements;

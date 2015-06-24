@@ -36,6 +36,8 @@ class AreaViewTest extends ViewUnitTestBase {
    * Tests the view area handler.
    */
   public function testViewArea() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $view = Views::getView('test_area_view');
 
     // Tests \Drupal\views\Plugin\views\area\View::calculateDependencies().
@@ -43,14 +45,14 @@ class AreaViewTest extends ViewUnitTestBase {
 
     $this->executeView($view);
     $output = $view->render();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->assertTrue(strpos($output, 'js-view-dom-id-' . $view->dom_id) !== FALSE, 'The test view is correctly embedded.');
     $view->destroy();
 
     $view->setArguments(array(27));
     $this->executeView($view);
     $output = $view->render();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->assertTrue(strpos($output, 'John') === FALSE, 'The test view is correctly embedded with inherited arguments.');
     $this->assertTrue(strpos($output, 'George') !== FALSE, 'The test view is correctly embedded with inherited arguments.');
     $view->destroy();

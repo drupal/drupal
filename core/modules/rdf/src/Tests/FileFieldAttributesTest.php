@@ -81,7 +81,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
   function testNodeTeaser() {
     // Render the teaser.
     $node_render_array = entity_view_multiple(array($this->node), 'teaser');
-    $html = drupal_render($node_render_array);
+    $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parses front page where the node is displayed in its teaser form.
     $parser = new \EasyRdf_Parser_Rdfa();

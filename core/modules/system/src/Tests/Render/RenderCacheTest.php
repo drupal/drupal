@@ -77,14 +77,14 @@ class RenderCacheTest extends KernelTestBase {
     ];
     $element = $test_element;
     $element['#markup'] = 'content for user 1';
-    $output = \Drupal::service('renderer')->render($element);
+    $output = \Drupal::service('renderer')->renderRoot($element);
     $this->assertEqual($output, 'content for user 1');
 
     // Verify the cache is working by rendering the same element but with
     // different markup passed in; the result should be the same.
     $element = $test_element;
     $element['#markup'] = 'should not be used';
-    $output = \Drupal::service('renderer')->render($element);
+    $output = \Drupal::service('renderer')->renderRoot($element);
     $this->assertEqual($output, 'content for user 1');
     \Drupal::service('account_switcher')->switchBack();
 
@@ -93,7 +93,7 @@ class RenderCacheTest extends KernelTestBase {
     \Drupal::service('account_switcher')->switchTo($first_authenticated_user);
     $element = $test_element;
     $element['#markup'] = 'content for authenticated users';
-    $output = \Drupal::service('renderer')->render($element);
+    $output = \Drupal::service('renderer')->renderRoot($element);
     $this->assertEqual($output, 'content for authenticated users');
     \Drupal::service('account_switcher')->switchBack();
 
@@ -102,7 +102,7 @@ class RenderCacheTest extends KernelTestBase {
     \Drupal::service('account_switcher')->switchTo($second_authenticated_user);
     $element = $test_element;
     $element['#markup'] = 'should not be used';
-    $output = \Drupal::service('renderer')->render($element);
+    $output = \Drupal::service('renderer')->renderRoot($element);
     $this->assertEqual($output, 'content for authenticated users');
     \Drupal::service('account_switcher')->switchBack();
 
@@ -111,7 +111,7 @@ class RenderCacheTest extends KernelTestBase {
     \Drupal::service('account_switcher')->switchTo($admin_user);
     $element = $test_element;
     $element['#markup'] = 'content for admin user';
-    $output = \Drupal::service('renderer')->render($element);
+    $output = \Drupal::service('renderer')->renderRoot($element);
     $this->assertEqual($output, 'content for admin user');
     \Drupal::service('account_switcher')->switchBack();
   }

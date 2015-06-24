@@ -123,7 +123,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
     $this->prepareView($view);
     $view->field['name']->options['exclude'] = TRUE;
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
     $this->assertFalse(strpos($output, 'views-field-name') !== FALSE, "Excluded field's wrapper was not rendered.");
     $view->destroy();
 
@@ -131,7 +131,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
     // rendered.
     $this->executeView($view);
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
 
     $this->assertFalse(strpos($output, 'custom text') !== FALSE, 'Empty handler was not rendered on a non empty table.');
 
@@ -140,7 +140,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
     $view->executed = TRUE;
     $view->result = array();
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
 
     $this->assertTrue(strpos($output, 'custom text') !== FALSE, 'Empty handler got rendered on an empty table.');
   }

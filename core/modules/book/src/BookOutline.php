@@ -126,8 +126,7 @@ class BookOutline {
     }
 
     if ($children) {
-      $elements = $this->bookManager->bookTreeOutput($children);
-      return drupal_render($elements);
+      return $this->bookManager->bookTreeOutput($children);
     }
     return '';
   }

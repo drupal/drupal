@@ -678,7 +678,7 @@ abstract class StylePluginBase extends PluginBase {
             '#cache_properties' => $field_ids,
           ];
           $renderer->addCacheableDependency($data, $this->view->storage);
-          $renderer->render($data);
+          $renderer->renderPlain($data);
 
           // Extract field output from the render array and post process it.
           $fields = $this->view->field;

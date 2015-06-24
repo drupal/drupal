@@ -52,6 +52,8 @@ class DisplayTest extends PluginTestBase {
    * @see \Drupal\views_test_data\Plugin\views\display\DisplayTest
    */
   public function testDisplayPlugin() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $view = Views::getView('test_view');
 
     // Add a new 'display_test' display and test it's there.
@@ -97,7 +99,7 @@ class DisplayTest extends PluginTestBase {
     $this->assertIdentical($view->display_handler->getOption('test_option'), '');
 
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
 
     $this->assertTrue(strpos($output, '<h1></h1>') !== FALSE, 'An empty value for test_option found in output.');
 
@@ -106,7 +108,7 @@ class DisplayTest extends PluginTestBase {
     $view->save();
 
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
 
     // Test we have our custom <h1> tag in the output of the view.
     $this->assertTrue(strpos($output, '<h1>Test option title</h1>') !== FALSE, 'The test_option value found in display output title.');
@@ -166,6 +168,9 @@ class DisplayTest extends PluginTestBase {
    * Tests the readmore functionality.
    */
   public function testReadMore() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     if (!isset($this->options['validate']['type'])) {
       return;
     }
@@ -175,7 +180,7 @@ class DisplayTest extends PluginTestBase {
     $this->executeView($view);
 
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
 
     $this->setRawContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
@@ -185,7 +190,7 @@ class DisplayTest extends PluginTestBase {
     // Test the renderMoreLink method directly. This could be directly unit
     // tested.
     $more_link = $view->display_handler->renderMoreLink();
-    $more_link = drupal_render($more_link);
+    $more_link = $renderer->renderRoot($more_link);
     $this->setRawContent($more_link);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
@@ -201,7 +206,7 @@ class DisplayTest extends PluginTestBase {
     $view->display_handler->setOption('use_more', 0);
     $this->executeView($view);
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown.');
@@ -219,7 +224,7 @@ class DisplayTest extends PluginTestBase {
     ));
     $this->executeView($view);
     $output = $view->preview();
-    $output = drupal_render($output);
+    $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');

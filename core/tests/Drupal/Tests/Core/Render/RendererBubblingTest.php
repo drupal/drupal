@@ -66,14 +66,14 @@ class RendererBubblingTest extends RendererTestBase {
     ];
 
     // Render the element and verify the presence of #attached JavaScript.
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $expected_libraries = ['test/parent', 'test/child', 'test/subchild'];
     $this->assertEquals($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
 
     // Load the element from cache and verify the presence of the #attached
     // JavaScript.
     $element = ['#cache' => ['keys' => ['simpletest', 'drupal_render', 'children_attached']]];
-    $this->assertTrue(strlen($this->renderer->render($element)) > 0, 'The element was retrieved from cache.');
+    $this->assertTrue(strlen($this->renderer->renderRoot($element)) > 0, 'The element was retrieved from cache.');
     $this->assertEquals($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
   }
 
@@ -116,7 +116,7 @@ class RendererBubblingTest extends RendererTestBase {
         ],
       ],
     ];
-    $this->renderer->render($build);
+    $this->renderer->renderRoot($build);
 
     $this->assertRenderCacheItem('parent:foo', [
       '#cache_redirect' => TRUE,
@@ -143,7 +143,7 @@ class RendererBubblingTest extends RendererTestBase {
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
 
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
 
     $this->assertEquals($expected_top_level_contexts, $element['#cache']['contexts'], 'Expected cache contexts found.');
     foreach ($expected_cache_items as $cid => $expected_cache_item) {
@@ -345,7 +345,7 @@ class RendererBubblingTest extends RendererTestBase {
     // contexts: user.roles.
     $element = $test_element;
     $current_user_role = 'A';
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertRenderCacheItem('parent', [
       '#cache_redirect' => TRUE,
       '#cache' => [
@@ -369,7 +369,7 @@ class RendererBubblingTest extends RendererTestBase {
     // contexts: foo, user.roles.
     $element = $test_element;
     $current_user_role = 'B';
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertRenderCacheItem('parent', [
       '#cache_redirect' => TRUE,
       '#cache' => [
@@ -401,7 +401,7 @@ class RendererBubblingTest extends RendererTestBase {
     // and 'user.roles' cache contexts, resulting in a cache miss every time.)
     $element = $test_element;
     $current_user_role = 'A';
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertRenderCacheItem('parent', [
       '#cache_redirect' => TRUE,
       '#cache' => [
@@ -425,7 +425,7 @@ class RendererBubblingTest extends RendererTestBase {
     // accessible => bubbled cache contexts: foo, bar, user.roles.
     $element = $test_element;
     $current_user_role = 'C';
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $final_parent_cache_item = [
       '#cache_redirect' => TRUE,
       '#cache' => [
@@ -449,7 +449,7 @@ class RendererBubblingTest extends RendererTestBase {
     // Request 5: role A again, verifying the merging like we did for request 3.
     $element = $test_element;
     $current_user_role = 'A';
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertRenderCacheItem('parent', $final_parent_cache_item);
     $this->assertRenderCacheItem('parent:bar:foo:r.A', [
       '#attached' => [],
@@ -464,7 +464,7 @@ class RendererBubblingTest extends RendererTestBase {
     // Request 6: role B again, verifying the merging like we did for request 3.
     $element = $test_element;
     $current_user_role = 'B';
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertRenderCacheItem('parent', $final_parent_cache_item);
     $this->assertRenderCacheItem('parent:bar:foo:r.B', [
       '#attached' => [],
@@ -570,7 +570,7 @@ class RendererBubblingTest extends RendererTestBase {
        ],
       '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingCacheOverwritePrerender'],
     ];
-    $this->renderer->render($data);
+    $this->renderer->renderRoot($data);
   }
 }
 

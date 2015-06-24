@@ -347,7 +347,7 @@ class FunctionsTest extends WebTestBase {
     // thing. We expect a single <ul> with appropriate links contained within
     // it.
     $render_array = $base_array;
-    $html = drupal_render($render_array);
+    $html = \Drupal::service('renderer')->renderRoot($render_array);
     $dom = new \DOMDocument();
     $dom->loadHTML($html);
     $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered HTML.');
@@ -363,8 +363,8 @@ class FunctionsTest extends WebTestBase {
     // sure we get two separate <ul>'s with the appropriate links contained
     // within each.
     $render_array = $base_array;
-    $child_html = drupal_render($render_array['first_child']);
-    $parent_html = drupal_render($render_array);
+    $child_html = \Drupal::service('renderer')->renderRoot($render_array['first_child']);
+    $parent_html = \Drupal::service('renderer')->renderRoot($render_array);
     // First check the child HTML.
     $dom = new \DOMDocument();
     $dom->loadHTML($child_html);

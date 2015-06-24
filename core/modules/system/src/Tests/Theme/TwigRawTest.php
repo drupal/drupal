@@ -31,7 +31,7 @@ class TwigRawTest extends WebTestBase {
       '#theme' => 'twig_raw_test',
       '#script' => '<script>alert("This alert is real because I will put it through the raw filter!");</script>',
     );
-    $rendered = drupal_render($test);
+    $rendered = \Drupal::service('renderer')->renderRoot($test);
     $this->setRawContent($rendered);
     $this->assertRaw('<script>alert("This alert is real because I will put it through the raw filter!");</script>');
   }
@@ -48,7 +48,7 @@ class TwigRawTest extends WebTestBase {
       '#theme' => 'twig_autoescape_test',
       '#script' => $script,
     ];
-    $rendered = drupal_render($build);
+    $rendered = \Drupal::service('renderer')->renderRoot($build);
     $this->setRawContent($rendered);
     $this->assertEscaped($script);
   }

@@ -588,7 +588,7 @@ class LinkFieldTest extends WebTestBase {
     $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), $view_mode);
     $content = $display->build($entity);
-    $output = drupal_render($content);
+    $output = \Drupal::service('renderer')->renderRoot($content);
     $this->setRawContent($output);
     $this->verbose($output);
   }

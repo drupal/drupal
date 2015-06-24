@@ -14,7 +14,6 @@ use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormAjaxException;
 use Drupal\Core\Form\FormAjaxResponseBuilderInterface;
 use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -37,25 +36,15 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   protected $formAjaxResponseBuilder;
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new FormAjaxSubscriber.
    *
    * @param \Drupal\Core\Form\FormAjaxResponseBuilderInterface $form_ajax_response_builder
    *   The form AJAX response builder.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    */
-  public function __construct(FormAjaxResponseBuilderInterface $form_ajax_response_builder, RendererInterface $renderer, TranslationInterface $string_translation) {
+  public function __construct(FormAjaxResponseBuilderInterface $form_ajax_response_builder, TranslationInterface $string_translation) {
     $this->formAjaxResponseBuilder = $form_ajax_response_builder;
-    $this->renderer = $renderer;
     $this->stringTranslation = $string_translation;
   }
 
@@ -94,7 +83,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
       $this->drupalSetMessage($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', ['@size' => $this->formatSize($exception->getSize())]), 'error');
       $response = new AjaxResponse();
       $status_messages = ['#type' => 'status_messages'];
-      $response->addCommand(new ReplaceCommand(NULL, $this->renderer->renderRoot($status_messages)));
+      $response->addCommand(new ReplaceCommand(NULL, $status_messages));
       $response->headers->set('X-Status-Code', 200);
       $event->setResponse($response);
       return;

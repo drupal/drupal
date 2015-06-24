@@ -65,9 +65,9 @@ class MessageViewBuilder extends EntityViewBuilder {
           $build[$key]['#label_display'] = 'hidden';
         }
       }
-      $build = array(
-        '#markup' => MailFormatHelper::htmlToText(drupal_render($build)),
-      );
+      $build['#post_render'][] = function ($html, array $elements) {
+        return MailFormatHelper::htmlToText($html);
+      };
     }
     return $build;
   }

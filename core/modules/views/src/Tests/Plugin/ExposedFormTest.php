@@ -135,7 +135,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->executeView($view);
     $exposed_form = $view->display_handler->getPlugin('exposed_form');
     $output = $exposed_form->renderExposedForm();
-    $this->setRawContent(drupal_render($output));
+    $this->setRawContent(\Drupal::service('renderer')->renderRoot($output));
 
     $this->assertFieldByXpath('//form/@id', $this->getExpectedExposedFormId($view), 'Expected form ID found.');
 

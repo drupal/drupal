@@ -125,7 +125,7 @@ abstract class FieldFieldAccessTestBase extends ViewUnitTestBase {
     $account_switcher->switchTo($this->userWithAccess);
     $executable = Views::getView($view_id);
     $build = $executable->preview();
-    $this->setRawContent($renderer->render($build));
+    $this->setRawContent($renderer->renderRoot($build));
 
     $this->assertText($field_content);
     $this->assertTrue(isset($executable->field[$field_name]));
@@ -133,7 +133,7 @@ abstract class FieldFieldAccessTestBase extends ViewUnitTestBase {
     $account_switcher->switchTo($this->userWithoutAccess);
     $executable = Views::getView($view_id);
     $build = $executable->preview();
-    $this->setRawContent($renderer->render($build));
+    $this->setRawContent($renderer->renderRoot($build));
 
     $this->assertNoText($field_content);
     $this->assertFalse(isset($executable->field[$field_name]));

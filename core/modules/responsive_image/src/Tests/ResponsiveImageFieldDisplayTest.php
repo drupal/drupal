@@ -163,6 +163,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    * Defaults to false.
    */
   protected function doTestResponsiveImageFieldFormatters($scheme, $empty_styles = FALSE) {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = Unicode::strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
@@ -186,7 +188,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 240,
       '#alt' => $alt,
     );
-    $default_output = str_replace("\n", NULL, drupal_render($image));
+    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Use the responsive image formatter linked to file formatter.
@@ -282,7 +284,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
-    $default_output = trim(drupal_render($fallback_image));
+    $default_output = trim($renderer->renderRoot($fallback_image));
     $this->assertRaw($default_output, 'Image style large formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {

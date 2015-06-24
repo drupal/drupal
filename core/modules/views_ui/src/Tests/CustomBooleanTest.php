@@ -100,7 +100,7 @@ class CustomBooleanTest extends UITestBase {
 
       $view = Views::getView('test_view');
       $output = $view->preview();
-      $output = drupal_render($output);
+      $output = \Drupal::service('renderer')->renderRoot($output);
 
       $replacements = array('%type' => $type);
       $this->{$values['test']}(strpos($output, $values['true']), format_string('Expected custom boolean TRUE value in output for %type.', $replacements));

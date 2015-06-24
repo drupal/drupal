@@ -41,7 +41,7 @@ class TwigFilterTest extends WebTestBase {
         'class' => array('red', 'green', 'blue'),
       ),
     );
-    $rendered = drupal_render($filter_test);
+    $rendered = \Drupal::service('renderer')->renderRoot($filter_test);
     $this->setRawContent($rendered);
 
     $elements = array(

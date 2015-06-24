@@ -94,10 +94,10 @@ class SimpletestResultsForm extends FormBase {
       '#alt' => 'Debug',
     );
     return array(
-      'pass' => drupal_render($image_pass),
-      'fail' => drupal_render($image_fail),
-      'exception' => drupal_render($image_exception),
-      'debug' => drupal_render($image_debug),
+      'pass' => $image_pass,
+      'fail' => $image_fail,
+      'exception' => $image_exception,
+      'debug' => $image_debug,
     );
   }
 
@@ -205,7 +205,7 @@ class SimpletestResultsForm extends FormBase {
     // Under normal circumstances, a form object's submitForm() should never be
     // called directly, FormBuilder::submitForm() should be called instead.
     // However, it calls $form_state->setProgrammed(), which disables the Batch API.
-    $simpletest_test_form = new SimpletestTestForm();
+    $simpletest_test_form = SimpletestTestForm::create(\Drupal::getContainer());
     $simpletest_test_form->buildForm($form_execute, $form_state_execute);
     $simpletest_test_form->submitForm($form_execute, $form_state_execute);
     if ($redirect = $form_state_execute->getRedirect()) {
@@ -318,7 +318,7 @@ class SimpletestResultsForm extends FormBase {
         $row[] = \Drupal::service('file_system')->basename(($assertion->file));
         $row[] = $assertion->line;
         $row[] = $assertion->function;
-        $row[] = $image_status_map[$assertion->status];
+        $row[] = ['data' => $image_status_map[$assertion->status]];
 
         $class = 'simpletest-' . $assertion->status;
         if ($assertion->message_group == 'Debug') {

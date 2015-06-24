@@ -62,7 +62,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       '#theme' => 'file_link',
       '#file' => $node_file,
     );
-    $default_output = drupal_render($file_link);
+    $default_output = \Drupal::service('renderer')->renderRoot($file_link);
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Turn the "display" option off and check that the file is no longer displayed.

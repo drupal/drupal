@@ -454,7 +454,7 @@ class ManageDisplayTest extends WebTestBase {
     // Render a cloned node, so that we do not alter the original.
     $clone = clone $node;
     $element = node_view($clone, $view_mode);
-    $output = drupal_render($element);
+    $output = \Drupal::service('renderer')->renderRoot($element);
     $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />'. $output);
 
     // Assign content so that WebTestBase functions can be used.

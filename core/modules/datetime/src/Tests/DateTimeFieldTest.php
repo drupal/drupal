@@ -644,7 +644,7 @@ class DateTimeFieldTest extends WebTestBase {
     $entity = entity_load('entity_test', $id);
     $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
     $build = $display->build($entity);
-    $output = drupal_render($build);
+    $output = \Drupal::service('renderer')->renderRoot($build);
     $this->setRawContent($output);
     $this->verbose($output);
   }

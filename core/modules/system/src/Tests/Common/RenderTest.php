@@ -39,7 +39,7 @@ class RenderTest extends KernelTestBase {
         '#markup' => 'Kittens!',
       ],
     ];
-    drupal_render($test_element);
+    \Drupal::service('renderer')->renderRoot($test_element);
 
     $expected_attached = [
       'library' => [

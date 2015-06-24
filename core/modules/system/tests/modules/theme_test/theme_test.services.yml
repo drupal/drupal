@@ -1,7 +1,7 @@
 services:
   theme_test.subscriber:
     class: Drupal\theme_test\EventSubscriber\ThemeTestSubscriber
-    arguments: [@current_route_match]
+    arguments: [@current_route_match, @renderer]
     tags:
       - { name: event_subscriber }
 

@@ -71,7 +71,7 @@ function book_theme() {
       'render element' => 'book_menus',
     ),
     'book_node_export_html' => array(
-      'variables' => array('node' => NULL, 'children' => NULL),
+      'variables' => array('node' => NULL, 'content' => NULL, 'children' => NULL),
     ),
   );
 }
@@ -234,9 +234,9 @@ function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayI
       if (!$book_node->access()) {
         return;
       }
-      $book_navigation = array( '#theme' => 'book_navigation', '#book_link' => $node->book);
       $build['book_navigation'] = array(
-        '#markup' => drupal_render($book_navigation),
+        '#theme' => 'book_navigation',
+        '#book_link' => $node->book,
         '#weight' => 100,
         // The book navigation is a listing of Node entities, so associate its
         // list cache tag for correct invalidation.
@@ -491,7 +491,6 @@ function template_preprocess_book_export_html(&$variables) {
 function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
   $variables['title'] = SafeMarkup::checkPlain($variables['node']->label());
-  $variables['content'] = $variables['node']->rendered;
 }
 
 /**

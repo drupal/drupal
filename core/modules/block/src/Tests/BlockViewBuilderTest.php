@@ -44,6 +44,13 @@ class BlockViewBuilderTest extends KernelTestBase {
   protected $controller;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -64,6 +71,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->block->save();
 
     $this->container->get('cache.render')->deleteAll();
+
+    $this->renderer = $this->container->get('renderer');
   }
 
   /**
@@ -90,7 +99,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEqual(drupal_render($output), $expected_output);
+    $this->assertEqual($this->renderer->renderRoot($output), $expected_output);
 
     // Reset the HTML IDs so that the next render is not affected.
     Html::resetSeenIds();
@@ -115,7 +124,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEqual(drupal_render($output), $expected_output);
+    $this->assertEqual($this->renderer->renderRoot($output), $expected_output);
   }
 
   /**
@@ -144,7 +153,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    * @see ::testBlockViewBuilderCache()
    */
   protected function verifyRenderCacheHandling() {
-    // Force a request via GET so we can get drupal_render() cache working.
+    // Force a request via GET so we can test the render cache.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
     $request->setMethod('GET');
@@ -152,7 +161,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     // Test that a cache entry is created.
     $build = $this->getBlockRenderArray();
     $cid = 'entity_view:block:test_block:en:core';
-    drupal_render($build);
+    $this->renderer->renderRoot($build);
     $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
 
     // Re-save the block and check that the cache entry has been deleted.
@@ -166,7 +175,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     // removes it.
     $build['#block'] = $this->block;
 
-    drupal_render($build);
+    $this->renderer->renderRoot($build);
     $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
     $this->block->delete();
     $this->assertFalse($this->container->get('cache.render')->get($cid), 'The block render cache entry has been cleared when the block was deleted.');
@@ -181,17 +190,17 @@ class BlockViewBuilderTest extends KernelTestBase {
   public function testBlockViewBuilderAlter() {
     // Establish baseline.
     $build = $this->getBlockRenderArray();
-    $this->assertIdentical(drupal_render($build), 'Llamas &gt; unicorns!');
+    $this->assertIdentical($this->renderer->renderRoot($build), 'Llamas &gt; unicorns!');
 
     // Enable the block view alter hook that adds a suffix, for basic testing.
     \Drupal::state()->set('block_test_view_alter_suffix', TRUE);
     Cache::invalidateTags($this->block->getCacheTags());
     $build = $this->getBlockRenderArray();
     $this->assertTrue(isset($build['#suffix']) && $build['#suffix'] === '<br>Goodbye!', 'A block with content is altered.');
-    $this->assertIdentical(drupal_render($build), 'Llamas &gt; unicorns!<br>Goodbye!');
+    $this->assertIdentical($this->renderer->renderRoot($build), 'Llamas &gt; unicorns!<br>Goodbye!');
     \Drupal::state()->set('block_test_view_alter_suffix', FALSE);
 
-    // Force a request via GET so we can get drupal_render() cache working.
+    // Force a request via GET so we can test the render cache.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
     $request->setMethod('GET');
@@ -209,7 +218,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected_keys = array_merge($default_keys, array($alter_add_key));
     $build = $this->getBlockRenderArray();
     $this->assertIdentical($expected_keys, $build['#cache']['keys'], 'An altered cacheable block has the expected cache keys.');
-    $this->assertIdentical(drupal_render($build), '');
+    $this->assertIdentical($this->renderer->renderRoot($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
     $expected_tags = array_merge($default_tags, ['rendered']);
@@ -224,7 +233,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $build = $this->getBlockRenderArray();
     sort($build['#cache']['tags']);
     $this->assertIdentical($expected_tags, $build['#cache']['tags'], 'An altered cacheable block has the expected cache tags.');
-    $this->assertIdentical(drupal_render($build), '');
+    $this->assertIdentical($this->renderer->renderRoot($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
     $expected_tags = array_merge($default_tags, [$alter_add_tag, 'rendered']);
@@ -236,8 +245,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     // alter the eventual content.
     \Drupal::state()->set('block_test_view_alter_append_pre_render_prefix', TRUE);
     $build = $this->getBlockRenderArray();
-    $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before calling drupal_render().');
-    $this->assertIdentical(drupal_render($build), 'Hiya!<br>');
+    $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before rendering.');
+    $this->assertIdentical($this->renderer->renderRoot($build), 'Hiya!<br>');
     $this->assertTrue(isset($build['#prefix']) && $build['#prefix'] === 'Hiya!<br>', 'A cached block without content is altered.');
 
     // Restore the previous request method.

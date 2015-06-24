@@ -43,7 +43,7 @@ class RenderElementTypesTest extends KernelTestBase {
    *   Assertion message.
    */
   protected function assertElements(array $elements, $expected_html, $message) {
-    $actual_html = drupal_render($elements);
+    $actual_html = \Drupal::service('renderer')->renderRoot($elements);
 
     $out = '<table><tr>';
     $out .= '<td valign="top"><pre>' . SafeMarkup::checkPlain($expected_html) . '</pre></td>';
@@ -198,7 +198,7 @@ class RenderElementTypesTest extends KernelTestBase {
     );
 
     foreach($elements as $element) {
-      $xml = new \SimpleXMLElement(drupal_render($element['value']));
+      $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
       $this->assertTrue($result, '"' . $element['name'] . '" input rendered correctly by drupal_render().');
     }
@@ -229,7 +229,7 @@ class RenderElementTypesTest extends KernelTestBase {
     );
 
     foreach ($elements as $element) {
-      $xml = new \SimpleXMLElement(drupal_render($element['value']));
+      $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
       $this->assertTrue($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
     }
@@ -245,7 +245,7 @@ class RenderElementTypesTest extends KernelTestBase {
       'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact?") and text()="Show descriptions"]',
     );
 
-    $xml = new \SimpleXMLElement(drupal_render($element['value']));
+    $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
     $result = $xml->xpath($element['expected']);
     $this->assertTrue($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
   }

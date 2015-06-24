@@ -40,14 +40,15 @@ class TipPluginImage extends TipPluginBase {
    * {@inheritdoc}
    */
   public function getOutput() {
-    $image = array(
+    $prefix = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . SafeMarkup::checkPlain($this->get('label')) . '</h2>';
+    $prefix .= '<p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">';
+    return [
+      '#prefix' => $prefix,
       '#theme' => 'image',
       '#uri' => $this->get('url'),
       '#alt' => $this->get('alt'),
-    );
-    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . SafeMarkup::checkPlain($this->get('label')) . '</h2>';
-    $output .= '<p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">' . drupal_render($image) . '</p>';
-    return array('#markup' => $output);
+      '#suffix' => '</p>',
+    ];
   }
 
 }

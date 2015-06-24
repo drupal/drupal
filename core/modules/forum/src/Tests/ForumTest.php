@@ -602,7 +602,7 @@ class ForumTest extends WebTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     );
-    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
+    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb), 'Breadcrumbs were displayed');
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -662,7 +662,7 @@ class ForumTest extends WebTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     );
-    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
+    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb), 'Breadcrumbs were displayed');
   }
 
   /**

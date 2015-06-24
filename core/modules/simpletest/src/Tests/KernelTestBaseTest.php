@@ -284,6 +284,8 @@ EOS;
    * Tests that _theme() works right after loading a module.
    */
   function testEnableModulesTheme() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     $original_element = $element = array(
       '#type' => 'container',
       '#markup' => 'Foo',
@@ -291,11 +293,11 @@ EOS;
     );
     $this->enableModules(array('system'));
     // _theme() throws an exception if modules are not loaded yet.
-    $this->assertTrue(drupal_render($element));
+    $this->assertTrue($renderer->renderRoot($element));
 
     $element = $original_element;
     $this->disableModules(array('entity_test'));
-    $this->assertTrue(drupal_render($element));
+    $this->assertTrue($renderer->renderRoot($element));
   }
 
   /**

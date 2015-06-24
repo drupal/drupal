@@ -72,7 +72,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
     // Save the uploading row for last.
     if (empty($widget['#files'])) {
       $widget['#title'] = $element['#file_upload_title'];
-      $widget['#description'] = drupal_render($element['#file_upload_description']);
+      $widget['#description'] = \Drupal::service('renderer')->renderPlain($element['#file_upload_description']);
       continue;
     }
 

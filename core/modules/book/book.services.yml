@@ -12,7 +12,7 @@ services:
     arguments: ['@book.manager']
   book.export:
     class: Drupal\book\BookExport
-    arguments: ['@entity.manager', '@book.manager']
+    arguments: ['@entity.manager', '@book.manager', '@renderer']
   book.outline_storage:
     class: Drupal\book\BookOutlineStorage
     arguments: ['@database']

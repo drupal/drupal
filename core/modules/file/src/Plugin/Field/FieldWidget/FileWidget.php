@@ -267,7 +267,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
         '#upload_validators' => $element['#upload_validators'],
         '#cardinality' => $cardinality,
       );
-      $element['#description'] = drupal_render($file_upload_help);
+      $element['#description'] = \Drupal::service('renderer')->renderPlain($file_upload_help);
       $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
       if ($cardinality != 1 && $cardinality != -1) {
         $element['#element_validate'] = array(array(get_class($this), 'validateMultipleCount'));

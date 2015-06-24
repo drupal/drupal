@@ -77,8 +77,7 @@ class CommonTestController {
         ),
       ),
     );
-    drupal_render($attached);
-    return '';
+    return \Drupal::service('renderer')->renderRoot($attached);
   }
 
   /**

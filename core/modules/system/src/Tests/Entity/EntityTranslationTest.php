@@ -559,6 +559,9 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    *   The entity type to run the tests with.
    */
   protected function doTestLanguageFallback($entity_type) {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     $current_langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
     $this->langcodes[] = $current_langcode;
 
@@ -609,16 +612,16 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Get an view builder.
     $controller = $this->entityManager->getViewBuilder($entity_type);
     $entity2_build = $controller->view($entity2);
-    $entity2_output = drupal_render($entity2_build);
+    $entity2_output = $renderer->renderRoot($entity2_build);
     $translation = $this->entityManager->getTranslationFromContext($entity2, $default_langcode);
     $translation_build = $controller->view($translation);
-    $translation_output = drupal_render($translation_build);
+    $translation_output = $renderer->renderRoot($translation_build);
     $this->assertIdentical($entity2_output, $translation_output, 'When the entity has no translation no fallback is applied.');
 
     // Checks that entity translations are rendered properly.
     $controller = $this->entityManager->getViewBuilder($entity_type);
     $build = $controller->view($entity);
-    drupal_render($build);
+    $renderer->renderRoot($build);
     $this->assertEqual($build['label']['#markup'], $values[$current_langcode]['name'], 'By default the entity is rendered in the current language.');
 
     $langcodes = array_combine($this->langcodes, $this->langcodes);
@@ -630,7 +633,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       // Unset the #cache key so that a fresh render is produced with each pass,
       // making the renderable array keys available to compare.
       unset($build['#cache']);
-      drupal_render($build);
+      $renderer->renderRoot($build);
       $this->assertEqual($build['label']['#markup'], $values[$expected]['name'], 'The entity is rendered in the expected language.');
     }
   }

@@ -90,7 +90,7 @@ class AddFeedTest extends WebTestBase {
       '#url' => 'node',
       '#title' => '<>&"\'',
     );
-    $text = drupal_render($variables);
+    $text = \Drupal::service('renderer')->renderRoot($variables);
     preg_match('/title="(.*?)"/', $text, $matches);
     $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'feed_icon template escapes reserved HTML characters.');
   }

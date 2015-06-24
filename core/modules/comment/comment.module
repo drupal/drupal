@@ -462,7 +462,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
       }
     }
   }
-  return drupal_render($build);
+  return \Drupal::service('renderer')->renderPlain($build);
 }
 
 /**

@@ -175,8 +175,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $view->dom_id = $dom_id;
 
         if ($preview = $view->preview($display_id, $args)) {
-          $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $this->renderer->render($preview)));
-          $response->setAttachments($preview['#attached']);
+          $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         }
         return $response;
       }
