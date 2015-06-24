@@ -9,11 +9,16 @@ namespace Drupal\service_provider_test;
 
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\DestructableInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class TestClass implements EventSubscriberInterface, DestructableInterface {
+class TestClass implements EventSubscriberInterface, DestructableInterface, ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * The state keyvalue collection.
@@ -40,6 +45,15 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
   }
 
   /**
+   * Flags the response in case a rebuild indicator is used.
+   */
+  public function onKernelResponseTest(FilterResponseEvent $event) {
+    if ($this->container->hasParameter('container_rebuild_indicator')) {
+      $event->getResponse()->headers->set('container_rebuild_indicator', $this->container->getParameter('container_rebuild_indicator'));
+    }
+  }
+
+  /**
    * Registers methods as kernel listeners.
    *
    * @return array
@@ -47,6 +61,7 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequestTest');
+    $events[KernelEvents::RESPONSE][] = array('onKernelResponseTest');
     return $events;
   }
 

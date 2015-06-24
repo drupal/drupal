@@ -287,6 +287,16 @@ $config_directories = array();
 $settings['hash_salt'] = '';
 
 /**
+ * Deployment identifier.
+ *
+ * Drupal's dependency injection container will be automatically invalidated and
+ * rebuilt when the Drupal core version changes. When updating contributed or
+ * custom code that changes the container, changing this identifier will also
+ * allow the container to be invalidated as soon as code is deployed.
+ */
+# $settings['deployment_identifier'] = \Drupal::VERSION;
+
+/**
  * Access control for update.php script.
  *
  * If you are updating your Drupal installation using the update.php script but

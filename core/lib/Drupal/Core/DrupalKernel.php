@@ -712,7 +712,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The class name.
    */
   protected function getClassName() {
-    $parts = array('service_container', $this->environment);
+    $parts = array('service_container', $this->environment, hash('crc32b', \Drupal::VERSION . Settings::get('deployment_identifier')));
     return implode('_', $parts);
   }
 
