@@ -74,7 +74,7 @@
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.857em;
 }
-.site-footer .content .menu-item {
+.site-footer .menu-item {
   padding: 0;
 }
 .site-footer .content ol:not(.menu),
