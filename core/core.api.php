@@ -374,9 +374,9 @@
  * Note: If not specified, all of the methods mentioned here belong to
  * \Drupal\Core\Cache\CacheBackendInterface.
  *
- * The Cache API is used to store data that takes a long time to
- * compute. Caching can be permanent, temporary, or valid for a certain
- * timespan, and the cache can contain any type of data.
+ * The Cache API is used to store data that takes a long time to compute.
+ * Caching can either be permanent or valid only for a certain timespan, and
+ * the cache can contain any type of data.
  *
  * To use the Cache API:
  * - Request a cache object through \Drupal::cache() or by injecting a cache
@@ -478,7 +478,7 @@
  * [prefix]:[suffix]. Usually, you'll want to associate the cache tags of
  * entities, or entity listings. You won't have to manually construct cache tags
  * for them — just get their cache tags via
- * \Drupal\Core\Entity\EntityInterface::getCacheTags() and
+ * \Drupal\Core\Cache\CacheableDependencyInterface::getCacheTags() and
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags().
  * Data that has been tagged can be invalidated as a group: no matter the Cache
  * ID (cid) of the cache item, no matter in which cache bin a cache item lives;
@@ -519,10 +519,33 @@
  * This also is the case when you define your own entity types: you'll get the
  * exact same cache tag invalidation as any of the built-in entity types, with
  * the ability to override any of the default behavior if needed.
- * See \Drupal\Core\Entity\EntityInterface::getCacheTags(),
+ * See \Drupal\Core\Cache\CacheableDepenencyInterface::getCacheTags(),
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags(),
  * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
  * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().
+ *
+ * @section context Cache contexts
+ *
+ * Some computed data depends on contextual data, such as the user roles of the
+ * logged-in user who is viewing a page, the language the page is being rendered
+ * in, the theme being used, etc. When caching the output of such a calculation,
+ * you must cache each variation separately, along with information about which
+ * variation of the contextual data was used in the calculatation. The next time
+ * the computed data is needed, if the context matches that for an existing
+ * cached data set, the cached data can be reused; if no context matches, a new
+ * data set can be calculated and cached for later use.
+ *
+ * Cache contexts are services tagged with 'cache.context', whose classes
+ * implement \Drupal\Core\Cache\Context\CacheContextInterface. See
+ * https://www.drupal.org/developing/api/8/cache/contexts for more information
+ * on cache contexts, including a list of the contexts that exist in Drupal
+ * core, and information on how to define your own contexts. See the
+ * @link container Services and the Dependency Injection Container @endlink
+ * topic for more information about services.
+ *
+ * Typically, the cache context is specified as part of the #cache property
+ * of a render array; see the Caching section of the
+ * @link theme_render Render API overview topic @endlink for details.
  *
  * @section configuration Configuration
  *
