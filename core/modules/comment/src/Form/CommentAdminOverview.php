@@ -15,7 +15,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -214,16 +213,16 @@ class CommentAdminOverview extends FormBase {
         ),
         'changed' => $this->dateFormatter->format($comment->getChangedTimeAcrossTranslations(), 'short'),
       );
-      $comment_uri_options = $comment->urlInfo()->getOptions();
+      $comment_uri_options = $comment->urlInfo()->getOptions() + ['query' => $destination];
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'url' => Url::fromRoute('entity.comment.edit_form', ['comment' => $comment->id()], $comment_uri_options + ['query' => $destination]),
+        'url' => $comment->urlInfo('edit-form', $comment_uri_options),
       );
       if ($this->moduleHandler->moduleExists('content_translation') && $this->moduleHandler->invoke('content_translation', 'translate_access', array($comment))->isAllowed()) {
         $links['translate'] = array(
           'title' => $this->t('Translate'),
-          'url' => Url::fromRoute('entity.comment.content_translation_overview', ['comment' => $comment->id()], $comment_uri_options + ['query' => $destination]),
+          'url' => $comment->urlInfo('drupal:content-translation-overview', $comment_uri_options),
         );
       }
       $options[$comment->id()]['operations']['data'] = array(
