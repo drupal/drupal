@@ -328,20 +328,6 @@
       }
       else if (this.element && element.form) {
         this.url = this.$form.attr('action');
-
-        // @todo If there's a file input on this form, then jQuery will submit
-        //   the AJAX response with a hidden Iframe rather than the XHR object.
-        //   If the response to the submission is an HTTP redirect, then the
-        //   Iframe will follow it, but the server won't content negotiate it
-        //   correctly, because there won't be an ajax_iframe_upload POST
-        //   variable. Until we figure out a work around to this problem, we
-        //   prevent AJAX-enabling elements that submit to the same URL as the
-        //   form when there's a file input. For example, this means the Delete
-        //   button on the edit form of an Article node doesn't open its
-        //   confirmation form in a dialog.
-        if (this.$form.find(':file').length) {
-          return;
-        }
       }
     }
 

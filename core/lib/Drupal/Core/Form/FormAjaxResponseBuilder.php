@@ -71,7 +71,7 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
     if (empty($callback) || !is_callable($callback)) {
       throw new HttpException(500, 'The specified #ajax callback is empty or not callable.');
     }
-    $result = call_user_func_array($callback, [&$form, &$form_state]);
+    $result = call_user_func_array($callback, [&$form, &$form_state, $request]);
 
     // If the callback is an #ajax callback, the result is a render array, and
     // we need to turn it into an AJAX response, so that we can add any commands

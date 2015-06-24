@@ -7,10 +7,16 @@
 
 namespace Drupal\Core\Form\EventSubscriber;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormAjaxException;
 use Drupal\Core\Form\FormAjaxResponseBuilderInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -21,6 +27,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class FormAjaxSubscriber implements EventSubscriberInterface {
 
+  use StringTranslationTrait;
+
   /**
    * The form AJAX response builder.
    *
@@ -29,13 +37,26 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   protected $formAjaxResponseBuilder;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new FormAjaxSubscriber.
    *
    * @param \Drupal\Core\Form\FormAjaxResponseBuilderInterface $form_ajax_response_builder
    *   The form AJAX response builder.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation.
    */
-  public function __construct(FormAjaxResponseBuilderInterface $form_ajax_response_builder) {
+  public function __construct(FormAjaxResponseBuilderInterface $form_ajax_response_builder, RendererInterface $renderer, TranslationInterface $string_translation) {
     $this->formAjaxResponseBuilder = $form_ajax_response_builder;
+    $this->renderer = $renderer;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -64,9 +85,24 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
+    $exception = $event->getException();
+    $request = $event->getRequest();
+
+    // Render a nice error message in case we have a file upload which exceeds
+    // the configured upload limit.
+    if ($exception instanceof BrokenPostRequestException && $request->query->has(FormBuilderInterface::AJAX_FORM_REQUEST)) {
+      $this->drupalSetMessage($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', ['@size' => $this->formatSize($exception->getSize())]), 'error');
+      $response = new AjaxResponse();
+      $status_messages = ['#type' => 'status_messages'];
+      $response->addCommand(new ReplaceCommand(NULL, $this->renderer->renderRoot($status_messages)));
+      $response->headers->set('X-Status-Code', 200);
+      $event->setResponse($response);
+      return;
+    }
+
     // Extract the form AJAX exception (it may have been passed to another
     // exception before reaching here).
-    if ($exception = $this->getFormAjaxException($event->getException())) {
+    if ($exception = $this->getFormAjaxException($exception)) {
       $request = $event->getRequest();
       $form = $exception->getForm();
       $form_state = $exception->getFormState();
@@ -112,6 +148,16 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Wraps format_size()
+   *
+   * @return string
+   *   The formatted size.
+   */
+  protected function formatSize($size) {
+    return format_size($size);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -121,6 +167,15 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
     $events[KernelEvents::VIEW][] = ['onView', 1];
 
     return $events;
+  }
+
+  /**
+   * Wraps drupal_set_message().
+   *
+   * @codeCoverageIgnore
+   */
+  protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
+    drupal_set_message($message, $type, $repeat);
   }
 
 }

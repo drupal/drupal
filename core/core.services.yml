@@ -821,7 +821,7 @@ services:
       - { name: event_subscriber }
   form_ajax_subscriber:
     class: Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber
-    arguments: ['@form_ajax_response_builder']
+    arguments: ['@form_ajax_response_builder', '@renderer', '@string_translation']
     tags:
       - { name: event_subscriber }
   route_enhancer.lazy_collector:

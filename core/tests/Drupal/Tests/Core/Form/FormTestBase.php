@@ -149,7 +149,12 @@ abstract class FormTestBase extends UnitTestCase {
    */
   protected $themeManager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
+    parent::setUp();
+
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCache = $this->getMock('Drupal\Core\Form\FormCacheInterface');
@@ -189,7 +194,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
 
-    $this->formBuilder = new FormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken, $this->kernel);
+    $this->formBuilder = new FormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken);
   }
 
   /**

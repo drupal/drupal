@@ -16,8 +16,11 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,6 +32,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @ingroup form_api
  */
 class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The module handler.
@@ -263,6 +268,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // All of the handlers in the pipeline receive $form_state by reference and
     // can use it to know or update information about the state of the form.
     $response = $this->processForm($form_id, $form, $form_state);
+
+    // In case the post request exceeds the configured allowed size
+    // (post_max_size), the post request is potentially broken. Add some
+    // protection against that and at the same time have a nice error message.
+    if ($ajax_form_request && !isset($form_state->getUserInput()['form_id'])) {
+      throw new BrokenPostRequestException($this->getFileUploadMaxSize());
+    }
 
     // After processing the form, if this is an AJAX form request, interrupt
     // form rendering and return by throwing an exception that contains the
@@ -1149,6 +1161,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Wraps file_upload_max_size().
+   *
+   * @return string
+   *   A translated string representation of the size of the file size limit
+   *   based on the PHP upload_max_filesize and post_max_size.
+   */
+  protected function getFileUploadMaxSize() {
+    return file_upload_max_size();
   }
 
   /**

@@ -1,12 +1,3 @@
-file.ajax_upload:
-  path: '/file/ajax'
-  defaults:
-    _controller: '\Drupal\file\Controller\FileWidgetAjaxController::upload'
-  options:
-    _theme: ajax_base_page
-  requirements:
-    _permission: 'access content'
-
 file.ajax_progress:
   path: '/file/progress'
   defaults:

@@ -407,18 +407,15 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     // file, the entire group of file fields is updated together.
     if ($element['#cardinality'] != 1) {
       $parents = array_slice($element['#array_parents'], 0, -1);
-      $new_url = Url::fromRoute('file.ajax_upload');
       $new_options = array(
         'query' => array(
           'element_parents' => implode('/', $parents),
-          'form_build_id' => $form['form_build_id']['#value'],
         ),
       );
       $field_element = NestedArray::getValue($form, $parents);
       $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
       foreach (Element::children($element) as $key) {
         if (isset($element[$key]['#ajax'])) {
-          $element[$key]['#ajax']['url'] = $new_url->setOptions($new_options);
           $element[$key]['#ajax']['options'] = $new_options;
           $element[$key]['#ajax']['wrapper'] = $new_wrapper;
         }
@@ -450,6 +447,19 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
   public static function processMultiple($element, FormStateInterface $form_state, $form) {
     $element_children = Element::children($element, TRUE);
     $count = count($element_children);
+
+    // Count the number of already uploaded files, in order to display new
+    // items in \Drupal\file\Element\ManagedFile::uploadAjaxCallback().
+    if (!$form_state->isRebuilding()) {
+      $count_items_before = 0;
+      foreach ($element_children as $children) {
+        if (!empty($element[$children]['#default_value']['fids'])) {
+          $count_items_before++;
+        }
+      }
+
+      $form_state->set('file_upload_delta_initial', $count_items_before);
+    }
 
     foreach ($element_children as $delta => $key) {
       if ($key != $element['#file_upload_delta']) {

@@ -7,13 +7,17 @@
 
 namespace Drupal\Tests\Core\Form\EventSubscriber;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber;
+use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormAjaxException;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -39,6 +43,20 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   protected $httpKernel;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $renderer;
+
+  /**
+   * The mocked string translation.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $stringTranslation;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -46,7 +64,9 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
     $this->httpKernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $this->formAjaxResponseBuilder = $this->getMock('Drupal\Core\Form\FormAjaxResponseBuilderInterface');
-    $this->subscriber = new FormAjaxSubscriber($this->formAjaxResponseBuilder);
+    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
+    $this->stringTranslation = $this->getStringTranslationStub();
+    $this->subscriber = new FormAjaxSubscriber($this->formAjaxResponseBuilder, $this->renderer, $this->stringTranslation);
   }
 
   /**
@@ -131,6 +151,46 @@ class FormAjaxSubscriberTest extends UnitTestCase {
 
     $event = $this->assertResponseFromException($request, $exception, NULL);
     $this->assertSame($expected_exception, $event->getException());
+  }
+
+  /**
+   * @covers ::onException
+   */
+  public function testOnExceptionBrokenPostRequest() {
+    $this->formAjaxResponseBuilder->expects($this->never())
+      ->method('buildResponse');
+    $this->subscriber = $this->getMockBuilder('\Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber')
+      ->setConstructorArgs([$this->formAjaxResponseBuilder, $this->renderer, $this->getStringTranslationStub()])
+      ->setMethods(['drupalSetMessage', 'formatSize'])
+      ->getMock();
+    $this->subscriber->expects($this->once())
+      ->method('drupalSetMessage')
+      ->willReturn('asdf');
+    $this->subscriber->expects($this->once())
+      ->method('formatSize')
+      ->with(32 * 1e6)
+      ->willReturn('32M');
+    $rendered_output = 'the rendered output';
+    $this->renderer->expects($this->once())
+      ->method('renderRoot')
+      ->willReturn($rendered_output);
+
+    $exception = new BrokenPostRequestException(32 * 1e6);
+    $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
+
+    $event = new GetResponseForExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+    $this->subscriber->onException($event);
+    $actual_response = $event->getResponse();
+    $this->assertInstanceOf('\Drupal\Core\Ajax\AjaxResponse', $actual_response);
+    $this->assertSame(200, $actual_response->headers->get('X-Status-Code'));
+    $expected_commands[] = [
+      'command' => 'insert',
+      'method' => 'replaceWith',
+      'selector' => NULL,
+      'data' => $rendered_output,
+      'settings' => NULL,
+    ];
+    $this->assertSame($expected_commands, $actual_response->getCommands());
   }
 
   /**
