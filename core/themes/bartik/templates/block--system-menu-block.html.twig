@@ -10,15 +10,12 @@
 {% set show_anchor = "show-" ~ attributes.id|clean_id %}
 {% set hide_anchor = "hide-" ~ attributes.id|clean_id %}
 {% block content %}
-  {# If a label is displayed, wrap it in <div class="content">. #}
-  {% if configuration.label_display %}
-    <div{{ content_attributes.addClass('content') }}>{{ content }}</div>
-  {% else %}
+  <div{{ content_attributes.addClass('content') }}>
     {# When rendering a menu without label, render a menu toggle. #}
     <div class="menu-toggle-target menu-toggle-target-show" id="{{ show_anchor }}"></div>
     <div class="menu-toggle-target" id="{{ hide_anchor }}"></div>
     <a class="menu-toggle" href="#{{ show_anchor }}">{{ 'Menu'|t }}</a>
     <a class="menu-toggle menu-toggle--hide" href="#{{ hide_anchor }}">{{ 'Menu'|t }}</a>
     {{ content }}
-  {% endif %}
+  </div>
 {% endblock %}

@@ -120,7 +120,7 @@ h1.site-name {
   overflow: hidden;
   height: 1px;
 }
-.region-header .block .content {
+.header .block .content {
   margin: 0;
   padding: 0;
 }

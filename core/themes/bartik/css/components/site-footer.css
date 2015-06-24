@@ -5,11 +5,10 @@
 
 .site-footer {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  padding: 35px 15px 30px;
+  padding: 35px 0 30px;
 }
-.site-footer .region {
-  box-sizing: border-box;
-  padding: 0 10px;
+.site-footer .layout-container {
+  padding: 0 15px;
 }
 @media all and (min-width: 560px) {
   .site-footer__top .region {
@@ -20,16 +19,47 @@
   [dir="rtl"] .site-footer__top .region {
     float: right;
   }
+}
+@media all and (min-width: 560px) and (max-width: 850px) {
+  .site-footer .region {
+    box-sizing: border-box;
+  }
+  .site-footer__top .region:nth-child(2n+1) {
+    padding-right: 10px; /* LTR */
+  }
+  [dir="rtl"] .site-footer__top .region:nth-child(2n+1) {
+    padding-left: 10px;
+    padding-right: 0;
+  }
+  .site-footer__top .region:nth-child(2n) {
+    padding-left: 10px; /* LTR */
+  }
+  [dir="rtl"] .site-footer__top .region:nth-child(2n) {
+    padding-left: 0;
+    padding-right: 10px;
+  }
   .region-footer-third {
     clear: both;
   }
 }
 @media all and (min-width: 851px) {
   .site-footer__top .region {
-    width: 25%;
+    width: 24%;
+    padding: 0 0.65%;
   }
-  .region-footer-third {
-    clear: none;
+  .site-footer__top .region:first-child {
+    padding-left: 0; /* LTR */
+  }
+  [dir="rtl"] .site-footer__top .region:first-child {
+    padding-left: 10px;
+    padding-right: 0;
+  }
+  .site-footer__top .region:last-child {
+    padding-right: 0; /* LTR */
+  }
+  [dir="rtl"] .site-footer__top .region:last-child {
+    padding-left: 0;
+    padding-right: 10px;
   }
 }
 .site-footer h2 {
@@ -156,7 +186,9 @@
 .site-footer__bottom .block {
   clear: both;
 }
-.site-footer__bottom .menu {
+
+/* We need to be specific to overwrite [dir="rtl"] .block ul in block.css. */
+.site-footer__bottom .block .menu {
   padding: 0;
 }
 .site-footer__bottom .menu-item a {
@@ -186,4 +218,12 @@
   padding-left: 0;
   padding-right: 12px;
   border-left: none;
+}
+
+/**
+ * When the item is both first and last, :last-child overrides the right padding
+ * when using [dir="rtl"]. We need this rule to remove the right padding.
+ */
+[dir="rtl"] .site-footer__bottom .menu-item:first-child:last-child a {
+  padding-right: 0;
 }
