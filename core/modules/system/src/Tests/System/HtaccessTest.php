@@ -101,7 +101,7 @@ class HtaccessTest extends WebTestBase {
     $this->drupalGet('core/lib/Drupal.php/1');
     $this->assertResponse(403, "Access to core/lib/Drupal.php/1 is denied.");
 
-    // Test that is it possible to have path aliases containing .php.
+    // Test that it is possible to have path aliases containing .php.
     $type = $this->drupalCreateContentType();
 
     // Create an node aliased to test.php.
