@@ -60,7 +60,7 @@ class DefaultFactoryTest extends UnitTestCase {
    * Tests getPluginClass() with a required interface but no implementation.
    *
    * @expectedException \Drupal\Component\Plugin\Exception\PluginException
-   * @expectedExceptionMessage Plugin "cherry" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) in core should implement interface \Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface.
+   * @expectedExceptionMessage Plugin "cherry" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface \Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface.
    */
   public function testGetPluginClassWithInterfaceAndInvalidClass() {
     $plugin_class = 'Drupal\plugin_test\Plugin\plugin_test\fruit\Kale';

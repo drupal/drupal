@@ -251,7 +251,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
    * @covers ::createInstance
    *
    * @expectedException \Drupal\Component\Plugin\Exception\PluginException
-   * @expectedExceptionMessage Plugin "kale" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) in plugin_test should implement interface \Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface
+   * @expectedExceptionMessage Plugin "kale" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface \Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface
    */
   public function testCreateInstanceWithInvalidInterfaces() {
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
