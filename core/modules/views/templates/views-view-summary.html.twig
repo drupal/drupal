@@ -20,8 +20,7 @@
  * @ingroup themeable
  */
 #}
-<div>
-  <ul>
+<ul>
   {% for row in rows %}
     <li><a href="{{ row.url }}"{{ row.attributes.addClass(row.active ? 'is-active')|without('href') }}>{{ row.link }}</a>
       {% if options.count %}
@@ -29,5 +28,4 @@
       {% endif %}
     </li>
   {% endfor %}
-  </ul>
-</div>
+</ul>
