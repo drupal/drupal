@@ -13,6 +13,7 @@ use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Config import subscriber for config import events.
@@ -116,17 +117,26 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
       }
     }
 
+    // Settings is safe to use because settings.php is written before any module
+    // is installed.
+    $install_profile = Settings::get('install_profile');
     // Ensure that all modules being uninstalled are not required by modules
     // that will be installed after the import.
     $uninstalls = $config_importer->getExtensionChangelist('module', 'uninstall');
     foreach ($uninstalls as $module) {
       foreach (array_keys($module_data[$module]->required_by) as $dependent_module) {
-        if ($module_data[$dependent_module]->status && !in_array($dependent_module, $uninstalls, TRUE)) {
+        if ($module_data[$dependent_module]->status && !in_array($dependent_module, $uninstalls, TRUE) && $dependent_module !== $install_profile) {
           $module_name = $module_data[$module]->info['name'];
           $dependent_module_name = $module_data[$dependent_module]->info['name'];
           $config_importer->logError($this->t('Unable to uninstall the %module module since the %dependent_module module is installed.', array('%module' => $module_name, '%dependent_module' => $dependent_module_name)));
         }
       }
+    }
+
+    // Ensure that the install profile is not being uninstalled.
+    if (in_array($install_profile, $uninstalls)) {
+      $profile_name = $module_data[$install_profile]->info['name'];
+      $config_importer->logError($this->t('Unable to uninstall the %profile profile since it is the install profile.', array('%profile' => $profile_name)));
     }
   }
 

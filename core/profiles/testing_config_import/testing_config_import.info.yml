@@ -1,0 +1,10 @@
+name: 'Testing config import'
+type: profile
+description: 'Tests install profiles in the config importer.'
+version: VERSION
+core: 8.x
+hidden: true
+dependencies:
+  - syslog
+themes:
+  - stark

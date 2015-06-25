@@ -648,4 +648,29 @@ class ConfigImporterTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests install profile validation during configuration import.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   */
+  public function testInstallProfile() {
+    $staging = $this->container->get('config.storage.staging');
+
+    $extensions = $staging->read('core.extension');
+    // Add an install profile.
+    $extensions['module']['standard'] = 0;
+
+    $staging->write('core.extension', $extensions);
+    try {
+      $this->configImporter->reset()->import();
+      $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $this->configImporter->getErrors();
+      // Install profiles should not even be scanned at this point.
+      $this->assertEqual(['Unable to install the <em class="placeholder">standard</em> module since it does not exist.'], $error_log);
+    }
+  }
+
 }
