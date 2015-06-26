@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Config\Config\ConfigEvents.
+ * Contains \Drupal\Core\Config\ConfigEvents.
  */
 
 namespace Drupal\Core\Config;

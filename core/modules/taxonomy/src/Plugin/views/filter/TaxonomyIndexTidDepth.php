@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTidDepth.
+ * Contains \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTidDepth.
  */
 
 namespace Drupal\taxonomy\Plugin\views\filter;

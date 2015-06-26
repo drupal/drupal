@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Transaction
+ * Contains \Drupal\Core\Database\Driver\mysql\Transaction.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

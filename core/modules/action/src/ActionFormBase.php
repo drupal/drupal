@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\action\ActionEditForm.
+ * Contains \Drupal\action\ActionFormBase.
  */
 
 namespace Drupal\action;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FilterNumericTest.
+ * Contains \Drupal\views\Tests\Handler\FilterNumericTest.
  */
 
 namespace Drupal\views\Tests\Handler;

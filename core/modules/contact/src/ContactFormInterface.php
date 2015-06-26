@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Entity\ContactFormInterface.
+ * Contains \Drupal\contact\ContactFormInterface.
  */
 
 namespace Drupal\contact;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\SharedTempStoreFactory.
+ * Contains \Drupal\user\SharedTempStoreFactory.
  */
 
 namespace Drupal\user;

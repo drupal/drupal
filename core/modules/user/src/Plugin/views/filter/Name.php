@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\filter\Name.
+ * Contains \Drupal\user\Plugin\views\filter\Name.
  */
 
 namespace Drupal\user\Plugin\views\filter;

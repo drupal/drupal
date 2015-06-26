@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
+ * Contains \Drupal\Core\Database\TransactionExplicitCommitNotAllowedException.
  */
 
 namespace Drupal\Core\Database;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoItem.
+ * Contains \Drupal\Component\Gettext\PoItem.
  */
 
 namespace Drupal\Component\Gettext;

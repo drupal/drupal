@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\RouteCompiler.
+ * Contains \Drupal\Core\Routing\RouteCompiler.
  */
 
 namespace Drupal\Core\Routing;

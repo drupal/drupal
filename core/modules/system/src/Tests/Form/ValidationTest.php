@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\ValidationTest.
+ * Contains \Drupal\system\Tests\Form\ValidationTest.
  */
 
 namespace Drupal\system\Tests\Form;

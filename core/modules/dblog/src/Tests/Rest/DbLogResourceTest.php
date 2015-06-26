@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\test\DBLogTest.
+ * Contains \Drupal\dblog\Tests\Rest\DbLogResourceTest.
  */
 
 namespace Drupal\dblog\Tests\Rest;

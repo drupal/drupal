@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\FloodTest.
+ * Contains \Drupal\system\Tests\System\FloodTest.
  */
 
 namespace Drupal\system\Tests\System;

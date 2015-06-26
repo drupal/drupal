@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\PrependCommand.
+ * Contains \Drupal\Core\Ajax\PrependCommand.
  */
 
 namespace Drupal\Core\Ajax;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\System\SettingsRewriteTest.
+ * Contains \Drupal\system\Tests\System\SettingsRewriteTest.
  */
 
 namespace Drupal\system\Tests\System;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Batch\ProcessingTest.
+ * Contains \Drupal\system\Tests\Batch\ProcessingTest.
  */
 
 namespace Drupal\system\Tests\Batch;

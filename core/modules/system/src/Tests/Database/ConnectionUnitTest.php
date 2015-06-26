@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Database\ConnectionUnitTest.
+ * Contains \Drupal\system\Tests\Database\ConnectionUnitTest.
  */
 
 namespace Drupal\system\Tests\Database;

@@ -1,6 +1,8 @@
 <?php
 /**
  * @file
+ * Contains \Drupal\migrate\Plugin\migrate\destination\Config.
+ *
  * Provides Configuration Management destination plugin.
  */
 

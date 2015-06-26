@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\PluginTestBase.
+ * Contains \Drupal\views\Tests\Plugin\PluginTestBase.
  */
 
 namespace Drupal\views\Tests\Plugin;

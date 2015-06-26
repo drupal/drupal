@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Component\Diff\MappedDiff.
+ */
+
 namespace Drupal\Component\Diff;
 
 /**

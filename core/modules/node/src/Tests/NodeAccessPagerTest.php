@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeAccessPagerTest.
+ * Contains \Drupal\node\Tests\NodeAccessPagerTest.
  */
 
 namespace Drupal\node\Tests;

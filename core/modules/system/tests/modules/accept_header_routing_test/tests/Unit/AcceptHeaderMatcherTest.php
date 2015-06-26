@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\accept_header_routing_test\Unit\Routing\AcceptHeaderMatcherTest.
+ * Contains \Drupal\Tests\accept_header_routing_teste\Unit\Routing\AcceptHeaderMatcherTest.
  */
 
 namespace Drupal\Tests\accept_header_routing_teste\Unit\Routing;

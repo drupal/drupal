@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\conneg_test\Controller\Test.
+ * Contains \Drupal\conneg_test\Controller\TestController.
  */
 
 namespace Drupal\conneg_test\Controller;

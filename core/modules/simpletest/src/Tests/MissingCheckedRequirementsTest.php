@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\Tests\MissingCheckedRequirementsTest.
+ * Contains \Drupal\simpletest\Tests\MissingCheckedRequirementsTest.
  */
 
 namespace Drupal\simpletest\Tests;

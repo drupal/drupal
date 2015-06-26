@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileFieldWidgetTest.
+ * Contains \Drupal\file\Tests\FileFieldWidgetTest.
  */
 
 namespace Drupal\file\Tests;

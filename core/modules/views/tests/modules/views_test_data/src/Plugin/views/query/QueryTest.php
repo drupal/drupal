@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\query\QueryTest.
+ * Contains \Drupal\views_test_data\Plugin\views\query\QueryTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\query;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\PhpStreamWrapperInterface.
+ * Contains \Drupal\Core\StreamWrapper\PhpStreamWrapperInterface.
  */
 
 namespace Drupal\Core\StreamWrapper;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Session\SessionHttpsTest.
+ * Contains \Drupal\system\Tests\Session\SessionHttpsTest.
  */
 
 namespace Drupal\system\Tests\Session;

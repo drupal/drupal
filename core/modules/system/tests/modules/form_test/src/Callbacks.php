@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\form_test\Callbacks.
+ * Contains \Drupal\form_test\Callbacks.
  */
 
 namespace Drupal\form_test;

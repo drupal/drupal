@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Plugin\views\argument\Fid.
+ * Contains \Drupal\file\Plugin\views\argument\Fid.
  */
 
 namespace Drupal\file\Plugin\views\argument;

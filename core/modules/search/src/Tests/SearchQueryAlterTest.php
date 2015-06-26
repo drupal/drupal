@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\search\Tests\SearchQueryAlterTest.
+ * Contains \Drupal\search\Tests\SearchQueryAlterTest.
  */
 
 namespace Drupal\search\Tests;

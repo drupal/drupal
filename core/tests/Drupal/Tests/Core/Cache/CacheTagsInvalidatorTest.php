@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Cache\CacheTest.
+ * Contains \Drupal\Tests\Core\Cache\CacheTagsInvalidatorTest.
  */
 
 namespace Drupal\Tests\Core\Cache;

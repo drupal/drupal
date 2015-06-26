@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\wizard\Comment.
+ * Contains \Drupal\comment\Plugin\views\wizard\Comment.
  */
 
 namespace Drupal\comment\Plugin\views\wizard;

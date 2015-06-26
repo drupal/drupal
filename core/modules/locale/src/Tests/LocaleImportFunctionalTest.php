@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleImportFunctionalTest.
+ * Contains \Drupal\locale\Tests\LocaleImportFunctionalTest.
  */
 
 namespace Drupal\locale\Tests;

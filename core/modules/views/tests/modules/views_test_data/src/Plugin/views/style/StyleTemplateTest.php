@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\style\StyleTemplateTest.
+ * Contains \Drupal\views_test_data\Plugin\views\style\StyleTemplateTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\style;

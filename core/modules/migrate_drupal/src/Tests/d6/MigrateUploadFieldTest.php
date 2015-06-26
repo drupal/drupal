@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUploadInstanceTest.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUploadFieldTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;

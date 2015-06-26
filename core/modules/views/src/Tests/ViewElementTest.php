@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\ViewElementTest.
+ * Contains \Drupal\views\Tests\ViewElementTest.
  */
 
 namespace Drupal\views\Tests;

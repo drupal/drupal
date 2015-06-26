@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\LastTimestamp.
+ * Contains \Drupal\comment\Plugin\views\field\LastTimestamp.
  */
 
 namespace Drupal\comment\Plugin\views\field;

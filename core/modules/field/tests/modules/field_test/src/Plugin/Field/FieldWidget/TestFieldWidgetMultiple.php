@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple.
+ * Contains \Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple.
  */
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;

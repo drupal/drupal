@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\search\Controller\SearchController
+ * Contains \Drupal\search\Controller\SearchController.
  */
 
 namespace Drupal\search\Controller;

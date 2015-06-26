@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\FileTransfer\FileTransfer.
+ * Contains \Drupal\Core\FileTransfer\FileTransfer.
  */
 
 namespace Drupal\Core\FileTransfer;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Queue\QueueInterface.
+ * Contains \Drupal\Core\Queue\QueueInterface.
  */
 
 namespace Drupal\Core\Queue;

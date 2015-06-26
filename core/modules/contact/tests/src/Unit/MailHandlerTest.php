@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Tests\Unit\MailHandlerTest.
+ * Contains \Drupal\Tests\contact\Unit\MailHandlerTest.
  */
 
 namespace Drupal\Tests\contact\Unit;

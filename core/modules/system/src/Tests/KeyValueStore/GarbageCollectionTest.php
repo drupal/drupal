@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\KeyValueStore\GarbageCollectionTest.
+ * Contains \Drupal\system\Tests\KeyValueStore\GarbageCollectionTest.
  */
 
 namespace Drupal\system\Tests\KeyValueStore;

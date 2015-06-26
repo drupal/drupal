@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\HandlerAliasTest.
+ * Contains \Drupal\views\Tests\Handler\HandlerAliasTest.
  */
 
 namespace Drupal\views\Tests\Handler;

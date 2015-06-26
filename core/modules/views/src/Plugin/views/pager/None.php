@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\pager\None.
+ * Contains \Drupal\views\Plugin\views\pager\None.
  */
 
 namespace Drupal\views\Plugin\views\pager;

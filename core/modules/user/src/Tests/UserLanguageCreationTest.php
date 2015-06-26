@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserLanguageCreationTest.
+ * Contains \Drupal\user\Tests\UserLanguageCreationTest.
  */
 
 namespace Drupal\user\Tests;

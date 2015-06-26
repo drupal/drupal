@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterSecurityTest.
+ * Contains \Drupal\filter\Tests\FilterSecurityTest.
  */
 
 namespace Drupal\filter\Tests;

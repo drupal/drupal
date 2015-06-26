@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\TermStorage.
+ * Contains \Drupal\taxonomy\TermStorage.
  */
 
 namespace Drupal\taxonomy;

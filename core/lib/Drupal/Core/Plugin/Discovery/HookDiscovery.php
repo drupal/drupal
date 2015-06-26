@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Plugin\Discovery\HookDiscovery.
+ * Contains \Drupal\Core\Plugin\Discovery\HookDiscovery.
  */
 
 namespace Drupal\Core\Plugin\Discovery;

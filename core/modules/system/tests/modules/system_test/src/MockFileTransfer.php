@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system_test\MockFileTransfer.
+ * Contains \Drupal\system_test\MockFileTransfer.
  */
 
 namespace Drupal\system_test;

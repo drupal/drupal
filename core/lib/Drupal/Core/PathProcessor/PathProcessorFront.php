@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\PathProcessor\PathProcessorFront.
+ * Contains \Drupal\Core\PathProcessor\PathProcessorFront.
  */
 
 namespace Drupal\Core\PathProcessor;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigOverrideTest.
+ * Contains \Drupal\config\Tests\ConfigOverrideTest.
  */
 
 namespace Drupal\config\Tests;

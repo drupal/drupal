@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Extension\ModuleHandler.
+ * Contains \Drupal\Core\Extension\ModuleHandler.
  */
 
 namespace Drupal\Core\Extension;

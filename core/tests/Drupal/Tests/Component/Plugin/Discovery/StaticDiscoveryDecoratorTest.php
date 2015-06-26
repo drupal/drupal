@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Plugin\Discovery\DiscoveryTraitTest.
+ * Contains \Drupal\Tests\Component\Plugin\Discovery\StaticDiscoveryDecoratorTest.
  */
 
 namespace Drupal\Tests\Component\Plugin\Discovery;

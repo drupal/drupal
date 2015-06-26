@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\UpdaterException.
+ * Contains \Drupal\Core\Updater\UpdaterException.
  */
 
 namespace Drupal\Core\Updater;

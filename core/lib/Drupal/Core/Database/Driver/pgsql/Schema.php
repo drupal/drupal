@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Schema
+ * Contains \Drupal\Core\Database\Driver\pgsql\Schema.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

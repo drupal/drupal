@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\MultiStepNodeFormBasicOptionsTest.
+ * Contains \Drupal\node\Tests\MultiStepNodeFormBasicOptionsTest.
  */
 
 namespace Drupal\node\Tests;

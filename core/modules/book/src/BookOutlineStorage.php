@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\book\BookOutlineStorage.
+ * Contains \Drupal\book\BookOutlineStorage.
  */
 
 namespace Drupal\book;

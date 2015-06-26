@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\Entity\EntityTestMulDefaultValue.
+ * Contains \Drupal\entity_test\Entity\EntityTestMulChanged.
  */
 
 namespace Drupal\entity_test\Entity;

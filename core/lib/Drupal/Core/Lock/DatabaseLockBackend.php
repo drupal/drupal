@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Lock\DatabaseLockBackend.
+ * Contains \Drupal\Core\Lock\DatabaseLockBackend.
  */
 
 namespace Drupal\Core\Lock;

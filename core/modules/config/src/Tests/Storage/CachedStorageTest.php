@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\Storage\CachedStorageTest.
+ * Contains \Drupal\config\Tests\Storage\CachedStorageTest.
  */
 
 namespace Drupal\config\Tests\Storage;

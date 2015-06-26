@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageDependencyInjectionTest.
+ * Contains \Drupal\language\Tests\LanguageDependencyInjectionTest.
  */
 
 namespace Drupal\language\Tests;

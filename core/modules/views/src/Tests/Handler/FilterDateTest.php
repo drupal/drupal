@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FilterDateTest.
+ * Contains \Drupal\views\Tests\Handler\FilterDateTest.
  */
 
 namespace Drupal\views\Tests\Handler;

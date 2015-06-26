@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\Formula.
+ * Contains \Drupal\views\Plugin\views\argument\Formula.
  */
 
 namespace Drupal\views\Plugin\views\argument;

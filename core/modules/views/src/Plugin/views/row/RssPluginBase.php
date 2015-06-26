@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Plugin\views\row\RssPluginBase.
+ * Contains \Drupal\views\Plugin\views\row\RssPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\row;

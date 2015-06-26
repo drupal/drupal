@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Definition of \Drupal\router_test\RouteTestSubscriber.
+ * @file
+ * Contains \Drupal\router_test\RouteTestSubscriber.
  */
 
 namespace Drupal\router_test;

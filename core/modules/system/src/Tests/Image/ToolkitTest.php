@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Image\ToolkitTest.
+ * Contains \Drupal\system\Tests\Image\ToolkitTest.
  */
 
 namespace Drupal\system\Tests\Image;

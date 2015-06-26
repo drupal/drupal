@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\entity_test\EntityTestForm.
+ * Contains \Drupal\entity_test\EntityTestForm.
  */
 
 namespace Drupal\entity_test;

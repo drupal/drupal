@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Core\DependencyInjection\ServiceModifierInterface.
+ */
+
 namespace Drupal\Core\DependencyInjection;
 
 /**

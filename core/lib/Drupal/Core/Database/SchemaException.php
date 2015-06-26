@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\SchemaException
+ * Contains \Drupal\Core\Database\SchemaException.
  */
 
 namespace Drupal\Core\Database;

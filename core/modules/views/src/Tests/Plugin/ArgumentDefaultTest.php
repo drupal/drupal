@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\ArgumentDefaultTest.
+ * Contains \Drupal\views\Tests\Plugin\ArgumentDefaultTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

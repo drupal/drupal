@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchMultilingualEntityTest.
+ * Contains \Drupal\search\Tests\SearchMultilingualEntityTest.
  */
 
 namespace Drupal\search\Tests;

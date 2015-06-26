@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeRevisionPermissionsTest.
+ * Contains \Drupal\node\Tests\NodeRevisionPermissionsTest.
  */
 
 namespace Drupal\node\Tests;

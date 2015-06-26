@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Menu\MenuRouterTest.
+ * Contains \Drupal\system\Tests\Menu\MenuRouterTest.
  */
 
 namespace Drupal\system\Tests\Menu;

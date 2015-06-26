@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\TranslationWebTest.
+ * Contains \Drupal\field\Tests\TranslationWebTest.
  */
 
 namespace Drupal\field\Tests;

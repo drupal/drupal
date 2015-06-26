@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FilterStringTest.
+ * Contains \Drupal\views\Tests\Handler\FilterStringTest.
  */
 
 namespace Drupal\views\Tests\Handler;

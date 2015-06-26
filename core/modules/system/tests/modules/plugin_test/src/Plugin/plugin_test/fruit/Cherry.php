@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry.
+ * Contains \Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry.
  */
 
 namespace Drupal\plugin_test\Plugin\plugin_test\fruit;

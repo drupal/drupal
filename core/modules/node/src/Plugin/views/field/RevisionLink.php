@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\field\RevisionLink.
+ * Contains \Drupal\node\Plugin\views\field\RevisionLink.
  */
 
 namespace Drupal\node\Plugin\views\field;

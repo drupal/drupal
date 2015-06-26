@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoWriterInterface.
+ * Contains \Drupal\Component\Gettext\PoWriterInterface.
  */
 
 namespace Drupal\Component\Gettext;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Transaction
+ * Contains \Drupal\Core\Database\Transaction.
  */
 
 namespace Drupal\Core\Database;

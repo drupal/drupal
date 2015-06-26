@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\link\Plugin\field\formatter\LinkSeparateFormatter.
+ * Contains \Drupal\link\Plugin\Field\FieldFormatter\LinkSeparateFormatter.
  *
  * @todo
  * Merge into 'link' formatter once there is a #type like 'item' that

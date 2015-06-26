@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\ImportOpmlTest.
+ * Contains \Drupal\aggregator\Tests\ImportOpmlTest.
  */
 
 namespace Drupal\aggregator\Tests;

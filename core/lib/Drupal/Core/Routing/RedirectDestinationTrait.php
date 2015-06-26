@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\RedirectDestinationTrait.
+ * Contains \Drupal\Core\Routing\RedirectDestinationTrait.
  */
 
 namespace Drupal\Core\Routing;

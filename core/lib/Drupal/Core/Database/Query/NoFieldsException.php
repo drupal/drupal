@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\NoFieldsException
+ * Contains \Drupal\Core\Database\Query\NoFieldsException.
  */
 
 namespace Drupal\Core\Database\Query;

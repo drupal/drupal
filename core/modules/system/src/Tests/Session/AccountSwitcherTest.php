@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Session\AccountSwitcherTest.
+ * Contains \Drupal\system\Tests\Session\AccountSwitcherTest.
  */
 
 namespace Drupal\system\Tests\Session;

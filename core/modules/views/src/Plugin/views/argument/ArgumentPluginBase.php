@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\ArgumentPluginBase.
+ * Contains \Drupal\views\Plugin\views\argument\ArgumentPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\argument;

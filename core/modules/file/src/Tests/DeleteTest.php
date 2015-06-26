@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\DeleteTest.
+ * Contains \Drupal\file\Tests\DeleteTest.
  */
 
 namespace Drupal\file\Tests;

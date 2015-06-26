@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\EventSubscriber\FinishResponseSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\FinishResponseSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;

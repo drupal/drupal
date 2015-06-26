@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserRoleAdminTest.
+ * Contains \Drupal\user\Tests\UserRoleAdminTest.
  */
 
 namespace Drupal\user\Tests;

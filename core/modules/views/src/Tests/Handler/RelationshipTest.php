@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\RelationshipTest.
+ * Contains \Drupal\views\Tests\Handler\RelationshipTest.
  */
 
 namespace Drupal\views\Tests\Handler;

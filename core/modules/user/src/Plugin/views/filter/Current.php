@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_user_current.
+ * Contains \Drupal\user\Plugin\views\filter\Current.
  */
 
 namespace Drupal\user\Plugin\views\filter;

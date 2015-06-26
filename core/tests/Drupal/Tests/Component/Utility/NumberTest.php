@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Common\Utility\NumberTest.
+ * Contains \Drupal\Tests\Component\Utility\NumberTest.
  *
  * @see \Drupal\Component\Utility\Number
  */

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\Insert
+ * Contains \Drupal\Core\Database\Query\Insert.
  */
 
 namespace Drupal\Core\Database\Query;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\test\ResourceTest.
+ * Contains \Drupal\rest\Tests\ResourceTest.
  */
 
 namespace Drupal\rest\Tests;

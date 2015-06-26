@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\Core\Annotation\TranslationTest.
+ * @file
+ * Contains \Drupal\Tests\Core\Annotation\TranslationTest.
  */
 
 namespace Drupal\Tests\Core\Annotation;

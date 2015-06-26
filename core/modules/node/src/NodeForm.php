@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\NodeForm.
+ * Contains \Drupal\node\NodeForm.
  */
 
 namespace Drupal\node;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchAdvancedSearchFormTest.
+ * Contains \Drupal\search\Tests\SearchAdvancedSearchFormTest.
  */
 
 namespace Drupal\search\Tests;

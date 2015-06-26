@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\Nid.
+ * Contains \Drupal\node\Plugin\views\argument\Nid.
  */
 
 namespace Drupal\node\Plugin\views\argument;

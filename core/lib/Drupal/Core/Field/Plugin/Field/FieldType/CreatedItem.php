@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\CreatedItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\CreatedItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

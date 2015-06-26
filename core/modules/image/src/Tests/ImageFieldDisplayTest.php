@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageFieldDisplayTest.
+ * Contains \Drupal\image\Tests\ImageFieldDisplayTest.
  */
 
 namespace Drupal\image\Tests;

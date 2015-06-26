@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains \Drupal\Tests\Core\Field\FieldItemListTest.
+ * @file
+ * Contains \Drupal\Tests\Core\Field\FieldItemListTest.
  */
 
 namespace Drupal\Tests\Core\Field;

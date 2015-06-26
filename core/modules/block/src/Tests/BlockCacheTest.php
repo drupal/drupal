@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockCacheTest.
+ * Contains \Drupal\block\Tests\BlockCacheTest.
  */
 
 namespace Drupal\block\Tests;

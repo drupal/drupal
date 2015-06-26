@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\TableSortExtenderTest.
+ * Contains \Drupal\system\Tests\Common\TableSortExtenderUnitTest.
  */
 
 namespace Drupal\system\Tests\Common;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoMemoryWriter.
+ * Contains \Drupal\Component\Gettext\PoMemoryWriter.
  */
 
 namespace Drupal\Component\Gettext;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Authentication\AuthenticationProviderFilterInterface
+ * Contains \Drupal\Core\Authentication\AuthenticationProviderFilterInterface.
  */
 
 namespace Drupal\Core\Authentication;

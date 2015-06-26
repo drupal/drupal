@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\Update
+ * Contains \Drupal\Core\Database\Query\Update.
  */
 
 namespace Drupal\Core\Database\Query;

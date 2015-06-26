@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Queue\Memory.
+ * Contains \Drupal\Core\Queue\Memory.
  */
 
 namespace Drupal\Core\Queue;

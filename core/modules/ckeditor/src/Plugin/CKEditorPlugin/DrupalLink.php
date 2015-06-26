@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\ckeditor\Plugin\ckeditor\plugin\DrupalLink.
+ * Contains \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalLink.
  */
 
 namespace Drupal\ckeditor\Plugin\CKEditorPlugin;

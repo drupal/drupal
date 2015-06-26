@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyParentUITest.
+ * Contains \Drupal\taxonomy\Tests\Views\TaxonomyRelationshipTest.
  */
 
 namespace Drupal\taxonomy\Tests\Views;

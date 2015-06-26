@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Entity\FieldWidgetConstraintValidatorTest.
+ * Contains \Drupal\system\Tests\Entity\FieldWidgetConstraintValidatorTest.
  */
 
 namespace Drupal\system\Tests\Entity;

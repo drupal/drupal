@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\Utility\DiffArray.
+ * Contains \Drupal\Component\Utility\DiffArray.
  */
 
 namespace Drupal\Component\Utility;

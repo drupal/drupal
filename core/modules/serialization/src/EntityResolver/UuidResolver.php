@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\EntityResolver\UuidResolver
+ * Contains \Drupal\serialization\EntityResolver\UuidResolver.
  */
 
 namespace Drupal\serialization\EntityResolver;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\responsive_image\Tests\ResponsiveImageFieldDisplayTest.
+ * Contains \Drupal\responsive_image\Tests\ResponsiveImageFieldDisplayTest.
  */
 
 namespace Drupal\responsive_image\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\TypedData\TypedDataTest.
+ * Contains \Drupal\system\Tests\TypedData\TypedDataTest.
  */
 
 namespace Drupal\system\Tests\TypedData;

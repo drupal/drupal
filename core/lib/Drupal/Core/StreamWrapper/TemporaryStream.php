@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\TemporaryStream.
+ * Contains \Drupal\Core\StreamWrapper\TemporaryStream.
  */
 
 namespace Drupal\Core\StreamWrapper;

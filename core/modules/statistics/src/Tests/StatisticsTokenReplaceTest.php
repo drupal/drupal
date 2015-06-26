@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\statistics\Tests\StatisticsTokenReplaceTest.
+ * Contains \Drupal\statistics\Tests\StatisticsTokenReplaceTest.
  */
 
 namespace Drupal\statistics\Tests;

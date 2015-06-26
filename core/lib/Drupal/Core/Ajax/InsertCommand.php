@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\InsertCommand.
+ * Contains \Drupal\Core\Ajax\InsertCommand.
  */
 
 namespace Drupal\Core\Ajax;

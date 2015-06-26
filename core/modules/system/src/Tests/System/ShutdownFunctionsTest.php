@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\ShutdownFunctionsTest.
+ * Contains \Drupal\system\Tests\System\ShutdownFunctionsTest.
  */
 
 namespace Drupal\system\Tests\System;

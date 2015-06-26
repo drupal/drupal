@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Entity\ContentEntityChangedTest.
+ * Contains \Drupal\system\Tests\Entity\ContentEntityChangedTest.
  */
 
 namespace Drupal\system\Tests\Entity;

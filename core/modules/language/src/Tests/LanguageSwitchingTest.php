@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageSwitchingTest.
+ * Contains \Drupal\language\Tests\LanguageSwitchingTest.
  */
 
 namespace Drupal\language\Tests;

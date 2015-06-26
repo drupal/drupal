@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\ProcessPluginBase.
+ * Contains \Drupal\migrate\ProcessPluginBase.
  */
 
 namespace Drupal\migrate;

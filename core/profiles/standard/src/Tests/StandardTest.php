@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\standard\Tests\StandardTest.
+ * Contains \Drupal\standard\Tests\StandardTest.
  */
 
 namespace Drupal\standard\Tests;

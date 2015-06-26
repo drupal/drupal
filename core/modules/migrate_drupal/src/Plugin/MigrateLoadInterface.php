@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\migrate_drupal\Plugin\MigrateLoadInterface
+ * Contains \Drupal\migrate_drupal\Plugin\MigrateLoadInterface.
  */
 
 namespace Drupal\migrate_drupal\Plugin;

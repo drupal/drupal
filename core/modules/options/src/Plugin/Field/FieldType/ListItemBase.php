@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\options\Type\ListItemBase.
+ * Contains \Drupal\options\Plugin\Field\FieldType\ListItemBase.
  */
 
 namespace Drupal\options\Plugin\Field\FieldType;

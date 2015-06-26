@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Annotation\MigrateDestination.
+ * Contains \Drupal\migrate\Annotation\MigrateSource.
  */
 
 namespace Drupal\migrate\Annotation;

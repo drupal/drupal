@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\TransactionException
+ * Contains \Drupal\Core\Database\TransactionException.
  */
 
 namespace Drupal\Core\Database;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\Depth.
+ * Contains \Drupal\comment\Plugin\views\field\Depth.
  */
 
 namespace Drupal\comment\Plugin\views\field;

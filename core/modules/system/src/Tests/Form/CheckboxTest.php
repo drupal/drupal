@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\CheckboxTest.
+ * Contains \Drupal\system\Tests\Form\CheckboxTest.
  */
 
 namespace Drupal\system\Tests\Form;

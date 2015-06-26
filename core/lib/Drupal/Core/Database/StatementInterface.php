@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\StatementInterface
+ * Contains \Drupal\Core\Database\StatementInterface.
  */
 
 namespace Drupal\Core\Database;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Menu\LocalTaskUnitTest.
+ * Contains \Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase.
  */
 
 namespace Drupal\Tests\Core\Menu;

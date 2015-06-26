@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FieldBooleanTest.
+ * Contains \Drupal\views\Tests\Handler\FieldBooleanTest.
  */
 
 namespace Drupal\views\Tests\Handler;

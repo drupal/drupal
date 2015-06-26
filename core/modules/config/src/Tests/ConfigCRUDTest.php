@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigCRUDTest.
+ * Contains \Drupal\config\Tests\ConfigCRUDTest.
  */
 
 namespace Drupal\config\Tests;

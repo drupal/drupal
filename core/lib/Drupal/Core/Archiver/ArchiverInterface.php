@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Archiver\ArchiverInterface.
+ * Contains \Drupal\Core\Archiver\ArchiverInterface.
  */
 
 namespace Drupal\Core\Archiver;

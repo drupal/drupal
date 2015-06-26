@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchMatchTest.
+ * Contains \Drupal\search\Tests\SearchMatchTest.
  */
 
 namespace Drupal\search\Tests;

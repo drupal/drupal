@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\DatabaseTestBase.
+ * Contains \Drupal\system\Tests\Database\DatabaseTestBase.
  */
 
 namespace Drupal\system\Tests\Database;

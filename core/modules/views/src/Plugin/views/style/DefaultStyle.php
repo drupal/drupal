@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\DefaultStyle.
+ * Contains \Drupal\views\Plugin\views\style\DefaultStyle.
  */
 
 namespace Drupal\views\Plugin\views\style;

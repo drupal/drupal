@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\forum\Tests\ForumIndexTest.
+ * Contains \Drupal\forum\Tests\ForumIndexTest.
  */
 
 namespace Drupal\forum\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Path\PathMatcherInterface
+ * Contains \Drupal\Core\Path\PathMatcherInterface.
  */
 
 namespace Drupal\Core\Path;

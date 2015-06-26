@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserTokenReplaceTest.
+ * Contains \Drupal\user\Tests\UserTokenReplaceTest.
  */
 
 namespace Drupal\user\Tests;

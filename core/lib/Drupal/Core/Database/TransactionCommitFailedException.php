@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\TransactionCommitFailedException
+ * Contains \Drupal\Core\Database\TransactionCommitFailedException.
  */
 
 namespace Drupal\Core\Database;

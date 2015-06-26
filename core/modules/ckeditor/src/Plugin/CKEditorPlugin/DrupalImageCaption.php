@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImageWidget.
+ * Contains \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImageCaption.
  */
 
 namespace Drupal\ckeditor\Plugin\CKEditorPlugin;

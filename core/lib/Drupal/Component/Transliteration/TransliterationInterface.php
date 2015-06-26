@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\Component\Transliteration\TransliterationInterface.
+ * Contains \Drupal\Component\Transliteration\TransliterationInterface.
  */
 
 namespace Drupal\Component\Transliteration;

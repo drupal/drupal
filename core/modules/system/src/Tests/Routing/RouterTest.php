@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Routing\RouterTest.
+ * Contains \Drupal\system\Tests\Routing\RouterTest.
  */
 
 namespace Drupal\system\Tests\Routing;

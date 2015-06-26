@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Bootstrap\GetFilenameUnitTest.
+ * Contains \Drupal\system\Tests\Bootstrap\GetFilenameUnitTest.
  */
 
 namespace Drupal\system\Tests\Bootstrap;

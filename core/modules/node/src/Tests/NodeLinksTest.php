@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\node\Tests\NodeLinksTest
+ * Contains \Drupal\node\Tests\NodeLinksTest.
  */
 
 namespace Drupal\node\Tests;

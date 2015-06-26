@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\RequestHandler.
+ * Contains \Drupal\rest\RequestHandler.
  */
 
 namespace Drupal\rest;

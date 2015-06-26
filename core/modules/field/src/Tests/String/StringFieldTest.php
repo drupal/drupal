@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\field\Tests\String\StringFieldTest.
+ * Contains \Drupal\field\Tests\String\StringFieldTest.
  */
 
 namespace Drupal\field\Tests\String;

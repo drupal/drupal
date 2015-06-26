@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\reEnableModuleFieldTest.
+ * Contains \Drupal\field\Tests\reEnableModuleFieldTest.
  */
 
 namespace Drupal\field\Tests;

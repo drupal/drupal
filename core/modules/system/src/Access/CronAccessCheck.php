@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Access\CronAccessCheck.
+ * Contains \Drupal\system\Access\CronAccessCheck.
  */
 
 namespace Drupal\system\Access;

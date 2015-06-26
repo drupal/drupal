@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Annotation\Translation.
+ * Contains \Drupal\Core\Annotation\Translation.
  */
 
 namespace Drupal\Core\Annotation;

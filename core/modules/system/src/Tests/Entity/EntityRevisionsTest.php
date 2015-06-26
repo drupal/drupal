@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityRevisionsTest.
+ * Contains \Drupal\system\Tests\Entity\EntityRevisionsTest.
  */
 
 namespace Drupal\system\Tests\Entity;

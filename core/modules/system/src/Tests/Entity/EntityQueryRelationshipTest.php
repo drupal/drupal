@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Tests\EntityQueryRelationshipTest.
+ * Contains \Drupal\system\Tests\Entity\EntityQueryRelationshipTest.
  */
 
 namespace Drupal\system\Tests\Entity;

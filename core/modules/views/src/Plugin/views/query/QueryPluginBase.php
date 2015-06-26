@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\query\QueryPluginBase.
+ * Contains \Drupal\views\Plugin\views\query\QueryPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\query;

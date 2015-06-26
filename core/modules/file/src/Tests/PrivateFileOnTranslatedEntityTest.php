@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\file\Tests\PrivateFileOnTranslatedEntityTest.
+ * Contains \Drupal\file\Tests\PrivateFileOnTranslatedEntityTest.
  */
 
 namespace Drupal\file\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Archiver\Tar.
+ * Contains \Drupal\Core\Archiver\Tar.
  */
 
 namespace Drupal\Core\Archiver;

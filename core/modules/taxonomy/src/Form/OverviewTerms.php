@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Form\OverviewTerms
+ * Contains \Drupal\taxonomy\Form\OverviewTerms.
  */
 
 namespace Drupal\taxonomy\Form;

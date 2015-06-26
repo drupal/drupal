@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Bootstrap\ResettableStaticUnitTest.
+ * Contains \Drupal\system\Tests\Bootstrap\ResettableStaticUnitTest.
  */
 
 namespace Drupal\system\Tests\Bootstrap;

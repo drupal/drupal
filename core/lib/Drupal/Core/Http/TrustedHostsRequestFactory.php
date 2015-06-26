@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Http\TrustedHostsRequestFactory.
+ * Contains \Drupal\Core\Http\TrustedHostsRequestFactory.
  */
 
 namespace Drupal\Core\Http;

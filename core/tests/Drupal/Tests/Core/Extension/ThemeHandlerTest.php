@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Extension\ThemeInstallerTest.
+ * Contains \Drupal\Tests\Core\Extension\ThemeHandlerTest.
  */
 
 namespace Drupal\Tests\Core\Extension;

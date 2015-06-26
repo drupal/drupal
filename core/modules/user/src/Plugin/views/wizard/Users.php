@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\wizard\Users.
+ * Contains \Drupal\user\Plugin\views\wizard\Users.
  */
 
 namespace Drupal\user\Plugin\views\wizard;

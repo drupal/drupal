@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\service_provider_test\ServiceProviderTestServiceProvider.
+ * Contains \Drupal\service_provider_test\ServiceProviderTestServiceProvider.
  */
 
 namespace Drupal\service_provider_test;

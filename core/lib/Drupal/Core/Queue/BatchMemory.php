@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Queue\BatchMemory.
+ * Contains \Drupal\Core\Queue\BatchMemory.
  */
 
 namespace Drupal\Core\Queue;

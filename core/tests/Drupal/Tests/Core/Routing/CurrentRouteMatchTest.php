@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Routing\RouteMatchTest.
+ * Contains \Drupal\Tests\Core\Routing\CurrentRouteMatchTest.
  */
 
 namespace Drupal\Tests\Core\Routing;

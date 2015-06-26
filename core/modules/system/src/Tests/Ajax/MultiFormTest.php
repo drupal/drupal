@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Ajax\MultiFormTest.
+ * Contains \Drupal\system\Tests\Ajax\MultiFormTest.
  */
 
 namespace Drupal\system\Tests\Ajax;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Log
+ * Contains \Drupal\Core\Database\Log.
  */
 
 namespace Drupal\Core\Database;

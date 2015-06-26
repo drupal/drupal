@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Path\PathMatcherTest
+ * Contains \Drupal\Tests\Core\Path\PathMatcherTest.
  */
 
 namespace Drupal\Tests\Core\Path;

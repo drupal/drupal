@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\RegisterForm.
+ * Contains \Drupal\user\RegisterForm.
  */
 
 namespace Drupal\user;

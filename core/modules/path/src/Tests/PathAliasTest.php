@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\path\Tests\PathAliasTest.
+ * Contains \Drupal\path\Tests\PathAliasTest.
  */
 
 namespace Drupal\path\Tests;

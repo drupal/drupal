@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\UserData.
+ * Contains \Drupal\user\UserData.
  */
 
 namespace Drupal\user;

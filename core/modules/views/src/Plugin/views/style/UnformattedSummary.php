@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\UnformattedSummary.
+ * Contains \Drupal\views\Plugin\views\style\UnformattedSummary.
  */
 
 namespace Drupal\views\Plugin\views\style;

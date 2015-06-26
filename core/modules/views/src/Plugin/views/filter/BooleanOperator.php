@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\BooleanOperator.
+ * Contains \Drupal\views\Plugin\views\filter\BooleanOperator.
  */
 
 namespace Drupal\views\Plugin\views\filter;

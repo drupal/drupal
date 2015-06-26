@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rest\Access\CSRFAccessCheck.
+ * Contains \Drupal\rest\Access\CSRFAccessCheck.
  */
 
 namespace Drupal\rest\Access;

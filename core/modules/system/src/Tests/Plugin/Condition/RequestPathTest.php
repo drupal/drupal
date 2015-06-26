@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Plugin\Core\Condition\RequestPathTest
+ * Contains \Drupal\system\Tests\Plugin\Condition\RequestPathTest.
  */
 
 namespace Drupal\system\Tests\Plugin\Condition;

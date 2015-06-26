@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\ban\Tests\IpAddressBlockingTest.
+ * Contains \Drupal\ban\Tests\IpAddressBlockingTest.
  */
 
 namespace Drupal\ban\Tests;

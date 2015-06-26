@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\argument\UserUid.
+ * Contains \Drupal\comment\Plugin\views\argument\UserUid.
  */
 
 namespace Drupal\comment\Plugin\views\argument;

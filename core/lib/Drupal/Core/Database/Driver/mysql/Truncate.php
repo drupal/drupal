@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Truncate
+ * Contains \Drupal\Core\Database\Driver\mysql\Truncate.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

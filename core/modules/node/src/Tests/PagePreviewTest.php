@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\PagePreviewTest.
+ * Contains \Drupal\node\Tests\PagePreviewTest.
  */
 
 namespace Drupal\node\Tests;

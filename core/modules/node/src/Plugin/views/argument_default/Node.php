@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument_default\Node.
+ * Contains \Drupal\node\Plugin\views\argument_default\Node.
  */
 
 namespace Drupal\node\Plugin\views\argument_default;

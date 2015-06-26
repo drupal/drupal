@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\StateValuesCleanTest.
+ * Contains \Drupal\system\Tests\Form\StateValuesCleanTest.
  */
 
 namespace Drupal\system\Tests\Form;

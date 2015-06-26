@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\PageEditTest.
+ * Contains \Drupal\node\Tests\PageEditTest.
  */
 
 namespace Drupal\node\Tests;

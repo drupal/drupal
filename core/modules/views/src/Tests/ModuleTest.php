@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\ModuleTest.
+ * Contains \Drupal\views\Tests\ModuleTest.
  */
 
 namespace Drupal\views\Tests;

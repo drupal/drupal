@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\breakpoint\Tests\BreakpointDiscoveryTest.
+ * Contains \Drupal\breakpoint\Tests\BreakpointDiscoveryTest.
  */
 
 namespace Drupal\breakpoint\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageUILanguageNegotiationTest.
+ * Contains \Drupal\language\Tests\LanguageUILanguageNegotiationTest.
  */
 
 namespace Drupal\language\Tests;

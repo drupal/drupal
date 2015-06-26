@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\AccessTest
+ * Contains \Drupal\views\Tests\Plugin\AccessTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

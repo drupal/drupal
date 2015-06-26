@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageFieldTestBase.
+ * Contains \Drupal\image\Tests\ImageFieldTestBase.
  */
 
 namespace Drupal\image\Tests;

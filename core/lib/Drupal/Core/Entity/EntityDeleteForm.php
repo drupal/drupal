@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\EntityConfirmFormBase.
+ * Contains \Drupal\Core\Entity\EntityDeleteForm.
  */
 
 namespace Drupal\Core\Entity;

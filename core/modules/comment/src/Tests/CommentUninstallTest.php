@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentUninstallTest.
+ * Contains \Drupal\comment\Tests\CommentUninstallTest.
  */
 
 namespace Drupal\comment\Tests;

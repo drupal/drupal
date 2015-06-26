@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\Plugin\Deriver\EntityDerivative.
+ * Contains \Drupal\rest\Plugin\Deriver\EntityDeriver.
  */
 
 namespace Drupal\rest\Plugin\Deriver;

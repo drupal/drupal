@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Plugin\Discovery\DiscoveryInterface.
+ * Contains \Drupal\Component\Plugin\Discovery\DiscoveryInterface.
  */
 
 namespace Drupal\Component\Plugin\Discovery;

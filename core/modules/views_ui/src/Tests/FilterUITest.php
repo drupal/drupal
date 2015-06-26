@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\FilterUITest.
+ * Contains \Drupal\views_ui\Tests\FilterUITest.
  */
 
 namespace Drupal\views_ui\Tests;

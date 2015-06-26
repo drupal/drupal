@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\field\Roles.
+ * Contains \Drupal\user\Plugin\views\field\Roles.
  */
 
 namespace Drupal\user\Plugin\views\field;

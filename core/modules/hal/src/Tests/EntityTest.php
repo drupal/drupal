@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\hal\Tests\NormalizeTest.
+ * Contains \Drupal\hal\Tests\EntityTest.
  */
 
 namespace Drupal\hal\Tests;

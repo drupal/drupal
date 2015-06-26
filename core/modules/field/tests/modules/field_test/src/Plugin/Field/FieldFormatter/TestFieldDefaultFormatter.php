@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_test\Plugin\field\formatter\TestFieldDefaultFormatter.
+ * Contains \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldDefaultFormatter.
  */
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;

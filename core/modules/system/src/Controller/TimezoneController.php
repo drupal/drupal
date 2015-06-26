@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\TimezoneController.
+ * Contains \Drupal\system\Controller\TimezoneController.
  */
 
 namespace Drupal\system\Controller;

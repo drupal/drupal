@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\contact\MessageViewBuilder.
+ * Contains \Drupal\contact\MessageViewBuilder.
  */
 
 namespace Drupal\contact;

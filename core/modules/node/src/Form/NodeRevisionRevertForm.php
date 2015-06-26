@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Form\NodeRevisionDeleteForm.
+ * Contains \Drupal\node\Form\NodeRevisionRevertForm.
  */
 
 namespace Drupal\node\Form;

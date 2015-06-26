@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\AccessDeniedTest.
+ * Contains \Drupal\system\Tests\System\AccessDeniedTest.
  */
 
 namespace Drupal\system\Tests\System;

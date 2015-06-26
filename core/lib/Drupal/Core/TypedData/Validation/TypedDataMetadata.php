@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Validation\MetadataBase.
+ * Contains \Drupal\Core\TypedData\Validation\TypedDataMetadata.
  */
 
 namespace Drupal\Core\TypedData\Validation;

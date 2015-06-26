@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Form\NegotiationConfigureBrowserDeleteForm.
+ * Contains \Drupal\language\Form\NegotiationBrowserDeleteForm.
  */
 
 namespace Drupal\language\Form;

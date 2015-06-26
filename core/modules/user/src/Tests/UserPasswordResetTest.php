@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserPasswordResetTest.
+ * Contains \Drupal\user\Tests\UserPasswordResetTest.
  */
 
 namespace Drupal\user\Tests;

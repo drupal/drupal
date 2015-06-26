@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\Tests\Core\Database\Driver\pgsql\PostgresqlConnectionTest
+ * Contains \Drupal\Tests\Core\Database\Driver\pgsql\PostgresqlConnectionTest.
  */
 
 namespace Drupal\Tests\Core\Database\Driver\pgsql;

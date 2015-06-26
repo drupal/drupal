@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileManagedFileElementTest.
+ * Contains \Drupal\file\Tests\FileManagedFileElementTest.
  */
 
 namespace Drupal\file\Tests;

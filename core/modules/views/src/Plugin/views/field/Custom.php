@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Custom.
+ * Contains \Drupal\views\Plugin\views\field\Custom.
  */
 
 namespace Drupal\views\Plugin\views\field;

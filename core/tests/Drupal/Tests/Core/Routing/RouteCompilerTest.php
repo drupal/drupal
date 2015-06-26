@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Routing\RouteCompilerTest.
+ * Contains \Drupal\Tests\Core\Routing\RouteCompilerTest.
  */
 
 namespace Drupal\Tests\Core\Routing;

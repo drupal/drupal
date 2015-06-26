@@ -2,6 +2,8 @@
 
 /**
  * @file
+ * Contains \Drupal\block\Tests\BlockHookOperationTest.
+ *
  * Tests for Block module regarding hook_entity_operations_alter().
  */
 

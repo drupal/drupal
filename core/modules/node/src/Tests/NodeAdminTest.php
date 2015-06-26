@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeAdminTest.
+ * Contains \Drupal\node\Tests\NodeAdminTest.
  */
 
 namespace Drupal\node\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Type\Timestamp.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\Timestamp.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;

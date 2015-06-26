@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\filter\EntityDisplayPluginCollection.
+ * Contains \Drupal\Core\Entity\EntityDisplayPluginCollection.
  */
 
 namespace Drupal\Core\Entity;

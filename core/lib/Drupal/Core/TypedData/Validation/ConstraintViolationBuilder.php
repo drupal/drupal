@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Core\TypedData\Validation\ConstraintViolationBuilder.
+ */
+
 namespace Drupal\Core\TypedData\Validation;
 
 use Symfony\Component\Translation\TranslatorInterface;

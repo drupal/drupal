@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Language\Form\NegotiationConfigureForm.
+ * Contains \Drupal\language\Form\NegotiationConfigureForm.
  */
 
 namespace Drupal\language\Form;

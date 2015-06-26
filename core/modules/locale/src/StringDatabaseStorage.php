@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\StringDatabaseStorage.
+ * Contains \Drupal\locale\StringDatabaseStorage.
  */
 
 namespace Drupal\locale;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_test\Plugin\field\formatter\TestFieldEmptySettingFormatter
+ * Contains \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldEmptySettingFormatter.
  */
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;

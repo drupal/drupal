@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\book\Tests\BookTest.
+ * Contains \Drupal\book\Tests\BookTest.
  */
 
 namespace Drupal\book\Tests;

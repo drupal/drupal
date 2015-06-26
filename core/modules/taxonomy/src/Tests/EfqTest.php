@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\EfqTest.
+ * Contains \Drupal\taxonomy\Tests\EfqTest.
  */
 
 namespace Drupal\taxonomy\Tests;

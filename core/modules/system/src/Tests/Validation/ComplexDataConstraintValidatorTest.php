@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Validation\ComplexDataConstraintValidatorTest.
+ * Contains \Drupal\system\Tests\Validation\ComplexDataConstraintValidatorTest.
  */
 
 namespace Drupal\system\Tests\Validation;

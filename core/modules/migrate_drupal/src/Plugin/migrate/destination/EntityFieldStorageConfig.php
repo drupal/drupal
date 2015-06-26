@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\destination\EntityFieldEntity.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\destination\EntityFieldStorageConfig.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\destination;

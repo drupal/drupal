@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Ajax\DialogTest.
+ * Contains \Drupal\system\Tests\Ajax\DialogTest.
  */
 
 namespace Drupal\system\Tests\Ajax;

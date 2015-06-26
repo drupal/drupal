@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\StatementEmpty
+ * Contains \Drupal\Core\Database\StatementEmpty.
  */
 
 namespace Drupal\Core\Database;

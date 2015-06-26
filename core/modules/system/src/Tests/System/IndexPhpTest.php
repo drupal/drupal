@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\IndexPhpTest.
+ * Contains \Drupal\system\Tests\System\IndexPhpTest.
  */
 
 namespace Drupal\system\Tests\System;

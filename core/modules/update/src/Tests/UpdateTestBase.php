@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\update\Tests\UpdateTestBase.
+ * Contains \Drupal\update\Tests\UpdateTestBase.
  *
  * The overarching methodology of these tests is we need to compare a given
  * state of installed modules and themes (e.g., version, project grouping,

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Datetime\DateTimePlus
+ * Contains \Drupal\Component\Datetime\DateTimePlus.
  */
 namespace Drupal\Component\Datetime;
 

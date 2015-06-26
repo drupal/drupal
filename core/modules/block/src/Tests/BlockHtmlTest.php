@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockHtmlTest.
+ * Contains \Drupal\block\Tests\BlockHtmlTest.
  */
 
 namespace Drupal\block\Tests;

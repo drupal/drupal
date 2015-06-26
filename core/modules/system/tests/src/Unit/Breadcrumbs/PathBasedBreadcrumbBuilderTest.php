@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\system\Unit\Breadcrumbs\PathBasedBreadcrumbBuilderTest
+ * Contains \Drupal\Tests\system\Unit\Breadcrumbs\PathBasedBreadcrumbBuilderTest.
  */
 
 namespace Drupal\Tests\system\Unit\Breadcrumbs;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\JoinTest.
+ * Contains \Drupal\views\Tests\Plugin\JoinTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

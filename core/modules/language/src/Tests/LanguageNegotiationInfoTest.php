@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageNegotiationInfoTest.
+ * Contains \Drupal\language\Tests\LanguageNegotiationInfoTest.
  */
 
 namespace Drupal\language\Tests;

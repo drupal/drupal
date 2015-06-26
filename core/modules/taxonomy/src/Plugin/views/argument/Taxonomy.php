@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\argument\Taxonomy.
+ * Contains \Drupal\taxonomy\Plugin\views\argument\Taxonomy.
  */
 
 namespace Drupal\taxonomy\Plugin\views\argument;

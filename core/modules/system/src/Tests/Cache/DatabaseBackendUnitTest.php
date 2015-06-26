@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Cache\DatabaseBackendUnitTest.
+ * Contains \Drupal\system\Tests\Cache\DatabaseBackendUnitTest.
  */
 
 namespace Drupal\system\Tests\Cache;

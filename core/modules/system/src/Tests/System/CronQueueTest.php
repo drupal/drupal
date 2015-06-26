@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\System\CronQueueTest.
+ * Contains \Drupal\system\Tests\System\CronQueueTest.
  */
 
 namespace Drupal\system\Tests\System;

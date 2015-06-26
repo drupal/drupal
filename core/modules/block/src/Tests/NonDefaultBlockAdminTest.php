@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\NonDefaultBlockAdminTest.
+ * Contains \Drupal\block\Tests\NonDefaultBlockAdminTest.
  */
 
 namespace Drupal\block\Tests;

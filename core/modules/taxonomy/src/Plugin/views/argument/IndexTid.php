@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\argument\IndexTid.
+ * Contains \Drupal\taxonomy\Plugin\views\argument\IndexTid.
  */
 
 namespace Drupal\taxonomy\Plugin\views\argument;

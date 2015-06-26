@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Asset\CssGrouperUnitTest.
+ * Contains \Drupal\Tests\Core\Asset\CssCollectionGrouperUnitTest.
  */
 
 

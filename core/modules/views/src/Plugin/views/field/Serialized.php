@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Serialized.
+ * Contains \Drupal\views\Plugin\views\field\Serialized.
  */
 
 namespace Drupal\views\Plugin\views\field;

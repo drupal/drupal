@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentActionsTest.
+ * Contains \Drupal\comment\Tests\CommentActionsTest.
  */
 
 namespace Drupal\comment\Tests;

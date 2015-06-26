@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\UriItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\UriItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

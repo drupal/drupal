@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoStreamInterface.
+ * Contains \Drupal\Component\Gettext\PoStreamInterface.
  */
 
 namespace Drupal\Component\Gettext;

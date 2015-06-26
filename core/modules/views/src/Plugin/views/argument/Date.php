@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\Date.
+ * Contains \Drupal\views\Plugin\views\argument\Date.
  */
 
 namespace Drupal\views\Plugin\views\argument;

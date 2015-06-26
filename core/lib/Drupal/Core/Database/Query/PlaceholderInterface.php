@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\PlaceholderInterface
+ * Contains \Drupal\Core\Database\Query\PlaceholderInterface.
  */
 
 namespace Drupal\Core\Database\Query;

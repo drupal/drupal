@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\ExtendableInterface
+ * Contains \Drupal\Core\Database\Query\ExtendableInterface.
  */
 
 namespace Drupal\Core\Database\Query;

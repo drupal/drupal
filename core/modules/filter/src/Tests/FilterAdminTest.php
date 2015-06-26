@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterAdminTest.
+ * Contains \Drupal\filter\Tests\FilterAdminTest.
  */
 
 namespace Drupal\filter\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Module\HookRequirementsTest.
+ * Contains \Drupal\system\Tests\Module\HookRequirementsTest.
  */
 
 namespace Drupal\system\Tests\Module;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\responsive_image\ResponsiveImageStyleListBuilder.
+ * Contains \Drupal\responsive_image\ResponsiveImageStyleListBuilder.
  */
 
 namespace Drupal\responsive_image;

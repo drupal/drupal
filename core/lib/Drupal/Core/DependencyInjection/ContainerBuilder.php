@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\DependencyInjection\Container.
+ * Contains \Drupal\Core\DependencyInjection\ContainerBuilder.
  */
 
 namespace Drupal\Core\DependencyInjection;

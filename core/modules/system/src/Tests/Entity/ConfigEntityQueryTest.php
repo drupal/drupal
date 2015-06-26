@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\ConfigEntityQueryTest.
+ * Contains \Drupal\system\Tests\Entity\ConfigEntityQueryTest.
  */
 
 namespace Drupal\system\Tests\Entity;

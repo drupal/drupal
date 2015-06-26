@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\CopyFromSource.
+ * Contains \Drupal\migrate\Plugin\migrate\process\Get.
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;

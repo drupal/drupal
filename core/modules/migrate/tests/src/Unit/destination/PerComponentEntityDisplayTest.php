@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate\Unit\destination\EntityDisplayTest.
+ * Contains \Drupal\Tests\migrate\Unit\destination\PerComponentEntityDisplayTest.
  */
 
 namespace Drupal\Tests\migrate\Unit\destination;

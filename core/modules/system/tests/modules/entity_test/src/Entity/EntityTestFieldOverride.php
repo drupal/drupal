@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\Entity\EntityTestDefaultValue.
+ * Contains \Drupal\entity_test\Entity\EntityTestFieldOverride.
  */
 
 namespace Drupal\entity_test\Entity;

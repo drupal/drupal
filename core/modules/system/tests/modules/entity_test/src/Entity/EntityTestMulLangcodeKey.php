@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\Entity\EntityTestMul.
+ * Contains \Drupal\entity_test\Entity\EntityTestMulLangcodeKey.
  */
 
 namespace Drupal\entity_test\Entity;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Exception\StorageDefinitionUpdateForbiddenException.
+ * Contains \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException.
  */
 
 namespace Drupal\Core\Entity\Exception;

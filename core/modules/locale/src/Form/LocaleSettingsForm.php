@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\user\LocaleSettingsForm.
+ * Contains \Drupal\locale\Form\LocaleSettingsForm.
  */
 
 namespace Drupal\locale\Form;

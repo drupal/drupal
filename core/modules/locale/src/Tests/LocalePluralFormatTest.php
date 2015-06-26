@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocalePluralFormatTest.
+ * Contains \Drupal\locale\Tests\LocalePluralFormatTest.
  */
 
 namespace Drupal\locale\Tests;

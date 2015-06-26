@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rdf\Tests\UserAttributesTest.
+ * Contains \Drupal\rdf\Tests\UserAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;

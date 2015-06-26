@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterDefaultFormatTest.
+ * Contains \Drupal\filter\Tests\FilterDefaultFormatTest.
  */
 
 namespace Drupal\filter\Tests;

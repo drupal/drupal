@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Utility\UnroutedUrlAssembler.
+ * Contains \Drupal\Core\Utility\UnroutedUrlAssembler.
  */
 
 namespace Drupal\Core\Utility;

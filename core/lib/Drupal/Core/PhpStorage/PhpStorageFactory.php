@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\PhpStorage\PhpStorageFactory.
+ * Contains \Drupal\Core\PhpStorage\PhpStorageFactory.
  */
 
 namespace Drupal\Core\PhpStorage;

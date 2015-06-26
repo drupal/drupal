@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\area\TestExample
+ * Contains \Drupal\views_test_data\Plugin\views\area\TestExample.
  */
 
 namespace Drupal\views_test_data\Plugin\views\area;

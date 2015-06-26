@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\search\SearchPageRepositoryInterface;
+ * Contains \Drupal\search\SearchPageRepositoryInterface.
  */
 
 namespace Drupal\search;

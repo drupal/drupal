@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\plugin_test\Plugin\plugin_test\fruit\Apple.
+ * Contains \Drupal\plugin_test\Plugin\plugin_test\fruit\Apple.
  */
 
 namespace Drupal\plugin_test\Plugin\plugin_test\fruit;

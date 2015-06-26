@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ParamConverter\EntityConverter.
+ * Contains \Drupal\Core\ParamConverter\EntityConverter.
  */
 
 namespace Drupal\Core\ParamConverter;

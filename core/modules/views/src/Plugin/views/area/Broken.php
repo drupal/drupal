@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\area\Broken
+ * Contains \Drupal\views\Plugin\views\area\Broken.
  */
 
 namespace Drupal\views\Plugin\views\area;

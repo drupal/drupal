@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserCancelTest.
+ * Contains \Drupal\user\Tests\UserCancelTest.
  */
 
 namespace Drupal\user\Tests;

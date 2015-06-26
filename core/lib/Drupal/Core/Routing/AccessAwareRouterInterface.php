@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains
+ * Contains \Drupal\Core\Routing\AccessAwareRouterInterface.
  */
 
 namespace Drupal\Core\Routing;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeLoadMultipleTest.
+ * Contains \Drupal\node\Tests\NodeLoadMultipleTest.
  */
 
 namespace Drupal\node\Tests;

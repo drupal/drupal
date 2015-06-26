@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\PhpStorage\PhpStorageInterface.
+ * Contains \Drupal\Component\PhpStorage\PhpStorageInterface.
  */
 
 namespace Drupal\Component\PhpStorage;

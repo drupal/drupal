@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\comment\Tests\CommentNewIndicatorTest.
+ * Contains \Drupal\comment\Tests\CommentNewIndicatorTest.
  */
 
 namespace Drupal\comment\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\form_test\Form\FormTestStorageForm.
+ * Contains \Drupal\form_test\Form\FormTestStoragePageCacheForm.
  */
 
 namespace Drupal\form_test\Form;

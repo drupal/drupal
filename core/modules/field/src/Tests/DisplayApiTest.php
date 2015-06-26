@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\DisplayApiTest.
+ * Contains \Drupal\field\Tests\DisplayApiTest.
  */
 
 namespace Drupal\field\Tests;

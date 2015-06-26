@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\conneg_test\Tests\ContentNegotiationRoutingTest.
+ * Contains \Drupal\system\Tests\Routing\ContentNegotiationRoutingTest.
  */
 
 namespace Drupal\system\Tests\Routing;

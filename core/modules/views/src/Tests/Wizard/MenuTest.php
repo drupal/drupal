@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Wizard\MenuTest.
+ * Contains \Drupal\views\Tests\Wizard\MenuTest.
  */
 
 namespace Drupal\views\Tests\Wizard;

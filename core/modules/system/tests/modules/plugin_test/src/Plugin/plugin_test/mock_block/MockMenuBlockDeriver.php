@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlockDeriver.
+ * Contains \Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlockDeriver.
  */
 
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;

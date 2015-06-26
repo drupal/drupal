@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterSettingsTest.
+ * Contains \Drupal\filter\Tests\FilterSettingsTest.
  */
 
 namespace Drupal\filter\Tests;

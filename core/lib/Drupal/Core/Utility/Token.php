@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Utility\Token.
+ * Contains \Drupal\Core\Utility\Token.
  */
 
 namespace Drupal\Core\Utility;

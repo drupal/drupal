@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\StackMiddleware\NegotationMiddleware.
+ * Contains \Drupal\Core\StackMiddleware\NegotiationMiddleware.
  */
 
 namespace Drupal\Core\StackMiddleware;

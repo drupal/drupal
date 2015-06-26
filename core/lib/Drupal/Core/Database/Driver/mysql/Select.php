@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Select
+ * Contains \Drupal\Core\Database\Driver\mysql\Select.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

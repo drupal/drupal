@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserLanguageTest.
+ * Contains \Drupal\user\Tests\UserLanguageTest.
  */
 
 namespace Drupal\user\Tests;

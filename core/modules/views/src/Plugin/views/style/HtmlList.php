@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\List.
+ * Contains \Drupal\views\Plugin\views\style\HtmlList.
  */
 
 namespace Drupal\views\Plugin\views\style;

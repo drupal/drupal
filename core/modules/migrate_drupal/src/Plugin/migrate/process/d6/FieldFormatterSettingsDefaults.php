@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldSettingsDefaults.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldFormatterSettingsDefaults.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;

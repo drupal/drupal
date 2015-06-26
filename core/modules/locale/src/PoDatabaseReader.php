@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\PoDatabaseReader.
+ * Contains \Drupal\locale\PoDatabaseReader.
  */
 
 namespace Drupal\locale;

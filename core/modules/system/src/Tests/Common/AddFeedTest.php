@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\AddFeedTest.
+ * Contains \Drupal\system\Tests\Common\AddFeedTest.
  */
 
 namespace Drupal\system\Tests\Common;

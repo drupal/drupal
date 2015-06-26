@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\NodeNewComments.
+ * Contains \Drupal\comment\Plugin\views\field\NodeNewComments.
  */
 
 namespace Drupal\comment\Plugin\views\field;

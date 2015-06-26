@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\area\TextCustom.
+ * Contains \Drupal\views\Plugin\views\area\TextCustom.
  */
 
 namespace Drupal\views\Plugin\views\area;

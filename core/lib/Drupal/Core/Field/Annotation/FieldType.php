@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Annotation\FieldType.
+ * Contains \Drupal\Core\Field\Annotation\FieldType.
  */
 
 namespace Drupal\Core\Field\Annotation;

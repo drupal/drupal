@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\responsive_image\Tests\ResponsiveImageAdminUITest.
+ * Contains \Drupal\responsive_image\Tests\ResponsiveImageAdminUITest.
  */
 
 namespace Drupal\responsive_image\Tests;

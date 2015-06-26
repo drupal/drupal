@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Form\ModulesListFormWebTest.
+ * Contains \Drupal\system\Tests\Form\ModulesListFormWebTest.
  */
 
 namespace Drupal\system\Tests\Form;

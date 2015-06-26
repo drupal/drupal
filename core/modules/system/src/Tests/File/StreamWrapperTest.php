@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\StreamWrapperTest.
+ * Contains \Drupal\system\Tests\File\StreamWrapperTest.
  */
 
 namespace Drupal\system\Tests\File;

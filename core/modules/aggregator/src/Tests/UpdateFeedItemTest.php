@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\UpdateFeedItemTest.
+ * Contains \Drupal\aggregator\Tests\UpdateFeedItemTest.
  */
 
 namespace Drupal\aggregator\Tests;

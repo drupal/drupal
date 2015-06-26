@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains
- *   \Drupal\Tests\Core\EventSubscriber\CustomPageExceptionHtmlSubscriberTest.
+ * Contains \Drupal\Tests\Core\EventSubscriber\CustomPageExceptionHtmlSubscriberTest.
  */
 
 namespace Drupal\Tests\Core\EventSubscriber;

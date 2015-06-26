@@ -1,6 +1,8 @@
 <?php
 /**
  * @file
+ * Contains \Drupal\Component\Plugin\Exception\MapperExceptionInterface.
+ *
  * Base exception interface for grouping mapper exceptions.
  */
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\GroupByNumeric.
+ * Contains \Drupal\views\Plugin\views\argument\GroupByNumeric.
  */
 
 namespace Drupal\views\Plugin\views\argument;

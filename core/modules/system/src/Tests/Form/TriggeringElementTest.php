@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\TriggeringElementTest.
+ * Contains \Drupal\system\Tests\Form\TriggeringElementTest.
  */
 
 namespace Drupal\system\Tests\Form;

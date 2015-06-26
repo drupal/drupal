@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateDateFormatTest.
+ */
+
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\Core\Datetime\DrupalDateTime;

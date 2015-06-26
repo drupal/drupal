@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\Equality.
+ * Contains \Drupal\views\Plugin\views\filter\Equality.
  */
 
 namespace Drupal\views\Plugin\views\filter;

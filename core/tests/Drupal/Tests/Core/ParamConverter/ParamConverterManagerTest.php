@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\ParamConverter\ParamConverterManagerTest.
+ * Contains \Drupal\Tests\Core\ParamConverter\ParamConverterManagerTest.
  */
 
 namespace Drupal\Tests\Core\ParamConverter;

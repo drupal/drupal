@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\InOperator.
+ * Contains \Drupal\views\Plugin\views\filter\InOperator.
  */
 
 namespace Drupal\views\Plugin\views\filter;

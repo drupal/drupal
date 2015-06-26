@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\ViewStorageTest.
+ * Contains \Drupal\views\Tests\ViewStorageTest.
  */
 
 namespace Drupal\views\Tests;

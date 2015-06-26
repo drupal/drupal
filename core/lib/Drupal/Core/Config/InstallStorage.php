@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Config\InstallStorage.
+ * Contains \Drupal\Core\Config\InstallStorage.
  */
 
 namespace Drupal\Core\Config;

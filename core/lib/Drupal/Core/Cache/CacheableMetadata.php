@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Core\CacheableMetadata
+ * Contains \Drupal\Core\Cache\CacheableMetadata.
  */
 
 namespace Drupal\Core\Cache;

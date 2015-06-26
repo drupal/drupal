@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Connection
+ * Contains \Drupal\Core\Database\Connection.
  */
 
 namespace Drupal\Core\Database;

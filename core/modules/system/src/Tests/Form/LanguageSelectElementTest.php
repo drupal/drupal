@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\LanguageSelectElementTest.
+ * Contains \Drupal\system\Tests\Form\LanguageSelectElementTest.
  */
 
 namespace Drupal\system\Tests\Form;

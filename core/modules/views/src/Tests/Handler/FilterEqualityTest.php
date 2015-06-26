@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FilterEqualityTest.
+ * Contains \Drupal\views\Tests\Handler\FilterEqualityTest.
  */
 
 namespace Drupal\views\Tests\Handler;

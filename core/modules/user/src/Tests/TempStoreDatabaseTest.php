@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\TempStoreDatabaseTest.
+ * Contains \Drupal\user\Tests\TempStoreDatabaseTest.
  */
 
 namespace Drupal\user\Tests;

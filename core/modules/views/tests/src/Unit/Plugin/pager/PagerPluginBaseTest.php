@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\pager\PagerPluginBaseTest
+ * Contains \Drupal\Tests\views\Unit\Plugin\pager\PagerPluginBaseTest.
  */
 
 namespace Drupal\Tests\views\Unit\Plugin\pager;

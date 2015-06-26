@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\Rss.
+ * Contains \Drupal\views\Plugin\views\style\Rss.
  */
 
 namespace Drupal\views\Plugin\views\style;

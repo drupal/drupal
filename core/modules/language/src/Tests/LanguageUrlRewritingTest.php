@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageUrlRewritingTest.
+ * Contains \Drupal\language\Tests\LanguageUrlRewritingTest.
  */
 
 namespace Drupal\language\Tests;

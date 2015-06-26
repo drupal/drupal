@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\pager\Full.
+ * Contains \Drupal\views\Plugin\views\pager\Full.
  */
 
 namespace Drupal\views\Plugin\views\pager;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language_test\\Plugin\LanguageNegotiation\LanguageNegotiationTestTs.
+ * Contains \Drupal\language_test\Plugin\LanguageNegotiation\LanguageNegotiationTestTs.
  */
 
 namespace Drupal\language_test\Plugin\LanguageNegotiation;

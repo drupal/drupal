@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\exposed_form\Basic.
+ * Contains \Drupal\views\Plugin\views\exposed_form\Basic.
  */
 
 namespace Drupal\views\Plugin\views\exposed_form;

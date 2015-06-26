@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\AggregatorTestBase.
+ * Contains \Drupal\aggregator\Tests\AggregatorTestBase.
  */
 
 namespace Drupal\aggregator\Tests;

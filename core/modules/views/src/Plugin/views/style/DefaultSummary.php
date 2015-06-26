@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\StyleSummaryPluginBase.
+ * Contains \Drupal\views\Plugin\views\style\DefaultSummary.
  */
 
 namespace Drupal\views\Plugin\views\style;

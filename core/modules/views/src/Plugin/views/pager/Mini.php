@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\pager\Mini.
+ * Contains \Drupal\views\Plugin\views\pager\Mini.
  */
 
 namespace Drupal\views\Plugin\views\pager;

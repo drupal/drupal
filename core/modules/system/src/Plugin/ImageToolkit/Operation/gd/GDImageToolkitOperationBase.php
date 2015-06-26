@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Plugin\ImageToolkit\Operation\gd\GDToolkitOperationBase
+ * Contains \Drupal\system\Plugin\ImageToolkit\Operation\gd\GDImageToolkitOperationBase.
  */
 
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;

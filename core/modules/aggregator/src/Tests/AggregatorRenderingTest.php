@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\AggregatorRenderingTest.
+ * Contains \Drupal\aggregator\Tests\AggregatorRenderingTest.
  */
 
 namespace Drupal\aggregator\Tests;

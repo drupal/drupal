@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Path\PathValidatorInterface
+ * Contains \Drupal\Core\Path\PathValidatorInterface.
  */
 
 namespace Drupal\Core\Path;

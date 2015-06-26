@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\Merge
+ * Contains \Drupal\Core\Database\Query\Merge.
  */
 
 namespace Drupal\Core\Database\Query;

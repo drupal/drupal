@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockHiddenRegionTest.
+ * Contains \Drupal\block\Tests\BlockHiddenRegionTest.
  */
 
 namespace Drupal\block\Tests;

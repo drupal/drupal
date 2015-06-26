@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\rest\test\UpdateTest.
+ * Contains \Drupal\rest\Tests\UpdateTest.
  */
 
 namespace Drupal\rest\Tests;

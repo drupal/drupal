@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\Core\Locale\CountryManager.
+ * Contains \Drupal\Core\Locale\CountryManager.
  */
 
 namespace Drupal\Core\Locale;

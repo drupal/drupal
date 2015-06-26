@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\DeleteTruncateTest.
+ * Contains \Drupal\system\Tests\Database\DeleteTruncateTest.
  */
 
 namespace Drupal\system\Tests\Database;

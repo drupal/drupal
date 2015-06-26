@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FilterInOperatorTest.
+ * Contains \Drupal\views\Tests\Handler\FilterInOperatorTest.
  */
 
 namespace Drupal\views\Tests\Handler;

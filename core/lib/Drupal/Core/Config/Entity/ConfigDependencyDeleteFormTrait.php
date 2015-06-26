@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait;
+ * Contains \Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait.
  */
 
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\simpletest\Tests\UserLoginTest.
+ * Contains \Drupal\simpletest\Tests\UserHelpersTest.
  */
 
 namespace Drupal\simpletest\Tests;

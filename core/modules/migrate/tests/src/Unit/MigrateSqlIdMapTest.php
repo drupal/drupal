@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateSqlIdMapTestCase.
+ * Contains \Drupal\Tests\migrate\Unit\MigrateSqlIdMapTest.
  */
 
 namespace Drupal\Tests\migrate\Unit;

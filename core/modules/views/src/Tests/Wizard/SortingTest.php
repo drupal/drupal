@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Wizard\SortingTest.
+ * Contains \Drupal\views\Tests\Wizard\SortingTest.
  */
 
 namespace Drupal\views\Tests\Wizard;

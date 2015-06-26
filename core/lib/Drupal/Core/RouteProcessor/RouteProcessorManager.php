@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\RouteProcessor\RouteProcessorManager.
+ * Contains \Drupal\Core\RouteProcessor\RouteProcessorManager.
  */
 
 namespace Drupal\Core\RouteProcessor;

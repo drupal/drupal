@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\FileCache\FileCacheFactory.
+ * Contains \Drupal\Component\FileCache\FileCacheFactory.
  */
 
 namespace Drupal\Component\FileCache;

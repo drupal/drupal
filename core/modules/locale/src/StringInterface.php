@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\StringInterface.
+ * Contains \Drupal\locale\StringInterface.
  */
 
 namespace Drupal\locale;

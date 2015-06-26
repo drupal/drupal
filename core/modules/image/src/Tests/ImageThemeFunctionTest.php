@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageThemeFunctionTest.
+ * Contains \Drupal\image\Tests\ImageThemeFunctionTest.
  */
 
 namespace Drupal\image\Tests;

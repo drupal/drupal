@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\RedirectTest.
+ * Contains \Drupal\system\Tests\Form\RedirectTest.
  */
 
 namespace Drupal\system\Tests\Form;

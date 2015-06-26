@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\NextIdTest.
+ * Contains \Drupal\system\Tests\Database\NextIdTest.
  */
 
 namespace Drupal\system\Tests\Database;

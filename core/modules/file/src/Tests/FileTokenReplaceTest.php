@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileTokenReplaceTest.
+ * Contains \Drupal\file\Tests\FileTokenReplaceTest.
  */
 
 namespace Drupal\file\Tests;

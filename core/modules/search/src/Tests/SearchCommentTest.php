@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchCommentTest.
+ * Contains \Drupal\search\Tests\SearchCommentTest.
  */
 
 namespace Drupal\search\Tests;

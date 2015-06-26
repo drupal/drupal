@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views_ui\ViewFormBase.
+ * Contains \Drupal\views_ui\ViewFormBase.
  */
 
 namespace Drupal\views_ui;

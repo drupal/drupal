@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\Tests\BrokenSetUpTest.
+ * Contains \Drupal\simpletest\Tests\BrokenSetUpTest.
  */
 
 namespace Drupal\simpletest\Tests;

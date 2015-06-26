@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\image\EventSubscriber\RouteSubscriber.
+ * Contains \Drupal\image\Routing\ImageStyleRoutes.
  */
 
 namespace Drupal\image\Routing;

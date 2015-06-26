@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterHooksTest.
+ * Contains \Drupal\filter\Tests\FilterHooksTest.
  */
 
 namespace Drupal\filter\Tests;

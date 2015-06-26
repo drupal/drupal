@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\CommentStorage.
+ * Contains \Drupal\comment\CommentStorage.
  */
 
 namespace Drupal\comment;

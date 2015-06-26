@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Entity\FieldEntityTest.
+ * Contains \Drupal\views\Tests\Entity\FieldEntityTest.
  */
 
 namespace Drupal\views\Tests\Entity;

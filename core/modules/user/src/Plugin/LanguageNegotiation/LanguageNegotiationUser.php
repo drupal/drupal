@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl.
+ * Contains \Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser.
  */
 
 namespace Drupal\user\Plugin\LanguageNegotiation;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\field\RevisionLinkDelete.
+ * Contains \Drupal\node\Plugin\views\field\RevisionLinkDelete.
  */
 
 namespace Drupal\node\Plugin\views\field;

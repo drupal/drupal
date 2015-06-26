@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\ckeditor\Tests\CKEditorLoadingTest.
+ * Contains \Drupal\ckeditor\Tests\CKEditorLoadingTest.
  */
 
 namespace Drupal\ckeditor\Tests;

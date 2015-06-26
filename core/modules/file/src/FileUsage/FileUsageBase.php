@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\FileUsage\FileUsageBase.
+ * Contains \Drupal\file\FileUsage\FileUsageBase.
  */
 
 namespace Drupal\file\FileUsage;

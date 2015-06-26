@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\PluginInstanceTest.
+ * Contains \Drupal\views\Tests\PluginInstanceTest.
  */
 
 namespace Drupal\views\Tests;

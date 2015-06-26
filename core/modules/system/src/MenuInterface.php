@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Entity\MenuInterface.
+ * Contains \Drupal\system\MenuInterface.
  */
 
 namespace Drupal\system;

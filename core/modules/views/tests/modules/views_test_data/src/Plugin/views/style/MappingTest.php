@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\style\MappingTest;
+ * Contains \Drupal\views_test_data\Plugin\views\style\MappingTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\style;

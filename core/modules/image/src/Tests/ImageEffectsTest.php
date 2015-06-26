@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageEffectsTest.
+ * Contains \Drupal\image\Tests\ImageEffectsTest.
  */
 
 namespace Drupal\image\Tests;

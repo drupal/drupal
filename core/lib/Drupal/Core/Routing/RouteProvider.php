@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\RouteProvider.
+ * Contains \Drupal\Core\Routing\RouteProvider.
  */
 
 namespace Drupal\Core\Routing;

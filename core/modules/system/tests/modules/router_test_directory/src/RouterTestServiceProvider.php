@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\router_test\RouterTestServiceProvider.
+ * Contains \Drupal\router_test\RouterTestServiceProvider.
  */
 
 namespace Drupal\router_test;

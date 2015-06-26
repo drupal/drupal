@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\UrlTest.
+ * Contains \Drupal\system\Tests\Common\UrlTest.
  */
 
 namespace Drupal\system\Tests\Common;

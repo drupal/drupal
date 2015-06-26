@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\TermViewBuilder.
+ * Contains \Drupal\taxonomy\TermViewBuilder.
  */
 
 namespace Drupal\taxonomy;

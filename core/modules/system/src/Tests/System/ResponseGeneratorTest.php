@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\ResponseGeneratorTest.
+ * Contains \Drupal\system\Tests\System\ResponseGeneratorTest.
  */
 
 namespace Drupal\system\Tests\System;

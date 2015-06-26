@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\module_autoload_test\SomeClass.
+ * Contains \Drupal\module_autoload_test\SomeClass.
  */
 
 namespace Drupal\module_autoload_test;

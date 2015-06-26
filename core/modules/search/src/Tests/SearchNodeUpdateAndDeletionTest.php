@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchNodeUpdateAndDeletionTest.
+ * Contains \Drupal\search\Tests\SearchNodeUpdateAndDeletionTest.
  */
 
 namespace Drupal\search\Tests;

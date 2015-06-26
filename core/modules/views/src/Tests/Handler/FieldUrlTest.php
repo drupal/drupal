@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FieldUrlTest.
+ * Contains \Drupal\views\Tests\Handler\FieldUrlTest.
  */
 
 namespace Drupal\views\Tests\Handler;

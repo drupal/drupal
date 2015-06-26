@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\path\Unit\Plugin\Field\FieldType\PathFieldDefinitionTest.
+ * Contains \Drupal\Tests\path\Unit\Field\PathFieldDefinitionTest.
  */
 
 namespace Drupal\Tests\path\Unit\Field;

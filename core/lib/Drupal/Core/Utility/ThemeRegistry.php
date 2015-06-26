@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Utility\ThemeRegistry
+ * Contains \Drupal\Core\Utility\ThemeRegistry.
  */
 
 namespace Drupal\Core\Utility;

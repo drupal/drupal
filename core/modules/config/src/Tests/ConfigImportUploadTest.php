@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigImportUploadTest.
+ * Contains \Drupal\config\Tests\ConfigImportUploadTest.
  */
 
 namespace Drupal\config\Tests;

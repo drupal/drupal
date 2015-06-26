@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Event\BundleConfigImportValidate
+ * Contains \Drupal\Core\Entity\Event\BundleConfigImportValidate.
  */
 
 namespace Drupal\Core\Entity\Event;

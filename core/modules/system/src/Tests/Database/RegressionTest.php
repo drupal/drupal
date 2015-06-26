@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\RegressionTest.
+ * Contains \Drupal\system\Tests\Database\RegressionTest.
  */
 
 namespace Drupal\system\Tests\Database;

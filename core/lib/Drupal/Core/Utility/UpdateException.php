@@ -1,8 +1,8 @@
 <?php
 
-/*
+/**
  * @file
- * Definition of Drupal\Core\Utility\UpdateException.
+ * Contains \Drupal\Core\Utility\UpdateException.
  */
 
 namespace Drupal\Core\Utility;

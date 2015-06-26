@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Http\TrustedHostsRequestFactoryTest.
+ * Contains \Drupal\Tests\Core\Http\TrustedHostsRequestFactoryTest.
  */
 
 namespace Drupal\Tests\Core\Http;

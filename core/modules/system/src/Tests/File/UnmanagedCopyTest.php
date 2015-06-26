@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\UnmanagedCopyTest.
+ * Contains \Drupal\system\Tests\File\UnmanagedCopyTest.
  */
 
 namespace Drupal\system\Tests\File;

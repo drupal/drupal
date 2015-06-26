@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\StringStorageException.
+ * Contains \Drupal\locale\StringStorageException.
  */
 
 namespace Drupal\locale;

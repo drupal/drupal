@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\ReadOnlyStreamWrapperTest.
+ * Contains \Drupal\system\Tests\File\ReadOnlyStreamWrapperTest.
  */
 
 namespace Drupal\system\Tests\File;

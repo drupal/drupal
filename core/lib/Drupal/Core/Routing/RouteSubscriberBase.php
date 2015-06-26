@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Routing\RouteSubscriberBase
+ * Contains \Drupal\Core\Routing\RouteSubscriberBase.
  */
 
 namespace Drupal\Core\Routing;

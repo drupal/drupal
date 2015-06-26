@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\field\FieldTest.
+ * Contains \Drupal\views_test_data\Plugin\views\field\FieldTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\field;

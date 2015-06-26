@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Theme\FastTest.
+ * Contains \Drupal\system\Tests\Theme\FastTest.
  */
 
 namespace Drupal\system\Tests\Theme;

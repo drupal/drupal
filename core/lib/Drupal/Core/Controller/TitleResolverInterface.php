@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Controller\TitleResolverInterface
+ * Contains \Drupal\Core\Controller\TitleResolverInterface.
  */
 namespace Drupal\Core\Controller;
 

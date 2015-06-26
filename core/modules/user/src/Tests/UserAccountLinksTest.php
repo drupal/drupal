@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of Drupal\user\Tests\UserAccountLinksTest.
+ * Contains \Drupal\user\Tests\UserAccountLinksTest.
  */
 
 namespace Drupal\user\Tests;

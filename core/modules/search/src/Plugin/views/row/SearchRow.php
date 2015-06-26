@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Plugin\views\row\SearchRow.
+ * Contains \Drupal\search\Plugin\views\row\SearchRow.
  */
 
 namespace Drupal\search\Plugin\views\row;

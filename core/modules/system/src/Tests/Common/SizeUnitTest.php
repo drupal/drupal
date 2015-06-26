@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\SizeUnitTest.
+ * Contains \Drupal\system\Tests\Common\SizeUnitTest.
  */
 
 namespace Drupal\system\Tests\Common;

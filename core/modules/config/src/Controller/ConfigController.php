@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\config\Controller\ConfigController
+ * Contains \Drupal\config\Controller\ConfigController.
  */
 
 namespace Drupal\config\Controller;

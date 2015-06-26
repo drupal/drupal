@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Tests\MetadataGeneratorTest.
+ * Contains \Drupal\quickedit\Tests\MetadataGeneratorTest.
  */
 
 namespace Drupal\quickedit\Tests;

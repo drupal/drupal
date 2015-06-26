@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Tests\Core\Cache\BackendChainImplementationUnitTest.
+ * Contains \Drupal\Tests\Core\Cache\BackendChainImplementationUnitTest.
  */
 
 namespace Drupal\Tests\Core\Cache;

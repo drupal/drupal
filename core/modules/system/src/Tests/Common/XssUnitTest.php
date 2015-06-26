@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\XssUnitTest.
+ * Contains \Drupal\system\Tests\Common\XssUnitTest.
  */
 
 namespace Drupal\system\Tests\Common;

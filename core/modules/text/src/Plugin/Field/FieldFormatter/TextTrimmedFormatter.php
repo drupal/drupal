@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\text\Plugin\field\FieldFormatter\TextTrimmedFormatter.
+ * Contains \Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter.
  */
 namespace Drupal\text\Plugin\Field\FieldFormatter;
 

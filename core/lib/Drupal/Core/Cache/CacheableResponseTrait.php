@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Core\Cache\CacheableResponseTrait.
+ */
+
 namespace Drupal\Core\Cache;
 
 /**

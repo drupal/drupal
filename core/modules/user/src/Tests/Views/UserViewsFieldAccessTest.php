@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Views\userViewsFieldAccessTest.
+ * Contains \Drupal\user\Tests\Views\UserViewsFieldAccessTest.
  */
 
 namespace Drupal\user\Tests\Views;

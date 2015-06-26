@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\update\Access\UpdateManagerAccessCheck.
+ * Contains \Drupal\update\Access\UpdateManagerAccessCheck.
  */
 
 namespace Drupal\update\Access;

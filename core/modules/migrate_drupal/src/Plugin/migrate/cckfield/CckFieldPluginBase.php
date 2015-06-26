@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\MigrateCckFieldInterface.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;

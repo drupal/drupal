@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\book\Access\BookNodeIsRemovableAccessCheck.
+ * Contains \Drupal\book\Access\BookNodeIsRemovableAccessCheck.
  */
 
 namespace Drupal\book\Access;

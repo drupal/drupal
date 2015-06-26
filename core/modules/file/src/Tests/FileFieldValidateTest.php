@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileFieldValidateTest.
+ * Contains \Drupal\file\Tests\FileFieldValidateTest.
  */
 
 namespace Drupal\file\Tests;

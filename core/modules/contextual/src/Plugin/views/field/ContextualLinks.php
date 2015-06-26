@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\contextual\Plugin\views\field\ContextualLinks.
+ * Contains \Drupal\contextual\Plugin\views\field\ContextualLinks.
  */
 
 namespace Drupal\contextual\Plugin\views\field;

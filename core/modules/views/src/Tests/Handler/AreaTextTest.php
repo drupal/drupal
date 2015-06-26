@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\AreaTextTest.
+ * Contains \Drupal\views\Tests\Handler\AreaTextTest.
  */
 
 namespace Drupal\views\Tests\Handler;

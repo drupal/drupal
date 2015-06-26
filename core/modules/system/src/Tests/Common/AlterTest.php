@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\AlterTest.
+ * Contains \Drupal\system\Tests\Common\AlterTest.
  */
 
 namespace Drupal\system\Tests\Common;

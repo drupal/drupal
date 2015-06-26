@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityLanguageTestBase.
+ * Contains \Drupal\system\Tests\Entity\EntityLanguageTestBase.
  */
 
 namespace Drupal\system\Tests\Entity;

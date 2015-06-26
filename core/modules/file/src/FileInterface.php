@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\file\Entity\FileInterface.
+ * Contains \Drupal\file\FileInterface.
  */
 
 namespace Drupal\file;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\node\Tests\NodeLoadHooksTest.
+ * Contains \Drupal\node\Tests\NodeFormButtonsTest.
  */
 
 namespace Drupal\node\Tests;

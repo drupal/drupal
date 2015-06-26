@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\PluginBase
+ * Contains \Drupal\Core\Plugin\PluginBase.
  */
 
 namespace Drupal\Core\Plugin;

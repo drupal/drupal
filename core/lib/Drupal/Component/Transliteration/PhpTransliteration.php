@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\Component\Transliteration\PhpTransliteration.
+ * Contains \Drupal\Component\Transliteration\PhpTransliteration.
  *
  * Some parts of this code were derived from the MediaWiki project's UtfNormal
  * class, Copyright © 2004 Brion Vibber <brion@pobox.com>,

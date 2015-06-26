@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\display\DisplayNoAreaTest.
+ * Contains \Drupal\views_test_data\Plugin\views\display\DisplayNoAreaTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\display;

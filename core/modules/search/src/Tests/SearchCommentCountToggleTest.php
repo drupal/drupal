@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchCommentCountToggleTest.
+ * Contains \Drupal\search\Tests\SearchCommentCountToggleTest.
  */
 
 namespace Drupal\search\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\AdminMetaTagTest.
+ * Contains \Drupal\system\Tests\System\AdminMetaTagTest.
  */
 
 namespace Drupal\system\Tests\System;

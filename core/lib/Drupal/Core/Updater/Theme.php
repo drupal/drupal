@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\Theme.
+ * Contains \Drupal\Core\Updater\Theme.
  */
 
 namespace Drupal\Core\Updater;

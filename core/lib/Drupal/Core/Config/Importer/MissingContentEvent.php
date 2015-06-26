@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Config\MissingContentEvent.
+ * Contains \Drupal\Core\Config\Importer\MissingContentEvent.
  */
 
 namespace Drupal\Core\Config\Importer;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Delete
+ * Contains \Drupal\Core\Database\Driver\mysql\Delete.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternal.
+ * Contains \Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraint.
  */
 
 namespace Drupal\link\Plugin\Validation\Constraint;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\FieldsOverlapException
+ * Contains \Drupal\Core\Database\Query\FieldsOverlapException.
  */
 
 namespace Drupal\Core\Database\Query;

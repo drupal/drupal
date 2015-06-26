@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\locale\LocaleProjectStorage.
+ * Contains \Drupal\locale\LocaleProjectStorage.
  */
 
 namespace Drupal\locale;

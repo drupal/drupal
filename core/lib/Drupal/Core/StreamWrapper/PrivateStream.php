@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\PrivateStream.
+ * Contains \Drupal\Core\StreamWrapper\PrivateStream.
  */
 
 namespace Drupal\Core\StreamWrapper;

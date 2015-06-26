@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\link\Tests\LinkFieldTest.
+ * Contains \Drupal\link\Tests\LinkFieldTest.
  */
 
 namespace Drupal\link\Tests;

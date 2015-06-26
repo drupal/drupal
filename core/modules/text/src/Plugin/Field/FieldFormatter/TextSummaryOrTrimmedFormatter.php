@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\text\Plugin\field\formatter\TextSummaryOrTrimmedFormatter.
+ * Contains \Drupal\text\Plugin\Field\FieldFormatter\TextSummaryOrTrimmedFormatter.
  */
 
 namespace Drupal\text\Plugin\Field\FieldFormatter;

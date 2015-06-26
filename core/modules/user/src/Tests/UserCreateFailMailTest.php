@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\Tests\UserCreateFailMailTest.
+ * Contains \Drupal\user\Tests\UserCreateFailMailTest.
  */
 
 namespace Drupal\user\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Access\DbUpdateAccessCheck.
+ * Contains \Drupal\system\Access\DbUpdateAccessCheck.
  */
 
 namespace Drupal\system\Access;

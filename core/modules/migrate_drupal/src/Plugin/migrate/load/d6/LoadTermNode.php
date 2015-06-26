@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\load\d6\TermNode.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\load\d6\LoadTermNode.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\load\d6;

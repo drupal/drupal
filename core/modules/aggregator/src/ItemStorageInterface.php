@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\aggregator\ItemStorageInterface.
+ * Contains \Drupal\aggregator\ItemStorageInterface.
  */
 
 namespace Drupal\aggregator;

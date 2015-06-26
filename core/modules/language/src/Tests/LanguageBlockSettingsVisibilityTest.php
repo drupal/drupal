@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\src\Tests\LanguageBlockSettingsVisibilityTest.
+ * Contains \Drupal\language\Tests\LanguageBlockSettingsVisibilityTest.
  */
 
 namespace Drupal\language\Tests;

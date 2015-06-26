@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Asset\CssOptimizerUnitTest.
+ * Contains \Drupal\Tests\Core\Asset\CssOptimizerUnitTest.
  */
 
 

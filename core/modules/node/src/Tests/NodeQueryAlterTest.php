@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeQueryAlterTest.
+ * Contains \Drupal\node\Tests\NodeQueryAlterTest.
  */
 
 namespace Drupal\node\Tests;

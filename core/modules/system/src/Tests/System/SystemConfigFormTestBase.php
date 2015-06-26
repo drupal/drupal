@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\SystemConfigFormTestBase.
+ * Contains \Drupal\system\Tests\System\SystemConfigFormTestBase.
  */
 
 namespace Drupal\system\Tests\System;

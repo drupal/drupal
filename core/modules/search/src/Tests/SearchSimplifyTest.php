@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchSimplifyTest.
+ * Contains \Drupal\search\Tests\SearchSimplifyTest.
  */
 
 namespace Drupal\search\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Update
+ * Contains \Drupal\Core\Database\Driver\pgsql\Update.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

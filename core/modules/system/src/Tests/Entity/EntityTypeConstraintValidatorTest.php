@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Entity\EntityTypeConstraintValidatorTest.
+ * Contains \Drupal\system\Tests\Entity\EntityTypeConstraintValidatorTest.
  */
 
 namespace Drupal\system\Tests\Entity;

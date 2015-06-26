@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\StorageException.
+ * Contains \Drupal\Core\Config\StorageException.
  */
 
 namespace Drupal\Core\Config;

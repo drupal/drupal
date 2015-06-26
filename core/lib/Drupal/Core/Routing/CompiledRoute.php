@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\CompiledRoute.
+ * Contains \Drupal\Core\Routing\CompiledRoute.
  */
 
 namespace Drupal\Core\Routing;

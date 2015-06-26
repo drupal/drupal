@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\AfterCommand.
+ * Contains \Drupal\Core\Ajax\AfterCommand.
  */
 
 namespace Drupal\Core\Ajax;

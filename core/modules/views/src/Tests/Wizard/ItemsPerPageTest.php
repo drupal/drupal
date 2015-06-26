@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Wizard\ItemsPerPageTest.
+ * Contains \Drupal\views\Tests\Wizard\ItemsPerPageTest.
  */
 
 namespace Drupal\views\Tests\Wizard;

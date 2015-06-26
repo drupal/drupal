@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\InvokeCommand.
+ * Contains \Drupal\Core\Ajax\InvokeCommand.
  */
 
 namespace Drupal\Core\Ajax;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\path\Tests\PathTestBase.
+ * Contains \Drupal\path\Tests\PathTestBase.
  */
 
 namespace Drupal\path\Tests;

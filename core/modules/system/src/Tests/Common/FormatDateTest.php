@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\FormatDateTest.
+ * Contains \Drupal\system\Tests\Common\FormatDateTest.
  */
 
 namespace Drupal\system\Tests\Common;

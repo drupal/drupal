@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\PublicStream.
+ * Contains \Drupal\Core\StreamWrapper\PublicStream.
  */
 
 namespace Drupal\Core\StreamWrapper;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\EventSubscriber\ParamConverterSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\ParamConverterSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;

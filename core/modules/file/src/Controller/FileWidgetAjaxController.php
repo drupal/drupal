@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\file\FileWidgetAjaxController.
+ * Contains \Drupal\file\Controller\FileWidgetAjaxController.
  */
 
 namespace Drupal\file\Controller;

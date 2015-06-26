@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\FieldHelpTest.
+ * Contains \Drupal\field\Tests\FieldHelpTest.
  */
 
 namespace Drupal\field\Tests;

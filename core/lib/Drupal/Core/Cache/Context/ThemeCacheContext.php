@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\Context\LanguageCacheContext.
+ * Contains \Drupal\Core\Cache\Context\ThemeCacheContext.
  */
 
 namespace Drupal\Core\Cache\Context;

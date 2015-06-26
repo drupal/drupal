@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Cache\NullBackend.
+ * Contains \Drupal\Core\Cache\NullBackend.
  */
 
 namespace Drupal\Core\Cache;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Archiver\Zip.
+ * Contains \Drupal\Core\Archiver\Zip.
  */
 
 namespace Drupal\Core\Archiver;

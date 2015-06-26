@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\FieldTranslationSqlStorageTest.
+ * Contains \Drupal\system\Tests\Entity\FieldTranslationSqlStorageTest.
  */
 
 namespace Drupal\system\Tests\Entity;

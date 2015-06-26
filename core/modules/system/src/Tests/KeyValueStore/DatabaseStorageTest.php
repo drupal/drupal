@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\KeyValueStore\DatabaseStorageTest.
+ * Contains \Drupal\system\Tests\KeyValueStore\DatabaseStorageTest.
  */
 
 namespace Drupal\system\Tests\KeyValueStore;

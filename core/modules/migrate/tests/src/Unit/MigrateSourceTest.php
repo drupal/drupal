@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Unit\MigrateSourceTest
+ * Contains \Drupal\Tests\migrate\Unit\MigrateSourceTest.
  */
 
 namespace Drupal\Tests\migrate\Unit;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\FrontPageTest.
+ * Contains \Drupal\system\Tests\System\FrontPageTest.
  */
 
 namespace Drupal\system\Tests\System;

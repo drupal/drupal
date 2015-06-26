@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\MigrateStorage.
+ * Contains \Drupal\migrate_drupal\MigrationStorage.
  */
 
 namespace Drupal\migrate_drupal;

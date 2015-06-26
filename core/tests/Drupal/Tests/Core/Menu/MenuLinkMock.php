@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Menu\MenuLinkMock
+ * Contains \Drupal\Tests\Core\Menu\MenuLinkMock.
  */
 
 namespace Drupal\Tests\Core\Menu;

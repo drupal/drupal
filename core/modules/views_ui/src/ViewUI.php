@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_ui\ViewUI.
+ * Contains \Drupal\views_ui\ViewUI.
  */
 
 namespace Drupal\views_ui;

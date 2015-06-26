@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\StringBase.
+ * Contains \Drupal\locale\StringBase.
  */
 
 namespace Drupal\locale;

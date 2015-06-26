@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\ChangedItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\ChangedItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeAccessLanguageTest.
+ * Contains \Drupal\node\Tests\NodeAccessLanguageTest.
  */
 
 namespace Drupal\node\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\test\AuthTest.
+ * Contains \Drupal\rest\Tests\AuthTest.
  */
 
 namespace Drupal\rest\Tests;

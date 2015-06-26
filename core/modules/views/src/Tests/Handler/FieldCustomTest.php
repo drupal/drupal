@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FieldCustomTest.
+ * Contains \Drupal\views\Tests\Handler\FieldCustomTest.
  */
 
 namespace Drupal\views\Tests\Handler;

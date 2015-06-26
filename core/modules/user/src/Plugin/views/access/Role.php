@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\access\Role.
+ * Contains \Drupal\user\Plugin\views\access\Role.
  */
 
 namespace Drupal\user\Plugin\views\access;

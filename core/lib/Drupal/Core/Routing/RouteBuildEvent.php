@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\RouteBuildEvent.
+ * Contains \Drupal\Core\Routing\RouteBuildEvent.
  */
 
 namespace Drupal\Core\Routing;

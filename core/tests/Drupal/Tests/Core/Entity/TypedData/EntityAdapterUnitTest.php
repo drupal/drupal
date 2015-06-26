@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Entity\EntityAdapterUnitTest.
+ * Contains \Drupal\Tests\Core\Entity\TypedData\EntityAdapterUnitTest.
  */
 
 namespace Drupal\Tests\Core\Entity\TypedData;

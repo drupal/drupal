@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Routing\ContentTypeHeaderMatcherTest.
+ * Contains \Drupal\Tests\Core\Routing\ContentTypeHeaderMatcherTest.
  */
 
 namespace Drupal\Tests\Core\Routing;

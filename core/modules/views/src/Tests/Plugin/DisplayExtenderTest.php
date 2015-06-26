@@ -1,9 +1,9 @@
 <?php
 
-  /**
-   * @file
-   * Definition of Drupal\views\Tests\Plugin\DisplayExtenderTest.
-   */
+/**
+ * @file
+ * Contains \Drupal\views\Tests\Plugin\DisplayExtenderTest.
+ */
 
 namespace Drupal\views\Tests\Plugin;
 

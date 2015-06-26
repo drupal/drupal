@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\System\HtaccessTest
+ * Contains \Drupal\system\Tests\System\HtaccessTest.
  */
 
 namespace Drupal\system\Tests\System;

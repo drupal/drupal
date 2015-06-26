@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeTitleXSSTest.
+ * Contains \Drupal\node\Tests\NodeTitleXSSTest.
  */
 
 namespace Drupal\node\Tests;

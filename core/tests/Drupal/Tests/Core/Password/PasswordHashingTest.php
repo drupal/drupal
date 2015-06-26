@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\System\PasswordHashingTest.
+ * Contains \Drupal\Tests\Core\Password\PasswordHashingTest.
  */
 
 namespace Drupal\Tests\Core\Password;

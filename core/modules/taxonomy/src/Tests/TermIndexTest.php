@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\TermIndexTest.
+ * Contains \Drupal\taxonomy\Tests\TermIndexTest.
  */
 
 namespace Drupal\taxonomy\Tests;

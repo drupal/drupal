@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Theme\EntityFilteringThemeTest.
+ * Contains \Drupal\system\Tests\Theme\EntityFilteringThemeTest.
  */
 
 namespace Drupal\system\Tests\Theme;

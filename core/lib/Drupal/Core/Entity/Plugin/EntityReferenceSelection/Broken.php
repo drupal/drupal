@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBroken.
+ * Contains \Drupal\Core\Entity\Plugin\EntityReferenceSelection\Broken.
  */
 
 namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;

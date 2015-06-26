@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\ConditionInterface
+ * Contains \Drupal\Core\Database\Query\ConditionInterface.
  */
 
 namespace Drupal\Core\Database\Query;

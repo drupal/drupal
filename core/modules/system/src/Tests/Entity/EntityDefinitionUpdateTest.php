@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Entity\EntityDefinitionUpdateTest.
+ * Contains \Drupal\system\Tests\Entity\EntityDefinitionUpdateTest.
  */
 
 namespace Drupal\system\Tests\Entity;

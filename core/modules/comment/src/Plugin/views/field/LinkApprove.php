@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\LinkApprove.
+ * Contains \Drupal\comment\Plugin\views\field\LinkApprove.
  */
 
 namespace Drupal\comment\Plugin\views\field;

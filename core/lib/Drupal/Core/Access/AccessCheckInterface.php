@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Access\AccessCheckInterface.
+ * Contains \Drupal\Core\Access\AccessCheckInterface.
  */
 
 namespace Drupal\Core\Access;

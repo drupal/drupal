@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigFileContentTest.
+ * Contains \Drupal\config\Tests\ConfigFileContentTest.
  */
 
 namespace Drupal\config\Tests;

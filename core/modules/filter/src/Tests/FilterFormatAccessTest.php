@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterFormatAccessTest.
+ * Contains \Drupal\filter\Tests\FilterFormatAccessTest.
  */
 
 namespace Drupal\filter\Tests;

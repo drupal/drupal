@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\config\Tests\SchemaCheckTestTrait.
+ * Contains \Drupal\config\Tests\SchemaCheckTestTrait.
  */
 
 namespace Drupal\config\Tests;

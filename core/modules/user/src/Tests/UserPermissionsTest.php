@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserPermissionsTest.
+ * Contains \Drupal\user\Tests\UserPermissionsTest.
  */
 
 namespace Drupal\user\Tests;

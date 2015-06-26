@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip.
+ * Contains \Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip.
  */
 
 namespace Drupal\content_translation_test\Entity;

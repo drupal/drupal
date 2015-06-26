@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserEditedOwnAccountTest.
+ * Contains \Drupal\user\Tests\UserEditedOwnAccountTest.
  */
 
 namespace Drupal\user\Tests;

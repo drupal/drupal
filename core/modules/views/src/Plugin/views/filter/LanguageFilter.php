@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Plugin\views\filter\LanguageFilter.
+ * Contains \Drupal\views\Plugin\views\filter\LanguageFilter.
  */
 
 namespace Drupal\views\Plugin\views\filter;

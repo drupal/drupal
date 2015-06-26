@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Connection
+ * Contains \Drupal\Core\Database\Driver\sqlite\Connection.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

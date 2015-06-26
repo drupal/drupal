@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\display\Attachment.
+ * Contains \Drupal\views\Plugin\views\display\Attachment.
  */
 
 namespace Drupal\views\Plugin\views\display;

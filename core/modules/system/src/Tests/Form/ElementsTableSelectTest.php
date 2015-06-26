@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\ElementsTableSelectTest.
+ * Contains \Drupal\system\Tests\Form\ElementsTableSelectTest.
  */
 
 namespace Drupal\system\Tests\Form;

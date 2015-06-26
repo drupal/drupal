@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\cache\Time.
+ * Contains \Drupal\views\Plugin\views\cache\Time.
  */
 
 namespace Drupal\views\Plugin\views\cache;

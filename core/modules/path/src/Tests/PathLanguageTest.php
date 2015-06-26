@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\path\Tests\PathLanguageTest.
+ * Contains \Drupal\path\Tests\PathLanguageTest.
  */
 
 namespace Drupal\path\Tests;

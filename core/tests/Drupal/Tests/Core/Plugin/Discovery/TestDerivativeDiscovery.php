@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Plugin\Discovery\TestDiscovery.
+ * Contains \Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery.
  */
 
 namespace Drupal\Tests\Core\Plugin\Discovery;

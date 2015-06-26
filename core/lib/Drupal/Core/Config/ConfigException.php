@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\ConfigException.
+ * Contains \Drupal\Core\Config\ConfigException.
  */
 
 namespace Drupal\Core\Config;

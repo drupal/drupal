@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\ContextAwarePluginBase
+ * Contains \Drupal\Core\Plugin\ContextAwarePluginBase.
  */
 
 namespace Drupal\Core\Plugin;

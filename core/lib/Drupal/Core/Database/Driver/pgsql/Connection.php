@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Connection
+ * Contains \Drupal\Core\Database\Driver\pgsql\Connection.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

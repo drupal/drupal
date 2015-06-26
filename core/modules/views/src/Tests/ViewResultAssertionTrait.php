@@ -2,7 +2,7 @@
 
 /**
  * @file
- * contains Drupal\views\Tests\ViewResultAssertionTrait.
+ * Contains \Drupal\views\Tests\ViewResultAssertionTrait.
  */
 
 namespace Drupal\views\Tests;

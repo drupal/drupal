@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\minimal\Tests\MinimalTest.
+ * Contains \Drupal\minimal\Tests\MinimalTest.
  */
 
 namespace Drupal\minimal\Tests;

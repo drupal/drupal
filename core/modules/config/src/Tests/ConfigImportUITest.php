@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigImportUITest.
+ * Contains \Drupal\config\Tests\ConfigImportUITest.
  */
 
 namespace Drupal\config\Tests;

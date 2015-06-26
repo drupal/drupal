@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\wizard\TaxonomyTerm.
+ * Contains \Drupal\taxonomy\Plugin\views\wizard\TaxonomyTerm.
  */
 
 namespace Drupal\taxonomy\Plugin\views\wizard;

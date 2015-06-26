@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\language\HttpKernel\PathProcessorLanguage.
+ * Contains \Drupal\language\HttpKernel\PathProcessorLanguage.
  */
 
 namespace Drupal\language\HttpKernel;

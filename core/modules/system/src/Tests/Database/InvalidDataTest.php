@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\InvalidDataTest.
+ * Contains \Drupal\system\Tests\Database\InvalidDataTest.
  */
 
 namespace Drupal\system\Tests\Database;

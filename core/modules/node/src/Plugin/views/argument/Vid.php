@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\Vid.
+ * Contains \Drupal\node\Plugin\views\argument\Vid.
  */
 
 namespace Drupal\node\Plugin\views\argument;

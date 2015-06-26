@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityBaseFieldOverride
+ * Contains \Drupal\migrate\Plugin\migrate\destination\EntityBaseFieldOverride.
  */
 
 namespace Drupal\migrate\Plugin\migrate\destination;

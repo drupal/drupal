@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\RebuildTest.
+ * Contains \Drupal\system\Tests\Form\RebuildTest.
  */
 
 namespace Drupal\system\Tests\Form;

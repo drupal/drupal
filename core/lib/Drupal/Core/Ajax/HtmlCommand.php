@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\HtmlCommand.
+ * Contains \Drupal\Core\Ajax\HtmlCommand.
  */
 
 namespace Drupal\Core\Ajax;

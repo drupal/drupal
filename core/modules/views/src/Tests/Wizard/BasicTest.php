@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Wizard\BasicTest.
+ * Contains \Drupal\views\Tests\Wizard\BasicTest.
  */
 
 namespace Drupal\views\Tests\Wizard;

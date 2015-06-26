@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Plugin\views\argument\Search.
+ * Contains \Drupal\search\Plugin\views\argument\Search.
  */
 
 namespace Drupal\search\Plugin\views\argument;

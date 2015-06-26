@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Broken.
+ * Contains \Drupal\views\Plugin\views\field\Broken.
  */
 
 namespace Drupal\views\Plugin\views\field;

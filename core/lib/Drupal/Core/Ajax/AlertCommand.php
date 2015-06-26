@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\AlertCommand.
+ * Contains \Drupal\Core\Ajax\AlertCommand.
  */
 
 namespace Drupal\Core\Ajax;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\UserDataInterface.
+ * Contains \Drupal\user\UserDataInterface.
  */
 
 namespace Drupal\user;

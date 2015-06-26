@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Config\ConfigFactoryTest.
+ */
+
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\Config;

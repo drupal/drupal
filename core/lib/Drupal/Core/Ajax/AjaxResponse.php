@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\AjaxResponse.
+ * Contains \Drupal\Core\Ajax\AjaxResponse.
  */
 
 namespace Drupal\Core\Ajax;

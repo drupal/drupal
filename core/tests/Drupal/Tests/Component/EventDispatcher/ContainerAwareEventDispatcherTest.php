@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\EventDispatcher\ContainerAwareEventDispatcherTest
+ * Contains \Drupal\Tests\Component\EventDispatcher\ContainerAwareEventDispatcherTest.
  */
 
 namespace Drupal\Tests\Component\EventDispatcher;

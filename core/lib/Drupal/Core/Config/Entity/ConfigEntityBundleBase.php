@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Config\Entity\ConfigEntityBundleBase.
+ * Contains \Drupal\Core\Config\Entity\ConfigEntityBundleBase.
  */
 
 namespace Drupal\Core\Config\Entity;

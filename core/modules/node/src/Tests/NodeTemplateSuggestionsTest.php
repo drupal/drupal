@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of \Drupal\node\Tests\NodeTemplateSuggestionsTest.
+ * Contains \Drupal\node\Tests\NodeTemplateSuggestionsTest.
  */
 
 namespace Drupal\node\Tests;

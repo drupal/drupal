@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\forum\Tests\ForumBlockTest.
+ * Contains \Drupal\forum\Tests\ForumBlockTest.
  */
 
 namespace Drupal\forum\Tests;

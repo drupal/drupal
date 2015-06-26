@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_test\Plugin\field\formatter\TestFieldMultipleFormatter.
+ * Contains \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldMultipleFormatter.
  */
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;

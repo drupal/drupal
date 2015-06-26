@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal.
+ * Contains \Drupal.
  */
 
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;

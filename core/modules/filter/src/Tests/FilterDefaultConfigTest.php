@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\filter\Tests\FilterDefaultConfigTest.
+ * Contains \Drupal\filter\Tests\FilterDefaultConfigTest.
  */
 
 namespace Drupal\filter\Tests;

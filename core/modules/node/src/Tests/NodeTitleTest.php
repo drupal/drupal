@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeTitleTest.
+ * Contains \Drupal\node\Tests\NodeTitleTest.
  */
 
 namespace Drupal\node\Tests;

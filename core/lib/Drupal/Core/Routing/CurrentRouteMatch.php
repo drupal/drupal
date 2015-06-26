@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\CurrentRouteMatch.
+ * Contains \Drupal\Core\Routing\CurrentRouteMatch.
  */
 
 namespace Drupal\Core\Routing;

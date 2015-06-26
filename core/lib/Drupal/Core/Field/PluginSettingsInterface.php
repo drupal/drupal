@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\PluginSettingsInterface.
+ * Contains \Drupal\Core\Field\PluginSettingsInterface.
  */
 
 namespace Drupal\Core\Field;

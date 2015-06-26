@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Select
+ * Contains \Drupal\Core\Database\Driver\sqlite\Select.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

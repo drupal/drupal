@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\PathProcessor\PathProcessorPrivateFiles.
+ * Contains \Drupal\system\PathProcessor\PathProcessorFiles.
  */
 
 namespace Drupal\system\PathProcessor;

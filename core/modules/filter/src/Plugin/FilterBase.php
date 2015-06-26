@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\filter\Plugin\Filter\FilterBase.
+ * Contains \Drupal\filter\Plugin\FilterBase.
  */
 
 namespace Drupal\filter\Plugin;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Installer\InstallerTranslationVersionUnitTest.
+ * Contains \Drupal\system\Tests\Installer\InstallerTranslationVersionUnitTest.
  */
 
 namespace Drupal\system\Tests\Installer;

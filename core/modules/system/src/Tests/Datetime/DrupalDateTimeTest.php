@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Datetime\DateTimePlusTest.
+ * Contains \Drupal\system\Tests\Datetime\DrupalDateTimeTest.
  */
 
 namespace Drupal\system\Tests\Datetime;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\QueryException.
+ * Contains \Drupal\Core\Entity\Query\QueryException.
  */
 
 namespace Drupal\Core\Entity\Query;

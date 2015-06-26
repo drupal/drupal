@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\options\Tests\OptionsFieldTest.
+ * Contains \Drupal\options\Tests\OptionsFieldTest.
  */
 
 namespace Drupal\options\Tests;

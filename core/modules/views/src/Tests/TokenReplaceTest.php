@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\TokenReplaceTest.
+ * Contains \Drupal\views\Tests\TokenReplaceTest.
  */
 
 namespace Drupal\views\Tests;

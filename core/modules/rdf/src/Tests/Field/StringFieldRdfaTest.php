@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\rdf\Tests\Field\TextFieldRdfaTest.
+ * Contains \Drupal\rdf\Tests\Field\StringFieldRdfaTest.
  */
 
 namespace Drupal\rdf\Tests\Field;

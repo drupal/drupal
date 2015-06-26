@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\DatabaseExceptionWrapper.
+ * Contains \Drupal\Core\Database\DatabaseExceptionWrapper.
  */
 
 namespace Drupal\Core\Database;

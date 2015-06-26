@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Mail\MailInterface.
+ * Contains \Drupal\Core\Mail\MailInterface.
  */
 
 namespace Drupal\Core\Mail;

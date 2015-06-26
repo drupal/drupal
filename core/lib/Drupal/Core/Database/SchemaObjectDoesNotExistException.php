@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\SchemaObjectDoesNotExistException
+ * Contains \Drupal\Core\Database\SchemaObjectDoesNotExistException.
  */
 
 namespace Drupal\Core\Database;

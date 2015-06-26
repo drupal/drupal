@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\statistics\Tests\StatisticsTestBase.
+ * Contains \Drupal\statistics\Tests\StatisticsTestBase.
  */
 
 namespace Drupal\statistics\Tests;

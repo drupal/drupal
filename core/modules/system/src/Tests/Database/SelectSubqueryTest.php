@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\SelectSubqueryTest.
+ * Contains \Drupal\system\Tests\Database\SelectSubqueryTest.
  */
 
 namespace Drupal\system\Tests\Database;

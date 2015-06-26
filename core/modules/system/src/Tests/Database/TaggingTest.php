@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\TaggingTest.
+ * Contains \Drupal\system\Tests\Database\TaggingTest.
  */
 
 namespace Drupal\system\Tests\Database;

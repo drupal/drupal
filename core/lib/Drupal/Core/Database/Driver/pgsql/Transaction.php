@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Transaction
+ * Contains \Drupal\Core\Database\Driver\pgsql\Transaction.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

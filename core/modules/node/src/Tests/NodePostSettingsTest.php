@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodePostSettingsTest.
+ * Contains \Drupal\node\Tests\NodePostSettingsTest.
  */
 
 namespace Drupal\node\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Archiver\ArchiverException.
+ * Contains \Drupal\Core\Archiver\ArchiverException.
  */
 
 namespace Drupal\Core\Archiver;

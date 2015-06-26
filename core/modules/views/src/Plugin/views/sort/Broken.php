@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\sort\Broken.
+ * Contains \Drupal\views\Plugin\views\sort\Broken.
  */
 
 namespace Drupal\views\Plugin\views\sort;

@@ -1,6 +1,7 @@
 <?php
 /**
- * Contains \Drupal\system\Tests\Block\SystemMenuBlockTest
+ * @file
+ * Contains \Drupal\system\Tests\Block\SystemMenuBlockTest.
  */
 
 namespace Drupal\system\Tests\Block;

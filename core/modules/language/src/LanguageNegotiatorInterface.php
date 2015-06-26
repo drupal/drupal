@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\LanguageNegotiatorInterface
+ * Contains \Drupal\language\LanguageNegotiatorInterface.
  */
 
 namespace Drupal\language;

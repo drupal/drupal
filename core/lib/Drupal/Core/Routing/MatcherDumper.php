@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\MatcherDumper.
+ * Contains \Drupal\Core\Routing\MatcherDumper.
  */
 
 namespace Drupal\Core\Routing;

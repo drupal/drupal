@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Common\JavaScriptTest.
+ * Contains \Drupal\system\Tests\Common\AttachedAssetsTest.
  */
 
 namespace Drupal\system\Tests\Common;

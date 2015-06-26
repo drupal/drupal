@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Plugin\views\field\Score.
+ * Contains \Drupal\search\Plugin\views\field\Score.
  */
 
 namespace Drupal\search\Plugin\views\field;

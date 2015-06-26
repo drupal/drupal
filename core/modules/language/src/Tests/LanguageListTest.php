@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageListTest.
+ * Contains \Drupal\language\Tests\LanguageListTest.
  */
 
 namespace Drupal\language\Tests;

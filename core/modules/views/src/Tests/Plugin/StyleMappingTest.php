@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\StyleMappingTest.
+ * Contains \Drupal\views\Tests\Plugin\StyleMappingTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

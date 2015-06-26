@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\RouteBuilderInterface.
+ * Contains \Drupal\Core\Routing\RouteBuilderInterface.
  */
 
 namespace Drupal\Core\Routing;

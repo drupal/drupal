@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\UpdaterFileTransferException.
+ * Contains \Drupal\Core\Updater\UpdaterFileTransferException.
  */
 
 namespace Drupal\Core\Updater;

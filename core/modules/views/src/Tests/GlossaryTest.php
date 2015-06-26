@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\GlossaryTest.
+ * Contains \Drupal\views\Tests\GlossaryTest.
  */
 
 namespace Drupal\views\Tests;

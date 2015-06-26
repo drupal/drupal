@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\DriverNotSpecifiedException
+ * Contains \Drupal\Core\Database\DriverNotSpecifiedException.
  */
 
 namespace Drupal\Core\Database;

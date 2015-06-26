@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Entity\EntityTypeConstraintsTest.
+ * Contains \Drupal\system\Tests\Entity\EntityTypeConstraintsTest.
  */
 
 namespace Drupal\system\Tests\Entity;

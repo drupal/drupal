@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateVocabularyToFieldTest.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateVocabularyFieldTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;

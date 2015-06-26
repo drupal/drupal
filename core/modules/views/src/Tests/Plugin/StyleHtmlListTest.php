@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Tests\Plugin\StyleHtmlListTest.
+ * Contains \Drupal\views\Tests\Plugin\StyleHtmlListTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

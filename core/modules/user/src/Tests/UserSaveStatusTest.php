@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserSaveStatusTest.
+ * Contains \Drupal\user\Tests\UserSaveStatusTest.
  */
 
 namespace Drupal\user\Tests;

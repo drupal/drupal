@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\UnmanagedDeleteRecursiveTest.
+ * Contains \Drupal\system\Tests\File\UnmanagedDeleteRecursiveTest.
  */
 
 namespace Drupal\system\Tests\File;

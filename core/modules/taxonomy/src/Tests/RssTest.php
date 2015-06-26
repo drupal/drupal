@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\RssTest.
+ * Contains \Drupal\taxonomy\Tests\RssTest.
  */
 
 namespace Drupal\taxonomy\Tests;

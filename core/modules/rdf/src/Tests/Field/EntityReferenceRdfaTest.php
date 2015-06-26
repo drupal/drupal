@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\rdf\Tests\Field\TaxonomyTermReferenceRdfaTest.
+ * Contains \Drupal\rdf\Tests\Field\EntityReferenceRdfaTest.
  */
 
 namespace Drupal\rdf\Tests\Field;

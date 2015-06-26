@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\options\Type\ListIntegerItem.
+ * Contains \Drupal\options\Plugin\Field\FieldType\ListIntegerItem.
  */
 
 namespace Drupal\options\Plugin\Field\FieldType;

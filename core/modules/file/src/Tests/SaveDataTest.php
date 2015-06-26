@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\SaveDataTest.
+ * Contains \Drupal\file\Tests\SaveDataTest.
  */
 
 namespace Drupal\file\Tests;

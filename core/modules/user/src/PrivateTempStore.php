@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\PrivateTempStore.
+ * Contains \Drupal\user\PrivateTempStore.
  */
 
 namespace Drupal\user;

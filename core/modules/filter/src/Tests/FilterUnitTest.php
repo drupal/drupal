@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterUnitTest.
+ * Contains \Drupal\filter\Tests\FilterUnitTest.
  */
 
 namespace Drupal\filter\Tests;

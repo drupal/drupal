@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\filter\Permissions.
+ * Contains \Drupal\user\Plugin\views\filter\Permissions.
  */
 
 namespace Drupal\user\Plugin\views\filter;

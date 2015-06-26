@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\InvalidMergeQueryException
+ * Contains \Drupal\Core\Database\Query\InvalidMergeQueryException.
  */
 
 namespace Drupal\Core\Database\Query;

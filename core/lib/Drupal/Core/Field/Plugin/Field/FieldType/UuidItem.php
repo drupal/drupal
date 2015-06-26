@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\UuidItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\UuidItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

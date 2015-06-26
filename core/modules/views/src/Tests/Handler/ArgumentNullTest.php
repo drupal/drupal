@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\ArgumentNullTest.
+ * Contains \Drupal\views\Tests\Handler\ArgumentNullTest.
  */
 
 namespace Drupal\views\Tests\Handler;

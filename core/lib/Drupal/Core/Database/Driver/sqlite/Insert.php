@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Insert
+ * Contains \Drupal\Core\Database\Driver\sqlite\Insert.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

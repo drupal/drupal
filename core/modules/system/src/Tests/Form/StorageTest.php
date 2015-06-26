@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\StorageTest.
+ * Contains \Drupal\system\Tests\Form\StorageTest.
  */
 
 namespace Drupal\system\Tests\Form;

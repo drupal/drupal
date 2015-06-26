@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockInvalidRegionTest.
+ * Contains \Drupal\block\Tests\BlockInvalidRegionTest.
  */
 
 namespace Drupal\block\Tests;

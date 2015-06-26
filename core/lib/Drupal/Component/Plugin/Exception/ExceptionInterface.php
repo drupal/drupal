@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\Component\Plugin\Exception\ExceptionInterface.
+ * Contains \Drupal\Component\Plugin\Exception\ExceptionInterface.
  */
 
 namespace Drupal\Component\Plugin\Exception;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Date.
+ * Contains \Drupal\views\Plugin\views\field\Date.
  */
 
 namespace Drupal\views\Plugin\views\field;

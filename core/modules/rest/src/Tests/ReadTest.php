@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\test\ReadTest.
+ * Contains \Drupal\rest\Tests\ReadTest.
  */
 
 namespace Drupal\rest\Tests;

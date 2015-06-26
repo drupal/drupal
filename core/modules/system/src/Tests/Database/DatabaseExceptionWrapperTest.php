@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Database\DatabaseExceptionWrapperTest.
+ * Contains \Drupal\system\Tests\Database\DatabaseExceptionWrapperTest.
  */
 
 namespace Drupal\system\Tests\Database;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\Annotation\PluginID.
+ * Contains \Drupal\Component\Annotation\PluginID.
  */
 
 namespace Drupal\Component\Annotation;

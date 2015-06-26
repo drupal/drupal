@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\AlterableInterface
+ * Contains \Drupal\Core\Database\Query\AlterableInterface.
  */
 
 namespace Drupal\Core\Database\Query;

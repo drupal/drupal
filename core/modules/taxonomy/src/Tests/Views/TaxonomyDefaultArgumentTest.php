@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\Views\RelationshipRepresentativeNodeTest.
+ * Contains \Drupal\taxonomy\Tests\Views\TaxonomyDefaultArgumentTest.
  */
 
 namespace Drupal\taxonomy\Tests\Views;

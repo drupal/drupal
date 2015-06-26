@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\File\UrlRewritingTest.
+ * Contains \Drupal\system\Tests\File\UrlRewritingTest.
  */
 
 namespace Drupal\system\Tests\File;

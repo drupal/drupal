@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\SharedTempStore.
+ * Contains \Drupal\user\SharedTempStore.
  */
 
 namespace Drupal\user;

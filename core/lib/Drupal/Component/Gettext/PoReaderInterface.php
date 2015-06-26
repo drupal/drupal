@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoReaderInterface.
+ * Contains \Drupal\Component\Gettext\PoReaderInterface.
  */
 
 namespace Drupal\Component\Gettext;

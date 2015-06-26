@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewEntityInterface.
+ * Contains \Drupal\views\ViewEntityInterface.
  */
 
 namespace Drupal\views;

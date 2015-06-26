@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\argument\VocabularyVid.
+ * Contains \Drupal\taxonomy\Plugin\views\argument\VocabularyVid.
  */
 
 namespace Drupal\taxonomy\Plugin\views\argument;

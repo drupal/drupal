@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\SimpleTestErrorCollectorTest.
+ * Contains \Drupal\system\Tests\Common\SimpleTestErrorCollectorTest.
  */
 
 namespace Drupal\system\Tests\Common;

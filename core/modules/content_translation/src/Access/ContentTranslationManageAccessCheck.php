@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\content_translation\Access\ContentTranslationManageAccessCheck.
+ * Contains \Drupal\content_translation\Access\ContentTranslationManageAccessCheck.
  */
 
 namespace Drupal\content_translation\Access;

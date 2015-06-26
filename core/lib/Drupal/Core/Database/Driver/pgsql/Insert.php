@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Insert
+ * Contains \Drupal\Core\Database\Driver\pgsql\Insert.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

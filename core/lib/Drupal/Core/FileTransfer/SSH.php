@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\FileTransfer\SSH.
+ * Contains \Drupal\Core\FileTransfer\SSH.
  */
 
 namespace Drupal\Core\FileTransfer;

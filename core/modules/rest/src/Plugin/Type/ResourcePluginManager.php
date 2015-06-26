@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\Plugin\Type\ResourcePluginManager.
+ * Contains \Drupal\rest\Plugin\Type\ResourcePluginManager.
  */
 
 namespace Drupal\rest\Plugin\Type;

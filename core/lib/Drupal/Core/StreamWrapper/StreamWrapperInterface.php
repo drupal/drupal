@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\StreamWrapperInterface.
+ * Contains \Drupal\Core\StreamWrapper\StreamWrapperInterface.
  *
  * Provides a Drupal interface and classes to implement PHP stream wrappers for
  * public, private, and temporary files.

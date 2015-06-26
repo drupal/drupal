@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\plugin_test\Plugin\MockBlockManager.
+ * Contains \Drupal\plugin_test\Plugin\MockBlockManager.
  */
 
 namespace Drupal\plugin_test\Plugin;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ParamConverter\ParamConverterManager.
+ * Contains \Drupal\Core\ParamConverter\ParamConverterManager.
  */
 
 namespace Drupal\Core\ParamConverter;

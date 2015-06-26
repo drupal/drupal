@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserSearchTest.
+ * Contains \Drupal\user\Tests\UserSearchTest.
  */
 
 namespace Drupal\user\Tests;

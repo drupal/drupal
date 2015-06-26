@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\AppendCommand.
+ * Contains \Drupal\Core\Ajax\AppendCommand.
  */
 
 namespace Drupal\Core\Ajax;

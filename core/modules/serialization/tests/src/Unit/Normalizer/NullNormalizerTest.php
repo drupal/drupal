@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\serialization\Unit\Normalizer\NullNormalizerTest
+ * Contains \Drupal\Tests\serialization\Unit\Normalizer\NullNormalizerTest.
  */
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;

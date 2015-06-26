@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageConfigurationElementTest.
+ * Contains \Drupal\language\Tests\LanguageConfigurationElementTest.
  */
 
 namespace Drupal\language\Tests;

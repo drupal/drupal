@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\trusted_hosts_test\Controller\TrustedHostsTestController.
+ * Contains \Drupal\trusted_hosts_test\Controller\TrustedHostsTestController.
  */
 
 namespace Drupal\trusted_hosts_test\Controller;

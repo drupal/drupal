@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchemaException.
+ * Contains \Drupal\Core\Entity\Sql\SqlContentEntityStorageException.
  */
 
 namespace Drupal\Core\Entity\Sql;

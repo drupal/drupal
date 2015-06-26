@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\user\Entity\RoleInterface.
+ * Contains \Drupal\user\RoleInterface.
  */
 
 namespace Drupal\user;

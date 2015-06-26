@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Lock\LockFunctionalTest.
+ * Contains \Drupal\system\Tests\Lock\LockFunctionalTest.
  */
 
 namespace Drupal\system\Tests\Lock;

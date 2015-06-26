@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Cache\BackendChain.
+ * Contains \Drupal\Core\Cache\BackendChain.
  */
 
 namespace Drupal\Core\Cache;

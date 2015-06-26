@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\options\Type\ListFloatItem.
+ * Contains \Drupal\options\Plugin\Field\FieldType\ListFloatItem.
  */
 
 namespace Drupal\options\Plugin\Field\FieldType;

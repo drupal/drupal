@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\MoveTest.
+ * Contains \Drupal\file\Tests\MoveTest.
  */
 
 namespace Drupal\file\Tests;

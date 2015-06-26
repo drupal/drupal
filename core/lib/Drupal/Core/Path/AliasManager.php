@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Path\AliasManager.
+ * Contains \Drupal\Core\Path\AliasManager.
  */
 
 namespace Drupal\Core\Path;

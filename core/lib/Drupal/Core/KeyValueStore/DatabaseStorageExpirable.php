@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\DatabaseStorageExpirable.
+ * Contains \Drupal\Core\KeyValueStore\DatabaseStorageExpirable.
  */
 
 namespace Drupal\Core\KeyValueStore;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block\Entity\BlockInterface.
+ * Contains \Drupal\block\BlockInterface.
  */
 
 namespace Drupal\block;

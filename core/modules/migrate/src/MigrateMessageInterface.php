@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains
+ * Contains \Drupal\migrate\MigrateMessageInterface.
  */
 
 namespace Drupal\migrate;

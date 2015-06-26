@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\condition\Tests\Condition\NodeConditionTest.
+ * Contains \Drupal\node\Tests\Condition\NodeConditionTest.
  */
 
 namespace Drupal\node\Tests\Condition;

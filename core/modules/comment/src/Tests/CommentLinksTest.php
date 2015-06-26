@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\comment\Tests\CommentLinksTest.
+ * Contains \Drupal\comment\Tests\CommentLinksTest.
  */
 
 namespace Drupal\comment\Tests;

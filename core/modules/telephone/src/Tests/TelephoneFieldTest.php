@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\telephone\TelephoneFieldTest.
+ * Contains \Drupal\telephone\Tests\TelephoneFieldTest.
  */
 
 namespace Drupal\telephone\Tests;

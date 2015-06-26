@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\InsertLobTest.
+ * Contains \Drupal\system\Tests\Database\InsertLobTest.
  */
 
 namespace Drupal\system\Tests\Database;

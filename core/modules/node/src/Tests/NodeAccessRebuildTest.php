@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeAccessRebuildTest.
+ * Contains \Drupal\node\Tests\NodeAccessRebuildTest.
  */
 
 namespace Drupal\node\Tests;

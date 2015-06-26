@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\UpdateBuildIdCommand.
+ * Contains \Drupal\Core\Ajax\UpdateBuildIdCommand.
  */
 
 namespace Drupal\Core\Ajax;

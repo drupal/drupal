@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory.
+ * Contains \Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory.
  */
 
 namespace Drupal\Core\KeyValueStore;

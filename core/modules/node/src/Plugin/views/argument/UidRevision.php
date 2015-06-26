@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\UidRevision.
+ * Contains \Drupal\node\Plugin\views\argument\UidRevision.
  */
 
 namespace Drupal\node\Plugin\views\argument;

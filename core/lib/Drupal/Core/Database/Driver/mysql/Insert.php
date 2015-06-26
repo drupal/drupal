@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Insert
+ * Contains \Drupal\Core\Database\Driver\mysql\Insert.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

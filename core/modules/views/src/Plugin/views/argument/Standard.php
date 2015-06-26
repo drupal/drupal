@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\Standard.
+ * Contains \Drupal\views\Plugin\views\argument\Standard.
  */
 
 namespace Drupal\views\Plugin\views\argument;

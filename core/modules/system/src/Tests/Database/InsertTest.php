@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\InsertTest.
+ * Contains \Drupal\system\Tests\Database\InsertTest.
  */
 
 namespace Drupal\system\Tests\Database;

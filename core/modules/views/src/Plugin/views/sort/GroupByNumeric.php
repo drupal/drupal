@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\sort\GroupByNumeric.
+ * Contains \Drupal\views\Plugin\views\sort\GroupByNumeric.
  */
 
 namespace Drupal\views\Plugin\views\sort;

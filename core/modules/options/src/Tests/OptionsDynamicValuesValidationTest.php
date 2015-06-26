@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\options\Tests\OptionsDynamicValuesValidationTest.
+ * Contains \Drupal\options\Tests\OptionsDynamicValuesValidationTest.
  */
 
 namespace Drupal\options\Tests;

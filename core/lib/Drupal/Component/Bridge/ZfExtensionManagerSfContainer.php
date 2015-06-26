@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Bridge\ZfExtensionManagerSfContainer
+ * Contains \Drupal\Component\Bridge\ZfExtensionManagerSfContainer.
  */
 namespace Drupal\Component\Bridge;
 

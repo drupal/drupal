@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\FormTest.
+ * Contains \Drupal\system\Tests\Form\FormTest.
  */
 
 namespace Drupal\system\Tests\Form;

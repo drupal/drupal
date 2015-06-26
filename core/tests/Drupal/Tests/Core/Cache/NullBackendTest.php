@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Tests\Core\Cache\NullBackendTest.
+ * Contains \Drupal\Tests\Core\Cache\NullBackendTest.
  */
 
 namespace Drupal\Tests\Core\Cache;

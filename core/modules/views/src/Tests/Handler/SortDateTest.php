@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\SortDateTest.
+ * Contains \Drupal\views\Tests\Handler\SortDateTest.
  */
 
 namespace Drupal\views\Tests\Handler;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument_default\Fixed.
+ * Contains \Drupal\views\Plugin\views\argument_default\Fixed.
  */
 
 namespace Drupal\views\Plugin\views\argument_default;

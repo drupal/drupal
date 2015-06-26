@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\MigrateExecutableInterface
+ * Contains \Drupal\migrate\MigrateExecutableInterface.
  */
 
 namespace Drupal\migrate;

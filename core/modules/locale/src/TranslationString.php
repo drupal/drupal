@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\TranslationString.
+ * Contains \Drupal\locale\TranslationString.
  */
 
 namespace Drupal\locale;

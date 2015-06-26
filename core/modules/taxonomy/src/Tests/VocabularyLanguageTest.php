@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\VocabularyLanguageTest.
+ * Contains \Drupal\taxonomy\Tests\VocabularyLanguageTest.
  */
 
 namespace Drupal\taxonomy\Tests;

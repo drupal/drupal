@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\hal\JsonEncoder.
+ * Contains \Drupal\hal\Encoder\JsonEncoder.
  */
 
 namespace Drupal\hal\Encoder;

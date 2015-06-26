@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeBlockFunctionalTest.
+ * Contains \Drupal\node\Tests\NodeBlockFunctionalTest.
  */
 
 namespace Drupal\node\Tests;

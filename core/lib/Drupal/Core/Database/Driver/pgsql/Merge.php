@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Merge
+ * Contains \Drupal\Core\Database\Driver\pgsql\Merge.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

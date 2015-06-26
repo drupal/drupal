@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\AutocompleteTagsWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteTagsWidget.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;

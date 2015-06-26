@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\link\Plugin\field\formatter\LinkFormatter.
+ * Contains \Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter.
  */
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;

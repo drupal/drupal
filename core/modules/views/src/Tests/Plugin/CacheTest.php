@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\CacheTest.
+ * Contains \Drupal\views\Tests\Plugin\CacheTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

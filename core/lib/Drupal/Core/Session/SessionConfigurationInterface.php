@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Session\SessionConfigurationInterface
+ * Contains \Drupal\Core\Session\SessionConfigurationInterface.
  */
 
 namespace Drupal\Core\Session;

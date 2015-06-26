@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockRenderOrderTest.
+ * Contains \Drupal\block\Tests\BlockRenderOrderTest.
  */
 
 namespace Drupal\block\Tests;

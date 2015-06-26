@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of \Drupal\Component\Plugin\Exception\InvalidDeriverClassException.
+ * Contains \Drupal\Component\Plugin\Exception\InvalidDeriverException.
  */
 
 namespace Drupal\Component\Plugin\Exception;

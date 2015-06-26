@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\access\StaticTest.
+ * Contains \Drupal\views_test_data\Plugin\views\access\StaticTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\access;

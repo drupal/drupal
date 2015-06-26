@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\views\pager\SqlBase
+ * Contains \Drupal\views\Plugin\views\pager\SqlBase.
  */
 
 namespace Drupal\views\Plugin\views\pager;

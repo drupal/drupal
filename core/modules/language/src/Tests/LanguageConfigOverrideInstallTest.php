@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\language\Tests\LanguageConfigOverrideInstallTest.
+ * Contains \Drupal\language\Tests\LanguageConfigOverrideInstallTest.
  */
 namespace Drupal\language\Tests;
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @fie
+ * @file
  * Contains \Drupal\field_ui\Plugin\Derivative\FieldUiLocalAction.
  */
 

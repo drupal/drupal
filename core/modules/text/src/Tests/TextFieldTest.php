@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\text\TextFieldTest.
+ * Contains \Drupal\text\Tests\TextFieldTest.
  */
 
 namespace Drupal\text\Tests;

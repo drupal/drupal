@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\plugin_test\Plugin\plugin_test\mock_block\MockTestBlock.
+ * Contains \Drupal\plugin_test\Plugin\plugin_test\mock_block\MockTestBlock.
  */
 
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;

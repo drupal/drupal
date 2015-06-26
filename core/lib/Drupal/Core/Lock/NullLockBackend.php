@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Lock\NullLockBackend.
+ * Contains \Drupal\Core\Lock\NullLockBackend.
  */
 
 namespace Drupal\Core\Lock;

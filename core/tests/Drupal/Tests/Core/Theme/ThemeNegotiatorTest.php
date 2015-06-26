@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Theme\ThemeNegotiatorTest.
+ * Contains \Drupal\Tests\Core\Theme\ThemeNegotiatorTest.
  */
 
 namespace Drupal\Tests\Core\Theme;

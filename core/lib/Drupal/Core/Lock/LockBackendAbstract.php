@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Lock\LockBackendAbstract.
+ * Contains \Drupal\Core\Lock\LockBackendAbstract.
  */
 
 namespace Drupal\Core\Lock;

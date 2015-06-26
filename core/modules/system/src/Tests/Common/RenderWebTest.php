@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\RenderWebTest.
+ * Contains \Drupal\system\Tests\Common\RenderWebTest.
  */
 
 namespace Drupal\system\Tests\Common;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\PhpStorage\FileStorage.
+ * Contains \Drupal\Component\PhpStorage\FileReadOnlyStorage.
  */
 
 namespace Drupal\Component\PhpStorage;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\simpletest\Tests\Page\DefaultMetatagsTest.
+ * Contains \Drupal\system\Tests\Page\DefaultMetatagsTest.
  */
 
 namespace Drupal\system\Tests\Page;

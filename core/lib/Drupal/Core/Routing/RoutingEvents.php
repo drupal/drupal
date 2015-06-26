@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\Core\Routing\RoutingEvents.
+ * Contains \Drupal\Core\Routing\RoutingEvents.
  */
 
 namespace Drupal\Core\Routing;

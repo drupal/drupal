@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\FileStorage.
+ * Contains \Drupal\file\FileStorage.
  */
 
 namespace Drupal\file;

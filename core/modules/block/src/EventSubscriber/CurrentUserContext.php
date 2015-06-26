@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block\Event\CurrentUserContext.
+ * Contains \Drupal\block\EventSubscriber\CurrentUserContext.
  */
 
 namespace Drupal\block\EventSubscriber;

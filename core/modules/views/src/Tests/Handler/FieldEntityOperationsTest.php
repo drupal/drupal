@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\views\Tests\Handler\FieldEntityOperationsTest.
+ * Contains \Drupal\views\Tests\Handler\FieldEntityOperationsTest.
  */
 
 namespace Drupal\views\Tests\Handler;

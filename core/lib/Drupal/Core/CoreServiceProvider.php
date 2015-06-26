@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\CoreServiceProvider.
+ * Contains \Drupal\Core\CoreServiceProvider.
  */
 
 namespace Drupal\Core;

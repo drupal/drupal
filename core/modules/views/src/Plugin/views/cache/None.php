@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\cache\None.
+ * Contains \Drupal\views\Plugin\views\cache\None.
  */
 
 namespace Drupal\views\Plugin\views\cache;

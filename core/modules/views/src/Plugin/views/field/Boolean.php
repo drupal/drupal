@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Boolean.
+ * Contains \Drupal\views\Plugin\views\field\Boolean.
  */
 
 namespace Drupal\views\Plugin\views\field;

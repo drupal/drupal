@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass.
+ * Contains \Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass.
  */
 
 namespace Drupal\Core\DependencyInjection\Compiler;

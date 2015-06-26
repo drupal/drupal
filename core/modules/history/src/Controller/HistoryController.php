@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\Controller\HistoryController.
+ * Contains \Drupal\history\Controller\HistoryController.
  */
 
 namespace Drupal\history\Controller;

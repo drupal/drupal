@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Container Drupal\Tests\Component\Utility\UserAgentTest.
+ * Contains \Drupal\Tests\Component\Utility\UserAgentTest.
  */
 
 namespace Drupal\Tests\Component\Utility;

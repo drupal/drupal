@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\ContentNegotiation.
+ * Contains \Drupal\Core\ContentNegotiation.
  */
 
 namespace Drupal\Core;

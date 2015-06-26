@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\StyleUnformattedTest.
+ * Contains \Drupal\views\Tests\Plugin\StyleUnformattedTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

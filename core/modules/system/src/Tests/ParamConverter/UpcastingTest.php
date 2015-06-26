@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\ParamConverter\UpcastingTest.
+ * Contains \Drupal\system\Tests\ParamConverter\UpcastingTest.
  */
 
 namespace Drupal\system\Tests\ParamConverter;

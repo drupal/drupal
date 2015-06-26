@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\config\Tests\ConfigEntityNormalizeTest.
+ */
+
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\KernelTestBase;

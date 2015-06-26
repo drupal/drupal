@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Plugin\views\field\File.
+ * Contains \Drupal\file\Plugin\views\field\File.
  */
 
 namespace Drupal\file\Plugin\views\field;

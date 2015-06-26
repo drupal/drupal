@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\forum\Forum\Breadcrumb\ForumNodeBreadcrumbBuilder.
+ * Contains \Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder.
  */
 
 namespace Drupal\forum\Breadcrumb;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\ArbitraryRebuildTest.
+ * Contains \Drupal\system\Tests\Form\ArbitraryRebuildTest.
  */
 
 namespace Drupal\system\Tests\Form;

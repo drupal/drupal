@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Cache\ClearTest.
+ * Contains \Drupal\system\Tests\Cache\ClearTest.
  */
 
 namespace Drupal\system\Tests\Cache;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rdf\Tests\GetRdfNamespacesTest.
+ * Contains \Drupal\rdf\Tests\GetRdfNamespacesTest.
  */
 
 namespace Drupal\rdf\Tests;

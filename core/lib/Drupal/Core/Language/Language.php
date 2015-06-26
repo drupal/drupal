@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Language\Language.
+ * Contains \Drupal\Core\Language\Language.
  */
 
 namespace Drupal\Core\Language;

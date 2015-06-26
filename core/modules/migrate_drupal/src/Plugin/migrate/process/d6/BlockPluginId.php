@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\BlockAggregator.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\BlockPluginId.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;

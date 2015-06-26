@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\PhpStorage\MTimeProtectedFileStorage.
+ * Contains \Drupal\Component\PhpStorage\MTimeProtectedFileStorage.
  */
 namespace Drupal\Component\PhpStorage;
 

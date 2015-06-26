@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\responsive_image\ResponsiveImageStyleForm.
+ * Contains \Drupal\responsive_image\ResponsiveImageStyleForm.
  */
 
 namespace Drupal\responsive_image;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\search\Plugin\SearchPluginBase
+ * Contains \Drupal\search\Plugin\SearchPluginBase.
  */
 
 namespace Drupal\search\Plugin;

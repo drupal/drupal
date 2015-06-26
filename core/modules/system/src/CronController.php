@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\CronController.
+ * Contains \Drupal\system\CronController.
  */
 
 namespace Drupal\system;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\filter\NodeComment.
+ * Contains \Drupal\comment\Plugin\views\filter\NodeComment.
  */
 
 namespace Drupal\comment\Plugin\views\filter;

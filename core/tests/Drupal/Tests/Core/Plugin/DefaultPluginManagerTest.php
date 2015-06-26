@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\DefaultPluginManagerTest.
+ * Contains \Drupal\Tests\Core\Plugin\DefaultPluginManagerTest.
  */
 
 namespace Drupal\Tests\Core\Plugin;

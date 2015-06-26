@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rest\test\PageCacheTest.
+ * Contains \Drupal\rest\Tests\PageCacheTest.
  */
 
 namespace Drupal\rest\Tests;

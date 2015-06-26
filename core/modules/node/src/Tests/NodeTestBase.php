@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeTestBase.
+ * Contains \Drupal\node\Tests\NodeTestBase.
  */
 
 namespace Drupal\node\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\block\Unit\Menu\BlockLocalTasksTest.
+ * Contains \Drupal\Tests\content_translation\Unit\Menu\ContentTranslationLocalTasksTest.
  */
 
 namespace Drupal\Tests\content_translation\Unit\Menu;

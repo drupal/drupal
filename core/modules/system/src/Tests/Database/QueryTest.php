@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\QueryTest.
+ * Contains \Drupal\system\Tests\Database\QueryTest.
  */
 
 namespace Drupal\system\Tests\Database;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\DependencyHookInvocationTest.
+ * Contains \Drupal\system\Tests\Update\DependencyHookInvocationTest.
  */
 
 namespace Drupal\system\Tests\Update;

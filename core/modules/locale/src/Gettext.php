@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Gettext.
+ * Contains \Drupal\locale\Gettext.
  */
 
 namespace Drupal\locale;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\CheckboxWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\BooleanCheckboxWidget.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;

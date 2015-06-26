@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\migrate_drupal\Plugin\migrate\d6\FieldInstanceSettings
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldInstanceSettings.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;

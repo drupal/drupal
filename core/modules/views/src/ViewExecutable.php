@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewExecutable.
+ * Contains \Drupal\views\ViewExecutable.
  */
 
 namespace Drupal\views;

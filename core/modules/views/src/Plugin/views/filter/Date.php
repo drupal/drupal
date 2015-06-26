@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\Date.
+ * Contains \Drupal\views\Plugin\views\filter\Date.
  */
 
 namespace Drupal\views\Plugin\views\filter;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FieldCounterTest.
+ * Contains \Drupal\views\Tests\Handler\FieldCounterTest.
  */
 
 namespace Drupal\views\Tests\Handler;

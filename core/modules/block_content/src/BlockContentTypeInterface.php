@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block_content\Entity\BlockContentTypeInterface.
+ * Contains \Drupal\block_content\BlockContentTypeInterface.
  */
 
 namespace Drupal\block_content;

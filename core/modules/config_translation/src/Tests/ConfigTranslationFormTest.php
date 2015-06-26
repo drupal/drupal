@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\config_translation\Tests\ConfigTranslationUiTest.
+ * Contains \Drupal\config_translation\Tests\ConfigTranslationFormTest.
  */
 
 namespace Drupal\config_translation\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\sort\Date.
+ * Contains \Drupal\views\Plugin\views\sort\Date.
  */
 
 namespace Drupal\views\Plugin\views\sort;

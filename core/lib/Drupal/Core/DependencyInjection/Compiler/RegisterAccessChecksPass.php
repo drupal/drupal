@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass.
+ * Contains \Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass.
  */
 
 namespace Drupal\Core\DependencyInjection\Compiler;

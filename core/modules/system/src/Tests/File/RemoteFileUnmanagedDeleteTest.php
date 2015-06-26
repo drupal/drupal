@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\RemoteFileUnmanagedDeleteTest.
+ * Contains \Drupal\system\Tests\File\RemoteFileUnmanagedDeleteTest.
  */
 
 namespace Drupal\system\Tests\File;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\EntityResolver\ChainEntityResolverInterface
+ * Contains \Drupal\serialization\EntityResolver\ChainEntityResolverInterface.
  */
 
 namespace Drupal\serialization\EntityResolver;

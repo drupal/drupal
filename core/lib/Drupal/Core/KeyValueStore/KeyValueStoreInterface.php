@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\KeyValueStoreInterface.
+ * Contains \Drupal\Core\KeyValueStore\KeyValueStoreInterface.
  */
 
 namespace Drupal\Core\KeyValueStore;

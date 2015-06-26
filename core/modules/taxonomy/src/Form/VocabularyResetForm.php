@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Form\VocabularyReset.
+ * Contains \Drupal\taxonomy\Form\VocabularyResetForm.
  */
 
 namespace Drupal\taxonomy\Form;

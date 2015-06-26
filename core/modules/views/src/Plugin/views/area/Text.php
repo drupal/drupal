@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\area\Text.
+ * Contains \Drupal\views\Plugin\views\area\Text.
  */
 
 namespace Drupal\views\Plugin\views\area;

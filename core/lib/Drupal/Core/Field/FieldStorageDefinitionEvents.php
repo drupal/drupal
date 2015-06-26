@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\FieldStorageDefinitionEvent.
+ * Contains \Drupal\Core\Field\FieldStorageDefinitionEvents.
  */
 
 namespace Drupal\Core\Field;

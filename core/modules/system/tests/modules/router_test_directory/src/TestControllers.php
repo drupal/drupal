@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\router_test\TestControllers.
+ * Contains \Drupal\router_test\TestControllers.
  */
 
 namespace Drupal\router_test;

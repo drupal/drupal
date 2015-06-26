@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\ChangedCommand.
+ * Contains \Drupal\Core\Ajax\ChangedCommand.
  */
 
 namespace Drupal\Core\Ajax;

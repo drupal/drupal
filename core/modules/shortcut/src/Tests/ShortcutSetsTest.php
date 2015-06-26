@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\shortcut\Tests\ShortcutSetsTest.
+ * Contains \Drupal\shortcut\Tests\ShortcutSetsTest.
  */
 
 namespace Drupal\shortcut\Tests;

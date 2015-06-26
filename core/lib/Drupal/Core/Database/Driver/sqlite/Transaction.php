@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Transaction
+ * Contains \Drupal\Core\Database\Driver\sqlite\Transaction.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

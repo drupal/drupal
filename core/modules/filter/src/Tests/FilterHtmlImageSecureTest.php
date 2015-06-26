@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\filter\Tests\FilterHtmlImageSecureTest.
+ * Contains \Drupal\filter\Tests\FilterHtmlImageSecureTest.
  */
 
 namespace Drupal\filter\Tests;

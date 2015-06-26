@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Cache\ArrayBackend.
+ * Contains \Drupal\Core\Cache\MemoryBackend.
  */
 
 namespace Drupal\Core\Cache;

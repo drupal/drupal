@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeTokenReplaceTest.
+ * Contains \Drupal\node\Tests\NodeTokenReplaceTest.
  */
 
 namespace Drupal\node\Tests;

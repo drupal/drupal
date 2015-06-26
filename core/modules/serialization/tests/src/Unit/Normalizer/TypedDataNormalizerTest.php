@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\serialization\Unit\Normalizer\TypedDataNormalizerTest
+ * Contains \Drupal\Tests\serialization\Unit\Normalizer\TypedDataNormalizerTest.
  */
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\ErrorHandlerTest.
+ * Contains \Drupal\system\Tests\System\ErrorHandlerTest.
  */
 
 namespace Drupal\system\Tests\System;

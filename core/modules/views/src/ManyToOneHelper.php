@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\ManyToOneHelper.
+ * Contains \Drupal\views\ManyToOneHelper.
  */
 
 namespace Drupal\views;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\Component\Plugin\Factory\ReflectionFactory.
+ * Contains \Drupal\Component\Plugin\Factory\ReflectionFactory.
  */
 
 namespace Drupal\Component\Plugin\Factory;

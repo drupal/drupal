@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\LocalReadOnlyStream.
+ * Contains \Drupal\Core\StreamWrapper\LocalReadOnlyStream.
  */
 
 namespace Drupal\Core\StreamWrapper;

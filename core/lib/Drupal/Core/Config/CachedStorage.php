@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Config\CachedStorage.
+ * Contains \Drupal\Core\Config\CachedStorage.
  */
 
 namespace Drupal\Core\Config;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\filter\Tests\FilterCrudTest.
+ * Contains \Drupal\filter\Tests\FilterCrudTest.
  */
 
 namespace Drupal\filter\Tests;

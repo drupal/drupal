@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\Constants.
+ * Contains \Drupal\migrate\Plugin\migrate\source\EmptySource.
  */
 
 namespace Drupal\migrate\Plugin\migrate\source;

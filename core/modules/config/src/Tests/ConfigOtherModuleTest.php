@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\config\Tests\ConfigOtherModuleTest.
+ * Contains \Drupal\config\Tests\ConfigOtherModuleTest.
  */
 
 namespace Drupal\config\Tests;

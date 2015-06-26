@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\argument_default\CurrentUser.
+ * Contains \Drupal\user\Plugin\views\argument_default\CurrentUser.
  */
 
 namespace Drupal\user\Plugin\views\argument_default;

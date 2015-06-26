@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\ConfigTest.
+ * Contains \Drupal\system\Tests\File\ConfigTest.
  */
 
 namespace Drupal\system\Tests\File;

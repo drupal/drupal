@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\CopyTest.
+ * Contains \Drupal\file\Tests\CopyTest.
  */
 
 namespace Drupal\file\Tests;

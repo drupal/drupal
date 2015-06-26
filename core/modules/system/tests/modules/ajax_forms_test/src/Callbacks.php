@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\ajax_forms_test\Callbacks.
+ * Contains \Drupal\ajax_forms_test\Callbacks.
  */
 
 namespace Drupal\ajax_forms_test;

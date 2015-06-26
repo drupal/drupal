@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Validation\PropertyContainerPropertyMetadata.
+ * Contains \Drupal\Core\TypedData\Validation\RecursiveContextualValidator.
  */
 
 namespace Drupal\Core\TypedData\Validation;

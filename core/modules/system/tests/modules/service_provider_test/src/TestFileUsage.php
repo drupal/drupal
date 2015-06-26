@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\service_provider_test\TestFileUsage.
+ * Contains \Drupal\service_provider_test\TestFileUsage.
  */
 
 namespace Drupal\service_provider_test;

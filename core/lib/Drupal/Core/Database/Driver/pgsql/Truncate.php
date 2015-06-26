@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Truncate
+ * Contains \Drupal\Core\Database\Driver\pgsql\Truncate.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

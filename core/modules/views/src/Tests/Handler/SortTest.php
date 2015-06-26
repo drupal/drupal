@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\SortTest.
+ * Contains \Drupal\views\Tests\Handler\SortTest.
  */
 
 namespace Drupal\views\Tests\Handler;

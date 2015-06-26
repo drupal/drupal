@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\LoadMultipleTest.
+ * Contains \Drupal\taxonomy\Tests\LoadMultipleTest.
  */
 
 namespace Drupal\taxonomy\Tests;

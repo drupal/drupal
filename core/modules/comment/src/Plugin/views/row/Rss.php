@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\row\Rss.
+ * Contains \Drupal\comment\Plugin\views\row\Rss.
  */
 
 namespace Drupal\comment\Plugin\views\row;

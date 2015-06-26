@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Truncate
+ * Contains \Drupal\Core\Database\Driver\sqlite\Truncate.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

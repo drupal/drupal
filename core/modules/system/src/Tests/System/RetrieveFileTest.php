@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\RetrieveFileTest.
+ * Contains \Drupal\system\Tests\System\RetrieveFileTest.
  */
 
 namespace Drupal\system\Tests\System;

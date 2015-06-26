@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file
  * Contains \Drupal\rest\Tests\CsrfTest.
  */
 

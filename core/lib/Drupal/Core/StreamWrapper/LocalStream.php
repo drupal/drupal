@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\StreamWrapper\LocalStream.
+ * Contains \Drupal\Core\StreamWrapper\LocalStream.
  */
 
 namespace Drupal\Core\StreamWrapper;

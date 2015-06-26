@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Merge
+ * Contains \Drupal\Core\Database\Driver\sqlite\Merge.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest.
+ * Contains \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest.
  */
 
 namespace Drupal\simpletest\Tests;

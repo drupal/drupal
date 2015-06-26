@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\UpdateScriptTest.
+ * Contains \Drupal\system\Tests\Update\UpdateScriptTest.
  */
 
 namespace Drupal\system\Tests\Update;

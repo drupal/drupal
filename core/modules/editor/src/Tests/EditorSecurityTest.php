@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\editor\Tests\EditorSecurityTest.
+ * Contains \Drupal\editor\Tests\EditorSecurityTest.
  */
 
 namespace Drupal\editor\Tests;

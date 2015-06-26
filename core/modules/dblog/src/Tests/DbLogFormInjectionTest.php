@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\dblog\Tests\DbLogFormInjectionTest
+ * Contains \Drupal\dblog\Tests\DbLogFormInjectionTest.
  */
 
 namespace Drupal\dblog\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\NewDefaultThemeBlocksTest.
+ * Contains \Drupal\block\Tests\NewDefaultThemeBlocksTest.
  */
 
 namespace Drupal\block\Tests;

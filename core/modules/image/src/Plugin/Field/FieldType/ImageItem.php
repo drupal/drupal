@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @image
+ * @file
  * Contains \Drupal\image\Plugin\Field\FieldType\ImageItem.
  */
 

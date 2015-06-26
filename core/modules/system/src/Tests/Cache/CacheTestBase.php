@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Cache\CacheTestBase.
+ * Contains \Drupal\system\Tests\Cache\CacheTestBase.
  */
 
 namespace Drupal\system\Tests\Cache;

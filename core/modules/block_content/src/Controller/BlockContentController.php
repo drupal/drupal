@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block_content\Controller\BlockContentController
+ * Contains \Drupal\block_content\Controller\BlockContentController.
  */
 
 namespace Drupal\block_content\Controller;

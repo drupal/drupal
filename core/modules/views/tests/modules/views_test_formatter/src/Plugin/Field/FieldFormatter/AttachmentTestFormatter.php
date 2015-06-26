@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_test_formatter\Field\Plugin\Field\FieldFormatter\AttachmentTestFormatter.
+ * Contains \Drupal\views_test_formatter\Plugin\Field\FieldFormatter\AttachmentTestFormatter.
  */
 
 namespace Drupal\views_test_formatter\Plugin\Field\FieldFormatter;

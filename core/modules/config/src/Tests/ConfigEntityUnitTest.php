@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\config\Tests\ConfigEntityUnitTest.
+ * Contains \Drupal\config\Tests\ConfigEntityUnitTest.
  */
 
 namespace Drupal\config\Tests;

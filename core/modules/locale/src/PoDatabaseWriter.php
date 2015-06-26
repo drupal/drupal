@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\PoDatabaseWriter.
+ * Contains \Drupal\locale\PoDatabaseWriter.
  */
 
 namespace Drupal\locale;

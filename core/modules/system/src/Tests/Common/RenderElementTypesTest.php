@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Common\RenderElementTypesTest.
+ * Contains \Drupal\system\Tests\Common\RenderElementTypesTest.
  */
 
 namespace Drupal\system\Tests\Common;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Batch\PageTest.
+ * Contains \Drupal\system\Tests\Batch\PageTest.
  */
 
 namespace Drupal\system\Tests\Batch;

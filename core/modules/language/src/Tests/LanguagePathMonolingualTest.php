@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguagePathMonolingualTest.
+ * Contains \Drupal\language\Tests\LanguagePathMonolingualTest.
  */
 
 namespace Drupal\language\Tests;

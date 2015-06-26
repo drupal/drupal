@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\shortcut\Tests\ShortcutTestBase.
+ * Contains \Drupal\shortcut\Tests\ShortcutTestBase.
  */
 
 namespace Drupal\shortcut\Tests;

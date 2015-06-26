@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\MergeTest.
+ * Contains \Drupal\system\Tests\Database\MergeTest.
  */
 
 namespace Drupal\system\Tests\Database;

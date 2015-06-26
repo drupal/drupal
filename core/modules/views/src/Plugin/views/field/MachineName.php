@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\MachineName.
+ * Contains \Drupal\views\Plugin\views\field\MachineName.
  */
 
 namespace Drupal\views\Plugin\views\field;

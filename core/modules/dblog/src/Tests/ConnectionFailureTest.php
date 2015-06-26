@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\dblog\Tests\ConnectionFailureTest.
+ * Contains \Drupal\dblog\Tests\ConnectionFailureTest.
  */
 
 namespace Drupal\dblog\Tests;

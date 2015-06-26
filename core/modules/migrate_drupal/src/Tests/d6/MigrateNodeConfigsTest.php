@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSystemSiteTest.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateNodeConfigsTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;

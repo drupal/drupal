@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\image\Plugin\field\formatter\ImageFormatterBase.
+ * Contains \Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase.
  */
 
 namespace Drupal\image\Plugin\Field\FieldFormatter;

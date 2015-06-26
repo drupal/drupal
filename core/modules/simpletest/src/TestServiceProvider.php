@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\simpletest\TestServiceProvider.
+ */
+
 namespace Drupal\simpletest;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

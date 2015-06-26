@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchExcerptTest.
+ * Contains \Drupal\search\Tests\SearchExcerptTest.
  */
 
 namespace Drupal\search\Tests;

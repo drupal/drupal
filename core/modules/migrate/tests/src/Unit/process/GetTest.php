@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains
+ * Contains \Drupal\Tests\migrate\Unit\process\GetTest.
  */
 
 namespace Drupal\Tests\migrate\Unit\process;

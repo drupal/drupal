@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\options\Type\ListStringItem.
+ * Contains \Drupal\options\Plugin\Field\FieldType\ListStringItem.
  */
 
 namespace Drupal\options\Plugin\Field\FieldType;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentNodeAccessTest.
+ * Contains \Drupal\comment\Tests\CommentNodeAccessTest.
  */
 
 namespace Drupal\comment\Tests;

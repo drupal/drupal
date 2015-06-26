@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageFieldValidateTest.
+ * Contains \Drupal\image\Tests\ImageFieldValidateTest.
  */
 
 namespace Drupal\image\Tests;

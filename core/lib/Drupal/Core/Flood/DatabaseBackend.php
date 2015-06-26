@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Flood\DatabaseBackend.
+ * Contains \Drupal\Core\Flood\DatabaseBackend.
  */
 
 namespace Drupal\Core\Flood;

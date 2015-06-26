@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FlagSkippingRow.
+ * Contains \Drupal\migrate\Plugin\migrate\process\SkipOnEmpty.
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;

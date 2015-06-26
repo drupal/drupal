@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityCrudHookTest.
+ * Contains \Drupal\system\Tests\Entity\EntityCrudHookTest.
  */
 
 namespace Drupal\system\Tests\Entity;

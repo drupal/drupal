@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Routing\Router.
+ * Contains \Drupal\Core\Routing\AccessAwareRouter.
  */
 
 namespace Drupal\Core\Routing;

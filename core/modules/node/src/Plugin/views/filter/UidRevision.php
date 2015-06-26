@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\filter\UidRevision.
+ * Contains \Drupal\node\Plugin\views\filter\UidRevision.
  */
 
 namespace Drupal\node\Plugin\views\filter;

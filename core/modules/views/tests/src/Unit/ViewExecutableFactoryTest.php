@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\views\Unit\VIewExecutableFactoryTest.
+ * Contains \Drupal\Tests\views\Unit\ViewExecutableFactoryTest.
  */
 
 namespace Drupal\Tests\views\Unit;

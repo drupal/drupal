@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\relationship\Broken.
+ * Contains \Drupal\views\Plugin\views\relationship\Broken.
  */
 
 namespace Drupal\views\Plugin\views\relationship;

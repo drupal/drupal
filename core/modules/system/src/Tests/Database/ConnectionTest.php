@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\ConnectionTest.
+ * Contains \Drupal\system\Tests\Database\ConnectionTest.
  */
 
 namespace Drupal\system\Tests\Database;

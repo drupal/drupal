@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\views\Plugin\views\filter\Bundle.
+ * Contains \Drupal\views\Plugin\views\filter\Bundle.
  */
 
 namespace Drupal\views\Plugin\views\filter;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\Module.
+ * Contains \Drupal\Core\Updater\Module.
  */
 
 namespace Drupal\Core\Updater;

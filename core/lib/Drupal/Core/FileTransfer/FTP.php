@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\FileTransfer\FTP.
+ * Contains \Drupal\Core\FileTransfer\FTP.
  */
 
 namespace Drupal\Core\FileTransfer;

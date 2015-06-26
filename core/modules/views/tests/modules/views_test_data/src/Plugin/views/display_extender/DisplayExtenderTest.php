@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest.
+ * Contains \Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\display_extender;

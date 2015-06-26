@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\forum\Tests\ForumUninstallTest.
+ * Contains \Drupal\forum\Tests\ForumUninstallTest.
  */
 
 namespace Drupal\forum\Tests;

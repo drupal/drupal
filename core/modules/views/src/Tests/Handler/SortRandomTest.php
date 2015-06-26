@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\SortRandomTest.
+ * Contains \Drupal\views\Tests\Handler\SortRandomTest.
  */
 
 namespace Drupal\views\Tests\Handler;

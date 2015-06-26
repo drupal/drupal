@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Authentication\AuthenticationProviderChallengeInterface
+ * Contains \Drupal\Core\Authentication\AuthenticationProviderChallengeInterface.
  */
 
 namespace Drupal\Core\Authentication;

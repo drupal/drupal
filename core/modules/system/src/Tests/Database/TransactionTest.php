@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\TransactionTest.
+ * Contains \Drupal\system\Tests\Database\TransactionTest.
  */
 
 namespace Drupal\system\Tests\Database;

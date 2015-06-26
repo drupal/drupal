@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\EventSubscriber\AutomaticCron.
+ * Contains \Drupal\system\EventSubscriber\AutomaticCron.
  */
 
 namespace Drupal\system\EventSubscriber;

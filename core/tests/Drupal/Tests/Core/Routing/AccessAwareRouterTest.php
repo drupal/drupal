@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Routing\RoutingTest.
+ * Contains \Drupal\Tests\Core\Routing\AccessAwareRouterTest.
  */
 
 namespace Drupal\Tests\Core\Routing;

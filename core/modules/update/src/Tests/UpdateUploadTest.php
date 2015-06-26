@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\update\Tests\UpdateUploadTest.
+ * Contains \Drupal\update\Tests\UpdateUploadTest.
  */
 
 namespace Drupal\update\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleStringTest.
+ * Contains \Drupal\locale\Tests\LocaleStringTest.
  */
 
 namespace Drupal\locale\Tests;

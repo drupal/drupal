@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\ThemeTest.
+ * Contains \Drupal\taxonomy\Tests\ThemeTest.
  */
 
 namespace Drupal\taxonomy\Tests;

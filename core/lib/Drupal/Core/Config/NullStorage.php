@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\NullStorage.
+ * Contains \Drupal\Core\Config\NullStorage.
  */
 
 namespace Drupal\Core\Config;

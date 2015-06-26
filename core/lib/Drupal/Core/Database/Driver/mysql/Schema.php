@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Schema
+ * Contains \Drupal\Core\Database\Driver\mysql\Schema.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

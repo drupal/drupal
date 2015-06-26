@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Plugin\views\field\LanguageField.
+ * Contains \Drupal\views\Plugin\views\field\LanguageField.
  */
 
 namespace Drupal\views\Plugin\views\field;

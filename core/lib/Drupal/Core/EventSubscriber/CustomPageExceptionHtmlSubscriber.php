@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\EventSubscriber\DefaultExceptionHtmlSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;

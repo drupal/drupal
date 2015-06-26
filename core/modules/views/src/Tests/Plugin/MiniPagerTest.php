@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Tests\Plugin\MiniPagerTest.
+ * Contains \Drupal\views\Tests\Plugin\MiniPagerTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

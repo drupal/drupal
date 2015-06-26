@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\argument_default\Tid.
+ * Contains \Drupal\taxonomy\Plugin\views\argument_default\Tid.
  */
 
 namespace Drupal\taxonomy\Plugin\views\argument_default;

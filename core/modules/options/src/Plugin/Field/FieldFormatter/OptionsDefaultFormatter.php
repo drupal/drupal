@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\options\Plugin\field\formatter\OptionsDefaultFormatter.
+ * Contains \Drupal\options\Plugin\Field\FieldFormatter\OptionsDefaultFormatter.
  */
 
 namespace Drupal\options\Plugin\Field\FieldFormatter;

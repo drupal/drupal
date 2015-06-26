@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\FilterTest.
+ * Contains \Drupal\views\Tests\Plugin\FilterTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

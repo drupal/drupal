@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Module\ClassLoaderTest.
+ * Contains \Drupal\system\Tests\Module\ClassLoaderTest.
  */
 
 namespace Drupal\system\Tests\Module;

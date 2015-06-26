@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\Combine.
+ * Contains \Drupal\views\Plugin\views\filter\Combine.
  */
 
 namespace Drupal\views\Plugin\views\filter;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Path\AliasTest.
+ * Contains \Drupal\system\Tests\Path\AliasTest.
  */
 
 namespace Drupal\system\Tests\Path;

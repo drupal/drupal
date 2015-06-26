@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Mail\MailTest.
+ * Contains \Drupal\system\Tests\Mail\MailTest.
  */
 
 namespace Drupal\system\Tests\Mail;

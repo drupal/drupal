@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\ArgumentValidatorTest.
+ * Contains \Drupal\views\Tests\Plugin\ArgumentValidatorTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

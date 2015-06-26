@@ -2,6 +2,8 @@
 
 /**
  * @file
+ * Contains \Drupal\menu_ui\Tests\MenuLanguageTest.
+ *
  * Tests for menu_ui language settings.
  */
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\SkipRowIfNotSet.
+ * Contains \Drupal\migrate\Plugin\migrate\process\SkipRowIfNotSet.
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;

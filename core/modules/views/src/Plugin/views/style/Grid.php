@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\Grid.
+ * Contains \Drupal\views\Plugin\views\style\Grid.
  */
 
 namespace Drupal\views\Plugin\views\style;

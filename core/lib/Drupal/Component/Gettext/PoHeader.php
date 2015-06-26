@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoHeader
+ * Contains \Drupal\Component\Gettext\PoHeader.
  */
 
 namespace Drupal\Component\Gettext;

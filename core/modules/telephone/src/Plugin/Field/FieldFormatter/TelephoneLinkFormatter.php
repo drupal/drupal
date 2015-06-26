@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\telephone\Plugin\field\formatter\TelephoneLinkFormatter.
+ * Contains \Drupal\telephone\Plugin\Field\FieldFormatter\TelephoneLinkFormatter.
  */
 
 namespace Drupal\telephone\Plugin\Field\FieldFormatter;

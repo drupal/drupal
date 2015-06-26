@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\CompatibilityFixTest.
+ * Contains \Drupal\system\Tests\Update\CompatibilityFixTest.
  */
 
 namespace Drupal\system\Tests\Update;

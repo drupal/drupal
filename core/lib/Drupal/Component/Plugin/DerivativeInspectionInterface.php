@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\Plugin\DerivativeInspectionInterface.
+ * Contains \Drupal\Component\Plugin\DerivativeInspectionInterface.
  */
 
 namespace Drupal\Component\Plugin;

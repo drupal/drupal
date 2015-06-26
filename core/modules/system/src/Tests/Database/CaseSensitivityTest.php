@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\CaseSensitivityTest.
+ * Contains \Drupal\system\Tests\Database\CaseSensitivityTest.
  */
 
 namespace Drupal\system\Tests\Database;

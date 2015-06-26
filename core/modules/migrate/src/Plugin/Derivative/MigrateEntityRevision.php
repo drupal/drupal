@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\Derivative\MigrateEntityDerivative.
+ * Contains \Drupal\migrate\Plugin\Derivative\MigrateEntityRevision.
  */
 
 namespace Drupal\migrate\Plugin\Derivative;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\NameMungingTest.
+ * Contains \Drupal\system\Tests\File\NameMungingTest.
  */
 
 namespace Drupal\system\Tests\File;

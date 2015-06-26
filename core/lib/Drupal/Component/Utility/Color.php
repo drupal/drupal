@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Utility\Color.
+ * Contains \Drupal\Component\Utility\Color.
  */
 
 namespace Drupal\Component\Utility;

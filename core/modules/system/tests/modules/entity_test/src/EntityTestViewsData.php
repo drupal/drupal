@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\entity_test\EntityTestViewsData.
+ * Contains \Drupal\entity_test\EntityTestViewsData.
  */
 
 namespace Drupal\entity_test;

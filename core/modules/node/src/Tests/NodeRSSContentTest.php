@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeRSSContentTest.
+ * Contains \Drupal\node\Tests\NodeRSSContentTest.
  */
 
 namespace Drupal\node\Tests;

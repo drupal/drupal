@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\PathProcessor\OutboundPathProcessorInterface.
+ * Contains \Drupal\Core\PathProcessor\OutboundPathProcessorInterface.
  */
 
 namespace Drupal\Core\PathProcessor;

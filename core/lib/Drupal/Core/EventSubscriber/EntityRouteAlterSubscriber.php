@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\SummaryLengthTest.
+ * Contains \Drupal\node\Tests\SummaryLengthTest.
  */
 
 namespace Drupal\node\Tests;

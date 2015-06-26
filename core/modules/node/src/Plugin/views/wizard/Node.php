@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\wizard\Node.
+ * Contains \Drupal\node\Plugin\views\wizard\Node.
  */
 
 namespace Drupal\node\Plugin\views\wizard;

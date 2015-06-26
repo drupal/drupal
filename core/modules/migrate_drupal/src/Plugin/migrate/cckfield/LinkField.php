@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\migrate_drupal\Plugin\migrate\cckfield\LinkField;
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\LinkField.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;

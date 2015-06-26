@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\Tests\BrowserTest.
+ * Contains \Drupal\simpletest\Tests\BrowserTest.
  */
 
 namespace Drupal\simpletest\Tests;

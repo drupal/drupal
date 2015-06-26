@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\SearchPage.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\SearchConfigurationRankings.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;

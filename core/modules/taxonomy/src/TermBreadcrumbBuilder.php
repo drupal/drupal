@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of \Drupal\taxonomy\TermBreadcrumbBuilder.
+ * Contains \Drupal\taxonomy\TermBreadcrumbBuilder.
  */
 
 namespace Drupal\taxonomy;

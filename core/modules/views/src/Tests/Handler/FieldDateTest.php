@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FieldDateTest.
+ * Contains \Drupal\views\Tests\Handler\FieldDateTest.
  */
 
 namespace Drupal\views\Tests\Handler;

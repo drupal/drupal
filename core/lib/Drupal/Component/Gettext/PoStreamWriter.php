@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Gettext\PoStreamWriter.
+ * Contains \Drupal\Component\Gettext\PoStreamWriter.
  */
 
 namespace Drupal\Component\Gettext;

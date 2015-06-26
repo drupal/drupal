@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Config\ConfigInstaller.
+ * Contains \Drupal\Core\Config\ConfigInstaller.
  */
 
 namespace Drupal\Core\Config;

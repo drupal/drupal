@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\SerializeQueryTest.
+ * Contains \Drupal\system\Tests\Database\SerializeQueryTest.
  */
 
 namespace Drupal\system\Tests\Database;

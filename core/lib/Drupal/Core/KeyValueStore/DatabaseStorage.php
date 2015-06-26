@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\DatabaseStorage.
+ * Contains \Drupal\Core\KeyValueStore\DatabaseStorage.
  */
 
 namespace Drupal\Core\KeyValueStore;

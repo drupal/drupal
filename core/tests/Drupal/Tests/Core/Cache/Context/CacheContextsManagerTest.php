@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Cache\CacheContextsTest.
+ * Contains \Drupal\Tests\Core\Cache\Context\CacheContextsManagerTest.
  */
 
 namespace Drupal\Tests\Core\Cache\Context;

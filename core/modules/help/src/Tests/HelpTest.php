@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\help\Tests\HelpTest.
+ * Contains \Drupal\help\Tests\HelpTest.
  */
 
 namespace Drupal\help\Tests;

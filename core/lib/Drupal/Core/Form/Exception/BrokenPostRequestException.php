@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Form\BrokenPostRequestException.
+ * Contains \Drupal\Core\Form\Exception\BrokenPostRequestException.
  */
 
 namespace Drupal\Core\Form\Exception;

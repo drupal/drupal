@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Entity\ContentUninstallValidator.
+ * Contains \Drupal\Core\Entity\ContentUninstallValidator.
  */
 
 namespace Drupal\Core\Entity;

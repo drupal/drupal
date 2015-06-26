@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\SettingsCommand.
+ * Contains \Drupal\Core\Ajax\SettingsCommand.
  */
 
 namespace Drupal\Core\Ajax;

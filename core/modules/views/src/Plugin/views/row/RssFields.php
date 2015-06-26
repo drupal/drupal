@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\row\RssFields.
+ * Contains \Drupal\views\Plugin\views\row\RssFields.
  */
 
 namespace Drupal\views\Plugin\views\row;

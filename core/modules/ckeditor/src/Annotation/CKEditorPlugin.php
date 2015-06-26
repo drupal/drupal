@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\ckeditor\Annotation\CKEditorPlugin.
+ * Contains \Drupal\ckeditor\Annotation\CKEditorPlugin.
  */
 
 namespace Drupal\ckeditor\Annotation;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\EventSubscriber\CacheableResponseSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\ClientErrorResponseSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;

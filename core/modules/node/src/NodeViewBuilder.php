@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\NodeViewBuilder.
+ * Contains \Drupal\node\NodeViewBuilder.
  */
 
 namespace Drupal\node;

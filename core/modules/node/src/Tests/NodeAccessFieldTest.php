@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeAccessFieldTest.
+ * Contains \Drupal\node\Tests\NodeAccessFieldTest.
  */
 
 namespace Drupal\node\Tests;

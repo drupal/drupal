@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\UrlGenerator.
+ * Contains \Drupal\Core\Routing\UrlGenerator.
  */
 
 namespace Drupal\Core\Routing;

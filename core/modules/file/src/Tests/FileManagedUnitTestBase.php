@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\file\Tests\FileManagedUnitTestBase.
+ * Contains \Drupal\file\Tests\FileManagedUnitTestBase.
  */
 
 namespace Drupal\file\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
+ * Contains \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser.
  */
 
 namespace Drupal\Core\File\MimeType;

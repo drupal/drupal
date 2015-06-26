@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\ckeditor\Tests\CKEditorPluginManagerTest.
+ * Contains \Drupal\ckeditor\Tests\CKEditorPluginManagerTest.
  */
 
 namespace Drupal\ckeditor\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\Tests\Views\HandlerFieldRoleTest.
+ * Contains \Drupal\user\Tests\Views\HandlerFieldRoleTest.
  */
 
 namespace Drupal\user\Tests\Views;

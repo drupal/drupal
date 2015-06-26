@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+ * Contains \Drupal\Core\Cache\CacheTagsInvalidatorInterface.
  */
 
 namespace Drupal\Core\Cache;

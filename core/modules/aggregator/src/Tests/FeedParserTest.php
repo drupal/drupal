@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\FeedParserTest.
+ * Contains \Drupal\aggregator\Tests\FeedParserTest.
  */
 
 namespace Drupal\aggregator\Tests;

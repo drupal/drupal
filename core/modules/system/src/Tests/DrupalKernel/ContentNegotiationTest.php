@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\DrupalKernel\ContentNegotiationTest.
+ * Contains \Drupal\system\Tests\DrupalKernel\ContentNegotiationTest.
  */
 
 namespace Drupal\system\Tests\DrupalKernel;

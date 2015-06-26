@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Component\Plugin\PluginBase
+ * Contains \Drupal\Component\Plugin\PluginBase.
  */
 
 namespace Drupal\Component\Plugin;

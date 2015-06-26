@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Form\FormHelperTest.
+ * Contains \Drupal\Tests\Core\Form\FormHelperTest.
  */
 
 namespace Drupal\Tests\Core\Form;

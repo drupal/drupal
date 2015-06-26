@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\UnmanagedMoveTest.
+ * Contains \Drupal\system\Tests\File\UnmanagedMoveTest.
  */
 
 namespace Drupal\system\Tests\File;

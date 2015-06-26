@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\Access\RegisterAccessCheck.
+ * Contains \Drupal\user\Access\RegisterAccessCheck.
  */
 
 namespace Drupal\user\Access;

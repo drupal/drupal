@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\ElementsLabelsTest.
+ * Contains \Drupal\system\Tests\Form\ElementsLabelsTest.
  */
 
 namespace Drupal\system\Tests\Form;

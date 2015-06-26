@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\DependencyOrderingTest.
+ * Contains \Drupal\system\Tests\Update\DependencyOrderingTest.
  */
 
 namespace Drupal\system\Tests\Update;

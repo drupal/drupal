@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Component\Diff\Engine\HWLDFWordAccumulator.
+ */
+
 namespace Drupal\Component\Diff\Engine;
 
 use Drupal\Component\Utility\Unicode;

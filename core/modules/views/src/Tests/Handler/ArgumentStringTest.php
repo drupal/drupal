@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\ArgumentStringTest.
+ * Contains \Drupal\views\Tests\Handler\ArgumentStringTest.
  */
 
 namespace Drupal\views\Tests\Handler;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\AlterTest.
+ * Contains \Drupal\system\Tests\Database\AlterTest.
  */
 
 namespace Drupal\system\Tests\Database;

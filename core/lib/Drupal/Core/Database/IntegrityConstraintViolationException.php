@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\IntegrityConstraintViolationException
+ * Contains \Drupal\Core\Database\IntegrityConstraintViolationException.
  */
 
 namespace Drupal\Core\Database;

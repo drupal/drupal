@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\MainContentFallbackTest.
+ * Contains \Drupal\system\Tests\System\MainContentFallbackTest.
  */
 
 namespace Drupal\system\Tests\System;

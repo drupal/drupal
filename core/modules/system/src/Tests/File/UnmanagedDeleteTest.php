@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\UnmanagedDeleteTest.
+ * Contains \Drupal\system\Tests\File\UnmanagedDeleteTest.
  */
 
 namespace Drupal\system\Tests\File;

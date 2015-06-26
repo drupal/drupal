@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\Access\PermissionAccessCheck.
+ * Contains \Drupal\user\Access\PermissionAccessCheck.
  */
 
 namespace Drupal\user\Access;

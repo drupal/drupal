@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeEntityViewModeAlterTest.
+ * Contains \Drupal\node\Tests\NodeEntityViewModeAlterTest.
  */
 
 namespace Drupal\node\Tests;

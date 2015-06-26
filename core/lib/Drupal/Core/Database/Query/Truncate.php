@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\Truncate
+ * Contains \Drupal\Core\Database\Query\Truncate.
  */
 
 namespace Drupal\Core\Database\Query;

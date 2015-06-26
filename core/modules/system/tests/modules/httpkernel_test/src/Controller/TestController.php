@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\httpkernel_test\Controller\TestController
+ * Contains \Drupal\httpkernel_test\Controller\TestController.
  */
 
 namespace Drupal\httpkernel_test\Controller;

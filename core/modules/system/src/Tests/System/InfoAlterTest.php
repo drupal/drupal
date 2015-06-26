@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\InfoAlterTest.
+ * Contains \Drupal\system\Tests\System\InfoAlterTest.
  */
 
 namespace Drupal\system\Tests\System;

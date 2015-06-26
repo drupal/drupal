@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Session\PhpStorage\PhpStorageFactoryTest.
+ * Contains \Drupal\system\Tests\PhpStorage\PhpStorageFactoryTest.
  */
 
 namespace Drupal\system\Tests\PhpStorage;

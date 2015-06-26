@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\Entity\ConfigEntityInterface.
+ * Contains \Drupal\Core\Config\Entity\ConfigEntityInterface.
  */
 
 namespace Drupal\Core\Config\Entity;

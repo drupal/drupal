@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\ban\BanIpManager.
+ * Contains \Drupal\ban\BanIpManager.
  */
 
 namespace Drupal\ban;

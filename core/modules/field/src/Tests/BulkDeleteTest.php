@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\BulkDeleteTest.
+ * Contains \Drupal\field\Tests\BulkDeleteTest.
  */
 
 namespace Drupal\field\Tests;

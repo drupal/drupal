@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Flood\MemoryBackend.
+ * Contains \Drupal\Core\Flood\MemoryBackend.
  */
 
 namespace Drupal\Core\Flood;

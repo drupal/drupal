@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal/form_test/FormTestInputForgeryForm.
+ * Contains \Drupal\form_test\Form\FormTestInputForgeryForm.
  */
 
 namespace Drupal\form_test\Form;

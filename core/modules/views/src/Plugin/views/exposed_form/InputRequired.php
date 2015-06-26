@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\exposed_form\InputRequired.
+ * Contains \Drupal\views\Plugin\views\exposed_form\InputRequired.
  */
 
 namespace Drupal\views\Plugin\views\exposed_form;

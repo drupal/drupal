@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\InsertDefaultsTest.
+ * Contains \Drupal\system\Tests\Database\InsertDefaultsTest.
  */
 
 namespace Drupal\system\Tests\Database;

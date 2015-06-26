@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\block\Form\BlockContentDeleteForm.
+ * Contains \Drupal\block_content\Form\BlockContentDeleteForm.
  */
 
 namespace Drupal\block_content\Form;

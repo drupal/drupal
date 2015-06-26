@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\forum\Tests\ForumNodeAccessTest.
+ * Contains \Drupal\forum\Tests\ForumNodeAccessTest.
  */
 
 namespace Drupal\forum\Tests;

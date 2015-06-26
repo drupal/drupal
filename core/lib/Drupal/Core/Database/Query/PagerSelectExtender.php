@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\PagerSelectExtender
+ * Contains \Drupal\Core\Database\Query\PagerSelectExtender.
  */
 
 namespace Drupal\Core\Database\Query;

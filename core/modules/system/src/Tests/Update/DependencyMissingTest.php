@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\DependencyMissingTest.
+ * Contains \Drupal\system\Tests\Update\DependencyMissingTest.
  */
 
 namespace Drupal\system\Tests\Update;

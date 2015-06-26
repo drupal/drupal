@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Image\ImageFactory.
+ * Contains \Drupal\Core\Image\ImageFactory.
  */
 
 namespace Drupal\Core\Image;

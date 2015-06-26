@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\ElementsVerticalTabsTest.
+ * Contains \Drupal\system\Tests\Form\ElementsVerticalTabsTest.
  */
 
 namespace Drupal\system\Tests\Form;

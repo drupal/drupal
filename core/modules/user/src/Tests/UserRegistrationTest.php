@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserRegistrationTest.
+ * Contains \Drupal\user\Tests\UserRegistrationTest.
  */
 
 namespace Drupal\user\Tests;

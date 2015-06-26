@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\NullGenerator.
+ * Contains \Drupal\Core\Routing\NullGenerator.
  */
 
 namespace Drupal\Core\Routing;

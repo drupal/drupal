@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\UpdateLobTest.
+ * Contains \Drupal\system\Tests\Database\UpdateLobTest.
  */
 
 namespace Drupal\system\Tests\Database;

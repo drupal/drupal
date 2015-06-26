@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\VocabularyStorage.
+ * Contains \Drupal\taxonomy\VocabularyStorage.
  */
 
 namespace Drupal\taxonomy;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\Table.
+ * Contains \Drupal\views\Plugin\views\style\Table.
  */
 
 namespace Drupal\views\Plugin\views\style;

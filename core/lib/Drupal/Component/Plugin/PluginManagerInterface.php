@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Component\Plugin\PluginManagerInterface
+ * Contains \Drupal\Component\Plugin\PluginManagerInterface.
  */
 
 namespace Drupal\Component\Plugin;

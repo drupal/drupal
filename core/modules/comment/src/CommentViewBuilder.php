@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contents Drupal\comment\CommentViewBuilder.
+ * Contains \Drupal\comment\CommentViewBuilder.
  */
 
 namespace Drupal\comment;

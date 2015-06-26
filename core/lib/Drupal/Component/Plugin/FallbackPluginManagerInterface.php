@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains FallbackPluginManagerInterface.php.
+ * Contains \Drupal\Component\Plugin\FallbackPluginManagerInterface.
  */
 
 namespace Drupal\Component\Plugin;

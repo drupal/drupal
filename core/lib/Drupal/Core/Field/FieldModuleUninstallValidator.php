@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Field\FieldModuleUninstallValidator.
+ * Contains \Drupal\Core\Field\FieldModuleUninstallValidator.
  */
 
 namespace Drupal\Core\Field;

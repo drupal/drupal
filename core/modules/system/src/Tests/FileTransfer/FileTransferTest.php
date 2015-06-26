@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\FileTransfer\FileTransferTest.
+ * Contains \Drupal\system\Tests\FileTransfer\FileTransferTest.
  */
 
 namespace Drupal\system\Tests\FileTransfer;

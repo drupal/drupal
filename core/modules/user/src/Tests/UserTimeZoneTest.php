@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserTimeZoneTest.
+ * Contains \Drupal\user\Tests\UserTimeZoneTest.
  */
 
 namespace Drupal\user\Tests;

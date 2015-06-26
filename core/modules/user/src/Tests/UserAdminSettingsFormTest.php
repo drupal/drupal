@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserAdminSettingsFormTest.
+ * Contains \Drupal\user\Tests\UserAdminSettingsFormTest.
  */
 
 namespace Drupal\user\Tests;

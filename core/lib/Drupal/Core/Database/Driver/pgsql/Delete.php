@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Delete
+ * Contains \Drupal\Core\Database\Driver\pgsql\Delete.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

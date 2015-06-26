@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityFieldTest.
+ * Contains \Drupal\system\Tests\Entity\EntityFieldTest.
  */
 
 namespace Drupal\system\Tests\Entity;

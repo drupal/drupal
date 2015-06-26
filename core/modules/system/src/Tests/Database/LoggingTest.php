@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\LoggingTest.
+ * Contains \Drupal\system\Tests\Database\LoggingTest.
  */
 
 namespace Drupal\system\Tests\Database;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\locale\Tests\LocaleFileSystemFormTest.
+ * Contains \Drupal\locale\Tests\LocaleFileSystemFormTest.
  */
 
 namespace Drupal\locale\Tests;

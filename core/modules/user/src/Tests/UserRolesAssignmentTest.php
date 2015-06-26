@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserRolesAssignmentTest.
+ * Contains \Drupal\user\Tests\UserRolesAssignmentTest.
  */
 
 namespace Drupal\user\Tests;

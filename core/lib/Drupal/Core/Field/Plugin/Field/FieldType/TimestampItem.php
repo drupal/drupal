@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\TimestampItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

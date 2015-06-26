@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileFieldDisplayTest.
+ * Contains \Drupal\file\Tests\FileFieldRSSContentTest.
  */
 
 namespace Drupal\file\Tests;

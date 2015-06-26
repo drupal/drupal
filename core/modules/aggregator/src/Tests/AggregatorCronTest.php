@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\AggregatorCronTest.
+ * Contains \Drupal\aggregator\Tests\AggregatorCronTest.
  */
 
 namespace Drupal\aggregator\Tests;

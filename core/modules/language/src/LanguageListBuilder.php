@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Form\LanguageListBuilder.
+ * Contains \Drupal\language\LanguageListBuilder.
  */
 
 namespace Drupal\language;

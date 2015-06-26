@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid.
+ * Contains \Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid.
  */
 
 namespace Drupal\taxonomy\Plugin\views\field;

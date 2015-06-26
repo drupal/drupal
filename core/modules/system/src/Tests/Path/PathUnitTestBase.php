@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Path\PathUnitTestBase.
+ * Contains \Drupal\system\Tests\Path\PathUnitTestBase.
  */
 
 namespace Drupal\system\Tests\Path;

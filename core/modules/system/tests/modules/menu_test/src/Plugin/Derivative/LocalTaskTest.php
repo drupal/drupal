@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Contains \Drupal\menu_test\Plugin\Derivative\LocalTaskTest
+ * @file
+ * Contains \Drupal\menu_test\Plugin\Derivative\LocalTaskTest.
  */
 
 namespace Drupal\menu_test\Plugin\Derivative;

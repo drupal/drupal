@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityUUIDTest.
+ * Contains \Drupal\system\Tests\Entity\EntityUUIDTest.
  */
 
 namespace Drupal\system\Tests\Entity;

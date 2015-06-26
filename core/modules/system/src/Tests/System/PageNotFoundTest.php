@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\PageNotFoundTest.
+ * Contains \Drupal\system\Tests\System\PageNotFoundTest.
  */
 
 namespace Drupal\system\Tests\System;

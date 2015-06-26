@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\StringTranslation\Translator\TranslationInterface.
+ * Contains \Drupal\Core\StringTranslation\Translator\TranslatorInterface.
  */
 
 namespace Drupal\Core\StringTranslation\Translator;

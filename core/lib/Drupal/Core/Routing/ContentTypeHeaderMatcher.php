@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Routing\ContentTypeHeaderMatcher.
+ * Contains \Drupal\Core\Routing\ContentTypeHeaderMatcher.
  */
 
 namespace Drupal\Core\Routing;

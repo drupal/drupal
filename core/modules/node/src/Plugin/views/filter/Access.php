@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\filter\Access.
+ * Contains \Drupal\node\Plugin\views\filter\Access.
  */
 
 namespace Drupal\node\Plugin\views\filter;

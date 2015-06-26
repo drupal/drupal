@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock.
+ * Contains \Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock.
  */
 
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;

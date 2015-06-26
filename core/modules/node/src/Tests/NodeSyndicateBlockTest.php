@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeSyndicateBlockTest.
+ * Contains \Drupal\node\Tests\NodeSyndicateBlockTest.
  */
 
 namespace Drupal\node\Tests;

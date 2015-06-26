@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\ManyToOne.
+ * Contains \Drupal\views\Plugin\views\filter\ManyToOne.
  */
 
 namespace Drupal\views\Plugin\views\filter;

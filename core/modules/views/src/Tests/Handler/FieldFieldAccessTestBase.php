@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\Handler\FieldFieldAccessTest.
+ * Contains \Drupal\views\Tests\Handler\FieldFieldAccessTestBase.
  */
 
 namespace Drupal\views\Tests\Handler;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \DrupalCore\Menu\LocalTaskInterface.
+ * Contains \Drupal\Core\Menu\LocalTaskInterface.
  */
 
 namespace Drupal\Core\Menu;

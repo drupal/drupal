@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\Context\CacheContextInterface.
+ * Contains \Drupal\Core\Cache\Context\CalculatedCacheContextInterface.
  */
 
 namespace Drupal\Core\Cache\Context;

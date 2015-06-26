@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FilterFormatRole.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FilterFormatPermission.
  */
 
 

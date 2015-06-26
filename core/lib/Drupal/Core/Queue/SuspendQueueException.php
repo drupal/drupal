@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Queue\SuspendQueueException.
+ * Contains \Drupal\Core\Queue\SuspendQueueException.
  */
 
 namespace Drupal\Core\Queue;

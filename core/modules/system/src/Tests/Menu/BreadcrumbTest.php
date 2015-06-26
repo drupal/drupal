@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Menu\BreadcrumbTest.
+ * Contains \Drupal\system\Tests\Menu\BreadcrumbTest.
  */
 
 namespace Drupal\system\Tests\Menu;

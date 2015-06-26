@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\options\Tests\OptionsWidgetsTest.
+ * Contains \Drupal\options\Tests\OptionsWidgetsTest.
  */
 
 namespace Drupal\options\Tests;

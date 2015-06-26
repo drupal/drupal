@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Update
+ * Contains \Drupal\Core\Database\Driver\mysql\Update.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

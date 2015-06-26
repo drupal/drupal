@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Entity\ConfigEntityImportTestBase.
+ * Contains \Drupal\system\Tests\Entity\ConfigEntityImportTest.
  */
 
 namespace Drupal\system\Tests\Entity;

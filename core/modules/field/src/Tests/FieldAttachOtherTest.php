@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\FieldAttachOtherTest.
+ * Contains \Drupal\field\Tests\FieldAttachOtherTest.
  */
 
 namespace Drupal\field\Tests;

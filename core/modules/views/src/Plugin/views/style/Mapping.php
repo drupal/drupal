@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\Mapping.
+ * Contains \Drupal\views\Plugin\views\style\Mapping.
  */
 
 namespace Drupal\views\Plugin\views\style;

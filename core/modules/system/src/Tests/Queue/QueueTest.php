@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Queue\QueueTest.
+ * Contains \Drupal\system\Tests\Queue\QueueTest.
  */
 
 namespace Drupal\system\Tests\Queue;

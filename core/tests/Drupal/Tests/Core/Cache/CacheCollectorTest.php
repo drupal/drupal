@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Cache\CacheCollectorTest.
+ * Contains \Drupal\Tests\Core\Cache\CacheCollectorTest.
  */
 
 namespace Drupal\Tests\Core\Cache;

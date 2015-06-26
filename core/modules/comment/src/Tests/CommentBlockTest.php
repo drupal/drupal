@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentBlockTest.
+ * Contains \Drupal\comment\Tests\CommentBlockTest.
  */
 
 namespace Drupal\comment\Tests;

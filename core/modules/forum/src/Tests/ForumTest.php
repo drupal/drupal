@@ -2,6 +2,8 @@
 
 /**
  * @file
+ * Contains \Drupal\forum\Tests\ForumTest.
+ *
  * Tests for forum.module.
  */
 

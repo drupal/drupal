@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Validation\RecursiveContextualValidatorInterface.
+ * Contains \Drupal\Core\TypedData\Validation\ContextualValidatorInterface.
  */
 
 namespace Drupal\Core\TypedData\Validation;

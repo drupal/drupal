@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigOverridesPriorityTest.
+ * Contains \Drupal\config\Tests\ConfigOverridesPriorityTest.
  */
 
 namespace Drupal\config\Tests;

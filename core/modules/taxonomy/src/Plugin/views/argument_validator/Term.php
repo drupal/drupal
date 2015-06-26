@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\argument_validator\Term.
+ * Contains \Drupal\taxonomy\Plugin\views\argument_validator\Term.
  */
 
 namespace Drupal\taxonomy\Plugin\views\argument_validator;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\DefaultPluginManager
+ * Contains \Drupal\Core\Plugin\DefaultPluginManager.
  */
 
 namespace Drupal\Core\Plugin;

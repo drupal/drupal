@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileFieldTestBase.
+ * Contains \Drupal\file\Tests\FileFieldTestBase.
  */
 
 namespace Drupal\file\Tests;

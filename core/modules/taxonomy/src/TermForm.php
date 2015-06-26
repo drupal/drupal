@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\TermForm.
+ * Contains \Drupal\taxonomy\TermForm.
  */
 
 namespace Drupal\taxonomy;

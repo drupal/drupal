@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Entity\View.
+ * Contains \Drupal\views\Entity\View.
  */
 
 namespace Drupal\views\Entity;

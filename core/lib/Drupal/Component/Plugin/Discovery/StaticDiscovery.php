@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Plugin\Discovery\StaticDiscovery.
+ * Contains \Drupal\Component\Plugin\Discovery\StaticDiscovery.
  */
 
 namespace Drupal\Component\Plugin\Discovery;

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Component\Diff\DiffFormatter.
+ */
+
 namespace Drupal\Component\Diff;
 
 use Drupal\Component\Diff\Engine\DiffOpCopy;

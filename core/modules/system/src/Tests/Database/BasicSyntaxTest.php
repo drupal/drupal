@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\BasicSyntaxTest.
+ * Contains \Drupal\system\Tests\Database\BasicSyntaxTest.
  */
 
 namespace Drupal\system\Tests\Database;

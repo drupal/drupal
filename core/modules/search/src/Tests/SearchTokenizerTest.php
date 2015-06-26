@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchTokenizerTest.
+ * Contains \Drupal\search\Tests\SearchTokenizerTest.
  */
 
 namespace Drupal\search\Tests;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\Core\Utility\UnroutedUrlAssemblerInterface.
+ * Contains \Drupal\Core\Utility\UnroutedUrlAssemblerInterface.
  */
 
 namespace Drupal\Core\Utility;

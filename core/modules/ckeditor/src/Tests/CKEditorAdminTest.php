@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\ckeditor\Tests\CKEditorAdminTest.
+ * Contains \Drupal\ckeditor\Tests\CKEditorAdminTest.
  */
 
 namespace Drupal\ckeditor\Tests;

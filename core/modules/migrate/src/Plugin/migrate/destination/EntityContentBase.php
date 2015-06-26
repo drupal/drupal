@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityBaseContent.
+ * Contains \Drupal\migrate\Plugin\migrate\destination\EntityContentBase.
  */
 
 namespace Drupal\migrate\Plugin\migrate\destination;

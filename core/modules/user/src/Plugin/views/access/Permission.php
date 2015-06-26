@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\access\Permission.
+ * Contains \Drupal\user\Plugin\views\access\Permission.
  */
 
 namespace Drupal\user\Plugin\views\access;

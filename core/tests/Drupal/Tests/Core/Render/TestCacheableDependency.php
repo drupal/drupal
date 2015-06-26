@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Render\TestCacheableDependency.
+ */
+
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

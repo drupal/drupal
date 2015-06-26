@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Module\UninstallTest.
+ * Contains \Drupal\system\Tests\Module\UninstallTest.
  */
 
 namespace Drupal\system\Tests\Module;

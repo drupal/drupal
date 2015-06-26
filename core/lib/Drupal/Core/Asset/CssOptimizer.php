@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Contains \Drupal\Core\Asset\CssOptimizer.
  */
 

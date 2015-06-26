@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\PageCache\DenyNoCacheRoutes.
+ * Contains \Drupal\Core\PageCache\ResponsePolicy\DenyNoCacheRoutes.
  */
 
 namespace Drupal\Core\PageCache\ResponsePolicy;

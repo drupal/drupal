@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\locale\Tests\LocaleUpdateCronTest.
+ * Contains \Drupal\locale\Tests\LocaleUpdateCronTest.
  */
 
 namespace Drupal\locale\Tests;

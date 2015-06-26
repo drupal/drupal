@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\sort\Thread.
+ * Contains \Drupal\comment\Plugin\views\sort\Thread.
  */
 
 namespace Drupal\comment\Plugin\views\sort;

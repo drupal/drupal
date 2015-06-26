@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\session_test\Form\SessionTestForm
+ * Contains \Drupal\session_test\Form\SessionTestForm.
  */
 
 namespace Drupal\session_test\Form;

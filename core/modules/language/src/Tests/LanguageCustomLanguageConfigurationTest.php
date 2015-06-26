@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Tests\LanguageCustomConfigurationTest.
+ * Contains \Drupal\language\Tests\LanguageCustomLanguageConfigurationTest.
  */
 
 namespace Drupal\language\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\filter\Roles.
+ * Contains \Drupal\user\Plugin\views\filter\Roles.
  */
 
 namespace Drupal\user\Plugin\views\filter;

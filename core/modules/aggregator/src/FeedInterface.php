@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Entity\FeedInterface.
+ * Contains \Drupal\aggregator\FeedInterface.
  */
 
 namespace Drupal\aggregator;

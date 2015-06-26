@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Mail\Plugin\Mail\PhpMail.
+ * Contains \Drupal\Core\Mail\Plugin\Mail\PhpMail.
  */
 
 namespace Drupal\Core\Mail\Plugin\Mail;

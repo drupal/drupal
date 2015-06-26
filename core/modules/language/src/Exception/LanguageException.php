@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Exception\DeleteDefaultLanguageException.
+ * Contains \Drupal\language\Exception\LanguageException.
  */
 
 namespace Drupal\language\Exception;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\Stub\StubConnection.
+ * Contains \Drupal\Tests\Core\Database\Stub\StubConnection.
  */
 
 namespace Drupal\Tests\Core\Database\Stub;

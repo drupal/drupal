@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FilterCombineTest.
+ * Contains \Drupal\views\Tests\Handler\FilterCombineTest.
  */
 
 namespace Drupal\views\Tests\Handler;

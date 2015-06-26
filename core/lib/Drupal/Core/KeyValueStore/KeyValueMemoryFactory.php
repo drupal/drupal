@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\KeyValueMemoryFactory.
+ * Contains \Drupal\Core\KeyValueStore\KeyValueMemoryFactory.
  */
 
 namespace Drupal\Core\KeyValueStore;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Install\Tasks
+ * Contains \Drupal\Core\Database\Driver\mysql\Install\Tasks.
  */
 
 namespace Drupal\Core\Database\Driver\mysql\Install;

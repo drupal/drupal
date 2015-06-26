@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\SelectOrderedTest.
+ * Contains \Drupal\system\Tests\Database\SelectOrderedTest.
  */
 
 namespace Drupal\system\Tests\Database;

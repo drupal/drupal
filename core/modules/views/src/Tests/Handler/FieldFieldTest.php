@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Tests\Handler\FieldFieldTest.
+ * Contains \Drupal\views\Tests\Handler\FieldFieldTest.
  */
 
 namespace Drupal\views\Tests\Handler;

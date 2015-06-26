@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Install\Tasks
+ * Contains \Drupal\Core\Database\Driver\sqlite\Install\Tasks.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite\Install;

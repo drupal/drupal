@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Type\TimeSpan.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\TimeSpan.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;

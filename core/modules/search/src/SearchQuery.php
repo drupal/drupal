@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\SearchQuery.
+ * Contains \Drupal\search\SearchQuery.
  *
  * Search query extender and helper functions.
  */

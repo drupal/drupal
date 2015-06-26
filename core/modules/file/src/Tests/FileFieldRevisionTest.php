@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\FileFieldRevisionTest.
+ * Contains \Drupal\file\Tests\FileFieldRevisionTest.
  */
 
 namespace Drupal\file\Tests;

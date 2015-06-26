@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\TableSortExtender.
+ * Contains \Drupal\Core\Database\Query\TableSortExtender.
  */
 
 namespace Drupal\Core\Database\Query;

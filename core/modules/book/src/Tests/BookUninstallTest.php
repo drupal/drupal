@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\book\Tests\BookUninstallTest.
+ * Contains \Drupal\book\Tests\BookUninstallTest.
  */
 
 namespace Drupal\book\Tests;

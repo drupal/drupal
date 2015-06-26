@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Component\Diff\Engine\DiffOpChange.
+ */
+
 namespace Drupal\Component\Diff\Engine;
 
 /**

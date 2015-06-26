@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Validation\AllowedValuesConstraintValidatorTest.
+ * Contains \Drupal\system\Tests\Validation\AllowedValuesConstraintValidatorTest.
  */
 
 namespace Drupal\system\Tests\Validation;

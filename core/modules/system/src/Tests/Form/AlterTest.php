@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\AlterTest.
+ * Contains \Drupal\system\Tests\Form\AlterTest.
  */
 
 namespace Drupal\system\Tests\Form;

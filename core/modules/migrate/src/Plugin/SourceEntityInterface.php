@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains
+ * Contains \Drupal\migrate\Plugin\SourceEntityInterface.
  */
 
 namespace Drupal\migrate\Plugin;

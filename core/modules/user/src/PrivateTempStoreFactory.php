@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\PrivateTempStoreFactory.
+ * Contains \Drupal\user\PrivateTempStoreFactory.
  */
 
 namespace Drupal\user;

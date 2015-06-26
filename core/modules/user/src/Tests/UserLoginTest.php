@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserLoginTest.
+ * Contains \Drupal\user\Tests\UserLoginTest.
  */
 
 namespace Drupal\user\Tests;

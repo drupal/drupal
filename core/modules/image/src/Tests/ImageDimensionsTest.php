@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageDimensionsTest.
+ * Contains \Drupal\image\Tests\ImageDimensionsTest.
  */
 
 namespace Drupal\image\Tests;

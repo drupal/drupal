@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\RangeQueryTest.
+ * Contains \Drupal\system\Tests\Database\RangeQueryTest.
  */
 
 namespace Drupal\system\Tests\Database;

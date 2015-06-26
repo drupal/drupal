@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Mail\MailFormatHelperTest.
+ * Contains \Drupal\Tests\Core\Mail\MailFormatHelperTest.
  */
 
 namespace Drupal\Tests\Core\Mail;

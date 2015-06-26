@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Plugin\field\formatter\EntityReferenceTaxonomyTermRssFormatter.
+ * Contains \Drupal\taxonomy\Plugin\Field\FieldFormatter\EntityReferenceTaxonomyTermRssFormatter.
  */
 
 namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;

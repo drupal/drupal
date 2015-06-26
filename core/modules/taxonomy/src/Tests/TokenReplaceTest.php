@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\TokenReplaceTest.
+ * Contains \Drupal\taxonomy\Tests\TokenReplaceTest.
  */
 
 namespace Drupal\taxonomy\Tests;

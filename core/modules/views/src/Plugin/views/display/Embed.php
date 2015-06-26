@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\display\Embed.
+ * Contains \Drupal\views\Plugin\views\display\Embed.
  */
 
 namespace Drupal\views\Plugin\views\display;

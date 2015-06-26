@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserDeleteTest.
+ * Contains \Drupal\user\Tests\UserDeleteTest.
  */
 
 namespace Drupal\user\Tests;

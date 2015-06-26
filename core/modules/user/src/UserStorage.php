@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\UserStorage.
+ * Contains \Drupal\user\UserStorage.
  */
 
 namespace Drupal\user;

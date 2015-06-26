@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Plugin\views\argument\IndexTidDepthModifier.
+ * Contains \Drupal\taxonomy\Plugin\views\argument\IndexTidDepthModifier.
  */
 
 namespace Drupal\taxonomy\Plugin\views\argument;

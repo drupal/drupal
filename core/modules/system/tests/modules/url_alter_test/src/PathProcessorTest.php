@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\url_alter_test\PathProcessorTest.
+ * Contains \Drupal\url_alter_test\PathProcessorTest.
  */
 
 namespace Drupal\url_alter_test;

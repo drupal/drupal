@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\tracker\Tests\TrackerNodeAccessTest.
+ * Contains \Drupal\tracker\Tests\TrackerNodeAccessTest.
  */
 
 namespace Drupal\tracker\Tests;

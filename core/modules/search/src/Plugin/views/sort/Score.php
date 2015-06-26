@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Plugin\views\sort\Score.
+ * Contains \Drupal\search\Plugin\views\sort\Score.
  */
 
 namespace Drupal\search\Plugin\views\sort;

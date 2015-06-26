@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface
+ * Contains \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface.
  */
 
 namespace Drupal\migrate_drupal\Plugin;

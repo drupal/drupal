@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\comment\Unit\CommentStatisticsTest.
+ * Contains \Drupal\Tests\comment\Unit\CommentStatisticsUnitTest.
  */
 
 namespace Drupal\Tests\comment\Unit;

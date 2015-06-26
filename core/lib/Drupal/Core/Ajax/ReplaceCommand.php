@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\ReplaceCommand.
+ * Contains \Drupal\Core\Ajax\ReplaceCommand.
  */
 
 namespace Drupal\Core\Ajax;

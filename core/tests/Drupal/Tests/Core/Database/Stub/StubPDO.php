@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\Stub\StubPDO.
+ * Contains \Drupal\Tests\Core\Database\Stub\StubPDO.
  */
 
 namespace Drupal\Tests\Core\Database\Stub;

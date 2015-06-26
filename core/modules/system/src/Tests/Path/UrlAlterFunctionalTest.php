@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Path\UrlAlterFunctionalTest.
+ * Contains \Drupal\system\Tests\Path\UrlAlterFunctionalTest.
  */
 
 namespace Drupal\system\Tests\Path;

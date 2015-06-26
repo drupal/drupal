@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\DrupalKernel.
+ * Contains \Drupal\Core\DrupalKernel.
  */
 
 namespace Drupal\Core;

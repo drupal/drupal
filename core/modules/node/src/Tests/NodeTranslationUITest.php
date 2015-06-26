@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeTranslationUITest.
+ * Contains \Drupal\node\Tests\NodeTranslationUITest.
  */
 
 namespace Drupal\node\Tests;

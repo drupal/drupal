@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\Tests\MailCaptureTest.
+ * Contains \Drupal\simpletest\Tests\MailCaptureTest.
  */
 
 namespace Drupal\simpletest\Tests;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\rdf\RdfMappingInterface
+ * Contains \Drupal\rdf\RdfMappingInterface.
  */
 
 namespace Drupal\rdf;

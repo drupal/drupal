@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Routing\RoutingFixtures.
+ */
+
 namespace Drupal\Tests\Core\Routing;
 
 use Symfony\Component\Routing\Route;

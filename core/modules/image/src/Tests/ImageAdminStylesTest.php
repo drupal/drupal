@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageAdminStylesTest.
+ * Contains \Drupal\image\Tests\ImageAdminStylesTest.
  */
 
 namespace Drupal\image\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\NodeAccessGrantsCacheContext.
+ * Contains \Drupal\node\Cache\NodeAccessGrantsCacheContext.
  */
 
 namespace Drupal\node\Cache;

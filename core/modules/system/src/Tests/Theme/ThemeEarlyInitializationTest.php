@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Theme\ThemeEarlyInitializationTest.
+ * Contains \Drupal\system\Tests\Theme\ThemeEarlyInitializationTest.
  */
 
 namespace Drupal\system\Tests\Theme;

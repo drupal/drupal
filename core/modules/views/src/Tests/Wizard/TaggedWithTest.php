@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Wizard\TaggedWithTest.
+ * Contains \Drupal\views\Tests\Wizard\TaggedWithTest.
  */
 
 namespace Drupal\views\Tests\Wizard;

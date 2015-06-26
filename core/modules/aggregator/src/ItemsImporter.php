@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Entity\ItemsImporter.
+ * Contains \Drupal\aggregator\ItemsImporter.
  */
 
 namespace Drupal\aggregator;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Mail\HtmlToTextTest.
+ * Contains \Drupal\system\Tests\Mail\HtmlToTextTest.
  */
 
 namespace Drupal\system\Tests\Mail;

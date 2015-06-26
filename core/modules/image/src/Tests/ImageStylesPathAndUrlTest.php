@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Tests\ImageStylesPathAndUrlTest.
+ * Contains \Drupal\image\Tests\ImageStylesPathAndUrlTest.
  */
 
 namespace Drupal\image\Tests;

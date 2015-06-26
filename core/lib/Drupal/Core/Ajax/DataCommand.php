@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\DataCommand.
+ * Contains \Drupal\Core\Ajax\DataCommand.
  */
 
 namespace Drupal\Core\Ajax;

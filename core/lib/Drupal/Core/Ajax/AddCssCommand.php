@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Ajax\AddCssCommand.
+ * Contains \Drupal\Core\Ajax\AddCssCommand.
  */
 
 namespace Drupal\Core\Ajax;

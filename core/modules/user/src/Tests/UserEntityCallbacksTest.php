@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserEntityCallbacksTest.
+ * Contains \Drupal\user\Tests\UserEntityCallbacksTest.
  */
 
 namespace Drupal\user\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Ajax\AjaxTestBase.
+ * Contains \Drupal\system\Tests\Ajax\AjaxTestBase.
  */
 
 namespace Drupal\system\Tests\Ajax;

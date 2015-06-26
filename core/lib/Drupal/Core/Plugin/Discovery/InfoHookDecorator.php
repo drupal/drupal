@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Plugin\Discovery\InfoHookDecorator.
+ * Contains \Drupal\Core\Plugin\Discovery\InfoHookDecorator.
  */
 
 namespace Drupal\Core\Plugin\Discovery;

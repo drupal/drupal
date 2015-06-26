@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass.
+ * Contains \Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass.
  */
 
 namespace Drupal\Core\DependencyInjection\Compiler;

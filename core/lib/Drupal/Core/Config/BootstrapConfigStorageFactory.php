@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Config\BootstrapConfigStorageFactory.
+ * Contains \Drupal\Core\Config\BootstrapConfigStorageFactory.
  */
 
 namespace Drupal\Core\Config;

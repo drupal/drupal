@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Plugin\views\filter\ListField.
+ * Contains \Drupal\options\Plugin\views\filter\ListField.
  */
 
 namespace Drupal\options\Plugin\views\filter;

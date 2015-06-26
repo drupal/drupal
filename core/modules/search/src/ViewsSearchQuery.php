@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\ViewsSearchQuery.
+ * Contains \Drupal\search\ViewsSearchQuery.
  */
 
 namespace Drupal\search;

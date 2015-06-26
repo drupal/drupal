@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\EmailItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\EmailItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

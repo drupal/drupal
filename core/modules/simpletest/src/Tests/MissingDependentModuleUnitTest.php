@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\Tests\MissingDependentModuleUnitTest.
+ * Contains \Drupal\simpletest\Tests\MissingDependentModuleUnitTest.
  */
 
 namespace Drupal\simpletest\Tests;

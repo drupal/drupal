@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Extension\InfoParser.
+ * Contains \Drupal\Core\Extension\InfoParser.
  */
 
 namespace Drupal\Core\Extension;

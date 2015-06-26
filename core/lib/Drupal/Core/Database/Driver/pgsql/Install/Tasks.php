@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Install\Tasks
+ * Contains \Drupal\Core\Database\Driver\pgsql\Install\Tasks.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql\Install;

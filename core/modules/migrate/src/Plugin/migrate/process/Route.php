@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\Route.
+ * Contains \Drupal\migrate\Plugin\migrate\process\Route.
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;

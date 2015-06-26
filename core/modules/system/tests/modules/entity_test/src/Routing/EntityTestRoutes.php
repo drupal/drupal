@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\Routing\RouteSubscriber.
+ * Contains \Drupal\entity_test\Routing\EntityTestRoutes.
  */
 
 namespace Drupal\entity_test\Routing;

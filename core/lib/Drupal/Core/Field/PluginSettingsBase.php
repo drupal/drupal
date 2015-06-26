@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\PluginSettingsBase.
+ * Contains \Drupal\Core\Field\PluginSettingsBase.
  */
 
 namespace Drupal\Core\Field;

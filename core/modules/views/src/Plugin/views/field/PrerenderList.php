@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\PrerenderList.
+ * Contains \Drupal\views\Plugin\views\field\PrerenderList.
  */
 
 namespace Drupal\views\Plugin\views\field;

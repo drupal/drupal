@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\locale\StreamWrapper\TranslationStream.
+ * Contains \Drupal\locale\StreamWrapper\TranslationsStream.
  */
 
 namespace Drupal\locale\StreamWrapper;

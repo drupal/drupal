@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Markup.
+ * Contains \Drupal\views\Plugin\views\field\Markup.
  */
 
 namespace Drupal\views\Plugin\views\field;

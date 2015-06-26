@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Install\Tasks
+ * Contains \Drupal\Core\Database\Install\Tasks.
  */
 
 namespace Drupal\Core\Database\Install;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\EventSubscriber\RequestCloseSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\RequestCloseSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;

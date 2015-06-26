@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Cache\DatabaseBackend.
+ * Contains \Drupal\Core\Cache\DatabaseBackend.
  */
 
 namespace Drupal\Core\Cache;

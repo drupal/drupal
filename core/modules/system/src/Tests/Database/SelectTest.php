@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\SelectTest.
+ * Contains \Drupal\system\Tests\Database\SelectTest.
  */
 
 namespace Drupal\system\Tests\Database;

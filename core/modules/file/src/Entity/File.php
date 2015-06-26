@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Entity\File.
+ * Contains \Drupal\file\Entity\File.
  */
 
 namespace Drupal\file\Entity;

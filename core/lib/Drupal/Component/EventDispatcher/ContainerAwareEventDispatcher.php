@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
+ * Contains \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher.
  */
 
 namespace Drupal\Component\EventDispatcher;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\BooleanItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\BooleanItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\file\Tests\SpaceUsedTest.
+ * Contains \Drupal\file\Tests\SpaceUsedTest.
  */
 
 namespace Drupal\file\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Asset\CssCollectionRendererUnitTest.
+ * Contains \Drupal\Tests\Core\Asset\CssCollectionRendererUnitTest.
  */
 
 

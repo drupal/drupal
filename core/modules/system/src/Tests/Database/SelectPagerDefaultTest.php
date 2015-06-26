@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\SelectPagerDefaultTest.
+ * Contains \Drupal\system\Tests\Database\SelectPagerDefaultTest.
  */
 
 namespace Drupal\system\Tests\Database;

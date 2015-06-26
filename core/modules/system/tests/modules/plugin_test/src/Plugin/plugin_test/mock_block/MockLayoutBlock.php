@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock.
+ * Contains \Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock.
  */
 
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;

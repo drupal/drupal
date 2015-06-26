@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\StatementPrefetch
+ * Contains \Drupal\Core\Database\StatementPrefetch.
  */
 
 namespace Drupal\Core\Database;

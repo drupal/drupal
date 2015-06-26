@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\HandlerBase.
+ * Contains \Drupal\views\Plugin\views\HandlerBase.
  */
 
 namespace Drupal\views\Plugin\views;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\tracker\Plugin\views\argument\UserUid
+ * Contains \Drupal\tracker\Plugin\views\argument\UserUid.
  */
 
 namespace Drupal\tracker\Plugin\views\argument;

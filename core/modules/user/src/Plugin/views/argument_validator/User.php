@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\argument_validator\User.
+ * Contains \Drupal\user\Plugin\views\argument_validator\User.
  */
 
 namespace Drupal\user\Plugin\views\argument_validator;

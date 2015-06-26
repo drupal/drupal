@@ -1,9 +1,9 @@
 <?php
 
 /**
-* @file
-* Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\NodeRevision.
-*/
+ * @file
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\NodeRevision.
+ */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\Entity\ConfigEntityStorage.
+ * Contains \Drupal\Core\Config\Entity\ConfigEntityStorage.
  */
 
 namespace Drupal\Core\Config\Entity;

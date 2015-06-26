@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\SiteMaintenanceTest.
+ * Contains \Drupal\system\Tests\System\SiteMaintenanceTest.
  */
 
 namespace Drupal\system\Tests\System;

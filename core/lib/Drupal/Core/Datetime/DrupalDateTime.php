@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Datetime\DrupalDateTime.
+ * Contains \Drupal\Core\Datetime\DrupalDateTime.
  */
 namespace Drupal\Core\Datetime;
 

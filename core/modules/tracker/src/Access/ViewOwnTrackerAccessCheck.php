@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\tracker\Access\ViewOwnTrackerAccessCheck.
+ * Contains \Drupal\tracker\Access\ViewOwnTrackerAccessCheck.
  */
 
 namespace Drupal\tracker\Access;

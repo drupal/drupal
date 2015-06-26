@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchRankingTest.
+ * Contains \Drupal\search\Tests\SearchRankingTest.
  */
 
 namespace Drupal\search\Tests;

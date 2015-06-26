@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\mysql\Merge
+ * Contains \Drupal\Core\Database\Driver\mysql\Merge.
  */
 
 namespace Drupal\Core\Database\Driver\mysql;

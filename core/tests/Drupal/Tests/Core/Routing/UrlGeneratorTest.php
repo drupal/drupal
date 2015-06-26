@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\Routing\UrlGeneratorTest.
+ * Contains \Drupal\Tests\Core\Routing\UrlGeneratorTest.
  */
 
 namespace Drupal\Tests\Core\Routing;

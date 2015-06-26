@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Authentication\AuthenticationManagerInterface
+ * Contains \Drupal\Core\Authentication\AuthenticationManagerInterface.
  */
 
 namespace Drupal\Core\Authentication;

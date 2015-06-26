@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\responsive_image\Plugin\field\formatter\ResponsiveImageFormatter.
+ * Contains \Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter.
  */
 
 namespace Drupal\responsive_image\Plugin\Field\FieldFormatter;

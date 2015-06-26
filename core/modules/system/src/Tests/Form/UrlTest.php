@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\UrlTest.
+ * Contains \Drupal\system\Tests\Form\UrlTest.
  */
 
 namespace Drupal\system\Tests\Form;

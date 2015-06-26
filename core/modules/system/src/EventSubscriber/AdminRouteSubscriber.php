@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\EventSubscriber\AdminRouteSubscriber
+ * Contains \Drupal\system\EventSubscriber\AdminRouteSubscriber.
  */
 
 namespace Drupal\system\EventSubscriber;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\QueryTest.
+ * Contains \Drupal\views\Tests\Plugin\QueryTest.
  */
 
 namespace Drupal\views\Tests\Plugin;

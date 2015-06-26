@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Tests\Core\PathProcessor\PathProcessorTest.
+ * Contains \Drupal\Tests\Core\PathProcessor\PathProcessorTest.
  */
 
 namespace Drupal\Tests\Core\PathProcessor;

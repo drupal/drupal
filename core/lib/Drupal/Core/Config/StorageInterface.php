@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\StorageInterface.
+ * Contains \Drupal\Core\Config\StorageInterface.
  */
 
 namespace Drupal\Core\Config;

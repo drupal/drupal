@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\Plugin\rest\resource\DBLogResource.
+ * Contains \Drupal\dblog\Plugin\rest\resource\DBLogResource.
  */
 
 namespace Drupal\dblog\Plugin\rest\resource;

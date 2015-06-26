@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views_test_data\Plugin\views\row\RowTest.
+ * Contains \Drupal\views_test_data\Plugin\views\row\RowTest.
  */
 
 namespace Drupal\views_test_data\Plugin\views\row;

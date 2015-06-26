@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityTranslationFormTest.
+ * Contains \Drupal\system\Tests\Entity\EntityTranslationFormTest.
  */
 
 namespace Drupal\system\Tests\Entity;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of \Drupal\views_ui\Tests\UnsavedPreviewTest.
+ * Contains \Drupal\views_ui\Tests\UnsavedPreviewTest.
  */
 
 namespace Drupal\views_ui\Tests;

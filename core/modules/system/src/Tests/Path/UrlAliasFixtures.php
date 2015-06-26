@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\system\Tests\Path\UrlAliasFixtures.
+ */
+
 namespace Drupal\system\Tests\Path;
 
 use Drupal\Core\Database\Connection;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\TestBase.
+ * Contains \Drupal\simpletest\TestBase.
  */
 
 namespace Drupal\simpletest;

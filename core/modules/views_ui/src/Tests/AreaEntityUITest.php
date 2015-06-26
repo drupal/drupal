@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views_ui\Tests\AreaEntityUITest.
+ * Contains \Drupal\views_ui\Tests\AreaEntityUITest.
  */
 
 namespace Drupal\views_ui\Tests;

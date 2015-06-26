@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Core\StackMiddleware\ReverseProxyMiddleware
+ * Contains \Drupal\Core\StackMiddleware\ReverseProxyMiddleware.
  */
 
 namespace Drupal\Core\StackMiddleware;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\TermTranslationUITest.
+ * Contains \Drupal\taxonomy\Tests\TermTranslationUITest.
  */
 
 namespace Drupal\taxonomy\Tests;

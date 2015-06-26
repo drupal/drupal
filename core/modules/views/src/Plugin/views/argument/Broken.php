@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\Broken.
+ * Contains \Drupal\views\Plugin\views\argument\Broken.
  */
 
 namespace Drupal\views\Plugin\views\argument;

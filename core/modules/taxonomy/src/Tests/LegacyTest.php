@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\LegacyTest.
+ * Contains \Drupal\taxonomy\Tests\LegacyTest.
  */
 
 namespace Drupal\taxonomy\Tests;

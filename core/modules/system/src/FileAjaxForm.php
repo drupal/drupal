@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\FileAjaxForm.
+ * Contains \Drupal\system\FileAjaxForm.
  */
 
 namespace Drupal\system;

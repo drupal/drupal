@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\locale\Tests\LocaleUpdateBase.
+ * Contains \Drupal\locale\Tests\LocaleUpdateBase.
  */
 
 namespace Drupal\locale\Tests;

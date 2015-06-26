@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\DefaultMobileMetaTagsTest.
+ * Contains \Drupal\system\Tests\System\DefaultMobileMetaTagsTest.
  */
 
 namespace Drupal\system\Tests\System;

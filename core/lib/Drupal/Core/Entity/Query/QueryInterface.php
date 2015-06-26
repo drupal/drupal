@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\QueryInterface.
+ * Contains \Drupal\Core\Entity\Query\QueryInterface.
  */
 
 namespace Drupal\Core\Entity\Query;

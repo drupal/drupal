@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityApiTest.
+ * Contains \Drupal\system\Tests\Entity\EntityApiTest.
  */
 
 namespace Drupal\system\Tests\Entity;

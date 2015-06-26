@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Module\RequiredTest.
+ * Contains \Drupal\system\Tests\Module\RequiredTest.
  */
 
 namespace Drupal\system\Tests\Module;

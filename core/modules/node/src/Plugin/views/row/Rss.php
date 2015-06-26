@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\row\Rss.
+ * Contains \Drupal\node\Plugin\views\row\Rss.
  */
 
 namespace Drupal\node\Plugin\views\row;

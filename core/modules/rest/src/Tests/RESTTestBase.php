@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\test\RESTTestBase.
+ * Contains \Drupal\rest\Tests\RESTTestBase.
  */
 
 namespace Drupal\rest\Tests;

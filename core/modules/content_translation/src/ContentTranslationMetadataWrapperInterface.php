@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\content_translation\ContentTranslationMetadataInterface.
+ * Contains \Drupal\content_translation\ContentTranslationMetadataWrapperInterface.
  */
 
 namespace Drupal\content_translation;

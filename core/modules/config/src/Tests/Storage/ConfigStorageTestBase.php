@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\Storage\ConfigStorageTestBase.
+ * Contains \Drupal\config\Tests\Storage\ConfigStorageTestBase.
  */
 
 namespace Drupal\config\Tests\Storage;

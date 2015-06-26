@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentTokenReplaceTest.
+ * Contains \Drupal\comment\Tests\CommentTokenReplaceTest.
  */
 
 namespace Drupal\comment\Tests;

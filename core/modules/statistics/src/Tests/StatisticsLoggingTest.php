@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\statistics\Tests\StatisticsLoggingTest.
+ * Contains \Drupal\statistics\Tests\StatisticsLoggingTest.
  */
 
 namespace Drupal\statistics\Tests;

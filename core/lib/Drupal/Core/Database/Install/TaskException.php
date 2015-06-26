@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Install\TaskException
+ * Contains \Drupal\Core\Database\Install\TaskException.
  */
 
 namespace Drupal\Core\Database\Install;

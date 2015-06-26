@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentThreadingTest.
+ * Contains \Drupal\comment\Tests\CommentThreadingTest.
  */
 
 namespace Drupal\comment\Tests;

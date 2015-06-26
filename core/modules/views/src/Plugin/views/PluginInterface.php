@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\PluginInterface.
+ * Contains \Drupal\views\Plugin\views\PluginInterface.
  */
 
 namespace Drupal\views\Plugin\views;

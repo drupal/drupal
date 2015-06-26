@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\path\Tests\PathTaxonomyTermTest.
+ * Contains \Drupal\path\Tests\PathTaxonomyTermTest.
  */
 
 namespace Drupal\path\Tests;

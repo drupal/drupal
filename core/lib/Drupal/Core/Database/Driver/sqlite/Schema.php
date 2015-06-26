@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\sqlite\Schema
+ * Contains \Drupal\Core\Database\Driver\sqlite\Schema.
  */
 
 namespace Drupal\Core\Database\Driver\sqlite;

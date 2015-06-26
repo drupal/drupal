@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\CronRunTest.
+ * Contains \Drupal\system\Tests\System\CronRunTest.
  */
 
 namespace Drupal\system\Tests\System;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Routing\MockMatcher.
+ * Contains \Drupal\system\Tests\Routing\MockMatcher.
  */
 
 namespace Drupal\system\Tests\Routing;

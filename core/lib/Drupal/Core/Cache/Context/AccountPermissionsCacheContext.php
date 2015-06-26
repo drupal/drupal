@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\Context\UserRolesCacheContext.
+ * Contains \Drupal\Core\Cache\Context\AccountPermissionsCacheContext.
  */
 
 namespace Drupal\Core\Cache\Context;

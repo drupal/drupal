@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentNodeChangesTest.
+ * Contains \Drupal\comment\Tests\CommentNodeChangesTest.
  */
 
 namespace Drupal\comment\Tests;

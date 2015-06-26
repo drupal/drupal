@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\StackMiddleware\KernelBoot.
+ * Contains \Drupal\Core\StackMiddleware\KernelPreHandle.
  */
 
 namespace Drupal\Core\StackMiddleware;

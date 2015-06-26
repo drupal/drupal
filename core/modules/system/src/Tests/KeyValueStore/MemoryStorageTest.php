@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\KeyValueStore\MemoryStorageTest.
+ * Contains \Drupal\system\Tests\KeyValueStore\MemoryStorageTest.
  */
 
 namespace Drupal\system\Tests\KeyValueStore;

@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains Drupal\Core\Routing\LinkGeneratorTrait.
+ * @file
+ * Contains \Drupal\Core\Routing\LinkGeneratorTrait.
  */
 
 namespace Drupal\Core\Routing;

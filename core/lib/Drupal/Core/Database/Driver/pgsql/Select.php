@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Select
+ * Contains \Drupal\Core\Database\Driver\pgsql\Select.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;

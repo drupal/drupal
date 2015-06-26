@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\Handler\GroupRowsTest.
+ * Contains \Drupal\views\Tests\Handler\FieldGroupRowsWebTest.
  */
 
 namespace Drupal\views\Tests\Handler;

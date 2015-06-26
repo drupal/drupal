@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\EmptyStatementTest.
+ * Contains \Drupal\Tests\Core\Database\EmptyStatementTest.
  */
 
 namespace Drupal\Tests\Core\Database;

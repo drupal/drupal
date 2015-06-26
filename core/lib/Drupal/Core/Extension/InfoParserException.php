@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\Core\Extension\InfoParserException.
+ * Contains \Drupal\Core\Extension\InfoParserException.
  */
 
 namespace Drupal\Core\Extension;

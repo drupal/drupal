@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\relationship\GroupwiseMax.
+ * Contains \Drupal\views\Plugin\views\relationship\GroupwiseMax.
  */
 
 namespace Drupal\views\Plugin\views\relationship;

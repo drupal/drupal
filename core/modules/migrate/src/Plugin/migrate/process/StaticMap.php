@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\MultipleColumnsMap.
+ * Contains \Drupal\migrate\Plugin\migrate\process\StaticMap.
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;

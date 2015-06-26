@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidget.
+ * Contains \Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidget.
  */
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;

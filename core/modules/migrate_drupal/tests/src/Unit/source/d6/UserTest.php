@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\CommentTest.
+ * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\UserTest.
  */
 
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Handler\FieldFileSizeTest.
+ * Contains \Drupal\views\Tests\Handler\FieldFileSizeTest.
  */
 
 namespace Drupal\views\Tests\Handler;

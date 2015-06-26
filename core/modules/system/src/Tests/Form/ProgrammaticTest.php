@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\ProgrammaticTest.
+ * Contains \Drupal\system\Tests\Form\ProgrammaticTest.
  */
 
 namespace Drupal\system\Tests\Form;

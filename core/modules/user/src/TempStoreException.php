@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\TempStoreException.
+ * Contains \Drupal\user\TempStoreException.
  */
 
 namespace Drupal\user;

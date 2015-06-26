@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\NodeTypeAccessControlHandler.
+ * Contains \Drupal\node\NodeTypeAccessControlHandler.
  */
 
 namespace Drupal\node;

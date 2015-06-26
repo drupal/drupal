@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\Utility\Export.
+ * Contains \Drupal\Component\Utility\Variable.
  */
 
 namespace Drupal\Component\Utility;

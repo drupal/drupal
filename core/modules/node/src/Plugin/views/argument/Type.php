@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\argument\Type.
+ * Contains \Drupal\node\Plugin\views\argument\Type.
  */
 
 namespace Drupal\node\Plugin\views\argument;

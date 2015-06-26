@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\datetime\DateTimeComputed.
+ * Contains \Drupal\datetime\DateTimeComputed.
  */
 
 namespace Drupal\datetime;

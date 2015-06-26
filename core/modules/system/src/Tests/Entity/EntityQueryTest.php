@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityQueryTest.
+ * Contains \Drupal\system\Tests\Entity\EntityQueryTest.
  */
 
 namespace Drupal\system\Tests\Entity;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\Entity\Role.
+ * Contains \Drupal\user\Entity\Role.
  */
 
 namespace Drupal\user\Entity;

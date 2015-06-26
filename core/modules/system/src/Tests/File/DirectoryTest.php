@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\DirectoryTest.
+ * Contains \Drupal\system\Tests\File\DirectoryTest.
  */
 
 namespace Drupal\system\Tests\File;
