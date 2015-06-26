@@ -94,3 +94,10 @@
     Hello new text.
   {% endtrans %}
 </div>
+
+{# Tests that https://www.drupal.org/node/2489024 doesn't happen without twig debug. #}
+<div>
+  {% trans %}
+    Number I never remember: ' . print(pi()) . '
+  {% endtrans %}
+</div>

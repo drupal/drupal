@@ -83,8 +83,26 @@ class TwigTransTest extends WebTestBase {
    * Test Twig "trans" tags.
    */
   public function testTwigTransTags() {
+    // Run this once without and once with Twig debug because trans can work
+    // differently depending on that setting.
     $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
+    $this->assertTwigTransTags();
 
+    // Enable debug, rebuild the service container, and clear all caches.
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->rebuildContainer();
+    $this->resetAll();
+
+    $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
+    $this->assertTwigTransTags();
+  }
+
+  /**
+   * Asserts Twig trans tags.
+   */
+  protected function assertTwigTransTags() {
     $this->assertText(
       'OH HAI SUNZ',
       '{% trans "Hello sun." %} was successfully translated.'
@@ -154,71 +172,9 @@ class TwigTransTest extends WebTestBase {
       'O HAI NU TXTZZZZ.',
       '{% trans with {"context": "Lolspeak", "langcode": "zz"} %} was successfully translated with context in specified language.'
     );
-
-    // Ensure debug output does not print.
-    $this->checkForDebugMarkup(FALSE);
-  }
-
-  /**
-   * Test Twig "trans" debug markup.
-   */
-  public function testTwigTransDebug() {
-    // Enable debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
-    $parameters['debug'] = TRUE;
-    $this->setContainerParameter('twig.config', $parameters);
-    $this->rebuildContainer();
-    $this->resetAll();
-
-    // Get page for assertion testing.
-    $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
-
-    // Ensure debug output is printed.
-    $this->checkForDebugMarkup(TRUE);
-  }
-
-  /**
-   * Tests rendering a placeholder outside of translate.
-   *
-   * This test ensures that the security problem described in
-   * https://www.drupal.org/node/2495179 doesn't exist.
-   */
-  public function testPlaceholderOutsideOfTrans() {
-    $this->drupalGet(Url::fromRoute('twig_theme_test.placeholder_outside_trans'));
-
-    $script = '<script>alert(123);</script>';
-    $this->assertNoRaw($script);
-    $this->assertEqual(2, substr_count($this->getRawContent(), '<em class="placeholder">' . SafeMarkup::checkPlain($script) . '</em>'));
-  }
-
-  /**
-   * Helper function: test twig debug translation markup.
-   *
-   * @param bool $visible
-   *   Toggle determining which assertion to use for test.
-   */
-  protected function checkForDebugMarkup($visible) {
-    $tests = array(
-      '{% trans "Hello sun." %}' => '<!-- TRANSLATION: "Hello sun." -->',
-      '{% trans "Hello sun." with {"context": "Lolspeak"} %}' => '<!-- TRANSLATION: "Hello sun.", CONTEXT: "Lolspeak" -->',
-      '{{ "Hello moon."|trans }}' => '<!-- TRANSLATION: "Hello moon." -->',
-      '{% trans %} with {% plural %}' => '<!-- TRANSLATION: "Hello star.", PLURAL: "Hello @count stars." -->',
-      '{{ token }}' => '<!-- TRANSLATION: "Escaped: @string" -->',
-      '{{ token|passthrough }}' => '<!-- TRANSLATION: "Pass-through: !string" -->',
-      '{{ token|placeholder }}' => '<!-- TRANSLATION: "Placeholder: %string" -->',
-      '{{ complex.tokens }}' => '<!-- TRANSLATION: "This @token.name has a length of: @count. It contains: %token.numbers and @token.bad_text. Lets pass the bad text through: !token.bad_text." -->',
-      '{% trans with {"context": "Lolspeak"} %}I have context.{% endtrans %}' => '<!-- TRANSLATION: "I have context.", CONTEXT: "Lolspeak" -->',
-      '{% trans with {"langcode": "zz"} %}Hello new text.{% endtrans %}' => '<!-- TRANSLATION: "Hello new text.", LANGCODE: "zz" -->',
-      '{% trans with {"context": "Lolspeak", "langcode": "zz"} %}Hello new text.{% endtrans %}' => '<!-- TRANSLATION: "Hello new text.", CONTEXT: "Lolspeak", LANGCODE: "zz" -->',
-    );
-    foreach ($tests as $test => $markup) {
-      if ($visible) {
-        $this->assertRaw($markup, "Twig debug translation markup exists in source for: $test");
-      }
-      else {
-        $this->assertNoRaw($markup, "Twig debug translation markup does not exist in source for: $test");
-      }
-    }
+    // Makes sure https://www.drupal.org/node/2489024 doesn't happen without
+    // twig debug.
+    $this->assertNoText(pi(), 'Running php code inside a Twig trans is not possible.');
   }
 
   /**
