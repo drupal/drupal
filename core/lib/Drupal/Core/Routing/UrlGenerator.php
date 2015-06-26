@@ -512,8 +512,8 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * Find the route using the provided route name.
    *
-   * @param string $name
-   *   The route name to fetch
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   The route name or a route object.
    *
    * @return \Symfony\Component\Routing\Route
    *   The found route.
