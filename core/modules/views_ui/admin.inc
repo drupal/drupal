@@ -52,10 +52,6 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   $triggering_element = &$wrapping_element[$trigger_key];
   $triggering_element['#ajax']['callback'] = 'views_ui_ajax_update_form';
 
-  // Specify the #ajax URL in order to retain form caching.
-  // @todo Remove this in https://www.drupal.org/node/2500523.
-  $triggering_element['#ajax']['url'] = Url::fromRoute('system.ajax');
-
   // We do not use \Drupal\Component\Utility\Html::getUniqueId() to get an ID
   // for the AJAX wrapper, because it remembers IDs across AJAX requests (and
   // won't reuse them), but in our case we need to use the same ID from request
@@ -117,9 +113,6 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     'wrapper' => $triggering_element['#ajax']['wrapper'],
     'trigger_key' => $trigger_key,
     'refresh_parents' => $refresh_parents,
-    // Keep track of duplicate wrappers so we don't add the same wrapper to the
-    // page more than once.
-    'duplicate_wrapper' => !empty($seen_ids[$triggering_element['#ajax']['wrapper']]),
   );
   $seen_ids[$triggering_element['#ajax']['wrapper']] = TRUE;
   $triggering_element['#views_ui_ajax_data'] = $ajax_data;
@@ -166,29 +159,25 @@ function views_ui_add_limited_validation($element, FormStateInterface $form_stat
  * submit button form element.
  */
 function views_ui_add_ajax_wrapper($element, FormStateInterface $form_state) {
-  // Don't add the wrapper <div> if the same one was already inserted on this
-  // form.
-  if (empty($element['#views_ui_ajax_data']['duplicate_wrapper'])) {
-    // Find the region of the complete form that needs to be refreshed by AJAX.
-    // This was earlier stored in a property on the element.
-    $complete_form = &$form_state->getCompleteForm();
-    $refresh_parents = $element['#views_ui_ajax_data']['refresh_parents'];
-    $refresh_element = NestedArray::getValue($complete_form, $refresh_parents);
+  // Find the region of the complete form that needs to be refreshed by AJAX.
+  // This was earlier stored in a property on the element.
+  $complete_form = &$form_state->getCompleteForm();
+  $refresh_parents = $element['#views_ui_ajax_data']['refresh_parents'];
+  $refresh_element = NestedArray::getValue($complete_form, $refresh_parents);
 
-    // The HTML ID that AJAX expects was also stored in a property on the
-    // element, so use that information to insert the wrapper <div> here.
-    $id = $element['#views_ui_ajax_data']['wrapper'];
-    $refresh_element += array(
-      '#prefix' => '',
-      '#suffix' => '',
-    );
-    $refresh_element['#prefix'] = '<div id="' . $id . '" class="views-ui-ajax-wrapper">' . $refresh_element['#prefix'];
-    $refresh_element['#suffix'] .= '</div>';
+  // The HTML ID that AJAX expects was also stored in a property on the
+  // element, so use that information to insert the wrapper <div> here.
+  $id = $element['#views_ui_ajax_data']['wrapper'];
+  $refresh_element += array(
+    '#prefix' => '',
+    '#suffix' => '',
+  );
+  $refresh_element['#prefix'] = '<div id="' . $id . '" class="views-ui-ajax-wrapper">' . $refresh_element['#prefix'];
+  $refresh_element['#suffix'] .= '</div>';
 
-    // Copy the element that needs to be refreshed back into the form, with our
-    // modifications to it.
-    NestedArray::setValue($complete_form, $refresh_parents, $refresh_element);
-  }
+  // Copy the element that needs to be refreshed back into the form, with our
+  // modifications to it.
+  NestedArray::setValue($complete_form, $refresh_parents, $refresh_element);
 
   return $element;
 }

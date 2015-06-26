@@ -196,7 +196,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
     $view['show[type]'] = $this->nodeTypeWithoutTags->id();
-    $this->drupalPostForm(NULL, $view, t('Update "of type" choice'));
+    $this->drupalPostForm(NULL, $view, t('Update "of type" choice (2)'));
     $this->assertNoFieldByXpath($tags_xpath);
 
     // If we add an instance of the tagging field to the second node type, the
@@ -225,7 +225,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
     $view['show[type]'] = $this->nodeTypeWithoutTags->id();
-    $this->drupalPostForm(NULL, $view, t('Update "of type" choice'));
+    $this->drupalPostForm(NULL, $view, t('Update "of type" choice (2)'));
     $this->assertFieldByXpath($tags_xpath);
   }
 

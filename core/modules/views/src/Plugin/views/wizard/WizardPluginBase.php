@@ -496,15 +496,18 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     // If there is a user-submitted value for this element that matches one of
-    // the currently available options attached to it, use that. We need to check
-    // FormState::$input rather than $form_state->getValues() here because the
-    // triggering element often has the #limit_validation_errors property set to
-    // prevent unwanted errors elsewhere on the form. This means that the
-    // $form_state->getValues() array won't be complete. We could make it complete
-    // by adding each required part of the form to the #limit_validation_errors
-    // property individually as the form is being built, but this is difficult to
-    // do for a highly dynamic and extensible form. This method is much simpler.
-    $user_input = &$form_state->getUserInput();
+    // the currently available options attached to it, use that. However, only
+    // perform this check during the form rebuild. During the initial build
+    // after #ajax is triggered, we need to rebuild the form as it was
+    // initially. We need to check FormState::getUserInput() rather than
+    // $form_state->getValues() here because the triggering element often has
+    // the #limit_validation_errors property set to prevent unwanted errors
+    // elsewhere on the form. This means that the $form_state->getValues() array
+    // won't be complete. We could make it complete by adding each required part
+    // of the form to the #limit_validation_errors property individually as the
+    // form is being built, but this is difficult to do for a highly dynamic and
+    // extensible form. This method is much simpler.
+    $user_input = $form_state->isRebuilding() ? $form_state->getUserInput() : [];
     if (!empty($user_input)) {
       $key_exists = NULL;
       $submitted = NestedArray::getValue($user_input, $parents, $key_exists);
