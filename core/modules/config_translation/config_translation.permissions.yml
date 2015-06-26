@@ -1,3 +1,4 @@
 translate configuration:
-  title: 'Translate user edited configuration'
-  description: 'Translate any configuration not shipped with modules and themes.'
+  title: 'Translate configuration'
+  description: 'Translate any configuration including those shipped with modules and themes.'
+  restrict access: true
