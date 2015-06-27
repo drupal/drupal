@@ -114,23 +114,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
 
-    // Attach globally-declared headers to the response object so that Symfony
-    // can send them for us correctly.
-    // @todo Remove this once drupal_process_attached() no longer calls
-    //    _drupal_add_http_header(), which has its own static. Instead,
-    //    _drupal_process_attached() should use
-    //    \Symfony\Component\HttpFoundation\Response->headers->set(), which is
-    //    already documented on the (deprecated) _drupal_process_attached() to
-    //    become the final, intended mechanism.
-    $headers = drupal_get_http_header();
-    foreach ($headers as $name => $value) {
-      // Symfony special-cases the 'Status' header.
-      if ($name === 'status') {
-        $response->setStatusCode($value);
-      }
-      $response->headers->set($name, $value, FALSE);
-    }
-
     // Expose the cache contexts and cache tags associated with this page in a
     // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.
     if ($response instanceof CacheableResponseInterface) {
