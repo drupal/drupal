@@ -62,6 +62,11 @@ class ConfirmFormTest extends WebTestBase {
     $this->assertCancelLinkUrl(Url::fromUri('internal:/node'));
     $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => 'http://example.com')));
     $this->assertCancelLinkUrl(Url::fromRoute('form_test.route8'));
+    $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => '<front>')));
+    $this->assertCancelLinkUrl(Url::fromRoute('<front>'));
+    // Other invalid destinations, should fall back to the form default.
+    $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => '/http://example.com')));
+    $this->assertCancelLinkUrl(Url::fromRoute('form_test.route8'));
   }
 
   /**

@@ -729,20 +729,22 @@ class UrlTest extends UnitTestCase {
   public function providerFromInvalidInternalUri() {
     return [
       // Normal paths without a leading slash.
-      ['kittens'],
-      ['kittens/bengal'],
+      'normal_path0' => ['kittens'],
+      'normal_path1' => ['kittens/bengal'],
       // Path without a leading slash containing a fragment.
-      ['kittens#feeding'],
-      // Path without a leading slash containing a query string.
-      ['kittens?page=1000'],
+      'fragment' => ['kittens#feeding'],
+       // Path without a leading slash containing a query string.
+      'without_leading_slash_query' => ['kittens?page=1000'],
       // Paths with various token formats but no leading slash.
-      ['[duckies]'],
-      ['%bunnies'],
-      ['{{ puppies }}'],
+      'path_with_tokens0' => ['[duckies]'],
+      'path_with_tokens1' => ['%bunnies'],
+      'path_with_tokens2' => ['{{ puppies }}'],
       // Disallowed characters in the authority (host name) that are valid
       // elsewhere in the path.
-      ['(:;2&+h^'],
-      ['AKI@&hO@'],
+      'disallowed_hostname_chars0' => ['(:;2&+h^'],
+      'disallowed_hostname_chars1' => ['AKI@&hO@'],
+      // Leading slash with a domain.
+      'leading_slash_with_domain' => ['/http://example.com'],
     ];
   }
 
