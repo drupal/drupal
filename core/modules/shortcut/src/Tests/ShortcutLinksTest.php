@@ -153,6 +153,19 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // works here.
     $link = $this->xpath('//a[normalize-space()=:label]', array(':label' => 'Add to Default shortcuts'));
     $this->assertTrue(!empty($link), 'Link Add to Default shortcuts found.');
+
+    // Test two pages which use same route name but different route parameters.
+    $this->drupalGet('node/add/page');
+    // Add Shortcut for Basic Page.
+    $this->clickLink('Add to Default shortcuts');
+    $this->assertText('Added a shortcut for Create Basic page.');
+    // Assure that Article does not have its shortcut indicated as set.
+    $this->drupalGet('node/add/article');
+    $link = $this->xpath('//a[normalize-space()=:label]', array(':label' => 'Remove from Default shortcuts'));
+    $this->assertTrue(empty($link), 'Link Remove to Default shortcuts not found for Create Article page.');
+    // Add Shortcut for Article.
+    $this->clickLink('Add to Default shortcuts');
+    $this->assertText('Added a shortcut for Create Article.');
   }
 
   /**
