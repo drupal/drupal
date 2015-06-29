@@ -30,20 +30,14 @@ class ConfirmFormHelper {
   public static function buildCancelLink(ConfirmFormInterface $form, Request $request) {
     // Prepare cancel link.
     $query = $request->query;
-    $url = NULL;
     // If a destination is specified, that serves as the cancel link.
     if ($query->has('destination')) {
       $options = UrlHelper::parse($query->get('destination'));
       // @todo Revisit this in https://www.drupal.org/node/2418219.
-      try {
-        $url = Url::fromUserInput('/' . ltrim($options['path'], '/'), $options);
-      }
-      catch (\InvalidArgumentException $e) {
-        // Suppress the exception and fall back to the form's cancel url.
-      }
+      $url = Url::fromUserInput('/' . ltrim($options['path'], '/'), $options);
     }
     // Check for a route-based cancel link.
-    if (!$url) {
+    else {
       $url = $form->getCancelUrl();
     }
 
