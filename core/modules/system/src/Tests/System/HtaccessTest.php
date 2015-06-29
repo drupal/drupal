@@ -108,7 +108,7 @@ class HtaccessTest extends WebTestBase {
     $node = $this->drupalCreateNode([
       'title' => 'This is a node',
       'type' => $type->id(),
-      'path' => 'test.php'
+      'path' => '/test.php'
     ]);
     $node->save();
     $this->drupalGet('test.php');
@@ -116,7 +116,7 @@ class HtaccessTest extends WebTestBase {
     $this->assertText('This is a node');
 
     // Update node's alias to test.php/test.
-    $node->path = 'test.php/test';
+    $node->path = '/test.php/test';
     $node->save();
     $this->drupalGet('test.php/test');
     $this->assertResponse(200);

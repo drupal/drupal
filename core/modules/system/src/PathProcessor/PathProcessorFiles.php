@@ -22,10 +22,10 @@ class PathProcessorFiles implements InboundPathProcessorInterface {
    * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
-    if (strpos($path, 'system/files/') === 0 && !$request->query->has('file')) {
-      $file_path = preg_replace('|^system\/files\/|', '', $path);
+    if (strpos($path, '/system/files/') === 0 && !$request->query->has('file')) {
+      $file_path = preg_replace('|^\/system\/files\/|', '', $path);
       $request->query->set('file', $file_path);
-      return 'system/files';
+      return '/system/files';
     }
     return $path;
   }

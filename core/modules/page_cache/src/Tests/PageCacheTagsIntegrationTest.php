@@ -64,7 +64,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1', array(
       'visibility' => array(
         'request_path' => array(
-          'pages' => 'node/' . $node_2->id(),
+          'pages' => '/node/' . $node_2->id(),
         ),
       ),
     ));

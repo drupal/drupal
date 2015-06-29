@@ -23,7 +23,7 @@ function standard_install() {
   \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
   // Set front page to "node".
-  \Drupal::configFactory()->getEditable('system.site')->set('page.front', 'node')->save(TRUE);
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/node')->save(TRUE);
 
   // Allow visitor account creation with administrative approval.
   $user_settings = \Drupal::configFactory()->getEditable('user.settings');

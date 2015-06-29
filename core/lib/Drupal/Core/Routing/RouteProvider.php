@@ -140,14 +140,16 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
       return $cached->data['routes'];
     }
     else {
-      $path = trim($request->getPathInfo(), '/');
+      // Just trim on the right side.
+      $path = $request->getPathInfo();
+      $path = $path === '/' ? $path : rtrim($request->getPathInfo(), '/');
       $path = $this->pathProcessor->processInbound($path, $request);
-      $this->currentPath->setPath('/' . $path, $request);
+      $this->currentPath->setPath($path, $request);
       // Incoming path processors may also set query parameters.
       $query_parameters = $request->query->all();
-      $routes = $this->getRoutesByPath('/' . rtrim($path, '/'));
+      $routes = $this->getRoutesByPath(rtrim($path, '/'));
       $cache_value = [
-        'path' => '/' . $path,
+        'path' => $path,
         'query' => $query_parameters,
         'routes' => $routes,
       ];

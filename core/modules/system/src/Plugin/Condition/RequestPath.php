@@ -153,7 +153,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
 
     $request = $this->requestStack->getCurrentRequest();
     // Compare the lowercase path alias (if any) and internal path.
-    $path = trim($this->currentPath->getPath($request), '/');
+    $path = rtrim($this->currentPath->getPath($request), '/');
     $path_alias = Unicode::strtolower($this->aliasManager->getAliasByPath($path));
 
     return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));

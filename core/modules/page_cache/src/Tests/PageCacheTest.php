@@ -39,7 +39,7 @@ class PageCacheTest extends WebTestBase {
 
     $this->config('system.site')
       ->set('name', 'Drupal')
-      ->set('page.front', 'test-page')
+      ->set('page.front', '/test-page')
       ->save();
   }
 

@@ -35,6 +35,9 @@ migrate.source.variable:
         status:
           type: boolean
           label: 'Status'
+        slash:
+          type: string
+          label: 'Slash'
 
 migrate.source.d6_comment:
   type: migrate_source_sql

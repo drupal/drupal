@@ -39,7 +39,7 @@ abstract class BlockTestBase extends WebTestBase {
     parent::setUp();
 
     // Use the test page as the front page.
-    $this->config('system.site')->set('page.front', 'test-page')->save();
+    $this->config('system.site')->set('page.front', '/test-page')->save();
 
     // Create Full HTML text format.
     $full_html_format = entity_create('filter_format', array(

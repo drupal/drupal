@@ -49,6 +49,14 @@ class AliasStorage implements AliasStorageInterface {
    */
   public function save($source, $alias, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $pid = NULL) {
 
+    if ($source[0] !== '/') {
+      throw new \InvalidArgumentException(sprintf('Source path %s has to start with a slash.', $source));
+    }
+
+    if ($alias[0] !== '/') {
+      throw new \InvalidArgumentException(sprintf('Alias path %s has to start with a slash.', $alias));
+    }
+
     $fields = array(
       'source' => $source,
       'alias' => $alias,

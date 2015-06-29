@@ -37,32 +37,32 @@ class UrlAlterFunctionalTest extends WebTestBase {
     // Test a single altered path.
     $this->drupalGet("user/$name");
     $this->assertResponse('200', 'The user/username path gets resolved correctly');
-    $this->assertUrlOutboundAlter("user/$uid", "user/$name");
+    $this->assertUrlOutboundAlter("/user/$uid", "/user/$name");
 
     // Test that a path always uses its alias.
-    $path = array('source' => "user/$uid/test1", 'alias' => 'alias/test1');
+    $path = array('source' => "/user/$uid/test1", 'alias' => '/alias/test1');
     $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
     $this->rebuildContainer();
-    $this->assertUrlInboundAlter('alias/test1', "user/$uid/test1");
-    $this->assertUrlOutboundAlter("user/$uid/test1", 'alias/test1');
+    $this->assertUrlInboundAlter('/alias/test1', "/user/$uid/test1");
+    $this->assertUrlOutboundAlter("/user/$uid/test1", '/alias/test1');
 
     // Test adding an alias via the UI.
-    $edit = array('source' => "user/$uid/edit", 'alias' => 'alias/test2');
+    $edit = array('source' => "/user/$uid/edit", 'alias' => '/alias/test2');
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
     $this->drupalGet('alias/test2');
     $this->assertResponse('200', 'The path alias gets resolved correctly');
-    $this->assertUrlOutboundAlter("user/$uid/edit", 'alias/test2');
+    $this->assertUrlOutboundAlter("/user/$uid/edit", '/alias/test2');
 
     // Test a non-existent user is not altered.
     $uid++;
-    $this->assertUrlOutboundAlter("user/$uid", "user/$uid");
+    $this->assertUrlOutboundAlter("/user/$uid", "/user/$uid");
 
     // Test that 'forum' is altered to 'community' correctly, both at the root
     // level and for a specific existing forum.
     $this->drupalGet('community');
     $this->assertText('General discussion', 'The community path gets resolved correctly');
-    $this->assertUrlOutboundAlter('forum', 'community');
+    $this->assertUrlOutboundAlter('/forum', '/community');
     $forum_vid = $this->config('forum.settings')->get('vocabulary');
     $term_name = $this->randomMachineName();
     $term = entity_create('taxonomy_term', array(
@@ -72,7 +72,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $term->save();
     $this->drupalGet("community/" . $term->id());
     $this->assertText($term_name, 'The community/{tid} path gets resolved correctly');
-    $this->assertUrlOutboundAlter("forum/" . $term->id(), "community/" . $term->id());
+    $this->assertUrlOutboundAlter("/forum/" . $term->id(), "/community/" . $term->id());
   }
 
   /**
@@ -87,8 +87,8 @@ class UrlAlterFunctionalTest extends WebTestBase {
    */
   protected function assertUrlOutboundAlter($original, $final) {
     // Test outbound altering.
-    $result = $this->container->get('url_generator')->generateFromPath($original);
-    $final = Url::fromUri('internal:/' . $final)->toString();
+    $result = $this->container->get('url_generator')->generateFromPath(ltrim($original, '/'));
+    $final = Url::fromUri('internal:' . $final)->toString();
     $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 

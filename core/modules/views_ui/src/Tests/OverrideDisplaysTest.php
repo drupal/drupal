@@ -117,7 +117,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", array(
       'visibility' => array(
         'request_path' => array(
-          'pages' => $view['page[path]'],
+          'pages' => '/' . $view['page[path]'],
           'negate' => TRUE,
         ),
       ),

@@ -33,7 +33,7 @@ class PathMatcherTest extends UnitTestCase {
     $config_factory_stub = $this->getConfigFactoryStub(
       array(
         'system.site' => array(
-          'page.front' => 'dummy',
+          'page.front' => '/dummy',
         ),
       )
     );
@@ -68,43 +68,43 @@ class PathMatcherTest extends UnitTestCase {
     return array(
       array(
         // Single absolute paths.
-        'example/1',
+        '/example/1',
         array(
-          'example/1' => TRUE,
-          'example/2' => FALSE,
-          'test' => FALSE,
+          '/example/1' => TRUE,
+          '/example/2' => FALSE,
+          '/test' => FALSE,
         ),
       ),
       array(
         // Single paths with wildcards.
-        'example/*',
+        '/example/*',
         array(
-          'example/1' => TRUE,
-          'example/2' => TRUE,
-          'example/3/edit' => TRUE,
-          'example/' => TRUE,
-          'example' => FALSE,
-          'test' => FALSE,
+          '/example/1' => TRUE,
+          '/example/2' => TRUE,
+          '/example/3/edit' => TRUE,
+          '/example/' => TRUE,
+          '/example' => FALSE,
+          '/test' => FALSE,
         ),
       ),
       array(
         // Single paths with multiple wildcards.
-        'node/*/revisions/*',
+        '/node/*/revisions/*',
         array(
-          'node/1/revisions/3' => TRUE,
-          'node/345/revisions/test' => TRUE,
-          'node/23/edit' => FALSE,
-          'test' => FALSE,
+          '/node/1/revisions/3' => TRUE,
+          '/node/345/revisions/test' => TRUE,
+          '/node/23/edit' => FALSE,
+          '/test' => FALSE,
         ),
       ),
       array(
         // Single paths with '<front>'.
         "<front>",
         array(
-          'dummy' => TRUE,
-          "dummy/" => FALSE,
-          "dummy/edit" => FALSE,
-          'node' => FALSE,
+          '/dummy' => TRUE,
+          "/dummy/" => FALSE,
+          "/dummy/edit" => FALSE,
+          '/node' => FALSE,
           '' => FALSE,
         ),
       ),
@@ -112,52 +112,52 @@ class PathMatcherTest extends UnitTestCase {
         // Paths with both '<front>' and wildcards (should not work).
         "<front>/*",
         array(
-          'dummy' => FALSE,
-          'dummy/' => FALSE,
-          'dummy/edit' => FALSE,
-          'node/12' => FALSE,
-          '' => FALSE,
+          '/dummy' => FALSE,
+          '/dummy/' => FALSE,
+          '/dummy/edit' => FALSE,
+          '/node/12' => FALSE,
+          '/' => FALSE,
         ),
       ),
       array(
         // Multiple paths with the \n delimiter.
-        "node/*\nnode/*/edit",
+        "/node/*\n/node/*/edit",
         array(
-          'node/1' => TRUE,
-          'node/view' => TRUE,
-          'node/32/edit' => TRUE,
-          'node/delete/edit' => TRUE,
-          'node/50/delete' => TRUE,
-          'test/example' => FALSE,
+          '/node/1' => TRUE,
+          '/node/view' => TRUE,
+          '/node/32/edit' => TRUE,
+          '/node/delete/edit' => TRUE,
+          '/node/50/delete' => TRUE,
+          '/test/example' => FALSE,
         ),
       ),
       array(
         // Multiple paths with the \r delimiter.
-        "user/*\rexample/*",
+        "/user/*\r/example/*",
         array(
-          'user/1' => TRUE,
-          'example/1' => TRUE,
-          'user/1/example/1' => TRUE,
-          'user/example' => TRUE,
-          'test/example' => FALSE,
-          'user' => FALSE,
-          'example' => FALSE,
+          '/user/1' => TRUE,
+          '/example/1' => TRUE,
+          '/user/1/example/1' => TRUE,
+          '/user/example' => TRUE,
+          '/test/example' => FALSE,
+          '/user' => FALSE,
+          '/example' => FALSE,
         ),
       ),
       array(
         // Multiple paths with the \r\n delimiter.
-        "test\r\n<front>",
+        "/test\r\n<front>",
         array(
-          'test' => TRUE,
-          'dummy' => TRUE,
-          'example' => FALSE,
+          '/test' => TRUE,
+          '/dummy' => TRUE,
+          '/example' => FALSE,
         ),
       ),
       array(
         // Test existing regular expressions (should be escaped).
         '[^/]+?/[0-9]',
         array(
-          'test/1' => FALSE,
+          '/test/1' => FALSE,
           '[^/]+?/[0-9]' => TRUE,
         ),
       ),

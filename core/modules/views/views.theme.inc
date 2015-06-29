@@ -883,9 +883,7 @@ function template_preprocess_views_view_rss(&$variables) {
     // Compare the link to the default home page; if it's the default home page,
     // just use $base_url.
     $url_string = $url->setOptions($url_options)->toString();
-    // @todo Should page.front be stored with a leading slash? See
-    //   https://www.drupal.org/node/2430595.
-    if ($url_string === Url::fromUserInput('/' . $config->get('page.front'))->toString()) {
+    if ($url_string === Url::fromUserInput($config->get('page.front'))->toString()) {
       $url_string = Url::fromRoute('<front>')->setAbsolute()->toString();
     }
 

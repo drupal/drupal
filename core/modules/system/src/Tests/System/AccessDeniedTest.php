@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
 
@@ -41,10 +42,18 @@ class AccessDeniedTest extends WebTestBase {
     $this->assertText(t('Access denied'), 'Found the default 403 page');
     $this->assertResponse(403);
 
-    // Use a custom 403 page.
     $this->drupalLogin($this->adminUser);
+
+    // Set a custom 404 page without a starting slash.
     $edit = [
       'site_403' => 'user/' . $this->adminUser->id(),
+    ];
+    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' =>  $edit['site_403']]));
+
+    // Use a custom 403 page.
+    $edit = [
+      'site_403' => '/user/' . $this->adminUser->id(),
     ];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
 
@@ -73,7 +82,7 @@ class AccessDeniedTest extends WebTestBase {
 
     // Log back in, set the custom 403 page to /user/login and remove the block
     $this->drupalLogin($this->adminUser);
-    $this->config('system.site')->set('page.403', 'user/login')->save();
+    $this->config('system.site')->set('page.403', '/user/login')->save();
     $edit = [
       'region' => -1,
     ];

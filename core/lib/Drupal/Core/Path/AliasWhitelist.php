@@ -107,7 +107,7 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    * {@inheritdoc}
    */
   public function resolveCacheMiss($root) {
-    $exists = $this->aliasStorage->pathHasMatchingAlias($root);
+    $exists = $this->aliasStorage->pathHasMatchingAlias('/' . $root);
     $this->storage[$root] = $exists;
     $this->persist($root);
     if ($exists) {

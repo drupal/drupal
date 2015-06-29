@@ -289,7 +289,7 @@ class MenuTest extends MenuWebTestBase {
     $node5 = $this->drupalCreateNode(array(
       'type' => 'article',
       'path' => array(
-        'alias' => 'node5',
+        'alias' => '/node5',
       ),
     ));
 

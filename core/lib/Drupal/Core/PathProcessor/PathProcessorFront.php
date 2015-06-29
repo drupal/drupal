@@ -39,7 +39,7 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
    * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
    */
   public function processInbound($path, Request $request) {
-    if (empty($path)) {
+    if ($path === '/') {
       $path = $this->config->get('system.site')->get('page.front');
     }
     return $path;
@@ -50,8 +50,8 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, CacheableMetadata $cacheable_metadata = NULL) {
     // The special path '<front>' links to the default front page.
-    if ($path == '<front>') {
-      $path = '';
+    if ($path === '/<front>') {
+      $path = '/';
     }
     return $path;
   }

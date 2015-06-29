@@ -159,12 +159,12 @@ class UrlGeneratorTest extends UnitTestCase {
   public function aliasManagerCallback() {
     $args = func_get_args();
     switch($args[0]) {
-      case 'test/one':
-        return 'hello/world';
-      case 'test/two/5':
-        return 'goodbye/cruel/world';
-      case '<front>':
-        return '';
+      case '/test/one':
+        return '/hello/world';
+      case '/test/two/5':
+        return '/goodbye/cruel/world';
+      case '/<front>':
+        return '/';
       default:
         return $args[0];
     }

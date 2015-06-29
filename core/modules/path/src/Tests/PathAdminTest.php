@@ -39,23 +39,23 @@ class PathAdminTest extends PathTestBase {
     $node3 = $this->drupalCreateNode();
 
     // Create aliases.
-    $alias1 = $this->randomMachineName(8);
+    $alias1 = '/' . $this->randomMachineName(8);
     $edit = array(
-      'source' => 'node/' . $node1->id(),
+      'source' => '/node/' . $node1->id(),
       'alias' => $alias1,
     );
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
-    $alias2 = $this->randomMachineName(8);
+    $alias2 = '/' . $this->randomMachineName(8);
     $edit = array(
-      'source' => 'node/' . $node2->id(),
+      'source' => '/node/' . $node2->id(),
       'alias' => $alias2,
     );
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
-    $alias3 = $this->randomMachineName(4) . '/' . $this->randomMachineName(4);
+    $alias3 = '/' . $this->randomMachineName(4) . '/' . $this->randomMachineName(4);
     $edit = array(
-      'source' => 'node/' . $node3->id(),
+      'source' => '/node/' . $node3->id(),
       'alias' => $alias3,
     );
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));

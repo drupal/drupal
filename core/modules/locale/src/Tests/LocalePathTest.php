@@ -32,7 +32,7 @@ class LocalePathTest extends WebTestBase {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    $this->config('system.site')->set('page.front', 'node')->save();
+    $this->config('system.site')->set('page.front', '/node')->save();
   }
 
   /**
@@ -74,8 +74,8 @@ class LocalePathTest extends WebTestBase {
     $path = 'admin/config/search/path/add';
     $english_path = $this->randomMachineName(8);
     $edit = array(
-      'source'   => 'node/' . $node->id(),
-      'alias'    => $english_path,
+      'source'   => '/node/' . $node->id(),
+      'alias'    => '/' . $english_path,
       'langcode' => 'en',
     );
     $this->drupalPostForm($path, $edit, t('Save'));
@@ -83,8 +83,8 @@ class LocalePathTest extends WebTestBase {
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomMachineName(8);
     $edit = array(
-      'source'   => 'node/' . $node->id(),
-      'alias'    => $custom_language_path,
+      'source'   => '/node/' . $node->id(),
+      'alias'    => '/' . $custom_language_path,
       'langcode' => $langcode,
     );
     $this->drupalPostForm($path, $edit, t('Save'));
@@ -102,16 +102,16 @@ class LocalePathTest extends WebTestBase {
 
     // Check priority of language for alias by source path.
     $edit = array(
-      'source'   => 'node/' . $node->id(),
-      'alias'    => $custom_path,
+      'source'   => '/node/' . $node->id(),
+      'alias'    => '/' . $custom_path,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
-    $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $node->id(), 'en');
-    $this->assertEqual($english_path, $lookup_path, 'English language alias has priority.');
+    $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), 'en');
+    $this->assertEqual('/' . $english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
-    $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $node->id(), $prefix);
-    $this->assertEqual($custom_language_path, $lookup_path, 'Custom language alias has priority.');
+    $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), $prefix);
+    $this->assertEqual('/' . $custom_language_path, $lookup_path, 'Custom language alias has priority.');
     $this->container->get('path.alias_storage')->delete($edit);
 
     // Create language nodes to check priority of aliases.
@@ -120,8 +120,8 @@ class LocalePathTest extends WebTestBase {
 
     // Assign a custom path alias to the first node with the English language.
     $edit = array(
-      'source'   => 'node/' . $first_node->id(),
-      'alias'    => $custom_path,
+      'source'   => '/node/' . $first_node->id(),
+      'alias'    => '/' . $custom_path,
       'langcode' => $first_node->language()->getId(),
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
@@ -129,8 +129,8 @@ class LocalePathTest extends WebTestBase {
     // Assign a custom path alias to second node with
     // LanguageInterface::LANGCODE_NOT_SPECIFIED.
     $edit = array(
-      'source'   => 'node/' . $second_node->id(),
-      'alias'    => $custom_path,
+      'source'   => '/node/' . $second_node->id(),
+      'alias'    => '/' . $custom_path,
       'langcode' => $second_node->language()->getId(),
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);

@@ -79,7 +79,7 @@ class ThemeTest extends WebTestBase {
   function testThemeSuggestions() {
     // Set the front page as something random otherwise the CLI
     // test runner fails.
-    $this->config('system.site')->set('page.front', 'nobody-home')->save();
+    $this->config('system.site')->set('page.front', '/nobody-home')->save();
     $args = array('node', '1', 'edit');
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
@@ -146,7 +146,7 @@ class ThemeTest extends WebTestBase {
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'user.login');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/user/login'));
     \Drupal::requestStack()->push($request);
-    $this->config('system.site')->set('page.front', 'user/login')->save();
+    $this->config('system.site')->set('page.front', '/user/login')->save();
     $suggestions = theme_get_suggestions(array('user', 'login'), 'page');
     // Set it back to not annoy the batch runner.
     \Drupal::requestStack()->pop();

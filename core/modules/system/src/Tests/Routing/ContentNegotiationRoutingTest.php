@@ -56,10 +56,10 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
     /** @var \Drupal\Core\Path\AliasStorageInterface $path_alias_storage */
     $path_alias_storage = $this->container->get('path.alias_storage');
     // Alias with extension pointing to no extension/constant content-type.
-    $path_alias_storage->save('conneg/html', 'alias.html');
+    $path_alias_storage->save('/conneg/html', '/alias.html');
 
     // Alias with extension pointing to dynamic extension/linked content-type.
-    $path_alias_storage->save('conneg/html?_format=json', 'alias.json');
+    $path_alias_storage->save('/conneg/html?_format=json', '/alias.json');
 
     $tests = [
       // ['path', 'accept', 'content-type'],
@@ -102,7 +102,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
       $accept_header = $test[1];
       $content_type = $test[2];
       $message = "Testing path:$path Accept:$accept_header Content-type:$content_type";
-      $request = Request::create($path);
+      $request = Request::create('/' . $path);
       if ($accept_header) {
         $request->headers->set('Accept', $accept_header);
       }
@@ -141,7 +141,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
       $accept_header = $test[1];
       $content_type = $test[2];
       $message = "Testing path:$path Accept:$accept_header Content-type:$content_type";
-      $request = Request::create($path);
+      $request = Request::create('/' . $path);
       $request->headers->set('Accept', $accept_header);
 
       /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */

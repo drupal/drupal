@@ -4,10 +4,20 @@ migration_tags:
   - Drupal 6
 source:
   plugin: d6_url_alias
+  constants:
+    slash: '/'
 
 process:
-  source: src
-  alias: dst
+  source:
+    plugin: concat
+    source:
+      - constants/slash
+      - src
+  alias:
+    plugin: concat
+    source:
+      - constants/slash
+      - dst
   langcode: language
 
 destination:

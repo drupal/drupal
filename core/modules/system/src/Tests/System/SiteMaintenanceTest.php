@@ -29,7 +29,7 @@ class SiteMaintenanceTest extends WebTestBase {
     parent::setUp();
 
     // Configure 'node' as front page.
-    $this->config('system.site')->set('page.front', 'node')->save();
+    $this->config('system.site')->set('page.front', '/node')->save();
 
     // Create a user allowed to access site in maintenance mode.
     $this->user = $this->drupalCreateUser(array('access site in maintenance mode'));

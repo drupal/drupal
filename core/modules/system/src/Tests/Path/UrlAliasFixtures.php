@@ -53,23 +53,23 @@ class UrlAliasFixtures {
   public function sampleUrlAliases() {
     return array(
       array(
-        'source' => 'node/1',
-        'alias' => 'alias_for_node_1_en',
+        'source' => '/node/1',
+        'alias' => '/alias_for_node_1_en',
         'langcode' => 'en'
       ),
       array(
-        'source' => 'node/2',
-        'alias' => 'alias_for_node_2_en',
+        'source' => '/node/2',
+        'alias' => '/alias_for_node_2_en',
         'langcode' => 'en'
       ),
       array(
-        'source' => 'node/1',
-        'alias' => 'alias_for_node_1_fr',
+        'source' => '/node/1',
+        'alias' => '/alias_for_node_1_fr',
         'langcode' => 'fr'
       ),
       array(
-        'source' => 'node/1',
-        'alias' => 'alias_for_node_1_und',
+        'source' => '/node/1',
+        'alias' => '/alias_for_node_1_und',
         'langcode' => 'und'
       )
     );

@@ -45,8 +45,8 @@ class PathLanguageUiTest extends PathTestBase {
   function testLanguageNeutralUrl() {
     $name = $this->randomMachineName(8);
     $edit = array();
-    $edit['source'] = 'admin/config/search/path';
-    $edit['alias'] = $name;
+    $edit['source'] = '/admin/config/search/path';
+    $edit['alias'] ='/' . $name;
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet($name);
@@ -59,8 +59,8 @@ class PathLanguageUiTest extends PathTestBase {
   function testDefaultLanguageUrl() {
     $name = $this->randomMachineName(8);
     $edit = array();
-    $edit['source'] = 'admin/config/search/path';
-    $edit['alias'] = $name;
+    $edit['source'] = '/admin/config/search/path';
+    $edit['alias'] = '/' . $name;
     $edit['langcode'] = 'en';
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
@@ -74,8 +74,8 @@ class PathLanguageUiTest extends PathTestBase {
   function testNonDefaultUrl() {
     $name = $this->randomMachineName(8);
     $edit = array();
-    $edit['source'] = 'admin/config/search/path';
-    $edit['alias'] = $name;
+    $edit['source'] = '/admin/config/search/path';
+    $edit['alias'] = '/' . $name;
     $edit['langcode'] = 'fr';
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 

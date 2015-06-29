@@ -29,12 +29,15 @@ interface AliasStorageInterface {
    * @return array|false
    *   FALSE if the path could not be saved or an associative array containing
    *   the following keys:
-   *   - source (string): The internal system path.
-   *   - alias (string): The URL alias.
+   *   - source (string): The internal system path with a starting slash.
+   *   - alias (string): The URL alias with a starting slash.
    *   - pid (int): Unique path alias identifier.
    *   - langcode (string): The language code of the alias.
    *   - original: For updates, an array with source, alias and langcode with
    *     the previous values.
+   *
+   * @thrown \InvalidArgumentException
+   *   Thrown when either the source or alias has not a starting slash.
    */
   public function save($source, $alias, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $pid = NULL);
 
@@ -47,8 +50,8 @@ interface AliasStorageInterface {
    * @return array|false
    *   FALSE if no alias was found or an associative array containing the
    *   following keys:
-   *   - source (string): The internal system path.
-   *   - alias (string): The URL alias.
+   *   - source (string): The internal system path with a starting slash.
+   *   - alias (string): The URL alias with a starting slash.
    *   - pid (int): Unique path alias identifier.
    *   - langcode (string): The language code of the alias.
    */

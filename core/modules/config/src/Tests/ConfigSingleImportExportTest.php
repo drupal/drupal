@@ -134,7 +134,7 @@ EOD;
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertRaw(t('Are you sure you want to update the %name @type?', array('%name' => $config->getName(), '@type' => 'simple configuration')));
     $this->drupalPostForm(NULL, array(), t('Confirm'));
-    $this->drupalGet('/');
+    $this->drupalGet('');
     $this->assertText('Test simple import');
   }
 

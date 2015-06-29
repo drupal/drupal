@@ -84,6 +84,6 @@ function path_entity_base_field_info(EntityTypeInterface $entity_type) {
  */
 function path_entity_translation_delete(EntityInterface $translation) {
   $path = $translation->urlInfo()->getInternalPath();
-  $conditions = array('source' => $path, 'langcode' => $translation->language()->getId());
+  $conditions = array('source' => '/' . $path, 'langcode' => $translation->language()->getId());
   \Drupal::service('path.alias_storage')->delete($conditions);
 }

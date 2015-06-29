@@ -83,7 +83,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Edit the node to set language and path.
     $edit = array();
-    $edit['path[0][alias]'] = $english_alias;
+    $edit['path[0][alias]'] = '/' . $english_alias;
     $this->drupalPostForm('node/' . $english_node->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
@@ -98,7 +98,7 @@ class PathLanguageTest extends PathTestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
     $french_alias = $this->randomMachineName();
-    $edit['path[0][alias]'] = $french_alias;
+    $edit['path[0][alias]'] = '/' . $french_alias;
     $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
 
     // Clear the path lookup cache.
@@ -116,7 +116,7 @@ class PathLanguageTest extends PathTestBase {
     $this->assertTrue($english_node->hasTranslation('fr'), 'Node found in database.');
 
     // Confirm that the alias works.
-    $this->drupalGet('fr/' . $edit['path[0][alias]']);
+    $this->drupalGet('fr' . $edit['path[0][alias]']);
     $this->assertText($english_node_french_translation->body->value, 'Alias for French translation works.');
 
     // Confirm that the alias is returned for the URL. Languages are cached on
@@ -174,22 +174,22 @@ class PathLanguageTest extends PathTestBase {
     // The alias manager has an internal path lookup cache. Check to see that
     // it has the appropriate contents at this point.
     $this->container->get('path.alias_manager')->cacheClear();
-    $french_node_path = $this->container->get('path.alias_manager')->getPathByAlias($french_alias, 'fr');
-    $this->assertEqual($french_node_path, 'node/' . $english_node_french_translation->id(), 'Normal path works.');
+    $french_node_path = $this->container->get('path.alias_manager')->getPathByAlias('/' . $french_alias, 'fr');
+    $this->assertEqual($french_node_path, '/node/' . $english_node_french_translation->id(), 'Normal path works.');
     // Second call should return the same path.
-    $french_node_path = $this->container->get('path.alias_manager')->getPathByAlias($french_alias, 'fr');
-    $this->assertEqual($french_node_path, 'node/' . $english_node_french_translation->id(), 'Normal path is the same.');
+    $french_node_path = $this->container->get('path.alias_manager')->getPathByAlias('/' . $french_alias, 'fr');
+    $this->assertEqual($french_node_path, '/node/' . $english_node_french_translation->id(), 'Normal path is the same.');
 
     // Confirm that the alias works.
-    $french_node_alias = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $english_node_french_translation->id(), 'fr');
-    $this->assertEqual($french_node_alias, $french_alias, 'Alias works.');
+    $french_node_alias = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $english_node_french_translation->id(), 'fr');
+    $this->assertEqual($french_node_alias, '/' . $french_alias, 'Alias works.');
     // Second call should return the same alias.
-    $french_node_alias = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $english_node_french_translation->id(), 'fr');
-    $this->assertEqual($french_node_alias, $french_alias, 'Alias is the same.');
+    $french_node_alias = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $english_node_french_translation->id(), 'fr');
+    $this->assertEqual($french_node_alias, '/' . $french_alias, 'Alias is the same.');
 
     // Confirm that the alias is removed if the translation is deleted.
     $english_node->removeTranslation('fr');
     $english_node->save();
-    $this->assertFalse($this->container->get('path.alias_storage')->aliasExists($french_alias, 'fr'), 'Alias for French translation is removed when translation is deleted.');
+    $this->assertFalse($this->container->get('path.alias_storage')->aliasExists('/' . $french_alias, 'fr'), 'Alias for French translation is removed when translation is deleted.');
   }
 }

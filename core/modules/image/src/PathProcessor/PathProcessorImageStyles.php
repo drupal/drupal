@@ -32,11 +32,11 @@ class PathProcessorImageStyles implements InboundPathProcessorInterface {
    */
   public function processInbound($path, Request $request) {
     $directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
-    if (strpos($path, $directory_path . '/styles/') === 0) {
-      $path_prefix = $directory_path . '/styles/';
+    if (strpos($path, '/' . $directory_path . '/styles/') === 0) {
+      $path_prefix = '/' . $directory_path . '/styles/';
     }
-    elseif (strpos($path, 'system/files/styles/') === 0) {
-      $path_prefix = 'system/files/styles/';
+    elseif (strpos($path, '/system/files/styles/') === 0) {
+      $path_prefix = '/system/files/styles/';
     }
     else {
       return $path;

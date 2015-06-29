@@ -11,6 +11,3 @@ migrate.source.empty:
     provider:
       type: string
       label: 'Provider'
-    constants:
-      type: ignore
-      label: 'Constants'

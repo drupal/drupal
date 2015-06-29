@@ -86,7 +86,7 @@ class RequestPathTest extends KernelTestBase {
     // Get the request path condition and test and configure it to check against
     // different patterns and requests.
 
-    $pages = "my/pass/page\r\nmy/pass/page2\r\nfoo";
+    $pages = "/my/pass/page\r\n/my/pass/page2\r\n/foo";
 
     $request = Request::create('/my/pass/page2');
     $this->requestStack->push($request);
@@ -95,42 +95,42 @@ class RequestPathTest extends KernelTestBase {
     $condition = $this->pluginManager->createInstance('request_path');
     $condition->setConfig('pages', $pages);
 
-    $this->aliasManager->addAlias('my/pass/page2', 'my/pass/page2');
+    $this->aliasManager->addAlias('/my/pass/page2', '/my/pass/page2');
 
     $this->assertTrue($condition->execute(), 'The request path matches a standard path');
-    $this->assertEqual($condition->summary(), 'Return true on the following pages: my/pass/page, my/pass/page2, foo', 'The condition summary matches for a standard path');
+    $this->assertEqual($condition->summary(), 'Return true on the following pages: /my/pass/page, /my/pass/page2, /foo', 'The condition summary matches for a standard path');
 
     // Test an aliased path.
     $this->currentPath->setPath('/my/aliased/page', $request);
     $this->requestStack->pop();
     $this->requestStack->push($request);
 
-    $this->aliasManager->addAlias('my/aliased/page', 'my/pass/page');
+    $this->aliasManager->addAlias('/my/aliased/page', '/my/pass/page');
 
     $this->assertTrue($condition->execute(), 'The request path matches an aliased path');
-    $this->assertEqual($condition->summary(), 'Return true on the following pages: my/pass/page, my/pass/page2, foo', 'The condition summary matches for an aliased path');
+    $this->assertEqual($condition->summary(), 'Return true on the following pages: /my/pass/page, /my/pass/page2, /foo', 'The condition summary matches for an aliased path');
 
     // Test a wildcard path.
-    $this->aliasManager->addAlias('my/pass/page3', 'my/pass/page3');
+    $this->aliasManager->addAlias('/my/pass/page3', '/my/pass/page3');
     $this->currentPath->setPath('/my/pass/page3', $request);
     $this->requestStack->pop();
     $this->requestStack->push($request);
 
-    $condition->setConfig('pages', 'my/pass/*');
+    $condition->setConfig('pages', '/my/pass/*');
 
     $this->assertTrue($condition->evaluate(), 'The system_path my/pass/page3 passes for wildcard paths.');
-    $this->assertEqual($condition->summary(), 'Return true on the following pages: my/pass/*', 'The condition summary matches for a wildcard path');
+    $this->assertEqual($condition->summary(), 'Return true on the following pages: /my/pass/*', 'The condition summary matches for a wildcard path');
 
     // Test a missing path.
     $this->requestStack->pop();
     $this->requestStack->push($request);
     $this->currentPath->setPath('/my/fail/page4', $request);
 
-    $condition->setConfig('pages', 'my/pass/*');
+    $condition->setConfig('pages', '/my/pass/*');
 
-    $this->aliasManager->addAlias('my/fail/page4', 'my/fail/page4');
+    $this->aliasManager->addAlias('/my/fail/page4', '/my/fail/page4');
 
-    $this->assertFalse($condition->evaluate(), 'The system_path my/pass/page4 fails for a missing path.');
+    $this->assertFalse($condition->evaluate(), 'The system_path /my/pass/page4 fails for a missing path.');
 
   }
 }

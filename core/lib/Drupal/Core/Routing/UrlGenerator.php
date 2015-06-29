@@ -435,7 +435,7 @@ class UrlGenerator implements UrlGeneratorInterface {
       return $collect_cacheability_metadata ? $generated_url->setGeneratedUrl($url) : $url;
     }
     else {
-      $path = ltrim($this->processPath($path, $options, $generated_url), '/');
+      $path = ltrim($this->processPath('/' . $path, $options, $generated_url), '/');
     }
 
     if (!isset($options['script'])) {
@@ -488,7 +488,7 @@ class UrlGenerator implements UrlGeneratorInterface {
       $actual_path = $path;
       $query_string = '';
     }
-    $path = '/' . $this->pathProcessor->processOutbound(trim($actual_path, '/'), $options, $this->requestStack->getCurrentRequest(), $cacheable_metadata);
+    $path = $this->pathProcessor->processOutbound($actual_path === '/' ? $actual_path : rtrim($actual_path, '/'), $options, $this->requestStack->getCurrentRequest(), $cacheable_metadata);
     $path .= $query_string;
     return $path;
   }

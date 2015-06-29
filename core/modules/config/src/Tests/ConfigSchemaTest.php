@@ -293,7 +293,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $meta = \Drupal::service('config.typed')->get('system.site');
     $property = $meta->get('page')->get('front');
     $this->assertTrue($property instanceof StringInterface, 'Got the right wrapper fo the page.front property.');
-    $this->assertEqual($property->getValue(), 'user/login', 'Got the right value for page.front data.');
+    $this->assertEqual($property->getValue(), '/user/login', 'Got the right value for page.front data.');
     $definition = $property->getDataDefinition();
     $this->assertTrue(empty($definition['translatable']), 'Got the right translatability setting for page.front data.');
 
@@ -301,13 +301,13 @@ class ConfigSchemaTest extends KernelTestBase {
     $list = $meta->get('page')->getElements();
     $this->assertEqual(count($list), 3, 'Got a list with the right number of properties for site page data');
     $this->assertTrue(isset($list['front']) && isset($list['403']) && isset($list['404']), 'Got a list with the right properties for site page data.');
-    $this->assertEqual($list['front']->getValue(), 'user/login', 'Got the right value for page.front data from the list.');
+    $this->assertEqual($list['front']->getValue(), '/user/login', 'Got the right value for page.front data from the list.');
 
     // And test some TypedConfigInterface methods.
     $properties = $list;
     $this->assertTrue(count($properties) == 3 && $properties['front'] == $list['front'], 'Got the right properties for site page.');
     $values = $meta->get('page')->toArray();
-    $this->assertTrue(count($values) == 3 && $values['front'] == 'user/login', 'Got the right property values for site page.');
+    $this->assertTrue(count($values) == 3 && $values['front'] == '/user/login', 'Got the right property values for site page.');
 
     // Now let's try something more complex, with nested objects.
     $wrapper = \Drupal::service('config.typed')->get('image.style.large');

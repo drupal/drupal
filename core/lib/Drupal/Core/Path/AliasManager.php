@@ -187,6 +187,9 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
    * {@inheritdoc}
    */
   public function getAliasByPath($path, $langcode = NULL) {
+    if ($path[0] !== '/') {
+      throw new \InvalidArgumentException(sprintf('Source path %s has to start with a slash.', $path));
+    }
     // If no language is explicitly specified we default to the current URL
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
@@ -196,7 +199,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     // Check the path whitelist, if the top-level part before the first /
     // is not in the list, then there is no need to do anything further,
     // it is not in the database.
-    if (empty($path) || !$this->whitelist->get(strtok($path, '/'))) {
+    if ($path === '/' || !$this->whitelist->get(strtok(trim($path, '/'), '/'))) {
       return $path;
     }
 

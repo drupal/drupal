@@ -138,11 +138,11 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $exclude[$front] = TRUE;
     // /user is just a redirect, so skip it.
     // @todo Find a better way to deal with /user.
-    $exclude['user'] = TRUE;
+    $exclude['/user'] = TRUE;
     while (count($path_elements) > 1) {
       array_pop($path_elements);
       // Copy the path elements for up-casting.
-      $route_request = $this->getRequestForPath(implode('/', $path_elements), $exclude);
+      $route_request = $this->getRequestForPath('/' . implode('/', $path_elements), $exclude);
       if ($route_request) {
         $route_match = RouteMatch::createFromRequest($route_request);
         $access = $this->accessManager->check($route_match, $this->currentUser);
@@ -161,7 +161,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
 
     }
-    if ($path && $path != $front) {
+    if ($path && '/' . $path != $front) {
       // Add the Home link, except for the front page.
       $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     }
@@ -172,7 +172,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * Matches a path in the router.
    *
    * @param string $path
-   *   The request path.
+   *   The request path with a leading slash.
    * @param array $exclude
    *   An array of paths or system paths to skip.
    *
@@ -185,7 +185,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
     // @todo Use the RequestHelper once https://www.drupal.org/node/2090293 is
     //   fixed.
-    $request = Request::create('/' . $path);
+    $request = Request::create($path);
     // Performance optimization: set a short accept header to reduce overhead in
     // AcceptHeaderMatcher when matching the request.
     $request->headers->set('Accept', 'text/html');
@@ -195,7 +195,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // This resolves to the front page, which we already add.
       return NULL;
     }
-    $this->currentPath->setPath('/' . $processed, $request);
+    $this->currentPath->setPath($processed, $request);
     // Attempt to match this path to provide a fully built request.
     try {
       $request->attributes->add($this->router->matchRequest($request));

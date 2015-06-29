@@ -35,7 +35,7 @@ class BlockTest extends BlockTestBase {
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $edit['visibility[request_path][pages]'] = 'user*';
+    $edit['visibility[request_path][pages]'] = '/user*';
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);

@@ -23,20 +23,20 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
    */
   public function processInbound($path, Request $request) {
     // Rewrite user/username to user/uid.
-    if (preg_match('!^user/([^/]+)(/.*)?!', $path, $matches)) {
+    if (preg_match('!^/user/([^/]+)(/.*)?!', $path, $matches)) {
       if ($account = user_load_by_name($matches[1])) {
         $matches += array(2 => '');
-        $path = 'user/' . $account->id() . $matches[2];
+        $path = '/user/' . $account->id() . $matches[2];
       }
     }
 
     // Rewrite community/ to forum/.
-    if ($path == 'community' || strpos($path, 'community/') === 0) {
-      $path = 'forum' . substr($path, 9);
+    if ($path == '/community' || strpos($path, '/community/') === 0) {
+      $path = '/forum' . substr($path, 10);
     }
 
-    if ($path == 'url-alter-test/bar') {
-      $path = 'url-alter-test/foo';
+    if ($path == '/url-alter-test/bar') {
+      $path = '/url-alter-test/foo';
     }
     return $path;
   }
@@ -46,10 +46,10 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, CacheableMetadata $cacheable_metadata = NULL) {
     // Rewrite user/uid to user/username.
-    if (preg_match('!^user/([0-9]+)(/.*)?!', $path, $matches)) {
+    if (preg_match('!^/user/([0-9]+)(/.*)?!', $path, $matches)) {
       if ($account = User::load($matches[1])) {
         $matches += array(2 => '');
-        $path = 'user/' . $account->getUsername() . $matches[2];
+        $path = '/user/' . $account->getUsername() . $matches[2];
         if ($cacheable_metadata) {
           $cacheable_metadata->addCacheTags($account->getCacheTags());
         }
@@ -57,8 +57,8 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
     }
 
     // Rewrite forum/ to community/.
-    if ($path == 'forum' || strpos($path, 'forum/') === 0) {
-      $path = 'community' . substr($path, 5);
+    if ($path == '/forum' || strpos($path, '/forum/') === 0) {
+      $path = '/community' . substr($path, 5);
     }
     return $path;
   }

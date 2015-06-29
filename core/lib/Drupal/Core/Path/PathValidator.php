@@ -96,6 +96,8 @@ class PathValidator implements PathValidatorInterface {
    * Helper for getUrlIfValid() and getUrlIfValidWithoutAccessCheck().
    */
   protected function getUrl($path, $access_check) {
+    $path = ltrim($path, '/');
+
     $parsed_url = UrlHelper::parse($path);
 
     $options = [];
@@ -119,7 +121,6 @@ class PathValidator implements PathValidatorInterface {
       return Url::fromUri($path);
     }
 
-    $path = ltrim($path, '/');
     $request = Request::create('/' . $path);
     $attributes = $this->getPathAttributes($path, $request, $access_check);
 
@@ -155,10 +156,10 @@ class PathValidator implements PathValidatorInterface {
       $router = $this->accessAwareRouter;
     }
 
-    $path = $this->pathProcessor->processInbound($path, $request);
+    $path = $this->pathProcessor->processInbound('/' . $path, $request);
 
     try {
-      return $router->match('/' . $path);
+      return $router->match($path);
     }
     catch (ResourceNotFoundException $e) {
       return FALSE;

@@ -179,8 +179,8 @@ class PathValidatorTest extends UnitTestCase {
       ->willReturn([RouteObjectInterface::ROUTE_NAME => 'test_route', '_raw_variables' => new ParameterBag(['key' => 'value'])]);
     $this->pathProcessor->expects($this->once())
       ->method('processInbound')
-      ->with('path-alias', $this->anything())
-      ->willReturn('test-path');
+      ->with('/path-alias', $this->anything())
+      ->willReturn('/test-path');
 
     $this->assertTrue($this->pathValidator->isValid('path-alias'));
   }

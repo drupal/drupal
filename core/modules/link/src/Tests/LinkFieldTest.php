@@ -92,7 +92,7 @@ class LinkFieldTest extends WebTestBase {
     $this->assertRaw('placeholder="http://example.com"');
 
     // Create a path alias.
-    \Drupal::service('path.alias_storage')->save('admin', 'a/path/alias');
+    \Drupal::service('path.alias_storage')->save('/admin', '/a/path/alias');
 
     // Create a node to test the link widget.
     $node = $this->drupalCreateNode();

@@ -105,14 +105,14 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
    */
   public function processInbound($path, Request $request) {
     $config = $this->config->get('language.negotiation')->get('url');
-    $parts = explode('/', $path);
+    $parts = explode('/', trim($path, '/'));
     $prefix = array_shift($parts);
 
     // Search prefix within added languages.
     foreach ($this->languageManager->getLanguages() as $language) {
       if (isset($config['prefixes'][$language->getId()]) && $config['prefixes'][$language->getId()] == $prefix) {
         // Rebuild $path with the language removed.
-        $path = implode('/', $parts);
+        $path = '/' . implode('/', $parts);
         break;
       }
     }

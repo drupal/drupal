@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,7 +43,7 @@ class FrontPageTest extends WebTestBase {
     $this->nodePath = "node/" . $this->drupalCreateNode(array('promote' => 1))->id();
 
     // Configure 'node' as front page.
-    $this->config('system.site')->set('page.front', 'node')->save();
+    $this->config('system.site')->set('page.front', '/node')->save();
     // Enable front page logging in system_test.module.
     \Drupal::state()->set('system_test.front_page_output', 1);
   }
@@ -67,12 +68,17 @@ class FrontPageTest extends WebTestBase {
     $this->assertNoText(t('On front page.'), 'Path is not the front page.');
 
     // Change the front page to an invalid path.
-    $edit = array('site_frontpage' => 'kittens');
+    $edit = array('site_frontpage' => '/kittens');
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertText(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $edit['site_frontpage'])));
 
+    // Change the front page to a path without a starting slash.
+    $edit = ['site_frontpage' => $this->nodePath];
+    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' =>  $edit['site_frontpage']]));
+
     // Change the front page to a valid path.
-    $edit['site_frontpage'] = $this->nodePath;
+    $edit['site_frontpage'] = '/' . $this->nodePath;
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'The front page path has been saved.');
 

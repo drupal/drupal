@@ -34,8 +34,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Create an alias for the node so we can test aliases.
     $path = array(
-      'source' => 'node/' . $this->node->id(),
-      'alias' => $this->randomMachineName(8),
+      'source' => '/node/' . $this->node->id(),
+      'alias' => '/' . $this->randomMachineName(8),
     );
     $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
 
