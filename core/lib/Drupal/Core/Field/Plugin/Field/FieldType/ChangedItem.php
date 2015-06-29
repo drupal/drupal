@@ -36,37 +36,21 @@ class ChangedItem extends CreatedItem {
       $this->value = REQUEST_TIME;
     }
     else {
-      // On an existing entity the changed timestamp will only be set to request
-      // time automatically if at least one other field value of the entity has
-      // changed. This detection doesn't run on new entities and will be turned
-      // off if the changed timestamp is set manually before save, for example
-      // during migrations or using
+      // On an existing entity translation, the changed timestamp will only be
+      // set to the request time automatically if at least one other field value
+      // of the entity has changed. This detection does not run on new entities
+      // and will be turned off if the changed timestamp is set manually before
+      // save, for example during migrations or by using
       // \Drupal\content_translation\ContentTranslationMetadataWrapperInterface::setChangedTime().
-      // @todo Knowing if the current translation was modified or not is
-      //   generally useful. There's a follow-up issue to reduce the nesting
-      //   here and to offer an accessor for this information. See
-      //   https://www.drupal.org/node/2453153
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $entity = $this->getEntity();
-      if (!$entity->isNew()) {
-        $field_name = $this->getFieldDefinition()->getName();
-        // Clone $entity->original to avoid modifying it when calling
-        // getTranslation().
-        $original = clone $entity->original;
-        $translatable = $this->getFieldDefinition()->isTranslatable();
-        if ($translatable) {
-          $original = $original->getTranslation($entity->language()->getId());
-        }
-        if ($this->value == $original->get($field_name)->value) {
-          foreach ($entity->getFieldDefinitions() as $other_field_name => $other_field_definition) {
-            if ($other_field_name != $field_name && !$other_field_definition->isComputed() && (!$translatable || $other_field_definition->isTranslatable())) {
-              $items = $entity->get($other_field_name)->filterEmptyItems();
-              $original_items = $original->get($other_field_name)->filterEmptyItems();
-              if (!$items->equals($original_items)) {
-                $this->value = REQUEST_TIME;
-                break;
-              }
-            }
-          }
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $original */
+      $original = $entity->original;
+      $langcode = $entity->language()->getId();
+      if (!$entity->isNew() && $original->hasTranslation($langcode)) {
+        $original_value = $original->getTranslation($langcode)->get($this->getFieldDefinition()->getName())->value;
+        if ($this->value == $original_value && $entity->hasTranslationChanges()) {
+          $this->value = REQUEST_TIME;
         }
       }
     }

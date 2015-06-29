@@ -238,4 +238,24 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
     return FALSE;
   }
 
+  /**
+   * Populates the affected flag for all the revision translations.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   An entity object being saved.
+   */
+  protected function populateAffectedRevisionTranslations(ContentEntityInterface $entity) {
+    if ($this->entityType->isTranslatable() && $this->entityType->isRevisionable()) {
+      $languages = $entity->getTranslationLanguages();
+      foreach ($languages as $langcode => $language) {
+        $translation = $entity->getTranslation($langcode);
+        // Avoid populating the value if it was already manually set.
+        $affected = $translation->isRevisionTranslationAffected();
+        if (!isset($affected) && $translation->hasTranslationChanges()) {
+          $translation->setRevisionTranslationAffected(TRUE);
+        }
+      }
+    }
+  }
+
 }

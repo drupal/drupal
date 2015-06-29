@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\entity_test\Entity\EntityTestMulChanged;
+use Drupal\entity_test\Entity\EntityTestMulRevChanged;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -24,6 +26,20 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
   public static $modules = ['language', 'user', 'system', 'field', 'text', 'filter', 'entity_test'];
 
   /**
+   * The EntityTestMulChanged entity type storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $mulChangedStorage;
+
+  /**
+   * The EntityTestMulRevChanged entity type storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $mulRevChangedStorage;
+
+  /**
    * @inheritdoc
    */
   protected function setUp() {
@@ -31,9 +47,13 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
 
     // Enable an additional language.
     ConfigurableLanguage::createFromLangcode('de')->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     $this->installEntitySchema('entity_test_mul_changed');
     $this->installEntitySchema('entity_test_mulrev_changed');
+
+    $this->mulChangedStorage = $this->entityManager->getStorage('entity_test_mul_changed');
+    $this->mulRevChangedStorage = $this->entityManager->getStorage('entity_test_mulrev_changed');
   }
 
   /**
@@ -43,8 +63,8 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
     $user1 = $this->createUser();
     $user2 = $this->createUser();
 
-    // Create some test entities.
-    $entity = entity_create('entity_test_mul_changed', array(
+    // Create a test entity.
+    $entity = EntityTestMulChanged::create(array(
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
@@ -73,6 +93,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
 
     $changed_en = $entity->getChangedTime();
 
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRevChanged $german */
     $german = $entity->addTranslation('de');
 
     $entity->save();
@@ -148,9 +169,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
     // At this point the changed time of the original language (en) is newer
     // than the changed time of the German translation. Now test that entity
     // queries work as expected.
-    $storage = $this->entityManager->getStorage('entity_test_mul_changed');
-
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en)->execute();
 
     $this->assertEqual(
@@ -158,7 +177,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time of original language.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en, '=', 'en')->execute();
 
     $this->assertEqual(
@@ -166,7 +185,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time of original language by setting the original language as condition.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_de, '=', 'en')->execute();
 
     $this->assertFalse(
@@ -174,7 +193,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'There\'s no original entity stored having the changed time of the German translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en)->condition('default_langcode', '1')->execute();
 
     $this->assertEqual(
@@ -182,7 +201,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time of default language.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_de)->condition('default_langcode', '1')->execute();
 
     $this->assertFalse(
@@ -190,7 +209,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'There\'s no entity stored using the default language having the changed time of the German translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_de)->execute();
 
     $this->assertEqual(
@@ -198,7 +217,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time of the German translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_de, '=', 'de')->execute();
 
     $this->assertEqual(
@@ -206,7 +225,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time of the German translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en, '=', 'de')->execute();
 
     $this->assertFalse(
@@ -214,7 +233,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'There\'s no German translation stored having the changed time of the original language.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_de, '>')->execute();
 
     $this->assertEqual(
@@ -222,7 +241,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time regardless of translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en, '<')->execute();
 
     $this->assertEqual(
@@ -230,7 +249,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time regardless of translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', 0, '>')->execute();
 
     $this->assertEqual(
@@ -238,7 +257,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Entity query can access changed time regardless of translation.'
     );
 
-    $query = $storage->getQuery();
+    $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en, '>')->execute();
 
     $this->assertFalse(
@@ -254,8 +273,8 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
     $user1 = $this->createUser();
     $user2 = $this->createUser();
 
-    // Create some test entities.
-    $entity = entity_create('entity_test_mulrev_changed', array(
+    // Create a test entity.
+    $entity = EntityTestMulRevChanged::create(array(
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
@@ -281,6 +300,11 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Changed time of original language is the same as changed time across all translations.'
     );
 
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is set for a new entity.'
+    );
+
     $changed_en = $entity->getChangedTime();
 
     $entity->setNewRevision();
@@ -292,8 +316,13 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Changed time of original language did not change.'
     );
 
-    $entity->setOwner($user2);
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is not set for new revision without changes.'
+    );
+
     $entity->setNewRevision();
+    $entity->setOwner($user2);
     $entity->save();
 
     $this->assertTrue(
@@ -301,11 +330,15 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Changed time of original language has been updated by new revision.'
     );
 
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is set for new revision with changes.'
+    );
+
     $changed_en = $entity->getChangedTime();
 
-    $entity->addTranslation('de');
-
-    $german = $entity->getTranslation('de');
+    /** @var \Drupal\entity_test\Entity\EntityTestMulRevChanged $german */
+    $german = $entity->addTranslation('de');
 
     $entity->save();
 
@@ -324,6 +357,16 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Changed time of the German translation is the newest time across all translations.'
     );
 
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is not reset by adding a new translation.'
+    );
+
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'Changed flag of German translation is set when adding the translation.'
+    );
+
     $changed_de = $german->getChangedTime();
 
     $entity->setNewRevision();
@@ -340,8 +383,18 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Changed time of the German translation did not change.'
     );
 
-    $german->setOwner($user2);
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is not set for new revision without changes.'
+    );
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'Changed flag of of the German translation is not set for new revision without changes.'
+    );
+
     $entity->setNewRevision();
+    $german->setOwner($user2);
     $entity->save();
 
     $this->assertEqual(
@@ -358,6 +411,135 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       $german->getChangedTime(), $entity->getChangedTimeAcrossTranslations(),
       'Changed time of the German translation is the newest time across all translations.'
     );
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is not set when changing the German Translation.'
+    );
+
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'Changed flag of German translation is set when changing the German translation.'
+    );
+
+    $french = $entity->getTranslation('fr');
+
+    $entity->setNewRevision();
+    $entity->save();
+
+    $this->assertEqual(
+      $entity->getChangedTime(), $changed_en,
+      'Changed time of original language did not change.'
+    );
+
+    $this->assertTrue(
+      $french->getChangedTime() > $entity->getChangedTime(),
+      'Changed time of the French translation is newer then the original language.'
+    );
+
+    $this->assertTrue(
+      $french->getChangedTime() > $entity->getChangedTime(),
+      'Changed time of the French translation is newer then the German translation.'
+    );
+
+    $this->assertEqual(
+      $french->getChangedTime(), $entity->getChangedTimeAcrossTranslations(),
+      'Changed time of the French translation is the newest time across all translations.'
+    );
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is reset by adding a new translation and a new revision.'
+    );
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'Changed flag of German translation is reset by adding a new translation and a new revision.'
+    );
+
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($french),
+      'Changed flag of French translation is set when adding the translation and a new revision.'
+    );
+
+    $entity->removeTranslation('fr');
+
+    $entity->setNewRevision();
+    $entity->save();
+
+    // This block simulates exactly the flow of a node form submission of a new
+    // translation and a new revision.
+    $form_entity_builder_entity = EntityTestMulRevChanged::load($entity->id());
+    // ContentTranslationController::prepareTranslation().
+    $form_entity_builder_entity = $form_entity_builder_entity->addTranslation('fr', $form_entity_builder_entity->toArray());
+    // EntityForm::buildEntity() during form submit.
+    $form_entity_builder_clone = clone $form_entity_builder_entity;
+    // NodeForm::submitForm().
+    $form_entity_builder_clone->setNewRevision();
+    // EntityForm::save().
+    $form_entity_builder_clone->save();
+
+    // The assertion fails unless https://www.drupal.org/node/2513094 is
+    // committed.
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($entity),
+      'Changed flag of original language is reset by adding a new translation and a new revision.'
+    );
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'Changed flag of German translation is reset by adding a new translation and a new revision.'
+    );
+
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($french),
+      'Changed flag of French translation is set when adding the translation and a new revision.'
+    );
+
+    $german->setOwner($user1);
+    $german->setRevisionTranslationAffected(FALSE);
+    $entity->save();
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'German translation changed but the changed flag is reset manually.'
+    );
+
+    $entity->setNewRevision();
+    $german->setRevisionTranslationAffected(TRUE);
+    $entity->save();
+
+    $this->assertTrue(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'German translation is not changed and a new revision is created but the changed flag is set manually.'
+    );
+
+    $german->setOwner($user2);
+    $entity->setNewRevision();
+    $german->setRevisionTranslationAffected(FALSE);
+    $entity->save();
+
+    $this->assertFalse(
+      $this->getRevisionTranslationAffectedFlag($german),
+      'German translation changed and a new revision is created but the changed flag is reset manually.'
+    );
+
+  }
+
+  /**
+   * Retrieves the revision translation affected flag value.
+   *
+   * @param \Drupal\entity_test\Entity\EntityTestMulRevChanged $entity
+   *   The entity object to be checked.
+   *
+   * @return bool
+   *   The flag value.
+   */
+  protected function getRevisionTranslationAffectedFlag(EntityTestMulRevChanged $entity) {
+    $query = $this->mulRevChangedStorage->getQuery();
+    $ids = $query->condition('revision_translation_affected', 1, '=', $entity->language()->getId())->execute();
+    $id = reset($ids);
+    return (bool) ($id == $entity->id());
   }
 
 }

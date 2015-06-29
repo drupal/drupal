@@ -7,7 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 
 /**
  * Create a node with revisions and test viewing, saving, reverting, and
@@ -19,8 +21,22 @@ class NodeRevisionsTest extends NodeTestBase {
   protected $nodes;
   protected $revisionLogs;
 
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = array('node', 'datetime', 'language', 'content_translation');
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+
+    ConfigurableLanguage::createFromLangcode('it')->save();
+
+    /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
+    $manager = \Drupal::service('content_translation.manager');
+    $manager->setEnabled('node', 'article', TRUE);
 
     // Create and log in user.
     $web_user = $this->drupalCreateUser(
@@ -29,7 +45,8 @@ class NodeRevisionsTest extends NodeTestBase {
         'revert page revisions',
         'delete page revisions',
         'edit any page content',
-        'delete any page content'
+        'delete any page content',
+        'translate any entity',
       )
     );
 
@@ -203,4 +220,58 @@ class NodeRevisionsTest extends NodeTestBase {
     $node_revision = $node_storage->load($node->id());
     $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
+
+  /**
+   * Tests the revision translations are correctly reverted.
+   */
+  public function testRevisionTranslationRevert() {
+    // Create a node and a few revisions.
+    $node = $this->drupalCreateNode(['langcode' => 'en']);
+    $this->createRevisions($node, 2);
+
+    // Translate the node and create a few translation revisions.
+    $translation = $node->addTranslation('it');
+    $this->createRevisions($translation, 3);
+    $revert_id = $node->getRevisionId();
+    $translated_title = $translation->label();
+
+    // Create a new revision for the default translation in-between a series of
+    // translation revisions.
+    $this->createRevisions($node, 1);
+    $default_translation_title = $node->label();
+
+    // And create a few more translation revisions.
+    $this->createRevisions($translation, 2);
+    $translation_revision_id = $translation->getRevisionId();
+
+    // Now revert the a translation revision preceding the last default
+    // translation revision, and check that the desired value was reverted but
+    // the default translation value was preserved.
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $revert_id . "/revert", [], t('Revert'));
+    /** @var \Drupal\node\NodeStorage $node_storage */
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage->resetCache();
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $node_storage->load($node->id());
+    $this->assertTrue($node->getRevisionId() > $translation_revision_id);
+    $this->assertEqual($node->label(), $default_translation_title);
+    $this->assertEqual($node->getTranslation('it')->label(), $translated_title);
+  }
+
+  /**
+   * Creates a series of revisions for the specified node.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node object.
+   * @param $count
+   *   The number of revisions to be created.
+   */
+  protected function createRevisions(NodeInterface $node, $count) {
+    for ($i = 0; $i < $count; $i++) {
+      $node->title = $this->randomString();
+      $node->setNewRevision(TRUE);
+      $node->save();
+    }
+  }
+
 }

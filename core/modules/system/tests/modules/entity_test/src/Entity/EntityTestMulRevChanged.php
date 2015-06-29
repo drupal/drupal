@@ -61,6 +61,13 @@ class EntityTestMulRevChanged extends EntityTestMulChanged {
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
+    $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Revision translation affected'))
+      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setReadOnly(TRUE)
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
+
     $fields['langcode']->setRevisionable(TRUE);
     $fields['name']->setRevisionable(TRUE);
     $fields['user_id']->setRevisionable(TRUE);

@@ -957,6 +957,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity->{$this->revisionKey}->value = $this->saveRevision($entity);
       }
       if ($this->dataTable) {
+        $this->populateAffectedRevisionTranslations($entity);
         $this->saveToSharedTables($entity);
       }
       if ($this->revisionDataTable) {
@@ -984,6 +985,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $record->{$this->revisionKey} = $this->saveRevision($entity);
       }
       if ($this->dataTable) {
+        $this->populateAffectedRevisionTranslations($entity);
         $this->saveToSharedTables($entity);
       }
       if ($this->revisionDataTable) {

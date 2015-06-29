@@ -59,6 +59,11 @@ class ContentTranslationController extends ControllerBase {
     $source_translation = $entity->getTranslation($source->getId());
     $target_translation = $entity->addTranslation($target->getId(), $source_translation->toArray());
 
+    // Make sure we do not inherit the affected status from the source values.
+    if ($entity->getEntityType()->isRevisionable()) {
+      $target_translation->setRevisionTranslationAffected(NULL);
+    }
+
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->entityManager()->getStorage('user')->load($this->currentUser()->id());
     $metadata = $this->manager->getTranslationMetadata($target_translation);

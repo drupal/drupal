@@ -219,7 +219,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function setNewRevision($value = TRUE) {
-
     if (!$this->getEntityType()->hasKey('revision')) {
       throw new \LogicException(SafeMarkup::format('Entity type @entity_type does not support revisions.', ['@entity_type' => $this->getEntityTypeId()]));
     }
@@ -228,7 +227,17 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       // When saving a new revision, set any existing revision ID to NULL so as
       // to ensure that a new revision will actually be created.
       $this->set($this->getEntityType()->getKey('revision'), NULL);
+
+      // Make sure that the flag tracking which translations are affected by the
+      // current revision is reset.
+      foreach ($this->translations as $langcode => $data) {
+        // But skip removed translations.
+        if ($this->hasTranslation($langcode)) {
+          $this->getTranslation($langcode)->setRevisionTranslationAffected(NULL);
+        }
+      }
     }
+
     $this->newRevision = $value;
   }
 
@@ -248,6 +257,25 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $this->isDefaultRevision = (bool) $new_value;
     }
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRevisionTranslationAffected() {
+    $field_name = 'revision_translation_affected';
+    return $this->hasField($field_name) ? $this->get($field_name)->value : TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionTranslationAffected($affected) {
+    $field_name = 'revision_translation_affected';
+    if ($this->hasField($field_name)) {
+      $this->set($field_name, $affected);
+    }
+    return $this;
   }
 
   /**
@@ -680,6 +708,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translation->fields = &$this->fields;
     $translation->translations = &$this->translations;
     $translation->enforceIsNew = &$this->enforceIsNew;
+    $translation->newRevision = &$this->newRevision;
     $translation->translationInitialize = FALSE;
     // Reset language-dependent properties.
     unset($translation->entityKeys['label']);
@@ -1010,6 +1039,57 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasTranslationChanges() {
+    if ($this->isNew()) {
+      return TRUE;
+    }
+
+    // $this->original only exists during save. See
+    // \Drupal\Core\Entity\EntityStorageBase::save(). If it exists we re-use it
+    // here for performance reasons.
+    /** @var \Drupal\Core\Entity\ContentEntityBase $original */
+    $original = $this->original ? $this->original : NULL;
+
+    if (!$original) {
+      $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();
+      $original = $this->entityManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
+    }
+
+    // If the current translation has just been added, we have a change.
+    $translated = count($this->translations) > 1;
+    if ($translated && !$original->hasTranslation($this->activeLangcode)) {
+      return TRUE;
+    }
+
+    // Compare field item current values with the original ones to determine
+    // whether we have changes. If a field is not translatable and the entity is
+    // translated we skip it because, depending on the use case, it would make
+    // sense to mark all translations as changed or none of them. We skip also
+    // computed fields as comparing them with their original values might not be
+    // possible or be meaningless.
+    /** @var \Drupal\Core\Entity\ContentEntityBase $translation */
+    $translation = $original->getTranslation($this->activeLangcode);
+    foreach ($this->getFieldDefinitions() as $field_name => $definition) {
+      // @todo Avoid special-casing the following fields. See
+      //    https://www.drupal.org/node/2329253.
+      if ($field_name == 'revision_translation_affected' || $field_name == 'revision_id') {
+        continue;
+      }
+      if (!$definition->isComputed() && (!$translated || $definition->isTranslatable())) {
+        $items = $this->get($field_name)->filterEmptyItems();
+        $original_items = $translation->get($field_name)->filterEmptyItems();
+        if (!$items->equals($original_items)) {
+          return TRUE;
+        }
+      }
+    }
+
+    return FALSE;
   }
 
 }
