@@ -426,6 +426,10 @@ class Url {
       }
       // Remove the leading slash.
       $uri_parts['path'] = substr($uri_parts['path'], 1);
+
+      if (UrlHelper::isExternal($uri_parts['path'])) {
+        throw new \InvalidArgumentException(SafeMarkup::format('The internal path component "@path" is external. You are not allowed to specify an external URL together with internal:/.', ['@path' => $uri_parts['path']]));
+      }
     }
 
     $url = \Drupal::pathValidator()
