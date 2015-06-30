@@ -335,10 +335,10 @@ class Datelist extends DateElementBase {
   protected static function incrementRound(&$date, $increment) {
     // Round minutes and seconds, if necessary.
     if ($date instanceOf DrupalDateTime && $increment > 1) {
-      $day = intval(date_format($date, 'j'));
-      $hour = intval(date_format($date, 'H'));
-      $second = intval(round(intval(date_format($date, 's')) / $increment) * $increment);
-      $minute = intval(date_format($date, 'i'));
+      $day = intval($date->format('j'));
+      $hour = intval($date->format('H'));
+      $second = intval(round(intval($date->format('s')) / $increment) * $increment);
+      $minute = intval($date->format('i'));
       if ($second == 60) {
         $minute += 1;
         $second = 0;
@@ -348,12 +348,12 @@ class Datelist extends DateElementBase {
         $hour += 1;
         $minute = 0;
       }
-      date_time_set($date, $hour, $minute, $second);
+      $date->setTime($hour, $minute, $second);
       if ($hour == 24) {
         $day += 1;
-        $year = date_format($date, 'Y');
-        $month = date_format($date, 'n');
-        date_date_set($date, $year, $month, $day);
+        $year = $date->format('Y');
+        $month = $date->format('n');
+        $date->setDate($year, $month, $day);
       }
     }
     return $date;

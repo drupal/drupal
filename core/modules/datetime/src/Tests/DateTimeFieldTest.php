@@ -438,6 +438,46 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertOptionSelected("edit-$field_name-0-value-hour", '5', 'Correct hour selected.');
     $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
     $this->assertOptionSelected("edit-$field_name-0-value-ampm", 'am', 'Correct ampm selected.');
+
+    // Test the widget using increment other than 1 and 24 hour mode.
+    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+      ->setComponent($field_name, array(
+        'type' => 'datetime_datelist',
+        'settings' => array(
+          'increment' => 15,
+          'date_order' => 'YMD',
+          'time_type' => '24',
+        ),
+      ))
+      ->save();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+
+    // Display creation form.
+    $this->drupalGet('entity_test/add');
+
+    // Other elements are unaffected by the changed settings.
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
+    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element not found.');
+
+    // Submit a valid date and ensure it is accepted.
+    $date_value = array('year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 17, 'minute' => 15);
+
+    $edit = array();
+    foreach ($date_value as $part => $value) {
+      $edit["{$field_name}[0][value][$part]"] = $value;
+    }
+
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
+
+    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-hour", '17', 'Correct hour selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
   }
 
   /**
