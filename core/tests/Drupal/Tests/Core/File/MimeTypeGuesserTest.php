@@ -38,6 +38,15 @@ class MimeTypeGuesserTest extends UnitTestCase {
     MimeTypeGuesser::registerWithSymfonyGuesser($container);
     $guessers = $this->readAttribute($symfony_guesser, 'guessers');
     $this->assertInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
+    $count = count($guessers);
+
+    $container = new ContainerBuilder();
+    $container->set('file.mime_type.guesser', new MimeTypeGuesser());
+    MimeTypeGuesser::registerWithSymfonyGuesser($container);
+    $guessers = $this->readAttribute($symfony_guesser, 'guessers');
+    $this->assertInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
+    $new_count = count($guessers);
+    $this->assertEquals($count, $new_count, 'The count of mime type guessers remains the same after container re-init.');
   }
 
 }

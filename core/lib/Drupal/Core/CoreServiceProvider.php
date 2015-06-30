@@ -10,6 +10,7 @@ namespace Drupal\Core;
 use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
+use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterLazyRouteEnhancers;
 use Drupal\Core\DependencyInjection\Compiler\RegisterLazyRouteFilters;
 use Drupal\Core\DependencyInjection\Compiler\DependencySerializationTraitPass;
@@ -59,6 +60,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // service definitions. This pass must come first so that later
     // list-building passes are operating on the post-alter services list.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
+
+    $container->addCompilerPass(new ProxyServicesPass());
 
     $container->addCompilerPass(new BackendCompilerPass());
 

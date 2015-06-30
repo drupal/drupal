@@ -37,7 +37,23 @@ class ProxyBuilderTest extends UnitTestCase {
    */
   public function testBuildProxyClassName() {
     $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
-    $this->assertEquals('Drupal_Tests_Component_ProxyBuilder_TestServiceNoMethod_Proxy', $class_name);
+    $this->assertEquals('Drupal\Tests\ProxyClass\Component\ProxyBuilder\TestServiceNoMethod', $class_name);
+  }
+
+  /**
+   * @covers ::buildProxyClassName
+   */
+  public function testBuildProxyClassNameForModule() {
+    $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\views_ui\ParamConverter\ViewUIConverter');
+    $this->assertEquals('Drupal\views_ui\ProxyClass\ParamConverter\ViewUIConverter', $class_name);
+  }
+
+  /**
+   * @covers ::buildProxyNamespace
+   */
+  public function testBuildProxyNamespace() {
+    $class_name = $this->proxyBuilder->buildProxyNamespace('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
+    $this->assertEquals('Drupal\Tests\ProxyClass\Component\ProxyBuilder', $class_name);
   }
 
   /**
@@ -65,10 +81,13 @@ class ProxyBuilderTest extends UnitTestCase {
 
     $method_body = <<<'EOS'
 
-    public function method()
-    {
-        return $this->lazyLoadItself()->method();
-    }
+/**
+ * {@inheritdoc}
+ */
+public function method()
+{
+    return $this->lazyLoadItself()->method();
+}
 
 EOS;
     $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
@@ -86,10 +105,13 @@ EOS;
 
     $method_body = <<<'EOS'
 
-    public function methodWithParameter($parameter)
-    {
-        return $this->lazyLoadItself()->methodWithParameter($parameter);
-    }
+/**
+ * {@inheritdoc}
+ */
+public function methodWithParameter($parameter)
+{
+    return $this->lazyLoadItself()->methodWithParameter($parameter);
+}
 
 EOS;
     $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
@@ -108,11 +130,14 @@ EOS;
     // @todo Solve the silly linebreak for array()
     $method_body = <<<'EOS'
 
-    public function complexMethod($parameter, callable $function, \Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
-    ))
-    {
-        return $this->lazyLoadItself()->complexMethod($parameter, $function, $test_service, $elements);
-    }
+/**
+ * {@inheritdoc}
+ */
+public function complexMethod($parameter, callable $function, \Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
+))
+{
+    return $this->lazyLoadItself()->complexMethod($parameter, $function, $test_service, $elements);
+}
 
 EOS;
 
@@ -131,10 +156,13 @@ EOS;
     // @todo Solve the silly linebreak for array()
     $method_body = <<<'EOS'
 
-    public function &returnReference()
-    {
-        return $this->lazyLoadItself()->returnReference();
-    }
+/**
+ * {@inheritdoc}
+ */
+public function &returnReference()
+{
+    return $this->lazyLoadItself()->returnReference();
+}
 
 EOS;
 
@@ -153,10 +181,13 @@ EOS;
 
     $method_body = <<<'EOS'
 
-    public function testMethod($parameter)
-    {
-        return $this->lazyLoadItself()->testMethod($parameter);
-    }
+/**
+ * {@inheritdoc}
+ */
+public function testMethod($parameter)
+{
+    return $this->lazyLoadItself()->testMethod($parameter);
+}
 
 EOS;
 
@@ -189,10 +220,13 @@ EOS;
 
     $method_body = <<<'EOS'
 
-    public function testMethod($parameter)
-    {
-        return $this->lazyLoadItself()->testMethod($parameter);
-    }
+/**
+ * {@inheritdoc}
+ */
+public function testMethod($parameter)
+{
+    return $this->lazyLoadItself()->testMethod($parameter);
+}
 
 EOS;
 
@@ -212,10 +246,13 @@ $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
     // Ensure that the static method is not wrapped.
     $method_body = <<<'EOS'
 
-    public static function testMethod($parameter)
-    {
-        \Drupal\Tests\Component\ProxyBuilder\TestServiceWithPublicStaticMethod::testMethod($parameter);
-    }
+/**
+ * {@inheritdoc}
+ */
+public static function testMethod($parameter)
+{
+    \Drupal\Tests\Component\ProxyBuilder\TestServiceWithPublicStaticMethod::testMethod($parameter);
+}
 
 EOS;
 
@@ -232,53 +269,87 @@ EOS;
    *   The code of the entire proxy.
    */
   protected function buildExpectedClass($class, $expected_methods_body, $interface_string = '') {
-    $proxy_class = $this->proxyBuilder->buildProxyClassName($class);
+    $namespace = ProxyBuilder::buildProxyNamespace($class);
+    $reflection = new \ReflectionClass($class);
+    $proxy_class = $reflection->getShortName();
+
     $expected_string = <<<'EOS'
-/**
- * Provides a proxy class for \{{ class }}.
- *
- * @see \Drupal\Component\ProxyBuilder
- */
-class {{ proxy_class }}{{ interface_string }}
-{
+
+namespace {{ namespace }} {
 
     /**
-     * @var string
-     */
-    protected $serviceId;
-
-    /**
-     * @var \{{ class }}
-     */
-    protected $service;
-
-    /**
-     * The service container.
+     * Provides a proxy class for \{{ class }}.
      *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @see \Drupal\Component\ProxyBuilder
      */
-    protected $container;
-
-    public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container, $serviceId)
+    class {{ proxy_class }}{{ interface_string }}
     {
-        $this->container = $container;
-        $this->serviceId = $serviceId;
-    }
 
-    protected function lazyLoadItself()
-    {
-        if (!isset($this->service)) {
-            $method_name = 'get' . Container::camelize($this->serviceId) . 'Service';
-            $this->service = $this->container->$method_name(false);
+        /**
+         * The id of the original proxied service.
+         *
+         * @var string
+         */
+        protected $drupalProxyOriginalServiceId;
+
+        /**
+         * The real proxied service, after it was lazy loaded.
+         *
+         * @var \{{ class }}
+         */
+        protected $service;
+
+        /**
+         * The service container.
+         *
+         * @var \Symfony\Component\DependencyInjection\ContainerInterface
+         */
+        protected $container;
+
+        /**
+         * Constructs a ProxyClass Drupal proxy object.
+         *
+         * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+         *   The container.
+         * @param string $drupal_proxy_original_service_id
+         *   The service ID of the original service.
+         */
+        public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container, $drupal_proxy_original_service_id)
+        {
+            $this->container = $container;
+            $this->drupalProxyOriginalServiceId = $drupal_proxy_original_service_id;
         }
 
-        return $this->service;
-    }
+        /**
+         * Lazy loads the real service from the container.
+         *
+         * @return object
+         *   Returns the constructed real service.
+         */
+        protected function lazyLoadItself()
+        {
+            if (!isset($this->service)) {
+                $this->service = $this->container->get($this->drupalProxyOriginalServiceId);
+            }
+
+            return $this->service;
+        }
 {{ expected_methods_body }}
+    }
+
 }
 
 EOS;
+
+    $expected_methods_body = implode("\n", array_map(function ($value) {
+      if ($value === '') {
+        return $value;
+      }
+      return "        $value";
+    }, explode("\n", $expected_methods_body)));
+
     $expected_string = str_replace('{{ proxy_class }}', $proxy_class, $expected_string);
+    $expected_string = str_replace('{{ namespace }}', $namespace, $expected_string);
     $expected_string = str_replace('{{ class }}', $class, $expected_string);
     $expected_string = str_replace('{{ expected_methods_body }}', $expected_methods_body, $expected_string);
     $expected_string = str_replace('{{ interface_string }}', $interface_string, $expected_string);

@@ -58,7 +58,10 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
     // Replace the route builder with an empty implementation.
     // @todo Convert installer steps into routes; add an installer.routing.yml.
     $definition = $container->getDefinition('router.builder');
-    $definition->setClass('Drupal\Core\Installer\InstallerRouteBuilder');
+    $definition->setClass('Drupal\Core\Installer\InstallerRouteBuilder')
+      // The core router builder, but there is no reason here to be lazy, so
+      // we don't need to ship with a custom proxy class.
+      ->setLazy(FALSE);
   }
 
   /**

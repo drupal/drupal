@@ -85,7 +85,14 @@ class EntityValidationTest extends EntityUnitTestBase {
    */
   public function testValidation() {
     // Ensure that the constraint manager is marked as cached cleared.
-    $plugin_cache_clearer = \Drupal::service('plugin.cache_clearer');
+
+    // Use the protected property on the cache_clearer first to check whether
+    // the constraint manager is added there.
+
+    // Ensure that the proxy class is initialized, which has the necessary
+    // method calls attached.
+    \Drupal::service('plugin.cache_clearer');
+    $plugin_cache_clearer = \Drupal::service('drupal.proxy_original_service.plugin.cache_clearer');
     $get_cached_discoveries = function () {
       return $this->cachedDiscoveries;
     };

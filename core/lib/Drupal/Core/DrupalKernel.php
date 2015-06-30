@@ -8,7 +8,6 @@
 namespace Drupal\Core;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\ProxyBuilder\ProxyDumper;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
@@ -24,7 +23,6 @@ use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
-use Drupal\Core\ProxyBuilder\ProxyBuilder;
 use Drupal\Core\Site\Settings;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -1180,7 +1178,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     // Cache the container.
     $dumper = new PhpDumper($container);
-    $dumper->setProxyDumper(new ProxyDumper(new ProxyBuilder()));
     $class = $this->getClassName();
     $namespace = $this->getClassNamespace();
     $content = $dumper->dump([

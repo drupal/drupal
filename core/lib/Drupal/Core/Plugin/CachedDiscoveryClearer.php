@@ -14,7 +14,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 /**
  * Defines a class which is capable of clearing the cache on plugin managers.
  */
-class CachedDiscoveryClearer {
+class CachedDiscoveryClearer implements CachedDiscoveryClearerInterface {
 
   /**
    * The stored discoveries.
@@ -24,18 +24,14 @@ class CachedDiscoveryClearer {
   protected $cachedDiscoveries = array();
 
   /**
-   * Adds a plugin manager to the active list.
-   *
-   * @param \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface $cached_discovery
-   *   An object that implements the cached discovery interface, typically a
-   *   plugin manager.
+   * {@inheritdoc}
    */
   public function addCachedDiscovery(CachedDiscoveryInterface $cached_discovery) {
     $this->cachedDiscoveries[] = $cached_discovery;
   }
 
   /**
-   * Clears the cache on all cached discoveries.
+   * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
     foreach ($this->cachedDiscoveries as $cached_discovery) {
