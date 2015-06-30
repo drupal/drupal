@@ -12,6 +12,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -415,8 +416,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         }
       }
 
-      // Only set errors if the element is accessible.
-      if (!isset($element['#access']) || $element['#access']) {
+      // Only set errors if the element is visible.
+      if (Element::isVisibleElement($element)) {
         $handles_multiple = $this->handlesMultipleValues();
 
         $violations_by_delta = array();

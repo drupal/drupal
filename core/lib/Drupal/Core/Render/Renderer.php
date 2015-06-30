@@ -10,6 +10,7 @@ namespace Drupal\Core\Render;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
@@ -168,6 +169,10 @@ class Renderer implements RendererInterface {
    * See the docs for ::render().
    */
   protected function doRender(&$elements, $is_root_call = FALSE) {
+    if (empty($elements)) {
+      return '';
+    }
+
     if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
       if (is_string($elements['#access_callback']) && strpos($elements['#access_callback'], '::') === FALSE) {
         $elements['#access_callback'] = $this->controllerResolver->getControllerFromDefinition($elements['#access_callback']);
@@ -176,8 +181,18 @@ class Renderer implements RendererInterface {
     }
 
     // Early-return nothing if user does not have access.
-    if (empty($elements) || (isset($elements['#access']) && !$elements['#access'])) {
-      return '';
+    if (isset($elements['#access'])) {
+      // If #access is an AccessResultInterface object, we must apply it's
+      // cacheability metadata to the render array.
+      if ($elements['#access'] instanceof AccessResultInterface) {
+        $this->addCacheableDependency($elements, $elements['#access']);
+        if (!$elements['#access']->isAllowed()) {
+          return '';
+        }
+      }
+      elseif ($elements['#access'] === FALSE) {
+        return '';
+      }
     }
 
     // Do not print elements twice.

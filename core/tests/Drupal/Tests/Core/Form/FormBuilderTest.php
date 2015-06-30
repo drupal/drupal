@@ -7,6 +7,9 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -449,6 +452,171 @@ class FormBuilderTest extends FormTestBase {
     $this->formBuilder->buildForm($form_arg, $form_state);
   }
 
+  /**
+   * @covers ::buildForm
+   *
+   * @dataProvider providerTestChildAccessInheritance
+   */
+  public function testChildAccessInheritance($element, $access_checks) {
+    $form_arg = new TestFormWithPredefinedForm();
+    $form_arg->setForm($element);
+
+    $form_state = new FormState();
+
+    $form = $this->formBuilder->buildForm($form_arg, $form_state);
+
+    $actual_access_structure = [];
+    $expected_access_structure = [];
+
+    // Ensure that the expected access checks are set.
+    foreach ($access_checks as $access_check) {
+      $parents = $access_check[0];
+      $parents[] = '#access';
+
+      $actual_access = NestedArray::getValue($form, $parents);
+      $actual_access_structure[] = [$parents, $actual_access];
+      $expected_access_structure[] = [$parents, $access_check[1]];
+    }
+
+    $this->assertEquals($expected_access_structure, $actual_access_structure);
+  }
+
+  /**
+   * Data provider for testChildAccessInheritance.
+   *
+   * @return array
+   */
+  public function providerTestChildAccessInheritance() {
+    $data = [];
+
+    $element = [
+      'child0' => [
+        '#type' => 'checkbox',
+      ],
+      'child1' => [
+        '#type' => 'checkbox',
+      ],
+      'child2' => [
+        '#type' => 'fieldset',
+        'child2.0' => [
+          '#type' => 'checkbox',
+        ],
+        'child2.1' => [
+          '#type' => 'checkbox',
+        ],
+        'child2.2' => [
+          '#type' => 'checkbox',
+        ],
+      ],
+    ];
+
+    // Sets access FALSE on the root level, this should be inherited completely.
+    $clone = $element;
+    $clone['#access'] = FALSE;
+
+    $expected_access = [];
+    $expected_access[] = [[], FALSE];
+    $expected_access[] = [['child0'], FALSE];
+    $expected_access[] = [['child1'], FALSE];
+    $expected_access[] = [['child2'], FALSE];
+    $expected_access[] = [['child2', 'child2.0'], FALSE];
+    $expected_access[] = [['child2', 'child2.1'], FALSE];
+    $expected_access[] = [['child2', 'child2.2'], FALSE];
+
+    $data['access-false-root'] = [$clone, $expected_access];
+
+    $clone = $element;
+    $access_result = AccessResult::forbidden()->addCacheContexts(['user']);
+    $clone['#access'] = $access_result;
+
+    $expected_access = [];
+    $expected_access[] = [[], $access_result];
+    $expected_access[] = [['child0'], $access_result];
+    $expected_access[] = [['child1'], $access_result];
+    $expected_access[] = [['child2'], $access_result];
+    $expected_access[] = [['child2', 'child2.0'], $access_result];
+    $expected_access[] = [['child2', 'child2.1'], $access_result];
+    $expected_access[] = [['child2', 'child2.2'], $access_result];
+
+    $data['access-forbidden-root'] = [$clone, $expected_access];
+
+    // Allow access on the most outer level but set FALSE otherwise.
+    $clone = $element;
+    $clone['#access'] = TRUE;
+    $clone['child0']['#access'] = FALSE;
+
+    $expected_access = [];
+    $expected_access[] = [[], TRUE];
+    $expected_access[] = [['child0'], FALSE];
+    $expected_access[] = [['child1'], NULL];
+    $expected_access[] = [['child2'], NULL];
+    $expected_access[] = [['child2', 'child2.0'], NULL];
+    $expected_access[] = [['child2', 'child2.1'], NULL];
+    $expected_access[] = [['child2', 'child2.2'], NULL];
+
+    $data['access-true-root'] = [$clone, $expected_access];
+
+    // Allow access on the most outer level but forbid otherwise.
+    $clone = $element;
+    $access_result_allowed = AccessResult::allowed()
+      ->addCacheContexts(['user']);
+    $clone['#access'] = $access_result_allowed;
+    $access_result_forbidden = AccessResult::forbidden()
+      ->addCacheContexts(['user']);
+    $clone['child0']['#access'] = $access_result_forbidden;
+
+    $expected_access = [];
+    $expected_access[] = [[], $access_result_allowed];
+    $expected_access[] = [['child0'], $access_result_forbidden];
+    $expected_access[] = [['child1'], NULL];
+    $expected_access[] = [['child2'], NULL];
+    $expected_access[] = [['child2', 'child2.0'], NULL];
+    $expected_access[] = [['child2', 'child2.1'], NULL];
+    $expected_access[] = [['child2', 'child2.2'], NULL];
+
+    $data['access-allowed-root'] = [$clone, $expected_access];
+
+    // Allow access on the most outer level, deny access on a parent, and allow
+    // on a child. The denying should be inherited.
+    $clone = $element;
+    $clone['#access'] = TRUE;
+    $clone['child2']['#access'] = FALSE;
+    $clone['child2.0']['#access'] = TRUE;
+    $clone['child2.1']['#access'] = TRUE;
+    $clone['child2.2']['#access'] = TRUE;
+
+    $expected_access = [];
+    $expected_access[] = [[], TRUE];
+    $expected_access[] = [['child0'], NULL];
+    $expected_access[] = [['child1'], NULL];
+    $expected_access[] = [['child2'], FALSE];
+    $expected_access[] = [['child2', 'child2.0'], FALSE];
+    $expected_access[] = [['child2', 'child2.1'], FALSE];
+    $expected_access[] = [['child2', 'child2.2'], FALSE];
+
+    $data['access-mixed-parents'] = [$clone, $expected_access];
+
+    $clone = $element;
+    $clone['#access'] = $access_result_allowed;
+    $clone['child2']['#access'] = $access_result_forbidden;
+    $clone['child2.0']['#access'] = $access_result_allowed;
+    $clone['child2.1']['#access'] = $access_result_allowed;
+    $clone['child2.2']['#access'] = $access_result_allowed;
+
+    $expected_access = [];
+    $expected_access[] = [[], $access_result_allowed];
+    $expected_access[] = [['child0'], NULL];
+    $expected_access[] = [['child1'], NULL];
+    $expected_access[] = [['child2'], $access_result_forbidden];
+    $expected_access[] = [['child2', 'child2.0'], $access_result_forbidden];
+    $expected_access[] = [['child2', 'child2.1'], $access_result_forbidden];
+    $expected_access[] = [['child2', 'child2.2'], $access_result_forbidden];
+
+    $data['access-mixed-parents-object'] = [$clone, $expected_access];
+
+    return $data;
+  }
+
 }
 
 class TestForm implements FormInterface {
@@ -466,4 +634,22 @@ class TestFormInjected extends TestForm implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static();
   }
+}
+
+
+class TestFormWithPredefinedForm extends TestForm {
+
+  /**
+   * @var array
+   */
+  protected $form;
+
+  public function setForm($form) {
+    $this->form = $form;
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    return $this->form;
+  }
+
 }

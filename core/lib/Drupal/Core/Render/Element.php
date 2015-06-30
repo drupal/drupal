@@ -8,6 +8,7 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Access\AccessResultInterface;
 
 /**
  * Provides helper methods for Drupal render elements.
@@ -136,11 +137,6 @@ class Element {
     foreach (static::children($elements) as $key) {
       $child = $elements[$key];
 
-      // Skip un-accessible children.
-      if (isset($child['#access']) && !$child['#access']) {
-        continue;
-      }
-
       // Skip value and hidden elements, since they are not rendered.
       if (!static::isVisibleElement($child)) {
         continue;
@@ -162,7 +158,9 @@ class Element {
    *   TRUE if the element is visible, otherwise FALSE.
    */
   public static function isVisibleElement($element) {
-    return (!isset($element['#type']) || !in_array($element['#type'], ['value', 'hidden', 'token'])) && (!isset($element['#access']) || $element['#access']);
+    return (!isset($element['#type']) || !in_array($element['#type'], ['value', 'hidden', 'token']))
+      && (!isset($element['#access'])
+      || (($element['#access'] instanceof AccessResultInterface && $element['#access']->isAllowed()) || ($element['#access'] === TRUE)));
   }
 
   /**

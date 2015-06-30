@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Render\Element;
@@ -367,7 +369,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithPresetAccess($access) {
     $build = [
@@ -381,7 +383,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithAccessCallbackCallable($access) {
     $build = [
@@ -399,7 +401,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithAccessPropertyAndCallback($access) {
     $build = [
@@ -416,14 +418,47 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithAccessControllerResolved($access) {
+
+    switch ($access) {
+      case AccessResult::allowed():
+        $method = 'accessResultAllowed';
+        break;
+
+      case AccessResult::forbidden():
+        $method = 'accessResultForbidden';
+        break;
+
+      case FALSE:
+        $method = 'accessFalse';
+        break;
+
+      case TRUE:
+        $method = 'accessTrue';
+        break;
+    }
+
     $build = [
-      '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::' . ($access ? 'accessTrue' : 'accessFalse'),
+      '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::' . $method,
     ];
 
     $this->assertAccess($build, $access);
+  }
+
+  /**
+   * @covers ::render
+   * @covers ::doRender
+   */
+  public function testRenderAccessCacheablityDependencyInheritance() {
+    $build = [
+      '#access' => AccessResult::allowed()->addCacheContexts(['user']),
+    ];
+
+    $this->renderer->renderPlain($build);
+
+    $this->assertEquals(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
   }
 
   /**
@@ -451,10 +486,12 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerBoolean() {
+  public function providerAccessValues() {
     return [
       [FALSE],
-      [TRUE]
+      [TRUE],
+      [AccessResult::forbidden()],
+      [AccessResult::allowed()],
     ];
   }
 
@@ -469,7 +506,7 @@ class RendererTest extends RendererTestBase {
   protected function assertAccess($build, $access) {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
-    if ($access) {
+    if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {
       $this->assertSame($sensitive_content, $this->renderer->renderRoot($build));
     }
     else {
@@ -782,6 +819,14 @@ class TestAccessClass {
 
   public static function accessFalse() {
     return FALSE;
+  }
+
+  public static function accessResultAllowed() {
+    return AccessResult::allowed();
+  }
+
+  public static function accessResultForbidden() {
+    return AccessResult::forbidden();
   }
 
 }

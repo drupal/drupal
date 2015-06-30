@@ -1036,7 +1036,7 @@ function drupal_pre_render_links($element) {
     $child = &$element[$key];
     // If the child has links which have not been printed yet and the user has
     // access to it, merge its links in to the parent.
-    if (isset($child['#links']) && empty($child['#printed']) && (!isset($child['#access']) || $child['#access'])) {
+    if (isset($child['#links']) && empty($child['#printed']) && Element::isVisibleElement($child)) {
       $element['#links'] += $child['#links'];
       // Mark the child as having been printed already (so that its links
       // cannot be mistakenly rendered twice).

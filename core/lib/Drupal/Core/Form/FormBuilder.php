@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -829,6 +830,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Recurse through all child elements.
     $count = 0;
+    if (isset($element['#access'])) {
+      $access = $element['#access'];
+      $inherited_access = NULL;
+      if (($access instanceof AccessResultInterface && !$access->isAllowed()) || $access === FALSE) {
+        $inherited_access = $access;
+      }
+    }
     foreach (Element::children($element) as $key) {
       // Prior to checking properties of child elements, their default
       // properties need to be loaded.
@@ -842,9 +850,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         $element[$key]['#tree'] = $element['#tree'];
       }
 
-      // Deny access to child elements if parent is denied.
-      if (isset($element['#access']) && !$element['#access']) {
-        $element[$key]['#access'] = FALSE;
+      // Children inherit #access from parent.
+      if (isset($inherited_access)) {
+        $element[$key]['#access'] = $inherited_access;
       }
 
       // Make child elements inherit their parent's #disabled and #allow_focus
