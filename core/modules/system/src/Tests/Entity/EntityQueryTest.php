@@ -210,6 +210,26 @@ class EntityQueryTest extends EntityUnitTestBase {
     // Unit 0 and unit 1, so bits 0 1.
     $this->assertResult(3, 7, 11, 15);
 
+    // Do the same test but with IN operator.
+    $query = $this->factory->get('entity_test_mulrev');
+    $group_blue = $query->andConditionGroup()->condition("$figures.color", array('blue'), 'IN');
+    $group_red = $query->andConditionGroup()->condition("$figures.color", array('red'), 'IN');
+    $query
+      ->condition($group_blue)
+      ->condition($group_red)
+      ->sort('id')
+      ->execute();
+    // Unit 0 and unit 1, so bits 0 1.
+    $this->assertResult(3, 7, 11, 15);
+
+    // An entity might have either red or blue figure.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition("$figures.color", array('blue', 'red'), 'IN')
+      ->sort('id')
+      ->execute();
+    // Bit 0 or 1 is on.
+    $this->assertResult(1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15);
+
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->exists("$figures.color")
       ->notExists("$greetings.value")
@@ -613,6 +633,38 @@ class EntityQueryTest extends EntityUnitTestBase {
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
+    // Check the case insensitive field, IN operator.
+    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
+      'field_ci', array($fixtures[0]['lowercase'] . $fixtures[1]['lowercase']), 'IN'
+    )->execute();
+    $this->assertIdentical(count($result), 1, 'Case insensitive, lowercase');
+
+    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
+      'field_ci', array($fixtures[0]['uppercase'] . $fixtures[1]['uppercase']), 'IN'
+    )->execute();
+    $this->assertIdentical(count($result), 1, 'Case insensitive, uppercase');
+
+    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
+      'field_ci', array($fixtures[0]['uppercase'] . $fixtures[1]['lowercase']), 'IN'
+    )->execute();
+    $this->assertIdentical(count($result), 1, 'Case insensitive, mixed');
+
+    // Check the case sensitive field, IN operator.
+    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
+      'field_cs', array($fixtures[0]['lowercase'] . $fixtures[1]['lowercase']), 'IN'
+    )->execute();
+    $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase');
+
+    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
+      'field_cs', array($fixtures[0]['uppercase'] . $fixtures[1]['uppercase']), 'IN'
+    )->execute();
+    $this->assertIdentical(count($result), 0, 'Case sensitive, uppercase');
+
+    $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
+      'field_cs', array($fixtures[0]['uppercase'] . $fixtures[1]['lowercase']), 'IN'
+    )->execute();
+    $this->assertIdentical(count($result), 1, 'Case sensitive, mixed');
+
     // Check the case insensitive field, STARTS_WITH operator.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
       'field_ci', $fixtures[0]['lowercase'], 'STARTS_WITH'
@@ -762,4 +814,20 @@ class EntityQueryTest extends EntityUnitTestBase {
     $this->assertEqual($result, [16 => '14']);
   }
 
+  /**
+   * Test against SQL inject of condition field. This covers a
+   * database driver's EntityQuery\Condition class.
+   */
+  public function testInjectionInCondition() {
+    try {
+      $this->queryResults = $this->factory->get('entity_test_mulrev')
+        ->condition('1 ; -- ', array(0, 1), 'IN')
+        ->sort('id')
+        ->execute();
+      $this->fail('SQL Injection attempt in Entity Query condition in operator should result in an exception.');
+    }
+    catch (\Exception $e) {
+      $this->pass('SQL Injection attempt in Entity Query condition in operator should result in an exception.');
+    }
+  }
 }
