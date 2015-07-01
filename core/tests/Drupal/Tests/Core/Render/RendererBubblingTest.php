@@ -125,6 +125,7 @@ class RendererBubblingTest extends RendererTestBase {
         'contexts' => ['bar', 'foo'],
         'tags' => [],
         'bin' => $bin,
+        'max-age' => 3600,
       ],
     ], $bin);
   }
@@ -279,6 +280,7 @@ class RendererBubblingTest extends RendererTestBase {
           'contexts' => ['bar', 'foo'],
           'tags' => ['dee', 'fiddle', 'har', 'yar'],
           'bin' => 'render',
+          'max-age' => Cache::PERMANENT,
         ],
       ],
       'parent:bar:foo' => [
@@ -325,6 +327,8 @@ class RendererBubblingTest extends RendererTestBase {
           '#cache' => [
             'contexts' => ['foo'],
             'tags' => ['c'],
+            // A lower max-age; the redirecting cache item should be updated.
+            'max-age' => 1800,
           ],
           'grandgrandchild' => [
             '#access_callback' => function () {
@@ -335,6 +339,8 @@ class RendererBubblingTest extends RendererTestBase {
             '#cache' => [
               'contexts' => ['bar'],
               'tags' => ['d'],
+              // A lower max-age; the redirecting cache item should be updated.
+              'max-age' => 300,
             ],
           ],
         ],
@@ -353,6 +359,7 @@ class RendererBubblingTest extends RendererTestBase {
         'contexts' => ['user.roles'],
         'tags' => ['a', 'b'],
         'bin' => 'render',
+        'max-age' => Cache::PERMANENT,
       ],
     ]);
     $this->assertRenderCacheItem('parent:r.A', [
@@ -366,7 +373,7 @@ class RendererBubblingTest extends RendererTestBase {
     ]);
 
     // Request 2: role B, the grandchild is accessible => bubbled cache
-    // contexts: foo, user.roles.
+    // contexts: foo, user.roles + merged max-age: 1800.
     $element = $test_element;
     $current_user_role = 'B';
     $this->renderer->renderRoot($element);
@@ -377,6 +384,7 @@ class RendererBubblingTest extends RendererTestBase {
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
         'bin' => 'render',
+        'max-age' => 1800,
       ],
     ]);
     $this->assertRenderCacheItem('parent:foo:r.B', [
@@ -384,7 +392,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
-        'max-age' => Cache::PERMANENT,
+        'max-age' => 1800,
       ],
       '#markup' => 'parent',
     ]);
@@ -409,6 +417,7 @@ class RendererBubblingTest extends RendererTestBase {
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
         'bin' => 'render',
+        'max-age' => 1800,
       ],
     ]);
     $this->assertRenderCacheItem('parent:foo:r.A', [
@@ -416,13 +425,17 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b'],
+        // Note that the max-age here is unaffected. When role A, the grandchild
+        // is never rendered, so neither is its max-age of 1800 present here,
+        // despite 1800 being the max-age of the redirecting cache item.
         'max-age' => Cache::PERMANENT,
       ],
       '#markup' => 'parent',
     ]);
 
     // Request 4: role C, both the grandchild and the grandgrandchild are
-    // accessible => bubbled cache contexts: foo, bar, user.roles.
+    // accessible => bubbled cache contexts: foo, bar, user.roles + merged
+    // max-age: 300.
     $element = $test_element;
     $current_user_role = 'C';
     $this->renderer->renderRoot($element);
@@ -433,6 +446,7 @@ class RendererBubblingTest extends RendererTestBase {
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b', 'c', 'd'],
         'bin' => 'render',
+        'max-age' => 300,
       ],
     ];
     $this->assertRenderCacheItem('parent', $final_parent_cache_item);
@@ -441,7 +455,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b', 'c', 'd'],
-        'max-age' => Cache::PERMANENT,
+        'max-age' => 300,
       ],
       '#markup' => 'parent',
     ]);
@@ -456,6 +470,10 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b'],
+        // Note that the max-age here is unaffected. When role A, the grandchild
+        // is never rendered, so neither is its max-age of 1800 present here,
+        // nor the grandgrandchild's max-age of 300, despite 300 being the
+        // max-age of the redirecting cache item.
         'max-age' => Cache::PERMANENT,
       ],
       '#markup' => 'parent',
@@ -471,7 +489,11 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
-        'max-age' => Cache::PERMANENT,
+        // Note that the max-age here is unaffected. When role B, the
+        // grandgrandchild is never rendered, so neither is its max-age of 300
+        // present here, despite 300 being the max-age of the redirecting cache
+        // item.
+        'max-age' => 1800,
       ],
       '#markup' => 'parent',
     ]);

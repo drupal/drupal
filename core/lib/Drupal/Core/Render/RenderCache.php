@@ -8,6 +8,7 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -96,7 +97,6 @@ class RenderCache implements RenderCacheInterface {
     $data = $this->getCacheableRenderArray($elements);
 
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
-    $expire = ($elements['#cache']['max-age'] === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $elements['#cache']['max-age'];
     $cache = $this->cacheFactory->get($bin);
 
     // Calculate the pre-bubbling CID.
@@ -207,26 +207,28 @@ class RenderCache implements RenderCacheInterface {
       // across requests. That's the strategy employed below and tested in
       // \Drupal\Tests\Core\Render\RendererBubblingTest::testConditionalCacheContextBubblingSelfHealing().
 
-      // The set of cache contexts for this element, including the bubbled ones,
-      // for which we are handling a cache miss.
-      $cache_contexts = $data['#cache']['contexts'];
-
-      // Get the contexts by which this element should be varied according to
-      // the current redirecting cache item, if any.
-      $stored_cache_contexts = [];
-      $stored_cache_tags = [];
+      // Get the cacheability of this element according to the current (stored)
+      // redirecting cache item, if any.
+      $redirect_cacheability = new CacheableMetadata();
       if ($stored_cache_redirect = $cache->get($pre_bubbling_cid)) {
-        $stored_cache_contexts = $stored_cache_redirect->data['#cache']['contexts'];
-        $stored_cache_tags = $stored_cache_redirect->data['#cache']['tags'];
+        $redirect_cacheability = CacheableMetadata::createFromRenderArray($stored_cache_redirect->data);
       }
 
-      // Calculate the union of the cache contexts for this request and the
-      // stored cache contexts.
-      $merged_cache_contexts = Cache::mergeContexts($stored_cache_contexts, $cache_contexts);
+      // Calculate the union of the cacheability for this request and the
+      // current (stored) redirecting cache item. We need:
+      // - the union of cache contexts, because that is how we know which cache
+      //   item to redirect to;
+      // - the union of cache tags, because that is how we know when the cache
+      //   redirect cache item itself is invalidated;
+      // - the union of max ages, because that is how we know when the cache
+      //   redirect cache item itself becomes stale. (Without this, we might end
+      //   up toggling between a permanently and a briefly cacheable cache
+      //   redirect, because the last update's max-age would always "win".)
+      $redirect_cacheability_updated = CacheableMetadata::createFromRenderArray($data)->merge($redirect_cacheability);
 
       // Stored cache contexts incomplete: this request causes cache contexts to
       // be added to the redirecting cache item.
-      if (array_diff($merged_cache_contexts, $stored_cache_contexts)) {
+      if (array_diff($redirect_cacheability_updated->getCacheContexts(), $redirect_cacheability->getCacheContexts())) {
         $redirect_data = [
           '#cache_redirect' => TRUE,
           '#cache' => [
@@ -234,14 +236,16 @@ class RenderCache implements RenderCacheInterface {
             // across requests.
             'keys' => $elements['#cache']['keys'],
             // The union of the current element's and stored cache contexts.
-            'contexts' => $merged_cache_contexts,
+            'contexts' => $redirect_cacheability_updated->getCacheContexts(),
             // The union of the current element's and stored cache tags.
-            'tags' => Cache::mergeTags($stored_cache_tags, $data['#cache']['tags']),
+            'tags' => $redirect_cacheability_updated->getCacheTags(),
+            // The union of the current element's and stored cache max-ages.
+            'max-age' => $redirect_cacheability_updated->getCacheMaxAge(),
             // The same cache bin as the one for the actual render cache items.
             'bin' => $bin,
           ],
         ];
-        $cache->set($pre_bubbling_cid, $redirect_data, $expire, Cache::mergeTags($redirect_data['#cache']['tags'], ['rendered']));
+        $cache->set($pre_bubbling_cid, $redirect_data, $this->maxAgeToExpire($redirect_cacheability_updated->getCacheMaxAge()), Cache::mergeTags($redirect_data['#cache']['tags'], ['rendered']));
       }
 
       // Current cache contexts incomplete: this request only uses a subset of
@@ -249,20 +253,35 @@ class RenderCache implements RenderCacheInterface {
       // additional (conditional) cache contexts as well, otherwise the
       // redirecting cache item would be pointing to a cache item that can never
       // exist.
-      if (array_diff($merged_cache_contexts, $cache_contexts)) {
+      if (array_diff($redirect_cacheability_updated->getCacheContexts(), $data['#cache']['contexts'])) {
         // Recalculate the cache ID.
         $recalculated_cid_pseudo_element = [
           '#cache' => [
             'keys' => $elements['#cache']['keys'],
-            'contexts' => $merged_cache_contexts,
+            'contexts' => $redirect_cacheability_updated->getCacheContexts(),
           ]
         ];
         $cid = $this->createCacheID($recalculated_cid_pseudo_element);
         // Ensure the about-to-be-cached data uses the merged cache contexts.
-        $data['#cache']['contexts'] = $merged_cache_contexts;
+        $data['#cache']['contexts'] = $redirect_cacheability_updated->getCacheContexts();
       }
     }
-    $cache->set($cid, $data, $expire, Cache::mergeTags($data['#cache']['tags'], ['rendered']));
+    $cache->set($cid, $data, $this->maxAgeToExpire($elements['#cache']['max-age']), Cache::mergeTags($data['#cache']['tags'], ['rendered']));
+  }
+
+  /**
+   * Maps a #cache[max-age] value to an "expire" value for the Cache API.
+   *
+   * @param int $max_age
+   *   A #cache[max-age] value.
+   *
+   * @return int
+   *   A corresponding "expire" value.
+   *
+   * @see \Drupal\Core\Cache\CacheBackendInterface::set()
+   */
+  protected function maxAgeToExpire($max_age) {
+    return ($max_age === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $max_age;
   }
 
   /**
