@@ -256,13 +256,13 @@ class Update extends Query implements ConditionInterface {
         $data['expression']->compile($this->connection, $this);
         $data['expression'] = ' (' . $data['expression'] . ')';
       }
-      $update_fields[] = $field . '=' . $data['expression'];
+      $update_fields[] = $this->connection->escapeField($field) . '=' . $data['expression'];
       unset($fields[$field]);
     }
 
     $max_placeholder = 0;
     foreach ($fields as $field => $value) {
-      $update_fields[] = $field . '=:db_update_placeholder_' . ($max_placeholder++);
+      $update_fields[] = $this->connection->escapeField($field) . '=:db_update_placeholder_' . ($max_placeholder++);
     }
 
     $query = $comments . 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);

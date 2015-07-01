@@ -274,5 +274,21 @@ function database_test_schema() {
     'primary key' => array('name', 'age'),
   );
 
+  $schema['test_special_columns'] = array(
+    'description' => 'A simple test table with special column names.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Simple unique ID.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'offset' => array(
+        'description' => 'A column with preserved name.',
+        'type' => 'text',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
   return $schema;
 }

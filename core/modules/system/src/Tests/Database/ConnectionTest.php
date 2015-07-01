@@ -138,4 +138,23 @@ class ConnectionTest extends DatabaseTestBase {
     }
   }
 
+  /**
+   * Test the escapeTable(), escapeField() and escapeAlias() methods with all possible reserved words in PostgreSQL.
+   */
+  public function testPostgresqlReservedWords() {
+    if (Database::getConnection()->databaseType() !== 'pgsql') {
+      return;
+    }
+
+    $db = Database::getConnection('default', 'default');
+    $stmt = $db->query("SELECT word FROM pg_get_keywords() WHERE catcode IN ('R', 'T')");
+    $stmt->execute();
+    foreach ($stmt->fetchAllAssoc('word') as $word => $row) {
+      $expected = '"' . $word . '"';
+      $this->assertIdentical($db->escapeTable($word), $expected, format_string('The reserved word %word was correctly escaped when used as a table name.', array('%word' => $word)));
+      $this->assertIdentical($db->escapeField($word), $expected, format_string('The reserved word %word was correctly escaped when used as a column name.', array('%word' => $word)));
+      $this->assertIdentical($db->escapeAlias($word), $expected, format_string('The reserved word %word was correctly escaped when used as an alias.', array('%word' => $word)));
+    }
+  }
+
 }

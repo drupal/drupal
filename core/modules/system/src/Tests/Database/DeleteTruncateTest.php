@@ -70,4 +70,19 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_records_after = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
     $this->assertEqual(0, $num_records_after, 'Truncate really deletes everything.');
   }
+
+  /**
+   * Confirms that we can delete a single special column name record successfully.
+   */
+  function testSpecialColumnDelete() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_special_columns}')->fetchField();
+
+    $num_deleted = db_delete('test_special_columns')
+      ->condition('id', 1)
+      ->execute();
+    $this->assertIdentical($num_deleted, 1, 'Deleted 1 special column record.');
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_special_columns}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
+  }
 }

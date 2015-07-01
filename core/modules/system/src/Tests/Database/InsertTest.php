@@ -182,4 +182,17 @@ class InsertTest extends DatabaseTestBase {
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
   }
 
+  /**
+   * Tests that we can INSERT INTO a special named column.
+   */
+  function testSpecialColumnInsert() {
+    $id = db_insert('test_special_columns')
+      ->fields(array(
+        'id' => 2,
+        'offset' => 'Offset value 2',
+      ))
+      ->execute();
+    $saved_value = db_query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', array(':id' => 2))->fetchField();
+    $this->assertIdentical($saved_value, 'Offset value 2', 'Can retrieve special column name value after inserting.');
+  }
 }

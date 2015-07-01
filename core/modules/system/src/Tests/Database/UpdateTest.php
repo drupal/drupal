@@ -145,4 +145,18 @@ class UpdateTest extends DatabaseTestBase {
     $saved_name= db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 42))->fetchField();
     $this->assertIdentical($saved_name, 'John', 'Updated primary key successfully.');
   }
+
+  /**
+   * Confirm that we can update values in a column with special name.
+   */
+  function testSpecialColumnUpdate() {
+    $num_updated = db_update('test_special_columns')
+      ->fields(array('offset' => 'New offset value'))
+      ->condition('id', 1)
+      ->execute();
+    $this->assertIdentical($num_updated, 1, 'Updated 1 special column record.');
+
+    $saved_value = db_query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', array(':id' => 1))->fetchField();
+    $this->assertIdentical($saved_value, 'New offset value', 'Updated special column name value successfully.');
+  }
 }
