@@ -43,7 +43,7 @@ class PathProcessorImageStyles implements InboundPathProcessorInterface {
     }
 
     // Strip out path prefix.
-    $rest = preg_replace('|^' . $path_prefix . '|', '', $path);
+    $rest = preg_replace('|^' . preg_quote($path_prefix, '|') . '|', '', $path);
 
     // Get the image style, scheme and path.
     if (substr_count($rest, '/') >= 2) {

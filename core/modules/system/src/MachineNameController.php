@@ -67,7 +67,7 @@ class MachineNameController implements ContainerInjectionInterface {
       $transliterated = Unicode::strtolower($transliterated);
     }
     if(isset($replace_pattern) && isset($replace)) {
-      $transliterated = preg_replace('@' . $replace_pattern . '@', $replace, $transliterated);
+      $transliterated = preg_replace('@' . preg_quote($replace_pattern, '@') . '@', $replace, $transliterated);
     }
     return new JsonResponse($transliterated);
   }

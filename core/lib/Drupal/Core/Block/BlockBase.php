@@ -265,14 +265,9 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     //   \Drupal\system\MachineNameController::transliterate(), so it might make
     //   sense to provide a common service for the two.
     $transliterated = $this->transliteration()->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
-
-    $replace_pattern = '[^a-z0-9_.]+';
-
     $transliterated = Unicode::strtolower($transliterated);
 
-    if (isset($replace_pattern)) {
-      $transliterated = preg_replace('@' . $replace_pattern . '@', '', $transliterated);
-    }
+    $transliterated = preg_replace('@[^a-z0-9_.]+@', '', $transliterated);
 
     return $transliterated;
   }
