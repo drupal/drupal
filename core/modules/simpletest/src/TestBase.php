@@ -1423,9 +1423,9 @@ abstract class TestBase {
    * Do not use this method when special characters are not possible (e.g., in
    * machine or file names that have already been validated); instead, use
    * \Drupal\simpletest\TestBase::randomMachineName(). If $length is greater
-   * than 2 the random string will include at least one ampersand ('&')
-   * character to ensure coverage for special characters and avoid the
-   * introduction of random test failures.
+   * than 3 the random string will include at least one ampersand ('&') and
+   * at least one greater than ('>') character to ensure coverage for special
+   * characters and avoid the introduction of random test failures.
    *
    * @param int $length
    *   Length of random string to generate.
@@ -1436,7 +1436,7 @@ abstract class TestBase {
    * @see \Drupal\Component\Utility\Random::string()
    */
   public function randomString($length = 8) {
-    if ($length < 3) {
+    if ($length < 4) {
       return $this->getRandomGenerator()->string($length, TRUE, array($this, 'randomStringValidate'));
     }
 
@@ -1444,9 +1444,10 @@ abstract class TestBase {
     // returned string contains a character that needs to be escaped in HTML by
     // injecting an ampersand into it.
     $replacement_pos = floor($length / 2);
-    // Remove 1 from the length to account for the ampersand character.
-    $string = $this->getRandomGenerator()->string($length - 1, TRUE, array($this, 'randomStringValidate'));
-    return substr_replace($string, '&', $replacement_pos, 0);
+    // Remove 2 from the length to account for the ampersand and greater than
+    // characters.
+    $string = $this->getRandomGenerator()->string($length - 2, TRUE, array($this, 'randomStringValidate'));
+    return substr_replace($string, '>&', $replacement_pos, 0);
   }
 
   /**
