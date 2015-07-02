@@ -172,53 +172,66 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $vids = $node_storage->revisionIds($node);
 
     foreach (array_reverse($vids) as $vid) {
-      if ($revision = $node_storage->loadRevision($vid)) {
-        $row = array();
+      $revision = $node_storage->loadRevision($vid);
+      $username = [
+        '#theme' => 'username',
+        '#account' => $revision->uid->entity,
+      ];
 
-        $revision_author = $revision->uid->entity;
-
-        if ($vid == $node->getRevisionId()) {
-          $username = array(
-            '#theme' => 'username',
-            '#account' => $revision_author,
-          );
-          $row[] = array('data' => $this->t('!date by !username', array('!date' => $node->link($this->dateFormatter->format($revision->revision_timestamp->value, 'short')), '!username' => drupal_render($username)))
-            . (($revision->revision_log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->revision_log->value) . '</p>' : ''),
-            'class' => array('revision-current'));
-          $row[] = array('data' => SafeMarkup::placeholder($this->t('current revision')), 'class' => array('revision-current'));
-        }
-        else {
-          $username = array(
-            '#theme' => 'username',
-            '#account' => $revision_author,
-          );
-          $row[] = $this->t('!date by !username', array('!date' => $this->l($this->dateFormatter->format($revision->revision_timestamp->value, 'short'), new Url('entity.node.revision', array('node' => $node->id(), 'node_revision' => $vid))), '!username' => drupal_render($username)))
-            . (($revision->revision_log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->revision_log->value) . '</p>' : '');
-
-          if ($revert_permission) {
-            $links['revert'] = array(
-              'title' => $this->t('Revert'),
-              'url' => Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
-            );
-          }
-
-          if ($delete_permission) {
-            $links['delete'] = array(
-              'title' => $this->t('Delete'),
-              'url' => Url::fromRoute('node.revision_delete_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
-            );
-          }
-
-          $row[] = array(
-            'data' => array(
-              '#type' => 'operations',
-              '#links' => $links,
-            ),
-          );
-        }
-
-        $rows[] = $row;
+      // Use revision link to link to revisions that are not active.
+      $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
+      if ($vid != $node->getRevisionId()) {
+        $link = $this->l($date, new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $vid]));
       }
+      else {
+        $link = $node->link($date);
+      }
+
+      $row = [];
+      $row[] = [
+        'data' => [
+          '#type' => 'inline_template',
+          '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
+          '#context' => [
+            'date' => $link,
+            'username' => $this->renderer->render($username),
+            'message' => Xss::filter($revision->revision_log->value),
+          ],
+        ],
+      ];
+
+      if ($vid == $node->getRevisionId()) {
+        $row[0]['class'] = ['revision-current'];
+        $row[] = [
+          'data' => SafeMarkup::placeholder($this->t('current revision')),
+          'class' => ['revision-current'],
+        ];
+      }
+      else {
+        $links = [];
+        if ($revert_permission) {
+          $links['revert'] = [
+            'title' => $this->t('Revert'),
+            'url' => Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
+          ];
+        }
+
+        if ($delete_permission) {
+          $links['delete'] = [
+            'title' => $this->t('Delete'),
+            'url' => Url::fromRoute('node.revision_delete_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
+          ];
+        }
+
+        $row[] = [
+          'data' => [
+            '#type' => 'operations',
+            '#links' => $links,
+          ],
+        ];
+      }
+
+      $rows[] = $row;
     }
 
     $build['node_revisions_table'] = array(
