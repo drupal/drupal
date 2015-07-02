@@ -113,6 +113,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // XSS and other vulnerabilities.
     // https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
+    $response->headers->set('X-Frame-Options', 'SAMEORIGIN', FALSE);
 
     // Expose the cache contexts and cache tags associated with this page in a
     // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.

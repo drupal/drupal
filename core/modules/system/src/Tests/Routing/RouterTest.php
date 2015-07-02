@@ -40,7 +40,7 @@ class RouterTest extends WebTestBase {
     $this->assertEqual($headers['x-ua-compatible'], 'IE=edge');
     $this->assertEqual($headers['content-language'], 'en');
     $this->assertEqual($headers['x-content-type-options'], 'nosniff');
-
+    $this->assertEqual($headers['x-frame-options'], 'SAMEORIGIN');
 
     $this->drupalGet('router_test/test2');
     $this->assertRaw('test2', 'The correct string was returned because the route was successful.');
