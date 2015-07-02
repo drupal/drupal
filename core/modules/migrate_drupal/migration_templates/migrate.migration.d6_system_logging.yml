@@ -1,0 +1,21 @@
+id: d6_system_logging
+label: Drupal 6 system logging
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - error_level
+process:
+  error_level:
+    plugin: static_map
+    source: error_level
+    default_value: all
+    map:
+      0: hide
+      1: some
+      2: all
+      3: verbose
+destination:
+  plugin: config
+  config_name: system.logging

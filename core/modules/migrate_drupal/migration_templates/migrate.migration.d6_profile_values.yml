@@ -1,0 +1,18 @@
+id: d6_profile_values
+label: Drupal 6 profile values
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_profile_field_values
+load:
+  plugin: drupal_entity
+process:
+  uid: uid
+destination:
+  plugin: entity:user
+migration_dependencies:
+  required:
+    - d6_user
+    - d6_user_profile_field_instance
+    - d6_user_profile_entity_display
+    - d6_user_profile_entity_form_display

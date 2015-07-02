@@ -1,0 +1,22 @@
+id: d6_term_node_revision
+label: Drupal 6 term/node relationship revisions
+migration_tags:
+  - Drupal 6
+load:
+  plugin: d6_term_node
+  bundle_migration: d6_vocabulary_field
+
+source:
+  plugin: d6_term_node_revision
+
+process:
+  vid: vid
+  type: type
+  # The actual field name is dynamic and will be added by the load plugin.
+
+destination:
+  plugin: entity_revision:node
+migration_dependencies:
+  required:
+    - d6_term_node
+    - d6_node_revision

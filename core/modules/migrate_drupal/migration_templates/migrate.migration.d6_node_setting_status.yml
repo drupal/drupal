@@ -1,0 +1,19 @@
+id: d6_node_setting_status
+label: Drupal 6 node type 'status' setting
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_node_type
+  constants:
+    entity_type: node
+    field_name: status
+process:
+  entity_type: 'constants/entity_type'
+  bundle: type
+  field_name: 'constants/field_name'
+  'default_value/0/value': 'options/status'
+destination:
+  plugin: entity:base_field_override
+migration_dependencies:
+  required:
+    - d6_node_type

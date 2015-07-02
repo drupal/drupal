@@ -198,6 +198,8 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       'name' => $this->randomMachineName(),
       'status' => 1,
     ])->enforceIsNew(TRUE)->save();
+
+    $this->installMigrations('Drupal 6');
   }
 
   /**

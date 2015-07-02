@@ -1,0 +1,27 @@
+id: d6_upload
+label: Drupal 6 file uploads
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_upload
+
+process:
+  nid: nid
+  vid: vid
+  type: type
+  upload:
+    plugin: iterator
+    source: upload
+    process:
+      target_id:
+        plugin: migration
+        migration: d6_file
+        source: fid
+      display: list
+      description: description
+destination:
+  plugin: entity:node
+migration_dependencies:
+  required:
+    - d6_file
+    - d6_node

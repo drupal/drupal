@@ -1,0 +1,16 @@
+id: d6_block_content_type
+label: Drupal 6 block content type
+migration_tags:
+  - Drupal 6
+source:
+  # We do an empty source and a proper destination to have an idmap for
+  # migration_dependencies.
+  plugin: md_empty
+  constants:
+    id: basic
+    label: Basic
+process:
+  id: 'constants/id'
+  label: 'constants/label'
+destination:
+  plugin: entity:block_content_type

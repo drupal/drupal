@@ -15,6 +15,14 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installMigrations('Drupal 6');
+  }
+
+  /**
      * {@inheritdoc}
      */
   protected function getDumpDirectory() {

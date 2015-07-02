@@ -1,0 +1,10 @@
+id: url_template
+label: Template test - url
+migration_tags:
+  - Template Test
+source:
+  plugin: empty
+process:
+  src: foobar
+destination:
+  plugin: url_alias

@@ -1,0 +1,34 @@
+id: d6_user_profile_field
+label: Drupal 6 user profile field configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_profile_field
+  constants:
+    entity_type: user
+process:
+  entity_type: 'constants/entity_type'
+  field_name: name
+  type:
+    plugin: static_map
+    source: type
+    map:
+      checkbox: boolean
+      date: datetime
+      list: text
+      selection: list_string
+      textfield: text
+      textarea: text_long
+      url: link
+  settings:
+    plugin: d6_profile_field_settings
+    source: type
+  'settings/allowed_values': options
+  cardinality:
+    plugin: static_map
+    default_value: 1
+    source: type
+    map:
+      list: -1
+destination:
+  plugin: md_entity:field_storage_config

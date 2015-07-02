@@ -1,0 +1,29 @@
+id: d6_user_picture_entity_form_display
+label: Drupal 6 user picture form display configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_user_picture_instance
+  constants:
+    entity_type: user
+    bundle: user
+    form_mode: default
+    name: user_picture
+    type: image_image
+    options:
+      settings:
+        progress_indicator: throbber
+        preview_image_style: thumbnail
+process:
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  field_name: 'constants/name'
+  form_mode: 'constants/form_mode'
+  type: 'constants/type'
+  options: 'constants/options'
+  'options/type': @type
+destination:
+  plugin: component_entity_form_display
+migration_dependencies:
+  required:
+    - d6_user_picture_field_instance

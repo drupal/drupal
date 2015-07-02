@@ -5,6 +5,9 @@ services:
       - { name: cache.bin }
     factory: cache_factory:get
     arguments: [migrate]
+  migrate.template_storage:
+    class: Drupal\migrate\MigrateTemplateStorage
+    arguments: ['@config.storage']
   plugin.manager.migrate.source:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']

@@ -1,0 +1,15 @@
+id: d6_locale_settings
+label: Drupal 6 locale configuration
+migration_tags:
+  - Drupal 6
+source:
+  plugin: variable
+  variables:
+    - locale_cache_strings
+    - locale_js_directory
+process:
+  cache_strings: locale_cache_strings
+  'javascript/directory': locale_js_directory
+destination:
+  plugin: config
+  config_name: locale.settings
