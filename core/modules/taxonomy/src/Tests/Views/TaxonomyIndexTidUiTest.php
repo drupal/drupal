@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Tests\ViewTestData;
@@ -20,6 +22,8 @@ use Drupal\views_ui\Tests\UITestBase;
  */
 class TaxonomyIndexTidUiTest extends UITestBase {
 
+  use EntityReferenceTestTrait;
+
   /**
    * Views used by this test.
    *
@@ -32,7 +36,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'taxonomy', 'taxonomy_test_views');
+  public static $modules = array('node', 'taxonomy', 'taxonomy_test_views', 'entity_reference');
 
   /**
    * A nested array of \Drupal\taxonomy\TermInterface objects.
@@ -118,6 +122,74 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       ],
     ];
     $this->assertIdentical($expected, $view->calculateDependencies());
+  }
+
+  /**
+   * Tests exposed taxonomy filters.
+   */
+  public function testExposedFilter() {
+    $node_type = $this->drupalCreateContentType(['type' => 'page']);
+
+    // Create the tag field itself.
+    $field_name = 'taxonomy_tags';
+    $this->createEntityReferenceField('node', $node_type->id(), $field_name, NULL, 'taxonomy_term');
+
+    // Create 4 nodes: 1 without a term, 2 with the same term, and 1 with a
+    // different term.
+    $node1 = $this->drupalCreateNode();
+    $node2 = $this->drupalCreateNode([
+      $field_name => [['target_id' => $this->terms[1][0]->id()]],
+    ]);
+    $node3 = $this->drupalCreateNode([
+      $field_name => [['target_id' => $this->terms[1][0]->id()]],
+    ]);
+    $node4 = $this->drupalCreateNode([
+      $field_name => [['target_id' => $this->terms[2][0]->id()]],
+    ]);
+
+    // Only the nodes with the selected term should be shown.
+    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $xpath = $this->xpath('//div[@class="view-content"]//a');
+    $this->assertIdentical(2, count($xpath));
+    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node2->url()]);
+    $this->assertIdentical(1, count($xpath));
+    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node3->url()]);
+    $this->assertIdentical(1, count($xpath));
+
+    // Expose the filter.
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', [], 'Expose filter');
+    // Set the operator to 'empty' and remove the default term ID.
+    $this->drupalPostForm(NULL, [
+      'options[operator]' => 'empty',
+      'options[value][]' => [],
+    ], 'Apply');
+    // Save the view.
+    $this->drupalPostForm(NULL, [], 'Save');
+
+    // After switching to 'empty' operator, the node without a term should be
+    // shown.
+    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $xpath = $this->xpath('//div[@class="view-content"]//a');
+    $this->assertIdentical(1, count($xpath));
+    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node1->url()]);
+    $this->assertIdentical(1, count($xpath));
+
+    // Set the operator to 'not empty'.
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', ['options[operator]' => 'not empty'], 'Apply');
+    // Save the view.
+    $this->drupalPostForm(NULL, [], 'Save');
+
+    // After switching to 'not empty' operator, all nodes with terms should be
+    // shown.
+    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $xpath = $this->xpath('//div[@class="view-content"]//a');
+    $this->assertIdentical(3, count($xpath));
+    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node2->url()]);
+    $this->assertIdentical(1, count($xpath));
+    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node3->url()]);
+    $this->assertIdentical(1, count($xpath));
+    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node4->url()]);
+    $this->assertIdentical(1, count($xpath));
   }
 
 }

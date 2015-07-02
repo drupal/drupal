@@ -276,11 +276,23 @@ class TaxonomyIndexTid extends ManyToOne {
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
+    // We need to know the operator, which is normally set in
+    // \Drupal\views\Plugin\views\filter\FilterPluginBase::acceptExposedInput(),
+    // before we actually call the parent version of ourselves.
+    if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']) && isset($input[$this->options['expose']['operator_id']])) {
+      $this->operator = $input[$this->options['expose']['operator_id']];
+    }
 
     // If view is an attachment and is inheriting exposed filters, then assume
     // exposed input has already been validated
     if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {
       $this->validated_exposed_input = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
+    }
+
+    // If we're checking for EMPTY or NOT, we don't need any input, and we can
+    // say that our input conditions are met by just having the right operator.
+    if ($this->operator == 'empty' || $this->operator == 'not empty') {
+      return TRUE;
     }
 
     // If it's non-required and there's no value don't bother filtering.

@@ -176,3 +176,11 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 2
+    display_options:
+      display_extenders: {  }
+      path: test-filter-taxonomy-index-tid
