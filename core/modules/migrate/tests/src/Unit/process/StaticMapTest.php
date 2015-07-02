@@ -19,12 +19,6 @@ class StaticMapTest extends MigrateProcessTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->migrateExecutable = $this->getMockBuilder('Drupal\migrate\MigrateExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
     $configuration['map']['foo']['bar'] = 'baz';
     $this->plugin = new StaticMap($configuration, 'map', array());
     parent::setUp();
