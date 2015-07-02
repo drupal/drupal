@@ -42,11 +42,9 @@
       this.changedFieldStates = ['changed', 'saving', 'saved', 'invalid'];
       this.readyFieldStates = ['candidate', 'highlighted'];
 
-      this.listenTo(options.entitiesCollection, {
-        // Track app state.
-        'change:state': this.appStateChange,
-        'change:isActive': this.enforceSingleActiveEntity
-      });
+      // Track app state.
+      this.listenTo(options.entitiesCollection, 'change:state', this.appStateChange);
+      this.listenTo(options.entitiesCollection, 'change:isActive', this.enforceSingleActiveEntity);
 
       // Track app state.
       this.listenTo(options.fieldsCollection, 'change:state', this.editorStateChange);

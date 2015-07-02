@@ -66,20 +66,17 @@
      */
     initialize: function (attrs, options) {
       // Respond to new/removed contextual links.
-      this.listenTo(options.contextualCollection, {
-        'reset remove add': this.countContextualLinks,
-        'add': this.lockNewContextualLinks
-      });
+      this.listenTo(options.contextualCollection, 'reset remove add', this.countContextualLinks);
+      this.listenTo(options.contextualCollection, 'add', this.lockNewContextualLinks);
 
-      this.listenTo(this, {
-        // Automatically determine visibility.
-        'change:contextualCount': this.updateVisibility,
-        // Whenever edit mode is toggled, lock all contextual links.
-        'change:isViewing': function (model, isViewing) {
-          options.contextualCollection.each(function (contextualModel) {
-            contextualModel.set('isLocked', !isViewing);
-          });
-        }
+      // Automatically determine visibility.
+      this.listenTo(this, 'change:contextualCount', this.updateVisibility);
+
+      // Whenever edit mode is toggled, lock all contextual links.
+      this.listenTo(this, 'change:isViewing', function (model, isViewing) {
+        options.contextualCollection.each(function (contextualModel) {
+          contextualModel.set('isLocked', !isViewing);
+        });
       });
     },
 
