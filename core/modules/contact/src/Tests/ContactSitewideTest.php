@@ -250,10 +250,17 @@ class ContactSitewideTest extends WebTestBase {
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');
 
+    $view_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and text()=:text]', [
+      ':href' => \Drupal::url('entity.contact_form.canonical', ['contact_form' => $contact_form]),
+      ':text' => $label,
+      ]
+    );
+    $this->assertTrue(!empty($view_link), 'Contact listing links to contact form.');
+
     // Find out in which row the form we want to add a field to is.
     $i = 0;
     foreach($this->xpath('//table/tbody/tr') as $row) {
-      if (((string)$row->td[0]) == $label) {
+      if (((string) $row->td[0]->a) == $label) {
         break;
       }
       $i++;

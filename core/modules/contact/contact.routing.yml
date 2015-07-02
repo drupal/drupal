@@ -39,7 +39,7 @@ contact.site_page:
   requirements:
     _permission: 'access site-wide contact form'
 
-contact.site_page_form:
+entity.contact_form.canonical:
   path: '/contact/{contact_form}'
   defaults:
     _title: 'Contact'
