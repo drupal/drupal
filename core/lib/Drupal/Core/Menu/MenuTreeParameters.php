@@ -16,10 +16,6 @@ namespace Drupal\Core\Menu;
  * - Which parent IDs should be used to restrict the tree. Only links with
  *   a parent in the list will be included.
  * - Which menu links are omitted, depending on the minimum and maximum depth.
- *
- * @todo Add getter methods and make all properties protected and define an
- *   interface instead of using the concrete class to type hint.
- *   https://www.drupal.org/node/2302041
  */
 class MenuTreeParameters {
 
