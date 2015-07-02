@@ -14,7 +14,7 @@ use \Drupal\Component\Annotation\Plugin;
  *
  * Plugin Namespace: Plugin\rest\resource
  *
- * For a working example, see \Drupal\rest\Plugin\rest\resource\DBLogResource
+ * For a working example, see \Drupal\dblog\Plugin\rest\resource\DBLogResource
  *
  * @see \Drupal\rest\Plugin\Type\ResourcePluginManager
  * @see \Drupal\rest\Plugin\ResourceBase
