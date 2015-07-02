@@ -31,6 +31,14 @@ interface ContextInterface {
   public function getContextValue();
 
   /**
+   * Returns whether the context has a value.
+   *
+   * @return bool
+   *   TRUE if the context has a value, FALSE otherwise.
+   */
+  public function hasContextValue();
+
+  /**
    * Sets the definition that the context must conform to.
    *
    * @param \Drupal\Component\Plugin\Context\ContextDefinitionInterface $context_definition

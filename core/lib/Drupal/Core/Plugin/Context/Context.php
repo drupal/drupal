@@ -59,6 +59,13 @@ class Context extends ComponentContext implements ContextInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasContextValue() {
+    return (bool) $this->contextData || parent::hasContextValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setContextValue($value) {
     if ($value instanceof TypedDataInterface) {
       return $this->setContextData($value);

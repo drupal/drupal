@@ -74,14 +74,38 @@ class ContextHandler implements ContextHandlerInterface {
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = array()) {
     $mappings += $plugin->getContextMapping();
     // Loop through each of the expected contexts.
-    foreach (array_keys($plugin->getContextDefinitions()) as $plugin_context_id) {
+
+    $missing_value = [];
+
+    foreach ($plugin->getContextDefinitions() as $plugin_context_id => $plugin_context_definition) {
       // If this context was given a specific name, use that.
       $context_id = isset($mappings[$plugin_context_id]) ? $mappings[$plugin_context_id] : $plugin_context_id;
       if (!empty($contexts[$context_id])) {
         // This assignment has been used, remove it.
         unset($mappings[$plugin_context_id]);
-        $plugin->setContextValue($plugin_context_id, $contexts[$context_id]->getContextValue());
+
+        // Pass the value to the plugin if there is one.
+        if ($contexts[$context_id]->hasContextValue()) {
+          $plugin->setContextValue($plugin_context_id, $contexts[$context_id]->getContextValue());
+        }
+        elseif ($plugin_context_definition->isRequired()) {
+          // Collect required contexts that exist but are missing a value.
+          $missing_value[] = $plugin_context_id;
+        }
       }
+      elseif ($plugin_context_definition->isRequired()) {
+        // Collect required contexts that are missing.
+        $missing_value[] = $plugin_context_id;
+      }
+      else {
+        // Ignore mappings for optional missing context.
+        unset($mappings[$plugin_context_id]);
+      }
+    }
+
+    // If there are any required contexts without a value, throw an exception.
+    if ($missing_value) {
+      throw new ContextException(sprintf('Required contexts without a value: %s.', implode(', ', $missing_value)));
     }
 
     // If there are any mappings that were not satisfied, throw an exception.

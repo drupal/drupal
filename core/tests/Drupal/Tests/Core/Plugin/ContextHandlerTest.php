@@ -233,6 +233,9 @@ class ContextHandlerTest extends UnitTestCase {
     $context_hit->expects($this->atLeastOnce())
       ->method('getContextValue')
       ->will($this->returnValue(array('foo')));
+    $context_hit->expects($this->atLeastOnce())
+      ->method('hasContextValue')
+      ->willReturn(TRUE);
     $context_miss = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context_miss->expects($this->never())
       ->method('getContextValue');
@@ -242,13 +245,15 @@ class ContextHandlerTest extends UnitTestCase {
       'miss' => $context_miss,
     );
 
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+
     $plugin = $this->getMock('Drupal\Core\Plugin\ContextAwarePluginInterface');
     $plugin->expects($this->once())
       ->method('getContextMapping')
       ->willReturn([]);
     $plugin->expects($this->once())
       ->method('getContextDefinitions')
-      ->will($this->returnValue(array('hit' => 'hit')));
+      ->will($this->returnValue(array('hit' => $context_definition)));
     $plugin->expects($this->once())
       ->method('setContextValue')
       ->with('hit', array('foo'));
@@ -258,8 +263,11 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::applyContextMapping
+   *
+   * @expectedException \Drupal\Component\Plugin\Exception\ContextException
+   * @expectedExceptionMessage Required contexts without a value: hit.
    */
-  public function testApplyContextMappingConfigurable() {
+  public function testApplyContextMappingMissingRequired() {
     $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->never())
       ->method('getContextValue');
@@ -268,13 +276,118 @@ class ContextHandlerTest extends UnitTestCase {
       'name' => $context,
     );
 
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+    $context_definition->expects($this->atLeastOnce())
+      ->method('isRequired')
+      ->willReturn(TRUE);
+
     $plugin = $this->getMock('Drupal\Tests\Core\Plugin\TestConfigurableContextAwarePluginInterface');
     $plugin->expects($this->once())
       ->method('getContextMapping')
       ->willReturn([]);
     $plugin->expects($this->once())
       ->method('getContextDefinitions')
-      ->will($this->returnValue(array('hit' => 'hit')));
+      ->will($this->returnValue(array('hit' => $context_definition)));
+    $plugin->expects($this->never())
+      ->method('setContextValue');
+
+    $this->contextHandler->applyContextMapping($plugin, $contexts);
+  }
+
+  /**
+   * @covers ::applyContextMapping
+   */
+  public function testApplyContextMappingMissingNotRequired() {
+    $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context->expects($this->never())
+      ->method('getContextValue');
+
+    $contexts = array(
+      'name' => $context,
+    );
+
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+    $context_definition->expects($this->atLeastOnce())
+      ->method('isRequired')
+      ->willReturn(FALSE);
+
+    $plugin = $this->getMock('Drupal\Tests\Core\Plugin\TestConfigurableContextAwarePluginInterface');
+    $plugin->expects($this->once())
+      ->method('getContextMapping')
+      ->willReturn(['optional' => 'missing']);
+    $plugin->expects($this->once())
+      ->method('getContextDefinitions')
+      ->will($this->returnValue(array('optional' => $context_definition)));
+    $plugin->expects($this->never())
+      ->method('setContextValue');
+
+    $this->contextHandler->applyContextMapping($plugin, $contexts);
+  }
+
+  /**
+   * @covers ::applyContextMapping
+   *
+   * @expectedException \Drupal\Component\Plugin\Exception\ContextException
+   * @expectedExceptionMessage Required contexts without a value: hit.
+   */
+  public function testApplyContextMappingNoValueRequired() {
+    $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context->expects($this->never())
+      ->method('getContextValue');
+    $context->expects($this->atLeastOnce())
+      ->method('hasContextValue')
+      ->willReturn(FALSE);
+
+    $contexts = array(
+      'hit' => $context,
+    );
+
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+    $context_definition->expects($this->atLeastOnce())
+      ->method('isRequired')
+      ->willReturn(TRUE);
+
+    $plugin = $this->getMock('Drupal\Tests\Core\Plugin\TestConfigurableContextAwarePluginInterface');
+    $plugin->expects($this->once())
+      ->method('getContextMapping')
+      ->willReturn([]);
+    $plugin->expects($this->once())
+      ->method('getContextDefinitions')
+      ->will($this->returnValue(array('hit' => $context_definition)));
+    $plugin->expects($this->never())
+      ->method('setContextValue');
+
+    $this->contextHandler->applyContextMapping($plugin, $contexts);
+  }
+
+
+  /**
+   * @covers ::applyContextMapping
+   */
+  public function testApplyContextMappingNoValueNonRequired() {
+    $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context->expects($this->never())
+      ->method('getContextValue');
+    $context->expects($this->atLeastOnce())
+      ->method('hasContextValue')
+      ->willReturn(FALSE);
+
+    $contexts = array(
+      'hit' => $context,
+    );
+
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+    $context_definition->expects($this->atLeastOnce())
+      ->method('isRequired')
+      ->willReturn(FALSE);
+
+    $plugin = $this->getMock('Drupal\Tests\Core\Plugin\TestConfigurableContextAwarePluginInterface');
+    $plugin->expects($this->once())
+      ->method('getContextMapping')
+      ->willReturn([]);
+    $plugin->expects($this->once())
+      ->method('getContextDefinitions')
+      ->will($this->returnValue(array('hit' => $context_definition)));
     $plugin->expects($this->never())
       ->method('setContextValue');
 
@@ -289,10 +402,15 @@ class ContextHandlerTest extends UnitTestCase {
     $context->expects($this->atLeastOnce())
       ->method('getContextValue')
       ->will($this->returnValue(array('foo')));
+    $context->expects($this->atLeastOnce())
+      ->method('hasContextValue')
+      ->willReturn(TRUE);
 
     $contexts = array(
       'name' => $context,
     );
+
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
 
     $plugin = $this->getMock('Drupal\Tests\Core\Plugin\TestConfigurableContextAwarePluginInterface');
     $plugin->expects($this->once())
@@ -300,7 +418,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->willReturn([]);
     $plugin->expects($this->once())
       ->method('getContextDefinitions')
-      ->will($this->returnValue(array('hit' => 'hit')));
+      ->will($this->returnValue(array('hit' => $context_definition)));
     $plugin->expects($this->once())
       ->method('setContextValue')
       ->with('hit', array('foo'));
@@ -323,13 +441,15 @@ class ContextHandlerTest extends UnitTestCase {
       'name' => $context,
     );
 
+    $context_definition = $this->getMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+
     $plugin = $this->getMock('Drupal\Tests\Core\Plugin\TestConfigurableContextAwarePluginInterface');
     $plugin->expects($this->once())
       ->method('getContextMapping')
       ->willReturn([]);
     $plugin->expects($this->once())
       ->method('getContextDefinitions')
-      ->will($this->returnValue(array('hit' => 'hit')));
+      ->will($this->returnValue(array('hit' => $context_definition)));
     $plugin->expects($this->never())
       ->method('setContextValue');
 

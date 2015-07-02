@@ -70,6 +70,13 @@ class Context implements ContextInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasContextValue() {
+    return (bool) $this->contextValue || (bool) $this->getContextDefinition()->getDefaultValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setContextDefinition(ContextDefinitionInterface $context_definition) {
     $this->contextDefinition = $context_definition;
   }
