@@ -9,10 +9,7 @@ namespace Drupal\rest\Plugin\Deriver;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
-use Drupal\Core\Routing\RouteBuilderInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Provides a resource plugin definition for every entity type.
