@@ -144,14 +144,14 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
-    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime(), $this->account->id()));
+    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
 
     // Create a user, block the account, and verify that a login link is denied.
     $timestamp = REQUEST_TIME - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account->getPassword(), $timestamp, $blocked_account->getLastLoginTime(), $this->account->id()));
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp));
     $this->assertResponse(403);
 
     // Verify a blocked user can not request a new password.
@@ -162,6 +162,16 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $this->assertRaw(t('%name is blocked or has not been activated yet.', array('%name' => $blocked_account->getUsername())), 'Notified user blocked accounts can not request a new password');
     $this->assertTrue(count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before, 'No email was sent when requesting password reset for a blocked account');
+
+    // Verify a password reset link is invalidated when the user's email address changes.
+    $this->drupalGet('user/password');
+    $edit = array('name' => $this->account->getUsername());
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $old_email_reset_link = $this->getResetURL();
+    $this->account->setEmail("1" . $this->account->getEmail());
+    $this->account->save();
+    $this->drupalGet($old_email_reset_link);
+    $this->assertText(t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'), 'One-time link is no longer valid.');
   }
 
   /**

@@ -59,7 +59,7 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt bogus account cancellation request confirmation.
     $timestamp = $account->getLastLoginTime();
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
     $this->assertResponse(403, 'Bogus cancelling request rejected.');
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
@@ -165,7 +165,7 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt bogus account cancellation request confirmation.
     $bogus_timestamp = $timestamp + 60;
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->getPassword(), $bogus_timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account, $bogus_timestamp));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'Bogus cancelling request rejected.');
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
@@ -173,7 +173,7 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt expired account cancellation request confirmation.
     $bogus_timestamp = $timestamp - 86400 - 60;
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->getPassword(), $bogus_timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account, $bogus_timestamp));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'Expired cancel account request rejected.');
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
@@ -214,7 +214,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'User has been blocked.');
@@ -272,7 +272,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'User has been blocked.');
@@ -348,7 +348,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
     $user_storage->resetCache(array($account->id()));
     $this->assertFalse($user_storage->load($account->id()), 'User is not found in the database.');
 
@@ -427,7 +427,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id()));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
     $user_storage->resetCache(array($account->id()));
     $this->assertFalse($user_storage->load($account->id()), 'User is not found in the database.');
 
