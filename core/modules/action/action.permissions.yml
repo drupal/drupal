@@ -1,2 +1,3 @@
 administer actions:
   title: 'Administer actions'
+  restrict access: true
