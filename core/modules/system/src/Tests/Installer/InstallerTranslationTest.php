@@ -57,6 +57,8 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->assertText('German');
     $this->assertNoText('English');
 
+    // The current container still has the english as current language, rebuild.
+    $this->rebuildContainer();
     /** @var \Drupal\user\Entity\User $account */
     $account = User::load(0);
     $this->assertEqual($account->language()->getId(), 'en', 'Anonymous user is English.');

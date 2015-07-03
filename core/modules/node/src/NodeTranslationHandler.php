@@ -7,8 +7,8 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -76,9 +76,8 @@ class NodeTranslationHandler extends ContentTranslationHandler {
    */
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     if ($form_state->hasValue('content_translation')) {
-      $form_object = $form_state->getFormObject();
       $translation = &$form_state->getValue('content_translation');
-      $translation['status'] = $form_object->getEntity()->isPublished();
+      $translation['status'] = $entity->isPublished();
       // $form['content_translation']['name'] is the equivalent field
       // for translation author uid.
       $account = $entity->uid->entity;

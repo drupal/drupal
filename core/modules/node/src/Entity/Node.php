@@ -53,7 +53,9 @@ use Drupal\user\UserInterface;
  *     "bundle" = "type",
  *     "label" = "title",
  *     "langcode" = "langcode",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status",
+ *     "uid" = "uid",
  *   },
  *   bundle_entity_type = "node_type",
  *   field_ui_base_route = "entity.node_type.edit_form",
@@ -71,6 +73,13 @@ use Drupal\user\UserInterface;
 class Node extends ContentEntityBase implements NodeInterface {
 
   use EntityChangedTrait;
+
+  /**
+   * Whether the node is being previewed or not.
+   *
+   * @var true|null
+   */
+  public $in_preview = NULL;
 
   /**
    * {@inheritdoc}
@@ -258,7 +267,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function isPublished() {
-    return (bool) $this->get('status')->value;
+    return (bool) $this->getEntityKey('status');
   }
 
   /**
@@ -280,7 +289,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function getOwnerId() {
-    return $this->get('uid')->target_id;
+    return $this->getEntityKey('uid');
   }
 
   /**
