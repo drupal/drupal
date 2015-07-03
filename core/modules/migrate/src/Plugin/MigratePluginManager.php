@@ -70,20 +70,4 @@ class MigratePluginManager extends DefaultPluginManager {
     return $plugin;
   }
 
-  /**
-   * Helper for the plugin type to interface map.
-   *
-   * @return array
-   *   An array map from plugin type to interface.
-   */
-  protected function getPluginInterfaceMap() {
-    return [
-      'destination' => 'Drupal\migrate\Plugin\MigrateDestinationInterface',
-      'process' => 'Drupal\migrate\Plugin\MigrateProcessInterface',
-      'source' => 'Drupal\migrate\Plugin\MigrateSourceInterface',
-      'id_map' => 'Drupal\migrate\Plugin\MigrateIdMapInterface',
-      'entity_field' => 'Drupal\migrate\Plugin\MigrateEntityDestinationFieldInterface',
-    ];
-  }
-
 }

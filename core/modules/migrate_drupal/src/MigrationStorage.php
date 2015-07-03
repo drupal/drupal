@@ -17,7 +17,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
 use Drupal\migrate\MigrationStorage as BaseMigrationStorage;
-use Drupal\migrate_drupal\Plugin\MigratePluginManager;
+use Drupal\migrate\Plugin\MigratePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
