@@ -154,13 +154,6 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
   /**
    * {@inheritdoc}
    */
-  public function getDataDefinition() {
-    return $this->definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getString() {
     return isset($this->entity) ? $this->entity->label() : '';
   }
