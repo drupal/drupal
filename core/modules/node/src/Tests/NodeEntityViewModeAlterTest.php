@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Cache\Cache;
+
 /**
  * Tests changing view modes for nodes.
  *
@@ -37,6 +39,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
 
     // Set the flag to alter the view mode and view the node.
     \Drupal::state()->set('node_test_change_view_mode', 'teaser');
+    Cache::invalidateTags(['rendered']);
     $this->drupalGet('node/' . $node->id());
 
     // Check that teaser mode is viewed.
