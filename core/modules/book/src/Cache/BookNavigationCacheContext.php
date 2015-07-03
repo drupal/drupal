@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Defines the book navigation cache context service.
  *
+ * Cache context ID: 'route.book_navigation'.
+ *
  * This allows for book navigation location-aware caching. It depends on:
  * - whether the current route represents a book node at all
  * - and if so, where in the book hierarchy we are

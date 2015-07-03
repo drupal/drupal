@@ -11,6 +11,8 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines the UserCacheContext service, for "per user" caching.
+ *
+ * Cache context ID: 'user'.
  */
 class UserCacheContext implements CacheContextInterface {
 

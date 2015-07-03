@@ -9,6 +9,10 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the HeadersCacheContext service, for "per header" caching.
+ *
+ * Cache context ID: 'headers' (to vary by all headers).
+ * Calculated cache context ID: 'headers:%name', e.g. 'headers:X-Something' (to
+ * vary by the 'X-Something' header).
  */
 class HeadersCacheContext extends RequestStackCacheContextBase implements CalculatedCacheContextInterface {
 

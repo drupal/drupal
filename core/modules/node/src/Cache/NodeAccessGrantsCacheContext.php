@@ -13,6 +13,10 @@ use Drupal\Core\Cache\Context\UserCacheContext;
 /**
  * Defines the node access view cache context service.
  *
+ * Cache context ID: 'user.node_grants' (to vary by all operations' grants).
+ * Calculated cache context ID: 'user.node_grants:%operation', e.g.
+ * 'user.node_grants:view' (to vary by the view operation's grants).
+ *
  * This allows for node access grants-sensitive caching when listing nodes.
  *
  * @see node_query_node_access_alter()

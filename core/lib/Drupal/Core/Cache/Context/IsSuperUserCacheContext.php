@@ -9,6 +9,8 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the IsSuperUserCacheContext service, for "super user or not" caching.
+ *
+ * Cache context ID: 'user.is_super_user'.
  */
 class IsSuperUserCacheContext extends UserCacheContext {
 

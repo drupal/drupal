@@ -10,6 +10,8 @@ namespace Drupal\Core\Cache\Context;
 /**
  * Defines the SiteCacheContext service, for "per site" caching.
  *
+ * Cache context ID: 'site'.
+ *
  * A "site" is defined as the combination of URI scheme, domain name, port and
  * base path. It allows for varying between the *same* site being accessed via
  * different entry points. (Different sites in a multisite setup have separate

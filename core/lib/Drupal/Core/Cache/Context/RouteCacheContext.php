@@ -11,6 +11,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines the RouteCacheContext service, for "per route" caching.
+ *
+ * Cache context ID: 'route'.
  */
 class RouteCacheContext implements CacheContextInterface {
 

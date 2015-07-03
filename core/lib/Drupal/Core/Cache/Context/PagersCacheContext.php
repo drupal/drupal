@@ -9,6 +9,10 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines a cache context for "per page in a pager" caching.
+ *
+ * Cache context ID: 'url.query_args.pagers' (to vary by all pagers).
+ * Calculated cache context ID: 'url.query_args.pagers:%pager_id', e.g.
+ * 'url.query_args.pagers:1' (to vary by the pager with ID 1).
  */
 class PagersCacheContext extends RequestStackCacheContextBase implements CalculatedCacheContextInterface {
 

@@ -9,6 +9,10 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the CookiesCacheContext service, for "per cookie" caching.
+ *
+ * Cache context ID: 'cookies' (to vary by all cookies).
+ * Calculated cache context ID: 'cookies:%name', e.g. 'cookies:device_type' (to
+ * vary by the 'device_type' cookie).
  */
 class CookiesCacheContext extends RequestStackCacheContextBase implements CalculatedCacheContextInterface {
 

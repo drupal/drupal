@@ -12,6 +12,8 @@ use Drupal\Core\Session\PermissionsHashGeneratorInterface;
 
 /**
  * Defines the AccountPermissionsCacheContext service, for "per permission" caching.
+ *
+ * Cache context ID: 'user.permissions'.
  */
 class AccountPermissionsCacheContext extends UserCacheContext {
 

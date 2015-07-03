@@ -11,6 +11,8 @@ use Drupal\Core\Cache\Context\CacheContextInterface;
 
 /**
  * Test cache context which uses a dynamic context coming from state.
+ *
+ * Cache context ID: 'views_test_cache_context'.
  */
 class ViewsTestCacheContext implements CacheContextInterface {
 

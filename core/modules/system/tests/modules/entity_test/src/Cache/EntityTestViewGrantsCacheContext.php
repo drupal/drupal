@@ -12,6 +12,8 @@ use Drupal\Core\Cache\Context\CacheContextInterface;
 /**
  * Defines the entity_test view grants cache context service.
  *
+ * Cache context ID: 'entity_test_view_grants'.
+ *
  * @see \Drupal\node\Cache\NodeAccessViewGrantsCacheContext
  */
 class EntityTestViewGrantsCacheContext implements CacheContextInterface {

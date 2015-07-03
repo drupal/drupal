@@ -12,6 +12,10 @@ namespace Drupal\Core\Cache\Context;
  *
  * Only use this cache context when checking explicitly for certain roles. Use
  * user.permissions for anything that checks permissions.
+ *
+ * Cache context ID: 'user.roles' (to vary by all roles of the current user).
+ * Calculated cache context ID: 'user.roles:%role', e.g. 'user.roles:anonymous'
+ * (to vary by the presence/absence of a specific role).
  */
 class UserRolesCacheContext extends UserCacheContext implements CalculatedCacheContextInterface{
 

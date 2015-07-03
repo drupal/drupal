@@ -9,6 +9,8 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the RequestFormatCacheContext service, for "per format" caching.
+ *
+ * Cache context ID: 'request_format'.
  */
 class RequestFormatCacheContext extends RequestStackCacheContextBase {
 

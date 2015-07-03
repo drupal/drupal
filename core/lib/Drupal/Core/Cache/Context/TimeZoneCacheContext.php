@@ -10,6 +10,8 @@ namespace Drupal\Core\Cache\Context;
 /**
  * Defines the TimeZoneCacheContext service, for "per time zone" caching.
  *
+ * Cache context ID: 'timezone'.
+ *
  * @see \Drupal\Core\Session\AccountProxy::setAccount()
  */
 class TimeZoneCacheContext implements CacheContextInterface {

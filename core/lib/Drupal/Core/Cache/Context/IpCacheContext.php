@@ -9,6 +9,8 @@ namespace Drupal\Core\Cache\Context;
 
 /**
  * Defines the IpCacheContext service, for "per IP address" caching.
+ *
+ * Cache context ID: 'ip'.
  */
 class IpCacheContext extends RequestStackCacheContextBase {
 

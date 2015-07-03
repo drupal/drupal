@@ -12,6 +12,8 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Defines the ThemeCacheContext service, for "per theme" caching.
+ *
+ * Cache context ID: 'theme'.
  */
 class ThemeCacheContext implements CacheContextInterface {
 
