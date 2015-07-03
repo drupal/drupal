@@ -80,8 +80,11 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
     $is_own_account = $items ? $items->getEntity()->id() == $account->id() : FALSE;
     switch ($field_definition->getName()) {
       case 'name':
-        // Allow view access to anyone with access to the entity.
-        if ($operation == 'view') {
+        // Allow view access to anyone with access to the entity. Anonymous
+        // users should be able to access the username field during the
+        // registration process, otherwise the username and email constraints
+        // are not checked.
+        if ($operation == 'view' || ($items && $account->isAnonymous() && $items->getEntity()->isAnonymous())) {
           return AccessResult::allowed()->cachePerPermissions();
         }
         // Allow edit access for the own user name if the permission is

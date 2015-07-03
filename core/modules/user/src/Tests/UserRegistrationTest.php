@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -262,6 +263,24 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct language field.');
     $this->assertEqual($new_user->preferred_langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct preferred language field.');
     $this->assertEqual($new_user->init->value, $mail, 'Correct init field.');
+  }
+
+  /**
+   * Tests username and email field constraints on user registration.
+   *
+   * @see \Drupal\user\Plugin\Validation\Constraint\UserNameUnique
+   * @see \Drupal\user\Plugin\Validation\Constraint\UserMailUnique
+   */
+  public function testUniqueFields() {
+    $account = $this->drupalCreateUser();
+
+    $edit = ['mail' => 'test@example.com', 'name' => $account->getUsername()];
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
+    $this->assertRaw(SafeMarkup::format('The username %value is already taken.', ['%value' => $account->getUsername()]));
+
+    $edit = ['mail' => $account->getEmail(), 'name' => $this->randomString()];
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
+    $this->assertRaw(SafeMarkup::format('The email address %value is already taken.', ['%value' => $account->getEmail()]));
   }
 
   /**
