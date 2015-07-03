@@ -12,6 +12,7 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
+use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
@@ -692,6 +693,29 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
       $settings['ajaxPageState']['theme_token'] = \Drupal::csrfToken()
         ->get(\Drupal::theme()->getActiveTheme()->getName());
     }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function system_form_alter(&$form, FormStateInterface $form_state) {
+  // If the page that's being built is cacheable, set the 'immutable' flag, to
+  // ensure that when the form is used, a new form build ID is generated when
+  // appropriate, to prevent information disclosure.
+
+  // Note: This code just wants to know whether cache response headers are set,
+  // not whether page_cache module will be active.
+  // \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onRespond will
+  // send those headers, in case $request_policy->check($request) succeeds. In
+  // that case we need to ensure that the immutable flag is sot, so future POST
+  // request won't take over the form state of another user.
+  /** @var \Drupal\Core\PageCache\RequestPolicyInterface $request_policy */
+  $request_policy = \Drupal::service('page_cache_request_policy');
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  $request_is_cacheable = $request_policy->check($request) === RequestPolicyInterface::ALLOW;
+  if ($request_is_cacheable) {
+    $form_state->addBuildInfo('immutable', TRUE);
   }
 }
 

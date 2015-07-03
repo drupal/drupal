@@ -29,18 +29,3 @@ function page_cache_help($route_name, RouteMatchInterface $route_match) {
       return $output;
   }
 }
-
-/**
- * Implements hook_form_alter().
- */
-function page_cache_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // If the page that's being built is cacheable, set the 'immutable' flag, to
-  // ensure that when the form is used, a new form build ID is generated when
-  // appropriate, to prevent information disclosure.
-  $request_policy = \Drupal::service('page_cache_request_policy');
-  $request = \Drupal::requestStack()->getCurrentRequest();
-  $request_is_cacheable = $request_policy->check($request) === RequestPolicyInterface::ALLOW;
-  if ($request_is_cacheable) {
-    $form_state->addBuildInfo('immutable', TRUE);
-  }
-}

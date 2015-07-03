@@ -11,10 +11,30 @@ use Drupal\Core\Form\FormStateInterface;
 * Implements hook_form_FORM_ID_alter().
 */
 function page_cache_form_test_form_page_cache_form_test_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // This runs earlier than system_form_alter() so we fore-go the immutability
+  // check to the process callback, by which time system_form_alter() has run.
+  $form['#process'][] = 'page_cache_form_test_form_page_cache_form_test_process';
+}
+
+/**
+ * Process callback to check immutability.
+ */
+function page_cache_form_test_form_page_cache_form_test_process($form, FormStateInterface $form_state) {
   if (isset($form_state->getBuildInfo()['immutable']) && $form_state->getBuildInfo()['immutable']) {
     $form['#suffix'] = 'Immutable: TRUE';
   }
   else {
     $form['#suffix'] = 'Immutable: FALSE';
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function page_cache_form_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'form_alter' && \Drupal::state()->get('page_cache_bypass_form_immutability', FALSE)) {
+    // Disable system_form_alter
+    unset($implementations['system']);
   }
 }
