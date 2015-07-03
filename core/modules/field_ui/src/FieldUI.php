@@ -40,10 +40,15 @@ class FieldUI {
    * @param array $destinations
    *   An array of destinations to redirect to.
    *
-   * @return \Drupal\Core\Url
+   * @return \Drupal\Core\Url|null
    *   The next destination to redirect to.
    */
   public static function getNextDestination(array $destinations) {
+    // If there are no valid destinations left, return here.
+    if (empty($destinations)) {
+      return NULL;
+    }
+
     $next_destination = array_shift($destinations);
     if (is_array($next_destination)) {
       $next_destination['options']['query']['destinations'] = $destinations;
@@ -59,7 +64,7 @@ class FieldUI {
       }
       // Redirect to any given path within the same domain.
       // @todo Revisit this in https://www.drupal.org/node/2418219.
-      $next_destination = Url::fromUserInput('/' . $options['path']);
+      $next_destination = Url::fromUserInput('/' . $options['path'], $options);
     }
     return $next_destination;
   }
