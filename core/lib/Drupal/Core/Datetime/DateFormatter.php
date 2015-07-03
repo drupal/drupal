@@ -204,6 +204,11 @@ class DateFormatter {
         $interval %= $value;
         $granularity--;
       }
+      elseif ($output) {
+        // Break if there was previous output but not any output at this level,
+        // to avoid skipping levels and getting output like "1 year 1 second".
+        break;
+      }
 
       if ($granularity == 0) {
         break;
@@ -373,14 +378,20 @@ class DateFormatter {
             // ourselves.
             $interval_output = '';
             $days = $interval->d;
-            if ($days >= 7) {
-              $weeks = floor($days / 7);
+            $weeks = floor($days / 7);
+            if ($weeks) {
               $interval_output .= $this->formatPlural($weeks, '1 week', '@count weeks', array(), array('langcode' => $options['langcode']));
               $days -= $weeks * 7;
               $granularity--;
             }
-            if ($granularity > 0 && $days > 0) {
+
+            if ((!$output || $weeks > 0) && $granularity > 0 && $days > 0) {
               $interval_output .= ($interval_output ? ' ' : '') . $this->formatPlural($days, '1 day', '@count days', array(), array('langcode' => $options['langcode']));
+            }
+            else {
+              // If we did not output days, set the granularity to 0 so that we
+              // will not output hours and get things like "1 week 1 hour".
+              $granularity = 0;
             }
             break;
 
@@ -397,8 +408,13 @@ class DateFormatter {
             break;
 
         }
-        $output .= ($output ? ' ' : '') . $interval_output;
+        $output .= ($output && $interval_output ? ' ' : '') . $interval_output;
         $granularity--;
+      }
+      elseif ($output) {
+        // Break if there was previous output but not any output at this level,
+        // to avoid skipping levels and getting output like "1 year 1 second".
+        break;
       }
 
       if ($granularity <= 0) {
