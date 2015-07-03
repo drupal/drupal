@@ -7,6 +7,7 @@
 
 namespace Drupal\block;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -49,7 +50,7 @@ class BlockRepository implements BlockRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getVisibleBlocksPerRegion(array $contexts) {
+  public function getVisibleBlocksPerRegion(array $contexts, array &$cacheable_metadata = []) {
     $active_theme = $this->themeManager->getActiveTheme();
     // Build an array of the region names in the right order.
     $empty = array_fill_keys($active_theme->getRegions(), array());
@@ -57,9 +58,19 @@ class BlockRepository implements BlockRepositoryInterface {
     $full = array();
     foreach ($this->blockStorage->loadByProperties(array('theme' => $active_theme->getName())) as $block_id => $block) {
       /** @var \Drupal\block\BlockInterface $block */
+      $block->setContexts($contexts);
+      $access = $block->access('view', NULL, TRUE);
+      $region = $block->getRegion();
+      if (!isset($cacheable_metadata[$region])) {
+        $cacheable_metadata[$region] = CacheableMetadata::createFromObject($access);
+      }
+      else {
+        $cacheable_metadata[$region] = $cacheable_metadata[$region]->merge(CacheableMetadata::createFromObject($access));
+      }
+
       // Set the contexts on the block before checking access.
-      if ($block->setContexts($contexts)->access('view')) {
-        $full[$block->getRegion()][$block_id] = $block;
+      if ($access->isAllowed()) {
+        $full[$region][$block_id] = $block;
       }
     }
 

@@ -258,6 +258,16 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContextValue')
       ->with('hit', array('foo'));
 
+    // Make sure that the cacheability metadata is passed to the plugin context.
+    $plugin_context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $plugin_context->expects($this->once())
+      ->method('addCacheableDependency')
+      ->with($context_hit);
+    $plugin->expects($this->once())
+      ->method('getContext')
+      ->with('hit')
+      ->willReturn($plugin_context);
+
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -291,6 +301,10 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('setContextValue');
 
+    // No context, so no cacheability metadata can be passed along.
+    $plugin->expects($this->never())
+      ->method('getContext');
+
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -320,6 +334,10 @@ class ContextHandlerTest extends UnitTestCase {
       ->will($this->returnValue(array('optional' => $context_definition)));
     $plugin->expects($this->never())
       ->method('setContextValue');
+
+    // No context, so no cacheability metadata can be passed along.
+    $plugin->expects($this->never())
+      ->method('getContext');
 
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
@@ -422,6 +440,16 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->once())
       ->method('setContextValue')
       ->with('hit', array('foo'));
+
+    // Make sure that the cacheability metadata is passed to the plugin context.
+    $plugin_context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $plugin_context->expects($this->once())
+      ->method('addCacheableDependency')
+      ->with($context);
+    $plugin->expects($this->once())
+      ->method('getContext')
+      ->with('hit')
+      ->willReturn($plugin_context);
 
     $this->contextHandler->applyContextMapping($plugin, $contexts, ['hit' => 'name']);
   }

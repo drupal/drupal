@@ -10,6 +10,8 @@ namespace Drupal\Core\Plugin;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
 use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -89,6 +91,55 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
    */
   protected function contextHandler() {
     return \Drupal::service('context.handler');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $cache_contexts = [];
+    // Applied contexts can affect the cache contexts when this plugin is
+    // involved in caching, collect and return them.
+    foreach ($this->getContexts() as $context) {
+      /** @var $context \Drupal\Core\Cache\CacheableDependencyInterface */
+      if ($context instanceof CacheableDependencyInterface) {
+        $cache_contexts = Cache::mergeContexts($cache_contexts, $context->getCacheContexts());
+      }
+    }
+    return $cache_contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags = [];
+    // Applied contexts can affect the cache tags when this plugin is
+    // involved in caching, collect and return them.
+    foreach ($this->getContexts() as $context) {
+      /** @var $context \Drupal\Core\Cache\CacheableDependencyInterface */
+      if ($context instanceof CacheableDependencyInterface) {
+        $tags = Cache::mergeTags($tags, $context->getCacheTags());
+      }
+    }
+    return $tags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    $max_age = Cache::PERMANENT;
+
+    // Applied contexts can affect the cache max age when this plugin is
+    // involved in caching, collect and return them.
+    foreach ($this->getContexts() as $context) {
+      /** @var $context \Drupal\Core\Cache\CacheableDependencyInterface */
+      if ($context instanceof CacheableDependencyInterface) {
+        $max_age = Cache::mergeMaxAges($max_age, $context->getCacheMaxAge());
+      }
+    }
+    return $max_age;
   }
 
 }

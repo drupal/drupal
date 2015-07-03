@@ -89,8 +89,8 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function debugCacheTags(array $actual_tags, array $expected_tags) {
     if ($actual_tags !== $expected_tags) {
-      debug('Missing cache tags: ' . implode(',', array_diff($expected_tags, $actual_tags)));
-      debug('Unwanted cache tags: ' . implode(',', array_diff($actual_tags, $expected_tags)));
+      debug('Unwanted cache tags in response: ' . implode(',', array_diff($actual_tags, $expected_tags)));
+      debug('Missing cache tags in response: ' . implode(',', array_diff($expected_tags, $actual_tags)));
     }
   }
 
@@ -125,8 +125,8 @@ trait AssertPageCacheContextsAndTagsTrait {
     sort($actual_contexts);
     $return = $this->assertIdentical($actual_contexts, $expected_contexts, $message);
     if (!$return) {
-      debug('Missing cache contexts: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
-      debug('Unwanted cache contexts: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
+      debug('Unwanted cache contexts in response: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
+      debug('Missing cache contexts in response: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
     }
     return $return;
   }

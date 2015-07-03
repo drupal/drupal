@@ -8,6 +8,7 @@
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\block\Event\BlockContextEvent;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -48,6 +49,11 @@ class CurrentLanguageContext extends BlockContextSubscriberBase {
       if (isset($info[$type_key]['name'])) {
         $context = new Context(new ContextDefinition('language', $info[$type_key]['name']));
         $context->setContextValue($this->languageManager->getCurrentLanguage($type_key));
+
+        $cacheability = new CacheableMetadata();
+        $cacheability->setCacheContexts(['languages:' . $type_key]);
+        $context->addCacheableDependency($cacheability);
+
         $event->setContext('language.' . $type_key, $context);
       }
     }

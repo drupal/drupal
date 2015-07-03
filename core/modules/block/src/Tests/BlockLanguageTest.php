@@ -90,6 +90,7 @@ class BlockLanguageTest extends WebTestBase {
           'langcodes' => array(
             'fr' => 'fr',
           ),
+          'context_mapping' => ['language' => 'language.language_interface'],
         ),
       ),
     );

@@ -123,4 +123,13 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
     return $this->t('The current theme is @theme', array('@theme' => $this->configuration['theme']));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = parent::getCacheContexts();
+    $contexts[] = 'theme';
+    return $contexts;
+  }
+
 }

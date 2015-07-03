@@ -8,6 +8,7 @@
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\block\Event\BlockContextEvent;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -39,8 +40,8 @@ class NodeRouteContext extends BlockContextSubscriberBase {
    * {@inheritdoc}
    */
   public function onBlockActiveContext(BlockContextEvent $event) {
+    $context = new Context(new ContextDefinition('entity:node', NULL, FALSE));
     if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['node'])) {
-      $context = new Context(new ContextDefinition($route_contexts['node']['type']));
       if ($node = $this->routeMatch->getParameter('node')) {
         $context->setContextValue($node);
       }
@@ -48,10 +49,12 @@ class NodeRouteContext extends BlockContextSubscriberBase {
     }
     elseif ($this->routeMatch->getRouteName() == 'node.add') {
       $node_type = $this->routeMatch->getParameter('node_type');
-      $context = new Context(new ContextDefinition('entity:node'));
       $context->setContextValue(Node::create(array('type' => $node_type->id())));
-      $event->setContext('node.node', $context);
     }
+    $cacheability = new CacheableMetadata();
+    $cacheability->setCacheContexts(['route']);
+    $context->addCacheableDependency($cacheability);
+    $event->setContext('node.node', $context);
   }
 
   /**

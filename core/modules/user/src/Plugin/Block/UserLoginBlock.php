@@ -79,7 +79,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $route_name = $this->routeMatch->getRouteName();
     if ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login', 'user.logout'))) {
       return AccessResult::allowed()
-        ->addCacheContexts(['route', 'user.roles:anonymous']);
+        ->addCacheContexts(['route.name', 'user.roles:anonymous']);
     }
     return AccessResult::forbidden();
   }

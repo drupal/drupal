@@ -12,6 +12,7 @@ use Drupal\block\Event\BlockContextEvent;
 use Drupal\block\Event\BlockEvents;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Block\MessagesBlockPluginInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
@@ -130,7 +131,8 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
     ];
     $contexts = $this->getActiveBlockContexts();
     // Load all region content assigned via blocks.
-    foreach ($this->blockRepository->getVisibleBlocksPerRegion($contexts) as $region => $blocks) {
+    $cacheable_metadata_list = [];
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($contexts, $cacheable_metadata_list) as $region => $blocks) {
       /** @var $blocks \Drupal\block\BlockInterface[] */
       foreach ($blocks as $key => $block) {
         $block_plugin = $block->getPlugin();
@@ -171,6 +173,17 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
         '#type' => 'status_messages',
       ];
     }
+
+    // The access results' cacheability is currently added to the top level of the
+    // render array. This is done to prevent issues with empty regions being
+    // displayed.
+    // This would need to be changed to allow caching of block regions, as each
+    // region must then have the relevant cacheable metadata.
+    $merged_cacheable_metadata = CacheableMetadata::createFromRenderArray($build);
+    foreach ($cacheable_metadata_list as $cacheable_metadata) {
+      $merged_cacheable_metadata = $merged_cacheable_metadata->merge($cacheable_metadata);
+    }
+    $merged_cacheable_metadata->applyTo($build);
 
     return $build;
   }

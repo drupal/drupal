@@ -8,6 +8,7 @@
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\block\Event\BlockContextEvent;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -56,6 +57,9 @@ class CurrentUserContext extends BlockContextSubscriberBase {
 
     $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')));
     $context->setContextValue($current_user);
+    $cacheability = new CacheableMetadata();
+    $cacheability->setCacheContexts(['user']);
+    $context->addCacheableDependency($cacheability);
     $event->setContext('user.current_user', $context);
   }
 

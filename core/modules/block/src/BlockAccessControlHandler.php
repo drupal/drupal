@@ -9,6 +9,8 @@ namespace Drupal\block;
 
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityHandlerInterface;
@@ -87,31 +89,60 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
     else {
       $contexts = $entity->getContexts();
       $conditions = [];
+      $missing_context = FALSE;
       foreach ($entity->getVisibilityConditions() as $condition_id => $condition) {
         if ($condition instanceof ContextAwarePluginInterface) {
           try {
             $this->contextHandler->applyContextMapping($condition, $contexts);
           }
           catch (ContextException $e) {
-            return AccessResult::forbidden()->setCacheMaxAge(0);
+            $missing_context = TRUE;
           }
         }
         $conditions[$condition_id] = $condition;
       }
-      if ($this->resolveConditions($conditions, 'and') !== FALSE) {
+
+      if ($missing_context) {
+        // If any context is missing then we might be missing cacheable
+        // metadata, and don't know based on what conditions the block is
+        // accessible or not. For example, blocks that have a node type
+        // condition will have a missing context on any non-node route like the
+        // frontpage.
+        // @todo Avoid setting max-age 0 for some or all cases, for example by
+        //   treating available contexts without value differently in
+        //   https://www.drupal.org/node/2521956.
+        $access = AccessResult::forbidden()->setCacheMaxAge(0);
+      }
+      elseif ($this->resolveConditions($conditions, 'and') !== FALSE) {
         // Delegate to the plugin.
         $access = $entity->getPlugin()->access($account, TRUE);
       }
       else {
         $access = AccessResult::forbidden();
       }
-      // This should not be hardcoded to an uncacheable access check result, but
-      // in order to fix that, we need condition plugins to return cache contexts,
-      // otherwise it will be impossible to determine by which cache contexts the
-      // result should be varied.
-      // @todo Change this to use $access->cacheUntilEntityChanges($entity) once
-      //   https://www.drupal.org/node/2375695 is resolved.
-      return $access->setCacheMaxAge(0);
+
+      $this->mergeCacheabilityFromConditions($access, $conditions);
+
+      // Ensure that access is evaluated again when the block changes.
+      return $access->cacheUntilEntityChanges($entity);
+    }
+  }
+
+  /**
+   * Merges cacheable metadata from conditions onto the access result object.
+   *
+   * @param \Drupal\Core\Access\AccessResult $access
+   *   The access result object.
+   * @param \Drupal\Core\Condition\ConditionInterface[] $conditions
+   *   List of visibility conditions.
+   */
+  protected function mergeCacheabilityFromConditions(AccessResult $access, array $conditions) {
+    foreach ($conditions as $condition) {
+      if ($condition instanceof CacheableDependencyInterface) {
+        $access->addCacheTags($condition->getCacheTags());
+        $access->addCacheContexts($condition->getCacheContexts());
+        $access->setCacheMaxAge(Cache::mergeMaxAges($access->getCacheMaxAge(), $condition->getCacheMaxAge()));
+      }
     }
   }
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -55,6 +57,18 @@ class BlockPageVariantTest extends UnitTestCase {
    *   A mocked display variant plugin.
    */
   public function setUpDisplayVariant($configuration = array(), $definition = array()) {
+
+    $container = new Container();
+    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container->set('cache_contexts_manager', $cache_context_manager);
+    $cache_context_manager->expects($this->any())
+      ->method('validateTokens')
+      ->with([])
+      ->willReturn([]);
+    \Drupal::setContainer($container);
+
     $this->blockRepository = $this->getMock('Drupal\block\BlockRepositoryInterface');
     $this->blockViewBuilder = $this->getMock('Drupal\Core\Entity\EntityViewBuilderInterface');
     $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
@@ -96,7 +110,10 @@ class BlockPageVariantTest extends UnitTestCase {
         '#cache' => [
           'tags' => [
             'config:block_list',
+            'route',
           ],
+          'contexts' => [],
+          'max-age' => -1,
         ],
         'top' => [
           'block1' => [],
@@ -121,7 +138,10 @@ class BlockPageVariantTest extends UnitTestCase {
         '#cache' => [
           'tags' => [
             'config:block_list',
+            'route',
           ],
+          'contexts' => [],
+          'max-age' => -1,
         ],
         'top' => [
           'block1' => [],
@@ -152,7 +172,10 @@ class BlockPageVariantTest extends UnitTestCase {
         '#cache' => [
           'tags' => [
             'config:block_list',
+            'route',
           ],
+          'contexts' => [],
+          'max-age' => -1,
         ],
         'top' => [
           'block1' => [],
@@ -205,7 +228,10 @@ class BlockPageVariantTest extends UnitTestCase {
       ->will($this->returnValue(array()));
     $this->blockRepository->expects($this->once())
       ->method('getVisibleBlocksPerRegion')
-      ->will($this->returnValue($blocks));
+      ->willReturnCallback(function ($contexts, &$cacheable_metadata) use ($blocks) {
+        $cacheable_metadata['top'] = (new CacheableMetadata())->addCacheTags(['route']);
+        return $blocks;
+      });
 
     $this->assertSame($expected_render_array, $display_variant->build());
   }
@@ -226,6 +252,8 @@ class BlockPageVariantTest extends UnitTestCase {
         'tags' => [
           'config:block_list',
         ],
+        'contexts' => [],
+        'max-age' => -1,
       ],
       'content' => [
         'system_main' => [],

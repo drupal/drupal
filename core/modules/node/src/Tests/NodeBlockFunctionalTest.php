@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\block\Entity\Block;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\user\RoleInterface;
  * @group node
  */
 class NodeBlockFunctionalTest extends NodeTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * An administrative user for testing.
@@ -122,6 +125,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node3->label(), 'Node found in block.');
     $this->assertText($node4->label(), 'Node found in block.');
 
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'user']);
+
     // Enable the "Powered by Drupal" block only on article nodes.
     $edit = [
       'id' => strtolower($this->randomMachineName()),
@@ -145,12 +150,16 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('');
     $label = $block->label();
     $this->assertNoText($label, 'Block was not displayed on the front page.');
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'user', 'route']);
     $this->drupalGet('node/add/article');
     $this->assertText($label, 'Block was displayed on the node/add/article page.');
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'user', 'route']);
     $this->drupalGet('node/' . $node1->id());
     $this->assertText($label, 'Block was displayed on the node/N when node is of type article.');
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'user', 'route', 'timezone']);
     $this->drupalGet('node/' . $node5->id());
     $this->assertNoText($label, 'Block was not displayed on nodes of type page.');
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'user', 'route', 'timezone']);
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/block');

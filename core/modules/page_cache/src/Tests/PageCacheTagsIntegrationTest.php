@@ -75,12 +75,20 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'route.menu_active_trails:footer',
       'route.menu_active_trails:main',
       'route.menu_active_trails:tools',
+      // The user login block access is not visible on certain routes.
+      'route.name',
       'theme',
       'timezone',
       'user.permissions',
+      // The user login block access depends on whether the current user is
+      // logged in or not.
+      'user.roles:anonymous',
       // The cache contexts associated with the (in)accessible menu links are
       // bubbled.
       'user.roles:authenticated',
+      // The placed block is only visible on certain URLs through a visibility
+      // condition.
+      'url',
     ];
 
     // Full node page 1.
@@ -93,6 +101,9 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:block.block.bartik_tools',
       'config:block.block.bartik_login',
       'config:block.block.bartik_footer',
+      'config:block.block.bartik_help',
+      'config:block.block.bartik_search',
+      'config:block.block.' . $block->id(),
       'config:block.block.bartik_powered',
       'config:block.block.bartik_main_menu',
       'config:block.block.bartik_account_menu',
@@ -123,6 +134,8 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:block.block.bartik_content',
       'config:block.block.bartik_tools',
       'config:block.block.bartik_login',
+      'config:block.block.bartik_help',
+      'config:block.block.bartik_search',
       'config:block.block.' . $block->id(),
       'config:block.block.bartik_footer',
       'config:block.block.bartik_powered',

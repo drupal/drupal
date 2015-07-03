@@ -9,6 +9,7 @@ namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 
 /**
@@ -83,6 +84,14 @@ class ContextHandler implements ContextHandlerInterface {
       if (!empty($contexts[$context_id])) {
         // This assignment has been used, remove it.
         unset($mappings[$plugin_context_id]);
+
+        // Plugins have their on context objects, only the value is applied.
+        // They also need to know about the cacheable metadata of where that
+        // value is coming from, so pass them through to those objects.
+        $plugin_context = $plugin->getContext($plugin_context_id);
+        if ($plugin_context instanceof ContextInterface && $contexts[$context_id] instanceof CacheableDependencyInterface) {
+          $plugin_context->addCacheableDependency($contexts[$context_id]);
+        }
 
         // Pass the value to the plugin if there is one.
         if ($contexts[$context_id]->hasContextValue()) {

@@ -159,4 +159,15 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = parent::getCacheContexts();
+    // @todo Add a url.path cache context in
+    //   https://www.drupal.org/node/2521978.
+    $contexts[] = 'url';
+    return $contexts;
+  }
+
 }

@@ -87,4 +87,17 @@ class UserRole extends ConditionPluginBase {
     return (bool) array_intersect($this->configuration['roles'], $user->getRoles());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    // Optimize cache context, if a user cache context is provided, only use
+    // user.roles, since that's the only part this condition cares about.
+    $contexts = [];
+    foreach (parent::getCacheContexts() as $context) {
+      $contexts[] = $context == 'user' ? 'user.roles' : $context;
+    }
+    return $contexts;
+  }
+
 }
