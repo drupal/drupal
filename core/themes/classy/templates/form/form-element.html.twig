@@ -52,7 +52,7 @@
     'form-item-' ~ name|clean_class,
     title_display not in ['after', 'before'] ? 'form-no-label',
     disabled == 'disabled' ? 'form-disabled',
-    errors ? 'form-error',
+    errors ? 'form-item--error',
   ]
 %}
 {%
@@ -81,7 +81,7 @@
     {{ label }}
   {% endif %}
   {% if errors %}
-    <div class="form-error-message">
+    <div class="form-item--error-message">
       <strong>{{ errors }}</strong>
     </div>
   {% endif %}

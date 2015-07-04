@@ -276,7 +276,7 @@ class ValidationTest extends WebTestBase {
    *   - key: The key used for the form element.
    */
   protected function assertErrorMessages($messages) {
-    $element = $this->xpath('//div[@class = "form-error-message"]/strong');
+    $element = $this->xpath('//div[@class = "form-item--error-message"]/strong');
     $this->assertIdentical(count($messages), count($element));
 
     $error_links = [];

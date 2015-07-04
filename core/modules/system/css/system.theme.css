@@ -114,7 +114,7 @@ abbr.ajax-changed {
 }
 
 /* Inline error messages. */
-.form-error-message:before {
+.form-item--error-message:before {
   content: '';
   display: inline-block;
   height: 14px;

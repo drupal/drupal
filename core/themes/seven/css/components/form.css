@@ -96,14 +96,14 @@ label[for] {
   width: 7px;
   height: 7px;
 }
-.form-error-message {
+.form-item--error-message {
   margin-top: 0.15em;
   color: #ea2800;
 }
-.fieldset-wrapper > .form-error-message {
+.fieldset-wrapper > .form-item--error-message {
   margin-top: 0;
 }
-.text-format-wrapper .form-error-message {
+.text-format-wrapper .form-item--error-message {
   border: solid #ccc;
   border-width: 0 1px;
   margin: 0;
