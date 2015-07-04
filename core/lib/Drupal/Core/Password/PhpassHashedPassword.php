@@ -44,7 +44,7 @@ class PhpassHashedPassword implements PasswordInterface {
   protected $countLog2;
 
   /**
-   * Constructs a new phpass password hashing instance.
+   * Constructs a new password hashing instance.
    *
    * @param int $countLog2
    *   Password stretching iteration count. Specifies the number of times the
@@ -60,13 +60,13 @@ class PhpassHashedPassword implements PasswordInterface {
   /**
    * Encodes bytes into printable base 64 using the *nix standard from crypt().
    *
-   * @param String $input
+   * @param string $input
    *   The string containing bytes to encode.
-   * @param Integer $count
+   * @param int $count
    *   The number of characters (bytes) to encode.
    *
-   * @return String
-   *   Encoded string
+   * @return string
+   *   Encoded string.
    */
   protected function base64Encode($input, $count) {
     $output = '';
@@ -95,7 +95,7 @@ class PhpassHashedPassword implements PasswordInterface {
   }
 
   /**
-   * Generates a random base 64-encoded salt prefixed with settings for the hash.
+   * Generates a random base 64-encoded salt prefixed with hash settings.
    *
    * Proper use of salts may defeat a number of attacks, including:
    *  - The ability to try candidate passwords against multiple hashes at once.
@@ -103,7 +103,7 @@ class PhpassHashedPassword implements PasswordInterface {
    *  - The ability to determine whether two users have the same (or different)
    *    password without actually having to guess one of the passwords.
    *
-   * @return String
+   * @return string
    *   A 12 character string containing the iteration count and a random salt.
    */
   protected function generateSalt() {
@@ -118,11 +118,11 @@ class PhpassHashedPassword implements PasswordInterface {
   /**
    * Ensures that $count_log2 is within set bounds.
    *
-   * @param Integer $count_log2
+   * @param int $count_log2
    *   Integer that determines the number of iterations used in the hashing
    *   process. A larger value is more secure, but takes more time to complete.
    *
-   * @return Integer
+   * @return int
    *   Integer within set bounds that is closest to $count_log2.
    */
   protected function enforceLog2Boundaries($count_log2) {
@@ -144,16 +144,16 @@ class PhpassHashedPassword implements PasswordInterface {
    * for an attacker to try to break the hash by brute-force computation of the
    * hashes of a large number of plain-text words or strings to find a match.
    *
-   * @param String $algo
+   * @param string $algo
    *   The string name of a hashing algorithm usable by hash(), like 'sha256'.
-   * @param String $password
+   * @param string $password
    *   Plain-text password up to 512 bytes (128 to 512 UTF-8 characters) to
    *   hash.
-   * @param String $setting
-   *   An existing hash or the output of $this->generateSalt().  Must be
-   *   at least 12 characters (the settings and salt).
+   * @param string $setting
+   *   An existing hash or the output of $this->generateSalt(). Must be at least
+   *   12 characters (the settings and salt).
    *
-   * @return String
+   * @return string
    *   A string containing the hashed password (and salt) or FALSE on failure.
    *   The return string will be truncated at HASH_LENGTH characters max.
    */
@@ -200,11 +200,14 @@ class PhpassHashedPassword implements PasswordInterface {
   }
 
   /**
-   * Parse the log2 iteration count from a stored hash or setting string.
+   * Parses the log2 iteration count from a stored hash or setting string.
    *
-   * @param String $setting
-   *   An existing hash or the output of $this->generateSalt().  Must be
-   *   at least 12 characters (the settings and salt).
+   * @param string $setting
+   *   An existing hash or the output of $this->generateSalt(). Must be at least
+   *   12 characters (the settings and salt).
+   *
+   * @return int
+   *   The log2 iteration count.
    */
   public function getCountLog2($setting) {
     return strpos(static::$ITOA64, $setting[3]);
