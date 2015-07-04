@@ -856,9 +856,9 @@ function drupal_process_states(&$elements) {
  * foreach ($regions as $region) {
  *   drupal_attach_tabledrag('my-module-table', array(
  *     'action' => 'order',
- *     'relationship' => sibling',
+ *     'relationship' => 'sibling',
  *     'group' => 'my-elements-weight',
- *     'subgroup' => my-elements-weight-' . $region,
+ *     'subgroup' => 'my-elements-weight-' . $region,
  *   ));
  * }
  * @endcode
