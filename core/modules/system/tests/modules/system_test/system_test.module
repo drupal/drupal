@@ -1,6 +1,20 @@
 <?php
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function system_test_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.system_test':
+      $output = '';
+      $output .= '<h3>' . t('Test Help Page') . '</h3>';
+      $output .= '<p>' . t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
+      return $output;
+  }
+}
 
 /**
  * Implements hook_modules_installed().

@@ -19,7 +19,7 @@ class ModulesListFormWebTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system_test');
+  public static $modules = array('system_test', 'help');
 
   /**
    * {@inheritdoc}
@@ -46,6 +46,9 @@ class ModulesListFormWebTest extends WebTestBase {
 
     // Check that system_test's permissions link was rendered correctly.
     $this->assertFieldByXPath("//a[contains(@href, '/admin/people/permissions#module-system_test') and @title='Configure permissions']");
+
+    // Check that system_test's help link was rendered correctly.
+    $this->assertFieldByXPath("//a[contains(@href, '/admin/help/system_test') and @title='Help']");
   }
 
 }
