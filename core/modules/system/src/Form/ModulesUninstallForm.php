@@ -84,7 +84,7 @@ class ModulesUninstallForm extends FormBase {
     // Get a list of all available modules.
     $modules = system_rebuild_module_data();
     $uninstallable = array_filter($modules, function ($module) use ($modules) {
-      return empty($modules[$module->getName()]->info['required']) && drupal_get_installed_schema_version($module->getName()) > SCHEMA_UNINSTALLED;
+      return empty($modules[$module->getName()]->info['required']) && $module->status;
     });
 
     // Include system.admin.inc so we can use the sort callbacks.

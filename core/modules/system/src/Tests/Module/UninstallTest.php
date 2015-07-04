@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Module;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -117,4 +118,31 @@ class UninstallTest extends WebTestBase {
     $this->assertUrl('admin/modules/uninstall');
     $this->assertTitle(t('Uninstall') . ' | Drupal');
   }
+
+  /**
+   * Tests that a module which fails to install can still be uninstalled.
+   */
+  public function testFailedInstallStatus() {
+    $account = $this->drupalCreateUser(array('administer modules'));
+    $this->drupalLogin($account);
+
+    $message = 'Exception thrown when installing module_installer_config_test with an invalid configuration file.';
+    try {
+      $this->container->get('module_installer')->install(array('module_installer_config_test'));
+      $this->fail($message);
+    } catch (EntityMalformedException $e) {
+      $this->pass($message);
+    }
+
+    // Even though the module failed to install properly, its configuration
+    // status is "enabled" and should still be available to uninstall.
+    $this->drupalGet('admin/modules/uninstall');
+    $this->assertText('Module installer config test');
+    $edit['uninstall[module_installer_config_test]'] = TRUE;
+    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'));
+    $this->assertNoText('Module installer config test');
+  }
+
 }

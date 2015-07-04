@@ -1,0 +1,10 @@
+module_installer_config_test.type.*:
+  type: config_entity
+  label: 'Test entity type'
+  mapping:
+    id:
+      type: string
+    name:
+      type: label
+      label: 'Name'
+
