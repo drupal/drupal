@@ -307,7 +307,8 @@
  *    specification). Each specification is an array containing the name of
  *    the referenced table ('table'), and an array of column mappings
  *    ('columns'). Column mappings are defined by key pairs ('source_column' =>
- *    'referenced_column').
+ *    'referenced_column'). This key is for documentation purposes only; foreign
+ *    keys are not created in the database, nor are they enforced by Drupal.
  *  - 'indexes':  An associative array of indexes ('indexname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form an index on the
@@ -357,6 +358,7 @@
  *   'unique keys' => array(
  *     'vid' => array('vid'),
  *   ),
+ *   // For documentation purposes only; foreign keys are not created in the database.
  *   'foreign keys' => array(
  *     'node_revision' => array(
  *       'table' => 'node_field_revision',
@@ -467,7 +469,9 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * creation and alteration of the supported database engines.
  *
  * See the Schema API Handbook at https://www.drupal.org/node/146843 for details
- * on schema definition structures.
+ * on schema definition structures. Note that foreign key definitions are for
+ * documentation purposes only; foreign keys are not created in the database,
+ * nor are they enforced by Drupal.
  *
  * @return array
  *   A schema definition structure array. For each element of the
@@ -517,6 +521,7 @@ function hook_schema() {
       'nid_vid' => array('nid', 'vid'),
       'vid'     => array('vid'),
     ),
+    // For documentation purposes only; foreign keys are not created in the database.
     'foreign keys' => array(
       'node_revision' => array(
         'table' => 'node_field_revision',
