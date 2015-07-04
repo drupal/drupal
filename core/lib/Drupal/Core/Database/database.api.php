@@ -358,7 +358,8 @@
  *   'unique keys' => array(
  *     'vid' => array('vid'),
  *   ),
- *   // For documentation purposes only; foreign keys are not created in the database.
+ *   // For documentation purposes only; foreign keys are not created in the
+ *   // database.
  *   'foreign keys' => array(
  *     'node_revision' => array(
  *       'table' => 'node_field_revision',
@@ -521,7 +522,8 @@ function hook_schema() {
       'nid_vid' => array('nid', 'vid'),
       'vid'     => array('vid'),
     ),
-    // For documentation purposes only; foreign keys are not created in the database.
+    // For documentation purposes only; foreign keys are not created in the
+    // database.
     'foreign keys' => array(
       'node_revision' => array(
         'table' => 'node_field_revision',
