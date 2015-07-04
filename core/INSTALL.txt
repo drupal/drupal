@@ -121,33 +121,40 @@ INSTALLATION
 
    a. Missing files directory.
 
-      The install script will attempt to create a file storage directory in
-      the default location at sites/default/files (the location of the files
+      The install script will attempt to create a public file storage directory
+      in the default location at sites/default/files (the location of the files
       directory may be changed after Drupal is installed).
 
-      If auto-creation fails, you can make it work by changing permissions on
-      the sites/default directory so that the web server can create the files
-      directory within it for you. (If you are creating a multisite
-      installation, substitute the correct sites directory for sites/default;
-      see the Multisite Configuration section of this file, below.)
+      If auto-creation fails, you can create the directory yourself. (If you are
+      creating a multisite installation, substitute the correct sites directory
+      for sites/default; see the Multisite Configuration section of this file,
+      below.) Sample commands from a Unix/Linux command line:
 
-      For example, on a Unix/Linux command line, you can grant everyone
+        mkdir sites/default/files
+        chmod a+w sites/default/files
+
+      Alternatively, you can make the install script work by changing
+      permissions on the sites/default directory. The web server can then
+      create the files directory within it for you.
+
+      For example, on a Unix/Linux command line, you can you can grant everyone
       (including the web server) permission to write to the sites/default
       directory with this command:
 
         chmod a+w sites/default
 
-      Be sure to set the permissions back after the installation is finished!
+      Then re-run install.php (e.g. by clicking "try again" at the bottom of
+      the Requirements problem page. Once the files directory is created, you
+      will need to grant everyone (including the web server) permission to
+      write to it with this command:
+
+        chmod a+w sites/default/files
+
+      Be sure to set the permissions for the default directory back after the
+      installation is finished! (Leave the files directory writeable.)
       Sample command:
 
         chmod go-w sites/default
-
-      Alternatively, instead of allowing the web server to create the files
-      directory for you as described above, you can create it yourself. Sample
-      commands from a Unix/Linux command line:
-
-        mkdir sites/default/files
-        chmod a+w sites/default/files
 
    b. Missing settings file.
 
