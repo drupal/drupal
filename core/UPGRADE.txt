@@ -67,6 +67,9 @@ following the instructions in the INTRODUCTION section at the top of this file:
    Sometimes an update includes changes to default.settings.php (this will be
    noted in the release notes). If that's the case, follow these steps:
 
+   - Locate your settings.php file in the /sites/* directory. (Typically
+     sites/default.)
+
    - Make a backup copy of your settings.php file, with a different file name.
 
    - Make a copy of the new default.settings.php file, and name the copy
