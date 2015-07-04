@@ -75,7 +75,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message with session ID.
    */
   public function getIdFromCookie(Request $request) {
-    return ['#markup' => 'session_id:' . $request->cookies->get(session_name()) . "\n"];
+    return ['#markup' => 'session_id:' . $request->cookies->get(session_name()) . "\n", '#cache' => ['contexts' => ['cookies:' . session_name()]]];
   }
 
   /**

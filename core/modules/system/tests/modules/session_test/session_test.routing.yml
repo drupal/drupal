@@ -3,6 +3,8 @@ session_test.get:
   defaults:
     _title: 'Session value'
     _controller: '\Drupal\session_test\Controller\SessionTestController::get'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 session_test.get_from_session_object:
@@ -10,6 +12,8 @@ session_test.get_from_session_object:
   defaults:
     _title: 'Session value'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getFromSessionObject'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 session_test.id:
@@ -17,6 +21,8 @@ session_test.id:
   defaults:
     _title: 'Session ID'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getId'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 
@@ -34,6 +40,7 @@ session_test.set:
     _title: 'Set session value'
     _controller: '\Drupal\session_test\Controller\SessionTestController::set'
   options:
+    no_cache: TRUE
     converters:
       test_value: '\s+'
   requirements:
@@ -45,6 +52,7 @@ session_test.no_set:
     _title: 'Set session value but do not save session'
     _controller: '\Drupal\session_test\Controller\SessionTestController::noSet'
   options:
+    no_cache: TRUE
     converters:
       test_value: '\s+'
   requirements:
@@ -96,6 +104,7 @@ session_test.get_session_basic_auth:
     _title: 'Get session information using basic authentication'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
   options:
+    no_cache: TRUE
     _auth: ['basic_auth']
   requirements:
     _permission: 'administer site configuration'
@@ -105,6 +114,8 @@ session_test.get_session_no_auth:
   defaults:
     _title: 'Get session information'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 
@@ -114,6 +125,7 @@ session_test.set_session:
     _title: 'Set a session value using basic authentication'
     _controller: '\Drupal\session_test\Controller\SessionTestController::setSession'
   options:
+    no_cache: TRUE
     _auth: ['basic_auth']
     converters:
       test_value: '\s+'
