@@ -8,17 +8,27 @@
   "use strict";
 
   /**
+   * Namespace for color-related functionality for Drupal.
+   *
    * @namespace
    */
   Drupal.color = {
 
     /**
+     * The callback for when the color preview has been attached.
+     *
      * @param {Element} context
+     *   The context to initiate the color behaviour.
      * @param {object} settings
+     *   Settings for the color functionality.
      * @param {HTMLFormElement} form
+     *   The form to initiate the color behaviour on.
      * @param {object} farb
+     *   The farbtastic object.
      * @param {number} height
+     *   Height of gradient.
      * @param {number} width
+     *   Width of gradient.
      */
     callback: function (context, settings, form, farb, height, width) {
       var accum;
