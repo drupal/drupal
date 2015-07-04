@@ -13,7 +13,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Link;
 use Drupal\Core\Path\AliasManagerInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
@@ -38,26 +37,16 @@ class LinkGenerator implements LinkGeneratorInterface {
   protected $moduleHandler;
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a LinkGenerator instance.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer service.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
+  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler) {
     $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
-    $this->renderer = $renderer;
   }
 
   /**
@@ -86,7 +75,8 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     // Start building a structured representation of our link to be altered later.
     $variables = array(
-      'text' => is_array($text) ? $this->renderer->render($text) : $text,
+      // @todo Inject the service when drupal_render() is converted to one.
+      'text' => is_array($text) ? drupal_render($text) : $text,
       'url' => $url,
       'options' => $url->getOptions(),
     );
