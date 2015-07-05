@@ -208,20 +208,20 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         'subgroup' => 'block-weight-' . $region,
       );
 
-      $form['blocks'][$region] = array(
+      $form['blocks']['region-' . $region] = array(
         '#attributes' => array(
           'class' => array('region-title', 'region-title-' . $region),
           'no_striping' => TRUE,
         ),
       );
-      $form['blocks'][$region]['title'] = array(
+      $form['blocks']['region-' . $region]['title'] = array(
         '#markup' => $region != BlockInterface::BLOCK_REGION_NONE ? $title : t('Disabled', array(), array('context' => 'Plural')),
         '#wrapper_attributes' => array(
           'colspan' => 5,
         ),
       );
 
-      $form['blocks'][$region . '-message'] = array(
+      $form['blocks']['region-' . $region . '-message'] = array(
         '#attributes' => array(
           'class' => array(
             'region-message',
@@ -230,7 +230,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           ),
         ),
       );
-      $form['blocks'][$region . '-message']['message'] = array(
+      $form['blocks']['region-' . $region . '-message']['message'] = array(
         '#markup' => '<em>' . t('No blocks in this region') . '</em>',
         '#wrapper_attributes' => array(
           'colspan' => 5,

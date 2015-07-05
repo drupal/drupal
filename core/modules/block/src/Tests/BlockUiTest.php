@@ -126,6 +126,12 @@ class BlockUiTest extends WebTestBase {
         'The block "' . $label . '" has the correct weight assignment (' . $values['test_weight'] . ').'
       );
     }
+
+    // Add a block with a machine name the same as a region name.
+    $this->drupalPlaceBlock('system_powered_by_block', ['region' => 'header', 'id' => 'header']);
+    $this->drupalGet('admin/structure/block');
+    $element = $this->xpath('//tr[contains(@class, :class)]', [':class' => 'region-title-header']);
+    $this->assertTrue(!empty($element));
   }
 
   /**
