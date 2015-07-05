@@ -23,59 +23,54 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function insert() {
-    parent::insert();
+  public function postSave($update) {
     $entity = $this->getEntity();
 
-    // Add a new usage for newly uploaded files.
-    foreach ($this->referencedEntities() as $file) {
-      \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function update() {
-    parent::update();
-    $entity = $this->getEntity();
-
-    // Get current target file entities and file IDs.
-    $files = $this->referencedEntities();
-    $fids = array();
-
-    foreach ($files as $file) {
-      $fids[] = $file->id();
-    }
-
-    // On new revisions, all files are considered to be a new usage and no
-    // deletion of previous file usages are necessary.
-    if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
-      foreach ($files as $file) {
+    if (!$update) {
+      // Add a new usage for newly uploaded files.
+      foreach ($this->referencedEntities() as $file) {
         \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
       }
-      return;
     }
+    else {
+      // Get current target file entities and file IDs.
+      $files = $this->referencedEntities();
+      $ids = array();
 
-    // Get the file IDs attached to the field before this update.
-    $field_name = $this->getFieldDefinition()->getName();
-    $original_fids = array();
-    $original_items = $entity->original->getTranslation($this->getLangcode())->$field_name;
-    foreach ($original_items as $item) {
-      $original_fids[] = $item->target_id;
-    }
+      /** @var \Drupal\file\FileInterface $file */
+      foreach ($files as $file) {
+        $ids[] = $file->id();
+      }
 
-    // Decrement file usage by 1 for files that were removed from the field.
-    $removed_fids = array_filter(array_diff($original_fids, $fids));
-    $removed_files = \Drupal::entityManager()->getStorage('file')->loadMultiple($removed_fids);
-    foreach ($removed_files as $file) {
-      \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id());
-    }
+      // On new revisions, all files are considered to be a new usage and no
+      // deletion of previous file usages are necessary.
+      if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
+        foreach ($files as $file) {
+          \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
+        }
+        return;
+      }
 
-    // Add new usage entries for newly added files.
-    foreach ($files as $file) {
-      if (!in_array($file->id(), $original_fids)) {
-        \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
+      // Get the file IDs attached to the field before this update.
+      $field_name = $this->getFieldDefinition()->getName();
+      $original_ids = array();
+      $original_items = $entity->original->getTranslation($this->getLangcode())->$field_name;
+      foreach ($original_items as $item) {
+        $original_ids[] = $item->target_id;
+      }
+
+      // Decrement file usage by 1 for files that were removed from the field.
+      $removed_ids = array_filter(array_diff($original_ids, $ids));
+      $removed_files = \Drupal::entityManager()->getStorage('file')->loadMultiple($removed_ids);
+      foreach ($removed_files as $file) {
+        \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id());
+      }
+
+      // Add new usage entries for newly added files.
+      foreach ($files as $file) {
+        if (!in_array($file->id(), $original_ids)) {
+          \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
+        }
       }
     }
   }

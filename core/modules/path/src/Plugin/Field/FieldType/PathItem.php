@@ -55,28 +55,25 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function insert() {
-    if ($this->alias) {
-      $entity = $this->getEntity();
-
-      if ($path = \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode())) {
-        $this->pid = $path['pid'];
+  public function postSave($update) {
+    if (!$update) {
+      if ($this->alias) {
+        $entity = $this->getEntity();
+        if ($path = \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode())) {
+          $this->pid = $path['pid'];
+        }
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function update() {
-    // Delete old alias if user erased it.
-    if ($this->pid && !$this->alias) {
-      \Drupal::service('path.alias_storage')->delete(array('pid' => $this->pid));
-    }
-    // Only save a non-empty alias.
-    elseif ($this->alias) {
-      $entity = $this->getEntity();
-      \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode(), $this->pid);
+    else {
+      // Delete old alias if user erased it.
+      if ($this->pid && !$this->alias) {
+        \Drupal::service('path.alias_storage')->delete(array('pid' => $this->pid));
+      }
+      // Only save a non-empty alias.
+      elseif ($this->alias) {
+        $entity = $this->getEntity();
+        \Drupal::service('path.alias_storage')->save('/' . $entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode(), $this->pid);
+      }
     }
   }
 

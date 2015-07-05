@@ -382,6 +382,34 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
+    // Track if this entity is new.
+    $is_new = $entity->isNew();
+
+    // Execute presave logic and invoke the related hooks.
+    $id = $this->doPreSave($entity);
+
+    // Perform the save and reset the static cache for the changed entity.
+    $return = $this->doSave($id, $entity);
+
+    // Execute post save logic and invoke the related hooks.
+    $this->doPostSave($entity, !$is_new);
+
+    return $return;
+  }
+
+  /**
+   * Performs presave entity processing.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The saved entity.
+   *
+   * @return int|string
+   *   The processed entity identifier.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   If the entity identifier is invalid.
+   */
+  protected function doPreSave(EntityInterface $entity) {
     $id = $entity->id();
 
     // Track the original ID.
@@ -389,13 +417,11 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $id = $entity->getOriginalId();
     }
 
-    // Track if this entity is new.
-    $is_new = $entity->isNew();
     // Track if this entity exists already.
     $id_exists = $this->has($id, $entity);
 
     // A new entity should not already exist.
-    if ($id_exists && $is_new) {
+    if ($id_exists && $entity->isNew()) {
       throw new EntityStorageException(SafeMarkup::format('@type entity with ID @id already exists.', array('@type' => $this->entityTypeId, '@id' => $id)));
     }
 
@@ -408,25 +434,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $entity->preSave($this);
     $this->invokeHook('presave', $entity);
 
-    // Perform the save and reset the static cache for the changed entity.
-    $return = $this->doSave($id, $entity);
-    $this->resetCache(array($id));
-
-    // The entity is no longer new.
-    $entity->enforceIsNew(FALSE);
-
-    // Allow code to run after saving.
-    $entity->postSave($this, !$is_new);
-    $this->invokeHook($is_new ? 'insert' : 'update', $entity);
-
-    // After saving, this is now the "original entity", and subsequent saves
-    // will be updates instead of inserts, and updates must always be able to
-    // correctly identify the original entity.
-    $entity->setOriginalId($entity->id());
-
-    unset($entity->original);
-
-    return $return;
+    return $id;
   }
 
   /**
@@ -442,6 +450,32 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   returns SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
    */
   abstract protected function doSave($id, EntityInterface $entity);
+
+  /**
+   * Performs post save entity processing.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The saved entity.
+   * @param bool $update
+   *   Specifies whether the entity is being updated or created.
+   */
+  protected function doPostSave(EntityInterface $entity, $update) {
+    $this->resetCache(array($entity->id()));
+
+    // The entity is no longer new.
+    $entity->enforceIsNew(FALSE);
+
+    // Allow code to run after saving.
+    $entity->postSave($this, $update);
+    $this->invokeHook($update ? 'update' : 'insert', $entity);
+
+    // After saving, this is now the "original entity", and subsequent saves
+    // will be updates instead of inserts, and updates must always be able to
+    // correctly identify the original entity.
+    $entity->setOriginalId($entity->id());
+
+    unset($entity->original);
+  }
 
   /**
    * Builds an entity query.

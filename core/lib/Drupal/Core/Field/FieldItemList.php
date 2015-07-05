@@ -7,14 +7,12 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Represents an entity field; that is, a list of field item objects.
@@ -212,15 +210,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function insert() {
-    $this->delegateMethod('insert');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function update() {
-    $this->delegateMethod('update');
+  public function postSave($update) {
+    $result = $this->delegateMethod('postSave', $update);
+    return (bool) array_filter($result);
   }
 
   /**
@@ -240,13 +232,23 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * Calls a method on each FieldItem.
    *
+   * Any argument passed will be forwarded to the invoked method.
+   *
    * @param string $method
-   *   The name of the method.
+   *   The name of the method to be invoked.
+   *
+   * @return array
+   *   An array of results keyed by delta.
    */
   protected function delegateMethod($method) {
-    foreach ($this->list as $item) {
-      $item->{$method}();
+    $result = [];
+    $args = array_slice(func_get_args(), 1);
+    foreach ($this->list as $delta => $item) {
+      // call_user_func_array() is way slower than a direct call so we avoid
+      // using it if have no parameters.
+      $result[$delta] = $args ? call_user_func_array([$item, $method], $args) : $item->{$method}();
     }
+    return $result;
   }
 
   /**

@@ -170,6 +170,7 @@ function node_test_node_insert(NodeInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->getTitle() == 'new') {
     $node->setTitle('Node '. $node->id());
+    $node->setNewRevision(FALSE);
     $node->save();
   }
 }

@@ -183,26 +183,39 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Defines custom presave behavior for field values.
    *
-   * This method is called before insert() and update() methods, and before
-   * values are written into storage.
+   * This method is called during the process of saving an entity, just before
+   * values are written into storage. When storing a new entity, its identifier
+   * will not be available yet. This should be used to massage item property
+   * values or perform any other operation that needs to happen before values
+   * are stored. For instance this is the proper phase to auto-create a new
+   * entity for an entity reference field item, because this way it will be
+   * possible to store the referenced entity identifier.
    */
   public function preSave();
 
   /**
-   * Defines custom insert behavior for field values.
+   * Defines custom post-save behavior for field values.
    *
-   * This method is called during the process of inserting an entity, just
-   * before values are written into storage.
-   */
-  public function insert();
-
-  /**
-   * Defines custom update behavior for field values.
+   * This method is called during the process of saving an entity, just after
+   * values are written into storage. This is useful mostly when the business
+   * logic to be implemented always requires the entity identifier, even when
+   * storing a new entity. For instance, when implementing circular entity
+   * references, the referenced entity will be created on pre-save with a dummy
+   * value for the referring entity identifier, which will be updated with the
+   * actual one on post-save.
    *
-   * This method is called during the process of updating an entity, just before
-   * values are written into storage.
+   * In the rare cases where item properties depend on the entity identifier,
+   * massaging logic will have to be implemented on post-save and returning TRUE
+   * will allow them to be rewritten to the storage with the updated values.
+   *
+   * @param bool $update
+   *   Specifies whether the entity is being updated or created.
+   *
+   * @return bool
+   *   Whether field items should be rewritten to the storage as a consequence
+   *   of the logic implemented by the custom behavior.
    */
-  public function update();
+  public function postSave($update);
 
   /**
    * Defines custom delete behavior for field values.

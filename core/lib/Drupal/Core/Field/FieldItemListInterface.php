@@ -130,26 +130,29 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Defines custom presave behavior for field values.
    *
-   * This method is called before either insert() or update() methods, and
-   * before values are written into storage.
+   * This method is called during the process of saving an entity, just before
+   * item values are written into storage.
+   *
+   * @see \Drupal\Core\Field\FieldItemInterface::preSave()
    */
   public function preSave();
 
   /**
-   * Defines custom insert behavior for field values.
+   * Defines custom post-save behavior for field values.
    *
-   * This method is called after the save() method, and before values are
-   * written into storage.
-   */
-  public function insert();
-
-  /**
-   * Defines custom update behavior for field values.
+   * This method is called during the process of saving an entity, just after
+   * item values are written into storage.
    *
-   * This method is called after the save() method, and before values are
-   * written into storage.
+   * @param bool $update
+   *   Specifies whether the entity is being updated or created.
+   *
+   * @return bool
+   *   Whether field items should be rewritten to the storage as a consequence
+   *   of the logic implemented by the custom behavior.
+   *
+   * @see \Drupal\Core\Field\FieldItemInterface::postSave()
    */
-  public function update();
+  public function postSave($update);
 
   /**
    * Defines custom delete behavior for field values.

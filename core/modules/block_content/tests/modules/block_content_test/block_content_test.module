@@ -60,6 +60,7 @@ function block_content_test_block_content_insert(BlockContent $block_content) {
   // Set the block_content title to the block_content ID and save.
   if ($block_content->label() == 'new') {
     $block_content->setInfo('BlockContent ' . $block_content->id());
+    $block_content->setNewRevision(FALSE);
     $block_content->save();
   }
   if ($block_content->label() == 'fail_creation') {

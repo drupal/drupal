@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
@@ -85,25 +84,25 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  protected function doLoadFieldItems($entities, $age) {
+  protected function doLoadRevisionFieldItems($revision_id) {
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doSaveFieldItems(EntityInterface $entity, $update) {
+  protected function doSaveFieldItems(ContentEntityInterface $entity, array $names = []) {
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doDeleteFieldItems(EntityInterface $entity) {
+  protected function doDeleteFieldItems($entities) {
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doDeleteFieldItemsRevision(EntityInterface $entity) {
+  protected function doDeleteRevisionFieldItems(ContentEntityInterface $revision) {
   }
 
   /**

@@ -9,7 +9,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
@@ -72,14 +72,14 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function save(EntityInterface $entity) {
+  protected function doSaveFieldItems(ContentEntityInterface $entity, array $names = []) {
     // The anonymous user account is saved with the fixed user ID of 0.
     // Therefore we need to check for NULL explicitly.
     if ($entity->id() === NULL) {
       $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX(uid) FROM {users}')->fetchField());
       $entity->enforceIsNew();
     }
-    return parent::save($entity);
+    return parent::doSaveFieldItems($entity, $names);
   }
 
   /**
