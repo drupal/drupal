@@ -26,7 +26,7 @@
         var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
         var il = $checkboxes.length;
         for (var i = 0; i < il; i++) {
-          vals.push($($checkboxes[i]).text());
+          vals.push($($checkboxes[i]).html());
         }
         if (!vals.length) {
           vals.push(Drupal.t('Not restricted'));
