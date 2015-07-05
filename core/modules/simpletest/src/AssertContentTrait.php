@@ -10,6 +10,7 @@ namespace Drupal\simpletest;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\RenderContext;
 use Symfony\Component\CssSelector\CssSelector;
 
 /**
@@ -808,7 +809,12 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertThemeOutput($callback, array $variables = array(), $expected = '', $message = '', $group = 'Other') {
-    $output = \Drupal::theme()->render($callback, $variables);
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $output = $renderer->executeInRenderContext(new RenderContext(), function() use ($callback, $variables) {
+      return \Drupal::theme()->render($callback, $variables);
+    });
     $this->verbose(
       '<hr />' . 'Result:' . '<pre>' . SafeMarkup::checkPlain(var_export($output, TRUE)) . '</pre>'
       . '<hr />' . 'Expected:' . '<pre>' . SafeMarkup::checkPlain(var_export($expected, TRUE)) . '</pre>'

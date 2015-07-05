@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
 
 /**
@@ -24,10 +25,15 @@ class TaxonomyFieldTidTest extends TaxonomyTestBase {
   public static $testViews = array('test_taxonomy_tid_field');
 
   function testViewsHandlerTidField() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
     $view = Views::getView('test_taxonomy_tid_field');
     $this->executeView($view);
 
-    $actual = $view->field['name']->advancedRender($view->result[0]);
+    $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['name']->advancedRender($view->result[0]);
+    });
     $expected = \Drupal::l($this->term1->label(), $this->term1->urlInfo());
 
     $this->assertEqual($expected, $actual);

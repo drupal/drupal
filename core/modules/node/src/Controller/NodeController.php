@@ -188,17 +188,20 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       }
 
       $row = [];
-      $row[] = [
+      $column = [
         'data' => [
           '#type' => 'inline_template',
           '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
           '#context' => [
             'date' => $link,
-            'username' => $this->renderer->render($username),
+            'username' => $this->renderer->renderPlain($username),
             'message' => Xss::filter($revision->revision_log->value),
           ],
         ],
       ];
+      // @todo Simplify once https://www.drupal.org/node/2334319 lands.
+      $this->renderer->addCacheableDependency($column['data'], $username);
+      $row[] = $column;
 
       if ($vid == $node->getRevisionId()) {
         $row[0]['class'] = ['revision-current'];

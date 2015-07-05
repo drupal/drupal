@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -168,9 +169,11 @@ class UrlTest extends WebTestBase {
     $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
 
     // Test a renderable array passed to _l().
-    $renderable_text = array('#markup' => 'foo');
-    $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
-    $this->assertEqual($l_renderable_text, $l);
+    $renderer->executeInRenderContext(new RenderContext(), function() use ($renderer, $l) {
+      $renderable_text = array('#markup' => 'foo');
+      $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
+      $this->assertEqual($l_renderable_text, $l);
+    });
 
     // Test a themed link with plain text 'text'.
     $type_link_plain_array = array(

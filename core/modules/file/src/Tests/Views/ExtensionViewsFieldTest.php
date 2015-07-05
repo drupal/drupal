@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Tests\Views;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\file\Entity\File;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
@@ -69,17 +70,22 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
    * Tests file extension views field handler extension_detect_tar option.
    */
   public function testFileExtensionTarOption() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
     $view = Views::getView('file_extension_view');
     $view->setDisplay();
     $this->executeView($view);
 
     // Test without the tar option.
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[0]), 'png');
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[1]), 'tar');
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[2]), 'gz');
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[3]), '');
-    // Test with the tar option.
+    $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[0]), 'png');
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[1]), 'tar');
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[2]), 'gz');
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[3]), '');
+    });
 
+    // Test with the tar option.
     $view = Views::getView('file_extension_view');
     $view->setDisplay();
     $view->initHandlers();
@@ -87,10 +93,12 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
     $view->field['extension']->options['settings']['extension_detect_tar'] = TRUE;
     $this->executeView($view);
 
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[0]), 'png');
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[1]), 'tar');
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[2]), 'tar.gz');
-    $this->assertEqual($view->field['extension']->advancedRender($view->result[3]), '');
+    $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[0]), 'png');
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[1]), 'tar');
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[2]), 'tar.gz');
+      $this->assertEqual($view->field['extension']->advancedRender($view->result[3]), '');
+    });
   }
 
 }

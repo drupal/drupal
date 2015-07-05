@@ -9,6 +9,7 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\RenderContext;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterPluginCollection;
@@ -101,10 +102,14 @@ class FilterUnitTest extends KernelTestBase {
    * Tests the caption filter.
    */
   function testCaptionFilter() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
     $filter = $this->filters['filter_caption'];
 
-    $test = function($input) use ($filter) {
-      return $filter->process($input, 'und');
+    $test = function($input) use ($filter, $renderer) {
+      return $renderer->executeInRenderContext(new RenderContext(), function () use ($input, $filter) {
+        return $filter->process($input, 'und');
+      });
     };
 
     $attached_library = array(
@@ -190,12 +195,14 @@ class FilterUnitTest extends KernelTestBase {
         'filter_html_nofollow' => 0,
       )
     ));
-    $test_with_html_filter = function ($input) use ($filter, $html_filter) {
-      // 1. Apply HTML filter's processing step.
-      $output = $html_filter->process($input, 'und');
-      // 2. Apply caption filter's processing step.
-      $output = $filter->process($output, 'und');
-      return $output->getProcessedText();
+    $test_with_html_filter = function ($input) use ($filter, $html_filter, $renderer) {
+      return $renderer->executeInRenderContext(new RenderContext(), function () use ($input, $filter, $html_filter) {
+        // 1. Apply HTML filter's processing step.
+        $output = $html_filter->process($input, 'und');
+        // 2. Apply caption filter's processing step.
+        $output = $filter->process($output, 'und');
+        return $output->getProcessedText();
+      });
     };
     // Editor XSS filter.
     $test_editor_xss_filter = function ($input) {
@@ -252,11 +259,15 @@ class FilterUnitTest extends KernelTestBase {
    * Tests the combination of the align and caption filters.
    */
   function testAlignAndCaptionFilters() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
     $align_filter = $this->filters['filter_align'];
     $caption_filter = $this->filters['filter_caption'];
 
-    $test = function($input) use ($align_filter, $caption_filter) {
-      return $caption_filter->process($align_filter->process($input, 'und'), 'und');
+    $test = function($input) use ($align_filter, $caption_filter, $renderer) {
+      return $renderer->executeInRenderContext(new RenderContext(), function () use ($input, $align_filter, $caption_filter) {
+        return $caption_filter->process($align_filter->process($input, 'und'), 'und');
+      });
     };
 
     $attached_library = array(

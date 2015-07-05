@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests\Views;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
 
 /**
@@ -25,6 +26,9 @@ class HandlerFieldUserNameTest extends UserTestBase {
   public static $testViews = array('test_views_handler_field_user_name');
 
   public function testUserName() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
     $this->drupalLogin($this->drupalCreateUser(array('access user profiles')));
 
     // Set defaults.
@@ -37,13 +41,17 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $this->executeView($view);
 
     $anon_name = $this->config('user.settings')->get('anonymous');
-    $render = $view->field['name']->advancedRender($view->result[0]);
+    $render = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['name']->advancedRender($view->result[0]);
+    });
     $this->assertTrue(strpos($render, $anon_name) !== FALSE, 'For user 0 it should use the default anonymous name by default.');
 
     $username = $this->randomMachineName();
     $view->result[0]->_entity->setUsername($username);
     $view->result[0]->_entity->uid->value = 1;
-    $render = $view->field['name']->advancedRender($view->result[0]);
+    $render = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['name']->advancedRender($view->result[0]);
+    });
     $this->assertTrue(strpos($render, $username) !== FALSE, 'If link to user is checked the username should be part of the output.');
     $this->assertTrue(strpos($render, 'user/1') !== FALSE, 'If link to user is checked the link to the user should appear as well.');
 
@@ -52,7 +60,9 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $username = $this->randomMachineName();
     $view->result[0]->_entity->setUsername($username);
     $view->result[0]->_entity->uid->value = 1;
-    $render = $view->field['name']->advancedRender($view->result[0]);
+    $render = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['name']->advancedRender($view->result[0]);
+    });
     $this->assertIdentical($render, $username, 'If the user is not linked the username should be printed out for a normal user.');
 
   }
@@ -61,13 +71,18 @@ class HandlerFieldUserNameTest extends UserTestBase {
    * Tests that the field handler works when no additional fields are added.
    */
   public function testNoAdditionalFields() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
     $view = Views::getView('test_views_handler_field_user_name');
     $this->executeView($view);
 
     $username = $this->randomMachineName();
     $view->result[0]->_entity->setUsername($username);
     $view->result[0]->_entity->uid->value = 1;
-    $render = $view->field['name']->advancedRender($view->result[0]);
+    $render = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['name']->advancedRender($view->result[0]);
+    });
     $this->assertTrue(strpos($render, $username) !== FALSE, 'If link to user is checked the username should be part of the output.');
   }
 

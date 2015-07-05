@@ -58,11 +58,24 @@ class Renderer implements RendererInterface {
   protected $rendererConfig;
 
   /**
-   * The stack containing bubbleable rendering metadata.
+   * The render context.
    *
-   * @var \SplStack|null
+   * This must be static as long as some controllers rebuild the container
+   * during a request. This causes multiple renderer instances to co-exist
+   * simultaneously, render state getting lost, and therefore causing pages to
+   * fail to render correctly. As soon as it is guaranteed that during a request
+   * the same container is used, it no longer needs to be static.
+   *
+   * @var \Drupal\Core\Render\RenderContext|null
    */
-  protected static $stack;
+  protected static $context;
+
+  /**
+   * Whether we're currently in a ::renderRoot() call.
+   *
+   * @var bool
+   */
+  protected $isRenderingRoot = FALSE;
 
   /**
    * Constructs a new Renderer.
@@ -90,18 +103,29 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function renderRoot(&$elements) {
-    return $this->render($elements, TRUE);
+    // Disallow calling ::renderRoot() from within another ::renderRoot() call.
+    if ($this->isRenderingRoot) {
+      $this->isRenderingRoot = FALSE;
+      throw new \LogicException('A stray renderRoot() invocation is causing bubbling of attached assets to break.');
+    }
+
+    // Render in its own render context.
+    $this->isRenderingRoot = TRUE;
+    $output = $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
+      return $this->render($elements, TRUE);
+    });
+    $this->isRenderingRoot = FALSE;
+
+    return $output;
   }
 
   /**
    * {@inheritdoc}
    */
   public function renderPlain(&$elements) {
-    $current_stack = static::$stack;
-    $this->resetStack();
-    $output = $this->renderRoot($elements);
-    static::$stack = $current_stack;
-    return $output;
+    return $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
+      return $this->render($elements, TRUE);
+    });
   }
 
   /**
@@ -151,16 +175,17 @@ class Renderer implements RendererInterface {
     // possible that any of them throw an exception that will cause a different
     // page to be rendered (e.g. throwing
     // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will cause
-    // the 404 page to be rendered). That page might also use Renderer::render()
-    // but if exceptions aren't caught here, the stack will be left in an
-    // inconsistent state.
-    // Hence, catch all exceptions and reset the stack and re-throw them.
+    // the 404 page to be rendered). That page might also use
+    // Renderer::renderRoot() but if exceptions aren't caught here, it will be
+    // impossible to call Renderer::renderRoot() again.
+    // Hence, catch all exceptions, reset the isRenderingRoot property and
+    // re-throw exceptions.
     try {
       return $this->doRender($elements, $is_root_call);
     }
     catch (\Exception $e) {
-      // Reset stack and re-throw exception.
-      $this->resetStack();
+      // Mark the ::rootRender() call finished due to this exception & re-throw.
+      $this->isRenderingRoot = FALSE;
       throw $e;
     }
   }
@@ -200,10 +225,10 @@ class Renderer implements RendererInterface {
       return '';
     }
 
-    if (!isset(static::$stack)) {
-      static::$stack = new \SplStack();
+    if (!isset(static::$context)) {
+      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
     }
-    static::$stack->push(new BubbleableMetadata());
+    static::$context->push(new BubbleableMetadata());
 
     // Set the bubbleable rendering metadata that has configurable defaults, if:
     // - this is the root call, to ensure that the final render array definitely
@@ -244,10 +269,10 @@ class Renderer implements RendererInterface {
         }
         // The render cache item contains all the bubbleable rendering metadata
         // for the subtree.
-        $this->updateStack($elements);
+        static::$context->update($elements);
         // Render cache hit, so rendering is finished, all necessary info
         // collected!
-        $this->bubbleStack();
+        static::$context->bubble();
         return $elements['#markup'];
       }
     }
@@ -345,9 +370,9 @@ class Renderer implements RendererInterface {
     if (!empty($elements['#printed'])) {
       // The #printed element contains all the bubbleable rendering metadata for
       // the subtree.
-      $this->updateStack($elements);
+      static::$context->update($elements);
       // #printed, so rendering is finished, all necessary info collected!
-      $this->bubbleStack();
+      static::$context->bubble();
       return '';
     }
 
@@ -473,8 +498,8 @@ class Renderer implements RendererInterface {
 
     $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
-    // We've rendered this element (and its subtree!), now update the stack.
-    $this->updateStack($elements);
+    // We've rendered this element (and its subtree!), now update the context.
+    static::$context->update($elements);
 
     // Cache the processed element if both $pre_bubbling_elements and $elements
     // have the metadata necessary to generate a cache ID.
@@ -496,13 +521,14 @@ class Renderer implements RendererInterface {
     // that is handled earlier in Renderer::render().
     if ($is_root_call) {
       $this->replacePlaceholders($elements);
-      if (static::$stack->count() !== 1) {
+      // @todo remove as part of https://www.drupal.org/node/2511330.
+      if (static::$context->count() !== 1) {
         throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
       }
     }
 
     // Rendering is finished, all necessary info collected!
-    $this->bubbleStack();
+    static::$context->bubble();
 
     $elements['#printed'] = TRUE;
     $elements['#markup'] = SafeMarkup::set($elements['#markup']);
@@ -510,52 +536,24 @@ class Renderer implements RendererInterface {
   }
 
   /**
-   * Resets the renderer service's internal stack (used for bubbling metadata).
-   *
-   * Only necessary in very rare/advanced situations, such as when rendering an
-   * error page if an exception occurred *during* rendering.
+   * {@inheritdoc}
    */
-  protected function resetStack() {
-    static::$stack = NULL;
-  }
+  public function executeInRenderContext(RenderContext $context, callable $callable) {
+    // Store the current render context.
+    $current_context = static::$context;
 
-  /**
-   * Updates the stack.
-   *
-   * @param array &$element
-   *   The element of the render array that has just been rendered. The stack
-   *   frame for this element will be updated with the bubbleable rendering
-   *   metadata of this element.
-   */
-  protected function updateStack(&$element) {
-    // The latest frame represents the bubbleable metadata for the subtree.
-    $frame = static::$stack->pop();
-    // Update the frame, but also update the current element, to ensure it
-    // contains up-to-date information in case it gets render cached.
-    $updated_frame = BubbleableMetadata::createFromRenderArray($element)->merge($frame);
-    $updated_frame->applyTo($element);
-    static::$stack->push($updated_frame);
-  }
-
-  /**
-   * Bubbles the stack.
-   *
-   * Whenever another level in the render array has been rendered, the stack
-   * must be bubbled, to merge its rendering metadata with that of the parent
-   * element.
-   */
-  protected function bubbleStack() {
-    // If there's only one frame on the stack, then this is the root call, and
-    // we can't bubble up further. Reset the stack for the next root call.
-    if (static::$stack->count() === 1) {
-      $this->resetStack();
-      return;
+    // Set the provided context and call the callable, it will use that context.
+    static::$context = $context;
+    $result = $callable();
+    // @todo Convert to an assertion in https://www.drupal.org/node/2408013
+    if (static::$context->count() > 1) {
+      throw new \LogicException('Bubbling failed.');
     }
 
-    // Merge the current and the parent stack frame.
-    $current = static::$stack->pop();
-    $parent = static::$stack->pop();
-    static::$stack->push($current->merge($parent));
+    // Restore the original render context.
+    static::$context = $current_context;
+
+    return $result;
   }
 
   /**

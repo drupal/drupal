@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests\Views;
 
 use Drupal\comment\Entity\Comment;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
@@ -58,6 +59,8 @@ class CommentFieldNameTest extends CommentTestBase {
    * Test comment field name.
    */
   public function testCommentFieldName() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
     $view = Views::getView('test_comment_field_name');
     $this->executeView($view);
 
@@ -85,8 +88,14 @@ class CommentFieldNameTest extends CommentTestBase {
     $view = Views::getView('test_comment_field_name');
     $this->executeView($view);
     // Test that data rendered.
-    $this->assertIdentical($this->comment->getFieldName(), $view->field['field_name']->advancedRender($view->result[0]));
-    $this->assertIdentical($this->customComment->getFieldName(), $view->field['field_name']->advancedRender($view->result[1]));
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['field_name']->advancedRender($view->result[0]);
+    });
+    $this->assertIdentical($this->comment->getFieldName(), $output);
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['field_name']->advancedRender($view->result[1]);
+    });
+    $this->assertIdentical($this->customComment->getFieldName(), $output);
   }
 
 }

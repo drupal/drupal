@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
 
 /**
@@ -67,6 +68,9 @@ class FieldGroupRowsTest extends HandlerTestBase {
    * Testing the "Grouped rows" functionality.
    */
   public function testGroupRows() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
     $edit = array(
       'title' => $this->randomMachineName(),
       $this->fieldName => array('a', 'b', 'c'),
@@ -77,7 +81,10 @@ class FieldGroupRowsTest extends HandlerTestBase {
 
     // Test grouped rows.
     $this->executeView($view);
-    $this->assertEqual($view->field[$this->fieldName]->advancedRender($view->result[0]), 'a, b, c');
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field[$this->fieldName]->advancedRender($view->result[0]);
+    });
+    $this->assertEqual($output, 'a, b, c');
 
     // Change the group_rows checkbox to false.
     $view = Views::getView('test_group_rows');
@@ -88,11 +95,20 @@ class FieldGroupRowsTest extends HandlerTestBase {
     $view->render();
 
     $view->row_index = 0;
-    $this->assertEqual($view->field[$this->fieldName]->advancedRender($view->result[0]), 'a');
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field[$this->fieldName]->advancedRender($view->result[0]);
+    });
+    $this->assertEqual($output, 'a');
     $view->row_index = 1;
-    $this->assertEqual($view->field[$this->fieldName]->advancedRender($view->result[1]), 'b');
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field[$this->fieldName]->advancedRender($view->result[1]);
+    });
+    $this->assertEqual($output, 'b');
     $view->row_index = 2;
-    $this->assertEqual($view->field[$this->fieldName]->advancedRender($view->result[2]), 'c');
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field[$this->fieldName]->advancedRender($view->result[2]);
+    });
+    $this->assertEqual($output, 'c');
   }
 
 }
