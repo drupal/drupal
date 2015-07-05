@@ -9,7 +9,6 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -44,23 +43,13 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   protected $configFactory;
 
   /**
-   * The bare HTML page renderer.
-   *
-   * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
-   */
-  protected $bareHtmlPageRenderer;
-
-  /**
    * Constructs a new DefaultExceptionSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
-   *   The bare HTML page renderer.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, BareHtmlPageRendererInterface $bare_html_page_renderer) {
+  public function __construct(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
-    $this->bareHtmlPageRenderer = $bare_html_page_renderer;
   }
 
   /**
@@ -87,15 +76,13 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionally in update.php.
+    $message = '';
     if (error_displayable($error)) {
-      $class = 'error';
-
       // If error type is 'User notice' then treat it as debug information
       // instead of an error message.
       // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
-        $class = 'status';
       }
 
       // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
@@ -125,11 +112,11 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
         // sure the backtrace is escaped as it can contain user submitted data.
         $message .= '<pre class="backtrace">' . SafeMarkup::escape(Error::formatBacktrace($backtrace)) . '</pre>';
       }
-      drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }
 
     $content = $this->t('The website encountered an unexpected error. Please try again later.');
-    $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Error'), 'maintenance_page');
+    $content .= $message ? '</br></br>' . $message : '';
+    $response = new Response($content, 500);
 
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());

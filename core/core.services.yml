@@ -1031,7 +1031,7 @@ services:
     class: Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@config.factory', '@bare_html_page_renderer']
+    arguments: ['@config.factory']
   exception.logger:
     class: Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber
     tags:

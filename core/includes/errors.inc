@@ -9,6 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Utility\Error;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Maps PHP error constants to watchdog severity levels.
@@ -117,21 +118,6 @@ function error_displayable($error = NULL) {
  */
 function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = drupal_installation_attempted();
-  // Initialize a maintenance theme if the bootstrap was not complete.
-  // Do it early because drupal_set_message() triggers a
-  // \Drupal\Core\Theme\ThemeManager::initTheme().
-  if ($fatal && \Drupal::hasService('theme.manager')) {
-    // The installer initializes a maintenance theme at the earliest possible
-    // point in time already. Do not unset that.
-    if (!$is_installer) {
-      \Drupal::theme()->resetActiveTheme();
-    }
-    if (!defined('MAINTENANCE_MODE')) {
-      define('MAINTENANCE_MODE', 'error');
-    }
-    // No-op if the active theme is set already.
-    drupal_maintenance_theme();
-  }
 
   // Backtrace array is not a valid replacement value for t().
   $backtrace = $error['backtrace'];
@@ -152,22 +138,37 @@ function _drupal_log_error($error, $fatal = FALSE) {
         'line' => $error['%line'],
       ),
     );
+    // For non-fatal errors (e.g. PHP notices) _drupal_log_error can be called
+    // multiple times per request. In that case the response is typically
+    // generated outside of the error handler, e.g., in a controller. As a
+    // result it is not possible to use a Response object here but instead the
+    // headers need to be emitted directly.
     header('X-Drupal-Assertion-' . $number . ': ' . rawurlencode(serialize($assertion)));
     $number++;
   }
+
+  $response = new Response();
 
   // Only call the logger if there is a logger factory available. This can occur
   // if there is an error while rebuilding the container or during the
   // installer.
   if (\Drupal::hasService('logger.factory')) {
-    \Drupal::logger('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+    try {
+      \Drupal::logger('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+    }
+    catch (\Exception $e) {
+      // We can't log, for example because the database connection is not
+      // available. At least try to log to PHP error log.
+      error_log(sprintf('Failed to log error: %type: !message in %function (line %line of %file).', $error['%type'], $error['%function'], $error['%line'], $error['%file']));
+    }
   }
 
   if (PHP_SAPI === 'cli') {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
       // Should not translate the string to avoid errors producing more errors.
-      print html_entity_decode(strip_tags(format_string('%type: !message in %function (line %line of %file).', $error))). "\n";
+      $response->setContent(html_entity_decode(strip_tags(format_string('%type: !message in %function (line %line of %file).', $error))). "\n");
+      $response->send();
       exit;
     }
   }
@@ -177,7 +178,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
         // Should not translate the string to avoid errors producing more errors.
-        print format_string('%type: !message in %function (line %line of %file).', $error);
+        $response->setContent(format_string('%type: !message in %function (line %line of %file).', $error));
+        $response->send();
       }
       exit;
     }
@@ -185,6 +187,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
   else {
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionally in update.php.
+    $message = '';
+    $class = NULL;
     if (error_displayable($error)) {
       $class = 'error';
 
@@ -219,6 +223,32 @@ function _drupal_log_error($error, $fatal = FALSE) {
         // Generate a backtrace containing only scalar argument values.
         $message .= '<pre class="backtrace">' . Error::formatBacktrace($backtrace) . '</pre>';
       }
+    }
+
+    if ($fatal) {
+      // We fallback to a maintenance page at this point, because the page generation
+      // itself can generate errors.
+      // Should not translate the string to avoid errors producing more errors.
+      $message = 'The website encountered an unexpected error. Please try again later.' . '<br />' . $message;
+
+      if ($is_installer) {
+        // install_display_output() prints the output and ends script execution.
+        $output = array(
+          '#title' => 'Error',
+          '#markup' => $message,
+        );
+        install_display_output($output, $GLOBALS['install_state'], $response->headers->all());
+        exit;
+      }
+
+      $response->setContent($message);
+      $response->setStatusCode(500, '500 Service unavailable (with message)');
+
+      $response->send();
+      // An exception must halt script execution.
+      exit;
+    }
+    else {
       if (\Drupal::hasService('session')) {
         // Message display is dependent on sessions being available.
         drupal_set_message(SafeMarkup::set($message), $class, TRUE);
@@ -226,29 +256,6 @@ function _drupal_log_error($error, $fatal = FALSE) {
       else {
         print $message;
       }
-    }
-
-    if ($fatal) {
-      // We fallback to a maintenance page at this point, because the page generation
-      // itself can generate errors.
-      // Should not translate the string to avoid errors producing more errors.
-      $message = 'The website encountered an unexpected error. Please try again later.';
-      if ($is_installer) {
-        // install_display_output() prints the output and ends script execution.
-        $output = array(
-          '#title' => 'Error',
-          '#markup' => $message,
-        );
-        install_display_output($output, $GLOBALS['install_state']);
-        exit;
-      }
-
-      $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
-      $response = $bare_html_page_renderer->renderBarePage(['#markup' => $message], 'Error', 'maintenance_page');
-      $response->setStatusCode(500, '500 Service unavailable (with message)');
-      // An exception must halt script execution.
-      $response->send();
-      exit;
     }
   }
 }
@@ -277,9 +284,16 @@ function _drupal_get_error_level() {
     return ERROR_REPORTING_DISPLAY_VERBOSE;
   }
   $error_level = NULL;
-  if (\Drupal::hasService('config.factory')) {
+  // Try to get the error level configuration from database. If this fails,
+  // for example if the database connection is not there, try to read it from
+  // settings.php.
+  try {
     $error_level = \Drupal::config('system.logging')->get('error_level');
   }
+  catch (\Exception $e) {
+    $error_level = isset($GLOBALS['config']['system.logging']['error_level']) ? $GLOBALS['config']['system.logging']['error_level'] : ERROR_REPORTING_HIDE;
+  }
+
   // If there is no container or if it has no config.factory service, we are
   // possibly in an edge-case error situation while trying to serve a regular
   // request on a public site, so use the non-verbose default value.

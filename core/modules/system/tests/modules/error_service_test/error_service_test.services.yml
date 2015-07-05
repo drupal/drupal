@@ -1,0 +1,8 @@
+services:
+  http_middleware.monkeys:
+    class: Drupal\error_service_test\MonkeysInTheControlRoom
+    tags:
+      - { name: http_middleware, priority: 400 }
+  # Set up a service with a missing class dependency.
+  broken_class_with_missing_dependency:
+    class: Drupal\error_service_test\LonelyMonkeyClass

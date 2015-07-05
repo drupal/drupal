@@ -1,0 +1,6 @@
+name: 'Error service test'
+type: module
+description: 'Support module for causing bedlam in container rebuilds.'
+package: Testing
+version: VERSION
+core: 8.x
