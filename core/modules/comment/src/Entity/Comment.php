@@ -81,7 +81,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     }
     if ($this->isNew()) {
       // Add the comment to database. This next section builds the thread field.
-      // Also see the documentation for comment_view().
+      // @see \Drupal\comment\CommentViewBuilder::buildComponents()
       $thread = $this->getThread();
       if (empty($thread)) {
         if ($this->threadLock) {
