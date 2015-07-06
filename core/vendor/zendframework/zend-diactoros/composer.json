@@ -1,0 +1,47 @@
+{
+  "name": "zendframework/zend-diactoros",
+  "description": "PSR HTTP Message implementations",
+  "type": "library",
+  "license": "BSD-2-Clause",
+  "keywords": [
+    "http",
+    "psr",
+    "psr-7"
+  ],
+  "homepage": "https://github.com/zendframework/zend-diactoros",
+  "support": {
+    "issues": "https://github.com/zendframework/zend-diactoros/issues",
+    "source": "https://github.com/zendframework/zend-diactoros"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev",
+      "dev-develop": "1.1-dev"
+    }
+  },
+  "require": {
+    "php": ">=5.4",
+    "psr/http-message": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/PHPUnit": "~4.6",
+    "squizlabs/php_codesniffer": "^2.3.1"
+  },
+  "provide": {
+    "psr/http-message-implementation": "~1.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zend\\Diactoros\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ZendTest\\Diactoros\\": "test/"
+    },
+    "files": [
+      "test/TestAsset/Functions.php",
+      "test/TestAsset/SapiResponse.php"
+    ]
+  }
+}

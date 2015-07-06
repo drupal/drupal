@@ -33,7 +33,9 @@
     "behat/mink": "~1.6",
     "behat/mink-goutte-driver": "~1.1",
     "fabpot/goutte": "^2.0.3",
-    "masterminds/html5": "~2.1"
+    "masterminds/html5": "~2.1",
+    "symfony/psr-http-message-bridge": "v0.2",
+    "zendframework/zend-diactoros": "1.1.0"
   },
   "replace": {
     "drupal/action": "self.version",

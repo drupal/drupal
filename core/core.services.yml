@@ -596,6 +596,10 @@ services:
       - { name: http_middleware, priority: 50 }
     calls:
       - [setContainer, ['@service_container']]
+  psr7.http_foundation_factory:
+    class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+  psr7.http_message_factory:
+    class: Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory
   language_manager:
     class: Drupal\Core\Language\LanguageManager
     arguments: ['@language.default']
