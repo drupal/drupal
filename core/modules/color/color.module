@@ -284,7 +284,7 @@ function template_preprocess_color_scheme_form(&$variables) {
 
   // Attempt to load preview HTML if the theme provides it.
   $preview_html_path = \Drupal::root() . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');
-  $variables['html_preview'] = SafeMarkup::set(file_get_contents($preview_html_path));
+  $variables['html_preview']['#markup'] = file_get_contents($preview_html_path);
 }
 
 /**

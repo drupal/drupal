@@ -29,4 +29,5 @@ $info = array(
   'css' => array(
     'css/colors.css',
   ),
+  'preview_html' => 'color/preview.html',
 );
