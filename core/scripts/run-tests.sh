@@ -1204,7 +1204,8 @@ function simpletest_script_open_browser() {
   $css_assets = \Drupal::service('asset.css.collection_renderer')->render($resolver->getCssAssets($assets, FALSE));
 
   // Make the html page to write to disk.
-  $html = '<head>' . drupal_render($js_assets_header) . drupal_render($css_assets) . '</head><body>' . drupal_render($form) . drupal_render($js_assets_footer) .'</body>';
+  $render_service = \Drupal::service('renderer');
+  $html = '<head>' . ($js_assets_header) . $render_service->renderPlain($css_assets) . '</head><body>' . $render_service->renderPlain($form) . $render_service->renderPlain($js_assets_footer) .'</body>';
 
   // Ensure we have assets verbose directory - tests with no verbose output will not
   // have created one.
