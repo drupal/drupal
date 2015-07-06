@@ -7,14 +7,13 @@
 
 namespace Drupal\migrate;
 
-use Drupal\Component\Discovery\YamlDiscovery;
-use Drupal\Core\Config\ExtensionInstallStorage;
-use Drupal\Core\Config\StorageInterface;
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Storage to access migration template configuration in enabled extensions.
  */
-class MigrateTemplateStorage extends ExtensionInstallStorage {
+class MigrateTemplateStorage {
 
   /**
    * Extension sub-directory containing default configuration for migrations.
@@ -22,10 +21,23 @@ class MigrateTemplateStorage extends ExtensionInstallStorage {
   const MIGRATION_TEMPLATE_DIRECTORY = 'migration_templates';
 
   /**
+   * Template subdirectory.
+   *
+   * @var string
+   */
+  protected $directory;
+
+  /**
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(StorageInterface $config_storage, $directory = self::MIGRATION_TEMPLATE_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION, $include_profile = TRUE) {
-    parent::__construct($config_storage, $directory, $collection, $include_profile);
+  public function __construct(ModuleHandlerInterface $module_handler, $directory = self::MIGRATION_TEMPLATE_DIRECTORY) {
+    $this->moduleHandler = $module_handler;
+    $this->directory = $directory;
   }
 
   /**
@@ -57,18 +69,18 @@ class MigrateTemplateStorage extends ExtensionInstallStorage {
    *   Array of parsed templates, keyed by the fully-qualified id.
    */
   public function getAllTemplates() {
-    // Retrieve the full list of templates, keyed by fully-qualified name,
-    // with the containing folder as the value.
-    $folders = $this->getAllFolders();
+
     $templates = [];
-    foreach ($folders as $full_name => $folder) {
-      // The fully qualified name will be in the form migrate.migration.d6_node.
-      // Break out the provider ('migrate') and name ('migration.d6_node').
-      list($provider, $name) = explode('.', $full_name, 2);
-      // Retrieve and parse the template contents.
-      $discovery = new YamlDiscovery($name, array($provider => $folder));
-      $all = $discovery->findAll();
-      $templates[$full_name] = reset($all);
+    foreach ($this->moduleHandler->getModuleDirectories() as $directory) {
+      $full_directory = $directory . '/' . $this->directory;
+      if (file_exists($full_directory)) {
+        $files = scandir($full_directory);
+        foreach ($files as $file) {
+          if ($file[0] !== '.' && fnmatch('*.yml', $file)) {
+            $templates[basename($file, '.yml')] = Yaml::decode(file_get_contents("$full_directory/$file"));
+          }
+        }
+      }
     }
 
     return $templates;

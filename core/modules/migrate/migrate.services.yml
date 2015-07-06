@@ -7,7 +7,7 @@ services:
     arguments: [migrate]
   migrate.template_storage:
     class: Drupal\migrate\MigrateTemplateStorage
-    arguments: ['@config.storage']
+    arguments: ['@module_handler']
   plugin.manager.migrate.source:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']
