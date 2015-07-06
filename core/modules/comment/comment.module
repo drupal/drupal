@@ -257,6 +257,9 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
  *
  * @return array
  *   An array as expected by drupal_render().
+ *
+ * @deprecated in Drupal 8.x and will be removed before Drupal 9.0.
+ *   Use \Drupal::entityManager()->getViewBuilder('comment')->view().
  */
 function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode = NULL) {
   return entity_view($comment, $view_mode, $langcode);
@@ -276,6 +279,9 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  *
  * @return array
  *   An array in the format expected by drupal_render().
+ *
+ * @deprecated in Drupal 8.x and will be removed before Drupal 9.0.
+ *   Use \Drupal::entityManager()->getViewBuilder('comment')->viewMultiple().
  *
  * @see drupal_render()
  */
