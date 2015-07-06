@@ -502,26 +502,25 @@ function simpletest_classloader_register() {
  *   The name of the file, including the path.
  */
 function simpletest_generate_file($filename, $width, $lines, $type = 'binary-text') {
-  $size = $width * $lines - $lines;
-
-  // Generate random text
   $text = '';
-  for ($i = 0; $i < $size; $i++) {
-    switch ($type) {
-      case 'text':
-        $text .= chr(rand(32, 126));
-        break;
-      case 'binary':
-        $text .= chr(rand(0, 31));
-        break;
-      case 'binary-text':
-      default:
-        $text .= rand(0, 1);
-        break;
+    for ($i = 0; $i < $lines; $i++) {
+      // Generate $width - 1 characters to leave space for the "\n" character.
+      for ($j = 0; $j < $width - 1; $j++) {
+        switch ($type) {
+          case 'text':
+            $text .= chr(rand(32, 126));
+            break;
+          case 'binary':
+            $text .= chr(rand(0, 31));
+            break;
+          case 'binary-text':
+          default:
+            $text .= rand(0, 1);
+            break;
+        }
+      }
+      $text .= "\n";
     }
-  }
-  // Add \n for symmetrical file.
-  $text = wordwrap($text, $width - 1, "\n", TRUE) . "\n";
 
   // Create filename.
   file_put_contents('public://' . $filename . '.txt', $text);
