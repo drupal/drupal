@@ -89,8 +89,12 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     \Drupal::formBuilder()->processForm('field_test_entity_form', $form, $form_state);
 
     // Validate the field constraint.
-    $form_state->getFormObject()->setEntity($entity)->setFormDisplay($display, $form_state);
-    $form_state->getFormObject()->validate($form, $form_state);
+    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
+    $form_object = $form_state->getFormObject();
+    $form_object
+      ->setEntity($entity)
+      ->setFormDisplay($display, $form_state)
+      ->validateForm($form, $form_state);
 
     return $form_state->getErrors();
   }

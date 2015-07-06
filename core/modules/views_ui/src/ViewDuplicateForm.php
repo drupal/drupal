@@ -58,7 +58,6 @@ class ViewDuplicateForm extends ViewFormBase {
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Duplicate'),
-      '#submit' => array('::submitForm'),
     );
     return $actions;
   }

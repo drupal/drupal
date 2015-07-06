@@ -95,19 +95,6 @@ interface EntityFormInterface extends BaseFormIdInterface {
   public function buildEntity(array $form, FormStateInterface $form_state);
 
   /**
-   * Validates the submitted form values of the entity form.
-   *
-   * @param array $form
-   *   A nested array form elements comprising the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return \Drupal\Core\Entity\ContentEntityTypeInterface
-   *   The built entity.
-   */
-  public function validate(array $form, FormStateInterface $form_state);
-
-  /**
    * Form submission handler for the 'save' action.
    *
    * Normally this method should be overridden to provide specific messages to

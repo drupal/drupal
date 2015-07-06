@@ -64,17 +64,28 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
 
   /**
    * {@inheritdoc}
-   *
-   * Note that extending classes should not override this method to add entity
-   * validation logic, but define further validation constraints using the
-   * entity validation API and/or provide a new validation constraint if
-   * necessary. This is the only way to ensure that the validation logic
-   * is correctly applied independently of form submissions; e.g., for REST
-   * requests.
-   * For more information about entity validation, see
-   * https://www.drupal.org/node/2015613.
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function buildEntity(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = parent::buildEntity($form, $form_state);
+
+    // Mark the entity as requiring validation.
+    $entity->setValidationRequired(!$form_state->getTemporaryValue('entity_validated'));
+
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Button-level validation handlers are highly discouraged for entity forms,
+   * as they will prevent entity validation from running. If the entity is going
+   * to be saved during the form submission, this method should be manually
+   * invoked from the button-level validation handler, otherwise an exception
+   * will be thrown.
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->buildEntity($form, $form_state);
 
@@ -87,10 +98,10 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
 
     $this->flagViolations($violations, $form, $form_state);
 
-    // @todo Remove this.
-    // Execute legacy global validation handlers.
-    $form_state->setValidateHandlers([]);
-    \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
+    // The entity was validated.
+    $entity->setValidationRequired(FALSE);
+    $form_state->setTemporaryValue('entity_validated', TRUE);
+
     return $entity;
   }
 

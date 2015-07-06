@@ -212,4 +212,22 @@ interface FieldableEntityInterface extends EntityInterface {
    */
   public function validate();
 
+  /**
+   * Checks whether entity validation is required before saving the entity.
+   *
+   * @return bool
+   *   TRUE if validation is required, FALSE if not.
+   */
+  public function isValidationRequired();
+
+  /**
+   * Sets whether entity validation is required before saving the entity.
+   *
+   * @param bool $required
+   *   TRUE if validation is required, FALSE otherwise.
+   *
+   * @return $this
+   */
+  public function setValidationRequired($required);
+
 }

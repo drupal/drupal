@@ -112,8 +112,8 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
 
     // Validate and each email recipient.
     $recipients = explode(',', $form_state->getValue('recipients'));

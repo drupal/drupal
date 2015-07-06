@@ -81,9 +81,6 @@ abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormIn
       'submit' => array(
         '#type' => 'submit',
         '#value' => $this->getConfirmText(),
-        '#validate' => array(
-          array($this, 'validate'),
-        ),
         '#submit' => array(
           array($this, 'submitForm'),
         ),

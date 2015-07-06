@@ -415,7 +415,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   );
   $options_cacheability->applyTo($form['menu']['menu_parent']);
 
-  $form['actions']['submit']['#validate'][] = 'menu_ui_form_node_type_form_validate';
+  $form['#validate'][] = 'menu_ui_form_node_type_form_validate';
   $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';
 }
 

@@ -224,7 +224,8 @@ class BlockContentForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($this->entity->isNew()) {
+    $entity = parent::validateForm($form, $form_state);
+    if ($entity->isNew()) {
       $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state->getValue(['info', 0, 'value'])));
       if (!empty($exists)) {
         $form_state->setErrorByName('info', $this->t('A block with description %name already exists.', array(
@@ -232,6 +233,7 @@ class BlockContentForm extends ContentEntityForm {
         )));
       }
     }
+    return $entity;
   }
 
 }

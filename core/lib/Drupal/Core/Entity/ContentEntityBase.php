@@ -152,6 +152,20 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $translatableEntityKeys = array();
 
   /**
+   * Whether entity validation was performed.
+   *
+   * @var bool
+   */
+  protected $validated = FALSE;
+
+  /**
+   * Whether entity validation is required before saving the entity.
+   *
+   * @var bool
+   */
+  protected $validationRequired = FALSE;
+
+  /**
    * Overrides Entity::__construct().
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = array()) {
@@ -334,6 +348,23 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    // An entity requiring validation should not be saved if it has not been
+    // actually validated.
+    if ($this->validationRequired && !$this->validated) {
+      // @todo Make this an assertion in https://www.drupal.org/node/2408013.
+      throw new \LogicException('Entity validation was skipped.');
+    }
+    else {
+      $this->validated = FALSE;
+    }
+
+    parent::preSave($storage);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
   }
 
@@ -341,8 +372,24 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function validate() {
+    $this->validated = TRUE;
     $violations = $this->getTypedData()->validate();
     return new EntityConstraintViolationList($this, iterator_to_array($violations));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValidationRequired() {
+    return (bool) $this->validationRequired;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValidationRequired($required) {
+    $this->validationRequired = $required;
+    return $this;
   }
 
   /**

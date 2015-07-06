@@ -297,7 +297,6 @@ class NodeForm extends ContentEntityForm {
       '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => t('Preview'),
       '#weight' => 20,
-      '#validate' => array('::validate'),
       '#submit' => array('::submitForm', '::preview'),
     );
 

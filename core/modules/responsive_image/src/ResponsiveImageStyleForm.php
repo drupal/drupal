@@ -142,7 +142,8 @@ class ResponsiveImageStyleForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
     // Only validate on edit.
     if ($form_state->hasValue('keyed_styles')) {
       // Check if another breakpoint group is selected.

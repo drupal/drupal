@@ -51,35 +51,40 @@ class EntityTestForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $entity = $this->entity;
+    try {
+      $entity = $this->entity;
 
-    // Save as a new revision if requested to do so.
-    if (!$form_state->isValueEmpty('revision')) {
-      $entity->setNewRevision();
-    }
+      // Save as a new revision if requested to do so.
+      if (!$form_state->isValueEmpty('revision')) {
+        $entity->setNewRevision();
+      }
 
-    $is_new = $entity->isNew();
-    $entity->save();
+      $is_new = $entity->isNew();
+      $entity->save();
 
-    if ($is_new) {
-     $message = t('%entity_type @id has been created.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()));
-    }
-    else {
-      $message = t('%entity_type @id has been updated.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()));
-    }
-    drupal_set_message($message);
+      if ($is_new) {
+        $message = t('%entity_type @id has been created.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()));
+      }
+      else {
+        $message = t('%entity_type @id has been updated.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()));
+      }
+      drupal_set_message($message);
 
-    if ($entity->id()) {
-      $entity_type = $entity->getEntityTypeId();
-      $form_state->setRedirect(
-        "entity.$entity_type.edit_form",
-        array($entity_type => $entity->id())
-      );
+      if ($entity->id()) {
+        $entity_type = $entity->getEntityTypeId();
+        $form_state->setRedirect(
+          "entity.$entity_type.edit_form",
+          array($entity_type => $entity->id())
+        );
+      }
+      else {
+        // Error on save.
+        drupal_set_message(t('The entity could not be saved.'), 'error');
+        $form_state->setRebuild();
+      }
     }
-    else {
-      // Error on save.
-      drupal_set_message(t('The entity could not be saved.'), 'error');
-      $form_state->setRebuild();
+    catch (\Exception $e) {
+      \Drupal::state()->set('entity_test.form.save.exception', get_class($e) . ': ' . $e->getMessage());
     }
   }
 

@@ -144,8 +144,8 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
 
     // Ensure each path is unique.
     $path = $this->entityQuery->get('search_page')

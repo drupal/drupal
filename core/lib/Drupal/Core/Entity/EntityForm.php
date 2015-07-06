@@ -219,7 +219,6 @@ class EntityForm extends FormBase implements EntityFormInterface {
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save'),
-      '#validate' => array('::validate'),
       '#submit' => array('::submitForm', '::save'),
     );
 
@@ -242,16 +241,6 @@ class EntityForm extends FormBase implements EntityFormInterface {
     }
 
     return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validate(array $form, FormStateInterface $form_state) {
-    // @todo Remove this.
-    // Execute legacy global validation handlers.
-    $form_state->setValidateHandlers([]);
-    \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
   }
 
   /**

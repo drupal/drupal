@@ -150,8 +150,8 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
 
     if (isset($form['default_value'])) {
       $item = $form['#entity']->get($this->entity->getName());

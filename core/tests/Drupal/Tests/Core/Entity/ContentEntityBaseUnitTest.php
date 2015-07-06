@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
@@ -347,6 +348,64 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->will($this->returnValue($validator));
     $this->assertSame(0, count($this->entity->validate()));
     $this->assertSame(1, count($this->entity->validate()));
+  }
+
+  /**
+   * Tests required validation.
+   *
+   * @covers ::validate
+   * @covers ::isValidationRequired
+   * @covers ::setValidationRequired
+   * @covers ::save
+   * @covers ::preSave
+   *
+   * @expectedException \LogicException
+   * @expectedExceptionMessage Entity validation was skipped.
+   */
+  public function testRequiredValidation() {
+    $validator = $this->getMock('\Symfony\Component\Validator\ValidatorInterface');
+    /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
+    $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
+      ->setMethods(NULL)
+      ->getMock();
+    $validator->expects($this->at(0))
+      ->method('validate')
+      ->with($this->entity->getTypedData())
+      ->will($this->returnValue($empty_violation_list));
+    $this->typedDataManager->expects($this->any())
+      ->method('getValidator')
+      ->will($this->returnValue($validator));
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject $storage */
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage->expects($this->any())
+      ->method('save')
+      ->willReturnCallback(function (ContentEntityInterface $entity) use ($storage) {
+        $entity->preSave($storage);
+      });
+
+    $this->entityManager->expects($this->any())
+      ->method('getStorage')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue($storage));
+
+    // Check that entities can be saved normally when validation is not
+    // required.
+    $this->assertFalse($this->entity->isValidationRequired());
+    $this->entity->save();
+
+    // Make validation required and check that if the entity is validated, it
+    // can be saved normally.
+    $this->entity->setValidationRequired(TRUE);
+    $this->assertTrue($this->entity->isValidationRequired());
+    $this->entity->validate();
+    $this->entity->save();
+
+    // Check that the "validated" status is reset after saving the entity and
+    // that trying to save a non-validated entity when validation is required
+    // results in an exception.
+    $this->assertTrue($this->entity->isValidationRequired());
+    $this->entity->save();
   }
 
   /**

@@ -162,7 +162,7 @@ class ViewAddForm extends ViewFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $wizard_type = $form_state->getValue(array('show', 'wizard_key'));
     $wizard_instance = $this->wizardManager->createInstance($wizard_type);
     $form_state->set('wizard', $wizard_instance->getPluginDefinition());

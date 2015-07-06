@@ -473,9 +473,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $form['#entity_builders'][] = array($this, 'entityFormEntityBuild');
 
     // Handle entity validation.
-    if (isset($form['actions']['submit'])) {
-      $form['actions']['submit']['#validate'][] = array($this, 'entityFormValidate');
-    }
+    $form['#validate'][] = array($this, 'entityFormValidate');
 
     // Handle entity deletion.
     if (isset($form['actions']['delete'])) {

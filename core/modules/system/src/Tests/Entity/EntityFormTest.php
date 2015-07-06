@@ -149,4 +149,25 @@ class EntityFormTest extends WebTestBase {
     $entities = $entity_storage->loadByProperties(array('name' => $name));
     return $entities ? current($entities) : NULL;
   }
+
+  /**
+   * Checks that validation handlers works as expected.
+   */
+  public function testValidationHandlers() {
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->container->get('state');
+
+    // Check that from-level validation handlers can be defined and can alter
+    // the form array.
+    $state->set('entity_test.form.validate.test', 'form-level');
+    $this->drupalPostForm('entity_test/add', [], 'Save');
+    $this->assertTrue($state->get('entity_test.form.validate.result'), 'Form-level validation handlers behave correctly.');
+
+    // Check that defining a button-level validation handler causes an exception
+    // to be thrown.
+    $state->set('entity_test.form.validate.test', 'button-level');
+    $this->drupalPostForm('entity_test/add', [], 'Save');
+    $this->assertEqual($state->get('entity_test.form.save.exception'), 'Drupal\Core\Entity\EntityStorageException: Entity validation was skipped.', 'Button-level validation handlers behave correctly.');
+  }
+
 }

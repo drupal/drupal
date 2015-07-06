@@ -273,8 +273,8 @@ class BlockForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
 
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
