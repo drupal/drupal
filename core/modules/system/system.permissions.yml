@@ -22,3 +22,5 @@ link to any page:
   title: 'Link to any page'
   restrict access: true
   description: 'This allows to bypass access checking when linking to internal paths.'
+administer menu:
+  title: 'Administer menus and menu items'

@@ -22,7 +22,6 @@ class MenuLinkContentFormTest extends WebTestBase {
    */
   public static $modules = array(
     'menu_link_content',
-    'menu_ui',
   );
 
   /**
