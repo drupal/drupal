@@ -139,7 +139,7 @@ class CacheableMetadata implements CacheableDependencyInterface {
    *   A new CacheableMetadata object, with the merged data.
    */
   public function merge(CacheableMetadata $other) {
-    $result = new static();
+    $result = clone $this;
 
     // This is called many times per request, so avoid merging unless absolutely
     // necessary.
