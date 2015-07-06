@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -26,22 +27,47 @@ class Date extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#theme' => 'input__date',
-      '#pre_render' => array(
-        array($class, 'preRenderDate'),
-      ),
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#process' => [[$class, 'processDate']],
+      '#pre_render' => [[$class, 'preRenderDate']],
+      '#theme_wrappers' => ['form_element'],
+    ];
+  }
+
+  /**
+   * Processes a date form element.
+   *
+   * @param array $element
+   *   The form element to process. Properties used:
+   *   - #attributes: An associative array containing:
+   *     - type: The type of date field rendered.
+   *   - #date_date_format: The date format used in PHP formats.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   *
+   * @return array
+   *   The processed element.
+   */
+  public static function processDate(&$element, FormStateInterface $form_state, &$complete_form) {
+    // Attach JS support for the date field, if we can determine which date
+    // format should be used.
+    if ($element['#attributes']['type'] == 'date' && !empty($element['#date_date_format'])) {
+      $element['#attached']['library'][] = 'core/drupal.date';
+      $element['#attributes']['data-drupal-date-format'] = [$element['#date_date_format']];
+    }
+    return $element;
   }
 
   /**
    * Adds form-specific attributes to a 'date' #type element.
    *
    * Supports HTML5 types of 'date', 'datetime', 'datetime-local', and 'time'.
-   * Falls back to a plain textfield. Used as a sub-element by the datetime
-   * element type.
+   * Falls back to a plain textfield with JS datepicker support. Used as a
+   * sub-element by the datetime element type.
    *
    * @param array $element
    *   An associative array containing the properties of the element.

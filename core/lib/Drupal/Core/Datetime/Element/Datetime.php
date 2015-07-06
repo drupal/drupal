@@ -268,6 +268,7 @@ class Datetime extends DateElementBase {
         '#required' => $element['#required'],
         '#size' => max(12, strlen($element['#value']['date'])),
         '#error_no_message' => TRUE,
+        '#date_date_format' => $element['#date_date_format'],
       );
 
       // Allows custom callbacks to alter the element.

@@ -133,6 +133,15 @@ drupal.collapse:
     - core/drupal.form
     - core/jquery.once
 
+drupal.date:
+  version: VERSION
+  js:
+    misc/date.js: {}
+  dependencies:
+    - core/drupal
+    - core/modernizr
+    - core/jquery.ui.datepicker
+
 drupal.debounce:
   version: VERSION
   js:
