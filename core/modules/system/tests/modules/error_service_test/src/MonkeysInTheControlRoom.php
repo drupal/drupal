@@ -44,7 +44,11 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
       $kernel = \Drupal::service('kernel');
       $kernel->rebuildContainer();
       // 2) Fetch the in-situ container builder.
-      $container = $kernel->getContainer();
+      $container = ErrorServiceTestServiceProvider::$containerBuilder;
+      // Ensure the compiler pass worked.
+      if (!$container) {
+        throw new \Exception('Oh oh, monkeys stole the ServiceProvider.');
+      }
       // Stop the theme manager from being found - and triggering error
       // maintenance mode.
       $container->removeDefinition('theme.manager');
