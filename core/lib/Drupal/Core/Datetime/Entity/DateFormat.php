@@ -41,14 +41,14 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable name of the date format entity.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The date format pattern.
