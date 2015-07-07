@@ -9,9 +9,9 @@ namespace Drupal\language\EventSubscriber;
 
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
+use Drupal\language\ConfigurableLanguageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -62,9 +62,8 @@ class ConfigSubscriber implements EventSubscriberInterface {
         $this->languageManager->reset();
         language_negotiation_url_prefixes_update();
       }
-      // Trigger a container rebuild on the next request by deleting compiled
-      // from PHP storage.
-      PhpStorageFactory::get('service_container')->deleteAll();
+      // Trigger a container rebuild on the next request by invalidating it.
+      ConfigurableLanguageManager::rebuildServices();
     }
   }
 

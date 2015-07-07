@@ -35,4 +35,26 @@ class ContainerRebuildWebTest extends WebTestBase {
     $this->assertHeader('container_rebuild_indicator', 'new-identifier');
   }
 
+  /**
+   * Tests container invalidation.
+   */
+  public function testContainerInvalidation() {
+
+    // Ensure that parameter is not set.
+    $this->drupalGet('<front>');
+    $this->assertHeader('container_rebuild_test_parameter', FALSE);
+
+    // Ensure that after setting the parameter, without a container rebuild the
+    // parameter is still not set.
+    $this->writeSettings(['settings' => ['container_rebuild_test_parameter' => (object) ['value' => 'rebuild_me_please', 'required' => TRUE]]]);
+
+    $this->drupalGet('<front>');
+    $this->assertHeader('container_rebuild_test_parameter', FALSE);
+
+    // Ensure that after container invalidation the parameter is set.
+    \Drupal::service('kernel')->invalidateContainer();
+    $this->drupalGet('<front>');
+    $this->assertHeader('container_rebuild_test_parameter', 'rebuild_me_please');
+  }
+
 }

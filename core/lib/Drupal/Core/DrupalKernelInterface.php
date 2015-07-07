@@ -97,6 +97,18 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   public function updateModules(array $module_list, array $module_filenames = array());
 
   /**
+   * Force a container rebuild.
+   *
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  public function rebuildContainer();
+
+  /**
+   * Invalidate the service container for the next request.
+   */
+  public function invalidateContainer();
+
+  /**
    * Prepare the kernel for handling a request without handling the request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

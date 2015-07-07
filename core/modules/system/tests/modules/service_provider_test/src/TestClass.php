@@ -51,6 +51,9 @@ class TestClass implements EventSubscriberInterface, DestructableInterface, Cont
     if ($this->container->hasParameter('container_rebuild_indicator')) {
       $event->getResponse()->headers->set('container_rebuild_indicator', $this->container->getParameter('container_rebuild_indicator'));
     }
+    if ($this->container->hasParameter('container_rebuild_test_parameter')) {
+      $event->getResponse()->headers->set('container_rebuild_test_parameter', $this->container->getParameter('container_rebuild_test_parameter'));
+    }
   }
 
   /**

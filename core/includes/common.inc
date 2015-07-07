@@ -1295,8 +1295,10 @@ function drupal_flush_all_caches() {
   // Reset all static caches.
   drupal_static_reset();
 
-  // Wipe the PHP Storage caches.
-  PhpStorageFactory::get('service_container')->deleteAll();
+  // Invalidate the container.
+  \Drupal::service('kernel')->invalidateContainer();
+
+  // Wipe the Twig PHP Storage cache.
   PhpStorageFactory::get('twig')->deleteAll();
 
   // Rebuild module and theme data.

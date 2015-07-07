@@ -26,5 +26,9 @@ class ServiceProviderTestServiceProvider implements ServiceModifierInterface {
     if ($indicator = Settings::get('deployment_identifier')) {
       $container->setParameter('container_rebuild_indicator', $indicator);
     }
+
+    if ($parameter = Settings::get('container_rebuild_test_parameter')) {
+      $container->setParameter('container_rebuild_test_parameter', $parameter);
+    }
   }
 }

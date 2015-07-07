@@ -8,7 +8,6 @@
 namespace Drupal\language;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
@@ -105,7 +104,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * {@inheritdoc}
    */
   public static function rebuildServices() {
-    PhpStorageFactory::get('service_container')->deleteAll();
+    \Drupal::service('kernel')->invalidateContainer();
   }
 
   /**

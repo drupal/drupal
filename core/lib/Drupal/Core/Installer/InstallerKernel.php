@@ -16,13 +16,11 @@ class InstallerKernel extends DrupalKernel {
 
   /**
    * {@inheritdoc}
-   *
-   * @param bool $rebuild
-   *   Force a container rebuild. Unlike the parent method, this defaults to
-   *   TRUE.
    */
-  protected function initializeContainer($rebuild = TRUE) {
-    $container = parent::initializeContainer($rebuild);
+  protected function initializeContainer() {
+    // Always force a container rebuild.
+    $this->containerNeedsRebuild = TRUE;
+    $container = parent::initializeContainer();
     return $container;
   }
 
