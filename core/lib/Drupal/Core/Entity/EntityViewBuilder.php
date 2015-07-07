@@ -117,14 +117,10 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
-    if (!isset($langcode)) {
-      $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
-    }
-
     $build_list = array(
       '#sorted' => TRUE,
       '#pre_render' => array(array($this, 'buildMultiple')),
-      '#langcode' => $langcode,
+      '#langcode' => $langcode ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId(),
     );
     $weight = 0;
     foreach ($entities as $key => $entity) {
@@ -133,9 +129,10 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $entity = $this->entityManager->getTranslationFromContext($entity, $langcode);
 
       // Set build defaults.
-      $build_list[$key] = $this->getBuildDefaults($entity, $view_mode, $langcode);
+      $entity_langcode = $entity->language()->getId();
+      $build_list[$key] = $this->getBuildDefaults($entity, $view_mode, $entity_langcode);
       $entityType = $this->entityTypeId;
-      $this->moduleHandler()->alter(array($entityType . '_build_defaults', 'entity_build_defaults'), $build_list[$key], $entity, $view_mode, $langcode);
+      $this->moduleHandler()->alter(array($entityType . '_build_defaults', 'entity_build_defaults'), $build_list[$key], $entity, $view_mode, $entity_langcode);
 
       $build_list[$key]['#weight'] = $weight++;
     }

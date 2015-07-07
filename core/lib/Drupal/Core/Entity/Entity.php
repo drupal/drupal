@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
@@ -23,6 +24,8 @@ use Drupal\Core\Url;
  * Defines a base entity class.
  */
 abstract class Entity implements EntityInterface {
+
+  use RefinableCacheableDependencyTrait;
 
   use DependencySerializationTrait {
     __sleep as traitSleep;
@@ -440,23 +443,36 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return [];
+    return $this->cacheContexts;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
+  public function getCacheTagsToInvalidate() {
     // @todo Add bundle-specific listing cache tag?
     //   https://www.drupal.org/node/2145751
+    if ($this->isNew()) {
+      return [];
+    }
     return [$this->entityTypeId . ':' . $this->id()];
   }
 
   /**
    * {@inheritdoc}
    */
+  public function getCacheTags() {
+    if ($this->cacheTags) {
+      return Cache::mergeTags($this->getCacheTagsToInvalidate(), $this->cacheTags);
+    }
+    return $this->getCacheTagsToInvalidate();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheMaxAge() {
-    return Cache::PERMANENT;
+    return $this->cacheMaxAge;
   }
 
   /**
@@ -511,7 +527,7 @@ abstract class Entity implements EntityInterface {
     }
     if ($update) {
       // An existing entity was updated, also invalidate its unique cache tag.
-      $tags = Cache::mergeTags($tags, $this->getCacheTags());
+      $tags = Cache::mergeTags($tags, $this->getCacheTagsToInvalidate());
     }
     Cache::invalidateTags($tags);
   }
@@ -532,7 +548,7 @@ abstract class Entity implements EntityInterface {
       // other pages than the one it's on. The one it's on is handled by its own
       // cache tag, but subsequent list pages would not be invalidated, hence we
       // must invalidate its list cache tags as well.)
-      $tags = Cache::mergeTags($tags, $entity->getCacheTags());
+      $tags = Cache::mergeTags($tags, $entity->getCacheTagsToInvalidate());
     }
     Cache::invalidateTags($tags);
   }

@@ -267,7 +267,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     // Clear caches so that formatters may be added for this style.
     drupal_theme_rebuild();
 
-    Cache::invalidateTags($this->getCacheTags());
+    Cache::invalidateTags($this->getCacheTagsToInvalidate());
 
     return $this;
   }

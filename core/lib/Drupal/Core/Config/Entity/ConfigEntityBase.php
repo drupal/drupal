@@ -193,7 +193,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    */
   public function disable() {
     // An entity was disabled, invalidate its own cache tag.
-    Cache::invalidateTags($this->getCacheTags());
+    Cache::invalidateTags($this->getCacheTagsToInvalidate());
     return $this->setStatus(FALSE);
   }
 
@@ -409,7 +409,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
+  public function getCacheTagsToInvalidate() {
     // Use cache tags that match the underlying config object's name.
     // @see \Drupal\Core\Config\ConfigBase::getCacheTags()
     return ['config:' . $this->getConfigDependencyName()];

@@ -25,6 +25,9 @@ use Drupal\Core\Session\AccountInterface;
  *
  * When using ::orIf() and ::andIf(), cacheability metadata will be merged
  * accordingly as well.
+ *
+ * @todo Use RefinableCacheableDependencyInterface and the corresponding trait in
+ *   https://www.drupal.org/node/2526326.
  */
 abstract class AccessResult implements AccessResultInterface, CacheableDependencyInterface {
 

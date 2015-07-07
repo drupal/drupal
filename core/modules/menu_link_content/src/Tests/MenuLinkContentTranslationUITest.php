@@ -18,6 +18,11 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
 
   /**
+   * {inheritdoc}
+   */
+  protected $defaultCacheContexts = ['languages:language_interface', 'theme', 'user.permissions', 'user.roles:authenticated'];
+
+  /**
    * Modules to enable.
    *
    * @var array

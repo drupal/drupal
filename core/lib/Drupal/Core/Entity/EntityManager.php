@@ -969,6 +969,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
       if (empty($langcode)) {
         $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+        $entity->addCacheContexts(['languages:' . LanguageInterface::TYPE_CONTENT]);
       }
 
       // Retrieve language fallback candidates to perform the entity language

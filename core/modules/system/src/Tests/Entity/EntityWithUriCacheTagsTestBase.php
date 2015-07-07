@@ -121,7 +121,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Verify that after invalidating the entity's cache tag directly, there is
     // a cache miss.
     $this->pass("Test invalidation of entity's cache tag.", 'Debug');
-    Cache::invalidateTags($this->entity->getCacheTags());
+    Cache::invalidateTags($this->entity->getCacheTagsToInvalidate());
     $this->verifyPageCache($entity_url, 'MISS');
 
     // Verify a cache hit.

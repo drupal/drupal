@@ -7,17 +7,21 @@
 
 namespace Drupal\content_translation\Tests;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the Content Translation UI.
  */
 abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * The id of the entity being translated.
@@ -32,6 +36,15 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @var bool
    */
   protected $testLanguageSelector = TRUE;
+
+  /**
+   * Default cache contexts expected on a non-translated entity.
+   *
+   * Cache contexts will not be checked if this list is empty.
+   *
+   * @var string[]
+   */
+  protected $defaultCacheContexts = ['languages:language_interface', 'theme', 'user.permissions'];
 
   /**
    * Tests the basic translation UI.
@@ -64,6 +77,11 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->assertTrue($entity, 'Entity found in the database.');
     $this->drupalGet($entity->urlInfo());
     $this->assertResponse(200, 'Entity URL is valid.');
+
+    // Ensure that the content language cache context is not yet added to the
+    // page.
+    $this->assertCacheContexts($this->defaultCacheContexts);
+
     $this->drupalGet($entity->urlInfo('drupal:content-translation-overview'));
     $this->assertNoText('Source language', 'Source language column correctly hidden.');
 
@@ -87,9 +105,14 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     ], array('language' => $language));
     $this->drupalPostForm($add_url, $this->getEditValues($values, $langcode), $this->getFormSubmitActionForNewTranslation($entity, $langcode));
 
-    // Get the entity and reset its cache, so that the new translation gets the
-    // updated values.
+    // Ensure that the content language cache context is not yet added to the
+    // page.
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+    $this->drupalGet($entity->urlInfo());
+    $this->assertCacheContexts(Cache::mergeContexts(['languages:language_content'], $this->defaultCacheContexts));
+
+    // Reset the cache of the entity, so that the new translation gets the
+    // updated values.
     $metadata_source_translation = $this->manager->getTranslationMetadata($entity->getTranslation($default_langcode));
     $metadata_target_translation = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
 

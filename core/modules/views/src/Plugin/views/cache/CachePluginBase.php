@@ -153,7 +153,7 @@ abstract class CachePluginBase extends PluginBase {
    * Clear out cached data for a view.
    */
   public function cacheFlush() {
-    Cache::invalidateTags($this->view->storage->getCacheTags());
+    Cache::invalidateTags($this->view->storage->getCacheTagsToInvalidate());
   }
 
   /**

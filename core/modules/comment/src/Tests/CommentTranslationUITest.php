@@ -33,6 +33,18 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   protected $adminUser;
 
   /**
+   * {inheritdoc}
+   */
+  protected $defaultCacheContexts = [
+    'languages:language_interface',
+    'theme',
+    'user.permissions',
+    'timezone',
+    'url.query_args.pagers:0',
+    'user.roles'
+  ];
+
+  /**
    * Modules to install.
    *
    * @var array

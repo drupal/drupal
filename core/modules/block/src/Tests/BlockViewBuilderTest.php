@@ -194,7 +194,7 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     // Enable the block view alter hook that adds a suffix, for basic testing.
     \Drupal::state()->set('block_test_view_alter_suffix', TRUE);
-    Cache::invalidateTags($this->block->getCacheTags());
+    Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
     $build = $this->getBlockRenderArray();
     $this->assertTrue(isset($build['#suffix']) && $build['#suffix'] === '<br>Goodbye!', 'A block with content is altered.');
     $this->assertIdentical($this->renderer->renderRoot($build), 'Llamas &gt; unicorns!<br>Goodbye!');
@@ -206,7 +206,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $request->setMethod('GET');
 
     \Drupal::state()->set('block_test.content', NULL);
-    Cache::invalidateTags($this->block->getCacheTags());
+    Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
 
     $default_keys = array('entity_view', 'block', 'test_block');
     $default_tags = array('block_view', 'config:block.block.test_block');

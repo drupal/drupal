@@ -22,6 +22,21 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class NodeTranslationUITest extends ContentTranslationUITestBase {
 
   /**
+   * {inheritdoc}
+   */
+  protected $defaultCacheContexts = [
+    'languages:language_interface',
+    'theme',
+    'user.permissions',
+    'route.menu_active_trails:account',
+    'route.menu_active_trails:footer',
+    'route.menu_active_trails:main',
+    'route.menu_active_trails:tools',
+    'timezone',
+    'user.roles'
+  ];
+
+  /**
    * Modules to enable.
    *
    * @var array

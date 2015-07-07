@@ -197,7 +197,7 @@ class CacheTagTest extends PluginTestBase {
     $view->destroy();
     // Invalidate the views cache tags in order to invalidate the render
     // caching.
-    \Drupal::service('cache_tags.invalidator')->invalidateTags($view->storage->getCacheTags());
+    \Drupal::service('cache_tags.invalidator')->invalidateTags($view->storage->getCacheTagsToInvalidate());
     $build = $view->buildRenderable();
     $renderer->renderPlain($build);
 

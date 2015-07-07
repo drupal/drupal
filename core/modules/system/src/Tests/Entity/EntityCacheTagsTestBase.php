@@ -571,7 +571,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // a cache miss for every route except the ones for the non-referencing
     // entity and the empty entity listing.
     $this->pass("Test invalidation of referenced entity's cache tag.", 'Debug');
-    Cache::invalidateTags($this->entity->getCacheTags());
+    Cache::invalidateTags($this->entity->getCacheTagsToInvalidate());
     $this->verifyPageCache($referencing_entity_url, 'MISS');
     $this->verifyPageCache($listing_url, 'MISS');
     $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');

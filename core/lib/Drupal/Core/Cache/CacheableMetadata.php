@@ -10,6 +10,9 @@ namespace Drupal\Core\Cache;
  * Defines a generic class for passing cacheability metadata.
  *
  * @ingroup cache
+ *
+ * @todo Use RefinableCacheableDependencyInterface and the corresponding trait in
+ *   https://www.drupal.org/node/2526326.
  */
 class CacheableMetadata implements CacheableDependencyInterface {
 

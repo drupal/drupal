@@ -101,6 +101,12 @@ class EntityForm extends FormBase implements EntityFormInterface {
       $this->init($form_state);
     }
 
+    // Ensure that edit forms have the correct cacheability metadata so they can
+    // be cached.
+    if (!$this->entity->isNew()) {
+      \Drupal::service('renderer')->addCacheableDependency($form, $this->entity);
+    }
+
     // Retrieve the form array using the possibly updated entity in form state.
     $form = $this->form($form, $form_state);
 

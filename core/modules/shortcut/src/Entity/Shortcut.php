@@ -102,7 +102,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     // newly created shortcut is *also* added to a shortcut set, so we must
     // invalidate the associated shortcut set's cache tag.
     if (!$update) {
-      Cache::invalidateTags($this->getCacheTags());
+      Cache::invalidateTags($this->getCacheTagsToInvalidate());
     }
   }
 
@@ -178,7 +178,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
+  public function getCacheTagsToInvalidate() {
     return $this->shortcut_set->entity->getCacheTags();
   }
 
