@@ -875,10 +875,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $this->documentSelfTokens($options[t('Fields')]);
 
       // Default text.
-      $output = '<p>' . $this->t('You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.') . '</p>';
+
+      $output = [];
+      $output[] = [
+        '#markup' => '<p>' . $this->t('You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.') . '</p>',
+      ];
       // We have some options, so make a list.
       if (!empty($options)) {
-        $output = '<p>' . $this->t("The following replacement tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.") . '</p>';
+        $output[] = [
+          '#markup' => '<p>' . $this->t("The following replacement tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.") . '</p>',
+        ];
         foreach (array_keys($options) as $type) {
           if (!empty($options[$type])) {
             $items = array();
@@ -890,7 +896,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
               '#items' => $items,
               '#list_type' => $type,
             );
-            $output .= $this->getRenderer()->render($item_list);
+            $output[] = $item_list;
           }
         }
       }
@@ -901,7 +907,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $form['alter']['help'] = array(
         '#type' => 'details',
         '#title' => $this->t('Replacement patterns'),
-        '#value' => SafeMarkup::set($output),
+        '#value' => $output,
         '#states' => array(
           'visible' => array(
             array(

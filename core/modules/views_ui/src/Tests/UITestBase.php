@@ -74,4 +74,23 @@ abstract class UITestBase extends ViewTestBase {
     return $default;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function drupalGet($path, array $options = array(), array $headers = array()) {
+    $url = $this->buildUrl($path, $options);
+
+    // Ensure that each nojs page is accessible via ajax as well.
+    if (strpos($url, 'nojs') !== FALSE) {
+      $url = str_replace('nojs', 'ajax', $url);
+      $result = $this->drupalGet($url, $options, $headers);
+      $this->assertResponse(200);
+      $this->assertHeader('Content-Type', 'application/json');
+      $this->assertTrue(json_decode($result), 'Ensure that the AJAX request returned valid content.');
+    }
+
+    return parent::drupalGet($path, $options, $headers);
+  }
+
+
 }
