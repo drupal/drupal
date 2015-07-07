@@ -25,6 +25,7 @@ global-styling:
       css/components/panel.css: {}
       css/components/skip-link.css: {}
       css/components/tables.css: {}
+      css/components/search-admin-settings.css: {}
       css/components/system-status-report.css: {}
       css/components/tabs.css: {}
       css/components/tour.theme.css: {}

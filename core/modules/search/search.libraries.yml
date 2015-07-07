@@ -3,8 +3,3 @@ drupal.search.results:
   css:
     theme:
       css/search.theme.css: {}
-
-admin:
-  css:
-    theme:
-      css/search.admin.css: {}
