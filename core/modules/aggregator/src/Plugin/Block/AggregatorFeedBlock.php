@@ -154,32 +154,27 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
         ->sort('iid', 'DESC')
         ->execute();
 
-      $items = $this->itemStorage->loadMultiple($result);
+      if ($result) {
+        // Only display the block if there are items to show.
+        $items = $this->itemStorage->loadMultiple($result);
 
-      $more_link = array(
-        '#type' => 'more_link',
-        '#url' => $feed->urlInfo(),
-        '#attributes' => array('title' => $this->t("View this feed's recent news.")),
-      );
-      $read_more = drupal_render($more_link);
-      $rendered_items = array();
-      foreach ($items as $item) {
-        $aggregator_block_item = array(
-          '#type' => 'link',
-          '#url' => $item->urlInfo(),
-          '#title' => $item->label(),
-        );
-        $rendered_items[] = drupal_render($aggregator_block_item);
-      }
-      // Only display the block if there are items to show.
-      if (count($rendered_items) > 0) {
-        $item_list = array(
+        $build['list'] = [
           '#theme' => 'item_list',
-          '#items' => $rendered_items,
-        );
-        return array(
-          '#children' => drupal_render($item_list) . $read_more,
-        );
+          '#items' => [],
+        ];
+        foreach ($items as $item) {
+          $build['list']['#items'][$item->id()] = [
+            '#type' => 'link',
+            '#url' => $item->urlInfo(),
+            '#title' => $item->label(),
+          ];
+        }
+        $build['more_link'] = [
+          '#type' => 'more_link',
+          '#url' => $feed->urlInfo(),
+          '#attributes' => ['title' => $this->t("View this feed's recent news.")],
+        ];
+        return $build;
       }
     }
   }
