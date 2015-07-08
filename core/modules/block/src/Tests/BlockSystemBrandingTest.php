@@ -53,6 +53,14 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
     $this->assertCacheTag('config:system.site');
 
+    // Be sure the slogan is XSS-filtered.
+    $this->config('system.site')
+      ->set('slogan', '<script>alert("Community carpentry");</script>')
+      ->save();
+    $this->drupalGet('');
+    $site_slogan_element = $this->xpath($site_slogan_xpath);
+    $this->assertEqual($site_slogan_element[0], 'alert("Community carpentry");', 'The site slogan was XSS-filtered.');
+
     // Turn just the logo off.
     $this->config('block.block.site-branding')
       ->set('settings.use_site_logo', 0)
