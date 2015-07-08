@@ -502,7 +502,11 @@ class EntityUnitTest extends UnitTestCase {
     // that.
     $this->entity->addCacheTags(['additional_cache_tag']);
 
-    $this->assertEquals(['additional_cache_tag', $this->entityTypeId . ':' . 1], $this->entity->getCacheTags());
+    // EntityTypeId is random so it can shift order. We need to duplicate the
+    // sort from \Drupal\Core\Cache\Cache::mergeTags().
+    $tags = ['additional_cache_tag', $this->entityTypeId . ':' . 1];
+    sort($tags);
+    $this->assertEquals($tags, $this->entity->getCacheTags());
     $this->assertEquals([$this->entityTypeId . ':' . 1], $this->entity->getCacheTagsToInvalidate());
   }
 
