@@ -27,7 +27,7 @@
     "easyrdf/easyrdf": "0.9.*",
     "phpunit/phpunit": "4.6.*",
     "zendframework/zend-feed": "2.4.*",
-    "mikey179/vfsStream": "1.*",
+    "mikey179/vfsStream": "~1.2",
     "stack/builder": "1.0.*",
     "egulias/email-validator": "1.2.*",
     "behat/mink": "~1.6",
