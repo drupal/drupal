@@ -61,6 +61,11 @@ services:
   user.permissions:
     class: Drupal\user\PermissionHandler
     arguments: ['@module_handler', '@string_translation', '@controller_resolver']
+  user.current_user_context:
+    class: Drupal\user\ContextProvider\CurrentUserContext
+    arguments: ['@current_user', '@entity.manager']
+    tags:
+      - { name: 'context_provider' }
 
 parameters:
   user.tempstore.expire: 604800

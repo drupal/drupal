@@ -266,6 +266,9 @@ services:
   context.handler:
     class: Drupal\Core\Plugin\Context\ContextHandler
     arguments: ['@typed_data_manager']
+  context.repository:
+    class: Drupal\Core\Plugin\Context\LazyContextRepository
+    arguments: ['@service_container']
   cron:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker']

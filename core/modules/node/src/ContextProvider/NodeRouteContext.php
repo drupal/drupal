@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\block\EventSubscriber\NodeRouteContext.
+ * Contains \Drupal\node\ContextProvider\NodeRouteContext.
  */
 
-namespace Drupal\block\EventSubscriber;
+namespace Drupal\node\ContextProvider;
 
-use Drupal\block\Event\BlockContextEvent;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 
 /**
  * Sets the current node as a context on node routes.
  */
-class NodeRouteContext extends BlockContextSubscriberBase {
+class NodeRouteContext implements ContextProviderInterface {
 
   /**
    * The route match object.
@@ -39,13 +39,13 @@ class NodeRouteContext extends BlockContextSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function onBlockActiveContext(BlockContextEvent $event) {
+  public function getRuntimeContexts(array $unqualified_context_ids) {
+    $result = [];
     $context = new Context(new ContextDefinition('entity:node', NULL, FALSE));
     if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['node'])) {
       if ($node = $this->routeMatch->getParameter('node')) {
         $context->setContextValue($node);
       }
-      $event->setContext('node.node', $context);
     }
     elseif ($this->routeMatch->getRouteName() == 'node.add') {
       $node_type = $this->routeMatch->getParameter('node_type');
@@ -54,15 +54,17 @@ class NodeRouteContext extends BlockContextSubscriberBase {
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['route']);
     $context->addCacheableDependency($cacheability);
-    $event->setContext('node.node', $context);
+    $result['node'] = $context;
+
+    return $result;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onBlockAdministrativeContext(BlockContextEvent $event) {
+  public function getAvailableContexts() {
     $context = new Context(new ContextDefinition('entity:node'));
-    $event->setContext('node.node', $context);
+    return ['node' => $context];
   }
 
 }

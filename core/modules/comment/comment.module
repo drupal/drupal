@@ -345,7 +345,8 @@ function comment_entity_storage_load($entities, $entity_type) {
   if (!\Drupal::entityManager()->getDefinition($entity_type)->isSubclassOf('Drupal\Core\Entity\FieldableEntityInterface')) {
     return;
   }
-  if (!\Drupal::service('comment.manager')->getFields($entity_type)) {
+  // @todo Investigate in https://www.drupal.org/node/2527866 why we need that.
+  if (!\Drupal::hasService('comment.manager') || !\Drupal::service('comment.manager')->getFields($entity_type)) {
     // Do not query database when entity has no comment fields.
     return;
   }

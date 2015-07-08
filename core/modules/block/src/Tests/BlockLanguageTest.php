@@ -90,7 +90,7 @@ class BlockLanguageTest extends WebTestBase {
           'langcodes' => array(
             'fr' => 'fr',
           ),
-          'context_mapping' => ['language' => 'language.language_interface'],
+          'context_mapping' => ['language' => '@language.current_language_context:language_interface'],
         ),
       ),
     );
@@ -142,7 +142,7 @@ class BlockLanguageTest extends WebTestBase {
     // Enable a standard block and set visibility to French only.
     $block_id = strtolower($this->randomMachineName(8));
     $edit = [
-      'visibility[language][context_mapping][language]' => 'language.language_interface',
+      'visibility[language][context_mapping][language]' => '@language.current_language_context:language_interface',
       'visibility[language][langcodes][fr]' => TRUE,
       'id' => $block_id,
       'region' => 'sidebar_first',
@@ -168,7 +168,7 @@ class BlockLanguageTest extends WebTestBase {
 
     // Change visibility to now depend on content language for this block.
     $edit = [
-      'visibility[language][context_mapping][language]' => 'language.language_content'
+      'visibility[language][context_mapping][language]' => '@language.current_language_context:language_content'
     ];
     $this->drupalPostForm('admin/structure/block/manage/' . $block_id, $edit, t('Save block'));
 

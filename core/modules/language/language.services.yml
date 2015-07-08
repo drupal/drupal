@@ -24,3 +24,8 @@ services:
     tags:
       - { name: paramconverter }
     lazy: true
+  language.current_language_context:
+    class: Drupal\language\ContextProvider\CurrentLanguageContext
+    arguments: ['@language_manager']
+    tags:
+      - { name: 'context_provider' }

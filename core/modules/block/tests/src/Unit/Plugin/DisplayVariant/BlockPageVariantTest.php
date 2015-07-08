@@ -32,13 +32,6 @@ class BlockPageVariantTest extends UnitTestCase {
   protected $blockViewBuilder;
 
   /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $dispatcher;
-
-  /**
    * The plugin context handler.
    *
    * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -71,12 +64,9 @@ class BlockPageVariantTest extends UnitTestCase {
 
     $this->blockRepository = $this->getMock('Drupal\block\BlockRepositoryInterface');
     $this->blockViewBuilder = $this->getMock('Drupal\Core\Entity\EntityViewBuilderInterface');
-    $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-    $this->dispatcher->expects($this->any())
-      ->method('dispatch')
-      ->willReturnArgument(1);
+
     return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
-      ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, $this->dispatcher, ['config:block_list']))
+      ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, ['config:block_list']))
       ->setMethods(array('getRegionNames'))
       ->getMock();
   }
@@ -217,23 +207,26 @@ class BlockPageVariantTest extends UnitTestCase {
     $messages_block_plugin = $this->getMock('Drupal\Core\Block\MessagesBlockPluginInterface');
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
+      $block->expects($this->any())
+        ->method('getContexts')
+        ->willReturn([]);
       $block->expects($this->atLeastOnce())
         ->method('getPlugin')
         ->willReturn($block_config[1] ? $main_content_block_plugin : ($block_config[2] ? $messages_block_plugin : $block_plugin));
       $blocks[$block_config[0]][$block_id] = $block;
     }
-
     $this->blockViewBuilder->expects($this->exactly($visible_block_count))
       ->method('view')
       ->will($this->returnValue(array()));
     $this->blockRepository->expects($this->once())
       ->method('getVisibleBlocksPerRegion')
-      ->willReturnCallback(function ($contexts, &$cacheable_metadata) use ($blocks) {
+      ->willReturnCallback(function (&$cacheable_metadata) use ($blocks) {
         $cacheable_metadata['top'] = (new CacheableMetadata())->addCacheTags(['route']);
         return $blocks;
       });
 
-    $this->assertSame($expected_render_array, $display_variant->build());
+    $value = $display_variant->build();
+    $this->assertSame($expected_render_array, $value);
   }
 
   /**

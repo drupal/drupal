@@ -60,7 +60,7 @@ class BlockRepositoryTest extends UnitTestCase {
       ]);
 
     $theme_manager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
-    $theme_manager->expects($this->once())
+    $theme_manager->expects($this->atLeastOnce())
       ->method('getActiveTheme')
       ->will($this->returnValue($active_theme));
 
@@ -86,9 +86,6 @@ class BlockRepositoryTest extends UnitTestCase {
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
       $block->expects($this->once())
-        ->method('setContexts')
-        ->willReturnSelf();
-      $block->expects($this->once())
         ->method('access')
         ->will($this->returnValue($block_config[0]));
       $block->expects($block_config[0] ? $this->atLeastOnce() : $this->never())
@@ -102,7 +99,8 @@ class BlockRepositoryTest extends UnitTestCase {
       ->with(['theme' => $this->theme])
       ->willReturn($blocks);
     $result = [];
-    foreach ($this->blockRepository->getVisibleBlocksPerRegion([]) as $region => $resulting_blocks) {
+    $cacheable_metadata = [];
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $block) {
         $result[$region][] = $plugin_id;
@@ -148,9 +146,6 @@ class BlockRepositoryTest extends UnitTestCase {
   public function testGetVisibleBlocksPerRegionWithContext() {
     $block = $this->getMock('Drupal\block\BlockInterface');
     $block->expects($this->once())
-      ->method('setContexts')
-      ->willReturnSelf();
-    $block->expects($this->once())
       ->method('access')
       ->willReturn(AccessResult::allowed()->addCacheTags(['config:block.block.block_id']));
     $block->expects($this->once())
@@ -158,14 +153,13 @@ class BlockRepositoryTest extends UnitTestCase {
       ->willReturn('top');
     $blocks['block_id'] = $block;
 
-    $contexts = [];
     $this->blockStorage->expects($this->once())
       ->method('loadByProperties')
       ->with(['theme' => $this->theme])
       ->willReturn($blocks);
     $result = [];
     $cacheable_metadata = [];
-    foreach ($this->blockRepository->getVisibleBlocksPerRegion($contexts, $cacheable_metadata) as $region => $resulting_blocks) {
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $block) {
         $result[$region][] = $plugin_id;

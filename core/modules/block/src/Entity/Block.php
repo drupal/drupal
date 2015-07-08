@@ -253,21 +253,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
-  public function setContexts(array $contexts) {
-    $this->contexts = $contexts;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContexts() {
-    return $this->contexts;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getVisibility() {
     return $this->getVisibilityConditions()->getConfiguration();
   }

@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\block\EventSubscriber\CurrentUserContext.
+ * Contains \Drupal\user\ContextProvider\CurrentUserContext.
  */
 
-namespace Drupal\block\EventSubscriber;
+namespace Drupal\user\ContextProvider;
 
-use Drupal\block\Event\BlockContextEvent;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Sets the current user as a context.
  */
-class CurrentUserContext extends BlockContextSubscriberBase {
+class CurrentUserContext implements ContextProviderInterface {
 
   use StringTranslationTrait;
 
@@ -52,7 +52,7 @@ class CurrentUserContext extends BlockContextSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function onBlockActiveContext(BlockContextEvent $event) {
+  public function getRuntimeContexts(array $unqualified_context_ids) {
     $current_user = $this->userStorage->load($this->account->id());
 
     $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')));
@@ -60,14 +60,19 @@ class CurrentUserContext extends BlockContextSubscriberBase {
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['user']);
     $context->addCacheableDependency($cacheability);
-    $event->setContext('user.current_user', $context);
+
+    $result = [
+      'current_user' => $context,
+    ];
+
+    return $result;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onBlockAdministrativeContext(BlockContextEvent $event) {
-    $this->onBlockActiveContext($event);
+  public function getAvailableContexts() {
+    return $this->getRuntimeContexts([]);
   }
 
 }

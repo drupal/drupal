@@ -2186,6 +2186,9 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   at the end of a request to finalize operations, if this service was
  *   instantiated. Services should implement \Drupal\Core\DestructableInterface
  *   in this case.
+ * - context_provider: Indicates a block context provider, used for example
+ *   by block conditions. It has to implement
+ *   \Drupal\Core\Plugin\Context\ContextProviderInterface.
  *
  * Creating a tag for a service does not do anything on its own, but tags
  * can be discovered or queried in a compiler pass when the container is built,

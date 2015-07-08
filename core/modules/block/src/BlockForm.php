@@ -7,8 +7,6 @@
 
 namespace Drupal\block;
 
-use Drupal\block\Event\BlockContextEvent;
-use Drupal\block\Event\BlockEvents;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -18,8 +16,8 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides form for block instance forms.
@@ -69,23 +67,30 @@ class BlockForm extends EntityForm {
   protected $themeHandler;
 
   /**
+   * The context repository service.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Executable\ExecutableManagerInterface $manager
    *   The ConditionManager for building the visibility UI.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The EventDispatcher for gathering administrative contexts.
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+   *   The lazy context repository service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language
    *   The language manager.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    * The theme handler.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, EventDispatcherInterface $dispatcher, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler) {
     $this->storage = $entity_manager->getStorage('block');
     $this->manager = $manager;
-    $this->dispatcher = $dispatcher;
+    $this->contextRepository = $context_repository;
     $this->language = $language;
     $this->themeHandler = $theme_handler;
   }
@@ -97,7 +102,7 @@ class BlockForm extends EntityForm {
     return new static(
       $container->get('entity.manager'),
       $container->get('plugin.manager.condition'),
-      $container->get('event_dispatcher'),
+      $container->get('context.repository'),
       $container->get('language_manager'),
       $container->get('theme_handler')
     );
@@ -117,7 +122,7 @@ class BlockForm extends EntityForm {
 
     // Store the gathered contexts in the form state for other objects to use
     // during form building.
-    $form_state->setTemporaryValue('gathered_contexts', $this->dispatcher->dispatch(BlockEvents::ADMINISTRATIVE_CONTEXT, new BlockContextEvent())->getContexts());
+    $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
 
     $form['#tree'] = TRUE;
     $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);

@@ -31,13 +31,6 @@ class BlockFormTest extends UnitTestCase {
   protected $storage;
 
   /**
-   * The event dispatcher service.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $dispatcher;
-
-  /**
    * The language manager service.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -60,6 +53,13 @@ class BlockFormTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The mocked context repository.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $contextRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -67,7 +67,7 @@ class BlockFormTest extends UnitTestCase {
 
     $this->conditionManager = $this->getMock('Drupal\Core\Executable\ExecutableManagerInterface');
     $this->language = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->contextRepository = $this->getMock('Drupal\Core\Plugin\Context\ContextRepositoryInterface');
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
@@ -104,7 +104,7 @@ class BlockFormTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($query));
 
-    $block_form_controller = new BlockForm($this->entityManager, $this->conditionManager, $this->dispatcher, $this->language, $this->themeHandler);
+    $block_form_controller = new BlockForm($this->entityManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler);
 
     // Ensure that the block with just one other instance gets the next available
     // name suggestion.

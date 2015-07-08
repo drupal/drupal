@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\block\EventSubscriber\CurrentLanguageContext.
+ * Contains \Drupal\language\ContextProvider\CurrentLanguageContext.
  */
 
-namespace Drupal\block\EventSubscriber;
+namespace Drupal\language\ContextProvider;
 
-use Drupal\block\Event\BlockContextEvent;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Sets the current language as a context.
  */
-class CurrentLanguageContext extends BlockContextSubscriberBase {
+class CurrentLanguageContext implements ContextProviderInterface {
 
   use StringTranslationTrait;
 
@@ -41,10 +41,20 @@ class CurrentLanguageContext extends BlockContextSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function onBlockActiveContext(BlockContextEvent $event) {
+  public function getRuntimeContexts(array $unqualified_context_ids) {
     // Add a context for each language type.
     $language_types = $this->languageManager->getLanguageTypes();
     $info = $this->languageManager->getDefinedLanguageTypesInfo();
+
+    if ($unqualified_context_ids) {
+      foreach ($unqualified_context_ids as $unqualified_context_id) {
+        if (array_search($unqualified_context_id, $language_types) === FALSE) {
+          unset($language_types[$unqualified_context_id]);
+        }
+      }
+    }
+
+    $result = [];
     foreach ($language_types as $type_key) {
       if (isset($info[$type_key]['name'])) {
         $context = new Context(new ContextDefinition('language', $info[$type_key]['name']));
@@ -54,16 +64,18 @@ class CurrentLanguageContext extends BlockContextSubscriberBase {
         $cacheability->setCacheContexts(['languages:' . $type_key]);
         $context->addCacheableDependency($cacheability);
 
-        $event->setContext('language.' . $type_key, $context);
+        $result[$type_key] = $context;
       }
     }
+
+    return $result;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onBlockAdministrativeContext(BlockContextEvent $event) {
-    $this->onBlockActiveContext($event);
+  public function getAvailableContexts() {
+    return $this->getRuntimeContexts([]);
   }
 
 }
