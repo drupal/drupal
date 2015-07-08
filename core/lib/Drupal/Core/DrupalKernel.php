@@ -52,8 +52,6 @@ use Symfony\Component\Routing\Route;
  */
 class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
-  const CONTAINER_BASE_CLASS = '\Drupal\Core\DependencyInjection\Container';
-
   /**
    * Holds the container instance.
    *
@@ -815,7 +813,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     \Drupal::setContainer($this->container);
 
     // If needs dumping flag was set, dump the container.
-    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
+    $base_class = Settings::get('container_base_class', '\Drupal\Core\DependencyInjection\Container');
+    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, $base_class)) {
       $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be written to disk');
     }
 

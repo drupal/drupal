@@ -633,6 +633,15 @@ if ($settings['hash_salt']) {
 $settings['container_yamls'][] = __DIR__ . '/services.yml';
 
 /**
+ * Override the default service container class.
+ *
+ * This is useful for example to trace the service container for performance
+ * tracking purposes, for testing a service container with an error condition or
+ * to test a service container that throws an exception.
+ */
+# $settings['container_base_class'] = '\Drupal\Core\DependencyInjection\Container';
+
+/**
  * Trusted host configuration.
  *
  * Drupal core can use the Symfony trusted host mechanism to prevent HTTP Host

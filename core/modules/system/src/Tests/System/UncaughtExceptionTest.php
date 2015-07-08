@@ -108,10 +108,17 @@ class UncaughtExceptionTest extends WebTestBase {
    * Tests a container which has an error.
    */
   public function testErrorContainer() {
-    $kernel = ErrorContainerRebuildKernel::createFromRequest($this->prepareRequestForGenerator(), $this->classLoader, 'prod', TRUE);
-    $kernel->rebuildContainer();
+    $settings = [];
+    $settings['settings']['container_base_class'] = (object) [
+      'value' => '\Drupal\system\Tests\Bootstrap\ErrorContainer',
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
 
-    $this->prepareRequestForGenerator();
+    // Need to rebuild the container, so the dumped container can be tested
+    // and not the container builder.
+    \Drupal::service('kernel')->rebuildContainer();
+
     // Ensure that we don't use the now broken generated container on the test
     // process.
     \Drupal::setContainer($this->container);
@@ -137,10 +144,17 @@ class UncaughtExceptionTest extends WebTestBase {
    * Tests a container which has an exception really early.
    */
   public function testExceptionContainer() {
-    $kernel = ExceptionContainerRebuildKernel::createFromRequest($this->prepareRequestForGenerator(), $this->classLoader, 'prod', TRUE);
-    $kernel->rebuildContainer();
+    $settings = [];
+    $settings['settings']['container_base_class'] = (object) [
+      'value' => '\Drupal\system\Tests\Bootstrap\ExceptionContainer',
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
 
-    $this->prepareRequestForGenerator();
+    // Need to rebuild the container, so the dumped container can be tested
+    // and not the container builder.
+    \Drupal::service('kernel')->rebuildContainer();
+
     // Ensure that we don't use the now broken generated container on the test
     // process.
     \Drupal::setContainer($this->container);
