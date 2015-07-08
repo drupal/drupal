@@ -69,7 +69,7 @@ class PagerTestController extends ControllerBase {
    * #pre_render callback for #type => pager that shows the pager cache context.
    */
   public static function showPagerCacheContext(array $pager) {
-    drupal_set_message(\Drupal::service('cache_contexts_manager')->convertTokensToKeys(['url.query_args.pagers:' . $pager['#element']])[0]);
+    drupal_set_message(\Drupal::service('cache_contexts_manager')->convertTokensToKeys(['url.query_args.pagers:' . $pager['#element']])->getKeys()[0]);
     return $pager;
   }
 

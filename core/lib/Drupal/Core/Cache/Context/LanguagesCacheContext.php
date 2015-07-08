@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Cache\Context;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
@@ -72,6 +73,13 @@ class LanguagesCacheContext implements CalculatedCacheContextInterface  {
       }
       return $this->languageManager->getCurrentLanguage($type)->getId();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($type = NULL) {
+    return new CacheableMetadata();
   }
 
 }

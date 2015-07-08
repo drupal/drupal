@@ -86,7 +86,7 @@ class ContextHandler implements ContextHandlerInterface {
         unset($mappings[$plugin_context_id]);
 
         // Plugins have their on context objects, only the value is applied.
-        // They also need to know about the cacheable metadata of where that
+        // They also need to know about the cacheability metadata of where that
         // value is coming from, so pass them through to those objects.
         $plugin_context = $plugin->getContext($plugin_context_id);
         if ($plugin_context instanceof ContextInterface && $contexts[$context_id] instanceof CacheableDependencyInterface) {

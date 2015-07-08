@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Cache\Context;
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Defines the RequestFormatCacheContext service, for "per format" caching.
  *
@@ -26,6 +28,13 @@ class RequestFormatCacheContext extends RequestStackCacheContextBase {
    */
   public function getContext() {
     return $this->requestStack->getCurrentRequest()->getRequestFormat();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata() {
+    return new CacheableMetadata();
   }
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\book\Cache;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -68,6 +69,26 @@ class BookNavigationCacheContext extends ContainerAware implements CacheContextI
     $active_trail = $this->container->get('book.manager')
       ->getActiveTrailIds($node->book['bid'], $node->book);
     return 'book.' . implode('|', $active_trail);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata() {
+    // The book active trail depends on the node and data attached to it.
+    // That information is however not stored as part of the node.
+    $cacheable_metadata = new CacheableMetadata();
+    if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
+      // If the node is part of a book then we can use the cache tag for that
+      // book. If not, then it can't be optimized away.
+      if (!empty($node->book['bid'])) {
+        $cacheable_metadata->addCacheTags(['bid:' . $node->book['bid']]);
+      }
+      else {
+        $cacheable_metadata->setCacheMaxAge(0);
+      }
+    }
+    return $cacheable_metadata;
   }
 
 }

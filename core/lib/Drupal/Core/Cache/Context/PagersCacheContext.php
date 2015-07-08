@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Cache\Context;
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Defines a cache context for "per page in a pager" caching.
  *
@@ -36,6 +38,13 @@ class PagersCacheContext extends RequestStackCacheContextBase implements Calcula
     }
 
     return 'pager.' . $pager_id . '.' . pager_find_page($pager_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($pager_id = NULL) {
+    return new CacheableMetadata();
   }
 
 }

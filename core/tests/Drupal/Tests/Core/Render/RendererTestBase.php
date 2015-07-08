@@ -8,6 +8,8 @@
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
@@ -124,7 +126,7 @@ class RendererTestBase extends UnitTestCase {
               $keys[] = $context_id;
           }
         }
-        return $keys;
+        return new ContextCacheKeys($keys, new CacheableMetadata());
       });
     $this->renderCache = new RenderCache($this->requestStack, $this->cacheFactory, $this->cacheContextsManager);
     $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->renderCache, $this->rendererConfig);

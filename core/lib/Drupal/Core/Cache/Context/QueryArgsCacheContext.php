@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Cache\Context;
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Defines the QueryArgsCacheContext service, for "per query args" caching.
  *
@@ -33,6 +35,13 @@ class QueryArgsCacheContext extends RequestStackCacheContextBase implements Calc
     else {
       return $this->requestStack->getCurrentRequest()->query->get($query_arg);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($query_arg = NULL) {
+    return new CacheableMetadata();
   }
 
 }

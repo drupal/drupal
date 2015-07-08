@@ -140,9 +140,8 @@ class TrackerTest extends WebTestBase {
     $this->assertNoText($other_published_no_comment->label(), "Another user's nodes do not show up in the user's tracker listing.");
     $this->assertText($other_published_my_comment->label(), "Nodes that the user has commented on appear in the user's tracker listing.");
 
-    // Assert cache contexts; the node grant context is not directly visible due
-    // to it being implied by the user context.
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user']);
+    // Assert cache contexts.
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
     // Assert cache tags for the visible nodes (including owners) and node list
     // cache tag.
     $tags = Cache::mergeTags(

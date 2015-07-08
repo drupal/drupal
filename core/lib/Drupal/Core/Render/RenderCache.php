@@ -289,13 +289,13 @@ class RenderCache implements RenderCacheInterface {
    *
    * Creates the cache ID string based on #cache['keys'] + #cache['contexts'].
    *
-   * @param array $elements
+   * @param array &$elements
    *   A renderable array.
    *
    * @return string
    *   The cache ID string, or FALSE if the element may not be cached.
    */
-  protected function createCacheID(array $elements) {
+  protected function createCacheID(array &$elements) {
     // If the maximum age is zero, then caching is effectively prohibited.
     if (isset($elements['#cache']['max-age']) && $elements['#cache']['max-age'] === 0) {
       return FALSE;
@@ -304,8 +304,11 @@ class RenderCache implements RenderCacheInterface {
     if (isset($elements['#cache']['keys'])) {
       $cid_parts = $elements['#cache']['keys'];
       if (!empty($elements['#cache']['contexts'])) {
-        $contexts = $this->cacheContextsManager->convertTokensToKeys($elements['#cache']['contexts']);
-        $cid_parts = array_merge($cid_parts, $contexts);
+        $context_cache_keys = $this->cacheContextsManager->convertTokensToKeys($elements['#cache']['contexts']);
+        $cid_parts = array_merge($cid_parts, $context_cache_keys->getKeys());
+        CacheableMetadata::createFromRenderArray($elements)
+          ->merge($context_cache_keys)
+          ->applyTo($elements);
       }
       return implode(':', $cid_parts);
     }

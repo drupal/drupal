@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Cache\Context;
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Defines the CookiesCacheContext service, for "per cookie" caching.
  *
@@ -33,6 +35,13 @@ class CookiesCacheContext extends RequestStackCacheContextBase implements Calcul
     else {
       return $this->requestStack->getCurrentRequest()->cookies->get($cookie);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($cookie = NULL) {
+    return new CacheableMetadata();
   }
 
 }

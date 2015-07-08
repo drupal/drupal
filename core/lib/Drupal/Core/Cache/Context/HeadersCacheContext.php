@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Cache\Context;
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Defines the HeadersCacheContext service, for "per header" caching.
  *
@@ -33,6 +35,13 @@ class HeadersCacheContext extends RequestStackCacheContextBase implements Calcul
     else {
       return $this->requestStack->getCurrentRequest()->headers->get($header);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($header = NULL) {
+    return new CacheableMetadata();
   }
 
 }
