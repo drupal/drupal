@@ -108,7 +108,6 @@ Database update system
 Entity system
 - Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
-- Franz Heinzmann 'Frando' https://www.drupal.org/u/frando
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
 
 Extension system
@@ -128,7 +127,6 @@ Form system
 - Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
-- Franz Heinzmann 'Frando' https://www.drupal.org/u/frando
 
 Image system
 - Claudiu Cristea 'claudiu.cristea' https://www.drupal.org/u/claudiu.cristea
@@ -182,7 +180,6 @@ Queue system
 Render system
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
-- Franz Heinzmann 'Frando' https://www.drupal.org/u/frando
 
 Request processing system
 - Larry Garfield 'Crell' https://www.drupal.org/u/crell
