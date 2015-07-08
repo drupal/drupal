@@ -15,8 +15,10 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @see \Drupal\block\Entity\Block
  */
 class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface {
-
-  /**
-   * The regions containing the blocks.
-   *
-   * @var array
-   */
-  protected $regions;
 
   /**
    * The theme containing the blocks.
@@ -57,6 +52,25 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   protected $blockManager;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $limit = FALSE;
+
+  /**
    * Constructs a new BlockListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -65,11 +79,17 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    *   The entity storage class.
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, BlockManagerInterface $block_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, BlockManagerInterface $block_manager, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder) {
     parent::__construct($entity_type, $storage);
 
     $this->blockManager = $block_manager;
+    $this->themeManager = $theme_manager;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -79,29 +99,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     return new static(
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->get('theme.manager'),
+      $container->get('form_builder')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function load() {
-    // If no theme was specified, use the current theme.
-    if (!$this->theme) {
-      $this->theme = \Drupal::theme()->getActiveTheme()->getName();
-    }
-
-    // Store the region list.
-    $this->regions = system_region_list($this->theme, REGIONS_VISIBLE);
-
-    // Load only blocks for this theme, and sort them.
-    // @todo Move the functionality of _block_rehash() out of the listing page.
-    $entities = _block_rehash($this->theme);
-
-    // Sort the blocks using \Drupal\block\Entity\Block::sort().
-    uasort($entities, array($this->entityType->getClass(), 'sort'));
-    return $entities;
   }
 
   /**
@@ -118,10 +119,9 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   public function render($theme = NULL, Request $request = NULL) {
     $this->request = $request;
-    // If no theme was specified, use the current theme.
-    $this->theme = $theme ?: \Drupal::theme()->getActiveTheme()->getName();
+    $this->theme = $theme;
 
-    return \Drupal::formBuilder()->getForm($this);
+    return $this->formBuilder->getForm($this);
   }
 
   /**
@@ -132,55 +132,42 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
-   *
-   * Form constructor for the main block administration form.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $placement = FALSE;
-    if ($this->request->query->has('block-placement')) {
-      $placement = $this->request->query->get('block-placement');
-      $form['#attached']['drupalSettings']['blockPlacement'] = $placement;
-    }
-    $entities = $this->load();
     $form['#theme'] = array('block_list');
     $form['#attached']['library'][] = 'core/drupal.tableheader';
     $form['#attached']['library'][] = 'block/drupal.block';
     $form['#attached']['library'][] = 'block/drupal.block.admin';
     $form['#attributes']['class'][] = 'clearfix';
 
-    // Add a last region for disabled blocks.
-    $block_regions_with_disabled = $this->regions + array(BlockInterface::BLOCK_REGION_NONE => BlockInterface::BLOCK_REGION_NONE);
-    $form['block_regions'] = array(
-      '#type' => 'value',
-      '#value' => $block_regions_with_disabled,
-    );
-
-    // Weights range from -delta to +delta, so delta should be at least half
-    // of the amount of blocks present. This makes sure all blocks in the same
-    // region get an unique weight.
-    $weight_delta = round(count($entities) / 2);
-
     // Build the form tree.
-    $form['edited_theme'] = array(
-      '#type' => 'value',
-      '#value' => $this->theme,
+    $form['blocks'] = $this->buildBlocksForm();
+    $form['place_blocks'] = $this->buildPlaceBlocksForm();
+
+    $form['actions'] = array(
+      '#tree' => FALSE,
+      '#type' => 'actions',
     );
-    $form['blocks'] = array(
-      '#type' => 'table',
-      '#header' => array(
-        t('Block'),
-        t('Category'),
-        t('Region'),
-        t('Weight'),
-        t('Operations'),
-      ),
-      '#attributes' => array(
-        'id' => 'blocks',
-      ),
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Save blocks'),
+      '#button_type' => 'primary',
     );
 
+    return $form;
+  }
+
+  /**
+   * Builds the main "Blocks" portion of the form.
+   *
+   * @return array
+   */
+  protected function buildBlocksForm() {
     // Build blocks first for each region.
+    $blocks = [];
+    $entities = $this->load();
+    /** @var \Drupal\block\BlockInterface[] $entities */
     foreach ($entities as $entity_id => $entity) {
       $definition = $entity->getPlugin()->getPluginDefinition();
       $blocks[$entity->getRegion()][$entity_id] = array(
@@ -192,36 +179,63 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       );
     }
 
+    $form = array(
+      '#type' => 'table',
+      '#header' => array(
+        $this->t('Block'),
+        $this->t('Category'),
+        $this->t('Region'),
+        $this->t('Weight'),
+        $this->t('Operations'),
+      ),
+      '#attributes' => array(
+        'id' => 'blocks',
+      ),
+    );
+
+    // Weights range from -delta to +delta, so delta should be at least half
+    // of the amount of blocks present. This makes sure all blocks in the same
+    // region get an unique weight.
+    $weight_delta = round(count($entities) / 2);
+
+    $placement = FALSE;
+    if ($this->request->query->has('block-placement')) {
+      $placement = $this->request->query->get('block-placement');
+      $form['#attached']['drupalSettings']['blockPlacement'] = $placement;
+    }
+
     // Loop over each region and build blocks.
+    $regions = $this->systemRegionList($this->getThemeName(), REGIONS_VISIBLE);
+    $block_regions_with_disabled = $regions + array(BlockInterface::BLOCK_REGION_NONE => BlockInterface::BLOCK_REGION_NONE);
     foreach ($block_regions_with_disabled as $region => $title) {
-      $form['blocks']['#tabledrag'][] = array(
+      $form['#tabledrag'][] = array(
         'action' => 'match',
         'relationship' => 'sibling',
         'group' => 'block-region-select',
         'subgroup' => 'block-region-' . $region,
         'hidden' => FALSE,
       );
-      $form['blocks']['#tabledrag'][] = array(
+      $form['#tabledrag'][] = array(
         'action' => 'order',
         'relationship' => 'sibling',
         'group' => 'block-weight',
         'subgroup' => 'block-weight-' . $region,
       );
 
-      $form['blocks']['region-' . $region] = array(
+      $form['region-' . $region] = array(
         '#attributes' => array(
           'class' => array('region-title', 'region-title-' . $region),
           'no_striping' => TRUE,
         ),
       );
-      $form['blocks']['region-' . $region]['title'] = array(
-        '#markup' => $region != BlockInterface::BLOCK_REGION_NONE ? $title : t('Disabled', array(), array('context' => 'Plural')),
+      $form['region-' . $region]['title'] = array(
+        '#markup' => $region != BlockInterface::BLOCK_REGION_NONE ? $title : $this->t('Disabled', array(), array('context' => 'Plural')),
         '#wrapper_attributes' => array(
           'colspan' => 5,
         ),
       );
 
-      $form['blocks']['region-' . $region . '-message'] = array(
+      $form['region-' . $region . '-message'] = array(
         '#attributes' => array(
           'class' => array(
             'region-message',
@@ -230,8 +244,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           ),
         ),
       );
-      $form['blocks']['region-' . $region . '-message']['message'] = array(
-        '#markup' => '<em>' . t('No blocks in this region') . '</em>',
+      $form['region-' . $region . '-message']['message'] = array(
+        '#markup' => '<em>' . $this->t('No blocks in this region') . '</em>',
         '#wrapper_attributes' => array(
           'colspan' => 5,
         ),
@@ -241,74 +255,72 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         foreach ($blocks[$region] as $info) {
           $entity_id = $info['entity_id'];
 
-          $form['blocks'][$entity_id] = array(
+          $form[$entity_id] = array(
             '#attributes' => array(
               'class' => array('draggable'),
             ),
           );
           if ($placement && $placement == Html::getClass($entity_id)) {
-            $form['blocks'][$entity_id]['#attributes']['class'][] = 'color-warning';
-            $form['blocks'][$entity_id]['#attributes']['class'][] = 'js-block-placed';
+            $form[$entity_id]['#attributes']['class'][] = 'color-warning';
+            $form[$entity_id]['#attributes']['class'][] = 'js-block-placed';
           }
-          $form['blocks'][$entity_id]['info'] = array(
+          $form[$entity_id]['info'] = array(
             '#markup' => SafeMarkup::checkPlain($info['label']),
             '#wrapper_attributes' => array(
               'class' => array('block'),
             ),
           );
-          $form['blocks'][$entity_id]['type'] = array(
+          $form[$entity_id]['type'] = array(
             '#markup' => $info['category'],
           );
-          $form['blocks'][$entity_id]['region-theme']['region'] = array(
+          $form[$entity_id]['region-theme']['region'] = array(
             '#type' => 'select',
             '#default_value' => $region,
             '#empty_value' => BlockInterface::BLOCK_REGION_NONE,
-            '#title' => t('Region for @block block', array('@block' => $info['label'])),
+            '#title' => $this->t('Region for @block block', array('@block' => $info['label'])),
             '#title_display' => 'invisible',
-            '#options' => $this->regions,
+            '#options' => $regions,
             '#attributes' => array(
               'class' => array('block-region-select', 'block-region-' . $region),
             ),
             '#parents' => array('blocks', $entity_id, 'region'),
           );
-          $form['blocks'][$entity_id]['region-theme']['theme'] = array(
+          $form[$entity_id]['region-theme']['theme'] = array(
             '#type' => 'hidden',
-            '#value' => $this->theme,
+            '#value' => $this->getThemeName(),
             '#parents' => array('blocks', $entity_id, 'theme'),
           );
-          $form['blocks'][$entity_id]['weight'] = array(
+          $form[$entity_id]['weight'] = array(
             '#type' => 'weight',
             '#default_value' => $info['weight'],
             '#delta' => $weight_delta,
-            '#title' => t('Weight for @block block', array('@block' => $info['label'])),
+            '#title' => $this->t('Weight for @block block', array('@block' => $info['label'])),
             '#title_display' => 'invisible',
             '#attributes' => array(
               'class' => array('block-weight', 'block-weight-' . $region),
             ),
           );
-          $form['blocks'][$entity_id]['operations'] = $this->buildOperations($info['entity']);
+          $form[$entity_id]['operations'] = $this->buildOperations($info['entity']);
         }
       }
     }
 
     // Do not allow disabling the main system content block when it is present.
-    if (isset($form['blocks']['system_main']['region'])) {
-      $form['blocks']['system_main']['region']['#required'] = TRUE;
+    if (isset($form['system_main']['region'])) {
+      $form['system_main']['region']['#required'] = TRUE;
     }
+    return $form;
+  }
 
-    $form['actions'] = array(
-      '#tree' => FALSE,
-      '#type' => 'actions',
-    );
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save blocks'),
-      '#button_type' => 'primary',
-    );
-
-    $form['place_blocks']['title'] = array(
+  /**
+   * Builds the "Place Blocks" portion of the form.
+   *
+   * @return array
+   */
+  protected function buildPlaceBlocksForm() {
+    $form['title'] = array(
       '#type' => 'container',
-      '#markup' => '<h3>' . t('Place blocks') . '</h3>',
+      '#markup' => '<h3>' . $this->t('Place blocks') . '</h3>',
       '#attributes' => array(
         'class' => array(
           'entity-meta__header',
@@ -316,21 +328,21 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       ),
     );
 
-    $form['place_blocks']['filter'] = array(
+    $form['filter'] = array(
       '#type' => 'search',
-      '#title' => t('Filter'),
+      '#title' => $this->t('Filter'),
       '#title_display' => 'invisible',
       '#size' => 30,
-      '#placeholder' => t('Filter by block name'),
+      '#placeholder' => $this->t('Filter by block name'),
       '#attributes' => array(
         'class' => array('block-filter-text'),
         'data-element' => '.entity-meta',
-        'title' => t('Enter a part of the block name to filter by.'),
+        'title' => $this->t('Enter a part of the block name to filter by.'),
       ),
     );
 
-    $form['place_blocks']['list']['#type'] = 'container';
-    $form['place_blocks']['list']['#attributes']['class'][] = 'entity-meta';
+    $form['list']['#type'] = 'container';
+    $form['list']['#attributes']['class'][] = 'entity-meta';
 
     // Only add blocks which work without any available context.
     $definitions = $this->blockManager->getDefinitionsForContexts();
@@ -338,8 +350,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     foreach ($sorted_definitions as $plugin_id => $plugin_definition) {
       $category = SafeMarkup::checkPlain($plugin_definition['category']);
       $category_key = 'category-' . $category;
-      if (!isset($form['place_blocks']['list'][$category_key])) {
-        $form['place_blocks']['list'][$category_key] = array(
+      if (!isset($form['list'][$category_key])) {
+        $form['list'][$category_key] = array(
           '#type' => 'details',
           '#title' => $category,
           '#open' => TRUE,
@@ -354,7 +366,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           ),
         );
       }
-      $form['place_blocks']['list'][$category_key]['content']['#links'][$plugin_id] = array(
+      $form['list'][$category_key]['content']['#links'][$plugin_id] = array(
         'title' => $plugin_definition['admin_label'],
         'url' => Url::fromRoute('block.admin_add', [
           'plugin_id' => $plugin_id,
@@ -373,32 +385,55 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   }
 
   /**
+   * Gets the name of the theme used for this block listing.
+   *
+   * @return string
+   *   The name of the theme.
+   */
+  protected function getThemeName() {
+    // If no theme was specified, use the current theme.
+    if (!$this->theme) {
+      $this->theme = $this->themeManager->getActiveTheme()->getName();
+    }
+    return $this->theme;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityIds() {
+    return $this->getStorage()->getQuery()
+      ->condition('theme', $this->getThemeName())
+      ->sort($this->entityType->getKey('id'))
+      ->execute();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Configure');
+      $operations['edit']['title'] = $this->t('Configure');
     }
 
     return $operations;
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // No validation.
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
-   *
-   * Form submission handler for the main block administration form.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $entities = $this->storage->loadMultiple(array_keys($form_state->getValue('blocks')));
+    /** @var \Drupal\block\BlockInterface[] $entities */
     foreach ($entities as $entity_id => $entity) {
       $entity_values = $form_state->getValue(array('blocks', $entity_id));
       $entity->setWeight($entity_values['weight']);
@@ -415,6 +450,13 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
     // Remove any previously set block placement.
     $this->request->query->remove('block-placement');
+  }
+
+  /**
+   * Wraps system_region_list().
+   */
+  protected function systemRegionList($theme, $show = REGIONS_ALL) {
+    return system_region_list($theme, $show);
   }
 
 }

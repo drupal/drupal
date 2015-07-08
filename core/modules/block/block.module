@@ -86,45 +86,6 @@ function block_page_top(array &$page_top) {
 }
 
 /**
- * Returns an array of block class instances by theme.
- *
- * @param $theme
- *   The theme to rehash blocks for. If not provided, defaults to the currently
- *   used theme.
- *
- * @return
- *   Blocks currently exported by modules.
- */
-function _block_rehash($theme = NULL) {
-  $theme = $theme ? $theme : \Drupal::config('system.theme')->get('default');
-  $regions = system_region_list($theme);
-  $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
-  foreach ($blocks as $block_id => $block) {
-    // Remove any invalid block from the list.
-    // @todo Remove this check as part of https://www.drupal.org/node/1776830.
-    if (!$block->getPlugin()) {
-      unset($blocks[$block_id]);
-      continue;
-    }
-    $region = $block->getRegion();
-    $status = $block->status();
-    // Disable blocks in invalid regions.
-    if (!empty($region) && $region != BlockInterface::BLOCK_REGION_NONE && !isset($regions[$region]) && $status) {
-      drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block_id, '%region' => $region)), 'warning');
-      // Disabled blocks are moved into the BlockInterface::BLOCK_REGION_NONE
-      // later so no need to move the block to another region.
-      $block->disable()->save();
-    }
-    // Set region to none if not enabled.
-    if (!$status && $region != BlockInterface::BLOCK_REGION_NONE) {
-      $block->setRegion(BlockInterface::BLOCK_REGION_NONE);
-      $block->save();
-    }
-  }
-  return $blocks;
-}
-
-/**
  * Initializes blocks for installed themes.
  *
  * @param $theme_list
@@ -177,9 +138,26 @@ function block_theme_initialize($theme) {
  * Implements hook_rebuild().
  */
 function block_rebuild() {
-  foreach (\Drupal::service('theme_handler')->listInfo() as $name => $data) {
+  foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {
     if ($data->status) {
-      _block_rehash($name);
+      $regions = system_region_list($theme);
+      /** @var \Drupal\block\BlockInterface[] $blocks */
+      $blocks = entity_load_multiple_by_properties('block', ['theme' => $theme]);
+      foreach ($blocks as $block_id => $block) {
+        // Disable blocks in invalid regions.
+        $region = $block->getRegion();
+        if ($region !== BlockInterface::BLOCK_REGION_NONE) {
+          if (!empty($region) && !isset($regions[$region]) && $block->status()) {
+            drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block_id, '%region' => $region]), 'warning');
+            $block->disable();
+          }
+          // Set region to none if not enabled.
+          if (!$block->status()) {
+            $block->setRegion(BlockInterface::BLOCK_REGION_NONE);
+            $block->save();
+          }
+        }
+      }
     }
   }
 }
