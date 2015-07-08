@@ -112,8 +112,8 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
       '#title' => $this->t('Pages'),
       '#default_value' => $this->configuration['pages'],
       '#description' => $this->t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %user for the current user's page and %user-wildcard for every user page. %front is the front page.", array(
-        '%user' => 'user',
-        '%user-wildcard' => 'user/*',
+        '%user' => '/user',
+        '%user-wildcard' => '/user/*',
         '%front' => '<front>',
       )),
     );
