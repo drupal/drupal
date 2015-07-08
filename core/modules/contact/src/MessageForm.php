@@ -231,20 +231,4 @@ class MessageForm extends ContentEntityForm {
     $message->save();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function init(FormStateInterface $form_state) {
-    $message = $this->entity;
-
-    // Make the message inherit the current content language unless specifically
-    // set.
-    if ($message->isNew() && !$message->langcode->value) {
-      $language_content = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-      $message->langcode->value = $language_content->getId();
-    }
-
-    parent::init($form_state);
-  }
-
 }
