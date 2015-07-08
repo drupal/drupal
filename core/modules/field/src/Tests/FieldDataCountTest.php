@@ -30,6 +30,11 @@ class FieldDataCountTest extends FieldUnitTestBase {
   protected $storageRev;
 
   /**
+   * @var \Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface
+   */
+  protected $storageUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -37,6 +42,7 @@ class FieldDataCountTest extends FieldUnitTestBase {
     $this->installEntitySchema('entity_test_rev');
     $this->storage = \Drupal::entityManager()->getStorage('entity_test');
     $this->storageRev = \Drupal::entityManager()->getStorage('entity_test_rev');
+    $this->storageUser = \Drupal::entityManager()->getStorage('user');
   }
 
   /**
@@ -134,6 +140,24 @@ class FieldDataCountTest extends FieldUnitTestBase {
     $storage =  $this->container->get('entity.manager')->getStorage($entity_type);
     $entity = $storage->loadRevision($first_revision);
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name_2}), $cardinality, format_string('Revision %revision_id: expected number of values.', array('%revision_id' => $first_revision)));
+  }
+
+  /**
+   * Verify that we can count a table that contains an entry with index 0.
+   */
+  public function testCountWithIndex0() {
+    // Create an entry for the anonymous user, who has user ID 0.
+    $user = $this->storageUser
+      ->create(array(
+        'uid' => 0,
+        'name' => 'anonymous',
+        'mail' => NULL,
+        'status' => FALSE,
+      ));
+    $user->save();
+
+    $storage = $user->getFieldDefinition('name')->getFieldStorageDefinition();
+    $this->assertIdentical(TRUE, $this->storageUser->countFieldData($storage, TRUE));
   }
 
 }

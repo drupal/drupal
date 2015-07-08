@@ -1623,9 +1623,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $or->isNotNull($table_mapping->getFieldColumnName($storage_definition, $property_name));
       }
       $query->condition($or);
-      $query
-        ->fields('t', array($this->idKey))
-        ->distinct(TRUE);
+      if (!$as_bool) {
+        $query
+          ->fields('t', array($this->idKey))
+          ->distinct(TRUE);
+      }
     }
 
     // @todo Find a way to count field data also for fields having custom
@@ -1635,7 +1637,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // If we are performing the query just to check if the field has data
       // limit the number of rows.
       if ($as_bool) {
-        $query->range(0, 1);
+        $query
+          ->range(0, 1)
+          ->addExpression('1');
       }
       else {
         // Otherwise count the number of rows.
