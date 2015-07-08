@@ -298,7 +298,8 @@ Configuration Translation module
 
 Contact module
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
-- Tim Eisenhuth 'tim-e' https://www.drupal.org/u/tim-e
+- Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
+- Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Content Translation module
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
