@@ -16,7 +16,7 @@ class Migration extends BaseMigration implements MigrationInterface {
    *
    * @var array
    */
-  public $load = array();
+  protected $load = array();
 
   /**
    * The load plugin.
