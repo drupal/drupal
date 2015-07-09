@@ -76,5 +76,12 @@ entity.user_role.test_operation:
   requirements:
     _access: 'TRUE'
 
+entity.entity_test_view_builder.canonical:
+  path: '/entity_test_view_builder/{entity_test_view_builder}'
+  defaults:
+    _entity_view: 'entity_test_view_builder'
+  requirements:
+    _access: 'TRUE'
+
 route_callbacks:
   - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'

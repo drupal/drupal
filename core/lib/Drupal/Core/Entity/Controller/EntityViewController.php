@@ -105,6 +105,7 @@ class EntityViewController implements ContainerInjectionInterface {
 
     $page['#pre_render'][] = [$this, 'buildTitle'];
     $page['#entity_type'] = $_entity->getEntityTypeId();
+    $page['#' . $page['#entity_type']] = $_entity;
 
 
     return $page;
