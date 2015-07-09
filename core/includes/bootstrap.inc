@@ -23,7 +23,7 @@ use Drupal\Core\Language\LanguageInterface;
 /**
  * Minimum supported version of PHP.
  */
-const DRUPAL_MINIMUM_PHP = '5.4.5';
+const DRUPAL_MINIMUM_PHP = '5.5.9';
 
 /**
  * Minimum recommended value of PHP memory_limit.
