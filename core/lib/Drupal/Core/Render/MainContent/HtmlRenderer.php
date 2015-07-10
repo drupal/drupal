@@ -183,6 +183,12 @@ class HtmlRenderer implements MainContentRendererInterface {
       // @todo Remove this once https://www.drupal.org/node/2359901 lands.
       if (!empty($main_content)) {
         $this->renderer->executeInRenderContext(new RenderContext(), function() use (&$main_content) {
+          if (isset($main_content['#cache']['keys'])) {
+            // Retain #title, otherwise, dynamically generated titles would be
+            // missing for controllers whose entire returned render array is
+            // render cached.
+            $main_content['#cache_properties'][] = '#title';
+          }
           return $this->renderer->render($main_content, FALSE);
         });
         $main_content = $this->renderCache->getCacheableRenderArray($main_content) + [

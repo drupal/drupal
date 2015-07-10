@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
@@ -690,10 +691,13 @@ class RendererTest extends RendererTestBase {
       ],
       // Collect expected property names.
       '#cache_properties' => array_keys(array_filter($expected_results)),
-      'child1' => ['#markup' => 1],
-      'child2' => ['#markup' => 2],
-      '#custom_property' => ['custom_value'],
+      'child1' => ['#markup' => '1'],
+      'child2' => ['#markup' => '2'],
+      // Mark the value as safe.
+      '#custom_property' => SafeMarkup::checkPlain('custom_value'),
+      '#custom_property_array' => ['custom value'],
     ];
+
     $this->renderer->renderRoot($element);
 
     $cache = $this->cacheFactory->get('render');
@@ -708,8 +712,13 @@ class RendererTest extends RendererTestBase {
       $this->assertEquals($cached, (bool) $expected);
       // Check that only the #markup key is preserved for children.
       if ($cached) {
-        $this->assertArrayEquals($data[$property], $original[$property]);
+        $this->assertSame($data[$property], $original[$property]);
       }
+    }
+    // #custom_property_array can not be a safe_cache_property.
+    $safe_cache_properties = array_diff(Element::properties(array_filter($expected_results)), ['#custom_property_array']);
+    foreach ($safe_cache_properties as $cache_property) {
+      $this->assertTrue(SafeMarkup::isSafe($data[$cache_property]), "$cache_property is marked as a safe string");
     }
   }
 
@@ -723,14 +732,15 @@ class RendererTest extends RendererTestBase {
   public function providerTestRenderCacheProperties() {
     return [
       [[]],
-      [['child1' => 0, 'child2' => 0, '#custom_property' => 0]],
-      [['child1' => 0, 'child2' => 0, '#custom_property' => 1]],
-      [['child1' => 0, 'child2' => 1, '#custom_property' => 0]],
-      [['child1' => 0, 'child2' => 1, '#custom_property' => 1]],
-      [['child1' => 1, 'child2' => 0, '#custom_property' => 0]],
-      [['child1' => 1, 'child2' => 0, '#custom_property' => 1]],
-      [['child1' => 1, 'child2' => 1, '#custom_property' => 0]],
-      [['child1' => 1, 'child2' => 1, '#custom_property' => 1]],
+      [['child1' => 0, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 0, 'child2' => 0, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 0, 'child2' => 1, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 0, 'child2' => 1, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 0, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 1, '#custom_property_array' => 1]],
     ];
   }
 

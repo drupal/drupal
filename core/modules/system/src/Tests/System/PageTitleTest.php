@@ -55,6 +55,7 @@ class PageTitleTest extends WebTestBase {
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node, 'Node created and found in database');
+    $this->assertText(SafeMarkup::checkPlain($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
     $this->drupalGet("node/" . $node->id());
     $this->assertText(SafeMarkup::checkPlain($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
   }
@@ -137,6 +138,24 @@ class PageTitleTest extends WebTestBase {
     $this->assertTitle('Dynamic title | Drupal');
     $result = $this->xpath('//h1');
     $this->assertEqual('Dynamic title', (string) $result[0]);
+
+    // Ensure that titles are cacheable and are escaped normally if the
+    // controller does not escape them.
+    $this->drupalGet('test-page-cached-controller');
+    $this->assertTitle('Cached title | Drupal');
+    $this->assertText(SafeMarkup::checkPlain('<span>Cached title</span>'));
+    $this->drupalGet('test-page-cached-controller');
+    $this->assertTitle('Cached title | Drupal');
+    $this->assertText(SafeMarkup::checkPlain('<span>Cached title</span>'));
+
+    // Ensure that titles are cacheable and are escaped normally if the
+    // controller escapes them use SafeMarkup::checkPlain().
+    $this->drupalGet('test-page-cached-controller-safe');
+    $this->assertTitle('Cached title | Drupal');
+    $this->assertText(SafeMarkup::checkPlain('<span>Cached title</span>'));
+    $this->drupalGet('test-page-cached-controller-safe');
+    $this->assertTitle('Cached title | Drupal');
+    $this->assertText(SafeMarkup::checkPlain('<span>Cached title</span>'));
   }
 
 }

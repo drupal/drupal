@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
@@ -76,6 +77,11 @@ class RenderCache implements RenderCacheInterface {
       if (isset($cached_element['#cache_redirect'])) {
         return $this->get($cached_element);
       }
+      // Ensure that any safe properties are marked safe.
+      foreach ($cached_element['#safe_cache_properties'] as $cache_property) {
+        SafeMarkup::set($cached_element[$cache_property]);
+      }
+      unset($cached_element['#safe_cache_properties']);
       // Return the cached element.
       return $cached_element;
     }
@@ -327,6 +333,7 @@ class RenderCache implements RenderCacheInterface {
         'tags' => $elements['#cache']['tags'],
         'max-age' => $elements['#cache']['max-age'],
       ],
+      '#safe_cache_properties' => []
     ];
 
     // Preserve cacheable items if specified. If we are preserving any cacheable
@@ -335,6 +342,13 @@ class RenderCache implements RenderCacheInterface {
     // the cache entry size.
     if (!empty($elements['#cache_properties']) && is_array($elements['#cache_properties'])) {
       $data['#cache_properties'] = $elements['#cache_properties'];
+      // Store whether any of the cache properties are safe strings.
+      foreach (Element::properties(array_flip($elements['#cache_properties'])) as $cache_property) {
+        if (isset($elements[$cache_property]) && !is_array($elements[$cache_property]) && SafeMarkup::isSafe($elements[$cache_property])) {
+          $data['#safe_cache_properties'][] = $cache_property;
+        }
+      }
+
       // Extract all the cacheable items from the element using cache
       // properties.
       $cacheable_items = array_intersect_key($elements, array_flip($elements['#cache_properties']));

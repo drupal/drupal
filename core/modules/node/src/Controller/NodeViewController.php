@@ -57,7 +57,7 @@ class NodeViewController extends EntityViewController {
    *   The page title.
    */
   public function title(EntityInterface $node) {
-    return SafeMarkup::checkPlain($this->entityManager->getTranslationFromContext($node)->label());
+    return $this->entityManager->getTranslationFromContext($node)->label();
   }
 
 }

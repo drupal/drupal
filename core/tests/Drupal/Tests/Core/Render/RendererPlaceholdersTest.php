@@ -137,6 +137,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
           'tags' => [],
           'max-age' => Cache::PERMANENT,
         ],
+        '#safe_cache_properties' => [],
       ],
     ];
 
@@ -179,6 +180,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
           'tags' => [],
           'max-age' => Cache::PERMANENT,
         ],
+        '#safe_cache_properties' => [],
       ],
     ];
 
@@ -312,6 +314,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
         'tags' => [],
         'max-age' => Cache::PERMANENT,
       ],
+      '#safe_cache_properties' => [],
     ];
     $expected_element['#attached']['placeholders'][$expected_placeholder_markup] = $expected_placeholder_render_array;
     $this->assertEquals($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by placeholder #lazy_builder callbacks.');
@@ -579,6 +582,7 @@ HTML;
         'tags' => [],
         'max-age' => Cache::PERMANENT,
       ],
+      '#safe_cache_properties' => [],
     ];
 
     $dom = Html::load($cached_element['#markup']);
