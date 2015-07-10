@@ -69,7 +69,7 @@ class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
       }
       // Default task!
       if ($default_theme == $theme_name) {
-        $this->derivatives[$theme_name]['route_name'] = 'block.admin_display';
+        $this->derivatives[$theme_name]['route_name'] = $base_plugin_definition['parent_id'];
         // Emulate default logic because without the base plugin id we can't
         // change the base_route.
         $this->derivatives[$theme_name]['weight'] = -10;

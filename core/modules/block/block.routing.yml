@@ -42,6 +42,15 @@ block.admin_display_theme:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
 
+block.admin_library:
+  path: 'admin/structure/block/library/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockLibraryController::listBlocks'
+    _title: 'Place block'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
 block.admin_add:
   path: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:

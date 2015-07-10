@@ -26,7 +26,34 @@ class BlockXssTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_content', 'menu_ui', 'views'];
+  public static $modules = ['block', 'block_content', 'block_test', 'menu_ui', 'views'];
+
+  /**
+   * Test XSS in title.
+   */
+  public function testXssInTitle() {
+    $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
+
+    \Drupal::state()->set('block_test.content', $this->randomMachineName());
+    $this->drupalGet('');
+    $this->assertNoRaw('<script>alert("XSS label");</script>', 'The block title was properly sanitized when rendered.');
+
+    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
+    $default_theme = $this->config('system.theme')->get('default');
+    $this->drupalGet('admin/structure/block/list/' . $default_theme);
+    $this->assertNoRaw("<script>alert('XSS subject');</script>", 'The block title was properly sanitized in Block Plugin UI Admin page.');
+  }
+
+  /**
+   * Tests XSS in category.
+   */
+  public function testXssInCategory() {
+    $this->drupalPlaceBlock('test_xss_title');
+    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
+    $this->drupalGet(Url::fromRoute('block.admin_display'));
+    $this->clickLinkPartialName('Place block');
+    $this->assertNoRaw("<script>alert('XSS category');</script>");
+  }
 
   /**
    * Tests various modules that provide blocks for XSS.
@@ -51,8 +78,9 @@ class BlockXssTest extends WebTestBase {
     $view->save();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLink('<script>alert("view");</script>');
-    $this->assertRaw('&lt;script&gt;alert(&quot;view&quot;);&lt;/script&gt;');
+    $this->clickLinkPartialName('Place block');
+    // The block admin label is automatically XSS admin filtered.
+    $this->assertRaw('alert("view");');
     $this->assertNoRaw('<script>alert("view");</script>');
   }
 
@@ -66,8 +94,9 @@ class BlockXssTest extends WebTestBase {
     ])->save();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLink('<script>alert("menu");</script>');
-    $this->assertRaw('&lt;script&gt;alert(&quot;menu&quot;);&lt;/script&gt;');
+    $this->clickLinkPartialName('Place block');
+    // The block admin label is automatically XSS admin filtered.
+    $this->assertRaw('alert("menu");');
     $this->assertNoRaw('<script>alert("menu");</script>');
   }
 
@@ -86,8 +115,9 @@ class BlockXssTest extends WebTestBase {
     ])->save();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLink('<script>alert("block_content");</script>');
-    $this->assertRaw('&lt;script&gt;alert(&quot;block_content&quot;);&lt;/script&gt;');
+    $this->clickLinkPartialName('Place block');
+    // The block admin label is automatically XSS admin filtered.
+    $this->assertRaw('alert("block_content");');
     $this->assertNoRaw('<script>alert("block_content");</script>');
   }
 

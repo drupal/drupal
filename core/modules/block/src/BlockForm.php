@@ -170,11 +170,13 @@ class BlockForm extends EntityForm {
     }
 
     // Region settings.
+    $entity_region = $entity->getRegion();
+    $region = $entity->isNew() ? $this->getRequest()->query->get('region', $entity_region) : $entity_region;
     $form['region'] = array(
       '#type' => 'select',
       '#title' => $this->t('Region'),
       '#description' => $this->t('Select the region where this block should be displayed.'),
-      '#default_value' => $entity->getRegion(),
+      '#default_value' => $region,
       '#empty_value' => BlockInterface::BLOCK_REGION_NONE,
       '#options' => system_region_list($theme, REGIONS_VISIBLE),
       '#prefix' => '<div id="edit-block-region-wrapper">',

@@ -50,6 +50,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Confirm that the view block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->clickLinkPartialName('Place block');
     $this->assertText($view['label']);
 
     // Place the block.
@@ -109,6 +110,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->clickLinkPartialName('Place block');
     $this->assertText($view['label']);
 
     // Put the block into the first sidebar region, and make sure it will not

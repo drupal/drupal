@@ -19,66 +19,38 @@
   Drupal.behaviors.blockFilterByText = {
     attach: function (context, settings) {
       var $input = $('input.block-filter-text').once('block-filter-text');
-      var $element = $($input.attr('data-element'));
-      var $blocks;
-      var $details;
+      var $table = $($input.attr('data-element'));
+      var $filter_rows;
 
-      /**
-       * Hides the `<details>` element for a category if it has no visible blocks.
-       *
-       * @param {number} index
-       * @param {HTMLElement} element
-       */
-      function hideCategoryDetails(index, element) {
-        var $catDetails = $(element);
-        $catDetails.toggle($catDetails.find('li:visible').length > 0);
-      }
-
-      /**
-       * Filters the block list.
-       *
-       * @param {jQuery.Event} e
-       */
       function filterBlockList(e) {
         var query = $(e.target).val().toLowerCase();
 
         /**
          * Shows or hides the block entry based on the query.
          *
-         * @param {number} index
-         * @param {HTMLElement} block
+         * @param {number} index The index of the block.
+         * @param {HTMLElement} label The label of the block.
          */
-        function showBlockEntry(index, block) {
-          var $block = $(block);
-          var $sources = $block.find('.block-filter-text-source');
-          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
-          $block.toggle(textMatch);
+        function toggleBlockEntry(index, label) {
+          var $label = $(label);
+          var $row = $label.parent().parent();
+          var textMatch = $label.text().toLowerCase().indexOf(query) !== -1;
+          $row.toggle(textMatch);
         }
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $blocks.each(showBlockEntry);
-
-          // Note that we first open all <details> to be able to use ':visible'.
-          // Mark the <details> elements that were closed before filtering, so
-          // they can be reclosed when filtering is removed.
-          $details.not('[open]').attr('data-drupal-block-state', 'forced-open');
-          // Hide the category <details> if they don't have any visible rows.
-          $details.attr('open', 'open').each(hideCategoryDetails);
+          $filter_rows.each(toggleBlockEntry);
         }
         else {
-          $blocks.show();
-          $details.show();
-          // Return <details> elements that had been closed before filtering
-          // to a closed state.
-          $details.filter('[data-drupal-block-state="forced-open"]').removeAttr('open data-drupal-block-state');
+          $filter_rows.each(function (index) {
+            $(this).parent().parent().show();
+          });
         }
       }
 
-      if ($element.length) {
-        $details = $element.find('details');
-        $blocks = $details.find('li');
-
+      if ($table.length) {
+        $filter_rows = $table.find('div.block-filter-text-source');
         $input.on('keyup', filterBlockList);
       }
     }

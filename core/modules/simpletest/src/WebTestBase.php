@@ -2324,7 +2324,7 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Follows a link by name.
+   * Follows a link by complete name.
    *
    * Will click the first link found with this link text by default, or a later
    * one if an index is given. Match is case sensitive with normalized space.
@@ -2332,17 +2332,54 @@ abstract class WebTestBase extends TestBase {
    *
    * If the link is discovered and clicked, the test passes. Fail otherwise.
    *
-   * @param $label
+   * @param string $label
    *   Text between the anchor tags.
-   * @param $index
+   * @param int $index
    *   Link position counting from zero.
    *
-   * @return
+   * @return string|bool
    *   Page contents on success, or FALSE on failure.
    */
   protected function clickLink($label, $index = 0) {
+    return $this->clickLinkHelper($label, $index, '//a[normalize-space()=:label]');
+  }
+
+  /**
+   * Follows a link by partial name.
+   *
+   *
+   * If the link is discovered and clicked, the test passes. Fail otherwise.
+   *
+   * @param string $label
+   *   Text between the anchor tags, uses starts-with().
+   * @param int $index
+   *   Link position counting from zero.
+   *
+   * @return string|bool
+   *   Page contents on success, or FALSE on failure.
+   *
+   * @see ::clickLink()
+   */
+  protected function clickLinkPartialName($label, $index = 0) {
+    return $this->clickLinkHelper($label, $index, '//a[starts-with(normalize-space(), :label)]');
+  }
+
+  /**
+   * Provides a helper for ::clickLink() and ::clickLinkPartialName().
+   *
+   * @param string $label
+   *   Text between the anchor tags, uses starts-with().
+   * @param int $index
+   *   Link position counting from zero.
+   * @param string $pattern
+   *   A pattern to use for the XPath.
+   *
+   * @return bool|string
+   *   Page contents on success, or FALSE on failure.
+   */
+  protected function clickLinkHelper($label, $index, $pattern) {
     $url_before = $this->getUrl();
-    $urls = $this->xpath('//a[normalize-space()=:label]', array(':label' => $label));
+    $urls = $this->xpath($pattern, array(':label' => $label));
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
       $this->pass(SafeMarkup::format('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');

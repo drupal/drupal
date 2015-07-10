@@ -133,6 +133,7 @@ class BasicTest extends WizardTestBase {
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->clickLinkPartialName('Place block');
     $this->assertText($view3['label']);
 
     // Place the block.

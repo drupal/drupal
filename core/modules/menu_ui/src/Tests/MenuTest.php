@@ -219,6 +219,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Confirm that the custom menu block is available.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->clickLinkPartialName('Place block');
     $this->assertText($label);
 
     // Enable the block.
@@ -532,6 +533,7 @@ class MenuTest extends MenuWebTestBase {
     // Make sure menu shows up with new name in block addition.
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalget('admin/structure/block/list/' . $default_theme);
+    $this->clickLinkPartialName('Place block');
     $this->assertText($edit['label']);
   }
 

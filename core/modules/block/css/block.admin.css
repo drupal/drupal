@@ -1,3 +1,13 @@
+/* Block listing page */
+.region-title .button {
+  margin-left: 1em; /* LTR */
+}
+[dir="rtl"] .region-title .button {
+  margin-left: 0;
+  margin-right: 1em;
+}
+
+/* Block demo mode */
 .block-region {
   background-color: #ff6;
   margin-top: 4px;
@@ -22,87 +32,10 @@ a.block-demo-backlink:hover {
   text-decoration: underline;
 }
 
-.layout-region {
-  box-sizing: border-box;
-}
-.block-list-secondary {
-  border: 1px solid #bfbfbf;
-  border-bottom-width: 0;
-}
-.block-list {
-  padding: 0 0.75em;
-  margin: 0;
-}
-.block-list li {
-  list-style: none;
-  padding: 0.1em 0;
-}
-.block-list a:before {
-  content: '+ ';
-}
-.block-list-secondary .form-type-search {
-  padding: 0 1em;
-}
+/* Configure block form - Block description */
 .block-form .form-item-settings-admin-label label {
   display: inline;
 }
 .block-form .form-item-settings-admin-label label:after {
   content: ':';
-}
-
-/* Wide screens */
-@media
-screen and (min-width: 780px),
-(orientation: landscape) and (min-device-height: 780px) {
-
-  .block-list-primary {
-    float: left; /* LTR */
-    width: 75%;
-    padding-right: 2em;
-  }
-  [dir="rtl"] .block-list-primary {
-    float: right;
-    padding-left: 2em;
-    padding-right: 0;
-  }
-
-  .block-list-secondary {
-    float: right; /* LTR */
-    width: 25%;
-  }
-  [dir="rtl"] .block-list-secondary {
-    float: left;
-  }
-
-  /* @todo File an issue to add a standard class to all text-like inputs */
-  .block-list-secondary .form-autocomplete,
-  .block-list-secondary .form-text,
-  .block-list-secondary .form-tel,
-  .block-list-secondary .form-email,
-  .block-list-secondary .form-url,
-  .block-list-secondary .form-search,
-  .block-list-secondary .form-number,
-  .block-list-secondary .form-color,
-  .block-list-secondary textarea {
-    box-sizing:         border-box;
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-/**
- * The vertical toolbar mode gets triggered for narrow screens, which throws off
- * the intent of media queries written for the viewport width. When the vertical
- * toolbar is on, we need to suppress layout for the original media width + the
- * toolbar width (240px). In this case, 240px + 780px.
- */
-@media
-screen and (max-width: 1020px) {
-
-  .toolbar-vertical.toolbar-tray-open .block-list-primary,
-  .toolbar-vertical.toolbar-tray-open .block-list-secondary {
-    float: none;
-    width: auto;
-    padding-right: 0;
-  }
 }

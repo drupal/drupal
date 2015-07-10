@@ -58,9 +58,6 @@ function block_theme() {
     'block' => array(
       'render element' => 'elements',
     ),
-    'block_list' => array(
-      'render element' => 'form',
-    ),
   );
 }
 

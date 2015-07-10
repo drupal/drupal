@@ -189,6 +189,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         // block configure form.
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
         $this->drupalGet($path);
+        $this->clickLinkPartialName('Place block');
         $this->clickLink(t('Add custom block'));
         // The seven theme has markup inside the link, we cannot use clickLink().
         if ($default_theme == 'seven') {

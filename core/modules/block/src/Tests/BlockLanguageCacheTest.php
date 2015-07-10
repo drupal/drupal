@@ -62,6 +62,7 @@ class BlockLanguageCacheTest extends WebTestBase {
     // Create the block cache for all languages.
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', array('language' => $langcode));
+      $this->clickLinkPartialName('Place block');
     }
 
     // Create a menu in the default language.
@@ -73,6 +74,7 @@ class BlockLanguageCacheTest extends WebTestBase {
     // Check that the block is listed for all languages.
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', array('language' => $langcode));
+      $this->clickLinkPartialName('Place block');
       $this->assertText($edit['label']);
     }
   }
