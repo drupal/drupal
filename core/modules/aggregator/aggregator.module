@@ -6,7 +6,7 @@
  */
 
 use Drupal\aggregator\Entity\Feed;
-use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -166,7 +166,7 @@ function aggregator_cron() {
  *   The filtered content.
  */
 function aggregator_filter_xss($value) {
-  return Xss::filter($value, preg_split('/\s+|<|>/', \Drupal::config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
+  return SafeMarkup::xssFilter($value, preg_split('/\s+|<|>/', \Drupal::config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
 }
 
 /**

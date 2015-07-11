@@ -7,8 +7,9 @@
 
 namespace Drupal\views\Plugin\Block;
 
-use Drupal\Core\Config\Entity\Query\Query;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Config\Entity\Query\Query;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,7 +33,8 @@ class ViewsBlock extends ViewsBlockBase {
     if ($output = $this->view->buildRenderable($this->displayID, [], FALSE)) {
       // Override the label to the dynamic title configured in the view.
       if (empty($this->configuration['views_label']) && $this->view->getTitle()) {
-        $output['#title'] = Xss::filterAdmin($this->view->getTitle());
+        // @todo https://www.drupal.org/node/2527360 remove call to SafeMarkup.
+        $output['#title'] = SafeMarkup::xssFilter($this->view->getTitle(), Xss::getAdminTagList());
       }
 
       // Before returning the block output, convert it to a renderable array

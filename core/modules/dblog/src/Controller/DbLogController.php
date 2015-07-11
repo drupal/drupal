@@ -207,7 +207,7 @@ class DbLogController extends ControllerBase {
           $this->dateFormatter->format($dblog->timestamp, 'short'),
           $message,
           array('data' => $username),
-          Xss::filter($dblog->link),
+          SafeMarkup::xssFilter($dblog->link),
         ),
         // Attributes for table row.
         'class' => array(Html::getClass('dblog-' . $dblog->type), $classes[$dblog->severity]),
@@ -285,7 +285,7 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Operations'), 'header' => TRUE),
-          SafeMarkup::checkAdminXss($dblog->link),
+          array('data' => array('#markup' => $dblog->link)),
         ),
       );
       $build['dblog_table'] = array(

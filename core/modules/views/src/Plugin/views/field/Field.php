@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss as CoreXss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -671,7 +670,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     if (!empty($items)) {
       $items = $this->prepareItemsByDelta($items);
       if ($this->options['multi_type'] == 'separator' || !$this->options['group_rows']) {
-        $separator = $this->options['multi_type'] == 'separator' ? SafeMarkup::checkAdminXss($this->options['separator']) : '';
+        $separator = $this->options['multi_type'] == 'separator' ? CoreXss::filterAdmin($this->options['separator']) : '';
         $build = [
           '#type' => 'inline_template',
           '#template' => '{{ items | safe_join(separator) }}',

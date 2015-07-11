@@ -125,6 +125,6 @@ function _bartik_process_page(&$variables) {
   if ($variables['hide_site_slogan']) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we
     // rebuild it.
-    $variables['site_slogan'] = Xss::filterAdmin($site_config->get('slogan'));
+    $variables['site_slogan']['#markup'] = $site_config->get('slogan');
   }
 }

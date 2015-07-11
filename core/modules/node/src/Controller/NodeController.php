@@ -8,7 +8,6 @@
 namespace Drupal\node\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -195,7 +194,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
           '#context' => [
             'date' => $link,
             'username' => $this->renderer->renderPlain($username),
-            'message' => Xss::filter($revision->revision_log->value),
+            'message' => SafeMarkup::xssFilter($revision->revision_log->value),
           ],
         ],
       ];

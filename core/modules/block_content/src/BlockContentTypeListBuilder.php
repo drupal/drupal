@@ -7,7 +7,6 @@
 
 namespace Drupal\block_content;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -45,7 +44,7 @@ class BlockContentTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['type'] = $entity->link();
-    $row['description'] = Xss::filterAdmin($entity->getDescription());
+    $row['description']['data']['#markup'] = $entity->getDescription();
     return $row + parent::buildRow($entity);
   }
 

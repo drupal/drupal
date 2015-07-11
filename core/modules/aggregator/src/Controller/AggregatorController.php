@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Controller;
 
-use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\aggregator\FeedInterface;
@@ -187,7 +187,7 @@ class AggregatorController extends ControllerBase {
    *   The feed label.
    */
   public function feedTitle(FeedInterface $aggregator_feed) {
-    return Xss::filter($aggregator_feed->label());
+    return SafeMarkup::xssFilter($aggregator_feed->label());
   }
 
 }

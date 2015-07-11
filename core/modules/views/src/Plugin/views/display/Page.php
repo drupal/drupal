@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -181,7 +182,8 @@ class Page extends PathPluginBase {
     //   it should be dropped.
     if (is_array($render)) {
       $render += array(
-        '#title' => Xss::filterAdmin($this->view->getTitle()),
+        // @todo https://www.drupal.org/node/2527360 remove call to SafeMarkup.
+        '#title' => SafeMarkup::xssFilter($this->view->getTitle(), Xss::getAdminTagList()),
       );
     }
     return $render;

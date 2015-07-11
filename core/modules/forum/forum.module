@@ -540,7 +540,7 @@ function template_preprocess_forum_list(&$variables) {
   $row = 0;
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
-    $variables['forums'][$id]->description = Xss::filterAdmin($forum->description->value);
+    $variables['forums'][$id]->description = array('#markup' => $forum->description->value);
     $variables['forums'][$id]->link = forum_uri($forum);
     $variables['forums'][$id]->name = SafeMarkup::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);

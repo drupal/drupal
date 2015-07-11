@@ -29,14 +29,19 @@ class Xss {
    * Based on kses by Ulf Harnhammar, see http://sourceforge.net/projects/kses.
    * For examples of various XSS attacks, see: http://ha.ckers.org/xss.html.
    *
-   * This code does five things:
+   * This method is preferred to
+   * \Drupal\Component\Utility\SafeMarkup::xssFilter() when the result is not
+   * being used directly in the rendering system (for example, when its result
+   * is being combined with other strings before rendering). This avoids
+   * bloating the safe string list with partial strings if the whole result will
+   * be marked safe.
+   *
+   * This code does four things:
    * - Removes characters and constructs that can trick browsers.
    * - Makes sure all HTML entities are well-formed.
    * - Makes sure all HTML tags and attributes are well-formed.
    * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g.
    *   javascript:).
-   * - Marks the sanitized, XSS-safe version of $string as safe markup for
-   *   rendering.
    *
    * @param $string
    *   The string with raw HTML in it. It will be stripped of everything that
@@ -49,7 +54,7 @@ class Xss {
    *   valid UTF-8.
    *
    * @see \Drupal\Component\Utility\Unicode::validateUtf8()
-   * @see \Drupal\Component\Utility\SafeMarkup
+   * @see \Drupal\Component\Utility\SafeMarkup::xssFilter()
    *
    * @ingroup sanitization
    */
@@ -83,7 +88,7 @@ class Xss {
     // for output. All other known XSS vectors have been filtered out by this
     // point and any HTML tags remaining will have been deliberately allowed, so
     // it is acceptable to call SafeMarkup::set() on the resultant string.
-    return SafeMarkup::set(preg_replace_callback('%
+    return preg_replace_callback('%
       (
       <(?=[^a-zA-Z!/])  # a lone <
       |                 # or
@@ -92,7 +97,7 @@ class Xss {
       <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
       |                 # or
       >                 # just a >
-      )%x', $splitter, $string));
+      )%x', $splitter, $string);
   }
 
   /**
@@ -103,6 +108,13 @@ class Xss {
    * is desired (so \Drupal\Component\Utility\SafeMarkup::checkPlain() is
    * not acceptable).
    *
+   * This method is preferred to
+   * \Drupal\Component\Utility\SafeMarkup::xssFilter() when the result is
+   * not being used directly in the rendering system (for example, when its
+   * result is being combined with other strings before rendering). This avoids
+   * bloating the safe string list with partial strings if the whole result will
+   * be marked safe.
+   *
    * Allows all tags that can be used inside an HTML body, save
    * for scripts and styles.
    *
@@ -111,6 +123,12 @@ class Xss {
    *
    * @return string
    *   The filtered string.
+   *
+   * @ingroup sanitization
+   *
+   * @see \Drupal\Component\Utility\SafeMarkup::xssFilter()
+   * @see \Drupal\Component\Utility\Xss::getAdminTagList()
+   *
    */
   public static function filterAdmin($string) {
     return static::filter($string, static::$adminTags);
@@ -317,6 +335,16 @@ class Xss {
    */
   protected static function needsRemoval($html_tags, $elem) {
     return !isset($html_tags[strtolower($elem)]);
+  }
+
+  /**
+   * Gets the list of html tags allowed by Xss::filterAdmin().
+   *
+   * @return array
+   *   The list of html tags allowed by filterAdmin().
+   */
+  public static function getAdminTagList() {
+    return static::$adminTags;
   }
 
 }

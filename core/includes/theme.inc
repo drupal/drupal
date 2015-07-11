@@ -1350,7 +1350,7 @@ function template_preprocess_page(&$variables) {
   $variables['language']          = $language_interface;
   $variables['logo']              = theme_get_setting('logo.url');
   $variables['site_name']         = (theme_get_setting('features.name') ? SafeMarkup::checkPlain($site_config->get('name')) : '');
-  $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
+  $variables['site_slogan']['#markup'] = (theme_get_setting('features.slogan') ? $site_config->get('slogan') : '');
 
   // An exception might be thrown.
   try {

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Plugin\Block;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -173,7 +174,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     );
 
     $build['site_slogan'] = array(
-      '#markup' => Xss::filterAdmin($site_config->get('slogan')),
+      '#markup' => $site_config->get('slogan'),
       '#access' => $this->configuration['use_site_slogan'],
     );
 

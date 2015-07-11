@@ -301,7 +301,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
           $table_form['enabled'][$method_id]['#attributes'] = array('disabled' => 'disabled');
         }
 
-        $table_form['description'][$method_id] = array('#markup' => Xss::filterAdmin($method['description']));
+        $table_form['description'][$method_id] = array('#markup' => $method['description']);
 
         $config_op = array();
         if (isset($method['config_route_name'])) {

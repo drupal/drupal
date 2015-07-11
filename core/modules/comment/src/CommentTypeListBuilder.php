@@ -46,7 +46,7 @@ class CommentTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['type'] = SafeMarkup::checkPlain($entity->label());
-    $row['description'] = Xss::filterAdmin($entity->getDescription());
+    $row['description']['data'] = ['#markup' => $entity->getDescription()];
     return $row + parent::buildRow($entity);
   }
 

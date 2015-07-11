@@ -353,7 +353,10 @@ function _filter_tips($format_id, $long = FALSE) {
       if ($filter->status) {
         $tip = $filter->tips($long);
         if (isset($tip)) {
-          $tips[$format->label()][$name] = array('tip' => $tip, 'id' => $name);
+          $tips[$format->label()][$name] = array(
+            'tip' => array('#markup' => $tip),
+            'id' => $name,
+          );
         }
       }
     }
@@ -430,7 +433,6 @@ function template_preprocess_filter_tips(&$variables) {
   foreach ($variables['tips'] as $name => $tiplist) {
     foreach ($tiplist as $tip_key => $tip) {
       $tiplist[$tip_key]['attributes'] = new Attribute();
-      $tiplist[$tip_key]['tip'] = Xss::filterAdmin($tiplist[$tip_key]['tip']);
     }
 
     $variables['tips'][$name] = array(

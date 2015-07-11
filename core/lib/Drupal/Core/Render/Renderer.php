@@ -393,7 +393,7 @@ class Renderer implements RendererInterface {
     if (isset($elements['#markup'])) {
       // @todo Decide how to support non-HTML in the render API in
       //   https://www.drupal.org/node/2501313.
-      $elements['#markup'] = SafeMarkup::checkAdminXss($elements['#markup']);
+      $elements['#markup'] = $this->xssFilterAdminIfUnsafe($elements['#markup']);
     }
 
     // Assume that if #theme is set it represents an implemented hook.
@@ -407,7 +407,7 @@ class Renderer implements RendererInterface {
       );
       foreach ($markup_keys as $key) {
         if (!empty($elements[$key]) && is_scalar($elements[$key])) {
-          $elements[$key] = SafeMarkup::checkAdminXss($elements[$key]);
+          $elements[$key] = $this->xssFilterAdminIfUnsafe($elements[$key]);
         }
       }
     }
@@ -493,8 +493,8 @@ class Renderer implements RendererInterface {
     // with how render cached output gets stored. This ensures that placeholder
     // replacement logic gets the same data to work with, no matter if #cache is
     // disabled, #cache is enabled, there is a cache hit or miss.
-    $prefix = isset($elements['#prefix']) ? SafeMarkup::checkAdminXss($elements['#prefix']) : '';
-    $suffix = isset($elements['#suffix']) ? SafeMarkup::checkAdminXss($elements['#suffix']) : '';
+    $prefix = isset($elements['#prefix']) ? $this->xssFilterAdminIfUnsafe($elements['#prefix']) : '';
+    $suffix = isset($elements['#suffix']) ? $this->xssFilterAdminIfUnsafe($elements['#suffix']) : '';
 
     $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
@@ -649,6 +649,25 @@ class Renderer implements RendererInterface {
     $meta_a = CacheableMetadata::createFromRenderArray($elements);
     $meta_b = CacheableMetadata::createFromObject($dependency);
     $meta_a->merge($meta_b)->applyTo($elements);
+  }
+
+  /**
+   * Applies a very permissive XSS/HTML filter for admin-only use.
+   *
+   * Note: This method only filters if $string is not marked safe already. This
+   * ensures that HTML intended for display is not filtered.
+   *
+   * @param string $string
+   *   A string.
+   *
+   * @return string
+   *   The escaped string. If SafeMarkup::isSafe($string) returns TRUE, it won't
+   *   be escaped again.
+   */
+  protected function xssFilterAdminIfUnsafe($string) {
+    // @todo https://www.drupal.org/node/2506581 replace with
+    //   SafeMarkup::isSafe() and Xss::filterAdmin().
+    return SafeMarkup::checkAdminXss($string);
   }
 
 }

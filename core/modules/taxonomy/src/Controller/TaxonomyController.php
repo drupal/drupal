@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Controller;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\taxonomy\TermInterface;
@@ -54,7 +55,7 @@ class TaxonomyController extends ControllerBase {
    *   The term label.
    */
   public function vocabularyTitle(VocabularyInterface $taxonomy_vocabulary) {
-    return Xss::filter($taxonomy_vocabulary->label());
+    return SafeMarkup::xssFilter($taxonomy_vocabulary->label());
   }
 
   /**
@@ -67,7 +68,7 @@ class TaxonomyController extends ControllerBase {
    *   The term label.
    */
   public function termTitle(TermInterface $taxonomy_term) {
-    return Xss::filter($taxonomy_term->getName());
+    return SafeMarkup::xssFilter($taxonomy_term->getName());
   }
 
 }

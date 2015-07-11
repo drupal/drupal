@@ -8,6 +8,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -50,7 +51,7 @@ class HtmlTag extends RenderElement {
    * pre-render callback being a #markup element, it is not passed through
    * \Drupal\Component\Utility\Xss::filterAdmin(). This is because it is marked
    * safe here, which causes
-   * \Drupal\Component\Utility\SafeMarkup::checkAdminXss() to regard it as safe
+   * \Drupal\Core\Render\Renderer::xssFilterAdminIfUnsafe() to regard it as safe
    * and bypass the call to \Drupal\Component\Utility\Xss::filterAdmin().
    *
    * @param array $element
@@ -161,7 +162,7 @@ class HtmlTag extends RenderElement {
     }
     else {
       // The IE expression might contain some user input data.
-      $expression = SafeMarkup::checkAdminXss($browsers['IE']);
+      $expression = Xss::filterAdmin($browsers['IE']);
     }
 
     // If the #prefix and #suffix properties are used, wrap them with
@@ -173,8 +174,8 @@ class HtmlTag extends RenderElement {
 
     // Ensure what we are dealing with is safe.
     // This would be done later anyway in drupal_render().
-    $prefix = isset($elements['#prefix']) ? SafeMarkup::checkAdminXss($elements['#prefix']) : '';
-    $suffix = isset($elements['#suffix']) ? SafeMarkup::checkAdminXss($elements['#suffix']) : '';
+    $prefix = isset($elements['#prefix']) ? Xss::filterAdmin($elements['#prefix']) : '';
+    $suffix = isset($elements['#suffix']) ? Xss::filterAdmin($elements['#suffix']) : '';
 
     // Now calling SafeMarkup::set is safe, because we ensured the
     // data coming in was at least admin escaped.

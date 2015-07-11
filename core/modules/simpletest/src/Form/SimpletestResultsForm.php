@@ -313,7 +313,7 @@ class SimpletestResultsForm extends FormBase {
       $rows = array();
       foreach ($assertions as $assertion) {
         $row = array();
-        $row[] = SafeMarkup::checkAdminXss($assertion->message);
+        $row[] = ['data' => ['#markup' => $assertion->message]];
         $row[] = $assertion->message_group;
         $row[] = \Drupal::service('file_system')->basename(($assertion->file));
         $row[] = $assertion->line;

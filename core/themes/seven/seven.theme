@@ -75,7 +75,6 @@ function seven_preprocess_node_add_list(&$variables) {
     /** @var \Drupal\node\NodeTypeInterface $type */
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = SafeMarkup::checkPlain($type->label());
-      $variables['types'][$type->id()]['description'] = Xss::filterAdmin($type->getDescription());
       $variables['types'][$type->id()]['url'] = \Drupal::url('node.add', array('node_type' => $type->id()));
     }
   }
@@ -85,13 +84,12 @@ function seven_preprocess_node_add_list(&$variables) {
  * Implements hook_preprocess_HOOK() for block content add list templates.
  *
  * Displays the list of available custom block types for creation, adding
- * separate variables for the label, description, and url.
+ * separate variables for the label and url.
  */
 function seven_preprocess_block_content_add_list(&$variables) {
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = SafeMarkup::checkPlain($type->label());
-      $variables['types'][$type->id()]['description'] = Xss::filterAdmin($type->getDescription());
       $options = array('query' => \Drupal::request()->query->all());
       $variables['types'][$type->id()]['url'] = \Drupal::url('block_content.add_form', array('block_content_type' => $type->id()), $options);
     }

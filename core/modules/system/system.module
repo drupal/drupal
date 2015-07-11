@@ -802,7 +802,7 @@ function system_preprocess_block(&$variables) {
       }
       $variables['site_slogan'] = '';
       if ($variables['content']['site_slogan']['#access'] && $variables['content']['site_slogan']['#markup']) {
-        $variables['site_slogan'] = $variables['content']['site_slogan']['#markup'];
+        $variables['site_slogan']['#markup'] = $variables['content']['site_slogan']['#markup'];
       }
       break;
 

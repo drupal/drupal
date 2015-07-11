@@ -58,7 +58,7 @@ function template_preprocess_admin_block_content(&$variables) {
     foreach ($variables['content'] as $key => $item) {
       $variables['content'][$key]['link'] = \Drupal::l($item['title'], $item['url']);
       if (!$variables['compact'] && isset($item['description'])) {
-        $variables['content'][$key]['description'] = Xss::filterAdmin($item['description']);
+        $variables['content'][$key]['description'] = ['#markup' => $item['description']];
       }
       else {
         $variables['content'][$key]['description'] = FALSE;
