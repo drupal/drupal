@@ -170,7 +170,7 @@ class SafeMarkup {
    *
    * If Twig receives a value that is not marked as safe then it will
    * automatically encode special characters in a plain-text string for display
-   * as HTML. Therefore, SafeMarkup::filterXss() should only be used when the
+   * as HTML. Therefore, SafeMarkup::xssFilter() should only be used when the
    * string might contain HTML that needs to be rendered properly by the
    * browser.
    *
