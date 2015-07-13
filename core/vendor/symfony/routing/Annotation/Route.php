@@ -59,7 +59,7 @@ class Route
      */
     public function setPattern($pattern)
     {
-        trigger_error('The '.__METHOD__.' method is deprecated since version 2.2 and will be removed in 3.0. Use the setPath() method instead and use the "path" option instead of the "pattern" option in the route definition.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.2 and will be removed in 3.0. Use the setPath() method instead and use the "path" option instead of the "pattern" option in the route definition.', E_USER_DEPRECATED);
 
         $this->path = $pattern;
     }
@@ -69,7 +69,7 @@ class Route
      */
     public function getPattern()
     {
-        trigger_error('The '.__METHOD__.' method is deprecated since version 2.2 and will be removed in 3.0. Use the getPath() method instead and use the "path" option instead of the "pattern" option in the route definition.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.2 and will be removed in 3.0. Use the getPath() method instead and use the "path" option instead of the "pattern" option in the route definition.', E_USER_DEPRECATED);
 
         return $this->path;
     }
@@ -106,6 +106,22 @@ class Route
 
     public function setRequirements($requirements)
     {
+        if (isset($requirements['_method'])) {
+            if (0 === count($this->methods)) {
+                $this->methods = explode('|', $requirements['_method']);
+            }
+
+            @trigger_error('The "_method" requirement is deprecated since version 2.2 and will be removed in 3.0. Use the "methods" option instead.', E_USER_DEPRECATED);
+        }
+
+        if (isset($requirements['_scheme'])) {
+            if (0 === count($this->schemes)) {
+                $this->schemes = explode('|', $requirements['_scheme']);
+            }
+
+            @trigger_error('The "_scheme" requirement is deprecated since version 2.2 and will be removed in 3.0. Use the "schemes" option instead.', E_USER_DEPRECATED);
+        }
+
         $this->requirements = $requirements;
     }
 

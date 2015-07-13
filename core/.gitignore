@@ -14,3 +14,6 @@ vendor/symfony/translation/Symfony/Component/Translation/*
 
 # PHPUnit provides some binary dependencies that are already available.
 vendor/phpunit/phpunit/build/dependencies
+
+# The PHAR file below contains CRLF characters that cause a problem with PIFR.
+vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar

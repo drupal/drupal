@@ -982,7 +982,13 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
         if ($callable = $definition->getConfigurator()) {
             if (is_array($callable)) {
-                $callable[0] = $callable[0] instanceof Reference ? $this->get((string) $callable[0]) : $parameterBag->resolveValue($callable[0]);
+                $callable[0] = $parameterBag->resolveValue($callable[0]);
+
+                if ($callable[0] instanceof Reference) {
+                    $callable[0] = $this->get((string) $callable[0], $callable[0]->getInvalidBehavior());
+                } elseif ($callable[0] instanceof Definition) {
+                    $callable[0] = $this->createService($callable[0], null);
+                }
             }
 
             if (!is_callable($callable)) {
@@ -1127,7 +1133,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     private function synchronize($id)
     {
         if ('request' !== $id) {
-            trigger_error('The '.__METHOD__.' method is deprecated in version 2.7 and will be removed in version 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated in version 2.7 and will be removed in version 3.0.', E_USER_DEPRECATED);
         }
 
         foreach ($this->definitions as $definitionId => $definition) {
