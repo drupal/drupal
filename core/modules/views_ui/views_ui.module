@@ -8,12 +8,8 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
-use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Component\Utility\Xss;
 
 /**
@@ -97,7 +93,6 @@ function views_ui_theme() {
     'views_ui_build_group_filter_form' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
-      'function' => 'theme_views_ui_build_group_filter_form',
     ),
 
     // On behalf of a plugin

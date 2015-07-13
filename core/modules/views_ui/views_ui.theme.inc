@@ -65,35 +65,18 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
 }
 
 /**
- * Theme the build group filter form.
+ * Prepares variables for Views UI build group filter form templates.
  *
- * @ingroup themeable
+ * Default template: views-ui-build-group-filter-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
  */
-function theme_views_ui_build_group_filter_form($variables) {
+function template_preprocess_views_ui_build_group_filter_form(&$variables) {
   $form = $variables['form'];
-  $more = drupal_render($form['more']);
 
-  $output = drupal_render($form['form_description']);
-  $output .= drupal_render($form['expose_button']);
-  $output .= drupal_render($form['group_button']);
-  if (isset($form['required'])) {
-    $output .= drupal_render($form['required']);
-  }
-
-  $output .= drupal_render($form['operator']);
-  $output .= drupal_render($form['value']);
-
-  $output .= '<div class="views-left-40">';
-  $output .= drupal_render($form['optional']);
-  $output .= drupal_render($form['remember']);
-  $output .= '</div>';
-
-  $output .= '<div class="views-right-60">';
-  $output .= drupal_render($form['widget']);
-  $output .= drupal_render($form['label']);
-  $output .= drupal_render($form['description']);
-  $output .= '</div>';
-
+  // Prepare table of options.
   $header = array(
     t('Default'),
     t('Weight'),
@@ -103,14 +86,14 @@ function theme_views_ui_build_group_filter_form($variables) {
     t('Operations'),
   );
 
+  // Prepare default selectors.
   $form_state = new FormState();
   $form['default_group'] = Element\Radios::processRadios($form['default_group'], $form_state, $form);
   $form['default_group_multiple'] = Element\Checkboxes::processCheckboxes($form['default_group_multiple'], $form_state, $form);
   $form['default_group']['All']['#title'] = '';
 
-  hide($form['default_group_multiple']['All']);
   $rows[] = array(
-    drupal_render($form['default_group']['All']),
+    ['data' => $form['default_group']['All']],
     '',
     array(
       'data' => \Drupal::config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? t('&lt;Any&gt;') : t('- Any -'),
@@ -118,6 +101,9 @@ function theme_views_ui_build_group_filter_form($variables) {
       'class' => array('class' => 'any-default-radios-row'),
     ),
   );
+  // Remove the 'All' default_group form element because it's added to the
+  // table row.
+  unset($variables['form']['default_group']['All']);
 
   foreach (Element::children($form['group_items']) as $group_id) {
     $form['group_items'][$group_id]['value']['#title'] = '';
@@ -125,6 +111,10 @@ function theme_views_ui_build_group_filter_form($variables) {
       $form['default_group'][$group_id],
       $form['default_group_multiple'][$group_id],
     ];
+    // Remove these fields from the form since they are moved into the table.
+    unset($variables['form']['default_group'][$group_id]);
+    unset($variables['form']['default_group_multiple'][$group_id]);
+
     $link = [
       '#type' => 'link',
       '#url' => Url::fromRoute('<none>', [], [
@@ -145,15 +135,15 @@ function theme_views_ui_build_group_filter_form($variables) {
     $remove = [$form['group_items'][$group_id]['remove'], $link];
     $data = array(
       'default' => ['data' => $default],
-      'weight' => drupal_render($form['group_items'][$group_id]['weight']),
-      'title' => drupal_render($form['group_items'][$group_id]['title']),
-      'operator' => drupal_render($form['group_items'][$group_id]['operator']),
-      'value' => drupal_render($form['group_items'][$group_id]['value']),
+      'weight' => ['data' => $form['group_items'][$group_id]['weight']],
+      'title' => ['data' => $form['group_items'][$group_id]['title']],
+      'operator' => ['data' => $form['group_items'][$group_id]['operator']],
+      'value' => ['data' => $form['group_items'][$group_id]['value']],
       'remove' => ['data' => $remove],
     );
     $rows[] = array('data' => $data, 'id' => 'views-row-' . $group_id, 'class' => array('draggable'));
   }
-  $table = array(
+  $variables['table'] = array(
     '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
@@ -170,11 +160,8 @@ function theme_views_ui_build_group_filter_form($variables) {
     ),
   );
 
-  // Render the "Add another item" button below the table.
-  $add_another = drupal_render($form['add_group']);
-  $render_form = drupal_render_children($form);
-
-  return $output . $render_form . drupal_render($table) . $add_another . $more;
+  // Hide fields used in table.
+  unset($variables['form']['group_items']);
 }
 
 /**
