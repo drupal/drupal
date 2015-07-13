@@ -48,7 +48,6 @@ class FormTestStoragePageCacheForm extends FormBase {
     );
 
     $form['#after_build'] = array(array($this, 'form_test_storage_page_cache_old_build_id'));
-    $form_state->setCached();
 
     return $form;
   }
@@ -68,6 +67,17 @@ class FormTestStoragePageCacheForm extends FormBase {
    */
   function form_test_storage_page_cache_rebuild($form, FormStateInterface $form_state) {
     $form_state->setRebuild();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Test using form cache when re-displaying a form due to validation
+    // errors.
+    if ($form_state->hasAnyErrors()) {
+      $form_state->setCached();
+    }
   }
 
   /**

@@ -283,7 +283,7 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * Tests the rebuildForm() method.
+   * Tests the rebuildForm() method for a POST submission.
    */
   public function testRebuildForm() {
     $form_id = 'test_form_id';
@@ -303,6 +303,9 @@ class FormBuilderTest extends FormTestBase {
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
     $original_build_id = $form['#build_id'];
 
+    $this->request->setMethod('POST');
+    $form_state->setRequestMethod('POST');
+
     // Rebuild the form, and assert that the build ID has not changed.
     $form_state->setRebuild();
     $input['form_id'] = $form_id;
@@ -310,11 +313,51 @@ class FormBuilderTest extends FormTestBase {
     $form_state->addRebuildInfo('copy', ['#build_id' => TRUE]);
     $this->formBuilder->processForm($form_id, $form, $form_state);
     $this->assertSame($original_build_id, $form['#build_id']);
+    $this->assertTrue($form_state->isCached());
 
     // Rebuild the form again, and assert that there is a new build ID.
     $form_state->setRebuildInfo([]);
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertNotSame($original_build_id, $form['#build_id']);
+    $this->assertTrue($form_state->isCached());
+  }
+
+  /**
+   * Tests the rebuildForm() method for a GET submission.
+   */
+  public function testRebuildFormOnGetRequest() {
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
+
+    // The form will be built four times.
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->exactly(2))
+      ->method('getFormId')
+      ->will($this->returnValue($form_id));
+    $form_arg->expects($this->exactly(4))
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+
+    // Do an initial build of the form and track the build ID.
+    $form_state = new FormState();
+    $form_state->setMethod('GET');
+    $form = $this->formBuilder->buildForm($form_arg, $form_state);
+    $original_build_id = $form['#build_id'];
+
+    // Rebuild the form, and assert that the build ID has not changed.
+    $form_state->setRebuild();
+    $input['form_id'] = $form_id;
+    $form_state->setUserInput($input);
+    $form_state->addRebuildInfo('copy', ['#build_id' => TRUE]);
+    $this->formBuilder->processForm($form_id, $form, $form_state);
+    $this->assertSame($original_build_id, $form['#build_id']);
+    $this->assertFalse($form_state->isCached());
+
+    // Rebuild the form again, and assert that there is a new build ID.
+    $form_state->setRebuildInfo([]);
+    $form = $this->formBuilder->buildForm($form_arg, $form_state);
+    $this->assertNotSame($original_build_id, $form['#build_id']);
+    $this->assertFalse($form_state->isCached());
   }
 
   /**
@@ -338,6 +381,7 @@ class FormBuilderTest extends FormTestBase {
     // Do an initial build of the form and track the build ID.
     $form_state = (new FormState())
       ->addBuildInfo('files', [['module' => 'node', 'type' => 'pages.inc']])
+      ->setRequestMethod('POST')
       ->setCached();
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
 
@@ -407,6 +451,7 @@ class FormBuilderTest extends FormTestBase {
       ->with($form_build_id);
 
     $form_state = new FormState();
+    $form_state->setRequestMethod('POST');
     $form_state->setCached();
     $this->simulateFormSubmission($form_id, $form_arg, $form_state);
   }

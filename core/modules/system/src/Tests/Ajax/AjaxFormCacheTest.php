@@ -37,15 +37,6 @@ class AjaxFormCacheTest extends AjaxTestBase {
 
     // The number of cache entries should not have changed.
     $this->assertEqual(0, count($key_value_expirable->getAll()));
-
-    // Visit a form that is explicitly cached, 3 times.
-    $cached_form_url = Url::fromRoute('ajax_forms_test.cached_form');
-    $this->drupalGet($cached_form_url);
-    $this->drupalGet($cached_form_url);
-    $this->drupalGet($cached_form_url);
-
-    // The number of cache entries should be exactly 3.
-    $this->assertEqual(3, count($key_value_expirable->getAll()));
   }
 
   /**

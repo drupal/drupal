@@ -1,12 +1,3 @@
-system.ajax:
-  path: '/system/ajax'
-  defaults:
-    _controller: '\Drupal\system\Controller\FormAjaxController::content'
-  options:
-    _theme: ajax_base_page
-  requirements:
-    _access: 'TRUE'
-
 system.401:
   path: '/system/401'
   defaults:

@@ -15,12 +15,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Defines a theme negotiator that deals with the active theme on ajax requests.
  *
- * Many different pages can invoke an Ajax request to system/ajax or another
- * generic Ajax path. It is almost always desired for an Ajax response to be
- * rendered using the same theme as the base page, because most themes are built
- * with the assumption that they control the entire page, so if the CSS for two
- * themes are both loaded for a given page, they may conflict with each other.
- * For example, Bartik is Drupal's default theme, and Seven is Drupal's default
+ * Many different pages can invoke an Ajax request to a generic Ajax path. It is
+ * almost always desired for an Ajax response to be rendered using the same
+ * theme as the base page, because most themes are built with the assumption
+ * that they control the entire page, so if the CSS for two themes are both
+ * loaded for a given page, they may conflict with each other. For example,
+ * Bartik is Drupal's default theme, and Seven is Drupal's default
  * administration theme. Depending on whether the "Use the administration theme
  * when editing or creating content" checkbox is checked, the node edit form may
  * be displayed in either theme, but the Ajax response to the Field module's

@@ -422,6 +422,11 @@ class FormStateTest extends UnitTestCase {
       'cache' => $cache_key,
       'no_cache' => $no_cache_key,
     ]);
+
+    $form_state->setMethod('POST');
+    $this->assertSame($expected, $form_state->isCached());
+
+    $form_state->setMethod('GET');
     $this->assertSame($expected, $form_state->isCached());
   }
 
@@ -461,6 +466,28 @@ class FormStateTest extends UnitTestCase {
       FALSE,
     ];
     return $data;
+  }
+
+  /**
+   * @covers ::setCached
+   */
+  public function testSetCachedPost() {
+    $form_state = new FormState();
+    $form_state->setRequestMethod('POST');
+    $form_state->setCached();
+    $this->assertTrue($form_state->isCached());
+  }
+
+  /**
+   * @covers ::setCached
+   *
+   * @expectedException \LogicException
+   * @expectedExceptionMessage Form state caching on GET requests is not allowed.
+   */
+  public function testSetCachedGet() {
+    $form_state = new FormState();
+    $form_state->setRequestMethod('GET');
+    $form_state->setCached();
   }
 
   /**

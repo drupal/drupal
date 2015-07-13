@@ -35,7 +35,7 @@ class AjaxFormPageCacheTest extends AjaxTestBase {
   }
 
   /**
-   * Create a simple form, then POST to system/ajax to change to it.
+   * Create a simple form, then submit the form via AJAX to change to it.
    */
   public function testSimpleAJAXFormValue() {
    $this->drupalGet('ajax_forms_test_get_form');

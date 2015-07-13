@@ -1591,17 +1591,14 @@ abstract class WebTestBase extends TestBase {
    *
    *   This function can also be called to emulate an Ajax submission. In this
    *   case, this value needs to be an array with the following keys:
-   *   - path: A path to submit the form values to for Ajax-specific processing,
-   *     which is likely different than the $path parameter used for retrieving
-   *     the initial form. Defaults to 'system/ajax'.
-   *   - triggering_element: If the value for the 'path' key is 'system/ajax' or
-   *     another generic Ajax processing path, this needs to be set to the name
-   *     of the element. If the name doesn't identify the element uniquely, then
-   *     this should instead be an array with a single key/value pair,
-   *     corresponding to the element name and value. The callback for the
-   *     generic Ajax processing path uses this to find the #ajax information
-   *     for the element, including which specific callback to use for
-   *     processing the request.
+   *   - path: A path to submit the form values to for Ajax-specific processing.
+   *   - triggering_element: If the value for the 'path' key is a generic Ajax
+   *     processing path, this needs to be set to the name of the element. If
+   *     the name doesn't identify the element uniquely, then this should
+   *     instead be an array with a single key/value pair, corresponding to the
+   *     element name and value. The \Drupal\Core\Form\FormAjaxResponseBuilder
+   *     uses this to find the #ajax information for the element, including
+   *     which specific callback to use for processing the request.
    *
    *   This can also be set to NULL in order to emulate an Internet Explorer
    *   submission of a form with a single text field, and pressing ENTER in that
@@ -1649,7 +1646,10 @@ abstract class WebTestBase extends TestBase {
         $submit_matches = $this->handleForm($post, $edit, $upload, $ajax ? NULL : $submit, $form);
         $action = isset($form['action']) ? $this->getAbsoluteUrl((string) $form['action']) : $this->getUrl();
         if ($ajax) {
-          $action = $this->getAbsoluteUrl(!empty($submit['path']) ? $submit['path'] : 'system/ajax');
+          if (empty($submit['path'])) {
+            throw new \Exception('No #ajax path specified.');
+          }
+          $action = $this->getAbsoluteUrl($submit['path']);
           // Ajax callbacks verify the triggering element if necessary, so while
           // we may eventually want extra code that verifies it in the
           // handleForm() function, it's not currently a requirement.
@@ -1735,8 +1735,7 @@ abstract class WebTestBase extends TestBase {
    *   and the value is the button label. i.e.) array('op' => t('Refresh')).
    * @param $ajax_path
    *   (optional) Override the path set by the Ajax settings of the triggering
-   *   element. In the absence of both the triggering element's Ajax path and
-   *   $ajax_path 'system/ajax' will be used.
+   *   element.
    * @param $options
    *   (optional) Options to be forwarded to the url generator.
    * @param $headers
@@ -1807,7 +1806,7 @@ abstract class WebTestBase extends TestBase {
     $extra_post = '&' . $this->serializePostValues($extra_post);
 
     // Unless a particular path is specified, use the one specified by the
-    // Ajax settings, or else 'system/ajax'.
+    // Ajax settings.
     if (!isset($ajax_path)) {
       if (isset($ajax_settings['url'])) {
         // In order to allow to set for example the wrapper envelope query
@@ -1824,10 +1823,12 @@ abstract class WebTestBase extends TestBase {
           $parsed_url['path']
         );
       }
-      else {
-        $ajax_path = 'system/ajax';
-      }
     }
+
+    if (empty($ajax_path)) {
+      throw new \Exception('No #ajax path specified.');
+    }
+
     $ajax_path = $this->container->get('unrouted_url_assembler')->assemble('base://' . $ajax_path, $options);
 
     // Submit the POST request.

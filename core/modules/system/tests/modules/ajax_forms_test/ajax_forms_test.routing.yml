@@ -30,10 +30,3 @@ ajax_forms_test.lazy_load_form:
   requirements:
     _access: 'TRUE'
 
-ajax_forms_test.cached_form:
-  path: '/ajax_forms_test_cached_form'
-  defaults:
-    _title: 'AJAX forms cached form test'
-    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestCachedForm'
-  requirements:
-    _access: 'TRUE'

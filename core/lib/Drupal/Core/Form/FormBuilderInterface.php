@@ -108,9 +108,7 @@ interface FormBuilderInterface {
    * form workflow, to be returned for rendering.
    *
    * Ajax form submissions are almost always multi-step workflows, so that is
-   * one common use-case during which form rebuilding occurs. See
-   * Drupal\system\FormAjaxController::content() for more information about
-   * creating Ajax-enabled forms.
+   * one common use-case during which form rebuilding occurs.
    *
    * @param string $form_id
    *   The unique string identifying the desired form. If a function with that
@@ -130,7 +128,6 @@ interface FormBuilderInterface {
    *   The newly built form.
    *
    * @see self::processForm()
-   * @see \Drupal\system\FormAjaxController::content()
    */
   public function rebuildForm($form_id, FormStateInterface &$form_state, $old_form = NULL);
 

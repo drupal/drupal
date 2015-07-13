@@ -97,6 +97,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    */
   public function testQueueSerialization() {
     $form_state = new FormState();
+    $form_state->setRequestMethod('POST');
     $form_state->setCached();
     $form_builder = $this->container->get('form_builder');
     $form_id = $form_builder->getFormId($this, $form_state);

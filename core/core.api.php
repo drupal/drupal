@@ -2054,12 +2054,6 @@ function hook_validation_constraint_alter(array &$definitions) {
  * an array. Here are the details of its elements, all of which are optional:
  * - callback: The callback to invoke to handle the server side of the
  *   Ajax event. More information on callbacks is below in @ref sub_callback.
- * - path: The URL path to use for the request. If omitted, defaults to
- *   'system/ajax', which invokes the default Drupal Ajax processing (this will
- *   call the callback supplied in the 'callback' element). If you supply a
- *   path, you must set up a routing entry to handle the request yourself and
- *   return output described in @ref sub_callback below. See the
- *   @link menu Routing topic @endlink for more information on routing.
  * - wrapper: The HTML 'id' attribute of the area where the content returned by
  *   the callback should be placed. Note that callbacks have a choice of
  *   returning content or JavaScript commands; 'wrapper' is used for content
@@ -2085,6 +2079,13 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   - message: Translated message to display.
  *   - url: For a bar progress indicator, URL path for determining progress.
  *   - interval: For a bar progress indicator, how often to update it.
+ * - url: A \Drupal\Core\Url to which to submit the Ajax request. If omitted,
+ *   defaults to either the same URL as the form or link destination is for
+ *   someone with JavaScript disabled, or a slightly modified version (e.g.,
+ *   with a query parameter added, removed, or changed) of that URL if
+ *   necessary to support Drupal's content negotiation. It is recommended to
+ *   omit this key and use Drupal's content negotiation rather than using
+ *   substantially different URLs between Ajax and non-Ajax.
  *
  * @subsection sub_callback Setting up a callback to process Ajax
  * Once you have set up your form to trigger an Ajax response (see @ref sub_form

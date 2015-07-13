@@ -7,13 +7,12 @@
 
 namespace Drupal\file\Controller;
 
-use Drupal\system\Controller\FormAjaxController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Defines a controller to respond to file widget AJAX requests.
  */
-class FileWidgetAjaxController extends FormAjaxController {
+class FileWidgetAjaxController {
 
   /**
    * Returns the progress status for a file upload process.

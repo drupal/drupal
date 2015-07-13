@@ -141,16 +141,29 @@ class FormState implements FormStateInterface {
   /**
    * The HTTP form method to use for finding the input for this form.
    *
-   * May be 'post' or 'get'. Defaults to 'post'. Note that 'get' method forms do
+   * May be 'POST' or 'GET'. Defaults to 'POST'. Note that 'GET' method forms do
    * not use form ids so are always considered to be submitted, which can have
-   * unexpected effects. The 'get' method should only be used on forms that do
-   * not change data, as that is exclusively the domain of 'post.'
+   * unexpected effects. The 'GET' method should only be used on forms that do
+   * not change data, as that is exclusively the domain of 'POST.'
    *
    * This property is uncacheable.
    *
    * @var string
    */
-  protected $method = 'post';
+  protected $method = 'POST';
+
+  /**
+   * The HTTP method used by the request building or processing this form.
+   *
+   * May be any valid HTTP method. Defaults to 'GET', because even though
+   * $method is 'POST' for most forms, the form's initial build is usually
+   * performed as part of a GET request.
+   *
+   * This property is uncacheable.
+   *
+   * @var string
+   */
+  protected $requestMethod = 'GET';
 
   /**
    * If set to TRUE the original, unprocessed form structure will be cached,
@@ -475,6 +488,12 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function setCached($cache = TRUE) {
+    // Persisting $form_state is a side-effect disallowed during a "safe" HTTP
+    // method.
+    if ($cache && $this->isRequestMethodSafe()) {
+      throw new \LogicException(sprintf('Form state caching on %s requests is not allowed.', $this->requestMethod));
+    }
+
     $this->cache = (bool) $cache;
     return $this;
   }
@@ -567,6 +586,29 @@ class FormState implements FormStateInterface {
    */
   public function isMethodType($method_type) {
     return $this->method === strtoupper($method_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRequestMethod($method) {
+    $this->requestMethod = strtoupper($method);
+    return $this;
+  }
+
+  /**
+   * Checks whether the request method is a "safe" HTTP method.
+   *
+   * http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1 defines
+   * GET and HEAD as "safe" methods, meaning they SHOULD NOT have side-effects,
+   * such as persisting $form_state changes.
+   *
+   * @return bool
+   *
+   * @see \Symfony\Component\HttpFoundation\Request::isMethodSafe()
+   */
+  protected function isRequestMethodSafe() {
+    return in_array($this->requestMethod, array('GET', 'HEAD'));
   }
 
   /**

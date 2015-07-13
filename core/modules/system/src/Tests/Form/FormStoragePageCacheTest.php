@@ -53,7 +53,7 @@ class FormStoragePageCacheTest extends WebTestBase {
     // Trigger validation error by submitting an empty title.
     $edit = ['title' => ''];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText($build_id_initial, 'Old build id on the page');
+    $this->assertText('No old build id', 'No old build id on the page');
     $build_id_first_validation = $this->getFormBuildId();
     $this->assertNotEqual($build_id_initial, $build_id_first_validation, 'Build id changes when form validation fails');
 
@@ -74,7 +74,7 @@ class FormStoragePageCacheTest extends WebTestBase {
     // Trigger validation error by submitting an empty title.
     $edit = ['title' => ''];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText($build_id_initial, 'Old build id is initial build id');
+    $this->assertText('No old build id', 'No old build id on the page');
     $build_id_from_cache_first_validation = $this->getFormBuildId();
     $this->assertNotEqual($build_id_initial, $build_id_from_cache_first_validation, 'Build id changes when form validation fails');
     $this->assertNotEqual($build_id_first_validation, $build_id_from_cache_first_validation, 'Build id from first user is not reused');
@@ -96,10 +96,15 @@ class FormStoragePageCacheTest extends WebTestBase {
     $this->assertText('No old build id', 'No old build id on the page');
     $build_id_initial = $this->getFormBuildId();
 
-    // Trigger rebuild, should regenerate build id.
+    // Trigger rebuild, should regenerate build id. When a submit handler
+    // triggers a rebuild, the form is built twice in the same POST request,
+    // and during the second build, there is an old build ID, but because the
+    // form is not cached during the initial GET request, it is different from
+    // that initial build ID.
     $edit = ['title' => 'something'];
     $this->drupalPostForm(NULL, $edit, 'Rebuild');
-    $this->assertText($build_id_initial, 'Initial build id as old build id on the page');
+    $this->assertNoText('No old build id', 'There is no old build id on the page.');
+    $this->assertNoText($build_id_initial, 'The old build id is not the initial build id.');
     $build_id_first_rebuild = $this->getFormBuildId();
     $this->assertNotEqual($build_id_initial, $build_id_first_rebuild, 'Build id changes on first rebuild.');
 

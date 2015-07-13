@@ -57,7 +57,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
     );
 
     // This is for testing invalid callbacks that should return a 500 error in
-    // \Drupal\system\FormAjaxController::content().
+    // \Drupal\Core\Form\FormAjaxResponseBuilderInterface::buildResponse().
     $invalid_callbacks = array(
       'null' => NULL,
       'empty' => '',

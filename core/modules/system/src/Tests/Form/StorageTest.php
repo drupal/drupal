@@ -73,16 +73,19 @@ class StorageTest extends WebTestBase {
 
     // Use form rebuilding triggered by a submit button.
     $this->drupalPostForm(NULL, $edit, 'Continue submit');
+    // The first one is for the building of the form.
     $this->assertText('Form constructions: 2');
+    // The second one is for the rebuilding of the form.
+    $this->assertText('Form constructions: 3');
 
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
     $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
     $this->assertFieldByName('title', 'new', 'Values have been reset.');
-    $this->assertText('Form constructions: 3');
+    $this->assertText('Form constructions: 4');
 
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('Form constructions: 3');
+    $this->assertText('Form constructions: 4');
     $this->assertText('Title: new', 'The form storage has stored the values.');
   }
 
@@ -127,55 +130,6 @@ class StorageTest extends WebTestBase {
     // the values of the updated form storage.
     $this->drupalPostForm(NULL, array('title' => 'foo', 'value' => 'bar'), 'Save');
     $this->assertText("The thing has been changed.", 'The altered form storage value was updated in cache and taken over.');
-  }
-
-  /**
-   * Tests a form using form state without using 'storage' to pass data from the
-   * constructor to a submit handler. The data has to persist even when caching
-   * gets activated, what may happen when a modules alter the form and adds
-   * #ajax properties.
-   */
-  function testFormStatePersist() {
-    // Test the form one time with caching activated and one time without.
-    $run_options = array(
-      array(),
-      array('query' => array('cache' => 1)),
-    );
-    foreach ($run_options as $options) {
-      $this->drupalPostForm('form-test/state-persist', array(), t('Submit'), $options);
-      // The submit handler outputs the value in $form_state, assert it's there.
-      $this->assertText('State persisted.');
-
-      // Test it again, but first trigger a validation error, then test.
-      $this->drupalPostForm('form-test/state-persist', array('title' => ''), t('Submit'), $options);
-      $this->assertText(t('!name field is required.', array('!name' => 'title')));
-      // Submit the form again triggering no validation error.
-      $this->drupalPostForm(NULL, array('title' => 'foo'), t('Submit'), $options);
-      $this->assertText('State persisted.');
-
-      // Now post to the rebuilt form and verify it's still there afterwards.
-      $this->drupalPostForm(NULL, array('title' => 'bar'), t('Submit'), $options);
-      $this->assertText('State persisted.');
-    }
-  }
-
-  /**
-   * Verify that the form build-id remains the same when validation errors
-   * occur on a mutable form.
-   */
-  public function testMutableForm() {
-    // Request the form with 'cache' query parameter to enable form caching.
-    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
-    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertEqual(count($buildIdFields), 1, 'One form build id field on the page');
-    $buildId = (string) $buildIdFields[0]['value'];
-
-    // Trigger validation error by submitting an empty title.
-    $edit = ['title' => ''];
-    $this->drupalPostForm(NULL, $edit, 'Continue submit');
-
-    // Verify that the build-id did not change.
-    $this->assertFieldByName('form_build_id', $buildId, 'Build id remains the same when form validation fails');
   }
 
   /**

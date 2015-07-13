@@ -76,19 +76,6 @@ function _form_test_tableselect_get_data() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- *
- * @see form_test_state_persist()
- */
-function form_test_form_form_test_state_persist_alter(&$form, FormStateInterface $form_state) {
-  // Simulate a form alter implementation inserting form elements that enable
-  // caching of the form, e.g. elements having #ajax.
-  if (\Drupal::request()->get('cache')) {
-    $form_state->setCached();
-  }
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for the registration form.
  */
 function form_test_form_user_register_form_alter(&$form, FormStateInterface $form_state) {

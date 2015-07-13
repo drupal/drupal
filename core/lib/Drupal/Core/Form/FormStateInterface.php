@@ -640,6 +640,10 @@ interface FormStateInterface {
    *   TRUE if the form should be cached, FALSE otherwise.
    *
    * @return $this
+   *
+   * @throws \LogicException
+   *   If the current request is using an HTTP method that must not change
+   *   state (e.g., GET).
    */
   public function setCached($cache = TRUE);
 
@@ -731,16 +735,35 @@ interface FormStateInterface {
   public function getLimitValidationErrors();
 
   /**
-   * Sets the HTTP form method.
+   * Sets the HTTP method to use for the form's submission.
+   *
+   * This is what the form's "method" attribute should be, not necessarily what
+   * the current request's HTTP method is. For example, a form can have a
+   * method attribute of POST, but the request that initially builds it uses
+   * GET.
    *
    * @param string $method
-   *   The HTTP form method.
+   *   Either "GET" or "POST". Other HTTP methods are not valid form submission
+   *   methods.
    *
    * @see \Drupal\Core\Form\FormState::$method
+   * @see \Drupal\Core\Form\FormStateInterface::setRequestMethod()
    *
    * @return $this
    */
   public function setMethod($method);
+
+  /**
+   * Sets the HTTP method used by the request that is building the form.
+   *
+   * @param string $method
+   *   Can be any valid HTTP method, such as GET, POST, HEAD, etc.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Form\FormStateInterface::setMethod()
+   */
+  public function setRequestMethod($method);
 
   /**
    * Returns the HTTP form method.
