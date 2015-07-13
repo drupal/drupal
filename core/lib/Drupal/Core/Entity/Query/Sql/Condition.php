@@ -43,7 +43,7 @@ class Condition extends ConditionBase {
         // Add the SQL query to the object before calling this method again.
         $sql_condition->sqlQuery = $sql_query;
         $condition['field']->compile($sql_condition);
-        $sql_query->condition($sql_condition);
+        $conditionContainer->condition($sql_condition);
       }
       else {
         $type = strtoupper($this->conjunction) == 'OR' || $condition['operator'] == 'IS NULL' ? 'LEFT' : 'INNER';
