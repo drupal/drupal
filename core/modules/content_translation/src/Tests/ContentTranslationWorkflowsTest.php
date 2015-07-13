@@ -113,6 +113,13 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       $this->drupalLogin($user);
       $this->drupalGet($translations_url);
 
+      // Make sure that the user.permissions cache context and the cache tags
+      // for the entity are present.
+      $this->assertCacheContext('user.permissions');
+      foreach ($this->entity->getCacheTags() as $cache_tag) {
+        $this->assertCacheTag($cache_tag);
+      }
+
       foreach ($ops as $op => $label) {
         if ($op != $current_op) {
           $this->assertNoLink($label, format_string('No %op link found.', array('%op' => $label)));
