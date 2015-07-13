@@ -20,6 +20,7 @@ use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Url;
 use Drupal\file\Element\ManagedFile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
@@ -346,7 +347,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       $removed_files = array_slice($values['fids'], $keep);
       $removed_names = array();
       foreach ($removed_files as $fid) {
-        $file = file_load($fid);
+        $file = File::load($fid);
         $removed_names[] = $file->getFilename();
       }
       $args = array('%field' => $field_storage->getFieldName(), '@max' => $field_storage->getCardinality(), '@count' => $keep, '%list' => implode(', ', $removed_names));

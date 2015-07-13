@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests creating and deleting revisions with files attached.
  *
@@ -40,7 +42,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Check that the file exists on disk and in the database.
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file_r1 = file_load($node->{$field_name}->target_id);
+    $node_file_r1 = File::load($node->{$field_name}->target_id);
     $node_vid_r1 = $node->getRevisionId();
     $this->assertFileExists($node_file_r1, 'New file saved to disk on node creation.');
     $this->assertFileEntryExists($node_file_r1, 'File entry exists in database on node creation.');
@@ -50,7 +52,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->replaceNodeFile($test_file, $field_name, $nid);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file_r2 = file_load($node->{$field_name}->target_id);
+    $node_file_r2 = File::load($node->{$field_name}->target_id);
     $node_vid_r2 = $node->getRevisionId();
     $this->assertFileExists($node_file_r2, 'Replacement file exists on disk after creating new revision.');
     $this->assertFileEntryExists($node_file_r2, 'Replacement file entry exists in database after creating new revision.');
@@ -58,7 +60,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Check that the original file is still in place on the first revision.
     $node = node_revision_load($node_vid_r1);
-    $current_file = file_load($node->{$field_name}->target_id);
+    $current_file = File::load($node->{$field_name}->target_id);
     $this->assertEqual($node_file_r1->id(), $current_file->id(), 'Original file still in place after replacing file in new revision.');
     $this->assertFileExists($node_file_r1, 'Original file still in place after replacing file in new revision.');
     $this->assertFileEntryExists($node_file_r1, 'Original file entry still in place after replacing file in new revision');
@@ -69,7 +71,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->drupalPostForm('node/' . $nid . '/edit', array('revision' => '1'), t('Save and keep published'));
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file_r3 = file_load($node->{$field_name}->target_id);
+    $node_file_r3 = File::load($node->{$field_name}->target_id);
     $node_vid_r3 = $node->getRevisionId();
     $this->assertEqual($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
     $this->assertFileIsPermanent($node_file_r3, 'New revision file is permanent.');
@@ -78,7 +80,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->drupalPostForm('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file_r4 = file_load($node->{$field_name}->target_id);
+    $node_file_r4 = File::load($node->{$field_name}->target_id);
     $this->assertEqual($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
     $this->assertFileIsPermanent($node_file_r4, 'Original revision file still permanent after reverting to the original revision.');
 

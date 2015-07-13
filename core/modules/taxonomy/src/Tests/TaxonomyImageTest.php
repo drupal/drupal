@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\user\RoleInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Tests access checks of private image fields.
@@ -86,7 +87,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     // Create a user that should have access to the file and one that doesn't.
     $access_user = $this->drupalCreateUser(array('access content'));
     $no_access_user = $this->drupalCreateUser();
-    $image = file_load($term->field_test->target_id);
+    $image = File::load($term->field_test->target_id);
     $this->drupalLogin($access_user);
     $this->drupalGet(file_create_url($image->getFileUri()));
     $this->assertResponse(200, 'Private image on term is accessible with right permission');

@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests the file copy function.
  *
@@ -39,7 +41,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Reload the file from the database and check that the changes were
     // actually saved.
-    $this->assertFileUnchanged($result, file_load($result->id(), TRUE));
+    $this->assertFileUnchanged($result, File::load($result->id()));
   }
 
   /**
@@ -66,9 +68,9 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Load all the affected files to check the changes that actually made it
     // to the database.
-    $loaded_source = file_load($source->id(), TRUE);
-    $loaded_target = file_load($target->id(), TRUE);
-    $loaded_result = file_load($result->id(), TRUE);
+    $loaded_source = File::load($source->id());
+    $loaded_target = File::load($target->id());
+    $loaded_result = File::load($result->id());
 
     // Verify that the source file wasn't changed.
     $this->assertFileUnchanged($source, $loaded_source);
@@ -106,9 +108,9 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Load all the affected files to check the changes that actually made it
     // to the database.
-    $loaded_source = file_load($source->id(), TRUE);
-    $loaded_target = file_load($target->id(), TRUE);
-    $loaded_result = file_load($result->id(), TRUE);
+    $loaded_source = File::load($source->id());
+    $loaded_target = File::load($target->id());
+    $loaded_result = File::load($result->id());
 
     // Verify that the source file wasn't changed.
     $this->assertFileUnchanged($source, $loaded_source);
@@ -141,7 +143,7 @@ class CopyTest extends FileManagedUnitTestBase {
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array());
 
-    $this->assertFileUnchanged($source, file_load($source->id(), TRUE));
-    $this->assertFileUnchanged($target, file_load($target->id(), TRUE));
+    $this->assertFileUnchanged($source, File::load($source->id()));
+    $this->assertFileUnchanged($target, File::load($target->id()));
   }
 }

@@ -17,6 +17,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
+use Drupal\file\Entity\File;
 
 /**
  * Tests the invocation of hooks when creating, inserting, loading, updating or
@@ -257,7 +258,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $GLOBALS['entity_crud_hook_test'] = array();
-    $file = file_load($file->id());
+    $file = File::load($file->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type file',

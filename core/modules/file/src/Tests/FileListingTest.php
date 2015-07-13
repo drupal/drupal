@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
 
 /**
  * Tests file listing page functionality.
@@ -103,7 +104,7 @@ class FileListingTest extends FileFieldTestBase {
     $this->drupalGet('admin/content/files');
 
     foreach ($nodes as $node) {
-      $file = entity_load('file', $node->file->target_id);
+      $file = File::load($node->file->target_id);
       $this->assertText($file->getFilename());
       $this->assertLinkByHref(file_create_url($file->getFileUri()));
       $this->assertLinkByHref('admin/content/files/usage/' . $file->id());
@@ -117,11 +118,11 @@ class FileListingTest extends FileFieldTestBase {
     $nodes[1]->save();
 
     $this->drupalGet('admin/content/files');
-    $file = entity_load('file', $orphaned_file);
+    $file = File::load($orphaned_file);
     $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
-    $file = entity_load('file', $used_file);
+    $file = File::load($used_file);
     $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
@@ -130,7 +131,7 @@ class FileListingTest extends FileFieldTestBase {
 
     // Test file usage page.
     foreach ($nodes as $node) {
-      $file = entity_load('file', $node->file->target_id);
+      $file = File::load($node->file->target_id);
       $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
       $this->assertResponse(200);

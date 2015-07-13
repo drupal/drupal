@@ -11,6 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
@@ -302,7 +303,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Get node field original image URI.
     $fid = $node->get($field_name)->target_id;
-    $original_uri = file_load($fid)->getFileUri();
+    $original_uri = File::load($fid)->getFileUri();
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
@@ -436,7 +437,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Get node field original image URI.
     $fid = $node->get($field_name)->target_id;
-    $original_uri = file_load($fid)->getFileUri();
+    $original_uri = File::load($fid)->getFileUri();
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);

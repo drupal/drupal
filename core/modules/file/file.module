@@ -631,6 +631,7 @@ function file_file_download($uri) {
  */
 function file_cron() {
   $age = \Drupal::config('system.file')->get('temporary_maximum_age');
+  $file_storage = \Drupal::entityManager()->getStorage('file');
 
   // Only delete temporary files if older than $age. Note that automatic cleanup
   // is disabled if $age set to 0.
@@ -640,7 +641,7 @@ function file_cron() {
       ->condition('changed', REQUEST_TIME - $age, '<')
       ->range(0, 100)
       ->execute();
-    $files = file_load_multiple($fids);
+    $files = $file_storage->loadMultiple($fids);
     foreach ($files as $file) {
       $references = \Drupal::service('file.usage')->listUsage($file);
       if (empty($references)) {
@@ -1225,7 +1226,7 @@ function template_preprocess_file_link(&$variables) {
   $file = $variables['file'];
   $options = array();
 
-  $file_entity = ($file instanceof File) ? $file : file_load($file->fid);
+  $file_entity = ($file instanceof File) ? $file : File::load($file->fid);
   $url = file_create_url($file_entity->getFileUri());
 
   $mime_type = $file->getMimeType();

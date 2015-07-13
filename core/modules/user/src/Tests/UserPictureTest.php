@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\file\Entity\File;
 
 /**
  * Tests user picture functionality.
@@ -75,7 +76,7 @@ class UserPictureTest extends WebTestBase {
     \Drupal::service('cron')->run();
 
     // Verify that the image has been deleted.
-    $this->assertFalse(file_load($file->id(), TRUE), 'File was removed from the database.');
+    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
     clearstatcache(TRUE, $file->getFileUri());
     $this->assertFalse(is_file($file->getFileUri()), 'File was removed from the file system.');
@@ -133,6 +134,6 @@ class UserPictureTest extends WebTestBase {
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
     $user_storage->resetCache(array($this->webUser->id()));
     $account = $user_storage->load($this->webUser->id());
-    return file_load($account->user_picture->target_id, TRUE);
+    return File::load($account->user_picture->target_id);
   }
 }

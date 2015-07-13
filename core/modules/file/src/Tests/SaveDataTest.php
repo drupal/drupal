@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests the file_save_data() function.
  *
@@ -32,7 +34,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(array('insert'));
 
     // Verify that what was returned is what's in the database.
-    $this->assertFileUnchanged($result, file_load($result->id(), TRUE));
+    $this->assertFileUnchanged($result, File::load($result->id()));
   }
 
   /**
@@ -57,7 +59,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(array('insert'));
 
     // Verify that what was returned is what's in the database.
-    $this->assertFileUnchanged($result, file_load($result->id(), TRUE));
+    $this->assertFileUnchanged($result, File::load($result->id()));
   }
 
   /**
@@ -82,10 +84,10 @@ class SaveDataTest extends FileManagedUnitTestBase {
 
     // Ensure that the existing file wasn't overwritten.
     $this->assertDifferentFile($existing, $result);
-    $this->assertFileUnchanged($existing, file_load($existing->id(), TRUE));
+    $this->assertFileUnchanged($existing, File::load($existing->id()));
 
     // Verify that was returned is what's in the database.
-    $this->assertFileUnchanged($result, file_load($result->id(), TRUE));
+    $this->assertFileUnchanged($result, File::load($result->id()));
   }
 
   /**
@@ -112,7 +114,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertSameFile($existing, $result);
 
     // Verify that what was returned is what's in the database.
-    $this->assertFileUnchanged($result, file_load($result->id(), TRUE));
+    $this->assertFileUnchanged($result, File::load($result->id()));
   }
 
   /**
@@ -131,6 +133,6 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(array());
 
     // Ensure that the existing file wasn't overwritten.
-    $this->assertFileUnchanged($existing, file_load($existing->id(), TRUE));
+    $this->assertFileUnchanged($existing, File::load($existing->id()));
   }
 }

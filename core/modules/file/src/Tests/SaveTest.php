@@ -36,7 +36,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(array('insert'));
 
     $this->assertTrue($file->id() > 0, 'A new file ID is set when saving a new file to the database.', 'File');
-    $loaded_file = file_load($file->id());
+    $loaded_file = File::load($file->id());
     $this->assertNotNull($loaded_file, 'Record exists in the database.');
     $this->assertEqual($loaded_file->isPermanent(), $file->isPermanent(), 'Status was saved correctly.');
     $this->assertEqual($file->getSize(), filesize($file->getFileUri()), 'File size was set correctly.', 'File');
@@ -53,7 +53,7 @@ class SaveTest extends FileManagedUnitTestBase {
 
     $this->assertEqual($file->id(), $file->id(), 'The file ID of an existing file is not changed when updating the database.', 'File');
     $this->assertTrue($file->getChangedTime() >= $file->getChangedTime(), "Timestamp didn't go backwards.", 'File');
-    $loaded_file = file_load($file->id());
+    $loaded_file = File::load($file->id());
     $this->assertNotNull($loaded_file, 'Record still exists in the database.', 'File');
     $this->assertEqual($loaded_file->isPermanent(), $file->isPermanent(), 'Status was saved correctly.');
     $this->assertEqual($loaded_file->langcode->value, 'en', 'Langcode was saved correctly.');

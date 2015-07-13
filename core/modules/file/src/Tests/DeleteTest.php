@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests the file delete function.
  *
@@ -24,7 +26,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file->delete();
     $this->assertFileHooksCalled(array('delete'));
     $this->assertFalse(file_exists($file->getFileUri()), 'Test file has actually been deleted.');
-    $this->assertFalse(file_load($file->id()), 'File was removed from the database.');
+    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
   }
 
   /**
@@ -40,7 +42,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $usage = $file_usage->listUsage($file);
     $this->assertEqual($usage['testing']['test'], array(1 => 1), 'Test file is still in use.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
-    $this->assertTrue(file_load($file->id()), 'File still exists in the database.');
+    $this->assertTrue(File::load($file->id()), 'File still exists in the database.');
 
     // Clear out the call to hook_file_load().
     file_test_reset();
@@ -50,7 +52,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(array('load', 'update'));
     $this->assertTrue(empty($usage), 'File usage data was removed.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
-    $file = file_load($file->id());
+    $file = File::load($file->id());
     $this->assertTrue($file, 'File still exists in the database.');
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
     file_test_reset();
@@ -69,6 +71,6 @@ class DeleteTest extends FileManagedUnitTestBase {
     // file_cron() loads
     $this->assertFileHooksCalled(array('delete'));
     $this->assertFalse(file_exists($file->getFileUri()), 'File has been deleted after its last usage was removed.');
-    $this->assertFalse(file_load($file->id()), 'File was removed from the database.');
+    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
   }
 }

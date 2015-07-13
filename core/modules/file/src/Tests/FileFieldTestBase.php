@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\file\Entity\File;
 
 /**
  * Provides methods specifically for testing File module's field handling.
@@ -45,7 +46,8 @@ abstract class FileFieldTestBase extends WebTestBase {
     // Get a file to upload.
     $file = current($this->drupalGetTestFiles($type_name, $size));
 
-    // Add a filesize property to files as would be read by file_load().
+    // Add a filesize property to files as would be read by
+    // \Drupal\file\Entity\File::load().
     $file->filesize = filesize($file->uri);
 
     return entity_create('file', (array) $file);
@@ -221,7 +223,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function assertFileEntryExists($file, $message = NULL) {
     $this->container->get('entity.manager')->getStorage('file')->resetCache();
-    $db_file = file_load($file->id());
+    $db_file = File::load($file->id());
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
     $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
   }
@@ -240,7 +242,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   function assertFileEntryNotExists($file, $message) {
     $this->container->get('entity.manager')->getStorage('file')->resetCache();
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
-    $this->assertFalse(file_load($file->id()), $message);
+    $this->assertFalse(File::load($file->id()), $message);
   }
 
   /**

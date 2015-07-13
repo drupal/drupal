@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests the file_save_upload() function.
  *
@@ -81,7 +83,7 @@ class SaveUploadTest extends FileManagedTestBase {
   function testNormal() {
     $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
     $this->assertTrue($max_fid_after > $this->maxFidBefore, 'A new file was created.');
-    $file1 = file_load($max_fid_after);
+    $file1 = File::load($max_fid_after);
     $this->assertTrue($file1, 'Loaded the file.');
     // MIME type of the uploaded image may be either image/jpeg or image/png.
     $this->assertEqual(substr($file1->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
@@ -100,13 +102,13 @@ class SaveUploadTest extends FileManagedTestBase {
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('validate', 'insert'));
 
-    $file2 = file_load($max_fid_after);
+    $file2 = File::load($max_fid_after);
     $this->assertTrue($file2, 'Loaded the file');
     // MIME type of the uploaded image may be either image/jpeg or image/png.
     $this->assertEqual(substr($file2->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
 
-    // Load both files using file_load_multiple().
-    $files = file_load_multiple(array($file1->id(), $file2->id()));
+    // Load both files using File::loadMultiple().
+    $files = File::loadMultiple(array($file1->id(), $file2->id()));
     $this->assertTrue(isset($files[$file1->id()]), 'File was loaded successfully');
     $this->assertTrue(isset($files[$file2->id()]), 'File was loaded successfully');
 

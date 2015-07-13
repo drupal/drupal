@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\file\Entity\File;
 
 /**
  * User pictures migration.
@@ -56,7 +57,7 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
     foreach (entity_load('migration', 'd6_user_picture_file')->getIdMap() as $destination_ids) {
       $file_ids[] = reset($destination_ids);
     }
-    $files = entity_load_multiple('file', $file_ids);
+    $files = File::loadMultiple($file_ids);
     /** @var \Drupal\file\FileInterface $file */
     $file = array_shift($files);
     $this->assertIdentical('image-test.jpg', $file->getFilename());

@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\file\Entity\File;
 
 /**
  * Generates text using placeholders for dummy content to check file token
@@ -40,7 +41,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     // Load the node and the file.
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $file = file_load($node->{$field_name}->target_id);
+    $file = File::load($node->{$field_name}->target_id);
 
     // Generate and test sanitized tokens.
     $tests = array();

@@ -12,6 +12,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Tests\MigrateDumpAlterInterface;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\TestBase;
+use Drupal\file\Entity\File;
 
 /**
  * file migration.
@@ -62,7 +63,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
    */
   public function testFiles() {
     /** @var \Drupal\file\FileInterface $file */
-    $file = entity_load('file', 1);
+    $file = File::load(1);
     $this->assertIdentical('Image1.png', $file->getFilename());
     $this->assertIdentical('39325', $file->getSize());
     $this->assertIdentical('public://image-1.png', $file->getFileUri());
@@ -96,11 +97,11 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
 
-    $file = entity_load('file', 2);
+    $file = File::load(2);
     $this->assertIdentical('public://core/modules/simpletest/files/image-2.jpg', $file->getFileUri());
 
     // Ensure that a temporary file has been migrated.
-    $file = entity_load('file', 6);
+    $file = File::load(6);
     $this->assertIdentical('temporary://' . static::getUniqueFilename(), $file->getFileUri());
   }
 

@@ -12,6 +12,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Tests the file field widget, single and multi-valued, with and without AJAX,
@@ -58,7 +59,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
       $node_storage->resetCache(array($nid));
       $node = $node_storage->load($nid);
-      $node_file = file_load($node->{$field_name}->target_id);
+      $node_file = File::load($node->{$field_name}->target_id);
       $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
       // Ensure the file can be downloaded.
@@ -238,7 +239,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file = file_load($node->{$field_name}->target_id);
+    $node_file = File::load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
     // Ensure the private file is available to the user who uploaded it.

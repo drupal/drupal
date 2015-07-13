@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Tests the display of file fields in node and views.
@@ -57,7 +58,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file = file_load($node->{$field_name}->target_id);
+    $node_file = File::load($node->{$field_name}->target_id);
     $file_link = array(
       '#theme' => 'file_link',
       '#file' => $node_file,

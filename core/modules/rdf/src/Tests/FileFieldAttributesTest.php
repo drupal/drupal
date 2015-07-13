@@ -8,6 +8,7 @@
 namespace Drupal\rdf\Tests;
 
 use Drupal\file\Tests\FileFieldTestBase;
+use Drupal\file\Entity\File;
 
 /**
  * Tests the RDFa markup of filefields.
@@ -68,8 +69,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
 
     $node_storage->resetCache(array($nid));
     $this->node = $node_storage->load($nid);
-    $this->file = file_load($this->node->{$this->fieldName}->target_id);
-
+    $this->file = File::load($this->node->{$this->fieldName}->target_id);
   }
 
   /**
