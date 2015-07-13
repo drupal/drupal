@@ -66,7 +66,7 @@ trait AssertContentTrait {
     $this->plainTextContent = NULL;
     $this->elements = NULL;
     $this->drupalSettings = array();
-    if (preg_match('/var drupalSettings = (.*?);$/m', $content, $matches)) {
+    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $content, $matches)) {
       $this->drupalSettings = Json::decode($matches[1]);
     }
   }
