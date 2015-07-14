@@ -118,4 +118,17 @@ class SettingsTest extends UnitTestCase {
     serialize(new Settings([]));
   }
 
+  /**
+   * Tests Settings::getApcuPrefix().
+   *
+   * @covers ::getApcuPrefix
+   */
+  public function testGetApcuPrefix() {
+    $settings = new Settings(array('hash_salt' => 123));
+    $this->assertNotEquals($settings::getApcuPrefix('cache_test', '/test/a'), $settings::getApcuPrefix('cache_test', '/test/b'));
+
+    $settings = new Settings(array('hash_salt' => 123, 'apcu_ensure_unique_prefix' => FALSE));
+    $this->assertNotEquals($settings::getApcuPrefix('cache_test', '/test/a'), $settings::getApcuPrefix('cache_test', '/test/b'));
+  }
+
 }

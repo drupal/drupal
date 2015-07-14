@@ -170,7 +170,7 @@ final class Settings {
    */
   public static function getApcuPrefix($identifier, $root, $site_path = '') {
     if (static::get('apcu_ensure_unique_prefix', TRUE)) {
-      return 'drupal.' . $identifier . '.' . hash_hmac('sha256', $identifier, static::get('hash_salt', $root . '/' . $site_path));
+      return 'drupal.' . $identifier . '.' . hash_hmac('sha256', $identifier, static::get('hash_salt') . '.' . $root . '/' . $site_path);
     }
     return 'drupal.' . $identifier . '.' . Crypt::hashBase64($root . '/' . $site_path);
   }
