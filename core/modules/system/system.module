@@ -520,7 +520,6 @@ function system_filetransfer_info() {
  */
 function system_page_attachments(array &$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
-  $page['#attached']['library'][] = 'core/normalize';
   $page['#attached']['library'][] = 'system/base';
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     $page['#attached']['library'][] = 'system/admin';

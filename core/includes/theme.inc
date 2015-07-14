@@ -1462,7 +1462,6 @@ function template_preprocess_maintenance_page(&$variables) {
   template_preprocess_page($variables);
 
   // @see system_page_attachments()
-  $variables['#attached']['library'][] = 'core/normalize';
   $variables['#attached']['library'][] = 'system/maintenance';
 }
 

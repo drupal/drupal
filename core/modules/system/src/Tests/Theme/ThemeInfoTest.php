@@ -94,13 +94,13 @@ class ThemeInfoTest extends WebTestBase {
     $active_theme = $this->themeManager->getActiveTheme();
     // Make sure we are not testing the wrong theme.
     $this->assertEqual('test_theme', $active_theme->getName());
-    $this->assertEqual(['classy/base', 'test_theme/global-styling'], $active_theme->getLibraries());
+    $this->assertEqual(['classy/base', 'core/normalize', 'test_theme/global-styling'], $active_theme->getLibraries());
 
     // @see theme_test_system_info_alter()
     $this->state->set('theme_test.modify_info_files', TRUE);
     drupal_flush_all_caches();
     $active_theme = $this->themeManager->getActiveTheme();
-    $this->assertEqual(['classy/base', 'test_theme/global-styling', 'core/backbone'], $active_theme->getLibraries());
+    $this->assertEqual(['classy/base', 'core/normalize', 'test_theme/global-styling', 'core/backbone'], $active_theme->getLibraries());
   }
 
 }

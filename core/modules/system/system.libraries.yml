@@ -6,8 +6,6 @@ base:
       css/system.module.css: { every_page: true, weight: -10, }
     theme:
       css/system.theme.css: { every_page: true, weight: -10 }
-  dependencies:
-    - core/normalize
 
 admin:
   version: VERSION
