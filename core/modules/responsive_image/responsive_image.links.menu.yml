@@ -1,6 +1,6 @@
 entity.responsive_image_style.collection:
   title: 'Responsive image styles'
-  description: 'Manage responsive image styles'
+  description: 'Manage responsive image styles.'
   weight: 10
   route_name: entity.responsive_image_style.collection
   parent: system.admin_config_media
