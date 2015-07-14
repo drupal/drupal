@@ -66,7 +66,7 @@ class Test {
     if ($mark_safe) {
       $build['#title'] = SafeMarkup::checkPlain($build['#title']);
     }
-    $build['#cache']['keys'] = ['test_controller', 'with_title'];
+    $build['#cache']['keys'] = ['test_controller', 'with_title', $mark_safe];
 
     return $build;
   }
