@@ -41,13 +41,6 @@ class EntityQueryTest extends EntityUnitTestBase {
   protected $factory;
 
   /**
-   * A list of bundle machine names created for this test.
-   *
-   * @var string[]
-   */
-  protected $bundles;
-
-  /**
    * Field name for the greetings field.
    *
    * @var string
@@ -140,7 +133,6 @@ class EntityQueryTest extends EntityUnitTestBase {
       }
       $entity->save();
     }
-    $this->bundles = $bundles;
     $this->figures = $figures;
     $this->greetings = $greetings;
     $this->factory = \Drupal::service('entity.query');
@@ -486,34 +478,6 @@ class EntityQueryTest extends EntityUnitTestBase {
       ->count()
       ->execute();
      $this->assertFalse($count);
-  }
-
-  /**
-   * Tests that nested condition groups work as expected.
-   */
-  public function testNestedConditionGroups() {
-    // Query for all entities of the first bundle that have either a red
-    // triangle as a figure or the Turkish greeting as a greeting.
-    $query = $this->factory->get('entity_test_mulrev');
-
-    $first_and = $query->andConditionGroup()
-      ->condition($this->figures . '.color', 'red')
-      ->condition($this->figures . '.shape', 'triangle');
-    $second_and = $query->andConditionGroup()
-      ->condition($this->greetings . '.value', 'merhaba')
-      ->condition($this->greetings . '.format', 'format-tr');
-
-    $or = $query->orConditionGroup()
-      ->condition($first_and)
-      ->condition($second_and);
-
-    $this->queryResults = $query
-      ->condition($or)
-      ->condition('type', reset($this->bundles))
-      ->sort('id')
-      ->execute();
-
-    $this->assertResult(6, 14);
   }
 
   protected function assertResult() {
