@@ -44,30 +44,6 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_menu().
- */
-function responsive_image_menu() {
-  $items = array();
-
-  $items['admin/config/media/responsive-image-style'] = array(
-    'title' => 'Responsive image styles',
-    'description' => 'Manage responsive image styles',
-    'weight' => 10,
-    'route_name' => 'entity.responsive_image_style.collection',
-  );
-  $items['admin/config/media/responsive-image-style/%responsive_image_style'] = array(
-    'title' => 'Edit responsive image style',
-    'route_name' => 'entity.responsive_image_style.edit_form',
-  );
-  $items['admin/config/media/responsive-image-style/%responsive_image_style/duplicate'] = array(
-    'title' => 'Duplicate responsive image style',
-    'route_name' => 'entity.responsive_image_style.duplicate_form',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_theme().
  */
 function responsive_image_theme() {
