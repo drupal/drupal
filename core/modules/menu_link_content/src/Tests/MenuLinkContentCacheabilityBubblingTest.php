@@ -69,7 +69,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     $default_menu_cacheability = (new CacheableMetadata())
       ->setCacheMaxAge(Cache::PERMANENT)
       ->setCacheTags(['config:system.menu.tools'])
-      ->setCacheContexts(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme']);
+      ->setCacheContexts(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions']);
 
     User::create(['uid' => 1, 'name' => $this->randomString()])->save();
     User::create(['uid' => 2, 'name' => $this->randomString()])->save();

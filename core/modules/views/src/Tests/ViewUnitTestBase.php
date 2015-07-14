@@ -31,7 +31,7 @@ abstract class ViewUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'views', 'views_test_config', 'views_test_data');
+  public static $modules = array('system', 'views', 'views_test_config', 'views_test_data', 'user');
 
   /**
    * {@inheritdoc}

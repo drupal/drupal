@@ -110,7 +110,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($url, 'HIT', ['config:block_list', 'rendered']);
+    $this->verifyPageCache($url, 'HIT', ['config:block_list', 'config:user.role.anonymous', 'rendered']);
   }
 
 }

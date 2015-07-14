@@ -32,7 +32,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     $view_mode = $this->selectViewMode($entity_type);
 
     // The default cache contexts for rendered entities.
-    $entity_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'];
+    $entity_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
 
     // Generate the standardized entity cache tags.
     $cache_tag = $this->entity->getCacheTags();

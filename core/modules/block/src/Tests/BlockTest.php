@@ -334,11 +334,13 @@ class BlockTest extends BlockTestBase {
       'config:block_list',
       'block_view',
       'config:block.block.powered',
+      'config:user.role.anonymous',
       'rendered',
     );
     sort($expected_cache_tags);
+    $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
-    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:classy');
+    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $expected_cache_tags = array(
       'block_view',
       'config:block.block.powered',
@@ -373,6 +375,7 @@ class BlockTest extends BlockTestBase {
       'block_view',
       'config:block.block.powered',
       'config:block.block.powered-2',
+      'config:user.role.anonymous',
       'rendered',
     );
     sort($expected_cache_tags);
@@ -383,7 +386,8 @@ class BlockTest extends BlockTestBase {
       'rendered',
     );
     sort($expected_cache_tags);
-    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:classy');
+    $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
+    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
     $expected_cache_tags = array(
       'block_view',
@@ -391,7 +395,8 @@ class BlockTest extends BlockTestBase {
       'rendered',
     );
     sort($expected_cache_tags);
-    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:en:classy');
+    $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
+    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:' . implode(':', $keys));
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
 
     // Now we should have a cache hit again.

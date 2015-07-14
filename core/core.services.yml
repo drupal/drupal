@@ -2,7 +2,7 @@ parameters:
   session.storage.options: {}
   twig.config: {}
   renderer.config:
-    required_cache_contexts: ['languages:language_interface', 'theme']
+    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
   factory.keyvalue:
     default: keyvalue.database
   factory.keyvalue.expirable:

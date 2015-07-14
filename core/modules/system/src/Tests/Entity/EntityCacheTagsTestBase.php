@@ -132,6 +132,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * Returns the access cache contexts for the tested entity.
    *
+   * Only list cache contexts that aren't part of the required cache contexts.
+   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be tested, as created by createEntity().
    *
@@ -141,11 +143,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * @see \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    */
   protected function getAccessCacheContextsForEntity(EntityInterface $entity) {
-    return ['user.permissions'];
+    return [];
   }
 
   /**
    * Returns the additional (non-standard) cache contexts for the tested entity.
+   *
+   * Only list cache contexts that aren't part of the required cache contexts.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be tested, as created by createEntity().
@@ -331,12 +335,16 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $nonempty_entity_listing_url = Url::fromRoute('entity.entity_test.collection_labels_alphabetically', ['entity_type_id' => $entity_type]);
 
     // The default cache contexts for rendered entities.
-    $default_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'];
+    $default_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
     $entity_cache_contexts = $default_cache_contexts;
 
     // Cache tags present on every rendered page.
     $page_cache_tags = Cache::mergeTags(
       ['rendered'],
+      // 'user.permissions' is a required cache context, and responses that vary
+      // by this cache context when requested by anonymous users automatically
+      // also get this cache tag, to ensure correct invalidation.
+      ['config:user.role.anonymous'],
       // If the block module is used, the Block page display variant is used,
       // which adds the block config entity type's list cache tags.
       \Drupal::moduleHandler()->moduleExists('block') ? ['config:block_list']: []
@@ -391,9 +399,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $cache_keys = ['entity_view', 'entity_test', $this->referencingEntity->id(), 'full'];
     $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
     $access_cache_contexts = $this->getAccessCacheContextsForEntity($this->entity);
+    $additional_cache_contexts = $this->getAdditionalCacheContextsForEntity($this->referencingEntity);
     $redirected_cid = NULL;
-    if (count($access_cache_contexts)) {
-      $cache_contexts = Cache::mergeContexts($entity_cache_contexts, $this->getAdditionalCacheContextsForEntity($this->referencingEntity), $access_cache_contexts);
+    if (count($access_cache_contexts) || count($additional_cache_contexts)) {
+      $cache_contexts = Cache::mergeContexts($entity_cache_contexts, $additional_cache_contexts, $access_cache_contexts);
       $redirected_cid = $this->createCacheId($cache_keys, $cache_contexts);
       $context_metadata = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($cache_contexts);
       $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, $context_metadata->getCacheTags());

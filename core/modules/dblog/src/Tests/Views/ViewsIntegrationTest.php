@@ -34,7 +34,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog', 'dblog_test_views');
+  public static $modules = array('dblog', 'dblog_test_views', 'user');
 
   /**
    * {@inheritdoc}

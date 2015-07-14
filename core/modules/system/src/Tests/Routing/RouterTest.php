@@ -30,7 +30,7 @@ class RouterTest extends WebTestBase {
    * Confirms that our FinishResponseSubscriber logic works properly.
    */
   public function testFinishResponseSubscriber() {
-    $renderer_required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'];
+    $renderer_required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
 
     // Confirm that the router can get to a controller.
     $this->drupalGet('router_test/test1');
@@ -47,7 +47,7 @@ class RouterTest extends WebTestBase {
     // Check expected headers from FinishResponseSubscriber.
     $headers = $this->drupalGetHeaders();
     $this->assertEqual($headers['x-drupal-cache-contexts'], implode(' ', $renderer_required_cache_contexts));
-    $this->assertEqual($headers['x-drupal-cache-tags'], 'rendered');
+    $this->assertEqual($headers['x-drupal-cache-tags'], 'config:user.role.anonymous rendered');
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
     $this->assertRaw('</html>', 'Page markup was found.');
@@ -62,12 +62,12 @@ class RouterTest extends WebTestBase {
     $this->drupalGet('router_test/test18');
     $headers = $this->drupalGetHeaders();
     $this->assertEqual($headers['x-drupal-cache-contexts'], implode(' ', Cache::mergeContexts($renderer_required_cache_contexts, ['url'])));
-    $this->assertEqual($headers['x-drupal-cache-tags'], 'foo rendered');
+    $this->assertEqual($headers['x-drupal-cache-tags'], 'config:user.role.anonymous foo rendered');
     // 2. controller result: render array, per-role cacheable route access.
     $this->drupalGet('router_test/test19');
     $headers = $this->drupalGetHeaders();
     $this->assertEqual($headers['x-drupal-cache-contexts'], implode(' ', Cache::mergeContexts($renderer_required_cache_contexts, ['url', 'user.roles'])));
-    $this->assertEqual($headers['x-drupal-cache-tags'], 'foo rendered');
+    $this->assertEqual($headers['x-drupal-cache-tags'], 'config:user.role.anonymous foo rendered');
     // 3. controller result: Response object, globally cacheable route access.
     $this->drupalGet('router_test/test1');
     $headers = $this->drupalGetHeaders();

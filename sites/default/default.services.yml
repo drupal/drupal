@@ -82,8 +82,8 @@ parameters:
     # The Renderer will automatically associate these cache contexts with every
     # render array, hence varying every render array by these cache contexts.
     #
-    # @default ['languages:language_interface', 'theme']
-    required_cache_contexts: ['languages:language_interface', 'theme']
+    # @default ['languages:language_interface', 'theme', 'user.permissions']
+    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
   factory.keyvalue:
     {}
     # Default key/value storage service to use.

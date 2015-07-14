@@ -9,7 +9,7 @@ namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\Context\UrlCacheContext;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,7 +27,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'system');
+  public static $modules = array('block', 'block_test', 'system', 'user');
 
   /**
    * The block being tested.
@@ -160,7 +160,7 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     // Test that a cache entry is created.
     $build = $this->getBlockRenderArray();
-    $cid = 'entity_view:block:test_block:en:core';
+    $cid = 'entity_view:block:test_block:' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
     $this->renderer->renderRoot($build);
     $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
 
@@ -214,7 +214,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     // Advanced: cached block, but an alter hook adds an additional cache key.
     $alter_add_key = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_key', $alter_add_key);
-    $cid = 'entity_view:block:test_block:' . $alter_add_key . ':en:core';
+    $cid = 'entity_view:block:test_block:' . $alter_add_key . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
     $expected_keys = array_merge($default_keys, array($alter_add_key));
     $build = $this->getBlockRenderArray();
     $this->assertIdentical($expected_keys, $build['#cache']['keys'], 'An altered cacheable block has the expected cache keys.');

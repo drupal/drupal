@@ -58,7 +58,7 @@ class UrlTest extends WebTestBase {
 
     foreach ($cases as $case) {
       list($title, $uri, $options, $expected_cacheability) = $case;
-      $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme']);
+      $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
       $link = [
         '#type' => 'link',
         '#title' => $title,
