@@ -17,6 +17,13 @@ use Drupal\simpletest\WebTestBase;
 class UncaughtExceptionTest extends WebTestBase {
 
   /**
+   * Exceptions thrown by site under test that contain this text are ignored.
+   *
+   * @var string
+   */
+  protected $expectedExceptionMessage;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -48,6 +55,7 @@ class UncaughtExceptionTest extends WebTestBase {
    * Tests uncaught exception handling when system is in a bad state.
    */
   public function testUncaughtException() {
+    $this->expectedExceptionMessage = 'Oh oh, bananas in the instruments.';
     \Drupal::state()->set('error_service_test.break_bare_html_renderer', TRUE);
 
     $this->config('system.logging')
@@ -63,7 +71,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertResponse(500);
     $this->assertText('The website encountered an unexpected error. Please try again later.');
-    $this->assertNoText('Oh oh, bananas in the instruments');
+    $this->assertNoText($this->expectedExceptionMessage);
 
     $this->config('system.logging')
       ->set('error_level', ERROR_REPORTING_DISPLAY_ALL)
@@ -78,30 +86,20 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertResponse(500);
     $this->assertText('The website encountered an unexpected error. Please try again later.');
-    $this->assertText('Oh oh, bananas in the instruments');
+    $this->assertText($this->expectedExceptionMessage);
+    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that monekys are found in the control room.');
   }
 
   /**
    * Tests a missing dependency on a service.
    */
   public function testMissingDependency() {
+    $this->expectedExceptionMessage = 'Argument 1 passed to Drupal\error_service_test\LonelyMonkeyClass::__construct() must be an instance of Drupal\Core\Database\Connection, non';
     $this->drupalGet('broken-service-class');
 
-    $message = 'Argument 1 passed to Drupal\error_service_test\LonelyMonkeyClass::__construct() must be an instance of Drupal\Core\Database\Connection, non';
-
     $this->assertRaw('The website encountered an unexpected error.');
-    $this->assertRaw($message);
-
-    $found_exception = FALSE;
-    foreach ($this->assertions as &$assertion) {
-      if (strpos($assertion['message'], $message) !== FALSE) {
-        $found_exception = TRUE;
-        $this->deleteAssert($assertion['message_id']);
-        unset($assertion);
-      }
-    }
-
-    $this->assertTrue($found_exception, 'Ensure that the exception of a missing constructor argument was triggered.');
+    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the exception of a missing constructor argument was triggered.');
   }
 
   /**
@@ -123,21 +121,11 @@ class UncaughtExceptionTest extends WebTestBase {
     // process.
     \Drupal::setContainer($this->container);
 
+    $this->expectedExceptionMessage = 'Argument 1 passed to Drupal\system\Tests\Bootstrap\ErrorContainer::Drupal\system\Tests\Bootstrap\{closur';
     $this->drupalGet('');
 
-    $message = 'Argument 1 passed to Drupal\system\Tests\Bootstrap\ErrorContainer::Drupal\system\Tests\Bootstrap\{closur';
-    $this->assertRaw($message);
-
-    $found_error = FALSE;
-    foreach ($this->assertions as &$assertion) {
-      if (strpos($assertion['message'], $message) !== FALSE) {
-        $found_error = TRUE;
-        $this->deleteAssert($assertion['message_id']);
-        unset($assertion);
-      }
-    }
-
-    $this->assertTrue($found_error, 'Ensure that the error of the container was triggered.');
+    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the error of the container was triggered.');
   }
 
   /**
@@ -159,22 +147,13 @@ class UncaughtExceptionTest extends WebTestBase {
     // process.
     \Drupal::setContainer($this->container);
 
+    $this->expectedExceptionMessage = 'Thrown exception during Container::get';
     $this->drupalGet('');
 
-    $message = 'Thrown exception during Container::get';
 
     $this->assertRaw('The website encountered an unexpected error');
-    $this->assertRaw($message);
-
-    $found_exception = FALSE;
-    foreach ($this->assertions as &$assertion) {
-      if (strpos($assertion['message'], $message) !== FALSE) {
-        $found_exception = TRUE;
-        $this->deleteAssert($assertion['message_id']);
-        unset($assertion);
-      }
-    }
-    $this->assertTrue($found_exception, 'Ensure that the exception of the container was triggered.');
+    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the exception of the container was triggered.');
   }
 
   /**
@@ -189,30 +168,43 @@ class UncaughtExceptionTest extends WebTestBase {
     );
     $this->writeSettings($settings);
 
+    $this->expectedExceptionMessage = '[1045] Access denied for user';
     $this->drupalGet('');
 
-    $message = 'Access denied for user';
-    $this->assertRaw($message);
+    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the access denied DB connection exception is thrown.');
+  }
 
+  /**
+   * Asserts that an exception is present in the assertions and removes it.
+   *
+   * This ensures that expected failures are passes rather than failures.
+   *
+   * @param string $exception_message
+   *   The exception message to search for.
+   *
+   * @return bool
+   *   TRUE if the exception message was found.
+   */
+  protected function assertExceptionFailure($exception_message, $message) {
     $found_exception = FALSE;
     foreach ($this->assertions as &$assertion) {
-      if (strpos($assertion['message'], $message) !== FALSE) {
+      if (strpos($assertion['message'], $exception_message) !== FALSE) {
         $found_exception = TRUE;
         $this->deleteAssert($assertion['message_id']);
         unset($assertion);
       }
     }
-    $this->assertTrue($found_exception, 'Ensure that the access denied DB connection exception is thrown.');
-
+    return $this->assertTrue($found_exception, $message);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function error($message = '', $group = 'Other', array $caller = NULL) {
-    if ($message === 'Oh oh, bananas in the instruments.') {
+    if (!empty($this->expectedExceptionMessage) && strpos($message, $this->expectedExceptionMessage) !== FALSE) {
       // We're expecting this error.
-      return;
+      return FALSE;
     }
     return parent::error($message, $group, $caller);
   }
