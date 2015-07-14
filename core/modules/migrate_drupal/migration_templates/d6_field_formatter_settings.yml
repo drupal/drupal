@@ -91,13 +91,6 @@ process:
             spamspan: email_mailto
             contact: email_mailto
             plain: basic_string
-          filefield:
-            default: file_default
-            url_plain: file_url_plain
-            path_plain: file_url_plain
-            image_plain: image
-            image_nodelink: image
-            image_imagelink: image
           fr_phone:
             default: basic_string
           be_phone:

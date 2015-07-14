@@ -88,9 +88,6 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         if ($source_plugin instanceof CckFieldMigrateSourceInterface) {
           foreach ($source_plugin->fieldData() as $field_name => $data) {
             switch ($data['type']) {
-              case 'filefield':
-                $this->processFileField($field_name, $data, $migration);
-                break;
               case 'text':
                 $this->processTextField($field_name, $data, $migration);
                 break;
@@ -152,28 +149,6 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
       ],
     ];
     $migration->mergeProcessOfProperty("$field_name/format", $process);
-  }
-
-  /**
-   * Manipulate file fields with any per field type processing.
-   *
-   * @param string $field_name
-   *   The field we're processing.
-   * @param array $field_data
-   *   The an array of field type data from the source.
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
-   *   The migration entity.
-   */
-  protected function processFileField($field_name, $field_data, MigrationInterface $migration) {
-    $process = [
-      'plugin' => 'd6_cck_file',
-      'source' => [
-        $field_name,
-        $field_name . '_list',
-        $field_name . '_data',
-      ],
-    ];
-    $migration->mergeProcessOfProperty($field_name, $process);
   }
 
 }
