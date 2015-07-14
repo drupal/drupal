@@ -50,6 +50,27 @@ class Variable extends DrupalDumpBase {
       'name' => 'admin_theme',
       'value' => 's:5:"seven";',
     ))->values(array(
+      'name' => 'aggregator_allowed_html_tags',
+      'value' => 's:13:"<p> <div> <a>";',
+    ))->values(array(
+      'name' => 'aggregator_clear',
+      'value' => 'i:86400;',
+    ))->values(array(
+      'name' => 'aggregator_fetcher',
+      'value' => 's:10:"aggregator";',
+    ))->values(array(
+      'name' => 'aggregator_parser',
+      'value' => 's:10:"aggregator";',
+    ))->values(array(
+      'name' => 'aggregator_processors',
+      'value' => 'a:1:{i:0;s:10:"aggregator";}',
+    ))->values(array(
+      'name' => 'aggregator_summary_items',
+      'value' => 'i:6;',
+    ))->values(array(
+      'name' => 'aggregator_teaser_length',
+      'value' => 'i:500;',
+    ))->values(array(
       'name' => 'allow_insecure_derivatives',
       'value' => 'b:1;',
     ))->values(array(
@@ -419,4 +440,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#dfc4cdd451a6575677b8c10442893d26
+#6e1892883e650f9e71e165fa6737ac4c
