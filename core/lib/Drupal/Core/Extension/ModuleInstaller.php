@@ -253,12 +253,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Record the fact that it was installed.
         $modules_installed[] = $module;
 
-        // file_get_stream_wrappers() needs to re-register Drupal's stream
-        // wrappers in case a module-provided stream wrapper is used later in
-        // the same request. In particular, this happens when installing Drupal
-        // via Drush, as the 'translations' stream wrapper is provided by
-        // Interface Translation module and is later used to import
-        // translations.
+        // Drupal's stream wrappers needs to be re-registered in case a
+        // module-provided stream wrapper is used later in the same request. In
+        // particular, this happens when installing Drupal via Drush, as the
+        // 'translations' stream wrapper is provided by Interface Translation
+        // module and is later used to import translations.
         \Drupal::service('stream_wrapper_manager')->register();
 
         // Update the theme registry to include it.

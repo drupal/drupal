@@ -229,7 +229,7 @@ function file_stream_wrapper_uri_normalize($uri) {
  *   "private://example.txt" would return a new private stream wrapper object
  *   (Drupal\Core\StreamWrapper\PrivateStream).
  *
- * * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::service('stream_wrapper_manager')->getViaUri().
  */
 function file_stream_wrapper_get_instance_by_uri($uri) {
@@ -331,7 +331,7 @@ function file_create_url($uri) {
   }
   else {
     // Attempt to return an external URL using the appropriate wrapper.
-    if ($wrapper = file_stream_wrapper_get_instance_by_uri($uri)) {
+    if ($wrapper = \Drupal::service('stream_wrapper_manager')->getViaUri($uri)) {
       return $wrapper->getExternalUrl();
     }
     else {

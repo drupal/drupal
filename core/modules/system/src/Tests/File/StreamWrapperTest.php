@@ -56,32 +56,32 @@ class StreamWrapperTest extends FileTestBase {
    */
   function testGetClassName() {
     // Check the dummy scheme.
-    $this->assertEqual($this->classname, file_stream_wrapper_get_class($this->scheme), 'Got correct class name for dummy scheme.');
+    $this->assertEqual($this->classname, \Drupal::service('stream_wrapper_manager')->getClass($this->scheme), 'Got correct class name for dummy scheme.');
     // Check core's scheme.
-    $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', file_stream_wrapper_get_class('public'), 'Got correct class name for public scheme.');
+    $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', \Drupal::service('stream_wrapper_manager')->getClass('public'), 'Got correct class name for public scheme.');
   }
 
   /**
-   * Test the file_stream_wrapper_get_instance_by_scheme() function.
+   * Test the getViaScheme() method.
    */
   function testGetInstanceByScheme() {
-    $instance = file_stream_wrapper_get_instance_by_scheme($this->scheme);
+    $instance = \Drupal::service('stream_wrapper_manager')->getViaScheme($this->scheme);
     $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy scheme.');
 
-    $instance = file_stream_wrapper_get_instance_by_scheme('public');
+    $instance = \Drupal::service('stream_wrapper_manager')->getViaScheme('public');
     $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', get_class($instance), 'Got correct class type for public scheme.');
   }
 
   /**
-   * Test the URI and target functions.
+   * Test the getViaUri() and getViaScheme() methods and target functions.
    */
   function testUriFunctions() {
     $config = $this->config('system.file');
 
-    $instance = file_stream_wrapper_get_instance_by_uri($this->scheme . '://foo');
+    $instance = \Drupal::service('stream_wrapper_manager')->getViaUri($this->scheme . '://foo');
     $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy URI.');
 
-    $instance = file_stream_wrapper_get_instance_by_uri('public://foo');
+    $instance = \Drupal::service('stream_wrapper_manager')->getViaUri('public://foo');
     $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', get_class($instance), 'Got correct class type for public URI.');
 
     // Test file_uri_target().
@@ -94,8 +94,8 @@ class StreamWrapperTest extends FileTestBase {
     // Test file_build_uri() and
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', 'Expected scheme was added.');
-    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath(), PublicStream::basePath(), 'Expected default directory path was returned.');
-    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
+    $this->assertEqual(\Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath(), PublicStream::basePath(), 'Expected default directory path was returned.');
+    $this->assertEqual(\Drupal::service('stream_wrapper_manager')->getViaScheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
     $config->set('default_scheme', 'private')->save();
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', 'Got a valid URI from foo/bar.txt.');
 

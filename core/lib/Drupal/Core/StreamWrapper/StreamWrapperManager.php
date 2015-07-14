@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 /**
  * Provides a StreamWrapper manager.
  *
- * @see file_get_stream_wrappers()
  * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface
  */
 class StreamWrapperManager extends ContainerAware implements StreamWrapperManagerInterface {

@@ -290,7 +290,7 @@ class SessionTest extends WebTestBase {
     $this->loggedInUser = FALSE;
 
     // Change cookie file for user.
-    $this->cookieFile = file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath() . '/cookie.' . $uid . '.txt';
+    $this->cookieFile = \Drupal::service('stream_wrapper_manager')->getViaScheme('temporary')->getDirectoryPath() . '/cookie.' . $uid . '.txt';
     $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
     $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
     $this->drupalGet('session-test/get');

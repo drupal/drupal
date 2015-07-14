@@ -80,7 +80,7 @@ class UrlRewritingTest extends FileTestBase {
     \Drupal::state()->set('file_test.hook_file_url_alter', 'cdn');
     $uri = $this->createUri();
     $url = file_create_url($uri);
-    $public_directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
+    $public_directory_path = \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath();
     $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, 'Correctly generated a CDN URL for a created file.');
 
     // Test alteration of file URLs to use root-relative URLs.
@@ -116,7 +116,7 @@ class UrlRewritingTest extends FileTestBase {
     // Managed file.
     $uri = $this->createUri();
     $url = file_create_url($uri);
-    $public_directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
+    $public_directory_path = \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath();
     $this->assertIdentical(base_path() . $public_directory_path . '/' . rawurlencode(drupal_basename($uri)), file_url_transform_relative($url));
   }
 

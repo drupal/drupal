@@ -10,7 +10,6 @@ namespace Drupal\Core\StreamWrapper;
 /**
  * Provides a StreamWrapper manager.
  *
- * @see file_get_stream_wrappers()
  * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface
  */
 interface StreamWrapperManagerInterface {
@@ -39,8 +38,8 @@ interface StreamWrapperManagerInterface {
    * returns only stream wrappers that use local file storage:
    *
    * @code
-   *   $local_stream_wrappers =
-   *   file_get_stream_wrappers(StreamWrapperInterface::LOCAL);
+   *   $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+   *   $local_stream_wrappers = $stream_wrapper_manager->getWrappers(StreamWrapperInterface::LOCAL);
    * @endcode
    *
    * The $filter parameter can only filter to types containing a particular
@@ -50,9 +49,11 @@ interface StreamWrapperManagerInterface {
    * array_diff_key() function can be used to help with this. For example, this
    * returns only stream wrappers that do not use local file storage:
    * @code
-   *   $remote_stream_wrappers =
-   *   array_diff_key(file_get_stream_wrappers(StreamWrapperInterface::ALL),
-   *   file_get_stream_wrappers(StreamWrapperInterface::LOCAL));
+   *   $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+   *   $remote_stream_wrappers = array_diff_key(
+   *     $stream_wrapper_manager->getWrappers(StreamWrapperInterface::ALL),
+   *     $stream_wrapper_manager->getWrappers(StreamWrapperInterface::LOCAL)
+   *   );
    * @endcode
    *
    * @param int $filter

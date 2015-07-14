@@ -950,7 +950,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // Reset/rebuild all data structures after enabling the modules, primarily
     // to synchronize all data structures and caches between the test runner and
     // the child site.
-    // Affects e.g. file_get_stream_wrappers().
+    // Affects e.g. StreamWrapperManagerInterface::getWrappers().
     // @see \Drupal\Core\DrupalKernel::bootCode()
     // @todo Test-specific setUp() methods may set up further fixtures; find a
     //   way to execute this after setUp() is done, or to eliminate it entirely.

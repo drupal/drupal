@@ -80,7 +80,7 @@ function hook_file_url_alter(&$uri) {
     }
     // Public created files.
     else {
-      $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+      $wrapper = \Drupal::service('stream_wrapper_manager')->getViaScheme($scheme);
       $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
     }
 

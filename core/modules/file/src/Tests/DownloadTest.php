@@ -30,7 +30,7 @@ class DownloadTest extends FileManagedTestBase {
     $url = file_create_url($file->getFileUri());
     // URLs can't contain characters outside the ASCII set so $filename has to be
     // encoded.
-    $filename = $GLOBALS['base_url'] . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
+    $filename = $GLOBALS['base_url'] . '/' . \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
     $this->assertEqual($filename, $url, 'Correctly generated a URL for a created file.');
     $this->drupalHead($url);
     $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the created file.');
@@ -117,7 +117,7 @@ class DownloadTest extends FileManagedTestBase {
       $clean_urls = $clean_url_setting == 'clean';
       $request = $this->prepareRequestForGenerator($clean_urls);
       $base_path = $request->getSchemeAndHttpHost() . $request->getBasePath();
-      $this->checkUrl('public', '', $basename, $base_path . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . $basename_encoded);
+      $this->checkUrl('public', '', $basename, $base_path . '/' . \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath() . '/' . $basename_encoded);
       $this->checkUrl('private', '', $basename, $base_path . '/' . $script_path . 'system/files/' . $basename_encoded);
     }
     $this->assertEqual(file_create_url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', t('Generated URL matches expected URL.'));

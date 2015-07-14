@@ -365,7 +365,7 @@ class Updater {
    * Returns the full path to a directory where backups should be written.
    */
   public function getBackupDir() {
-    return file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath();
+    return \Drupal::service('stream_wrapper_manager')->getViaScheme('temporary')->getDirectoryPath();
   }
 
   /**

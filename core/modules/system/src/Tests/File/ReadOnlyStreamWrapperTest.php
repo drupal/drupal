@@ -40,7 +40,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
 
     // Generate a read-only stream wrapper instance
     $uri = $this->scheme . '://' . $filename;
-    file_stream_wrapper_get_instance_by_scheme($this->scheme);
+    \Drupal::service('stream_wrapper_manager')->getViaScheme($this->scheme);
 
     // Attempt to open a file in read/write mode
     $handle = @fopen($uri, 'r+');

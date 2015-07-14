@@ -9,8 +9,12 @@ namespace Drupal\system\Plugin\ImageToolkit;
 
 use Drupal\Component\Utility\Color;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
+use Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 
@@ -54,6 +58,36 @@ class GDToolkit extends ImageToolkitBase {
   protected $preLoadInfo = NULL;
 
   /**
+   * The StreamWrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
+   * Constructs a TestToolkit object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operation_manager
+   *   The toolkit operation manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   The StreamWrapper manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager, LoggerInterface $logger, ConfigFactoryInterface $config_factory, StreamWrapperManagerInterface $stream_wrapper_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $operation_manager, $logger, $config_factory);
+    $this->streamWrapperManager = $stream_wrapper_manager;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -63,7 +97,8 @@ class GDToolkit extends ImageToolkitBase {
       $plugin_definition,
       $container->get('image.toolkit.operation.manager'),
       $container->get('logger.channel.image'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('stream_wrapper_manager')
     );
   }
 
@@ -172,7 +207,7 @@ class GDToolkit extends ImageToolkitBase {
     // Work around lack of stream wrapper support in imagejpeg() and imagepng().
     if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
       // If destination is not local, save image to temporary local file.
-      $local_wrappers = file_get_stream_wrappers(StreamWrapperInterface::LOCAL);
+      $local_wrappers = $this->streamWrapperManager->getWrappers(StreamWrapperInterface::LOCAL);
       if (!isset($local_wrappers[$scheme])) {
         $permanent_destination = $destination;
         $destination = drupal_tempnam('temporary://', 'gd_');
