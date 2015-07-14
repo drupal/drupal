@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\link\LinkItemInterface;
 
 /**
@@ -67,20 +65,15 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     entity_create('node_type', array('type' => 'story'))->save();
     entity_create('node_type', array('type' => 'test_page'))->save();
 
-    $migration = entity_load('migration', 'd6_field_instance');
-    $dumps = array(
-      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
-      $this->getDumpDirectory() . '/ContentNodeField.php',
-      $this->getDumpDirectory() . '/ContentFieldTest.php',
-      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
-      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
-    );
+    $this->loadDumps([
+      'ContentNodeFieldInstance.php',
+      'ContentNodeField.php',
+      'ContentFieldTest.php',
+      'ContentFieldTestTwo.php',
+      'ContentFieldMultivalue.php',
+    ]);
     $this->createFields();
-
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-
+    $this->executeMigration('d6_field_instance');
   }
 
   /**

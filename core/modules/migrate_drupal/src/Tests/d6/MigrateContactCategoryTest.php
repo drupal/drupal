@@ -8,9 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\contact\Entity\ContactForm;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\MigrateMessage;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate contact categories to contact.form.*.yml.
@@ -31,13 +28,8 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_contact_category');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Contact.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
-    $executable->import();
+    $this->loadDumps(['Contact.php']);
+    $this->executeMigration('d6_contact_category');
   }
 
   /**

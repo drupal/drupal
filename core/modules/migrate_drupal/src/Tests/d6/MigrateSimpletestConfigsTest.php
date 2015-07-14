@@ -8,9 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to simpletest.settings.yml.
@@ -35,14 +32,8 @@ class MigrateSimpletestConfigsTest extends MigrateDrupal6TestBase {
     parent::setUp();
 
     $this->installConfig(['simpletest']);
-
-    $migration = entity_load('migration', 'd6_simpletest_settings');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
-    $executable->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d6_simpletest_settings');
   }
 
   /**

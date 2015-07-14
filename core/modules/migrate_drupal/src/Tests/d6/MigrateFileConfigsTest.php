@@ -8,9 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to file.settings.yml.
@@ -33,13 +30,8 @@ class MigrateFileConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_file_settings');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
-    $executable->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d6_file_settings');
   }
 
   /**

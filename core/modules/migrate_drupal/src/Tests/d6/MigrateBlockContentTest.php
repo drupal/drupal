@@ -7,12 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\Core\Language\Language;
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade custom blocks.
@@ -31,26 +26,16 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
     $this->installConfig(array('block_content'));
     $this->installEntitySchema('block_content');
 
-    $migration = entity_load('migration', 'd6_block_content_type');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-    $migration = entity_load('migration', 'd6_block_content_body_field');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration('d6_block_content_type');
+    $this->executeMigration('d6_block_content_body_field');
 
     $this->prepareMigrations(array(
       'd6_filter_format' => array(
         array(array(2), array('full_html'))
       )
     ));
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_custom_block');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Boxes.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Boxes.php']);
+    $this->executeMigration('d6_custom_block');
   }
 
   /**

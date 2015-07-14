@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -39,18 +37,14 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_user_role');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Permission.php',
-      $this->getDumpDirectory() . '/Role.php',
-      $this->getDumpDirectory() . '/Filters.php',
-      $this->getDumpDirectory() . '/FilterFormats.php',
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps([
+      'Permission.php',
+      'Role.php',
+      'Filters.php',
+      'FilterFormats.php',
+      'Variable.php',
+    ]);
+    $this->executeMigration('d6_user_role');
   }
 
   /**

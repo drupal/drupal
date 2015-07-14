@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\block\Entity\Block;
 
 /**
@@ -72,16 +70,8 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     // Install one of D8's test themes.
     \Drupal::service('theme_handler')->install(array('test_theme'));
 
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_block');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Blocks.php',
-      $this->getDumpDirectory() . '/BlocksRoles.php',
-      $this->getDumpDirectory() . '/AggregatorFeed.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Blocks.php', 'BlocksRoles.php', 'AggregatorFeed.php']);
+    $this->executeMigration('d6_block');
   }
 
   /**

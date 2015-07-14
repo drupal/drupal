@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\Node;
 
 /**
@@ -22,10 +21,7 @@ class MigrateUploadTest extends MigrateUploadBase {
    */
   protected function setUp() {
     parent::setUp();
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_upload');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration('d6_upload');
   }
 
   /**

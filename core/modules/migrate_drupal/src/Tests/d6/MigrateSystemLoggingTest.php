@@ -7,9 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade error_level variable to system.logging.yml.
@@ -25,13 +23,8 @@ class MigrateSystemLoggingTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_system_logging');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d6_system_logging');
   }
 
   /**

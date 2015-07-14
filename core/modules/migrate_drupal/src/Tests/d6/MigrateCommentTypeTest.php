@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\comment\Entity\CommentType;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comment type.
@@ -30,16 +28,8 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('comment');
     $this->installConfig(['node', 'comment']);
 
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_comment_type');
-
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-      $this->getDumpDirectory() . '/NodeType.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Variable.php', 'NodeType.php']);
+    $this->executeMigration('d6_comment_type');
   }
 
   /**

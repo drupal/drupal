@@ -10,8 +10,6 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\user\Entity\User;
 use Drupal\file\Entity\File;
 use Drupal\Core\Database\Database;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -88,20 +86,18 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
     file_put_contents($file->getFileUri(), file_get_contents('core/modules/simpletest/files/image-2.jpg'));
     $file->save();
 
-    // Load database dumps to provide source data.
-    $dumps = array(
-      $this->getDumpDirectory() . '/Filters.php',
-      $this->getDumpDirectory() . '/FilterFormats.php',
-      $this->getDumpDirectory() . '/Variable.php',
-      $this->getDumpDirectory() . '/ProfileFields.php',
-      $this->getDumpDirectory() . '/Permission.php',
-      $this->getDumpDirectory() . '/Role.php',
-      $this->getDumpDirectory() . '/Users.php',
-      $this->getDumpDirectory() . '/ProfileValues.php',
-      $this->getDumpDirectory() . '/UsersRoles.php',
-      $this->getDumpDirectory() . '/EventTimezones.php',
-    );
-    $this->loadDumps($dumps);
+    $this->loadDumps([
+      'Filters.php',
+      'FilterFormats.php',
+      'Variable.php',
+      'ProfileFields.php',
+      'Permission.php',
+      'Role.php',
+      'Users.php',
+      'ProfileValues.php',
+      'UsersRoles.php',
+      'EventTimezones.php',
+    ]);
 
     $id_mappings = array(
       'd6_user_role' => array(
@@ -125,10 +121,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
 
     $this->prepareMigrations($id_mappings);
 
-    // Migrate users.
-    $migration = entity_load('migration', 'd6_user');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration('d6_user');
   }
 
   /**

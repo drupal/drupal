@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\MigrateMessage;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 use Drupal\system\Entity\Menu;
 
@@ -25,13 +23,8 @@ class MigrateMenuTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_menu');
-    $dumps = array(
-      $this->getDumpDirectory() . '/MenuCustom.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['MenuCustom.php']);
+    $this->executeMigration('d6_menu');
   }
 
   /**

@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Upgrade comment subject variable to core.entity_form_display.comment.*.default.yml
  *
@@ -43,15 +40,8 @@ class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupal6T
       ),
     );
     $this->prepareMigrations($id_mappings);
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_comment_entity_form_display_subject');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-      $this->getDumpDirectory() . '/NodeType.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Variable.php', 'NodeType.php']);
+    $this->executeMigration('d6_comment_entity_form_display_subject');
   }
 
   /**

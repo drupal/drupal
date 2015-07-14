@@ -8,7 +8,9 @@
 namespace Drupal\migrate\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;
 use Drupal\simpletest\KernelTestBase;
@@ -74,21 +76,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   }
 
   /**
-   * Prepare the migration.
-   *
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
-   *   The migration object.
-   * @param array $files
-   *   An array of files.
-   */
-  protected function prepare(MigrationInterface $migration, array $files = array()) {
-    $this->loadDumps($files);
-    if ($this instanceof MigrateDumpAlterInterface) {
-      static::migrateDumpAlter($this);
-    }
-  }
-
-  /**
    * Load Drupal 6 database dumps to be used.
    *
    * @param array $files
@@ -96,7 +83,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    * @param string $method
    *   The name of the method in the dump class to use. Defaults to load.
    */
-  protected function loadDumps($files, $method = 'load') {
+  protected function loadDumps(array $files, $method = 'load') {
     // Load the database from the portable PHP dump.
     // The files may be gzipped.
     foreach ($files as $file) {
@@ -135,6 +122,22 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
         $id_map->saveIdMapping($row, $id_mapping[1]);
       }
     }
+  }
+
+  /**
+   * Executes a single migration.
+   *
+   * @param string|\Drupal\migrate\Entity\MigrationInterface $migration
+   *  The migration to execute, or its ID.
+   */
+  protected function executeMigration($migration) {
+    if (is_string($migration)) {
+      $migration = Migration::load($migration);
+    }
+    if ($this instanceof MigrateDumpAlterInterface) {
+      static::migrateDumpAlter($this);
+    }
+    (new MigrateExecutable($migration, $this))->import();
   }
 
   /**

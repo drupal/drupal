@@ -7,10 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -25,14 +22,8 @@ class MigrateDateFormatTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_date_formats');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
-    $executable->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d6_date_formats');
   }
 
   /**

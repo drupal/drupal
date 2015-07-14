@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * User picture entity form display.
  *
@@ -35,10 +32,7 @@ class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-
-    $migration = entity_load('migration', 'd6_user_picture_entity_form_display');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration('d6_user_picture_entity_form_display');
   }
 
   /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\Core\Database\Database;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\Node;
 

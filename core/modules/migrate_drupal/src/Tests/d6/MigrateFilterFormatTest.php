@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Upgrade variables to filter.formats.*.yml.
  *
@@ -27,15 +24,8 @@ class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_filter_format');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Filters.php',
-      $this->getDumpDirectory() . '/FilterFormats.php',
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Filters.php', 'FilterFormats.php', 'Variable.php']);
+    $this->executeMigration('d6_filter_format');
   }
 
   /**

@@ -9,7 +9,6 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -26,14 +25,8 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     parent::setUp();
 
     $this->installSchema('system', ['url_alias']);
-
-    $migration = entity_load('migration', 'd6_url_alias');
-    $dumps = array(
-      $this->getDumpDirectory() . '/UrlAlias.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['UrlAlias.php']);
+    $this->executeMigration('d6_url_alias');
   }
 
   /**

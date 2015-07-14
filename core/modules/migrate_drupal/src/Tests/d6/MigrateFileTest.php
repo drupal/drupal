@@ -8,7 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\Component\Utility\Random;
-use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Tests\MigrateDumpAlterInterface;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\TestBase;
@@ -44,17 +43,13 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->installEntitySchema('file');
     $this->installConfig(['file']);
 
-    $dumps = array(
-      $this->getDumpDirectory() . '/Files.php',
-    );
+    $this->loadDumps(['Files.php']);
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $migration = entity_load('migration', 'd6_file');
     $source = $migration->get('source');
     $source['site_path'] = 'core/modules/simpletest';
     $migration->set('source', $source);
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration($migration);
     $this->standalone = TRUE;
   }
 
@@ -77,11 +72,8 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
 
     // Test that we can re-import and also test with file_directory_path set.
     db_truncate(entity_load('migration', 'd6_file')->getIdMap()->mapTableName())->execute();
-    $migration = entity_load_unchanged('migration', 'd6_file');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
+
+    $this->loadDumps(['Variable.php']);
 
     // Update the file_directory_path.
     Database::getConnection('default', 'migrate')
@@ -94,8 +86,9 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->fields(array('value' => serialize($this->getTempFilesDirectory())))
       ->condition('name', 'file_directory_temp')
       ->execute();
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+
+    $migration = entity_load_unchanged('migration', 'd6_file');
+    $this->executeMigration($migration);
 
     $file = File::load(2);
     $this->assertIdentical('public://core/modules/simpletest/files/image-2.jpg', $file->getFileUri());

@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Test migrating node settings into the base_field_bundle_override config entity.
  *
@@ -58,25 +55,10 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    // Setup the dumps.
-    $migration = entity_load('migration', 'd6_node_setting_promote');
-    $dumps = array(
-      $this->getDumpDirectory() . '/NodeType.php',
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-
-    // Run the migrations.
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-
-    $migration = entity_load('migration', 'd6_node_setting_status');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-
-    $migration = entity_load('migration', 'd6_node_setting_sticky');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['NodeType.php', 'Variable.php']);
+    $this->executeMigration('d6_node_setting_promote');
+    $this->executeMigration('d6_node_setting_status');
+    $this->executeMigration('d6_node_setting_sticky');
   }
 
   /**

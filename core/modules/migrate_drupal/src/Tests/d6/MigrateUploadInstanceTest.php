@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upload field instance migration.
@@ -52,14 +50,8 @@ class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
       'translatable' => '0',
     ))->save();
 
-    $migration = entity_load('migration', 'd6_upload_field_instance');
-    $dumps = array(
-      $this->getDumpDirectory() . '/NodeType.php',
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['NodeType.php', 'Variable.php']);
+    $this->executeMigration('d6_upload_field_instance');
   }
 
   /**

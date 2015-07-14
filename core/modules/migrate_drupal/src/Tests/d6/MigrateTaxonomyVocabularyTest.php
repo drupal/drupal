@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
@@ -30,14 +28,8 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_taxonomy_vocabulary');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Vocabulary.php',
-      $this->getDumpDirectory() . '/VocabularyNodeTypes.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Vocabulary.php', 'VocabularyNodeTypes.php']);
+    $this->executeMigration('d6_taxonomy_vocabulary');
   }
 
   /**

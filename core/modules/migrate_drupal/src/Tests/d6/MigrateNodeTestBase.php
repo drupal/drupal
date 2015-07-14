@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\user\Entity\User;
 
@@ -95,21 +94,19 @@ abstract class MigrateNodeTestBase extends MigrateDrupal6TestBase {
     $node->enforceIsNew();
     $node->save();
 
-    // Load dumps.
-    $dumps = array(
-      $this->getDumpDirectory() . '/Node.php',
-      $this->getDumpDirectory() . '/NodeRevisions.php',
-      $this->getDumpDirectory() . '/ContentTypeStory.php',
-      $this->getDumpDirectory() . '/ContentTypeTestPlanet.php',
-      $this->getDumpDirectory() . '/NodeType.php',
-      $this->getDumpDirectory() . '/Variable.php',
-      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
-      $this->getDumpDirectory() . '/ContentNodeField.php',
-      $this->getDumpDirectory() . '/ContentFieldTest.php',
-      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
-      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
-    );
-    $this->loadDumps($dumps);
+    $this->loadDumps([
+      'Node.php',
+      'NodeRevisions.php',
+      'ContentTypeStory.php',
+      'ContentTypeTestPlanet.php',
+      'NodeType.php',
+      'Variable.php',
+      'ContentNodeFieldInstance.php',
+      'ContentNodeField.php',
+      'ContentFieldTest.php',
+      'ContentFieldTestTwo.php',
+      'ContentFieldMultivalue.php',
+    ]);
   }
 
 }

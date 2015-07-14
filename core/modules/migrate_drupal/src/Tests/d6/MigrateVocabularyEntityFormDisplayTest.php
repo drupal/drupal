@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Vocabulary entity form display migration.
  *
@@ -71,15 +68,8 @@ class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    $migration = entity_load('migration', 'd6_vocabulary_entity_form_display');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Vocabulary.php',
-      $this->getDumpDirectory() . '/VocabularyNodeTypes.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-
+    $this->loadDumps(['Vocabulary.php', 'VocabularyNodeTypes.php']);
+    $this->executeMigration('d6_vocabulary_entity_form_display');
   }
 
   /**

@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -33,15 +31,8 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     parent::setUp();
 
     $this->installConfig(array('node'));
-
-    $migration = entity_load('migration', 'd6_node_type');
-    $dumps = array(
-      $this->getDumpDirectory() . '/NodeType.php',
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['NodeType.php', 'Variable.php']);
+    $this->executeMigration('d6_node_type');
   }
 
   /**

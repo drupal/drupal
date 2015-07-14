@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Base class for file/upload migration tests.
  */
@@ -90,14 +88,13 @@ abstract class MigrateUploadBase extends MigrateDrupal6TestBase {
         $node->save();
       }
     }
-    $dumps = array(
-      $this->getDumpDirectory() . '/Node.php',
-      $this->getDumpDirectory() . '/NodeRevisions.php',
-      $this->getDumpDirectory() . '/ContentTypeStory.php',
-      $this->getDumpDirectory() . '/ContentTypeTestPlanet.php',
-      $this->getDumpDirectory() . '/Upload.php',
-    );
-    $this->loadDumps($dumps);
+    $this->loadDumps([
+      'Node.php',
+      'NodeRevisions.php',
+      'ContentTypeStory.php',
+      'ContentTypeTestPlanet.php',
+      'Upload.php',
+    ]);
   }
 
 }

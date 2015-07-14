@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d7;
 
-use Drupal\migrate\Entity\Migration;
-use Drupal\migrate\MigrateExecutable;
-
 /**
  * Tests migration of Aggregator's variables to configuration.
  *
@@ -25,11 +22,8 @@ class MigrateAggregatorSettingsTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(static::$modules);
-    $this->loadDumps([
-      $this->getDumpDirectory() . '/Variable.php',
-    ]);
-    $migration = Migration::load('d7_aggregator_settings');
-    (new MigrateExecutable($migration, $this))->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d7_aggregator_settings');
   }
 
   /**

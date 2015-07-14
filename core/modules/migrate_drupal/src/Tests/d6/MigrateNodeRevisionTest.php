@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
 
 /**
@@ -30,10 +29,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    $dumps = array(
-      $this->getDumpDirectory() . '/Users.php',
-    );
-    $this->loadDumps($dumps);
+    $this->loadDumps(['Users.php']);
 
     // Create our users for the node authors.
     $query = Database::getConnection('default', 'migrate')->query('SELECT * FROM {users} WHERE uid NOT IN (0, 1)');
@@ -43,10 +39,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
       $user->save();
     }
 
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_node_revision');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration('d6_node_revision');
   }
 
   /**

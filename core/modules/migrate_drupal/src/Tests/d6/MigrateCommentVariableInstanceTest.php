@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Upgrade comment variables to field.instance.node.*.comment.yml.
  *
@@ -50,15 +47,8 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupal6TestBase {
       'type' => 'comment',
       'translatable' => '0',
     ))->save();
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_comment_field_instance');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-      $this->getDumpDirectory() . '/NodeType.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Variable.php', 'NodeType.php']);
+    $this->executeMigration('d6_comment_field_instance');
   }
 
   /**

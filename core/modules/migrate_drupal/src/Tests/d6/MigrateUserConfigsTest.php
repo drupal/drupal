@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to user.*.yml.
@@ -25,17 +23,9 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $migration = entity_load('migration', 'd6_user_mail');
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-
-    $migration = entity_load('migration', 'd6_user_settings');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d6_user_mail');
+    $this->executeMigration('d6_user_settings');
   }
 
   /**

@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -34,17 +32,13 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
         array(array(2), array('vocabulary_2_i_1_')),
         array(array(3), array('vocabulary_3_i_2_')),
     )));
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_taxonomy_term');
-    $dumps = array(
-      $this->getDumpDirectory() . '/TermData.php',
-      $this->getDumpDirectory() . '/TermHierarchy.php',
-      $this->getDumpDirectory() . '/Vocabulary.php',
-      $this->getDumpDirectory() . '/VocabularyNodeTypes.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps([
+      'TermData.php',
+      'TermHierarchy.php',
+      'Vocabulary.php',
+      'VocabularyNodeTypes.php',
+    ]);
+    $this->executeMigration('d6_taxonomy_term');
   }
 
   /**

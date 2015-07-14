@@ -8,9 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to contact.settings.yml.
@@ -41,14 +38,8 @@ class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $migration = entity_load('migration', 'd6_contact_settings');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-      $this->getDumpDirectory() . '/Contact.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
-    $executable->import();
+    $this->loadDumps(['Variable.php', 'Contact.php']);
+    $this->executeMigration('d6_contact_settings');
   }
 
   /**

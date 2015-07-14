@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -74,15 +72,14 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
       'type' => 'boolean',
     ))->save();
 
-    $migration = entity_load('migration', 'd6_user_profile_entity_display');
-    $dumps = array(
-      $this->getDumpDirectory() . '/ProfileFields.php',
-      $this->getDumpDirectory() . '/Users.php',
-      $this->getDumpDirectory() . '/ProfileValues.php',
-      $this->getDumpDirectory() . '/UsersRoles.php',
-      $this->getDumpDirectory() . '/EventTimezones.php',
-    );
-    $this->prepare($migration, $dumps);
+    $this->loadDumps([
+      'ProfileFields.php',
+      'Users.php',
+      'ProfileValues.php',
+      'UsersRoles.php',
+      'EventTimezones.php',
+    ]);
+
     $field_data = Database::getConnection('default', 'migrate')
       ->select('profile_fields', 'u')
       ->fields('u')
@@ -98,8 +95,8 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
         'required' => 1,
       ))->save();
     }
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+
+    $this->executeMigration('d6_user_profile_entity_display');
   }
 
   /**

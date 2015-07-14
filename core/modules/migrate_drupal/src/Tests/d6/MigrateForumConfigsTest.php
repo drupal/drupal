@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to forum.settings.yml.
@@ -37,13 +35,8 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
         array(array(1), array('vocabulary_1_i_0_')),
       )
     ));
-    $migration = entity_load('migration', 'd6_forum_settings');
-    $dumps = array(
-      $this->getDumpDirectory() . '/Variable.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['Variable.php']);
+    $this->executeMigration('d6_forum_settings');
   }
 
   /**

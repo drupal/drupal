@@ -9,7 +9,6 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -106,15 +105,14 @@ class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    // Load database dumps to provide source data.
-    $dumps = array(
-      $this->getDumpDirectory() . '/ProfileFields.php',
-      $this->getDumpDirectory() . '/Users.php',
-      $this->getDumpDirectory() . '/ProfileValues.php',
-      $this->getDumpDirectory() . '/UsersRoles.php',
-      $this->getDumpDirectory() . '/EventTimezones.php',
-    );
-    $this->loadDumps($dumps);
+    $this->loadDumps([
+      'ProfileFields.php',
+      'Users.php',
+      'ProfileValues.php',
+      'UsersRoles.php',
+      'EventTimezones.php',
+    ]);
+
     $field_data = Database::getConnection('default', 'migrate')
       ->select('profile_fields', 'u')
       ->fields('u')
@@ -140,10 +138,8 @@ class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
       $user->save();
     }
 
-    // Migrate profile fields.
     $migration_format = entity_load('migration', 'd6_profile_values:user');
-    $executable = new MigrateExecutable($migration_format, $this);
-    $executable->import();
+    $this->executeMigration($migration_format);
   }
 
   /**

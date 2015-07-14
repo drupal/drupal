@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Menu link migration.
  *
@@ -43,13 +40,8 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
       ),
     ));
 
-    $migration = entity_load('migration', 'd6_menu_links');
-    $dumps = array(
-      $this->getDumpDirectory() . '/MenuLinks.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps(['MenuLinks.php']);
+    $this->executeMigration('d6_menu_links');
   }
 
   public function testMenuLinks() {

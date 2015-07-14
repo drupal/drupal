@@ -7,8 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\file\Entity\File;
 
 /**
@@ -32,21 +30,19 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
     parent::setUp();
 
     $this->installEntitySchema('file');
+    $this->loadDumps([
+      'Users.php',
+      'ProfileValues.php',
+      'UsersRoles.php',
+      'EventTimezones.php',
+    ]);
 
-    $dumps = array(
-      $this->getDumpDirectory() . '/Users.php',
-      $this->getDumpDirectory() . '/ProfileValues.php',
-      $this->getDumpDirectory() . '/UsersRoles.php',
-      $this->getDumpDirectory() . '/EventTimezones.php',
-    );
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $migration = entity_load('migration', 'd6_user_picture_file');
     $source = $migration->get('source');
     $source['site_path'] = 'core/modules/simpletest';
     $migration->set('source', $source);
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration($migration);
   }
 
   /**
