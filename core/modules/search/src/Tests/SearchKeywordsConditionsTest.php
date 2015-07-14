@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
+
 /**
  * Verify the search without keywords set and extra conditions.
  *
@@ -59,6 +61,6 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     $keys = 'moving drop ' . $this->randomMachineName();
     $this->drupalGet("search/dummy_path", array('query' => array('keys' => 'bike', 'search_conditions' => $keys)));
     $this->assertText("Dummy search snippet to display.");
-    $this->assertRaw(print_r(array('keys' => 'bike', 'search_conditions' => $keys), TRUE));
+    $this->assertRaw(SafeMarkup::checkPlain(print_r(array('keys' => 'bike', 'search_conditions' => $keys), TRUE)));
   }
 }
