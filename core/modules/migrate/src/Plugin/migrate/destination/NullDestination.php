@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\Null.
+ * Contains \Drupal\migrate\Plugin\migrate\destination\NullDestination.
  */
 
 namespace Drupal\migrate\Plugin\migrate\destination;
@@ -16,7 +16,7 @@ use Drupal\migrate\Row;
  *   requirements_met = false
  * )
  */
-class Null extends DestinationBase {
+class NullDestination extends DestinationBase {
 
   /**
    * {@inheritdoc}
