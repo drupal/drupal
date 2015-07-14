@@ -210,97 +210,10 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
-   * Tests that all toolbar cache entries for a user are cleared with a cache
-   * tag for that user, i.e. cache entries for all languages for that user.
-   */
-  function testCacheClearByCacheTag() {
-    // Test that the toolbar admin menu subtrees cache is invalidated for a user
-    // across multiple languages.
-    $this->drupalLogin($this->adminUser);
-    $toolbarCache = $this->container->get('cache.toolbar');
-    $admin_user_id = $this->adminUser->id();
-    $admin_user_2_id = $this->adminUser2->id();
-
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser against the language "en".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . 'en');
-    $this->assertEqual(in_array('user:' . $admin_user_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user against the language "en".');
-
-    // Assert that no toolbar cache exists for adminUser against the
-    // language "fr".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . 'fr');
-    $this->assertFalse($cache, 'No toolbar cache exists for admin_user against the language "fr".');
-
-    // Install a second language.
-    $edit = array(
-      'predefined_langcode' => 'fr',
-    );
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
-
-    // Request a page in 'fr' to update the cache.
-    $this->drupalGet('fr/test-page');
-    $this->assertResponse(200);
-
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser against the language "fr".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . 'fr');
-    $this->assertEqual(in_array('user:' . $admin_user_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user against the language "fr".');
-
-    // Log in the adminUser2 user. We will use this user as a control to
-    // verify that clearing a cache tag for adminUser does not clear the cache
-    // for adminUser2.
-    $this->drupalLogin($this->adminUser2);
-
-    // Request a page in 'en' to create the cache.
-    $this->drupalGet('test-page');
-    $this->assertResponse(200);
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser2 against the language "en".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'en');
-    $this->assertEqual(in_array('user:' . $admin_user_2_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "en".');
-
-    // Request a page in 'fr' to create the cache.
-    $this->drupalGet('fr/test-page');
-    $this->assertResponse(200);
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser against the language "fr".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'fr');
-    $this->assertEqual(in_array('user:' . $admin_user_2_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "fr".');
-
-    // Log in the admin user and clear the caches for this user using a tag.
-    $this->drupalLogin($this->adminUser);
-    Cache::invalidateTags(array('user:' . $admin_user_id));
-
-    // Assert that no toolbar cache exists for adminUser against the
-    // language "en".
-    $cache = $toolbarCache->get($admin_user_id . ':' . 'en');
-    $this->assertFalse($cache, 'No toolbar cache exists for admin_user against the language "en".');
-
-    // Assert that no toolbar cache exists for adminUser against the
-    // language "fr".
-    $cache = $toolbarCache->get($admin_user_id . ':' . 'fr');
-    $this->assertFalse($cache, 'No toolbar cache exists for admin_user against the language "fr".');
-
-    // Log in adminUser2 and verify that this user's caches still exist.
-    $this->drupalLogin($this->adminUser2);
-
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser2 against the language "en".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'en');
-    $this->assertEqual(in_array('user:' . $admin_user_2_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "en".');
-
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser2 against the language "fr".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'fr');
-    $this->assertEqual(in_array('user:' . $admin_user_2_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "fr".');
-  }
-
-  /**
    * Tests that changes to a user account by another user clears the changed
    * account's toolbar cached, not the user's who took the action.
    */
   function testNonCurrentUserAccountUpdates() {
-    $toolbarCache = $this->container->get('cache.toolbar');
     $admin_user_id = $this->adminUser->id();
     $admin_user_2_id = $this->adminUser2->id();
     $this->hash = $this->getSubtreesHash();
@@ -337,9 +250,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
    * Tests that toolbar cache is cleared when string translations are made.
    */
   function testLocaleTranslationSubtreesHashCacheClear() {
-    $toolbarCache = $this->container->get('cache.toolbar');
     $admin_user = $this->adminUser;
-    $admin_user_id = $this->adminUser->id();
     // User to translate and delete string.
     $translate_user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
 
@@ -372,11 +283,6 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
     $this->assertResponse(200);
-
-    // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for adminUser against the language "xx".
-    $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . $langcode);
-    $this->assertEqual(in_array('user:' . $admin_user_id, $cache->tags), 'A cache tag in the toolbar cache under the key "user" exists for admin_user against the language "xx".');
 
     // Get a baseline hash for the admin menu subtrees before translating one
     // of the menu link items.
@@ -434,28 +340,6 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $subtrees_hash = $this->getSubtreesHash();
 
     $this->drupalGetJSON('toolbar/subtrees/' . $subtrees_hash);
-    $this->assertResponse('200');
-
-    // Test that the subtrees hash changes with a different language code and
-    // that JSON is returned when a language code is specified.
-    // Create a new language with the langcode 'xx'.
-    $langcode = 'xx';
-    // The English name for the language. This will be translated.
-    $name = $this->randomMachineName(16);
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode,
-      'label' => $name,
-      'direction' => LanguageInterface::DIRECTION_LTR,
-    );
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
-
-    // Get a page with the new language langcode in the URL.
-    $this->drupalGet('xx/test-page');
-    // Request a new page to refresh the drupalSettings object.
-    $subtrees_hash = $this->getSubtreesHash();
-
-    $this->drupalGetJSON('toolbar/subtrees/' . $subtrees_hash . '/' . $langcode);
     $this->assertResponse('200');
   }
 

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -13,7 +14,6 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\user\Entity\Role;
 use Drupal\Core\Url;
 
 /**
@@ -158,10 +158,9 @@ function toolbar_toolbar() {
   // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
   // script here with the hash parameter that is needed for that route.
   // @see toolbar_subtrees_jsonp()
-  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  list($hash, $hash_cacheability) = _toolbar_get_subtrees_hash();
   $subtrees_attached['drupalSettings']['toolbar'] = [
-    'subtreesHash' => _toolbar_get_subtrees_hash($langcode),
-    'langcode' => $langcode,
+    'subtreesHash' => $hash,
   ];
 
   // The administration element has a link that is themed to correspond to
@@ -198,6 +197,7 @@ function toolbar_toolbar() {
     ),
     '#weight' => -15,
   );
+  $hash_cacheability->applyTo($items['administration']);
 
   return $items;
 }
@@ -269,8 +269,30 @@ function toolbar_menu_navigation_links(array $tree) {
 
 /**
  * Returns the rendered subtree of each top-level toolbar link.
+ *
+ * @return array
+ *   An array with the following key-value pairs:
+ *   - 'subtrees': the rendered subtrees
+ *   - 'cacheability: the associated cacheability.
  */
 function toolbar_get_rendered_subtrees() {
+  $data = [
+    '#pre_render' => ['_toolbar_do_get_rendered_subtrees'],
+    '#cache' => [
+      'keys' => [
+        'toolbar_rendered_subtrees',
+      ],
+    ],
+    '#cache_properties' => ['#subtrees'],
+  ];
+  \Drupal::service('renderer')->renderPlain($data);
+  return [$data['#subtrees'], CacheableMetadata::createFromRenderArray($data)];
+}
+
+/**
+ * #pre_render callback for toolbar_get_rendered_subtrees().
+ */
+function _toolbar_do_get_rendered_subtrees(array $data) {
   $menu_tree = \Drupal::service('toolbar.menu_tree');
   $parameters = new MenuTreeParameters();
   $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->onlyEnabledLinks();
@@ -282,12 +304,15 @@ function toolbar_get_rendered_subtrees() {
   );
   $tree = $menu_tree->transform($tree, $manipulators);
   $subtrees = array();
+  // Calculated the combined cacheability of all subtrees.
+  $cacheability = new CacheableMetadata();
   foreach ($tree as $element) {
     /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
     $link = $element->link;
     if ($element->subtree) {
       $subtree = $menu_tree->build($element->subtree);
       $output = \Drupal::service('renderer')->renderPlain($subtree);
+      $cacheability = $cacheability->merge(CacheableMetadata::createFromRenderArray($subtree));
     }
     else {
       $output = '';
@@ -298,35 +323,24 @@ function toolbar_get_rendered_subtrees() {
 
     $subtrees[$id] = $output;
   }
-  return $subtrees;
+
+  // Store the subtrees, along with the cacheability metadata.
+  $cacheability->applyTo($data);
+  $data['#subtrees'] = $subtrees;
+
+  return $data;
 }
 
 /**
  * Returns the hash of the per-user rendered toolbar subtrees.
  *
- * @param string $langcode
- *   The langcode of the current request.
- *
  * @return string
  *   The hash of the admin_menu subtrees.
  */
-function _toolbar_get_subtrees_hash($langcode) {
-  $uid = \Drupal::currentUser()->id();
-  $cid = _toolbar_get_user_cid($uid, $langcode);
-  if ($cache = \Drupal::cache('toolbar')->get($cid)) {
-    $hash = $cache->data;
-  }
-  else {
-    $subtrees = toolbar_get_rendered_subtrees();
-    $hash = Crypt::hashBase64(serialize($subtrees));
-    // Cache using a tag 'user' so that we can invalidate all user-specific
-    // caches later, based on the user's ID regardless of language.
-    // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
-    // subtrees rendering when string translations are made.
-    $role_list_cache_tags = \Drupal::entityManager()->getDefinition('user_role')->getListCacheTags();
-    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, Cache::mergeTags(array('user:' . $uid, 'locale', 'config:system.menu.admin'), $role_list_cache_tags));
-  }
-  return $hash;
+function _toolbar_get_subtrees_hash() {
+  list($subtrees, $cacheability) = toolbar_get_rendered_subtrees();
+  $hash = Crypt::hashBase64(serialize($subtrees));
+  return [$hash, $cacheability];
 }
 
 /**
