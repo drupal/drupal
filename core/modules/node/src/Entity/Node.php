@@ -77,7 +77,11 @@ class Node extends ContentEntityBase implements NodeInterface {
   /**
    * Whether the node is being previewed or not.
    *
+   * The variable is set to public as it will give a considerable performance
+   * improvement. See https://www.drupal.org/node/2498919.
+   *
    * @var true|null
+   *   TRUE if the node is being previewed and NULL if it is not.
    */
   public $in_preview = NULL;
 
