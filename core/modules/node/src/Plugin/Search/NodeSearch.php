@@ -293,7 +293,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     }
 
     if ($status & SearchQuery::NO_POSITIVE_KEYWORDS) {
-      drupal_set_message($this->formatPlural($this->searchSettings->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'), 'warning');
+      drupal_set_message($this->formatPlural($this->searchSettings->get('index.minimum_word_size'), 'You must include at least one keyword to match in the content, and punctuation is ignored.', 'You must include at least one keyword to match in the content. Keywords must be at least @count characters, and punctuation is ignored.'), 'warning');
     }
 
     return $find;

@@ -93,16 +93,16 @@ class SearchBlockTest extends SearchTestBase {
     // Test that after entering a too-short keyword in the form, you can then
     // search again with a longer keyword. First test using the block form.
     $this->submitGetForm('node', array('keys' => $this->randomMachineName(1)), t('Search'));
-    $this->assertText('You must include at least one positive keyword', 'Keyword message is displayed when searching for short word');
+    $this->assertText('You must include at least one keyword to match in the content', 'Keyword message is displayed when searching for short word');
     $this->assertNoText(t('Please enter some keywords'), 'With short word entered, no keywords message is not displayed');
     $this->submitGetForm(NULL, array('keys' => $this->randomMachineName()), t('Search'), 'search-block-form');
-    $this->assertNoText('You must include at least one positive keyword', 'Keyword message is not displayed when searching for long word after short word search');
+    $this->assertNoText('You must include at least one keyword to match in the content', 'Keyword message is not displayed when searching for long word after short word search');
 
     // Same test again, using the search page form for the second search this
     // time.
     $this->submitGetForm('node', array('keys' => $this->randomMachineName(1)), t('Search'));
     $this->drupalPostForm(NULL, array('keys' => $this->randomMachineName()), t('Search'), array(), array(), 'search-form');
-    $this->assertNoText('You must include at least one positive keyword', 'Keyword message is not displayed when searching for long word after short word search');
+    $this->assertNoText('You must include at least one keyword to match in the content', 'Keyword message is not displayed when searching for long word after short word search');
 
   }
 

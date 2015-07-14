@@ -119,10 +119,10 @@ class SearchPageTextTest extends SearchTestBase {
     // message, and that if after that you search for a longer keyword, you
     // do not still see the message.
     $this->drupalPostForm('search/node', array('keys' => $this->randomMachineName(1)), t('Search'));
-    $this->assertText('You must include at least one positive keyword', 'Keyword message is displayed when searching for short word');
+    $this->assertText('You must include at least one keyword', 'Keyword message is displayed when searching for short word');
     $this->assertNoText(t('Please enter some keywords'), 'With short word entered, no keywords message is not displayed');
     $this->drupalPostForm(NULL, array('keys' => $this->randomMachineName()), t('Search'));
-    $this->assertNoText('You must include at least one positive keyword', 'Keyword message is not displayed when searching for long word after short word search');
+    $this->assertNoText('You must include at least one keyword', 'Keyword message is not displayed when searching for long word after short word search');
 
     // Test that if you search for a URL with .. in it, you still end up at
     // the search page. See issue https://www.drupal.org/node/890058.

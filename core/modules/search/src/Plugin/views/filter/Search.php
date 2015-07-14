@@ -108,7 +108,7 @@ class Search extends FilterPluginBase {
     if (!$form_state->isValueEmpty($key)) {
       $this->queryParseSearchExpression($form_state->getValue($key));
       if (count($this->searchQuery->words()) == 0) {
-        $form_state->setErrorByName($key, $this->formatPlural(\Drupal::config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
+        $form_state->setErrorByName($key, $this->formatPlural(\Drupal::config('search.settings')->get('index.minimum_word_size'), 'You must include at least one keyword to match in the content, and punctuation is ignored.', 'You must include at least one keyword to match in the content. Keywords must be at least @count characters, and punctuation is ignored.'));
       }
     }
   }
