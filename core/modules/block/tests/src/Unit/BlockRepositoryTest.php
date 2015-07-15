@@ -91,6 +91,12 @@ class BlockRepositoryTest extends UnitTestCase {
       $block->expects($block_config[0] ? $this->atLeastOnce() : $this->never())
         ->method('getRegion')
         ->willReturn($block_config[1]);
+      $block->expects($this->any())
+        ->method('label')
+        ->willReturn($block_id);
+      $block->expects($this->any())
+        ->method('getWeight')
+        ->willReturn($block_config[2]);
       $blocks[$block_id] = $block;
     }
 
@@ -106,7 +112,7 @@ class BlockRepositoryTest extends UnitTestCase {
         $result[$region][] = $plugin_id;
       }
     }
-    $this->assertSame($result, $expected_blocks);
+    $this->assertEquals($expected_blocks, $result);
   }
 
   public function providerBlocksConfig() {
@@ -118,11 +124,14 @@ class BlockRepositoryTest extends UnitTestCase {
       'block2' => array(
         AccessResult::forbidden(), 'bottom', 0
       ),
-      // Test two blocks in the same region with specific weight.
+      // Test some blocks in the same region with specific weight.
+      'block4' => array(
+        AccessResult::allowed(), 'bottom', 5
+      ),
       'block3' => array(
         AccessResult::allowed(), 'bottom', 5
       ),
-      'block4' => array(
+      'block5' => array(
         AccessResult::allowed(), 'bottom', -5
       ),
     );
@@ -132,7 +141,7 @@ class BlockRepositoryTest extends UnitTestCase {
       [
         'top' => ['block1'],
         'center' => [],
-        'bottom' => ['block4', 'block3'],
+        'bottom' => ['block5', 'block3', 'block4'],
       ]
     ];
     return $test_cases;
