@@ -7,15 +7,15 @@
 
 namespace Drupal\Core;
 
-use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Used to return generated URLs, along with associated cacheability metadata.
+ * Used to return generated URLs, along with associated bubbleable metadata.
  *
  * Note: not to be confused with \Drupal\Core\Url, which is for passing around
  *   ungenerated URLs (typically route name + route parameters).
  */
-class GeneratedUrl extends CacheableMetadata {
+class GeneratedUrl extends BubbleableMetadata {
 
   /**
    * The string value of the URL.

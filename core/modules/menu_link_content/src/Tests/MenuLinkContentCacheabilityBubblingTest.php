@@ -8,9 +8,9 @@
 namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\User;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Ensures that rendered menu links bubble the necessary cacheability metadata
+ * Ensures that rendered menu links bubble the necessary bubbleable metadata
  * for outbound path/route processing.
  *
  * @group menu_link_content
@@ -47,7 +47,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
   }
 
   /**
-   * Tests bubbling of menu links' outbound route/path processing cacheability.
+   * Tests bubbleable metadata of menu links' outbound route/path processing.
    */
   public function testOutboundPathAndRouteProcessing() {
     \Drupal::service('router.builder')->rebuild();
@@ -66,7 +66,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     $renderer = \Drupal::service('renderer');
 
 
-    $default_menu_cacheability = (new CacheableMetadata())
+    $default_menu_cacheability = (new BubbleableMetadata())
       ->setCacheMaxAge(Cache::PERMANENT)
       ->setCacheTags(['config:system.menu.tools'])
       ->setCacheContexts(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions']);
@@ -87,26 +87,26 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
       // \Drupal\Core\RouteProcessor\RouteProcessorCurrent: 'route' cache context.
       [
         'uri' => 'route:<current>',
-        'cacheability' => (new CacheableMetadata())->setCacheContexts(['route']),
+        'cacheability' => (new BubbleableMetadata())->setCacheContexts(['route']),
       ],
-      // \Drupal\Core\Access\RouteProcessorCsrf: max-age = 0.
+      // \Drupal\Core\Access\RouteProcessorCsrf: placeholder.
       [
         'uri' => 'route:outbound_processing_test.route.csrf',
-        'cacheability' => (new CacheableMetadata())->setCacheMaxAge(0),
+        'cacheability' => (new BubbleableMetadata())->setCacheContexts(['session'])->setAttachments(['placeholders' => []]),
       ],
       // \Drupal\Core\PathProcessor\PathProcessorFront: permanently cacheable.
       [
         'uri' => 'internal:/',
-        'cacheability' => (new CacheableMetadata()),
+        'cacheability' => (new BubbleableMetadata()),
       ],
       // \Drupal\url_alter_test\PathProcessorTest: user entity's cache tags.
       [
         'uri' => 'internal:/user/1',
-        'cacheability' => (new CacheableMetadata())->setCacheTags(User::load(1)->getCacheTags()),
+        'cacheability' => (new BubbleableMetadata())->setCacheTags(User::load(1)->getCacheTags()),
       ],
       [
         'uri' => 'internal:/user/2',
-        'cacheability' => (new CacheableMetadata())->setCacheTags(User::load(2)->getCacheTags()),
+        'cacheability' => (new BubbleableMetadata())->setCacheTags(User::load(2)->getCacheTags()),
       ],
     ];
 
@@ -122,7 +122,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
       $renderer->renderRoot($build);
 
       $expected_cacheability = $default_menu_cacheability->merge($expectation['cacheability']);
-      $this->assertEqual($expected_cacheability, CacheableMetadata::createFromRenderArray($build));
+      $this->assertEqual($expected_cacheability, BubbleableMetadata::createFromRenderArray($build));
 
       $menu_link_content->delete();
     }
@@ -130,7 +130,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     // Now test them all together in one menu: the rendered menu's cacheability
     // metadata should be the combination of the cacheability of all links, and
     // thus of all tested outbound path & route processors.
-    $expected_cacheability = new CacheableMetadata();
+    $expected_cacheability = new BubbleableMetadata();
     foreach ($test_cases as $expectation) {
       $menu_link_content = MenuLinkContent::create([
         'link' => ['uri' => $expectation['uri']],
@@ -143,7 +143,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     $build = $menu_tree->build($tree);
     $renderer->renderRoot($build);
     $expected_cacheability = $expected_cacheability->merge($default_menu_cacheability);
-    $this->assertEqual($expected_cacheability, CacheableMetadata::createFromRenderArray($build));
+    $this->assertEqual($expected_cacheability, BubbleableMetadata::createFromRenderArray($build));
   }
 
 }

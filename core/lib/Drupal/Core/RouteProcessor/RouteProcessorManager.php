@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\RouteProcessor;
 
-use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -51,10 +51,10 @@ class RouteProcessorManager implements OutboundRouteProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($route_name, Route $route, array &$parameters, CacheableMetadata $cacheable_metadata = NULL) {
+  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
     $processors = $this->getOutbound();
     foreach ($processors as $processor) {
-      $processor->processOutbound($route_name, $route, $parameters, $cacheable_metadata);
+      $processor->processOutbound($route_name, $route, $parameters, $bubbleable_metadata);
     }
   }
 

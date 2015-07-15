@@ -8,8 +8,8 @@
 namespace Drupal\system\Tests\RouteProcessor;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\GeneratedUrl;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +52,7 @@ class RouteNoneTest extends KernelTestBase {
    * Tests the output process.
    */
   public function testProcessOutbound() {
-    $expected_cacheability = (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT);
+    $expected_cacheability = (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT);
 
     $request_stack = \Drupal::requestStack();
     /** @var \Symfony\Component\Routing\RequestContext $request_context */

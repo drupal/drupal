@@ -122,17 +122,17 @@ class Link {
   /**
    * Generates the HTML for this Link object.
    *
-   * @param bool $collect_cacheability_metadata
+   * @param bool $collect_bubbleable_metadata
    *   (optional) Defaults to FALSE. When TRUE, both the generated link and its
-   *   associated cacheability metadata are returned.
+   *   associated bubbleable metadata are returned.
    *
    * @return string|\Drupal\Core\GeneratedLink
    *   The link HTML markup.
-   *   When $collect_cacheability_metadata is TRUE, a GeneratedLink object is
-   *   returned, containing the generated link plus cacheability metadata.
+   *   When $collect_bubbleable_metadata is TRUE, a GeneratedLink object is
+   *   returned, containing the generated link plus bubbleable metadata.
    */
-  public function toString($collect_cacheability_metadata = FALSE) {
-    return $this->getLinkGenerator()->generateFromLink($this, $collect_cacheability_metadata);
+  public function toString($collect_bubbleable_metadata = FALSE) {
+    return $this->getLinkGenerator()->generateFromLink($this, $collect_bubbleable_metadata);
   }
 
 }

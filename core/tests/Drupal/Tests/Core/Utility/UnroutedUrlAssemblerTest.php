@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Core\Utility;
 
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\GeneratedUrl;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Utility\UnroutedUrlAssembler;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +87,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    $this->assertEquals($expected, $this->unroutedUrlAssembler->assemble($uri, $options));
    $generated_url = $this->unroutedUrlAssembler->assemble($uri, $options, TRUE);
    $this->assertEquals($expected, $generated_url->getGeneratedUrl());
-   $this->assertInstanceOf('\Drupal\Core\Cache\CacheableMetadata', $generated_url);
+   $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_url);
   }
 
   /**
@@ -153,9 +153,9 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     $this->setupRequestStack(FALSE);
     $this->pathProcessor->expects($this->exactly(2))
       ->method('processOutbound')
-      ->willReturnCallback(function($path, &$options = [], Request $request = NULL, CacheableMetadata $cacheable_metadata = NULL) {
-        if ($cacheable_metadata) {
-          $cacheable_metadata->setCacheContexts(['some-cache-context']);
+      ->willReturnCallback(function($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+        if ($bubbleable_metadata) {
+          $bubbleable_metadata->setCacheContexts(['some-cache-context']);
         }
         return 'test-other-uri';
       });

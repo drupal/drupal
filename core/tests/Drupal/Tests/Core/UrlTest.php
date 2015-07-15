@@ -89,8 +89,8 @@ class UrlTest extends UnitTestCase {
       array('non-existent', NULL, FALSE, 'non-existent'),
     );
 
-    // $this->map has $collect_cacheability_metadata = FALSE; also generate the
-    // $collect_cacheability_metadata = TRUE case for ::generateFromRoute().
+    // $this->map has $collect_bubbleable_metadata = FALSE; also generate the
+    // $collect_bubbleable_metadata = TRUE case for ::generateFromRoute().
     $generate_from_route_map = [];
     foreach ($this->map as $values) {
       $generate_from_route_map[] = $values;
@@ -382,7 +382,7 @@ class UrlTest extends UnitTestCase {
       $this->assertSame($path, $url->toString());
       $generated_url = $url->toString(TRUE);
       $this->assertSame($path, $generated_url->getGeneratedUrl());
-      $this->assertInstanceOf('\Drupal\Core\Cache\CacheableMetadata', $generated_url);
+      $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_url);
     }
   }
 

@@ -24,6 +24,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
+  cache_context.session:
+    class: Drupal\Core\Cache\Context\SessionCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context}
   cache_context.request_format:
     class: Drupal\Core\Cache\Context\RequestFormatCacheContext
     arguments: ['@request_stack']

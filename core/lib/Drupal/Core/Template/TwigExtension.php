@@ -222,7 +222,7 @@ class TwigExtension extends \Twig_Extension {
     $options['absolute'] = TRUE;
     $generated_url = $this->urlGenerator->generateFromRoute($name, $parameters, $options, TRUE);
 
-    // Return as render array, so we can bubble the cacheability metadata.
+    // Return as render array, so we can bubble the bubbleable metadata.
     $build = ['#markup' => $generated_url->getGeneratedUrl()];
     $generated_url->applyTo($build);
     return $build;
@@ -247,7 +247,7 @@ class TwigExtension extends \Twig_Extension {
     $options['absolute'] = TRUE;
     $generated_url = $this->urlGenerator->generateFromPath($path, $options, TRUE);
 
-    // Return as render array, so we can bubble the cacheability metadata.
+    // Return as render array, so we can bubble the bubbleable metadata.
     $build = ['#markup' => $generated_url->getGeneratedUrl()];
     $generated_url->applyTo($build);
     return $build;

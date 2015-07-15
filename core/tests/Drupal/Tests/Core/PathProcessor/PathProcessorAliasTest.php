@@ -8,8 +8,8 @@
 namespace Drupal\Tests\Core\PathProcessor;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -70,11 +70,11 @@ class PathProcessorAliasTest extends UnitTestCase {
         array('url', NULL, 'url'),
       )));
 
-    $cacheable_metadata = new CacheableMetadata();
-    $this->assertEquals($expected_path, $this->pathProcessor->processOutbound($path, $options, NULL, $cacheable_metadata));
+    $bubbleable_metadata = new BubbleableMetadata();
+    $this->assertEquals($expected_path, $this->pathProcessor->processOutbound($path, $options, NULL, $bubbleable_metadata));
     // Cacheability of paths replaced with path aliases is permanent.
     // @todo https://www.drupal.org/node/2480077
-    $this->assertEquals((new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), $cacheable_metadata);
+    $this->assertEquals((new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT), $bubbleable_metadata);
   }
 
   /**

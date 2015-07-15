@@ -732,21 +732,21 @@ class Url {
    * http://example.com/node/1 depending on the options array, plus any
    * specified query string or fragment.
    *
-   * @param bool $collect_cacheability_metadata
+   * @param bool $collect_bubbleable_metadata
    *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
-   *   associated cacheability metadata are returned.
+   *   associated bubbleable metadata are returned.
    *
    * @return string|\Drupal\Core\GeneratedUrl
    *   A string URL.
-   *   When $collect_cacheability_metadata is TRUE, a GeneratedUrl object is
-   *   returned, containing the generated URL plus cacheability metadata.
+   *   When $collect_bubbleable_metadata is TRUE, a GeneratedUrl object is
+   *   returned, containing the generated URL plus bubbleable metadata.
    */
-  public function toString($collect_cacheability_metadata = FALSE) {
+  public function toString($collect_bubbleable_metadata = FALSE) {
     if ($this->unrouted) {
-      return $this->unroutedUrlAssembler()->assemble($this->getUri(), $this->getOptions(), $collect_cacheability_metadata);
+      return $this->unroutedUrlAssembler()->assemble($this->getUri(), $this->getOptions(), $collect_bubbleable_metadata);
     }
 
-    return $this->urlGenerator()->generateFromRoute($this->getRouteName(), $this->getRouteParameters(), $this->getOptions(), $collect_cacheability_metadata);
+    return $this->urlGenerator()->generateFromRoute($this->getRouteName(), $this->getRouteParameters(), $this->getOptions(), $collect_bubbleable_metadata);
   }
 
   /**

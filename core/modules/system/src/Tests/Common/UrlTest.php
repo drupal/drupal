@@ -44,20 +44,20 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Tests that #type=link bubbles outbound route/path processors' cacheability.
+   * Tests that #type=link bubbles outbound route/path processors' metadata.
    */
-  function testLinkCacheability() {
+  function testLinkBubbleableMetadata() {
     $cases = [
-      ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT]],
-      ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT]],
-      ['Route processor link', 'route:system.run_cron', [], ['contexts' => [], 'tags' => [], 'max-age' => 0]],
-      ['Route processor link, absolute', 'route:system.run_cron', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => 0]],
-      ['Path processor link', 'internal:/user/1', [], ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT]],
-      ['Path processor link, absolute', 'internal:/user/1', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT]],
+      ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
+      ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
+      ['Route processor link', 'route:system.run_cron', [], ['contexts' => ['session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
+      ['Route processor link, absolute', 'route:system.run_cron', ['absolute' => TRUE], ['contexts' => ['url.site', 'session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
+      ['Path processor link', 'internal:/user/1', [], ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
+      ['Path processor link, absolute', 'internal:/user/1', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
     ];
 
     foreach ($cases as $case) {
-      list($title, $uri, $options, $expected_cacheability) = $case;
+      list($title, $uri, $options, $expected_cacheability, $expected_attachments) = $case;
       $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
       $link = [
         '#type' => 'link',
@@ -68,6 +68,7 @@ class UrlTest extends WebTestBase {
       \Drupal::service('renderer')->renderRoot($link);
       $this->pass($title);
       $this->assertEqual($expected_cacheability, $link['#cache']);
+      $this->assertEqual($expected_attachments, $link['#attached']);
     }
   }
 

@@ -63,8 +63,8 @@ class LinkGenerator implements LinkGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromLink(Link $link, $collect_cacheability_metadata = FALSE) {
-    return $this->generate($link->getText(), $link->getUrl(), $collect_cacheability_metadata);
+  public function generateFromLink(Link $link, $collect_bubbleable_metadata = FALSE) {
+    return $this->generate($link->getText(), $link->getUrl(), $collect_bubbleable_metadata);
   }
 
   /**
@@ -79,7 +79,7 @@ class LinkGenerator implements LinkGeneratorInterface {
    *
    * @see system_page_attachments()
    */
-  public function generate($text, Url $url, $collect_cacheability_metadata = FALSE) {
+  public function generate($text, Url $url, $collect_bubbleable_metadata = FALSE) {
     // Performance: avoid Url::toString() needing to retrieve the URL generator
     // service from the container.
     $url->setUrlGenerator($this->urlGenerator);
@@ -141,11 +141,11 @@ class LinkGenerator implements LinkGeneratorInterface {
     unset($variables['options']['attributes']);
     $url->setOptions($variables['options']);
 
-    if (!$collect_cacheability_metadata) {
-      $url_string = $url->toString($collect_cacheability_metadata);
+    if (!$collect_bubbleable_metadata) {
+      $url_string = $url->toString($collect_bubbleable_metadata);
     }
     else {
-      $generated_url = $url->toString($collect_cacheability_metadata);
+      $generated_url = $url->toString($collect_bubbleable_metadata);
       $url_string = $generated_url->getGeneratedUrl();
       $generated_link = GeneratedLink::createFromObject($generated_url);
     }
@@ -155,7 +155,7 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     $result = SafeMarkup::format('<a@attributes>@text</a>', array('@attributes' => new Attribute($attributes), '@text' => $variables['text']));
 
-    return $collect_cacheability_metadata ? $generated_link->setGeneratedLink($result) : $result;
+    return $collect_bubbleable_metadata ? $generated_link->setGeneratedLink($result) : $result;
   }
 
 }

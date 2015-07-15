@@ -504,22 +504,22 @@ class Drupal {
    *   (optional) An associative array of parameter names and values.
    * @param array $options
    *   (optional) An associative array of additional options.
-   * @param bool $collect_cacheability_metadata
+   * @param bool $collect_bubbleable_metadata
    *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
-   *   associated cacheability metadata are returned.
+   *   associated bubbleable metadata are returned.
    *
    * @return string|\Drupal\Core\GeneratedUrl
    *   A string containing a URL to the given path.
-   *   When $collect_cacheability_metadata is TRUE, a GeneratedUrl object is
-   *   returned, containing the generated URL plus cacheability metadata.
+   *   When $collect_bubbleable_metadata is TRUE, a GeneratedUrl object is
+   *   returned, containing the generated URL plus bubbleable metadata.
    *
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    * @see \Drupal\Core\Url
    * @see \Drupal\Core\Url::fromRoute()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public static function url($route_name, $route_parameters = array(), $options = array(), $collect_cacheability_metadata = FALSE) {
-    return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options, $collect_cacheability_metadata);
+  public static function url($route_name, $route_parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
+    return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options, $collect_bubbleable_metadata);
   }
 
   /**
@@ -542,20 +542,20 @@ class Drupal {
    *   The link text for the anchor tag.
    * @param \Drupal\Core\Url $url
    *   The URL object used for the link.
-   * @param bool $collect_cacheability_metadata
+   * @param bool $collect_bubbleable_metadata
    *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
-   *   associated cacheability metadata are returned.
+   *   associated bubbleable metadata are returned.
    *
    * @return string|\Drupal\Core\GeneratedLink
    *   An HTML string containing a link to the given route and parameters.
-   *   When $collect_cacheability_metadata is TRUE, a GeneratedLink object is
-   *   returned, containing the generated link plus cacheability metadata.
+   *   When $collect_bubbleable_metadata is TRUE, a GeneratedLink object is
+   *   returned, containing the generated link plus bubbleable metadata.
    *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    * @see \Drupal\Core\Url
    */
-  public static function l($text, Url $url, $collect_cacheability_metadata = FALSE) {
-    return static::getContainer()->get('link_generator')->generate($text, $url, $collect_cacheability_metadata);
+  public static function l($text, Url $url, $collect_bubbleable_metadata = FALSE) {
+    return static::getContainer()->get('link_generator')->generate($text, $url, $collect_bubbleable_metadata);
   }
 
   /**

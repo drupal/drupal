@@ -70,14 +70,14 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *     set if _url() is invoked by Drupal\Core\Entity\Entity::uri().
    *   - 'entity': The entity object (such as a node) for which the URL is being
    *     generated. Only set if _url() is invoked by Drupal\Core\Entity\Entity::uri().
-   * @param bool $collect_cacheability_metadata
+   * @param bool $collect_bubbleable_metadata
    *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
-   *   associated cacheability metadata are returned.
+   *   associated bubbleable metadata are returned.
    *
    * @return string|\Drupal\Core\GeneratedUrl
    *   A string containing a URL to the given path.
-   *   When $collect_cacheability_metadata is TRUE, a GeneratedUrl object is
-   *   returned, containing the generated URL plus cacheability metadata.
+   *   When $collect_bubbleable_metadata is TRUE, a GeneratedUrl object is
+   *   returned, containing the generated URL plus bubbleable metadata.
    *
    * @throws \Drupal\Core\Routing\GeneratorNotInitializedException.
    *
@@ -92,7 +92,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    * @see \Drupal\Core\Url
    * @see \Drupal\Core\GeneratedUrl
    */
-  public function generateFromPath($path = NULL, $options = array(), $collect_cacheability_metadata = FALSE);
+  public function generateFromPath($path = NULL, $options = array(), $collect_bubbleable_metadata = FALSE);
 
   /**
    * Gets the internal path (system path) of a route.
@@ -142,14 +142,14 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *     modify the base URL when a language dependent URL requires so.
    *   - 'prefix': Only used internally, to modify the path when a language
    *     dependent URL requires so.
-   * @param bool $collect_cacheability_metadata
+   * @param bool $collect_bubbleable_metadata
    *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
-   *   associated cacheability metadata are returned.
+   *   associated bubbleable metadata are returned.
    *
    * @return string|\Drupal\Core\GeneratedUrl
    *   The generated URL for the given route.
-   *   When $collect_cacheability_metadata is TRUE, a GeneratedUrl object is
-   *   returned, containing the generated URL plus cacheability metadata.
+   *   When $collect_bubbleable_metadata is TRUE, a GeneratedUrl object is
+   *   returned, containing the generated URL plus bubbleable metadata.
    *
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   Thrown when the named route does not exist.
@@ -159,6 +159,6 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   Thrown when a parameter value for a placeholder is not correct because it
    *   does not match the requirement.
    */
-  public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_cacheability_metadata = FALSE);
+  public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE);
 
 }

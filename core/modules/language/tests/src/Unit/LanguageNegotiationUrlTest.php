@@ -8,8 +8,8 @@
 namespace Drupal\Tests\language\Unit {
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -91,10 +91,10 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $method->setCurrentUser($this->user);
     $this->assertEquals($expected_langcode, $method->getLangcode($request));
 
-    $cacheability = new CacheableMetadata();
+    $cacheability = new BubbleableMetadata();
     $options = [];
     $method->processOutbound('foo', $options, $request, $cacheability);
-    $expected_cacheability = new CacheableMetadata();
+    $expected_cacheability = new BubbleableMetadata();
     if ($expected_langcode) {
       $this->assertSame($prefix . '/', $options['prefix']);
       $expected_cacheability->setCacheContexts(['languages:' . LanguageInterface::TYPE_URL]);
@@ -180,10 +180,10 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $method->setCurrentUser($this->user);
     $this->assertEquals($expected_langcode, $method->getLangcode($request));
 
-    $cacheability = new CacheableMetadata();
+    $cacheability = new BubbleableMetadata();
     $options = [];
     $this->assertSame('foo', $method->processOutbound('foo', $options, $request, $cacheability));
-    $expected_cacheability = new CacheableMetadata();
+    $expected_cacheability = new BubbleableMetadata();
     if ($expected_langcode !== FALSE && count($domains) > 1) {
       $expected_cacheability->setCacheMaxAge(Cache::PERMANENT)->setCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
     }

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\BubbleableMetadata;
 
 /**
  * Used to return generated links, along with associated cacheability metadata.
@@ -15,7 +15,7 @@ use Drupal\Core\Cache\CacheableMetadata;
  * Note: not to be confused with \Drupal\Core\Link, which is for passing around
  *   ungenerated links (typically link text + route name + route parameters).
  */
-class GeneratedLink extends CacheableMetadata {
+class GeneratedLink extends BubbleableMetadata {
 
   /**
    * The HTML string value containing a link.
