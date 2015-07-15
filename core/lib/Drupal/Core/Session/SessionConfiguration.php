@@ -129,12 +129,6 @@ class SessionConfiguration implements SessionConfigurationInterface {
     }
     else {
       $host = $request->getHost();
-
-      // Strip www. from hostname.
-      if (strpos($host, 'www.') === 0) {
-        $host = substr($host, 4);
-      }
-
       // To maximize compatibility and normalize the behavior across user
       // agents, the cookie domain should start with a dot.
       $cookie_domain = '.' . $host;

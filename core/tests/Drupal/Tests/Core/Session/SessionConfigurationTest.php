@@ -51,7 +51,7 @@ class SessionConfigurationTest extends UnitTestCase {
   public function providerTestGeneratedCookieDomain() {
     return [
       ['http://example.com/path/index.php', '.example.com'],
-      ['http://www.example.com/path/index.php', '.example.com'],
+      ['http://www.example.com/path/index.php', '.www.example.com'],
       ['http://subdomain.example.com/path/index.php', '.subdomain.example.com'],
       ['http://example.com:8080/path/index.php', '.example.com'],
       ['https://example.com/path/index.php', '.example.com'],
