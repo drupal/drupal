@@ -151,7 +151,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @param $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
    *
-   * @return boolean
+   * @return bool
    *   Returns TRUE if the property exists and is set, FALSE otherwise.
    */
   public function __isset($property_name);

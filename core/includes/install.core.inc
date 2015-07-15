@@ -1350,7 +1350,7 @@ function install_download_translation(&$install_state) {
  *   original name. If the path contains a filename as well, that one will be
  *   used instead.
  *
- * @return boolean
+ * @return bool
  *   TRUE on success, FALSE on failure.
  */
 function install_retrieve_file($uri, $destination) {

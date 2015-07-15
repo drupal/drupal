@@ -121,7 +121,7 @@ class EntityFile extends EntityContentBase {
    * @param integer $replace
    *  FILE_EXISTS_REPLACE (default) or FILE_EXISTS_RENAME.
    *
-   * @return boolean
+   * @return bool
    *  TRUE on success, FALSE on failure.
    */
   protected function writeFile($source, $destination, $replace = FILE_EXISTS_REPLACE) {
@@ -164,7 +164,7 @@ class EntityFile extends EntityContentBase {
    * @param string $uri
    *  The URI or path.
    *
-   * @return boolean|string
+   * @return string|false
    *  The directory component of the path or URI, or FALSE if it could not
    *  be determined.
    */
@@ -187,7 +187,7 @@ class EntityFile extends EntityContentBase {
    * @param string $destination
    *  The destination URI.
    *
-   * @return boolean
+   * @return bool
    *  TRUE if the source and destination URIs refer to the same physical path,
    *  otherwise FALSE.
    */
@@ -210,7 +210,7 @@ class EntityFile extends EntityContentBase {
    * @param string $uri
    *  The URI or path to test.
    *
-   * @return boolean
+   * @return bool
    */
   protected function isLocalUri($uri) {
     $scheme = $this->fileSystem->uriScheme($uri);

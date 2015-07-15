@@ -58,7 +58,7 @@ interface ContentEntityFormInterface extends EntityFormInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return boolean
+   * @return bool
    *   Returns TRUE if the entity form language matches the entity one.
    */
   public function isDefaultFormLangcode(FormStateInterface $form_state);

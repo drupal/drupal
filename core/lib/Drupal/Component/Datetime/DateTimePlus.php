@@ -508,7 +508,7 @@ class DateTimePlus {
    * @param array $array
    *   An array of datetime values keyed by date part.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the datetime parts contain valid values, otherwise FALSE.
    */
   public static function checkArray($array) {

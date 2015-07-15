@@ -25,7 +25,7 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
   /**
    * Determines whether the list contains any non-empty items.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the list is empty, FALSE otherwise.
    */
   public function isEmpty();

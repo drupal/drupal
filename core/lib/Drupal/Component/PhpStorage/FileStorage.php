@@ -224,7 +224,7 @@ EOF;
    * @param string $path
    *   A string containing either a file or directory path.
    *
-   * @return boolean
+   * @return bool
    *   TRUE for success or if path does not exist, FALSE in the event of an
    *   error.
    */

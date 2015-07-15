@@ -95,7 +95,7 @@ class SystemManager {
   /**
    * Checks for requirement severity.
    *
-   * @return boolean
+   * @return bool
    *   Returns the status of the system.
    */
   public function checkRequirements() {

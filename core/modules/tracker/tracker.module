@@ -138,7 +138,7 @@ function tracker_cron() {
  * @param int $account
  *   The account ID to check.
  *
- * @return boolean
+ * @return bool
  *   TRUE if a user is accessing tracking info for their own account and
  *   has permission to access the content.
  *

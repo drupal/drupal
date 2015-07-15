@@ -336,7 +336,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * Determines if the provider of a definition exists.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if provider exists, FALSE otherwise.
    */
   protected function providerExists($provider) {

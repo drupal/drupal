@@ -231,7 +231,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    * @param array $edit
    *   An array of values to submit to the content translation settings page.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSettings($entity_type, $bundle, $enabled, $edit) {

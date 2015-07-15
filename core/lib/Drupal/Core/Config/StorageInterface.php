@@ -156,7 +156,7 @@ interface StorageInterface {
    *   (optional) The prefix to search for. If omitted, all configuration
    *   objects that exist will be deleted.
    *
-   * @return boolean
+   * @return bool
    *   TRUE on success, FALSE otherwise.
    */
   public function deleteAll($prefix = '');

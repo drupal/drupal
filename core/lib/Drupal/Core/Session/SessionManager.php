@@ -152,7 +152,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * Forcibly start a PHP session.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the session is started.
    */
   protected function startNow() {

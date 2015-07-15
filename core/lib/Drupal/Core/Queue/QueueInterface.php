@@ -89,7 +89,7 @@ interface QueueInterface {
    * @param $item
    *   The item returned by \Drupal\Core\Queue\QueueInterface::claimItem().
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the item has been released, FALSE otherwise.
    */
   public function releaseItem($item);

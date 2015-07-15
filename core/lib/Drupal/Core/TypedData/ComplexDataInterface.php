@@ -94,7 +94,7 @@ interface ComplexDataInterface extends TraversableTypedDataInterface  {
   /**
    * Determines whether the data structure is empty.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the data structure is empty, FALSE otherwise.
    */
   public function isEmpty();

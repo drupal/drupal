@@ -147,7 +147,7 @@ class PoItem {
   /**
    * Get if the translation has plural values.
    *
-   * @return boolean $plural
+   * @return bool
    */
   function isPlural() {
     return $this->_plural;

@@ -182,7 +182,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @param bool $reply
    *   Boolean indicating whether the comment is a reply to another comment.
    *
-   * @return boolean
+   * @return bool
    *   Boolean indicating whether the comment was found.
    */
   function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
@@ -323,7 +323,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Checks whether the commenter's contact information is displayed.
    *
-   * @return boolean
+   * @return bool
    *   Contact info is available.
    */
   function commentContactInfoAvailable() {

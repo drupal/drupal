@@ -1402,7 +1402,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param array $host_patterns
    *   The array of trusted host patterns.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the Host header is trusted, FALSE otherwise.
    *
    * @see https://www.drupal.org/node/1992030

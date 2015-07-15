@@ -286,7 +286,7 @@ function restore_table($path, Connection $connection) {
  * @param string $path
  *  The path to the dump file.
  *
- * @return boolean
+ * @return bool
  */
 function table_is_valid($path) {
   // The call to rtrim() is important, since we need to extract a specific
