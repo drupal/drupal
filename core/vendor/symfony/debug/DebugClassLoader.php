@@ -179,7 +179,7 @@ class DebugClassLoader
             }
 
             if (in_array(strtolower($refl->getShortName()), self::$php7Reserved)) {
-                trigger_error(sprintf('%s uses a reserved class name (%s) that will break on PHP 7 and higher', $name, $refl->getShortName()), E_USER_DEPRECATED);
+                @trigger_error(sprintf('%s uses a reserved class name (%s) that will break on PHP 7 and higher', $name, $refl->getShortName()), E_USER_DEPRECATED);
             } elseif (preg_match('#\n \* @deprecated (.*?)\r?\n \*(?: @|/$)#s', $refl->getDocComment(), $notice)) {
                 self::$deprecated[$name] = preg_replace('#\s*\r?\n \* +#', ' ', $notice[1]);
             } else {
@@ -222,7 +222,7 @@ class DebugClassLoader
             }
             if (self::$caseCheck && preg_match('#([/\\\\][a-zA-Z_\x7F-\xFF][a-zA-Z0-9_\x7F-\xFF]*)+\.(php|hh)$#D', $file, $tail)) {
                 $tail = $tail[0];
-                $real = $refl->getFilename();
+                $real = $refl->getFileName();
 
                 if (2 === self::$caseCheck) {
                     // realpath() on MacOSX doesn't normalize the case of characters
