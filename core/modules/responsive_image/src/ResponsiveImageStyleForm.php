@@ -109,7 +109,12 @@ class ResponsiveImageStyleForm extends EntityForm {
       '#required' => TRUE,
     );
 
-    $breakpoints = $this->breakpointManager->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup());
+    // By default, breakpoints are ordered from smallest weight to largest:
+    // the smallest weight is expected to have the smallest breakpoint width,
+    // while the largest weight is expected to have the largest breakpoint
+    // width. For responsive images, we need largest breakpoint widths first, so
+    // we need to reverse the order of these breakpoints.
+    $breakpoints = array_reverse($this->breakpointManager->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
     foreach ($breakpoints as $breakpoint_id => $breakpoint) {
       foreach ($breakpoint->getMultipliers() as $multiplier) {
         $label = $multiplier . ' ' . $breakpoint->getLabel() . ' [' . $breakpoint->getMediaQuery() . ']';

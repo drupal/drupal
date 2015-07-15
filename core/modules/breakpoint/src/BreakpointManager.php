@@ -169,6 +169,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
         $this->breakpointsByGroup[$group] = $breakpoints;
       }
     }
+
     $instances = array();
     foreach ($this->breakpointsByGroup[$group] as $plugin_id => $definition) {
       if (!isset($this->instances[$plugin_id])) {

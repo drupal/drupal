@@ -133,8 +133,13 @@ function template_preprocess_responsive_image(&$variables) {
 
   $image = \Drupal::service('image.factory')->get($variables['uri']);
   $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
-  // All breakpoints and multipliers.
-  $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup());
+  // Retrieve all breakpoints and multipliers and reverse order of breakpoints.
+  // By default, breakpoints are ordered from smallest weight to largest:
+  // the smallest weight is expected to have the smallest breakpoint width,
+  // while the largest weight is expected to have the largest breakpoint
+  // width. For responsive images, we need largest breakpoint widths first, so
+  // we need to reverse the order of these breakpoints.
+  $breakpoints = array_reverse(\Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
   foreach ($responsive_image_style->getKeyedImageStyleMappings() as $breakpoint_id => $multipliers) {
     if (isset($breakpoints[$breakpoint_id])) {
       $variables['sources'][] = responsive_image_build_source_attributes($image, $variables, $breakpoints[$breakpoint_id], $multipliers);

@@ -34,34 +34,22 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   public function testThemeBreakpoints() {
     // Verify the breakpoint group for breakpoint_theme_test was created.
     $expected_breakpoints = array(
-      'breakpoint_theme_test.tv' => array(
-        'label' => 'tv',
-        'mediaQuery' => 'only screen and (min-width: 1220px)',
+      'breakpoint_theme_test.mobile' => array(
+        'label' => 'mobile',
+        'mediaQuery' => '(min-width: 0px)',
         'weight' => 0,
         'multipliers' => array(
           '1x',
         ),
         'provider' => 'breakpoint_theme_test',
-        'id' => 'breakpoint_theme_test.tv',
-        'group' => 'breakpoint_theme_test',
-        'class' => 'Drupal\\breakpoint\\Breakpoint',
-      ),
-      'breakpoint_theme_test.wide' => array(
-        'label' => 'wide',
-        'mediaQuery' => '(min-width: 851px)',
-        'weight' => 1,
-        'multipliers' => array(
-          '1x',
-        ),
-        'provider' => 'breakpoint_theme_test',
-        'id' => 'breakpoint_theme_test.wide',
+        'id' => 'breakpoint_theme_test.mobile',
         'group' => 'breakpoint_theme_test',
         'class' => 'Drupal\\breakpoint\\Breakpoint',
       ),
       'breakpoint_theme_test.narrow' => array(
         'label' => 'narrow',
         'mediaQuery' => '(min-width: 560px)',
-        'weight' => 2,
+        'weight' => 1,
         'multipliers' => array(
           '1x',
         ),
@@ -70,15 +58,27 @@ class BreakpointDiscoveryTest extends KernelTestBase {
         'group' => 'breakpoint_theme_test',
         'class' => 'Drupal\\breakpoint\\Breakpoint',
       ),
-      'breakpoint_theme_test.mobile' => array(
-        'label' => 'mobile',
-        'mediaQuery' => '(min-width: 0px)',
+      'breakpoint_theme_test.wide' => array(
+        'label' => 'wide',
+        'mediaQuery' => '(min-width: 851px)',
+        'weight' => 2,
+        'multipliers' => array(
+          '1x',
+        ),
+        'provider' => 'breakpoint_theme_test',
+        'id' => 'breakpoint_theme_test.wide',
+        'group' => 'breakpoint_theme_test',
+        'class' => 'Drupal\\breakpoint\\Breakpoint',
+      ),
+      'breakpoint_theme_test.tv' => array(
+        'label' => 'tv',
+        'mediaQuery' => 'only screen and (min-width: 1220px)',
         'weight' => 3,
         'multipliers' => array(
           '1x',
         ),
         'provider' => 'breakpoint_theme_test',
-        'id' => 'breakpoint_theme_test.mobile',
+        'id' => 'breakpoint_theme_test.tv',
         'group' => 'breakpoint_theme_test',
         'class' => 'Drupal\\breakpoint\\Breakpoint',
       ),
@@ -102,7 +102,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
       'breakpoint_theme_test.group2.narrow' => array(
         'label' => 'narrow',
         'mediaQuery' => '(min-width: 560px)',
-        'weight' => 2,
+        'weight' => 0,
         'multipliers' => array(
           '1x',
           '2x',
@@ -128,7 +128,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
       'breakpoint_module_test.breakpoint_theme_test.group2.tv' => array(
         'label' => 'tv',
         'mediaQuery' => '(min-width: 6000px)',
-        'weight' => 0,
+        'weight' => 2,
         'multipliers' => array(
           '1x',
         ),
@@ -153,7 +153,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
       'breakpoint_module_test.mobile' => array(
         'label' => 'mobile',
         'mediaQuery' => '(min-width: 0px)',
-        'weight' => 1,
+        'weight' => 0,
         'multipliers' => array(
           '1x',
         ),
@@ -165,7 +165,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
       'breakpoint_module_test.standard' => array(
         'label' => 'standard',
         'mediaQuery' => '(min-width: 560px)',
-        'weight' => 0,
+        'weight' => 1,
         'multipliers' => array(
           '1x',
           '2x',
@@ -178,9 +178,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     );
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_module_test');
-    foreach ($expected_breakpoints as $id => $expected_breakpoint) {
-      $this->assertEqual($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
-    }
+    $this->assertEqual(array_keys($expected_breakpoints), array_keys($breakpoints));
   }
 
   /**

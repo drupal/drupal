@@ -1,7 +1,7 @@
 stark.mobile:
   label: mobile
   mediaQuery: '(min-width: 0px)'
-  weight: 2
+  weight: 0
   multipliers:
    - 1x
 stark.narrow:
@@ -13,6 +13,6 @@ stark.narrow:
 stark.wide:
   label: wide
   mediaQuery: 'all and (min-width: 960px)'
-  weight: 0
+  weight: 2
   multipliers:
     - 1x
