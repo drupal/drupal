@@ -537,7 +537,7 @@ function _filter_url($text, $filter) {
   $tasks['_filter_url_parse_full_links'] = $pattern;
 
   // Match email addresses.
-  $url_pattern = "[\p{L}\p{M}\p{N}._-]{1,254}@(?:$domain)";
+  $url_pattern = "[\p{L}\p{M}\p{N}._+-]{1,254}@(?:$domain)";
   $pattern = "`($url_pattern)`u";
   $tasks['_filter_url_parse_email_links'] = $pattern;
 
