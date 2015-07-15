@@ -13,6 +13,19 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form input element for entering an email address.
  *
+ * Properties:
+ * - #default_value: An RFC-compliant email address.
+ *
+ * Example usage:
+ * @code
+ * $form['email'] = array(
+ *   '#type' => 'email',
+ *   '#title' => t('Email'),
+ * );
+ * @end
+ *
+ * @see \Drupal\Core\Render\Element\Render\Textfield
+ *
  * @FormElement("email")
  */
 class Email extends FormElement {

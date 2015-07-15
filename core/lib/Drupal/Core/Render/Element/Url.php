@@ -14,6 +14,21 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for input of a URL.
  *
+ * Properties:
+ * - #default_value: A valid URL string.
+ *
+ * Usage example:
+ * @code
+ * $form['homepage'] = array(
+ *   '#type' => 'url',
+ *   '#title' => t('Home Page'),
+ *   '#size' => 30,
+ *   ...
+ * );
+ * @end_code
+ *
+ * @see \Drupal\Core\Render\Element\Textfield
+ *
  * @FormElement("url")
  */
 class Url extends FormElement {

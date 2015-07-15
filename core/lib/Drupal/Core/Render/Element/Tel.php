@@ -12,6 +12,19 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for entering a telephone number.
  *
+ * Provides an HTML5 input element with type of "tel". It provides no special
+ * validation.
+ *
+ * Usage example:
+ * @code
+ * $form['phone'] = array(
+ *   '#type' => 'tel',
+ *   '#title' => t('Phone'),
+ * );
+ * @endcode
+ *
+ * @see \Drupal\Core\Render\Element
+ *
  * @FormElement("tel")
  */
 class Tel extends FormElement {

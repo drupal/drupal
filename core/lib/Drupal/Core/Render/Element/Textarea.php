@@ -12,6 +12,23 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for input of multiple-line text.
  *
+ * Properties:
+ * - #rows: Number of rows in the text box.
+ * - #cols: Number of columns in the text box.
+ * - #resizable: Controls whether the text area is resizable.  Allowed values
+ *   are "none", "vertical", "horizontal", or "both" (defaults to "vertical").
+ *
+ * Usage example:
+ * @code
+ * $form['text'] = array(
+ *   '#type' => 'textarea',
+ *   '#title' => t('Text'),
+ * );
+ * @endcode
+ *
+ * @see \Drupal\Core\Render\Element\Textfield
+ * @see \Drupal\filter\Element\TextFormat
+ *
  * @FormElement("textarea")
  */
 class Textarea extends FormElement {

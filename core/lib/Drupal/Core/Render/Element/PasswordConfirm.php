@@ -15,6 +15,17 @@ use Drupal\Core\Form\FormStateInterface;
  * Formats as a pair of password fields, which do not validate unless the two
  * entered passwords match.
  *
+ * Usage example:
+ * @code
+ * $form['pass'] = array(
+ *   '#type' => 'password_confirm',
+ *   '#title' => t('Password'),
+ *   '#size' => 25,
+ * );
+ * @endcode
+ *
+ * @see \Drupal\Core\Render\Element\Password
+ *
  * @FormElement("password_confirm")
  */
 class PasswordConfirm extends FormElement {

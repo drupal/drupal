@@ -12,6 +12,18 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for entering a password, with hidden text.
  *
+ * Usage example:
+ * @code
+ * $form['pass'] = array(
+ *   '#type' => 'password',
+ *   '#title => t('Password'),
+ *   '#size' => 25,
+ * );
+ * @endcode
+ *
+ * @see \Drupal\Core\Render\Element\PasswordConfirm
+ * @see \Drupal\Core\Render\Element\Textfield
+ *
  * @FormElement("password")
  */
 class Password extends FormElement {

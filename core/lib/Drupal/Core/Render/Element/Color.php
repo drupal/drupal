@@ -14,6 +14,18 @@ use Drupal\Component\Utility\Color as ColorUtility;
 /**
  * Provides a form element for choosing a color.
  *
+ * Properties:
+ * - #default_value: Default value, in a format like #ffffff.
+ *
+ * Example usage:
+ * @code
+ * $form['color'] = array(
+ *   '#type' => 'color',
+ *   '#title' => 'Color',
+ *   '#default_value' => '#ffffff',
+ * );
+ * @endcode
+ *
  * @FormElement("color")
  */
 class Color extends FormElement {

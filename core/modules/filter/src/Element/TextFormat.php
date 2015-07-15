@@ -15,6 +15,27 @@ use Drupal\Core\Url;
 /**
  * Provides a text format render element.
  *
+ * Properties:
+ * - #base_type: The form element #type to use for the 'value' element.
+ *   'textarea' by default.
+ * - #format: (optional) The text format ID to preselect. If omitted, the
+ *   default format for the current user will be used.
+ * - #allowed_formats: (optional) An array of text format IDs that are available
+ *   for this element. If omitted, all text formats that the current user has
+ *   access to will be allowed.
+ *
+ * Usage Example:
+ * @code
+ * $form['body'] = array(
+ *   '#type' => 'text_format',
+ *   '#title' => 'Body',
+ *   '#format' => 'full_html',
+ *   '#default_value' => '<p>The quick brown fox jumped over the lazy dog.</p>',
+ * );
+ * @endcode
+ *
+ * @see \Drupal\Core\Render\Element\Textarea
+ *
  * @RenderElement("text_format")
  */
 class TextFormat extends RenderElement {
@@ -54,14 +75,7 @@ class TextFormat extends RenderElement {
    * @endcode
    *
    * @param array $element
-   *   The form element to process. Properties used:
-   *   - #base_type: The form element #type to use for the 'value' element.
-   *     'textarea' by default.
-   *   - #format: (optional) The text format ID to preselect. If omitted, the
-   *     default format for the current user will be used.
-   *   - #allowed_formats: (optional) An array of text format IDs that are
-   *     available for this element. If omitted, all text formats that the
-   *     current user has access to will be allowed.
+   *   The form element to process. See main class documentation for properties.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param array $complete_form

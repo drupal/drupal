@@ -13,10 +13,17 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a form element for date selection.
  *
- * The #default_value will be today's date if no value is supplied. The format
- * for the #default_value and the #return_value is an array with three elements
- * with the keys: 'year', month', and 'day'. For example,
- * array('year' => 2007, 'month' => 2, 'day' => 15)
+ * Properties:
+ * - #default_value: An array with the keys: 'year', 'month', and 'day'.
+ *   Defaults to the current date if no value is supplied.
+ *
+ * @code
+ * $form['expiration'] = array(
+ *   '#type' => 'date',
+ *   '#title' => t('Content expiration'),
+ *   '#default_value' => array('year' => 2020, 'month' => 2, 'day' => 15,)
+ * );
+ * @endcode
  *
  * @FormElement("date")
  */
