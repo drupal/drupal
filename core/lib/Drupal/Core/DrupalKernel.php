@@ -1360,8 +1360,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @return bool
    *   TRUE if the hostmame is valid, or FALSE otherwise.
-   *
-   * @todo Adjust per resolution to https://github.com/symfony/symfony/issues/12349
    */
   public static function validateHostname(Request $request) {
     // $request->getHost() can throw an UnexpectedValueException if it
