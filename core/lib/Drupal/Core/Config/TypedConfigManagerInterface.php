@@ -12,9 +12,12 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
- * Defines an interface for typed configuration manager.
+ * Defines an interface for managing config schema type plugins.
  *
- * @package Drupal\Core\Config
+ * @see \Drupal\Core\Config\TypedConfigManager
+ * @see \Drupal\Core\Config\Schema\ConfigSchemaDiscovery
+ * @see hook_config_schema_info_alter()
+ * @see https://www.drupal.org/node/1905070
  */
 Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDiscoveryInterface {
 

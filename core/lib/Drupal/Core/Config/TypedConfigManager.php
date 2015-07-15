@@ -17,7 +17,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 
 /**
- * Manages config type plugins.
+ * Manages config schema type plugins.
  */
 class TypedConfigManager extends TypedDataManager implements TypedConfigManagerInterface {
 
