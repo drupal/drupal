@@ -14,10 +14,10 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * Storage to access migration template configuration in enabled extensions.
  */
 class MigrateTemplateStorage {
-
   /**
    * Extension sub-directory containing default configuration for migrations.
    */
+
   const MIGRATION_TEMPLATE_DIRECTORY = 'migration_templates';
 
   /**
@@ -63,13 +63,26 @@ class MigrateTemplateStorage {
   }
 
   /**
+   * Retrieve a template given a specific name.
+   *
+   * @param string $name
+   *   A migration template name.
+   *
+   * @return NULL|array
+   *   A parsed migration template, or NULL if it doesn't exist.
+   */
+  public function getTemplateByName($name) {
+    $templates = $this->getAllTemplates();
+    return isset($templates[$name]) ? $templates[$name] : NULL;
+  }
+
+  /**
    * Retrieves all migration templates belonging to enabled extensions.
    *
    * @return array
    *   Array of parsed templates, keyed by the fully-qualified id.
    */
   public function getAllTemplates() {
-
     $templates = [];
     foreach ($this->moduleHandler->getModuleDirectories() as $directory) {
       $full_directory = $directory . '/' . $this->directory;
