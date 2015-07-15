@@ -104,6 +104,7 @@ class DomainPart extends Parser
     {
         $domain = '';
         do {
+
             $prev = $this->lexer->getPrevious();
 
             if ($this->lexer->token['type'] === EmailLexer::S_SLASH) {
@@ -217,9 +218,6 @@ class DomainPart extends Parser
         return $addressLiteral;
     }
 
-    /**
-     * @param string $addressLiteral
-     */
     protected function checkIPV4Tag($addressLiteral)
     {
         $matchesIP  = array();
@@ -245,6 +243,17 @@ class DomainPart extends Parser
 
     protected function checkDomainPartExceptions($prev)
     {
+        $invalidDomainTokens = array(
+            EmailLexer::S_DQUOTE => true,
+            EmailLexer::S_SEMICOLON => true,
+            EmailLexer::S_GREATERTHAN => true,
+            EmailLexer::S_LOWERTHAN => true,
+        );
+
+        if (isset($invalidDomainTokens[$this->lexer->token['type']])) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+        }
+
         if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
             throw new \InvalidArgumentException('ERR_COMMA_IN_DOMAIN');
         }

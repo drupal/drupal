@@ -677,58 +677,6 @@
         ]
     },
     {
-        "name": "egulias/email-validator",
-        "version": "1.2.5",
-        "version_normalized": "1.2.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/egulias/EmailValidator.git",
-            "reference": "518f80a0ff7c1a35780e7702f4262c8c6f2b807f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/518f80a0ff7c1a35780e7702f4262c8c6f2b807f",
-            "reference": "518f80a0ff7c1a35780e7702f4262c8c6f2b807f",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/lexer": "~1.0",
-            "php": ">= 5.3.3"
-        },
-        "require-dev": {
-            "satooshi/php-coveralls": "dev-master"
-        },
-        "time": "2014-11-06 08:59:44",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Egulias\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Eduardo Gulias Davis"
-            }
-        ],
-        "description": "A library for validating emails",
-        "homepage": "https://github.com/egulias/EmailValidator",
-        "keywords": [
-            "email",
-            "validation",
-            "validator"
-        ]
-    },
-    {
         "name": "easyrdf/easyrdf",
         "version": "0.9.0",
         "version_normalized": "0.9.0.0",
@@ -3558,5 +3506,60 @@
         ],
         "description": "Symfony BrowserKit Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "egulias/email-validator",
+        "version": "1.2.9",
+        "version_normalized": "1.2.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/egulias/EmailValidator.git",
+            "reference": "af864423f50ea59f96c87bb1eae147a70bcf67a1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/af864423f50ea59f96c87bb1eae147a70bcf67a1",
+            "reference": "af864423f50ea59f96c87bb1eae147a70bcf67a1",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/lexer": "~1.0,>=1.0.1",
+            "php": ">= 5.3.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.4",
+            "satooshi/php-coveralls": "dev-master"
+        },
+        "time": "2015-06-22 21:07:51",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Egulias\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Eduardo Gulias Davis"
+            }
+        ],
+        "description": "A library for validating emails",
+        "homepage": "https://github.com/egulias/EmailValidator",
+        "keywords": [
+            "email",
+            "emailvalidation",
+            "emailvalidator",
+            "validation",
+            "validator"
+        ]
     }
 ]

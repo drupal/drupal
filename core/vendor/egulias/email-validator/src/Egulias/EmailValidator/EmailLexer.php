@@ -75,8 +75,6 @@ class EmailLexer extends AbstractLexer
         '\0'   => self::C_NUL,
     );
 
-    protected $invalidASCII = array(226 => 1,);
-
     protected $hasInvalidTokens = false;
 
     protected $previous;
@@ -138,12 +136,12 @@ class EmailLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-zA-Z_]+[46]?',
+            '[a-zA-Z_]+[46]?', //ASCII and domain literal
+            '[^\x00-\x7F]',  //UTF-8
             '[0-9]+',
             '\r\n',
             '::',
-            '\s+',
-            '[\x10-\x1F]+',
+            '\s+?',
             '.',
             );
     }
@@ -155,7 +153,7 @@ class EmailLexer extends AbstractLexer
      */
     protected function getNonCatchablePatterns()
     {
-        return array('[\x7f-\xff]+');
+        return array('[\xA0-\xff]+');
     }
 
     /**
@@ -167,16 +165,15 @@ class EmailLexer extends AbstractLexer
      */
     protected function getType(&$value)
     {
-
         if ($this->isNullType($value)) {
             return self::C_NUL;
         }
 
-        if (isset($this->charValue[$value])) {
+        if ($this->isValid($value)) {
             return $this->charValue[$value];
         }
 
-        if ($this->isInvalid($value)) {
+        if ($this->isUTF8Invalid($value)) {
             $this->hasInvalidTokens = true;
             return self::INVALID;
         }
@@ -184,8 +181,18 @@ class EmailLexer extends AbstractLexer
         return  self::GENERIC;
     }
 
+    protected function isValid($value)
+    {
+        if (isset($this->charValue[$value])) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
-     * @param string $value
+     * @param $value
+     * @return bool
      */
     protected function isNullType($value)
     {
@@ -197,18 +204,20 @@ class EmailLexer extends AbstractLexer
     }
 
     /**
-     * @param string $value
+     * @param $value
+     * @return bool
      */
-    protected function isInvalid($value)
+    protected function isUTF8Invalid($value)
     {
-        if (preg_match('/[\x10-\x1F]+/', $value)) {
-            return true;
-        }
-
-        if (isset($this->invalidASCII[ord($value)])) {
+        if (preg_match('/\p{Cc}+/u', $value)) {
             return true;
         }
 
         return false;
+    }
+
+    protected function getModifiers()
+    {
+        return 'iu';
     }
 }
