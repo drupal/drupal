@@ -192,7 +192,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $name_field_1->options['alter']['text'] = '{{ name_1 }} {{ name }}';
 
     $name_field_2->options['alter']['alter_text'] = TRUE;
-    $name_field_2->options['alter']['text'] = '{{ name_2 }} {{ name_1 }}';
+    $name_field_2->options['alter']['text'] = '{% if name_2|length > 3 %}{{ name_2 }} {{ name_1 }}{% endif %}';
 
     foreach ($view->result as $row) {
       $expected_output_0 = $row->views_test_data_name;
@@ -247,10 +247,42 @@ class FieldUnitTest extends ViewUnitTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertSubString($output, $old_token, format_string('Make sure the old token style (!token => !value) is not changed in the output (!output)', [
+    $this->assertEqual($output, $old_token, format_string('Make sure the old token style (!token => !value) is not changed in the output (!output)', [
       '!value' => $random_text,
       '!output' => $output,
       '!token' => $job_field->options['alter']['text'],
+    ]));
+
+    // Verify HTML tags are allowed in rewrite templates while token
+    // replacements are escaped.
+    $job_field->options['alter']['text'] = '<h1>{{ job }}</h1>';
+    $random_text = $this->randomMachineName();
+    $job_field->setTestValue('<span>' . $random_text . '</span>');
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
+      return $job_field->advancedRender($row);
+    });
+    $this->assertEqual($output, '<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', 'Valid tags are allowed in rewrite templates and token replacements.');
+
+    // Verify <script> tags are correctly removed from rewritten text.
+    $rewrite_template = '<script>alert("malicious");</script>';
+    $job_field->options['alter']['text'] = $rewrite_template;
+    $random_text = $this->randomMachineName();
+    $job_field->setTestValue($random_text);
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
+      return $job_field->advancedRender($row);
+    });
+    $this->assertNotSubString($output, '<script>', 'Ensure a script tag in the rewrite template is removed.');
+
+    $rewrite_template = '<script>{{ job }}</script>';
+    $job_field->options['alter']['text'] = $rewrite_template;
+    $random_text = $this->randomMachineName();
+    $job_field->setTestValue($random_text);
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
+      return $job_field->advancedRender($row);
+    });
+    $this->assertEqual($output, $random_text, format_string('Make sure a script tag in the template (!template) is removed, leaving only the replaced token in the output (!output)', [
+      '!output' => $output,
+      '!template' => $rewrite_template,
     ]));
   }
 

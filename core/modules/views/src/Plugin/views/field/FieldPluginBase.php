@@ -1290,9 +1290,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Render this field as user-defined altered text.
    */
   protected function renderAltered($alter, $tokens) {
-    // Filter this right away as our substitutions are already sanitized.
-    $template = Xss::filterAdmin($alter['text']);
-    return $this->viewsTokenReplace($template, $tokens);
+    return $this->viewsTokenReplace($alter['text'], $tokens);
   }
 
   /**

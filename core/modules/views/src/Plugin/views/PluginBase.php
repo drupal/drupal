@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -333,23 +334,27 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   }
 
   /**
-   * Replaces Views' tokens in a given string. It is the responsibility of the
-   * calling function to ensure $text and $token replacements are sanitized.
+   * Replaces Views' tokens in a given string. The resulting string will be
+   * sanitized with Xss::filterAdmin.
    *
    * This used to be a simple strtr() scattered throughout the code. Some Views
    * tokens, such as arguments (e.g.: %1 or !1), still use the old format so we
    * handle those as well as the new Twig-based tokens (e.g.: {{ field_name }})
    *
    * @param $text
-   *   String with possible tokens.
+   *   Unsanitized string with possible tokens.
    * @param $tokens
    *   Array of token => replacement_value items.
    *
    * @return String
    */
   protected function viewsTokenReplace($text, $tokens) {
+    if (!strlen($text)) {
+      // No need to run filterAdmin on an empty string.
+      return '';
+    }
     if (empty($tokens)) {
-      return $text;
+      return Xss::filterAdmin($text);
     }
 
     // Separate Twig tokens from other tokens (e.g.: contextual filter tokens in
@@ -370,11 +375,19 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     // Non-Twig tokens are a straight string replacement, Twig tokens get run
     // through an inline template for rendering and replacement.
     $text = strtr($text, $other_tokens);
-    if ($twig_tokens && !empty($text)) {
+    if ($twig_tokens) {
+      // Use the unfiltered text for the Twig template, then filter the output.
+      // Otherwise, Xss::filterAdmin could remove valid Twig syntax before the
+      // template is parsed.
       $build = array(
         '#type' => 'inline_template',
         '#template' => $text,
         '#context' => $twig_tokens,
+        '#post_render' => [
+          function ($children, $elements) {
+            return Xss::filterAdmin($children);
+          }
+        ],
       );
 
       return $this->getRenderer()->render($build);

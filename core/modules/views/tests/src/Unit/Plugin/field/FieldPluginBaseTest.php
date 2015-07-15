@@ -453,6 +453,7 @@ class FieldPluginBaseTest extends UnitTestCase {
       '#type' => 'inline_template',
       '#template' => 'base:test-path/' . explode('/', $path)[1],
       '#context' => ['foo' => 123],
+      '#post_render' => [function() {}],
     ];
 
     $this->renderer->expects($this->once())

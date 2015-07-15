@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -238,6 +239,11 @@ abstract class StylePluginBase extends PluginBase {
       }
 
       $value = $this->viewsTokenReplace($value, $tokens);
+    }
+    else {
+      // ::viewsTokenReplace() will run Xss::filterAdmin on the
+      // resulting string. We do the same here for consistency.
+      $value = Xss::filterAdmin($value);
     }
     return $value;
   }
