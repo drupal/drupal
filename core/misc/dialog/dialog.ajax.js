@@ -67,6 +67,7 @@
         // "display: none", we set its dimensions to zero.
         // See http://mattsnider.com/how-forms-submit-when-pressing-enter/
         var $originalButton = $(this).css({
+          display: 'block',
           width: 0,
           height: 0,
           padding: 0,
