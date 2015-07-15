@@ -12,6 +12,9 @@ use Drupal\Core\CacheDecorator\CacheDecoratorInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
+/**
+ * The default alias manager implementation.
+ */
 class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
 
   /**
