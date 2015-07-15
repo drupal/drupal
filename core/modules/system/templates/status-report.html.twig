@@ -25,10 +25,8 @@
   </thead>
   <tbody>
   {% for requirement in requirements %}
-    {% if requirement.severity_status in ['warning', 'error'] %}
+    {% if requirement.severity_status %}
       <tr class="system-status-report__entry color-{{ requirement.severity_status }}">
-    {% else %}
-      <tr class="system-status-report__entry">
     {% endif %}
         <td class="system-status-report__status-icon system-status-report__status-icon--{{ requirement.severity_status }}">
           <div title="{{ requirement.severity_title }}">
