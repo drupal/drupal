@@ -118,21 +118,9 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    * @see \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser
    */
   public static function registerWithSymfonyGuesser(ContainerInterface $container) {
+    // Reset state, so we do not store more and more services during test runs.
+    SymfonyMimeTypeGuesser::reset();
     $singleton = SymfonyMimeTypeGuesser::getInstance();
-
-    // @todo Remove once Symfony adds a reset() method.
-    $property = new \ReflectionProperty(get_class($singleton), 'guessers');
-    $property->setAccessible(TRUE);
-
-    if (isset($singleton->_beforeDrupalRegistration)) {
-      // Reset state, else we store more and more services during test runs.
-      $property->setValue($singleton, $singleton->_beforeDrupalRegistration);
-    } else {
-      // Store original state before we register our services.
-      $singleton->_beforeDrupalRegistration = $property->getValue($singleton);
-    }
-
-    //$singleton->reset();
     $singleton->register($container->get('file.mime_type.guesser'));
   }
 
