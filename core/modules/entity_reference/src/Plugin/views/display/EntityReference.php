@@ -137,10 +137,11 @@ class EntityReference extends DisplayPluginBase {
       $conditions = db_or();
 
       // Build the condition using the selected search fields.
-      foreach ($style_options['options']['search_fields'] as $field_alias) {
-        if (!empty($field_alias)) {
+      foreach ($style_options['options']['search_fields'] as $field_id) {
+        if (!empty($field_id)) {
           // Get the table and field names for the checked field.
-          $field = $this->view->query->fields[$this->view->field[$field_alias]->field_alias];
+          $field_alias = $this->view->query->addField($this->view->field[$field_id]->table, $field_id);
+          $field = $this->view->query->fields[$field_alias];
           // Add an OR condition for the field.
           $conditions->condition($field['table'] . '.' . $field['field'], $value, 'LIKE');
         }

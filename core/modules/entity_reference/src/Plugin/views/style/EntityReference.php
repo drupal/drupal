@@ -47,7 +47,7 @@ class EntityReference extends StylePluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['search_fields'] = array('default' => NULL);
+    $options['search_fields'] = array('default' => array());
 
     return $options;
   }
