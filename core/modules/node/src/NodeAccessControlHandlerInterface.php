@@ -32,7 +32,6 @@ interface NodeAccessControlHandlerInterface {
    */
   public function acquireGrants(NodeInterface $node);
 
-
   /**
    * Writes a list of grants to the database, deleting any previously saved ones.
    *
@@ -46,12 +45,6 @@ interface NodeAccessControlHandlerInterface {
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node whose grants are being written.
-   * @param $grants
-   *   A list of grants to write. See hook_node_access_records() for the
-   *   expected structure of the grants array.
-   * @param $realm
-   *   (optional) If provided, read/write grants for that realm only. Defaults to
-   *   NULL.
    * @param $delete
    *   (optional) If false, does not delete records. This is only for optimization
    *   purposes, and assumes the caller has already performed a mass delete of
