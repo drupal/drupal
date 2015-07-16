@@ -458,16 +458,37 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Gets a list files that can be used in tests.
+   * Gets a list of files that can be used in tests.
+   *
+   * The first time this method is called, it will call
+   * simpletest_generate_file() to generate binary and ASCII text files in the
+   * public:// directory. It will also copy all files in
+   * core/modules/simpletest/files to public://. These contain image, SQL, PHP,
+   * JavaScript, and HTML files.
+   *
+   * All filenames are prefixed with their type and have appropriate extensions:
+   * - text-*.txt
+   * - binary-*.txt
+   * - html-*.html and html-*.txt
+   * - image-*.png, image-*.jpg, and image-*.gif
+   * - javascript-*.txt and javascript-*.script
+   * - php-*.txt and php-*.php
+   * - sql-*.txt and sql-*.sql
+   *
+   * Any subsequent calls will not generate any new files, or copy the files
+   * over again. However, if a test class adds a new file to public:// that
+   * is prefixed with one of the above types, it will get returned as well, even
+   * on subsequent calls.
    *
    * @param $type
    *   File type, possible values: 'binary', 'html', 'image', 'javascript',
    *   'php', 'sql', 'text'.
    * @param $size
-   *   File size in bytes to match. Please check the tests/files folder.
+   *   (optional) File size in bytes to match. Defaults to NULL, which will not
+   *   filter the returned list by size.
    *
    * @return
-   *   List of files that match filter.
+   *   List of files in public:// that match the filter(s).
    */
   protected function drupalGetTestFiles($type, $size = NULL) {
     if (empty($this->generatedTestFiles)) {
@@ -478,7 +499,7 @@ abstract class WebTestBase extends TestBase {
         simpletest_generate_file('binary-' . $count++, 64, $line, 'binary');
       }
 
-      // Generate text test files.
+      // Generate ASCII text test files.
       $lines = array(16, 256, 1024, 2048, 20480);
       $count = 0;
       foreach ($lines as $line) {

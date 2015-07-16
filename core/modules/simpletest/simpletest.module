@@ -487,16 +487,23 @@ function simpletest_classloader_register() {
 }
 
 /**
- * Generates test file.
+ * Generates a test file.
  *
  * @param string $filename
- *   The name of the file, including the path.
+ *   The name of the file, including the path. The suffix '.txt' is appended to
+ *   the supplied file name and the file is put into the public:// files
+ *   directory.
  * @param int $width
  *   The number of characters on one line.
  * @param int $lines
  *   The number of lines in the file.
  * @param string $type
- *   (optional) The type, for example: "text", "binary", or "binary-text".
+ *   (optional) The type, one of:
+ *   - text: The generated file contains random ASCII characters.
+ *   - binary: The generated file contains random characters whose codes are in
+ *     the range of 0 to 31.
+ *   - binary-text: The generated file contains random sequence of '0' and '1'
+ *     values.
  *
  * @return string
  *   The name of the file, including the path.
