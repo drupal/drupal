@@ -167,7 +167,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function install(array $theme_list, $install_dependencies = TRUE) {
     // We keep the old install() method as BC layer but redirect directly to the
     // theme installer.
-    \Drupal::service('theme_installer')->install($theme_list, $install_dependencies);
+    return \Drupal::service('theme_installer')->install($theme_list, $install_dependencies);
   }
 
   /**

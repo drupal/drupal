@@ -334,4 +334,28 @@ class ThemeTest extends WebTestBase {
     $this->clickLink(t('Uninstall'));
     $this->assertRaw('The <em class="placeholder">Classy</em> theme has been uninstalled');
   }
+
+  /**
+   * Tests installing a theme and setting it as default.
+   */
+  function testInstallAndSetAsDefault() {
+    $this->drupalGet('admin/appearance');
+    // Bartik is uninstalled in the test profile and has the second "Install and
+    // set as default" link.
+    $this->clickLink(t('Install and set as default'), 1);
+    // Test the confirmation message.
+    $this->assertText('Bartik is now the default theme.');
+    // Make sure Bartik is now set as the default theme in config.
+    $this->assertEqual($this->config('system.theme')->get('default'), 'bartik');
+
+    // This checks for a regression. See https://www.drupal.org/node/2498691.
+    $this->assertNoText('The bartik theme was not found.');
+
+    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+    $version = $themes['bartik']->info['version'];
+
+    // Confirm Bartik is indicated as the default theme.
+    $this->assertTextPattern('/Bartik ' . preg_quote($version) . '\s{2,}\(default theme\)/');
+  }
+
 }
