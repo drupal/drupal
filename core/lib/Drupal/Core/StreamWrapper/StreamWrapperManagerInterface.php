@@ -113,35 +113,52 @@ interface StreamWrapperManagerInterface {
   public function getDescriptions($filter = StreamWrapperInterface::ALL);
 
   /**
-   * Returns a stream wrapper via scheme.
+   * Returns a reference to the stream wrapper class responsible for a scheme.
+   *
+   * This helper method returns a stream instance using a scheme. That is, the
+   * passed string does not contain a "://". For example, "public" is a scheme
+   * but "public://" is a URI (stream). This is because the later contains both
+   * a scheme and target despite target being empty.
+   *
+   * Note: the instance URI will be initialized to "scheme://" so that you can
+   * make the customary method calls as if you had retrieved an instance by URI.
    *
    * @param string $scheme
-   *   The scheme of the stream wrapper.
+   *   If the stream was "public://target", "public" would be the scheme.
    *
    * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
-   *   A stream wrapper object, or false if the scheme is not available.
+   *   Returns a new stream wrapper object appropriate for the given $scheme.
+   *   For example, for the public scheme a stream wrapper object
+   *   (Drupal\Core\StreamWrapper\PublicStream).
+   *   FALSE is returned if no registered handler could be found.
    */
   public function getViaScheme($scheme);
 
   /**
-   * Returns a stream wrapper via URI.
+   * Returns a reference to the stream wrapper class responsible for a URI.
+   *
+   * The scheme determines the stream wrapper class that should be
+   * used by consulting the stream wrapper registry.
    *
    * @param string $uri
-   *   The URI of the stream wrapper.
+   *   A stream, referenced as "scheme://target".
    *
    * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
-   *   A stream wrapper object, or false if the scheme is not available.
+   *   Returns a new stream wrapper object appropriate for the given URI or
+   *   FALSE if no registered handler could be found. For example, a URI of
+   *   "private://example.txt" would return a new private stream wrapper object
+   *   (Drupal\Core\StreamWrapper\PrivateStream).
    */
   public function getViaUri($uri);
 
   /**
-   * Returns the stream wrapper class.
+   * Returns the stream wrapper class name for a given scheme.
    *
    * @param string $scheme
-   *   The stream wrapper scheme.
+   *   Stream scheme.
    *
    * @return string|bool
-   *   The stream wrapper class, or false if the scheme does not exist.
+   *   Return string if a scheme has a registered handler, or FALSE.
    */
   public function getClass($scheme);
 

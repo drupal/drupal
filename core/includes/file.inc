@@ -90,49 +90,6 @@ const FILE_EXISTS_ERROR = 2;
 const FILE_STATUS_PERMANENT = 1;
 
 /**
- * Provides Drupal stream wrapper registry.
- *
- * @param int $filter
- *   (Optional) Filters out all types except those with an on bit for each on
- *   bit in $filter. For example, if $filter is
- *   StreamWrapperInterface::WRITE_VISIBLE, which is equal to
- *   (StreamWrapperInterface::READ | StreamWrapperInterface::WRITE |
- *   StreamWrapperInterface::VISIBLE), then only stream wrappers with all three
- *   of these bits set are returned. Defaults to StreamWrapperInterface::ALL,
- *   which returns all registered stream wrappers.
- *
- * @return array
- *   An array keyed by scheme, with values containing an array of information
- *   about the stream wrapper, as returned by hook_stream_wrappers(). If $filter
- *   is omitted or set to StreamWrapperInterface::ALL, the entire Drupal stream
- *   wrapper registry is returned. Otherwise only the stream wrappers whose
- *   'type' bitmask has an on bit for each bit specified in $filter are
- *   returned.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('stream_wrapper_manager')->getWrappers().
- */
-function file_get_stream_wrappers($filter = StreamWrapperInterface::ALL) {
-  return \Drupal::service('stream_wrapper_manager')->getWrappers($filter);
-}
-
-/**
- * Returns the stream wrapper class name for a given scheme.
- *
- * @param string $scheme
- *   Stream scheme.
- *
- * @return string|bool
- *   Return string if a scheme has a registered handler, or FALSE.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('stream_wrapper_manager')->getClass().
- */
-function file_stream_wrapper_get_class($scheme) {
-  return \Drupal::service('stream_wrapper_manager')->getClass($scheme);
-}
-
-/**
  * Returns the scheme of a URI (e.g. a stream).
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
@@ -212,55 +169,6 @@ function file_stream_wrapper_uri_normalize($uri) {
   }
 
   return $uri;
-}
-
-/**
- * Returns a reference to the stream wrapper class responsible for a given URI.
- *
- * The scheme determines the stream wrapper class that should be
- * used by consulting the stream wrapper registry.
- *
- * @param string $uri
- *   A stream, referenced as "scheme://target".
- *
- * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
- *   Returns a new stream wrapper object appropriate for the given URI or FALSE
- *   if no registered handler could be found. For example, a URI of
- *   "private://example.txt" would return a new private stream wrapper object
- *   (Drupal\Core\StreamWrapper\PrivateStream).
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('stream_wrapper_manager')->getViaUri().
- */
-function file_stream_wrapper_get_instance_by_uri($uri) {
-  return \Drupal::service('stream_wrapper_manager')->getViaUri($uri);
-}
-
-/**
- * Returns a reference to the stream wrapper class responsible for a scheme.
- *
- * This helper method returns a stream instance using a scheme. That is, the
- * passed string does not contain a "://". For example, "public" is a scheme
- * but "public://" is a URI (stream). This is because the later contains both
- * a scheme and target despite target being empty.
- *
- * Note: the instance URI will be initialized to "scheme://" so that you can
- * make the customary method calls as if you had retrieved an instance by URI.
- *
- * @param string $scheme
- *   If the stream was "public://target", "public" would be the scheme.
- *
- * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
- *   Returns a new stream wrapper object appropriate for the given $scheme.
- *   For example, for the public scheme a stream wrapper object
- *   (Drupal\Core\StreamWrapper\PublicStream).
- *   FALSE is returned if no registered handler could be found.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('stream_wrapper_manager')->getViaScheme().
- */
-function file_stream_wrapper_get_instance_by_scheme($scheme) {
-  return \Drupal::service('stream_wrapper_manager')->getViaScheme($scheme);
 }
 
 /**
