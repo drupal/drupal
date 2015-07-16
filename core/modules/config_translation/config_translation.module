@@ -188,6 +188,7 @@ function config_translation_config_schema_info_alter(&$definitions) {
     'text_format' => '\Drupal\config_translation\FormElement\TextFormat',
     'mapping' => '\Drupal\config_translation\FormElement\ListElement',
     'sequence' => '\Drupal\config_translation\FormElement\ListElement',
+    'plural_label' => '\Drupal\config_translation\FormElement\PluralVariants',
   );
 
   // Enhance the text and date type definitions with classes to generate proper

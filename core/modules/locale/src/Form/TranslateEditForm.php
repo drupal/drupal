@@ -123,6 +123,7 @@ class TranslateEditForm extends TranslateFormBase {
           for ($i = 0; $i < $plurals; $i++) {
             $form['strings'][$string->lid]['translations'][$i] = array(
               '#type' => 'textarea',
+              // @todo Should use better labels https://www.drupal.org/node/2499639
               '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
               '#rows' => $rows,
               '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',

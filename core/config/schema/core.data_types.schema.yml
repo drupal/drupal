@@ -56,6 +56,11 @@ label:
   label: 'Label'
   translatable: true
 
+# String containing plural variants, separated by EXT.
+plural_label:
+  type: label
+  label: 'Plural variants'
+
 # Internal Drupal path
 path:
   type: string

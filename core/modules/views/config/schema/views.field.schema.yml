@@ -117,8 +117,8 @@ views.field.numeric:
       type: boolean
       label: 'Format plural'
     format_plural_string:
-      type: label
-      label: 'Singular and one or more plurals'
+      type: plural_label
+      label: 'Plural variants'
     prefix:
       type: label
       label: 'Prefix'

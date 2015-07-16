@@ -102,6 +102,7 @@ class NumericField extends FieldPluginBase {
     for ($i = 0; $i < $plurals; $i++) {
       $form['format_plural_values'][$i] = array(
         '#type' => 'textfield',
+        // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
         '#default_value' => isset($plural_array[$i]) ? $plural_array[$i] : '',
         '#description' => $this->t('Text to use for this variant, @count will be replaced with the value.'),
