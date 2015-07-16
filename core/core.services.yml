@@ -1191,50 +1191,71 @@ services:
     calls:
       - [setContainer, ['@service_container']]
     arguments: ['feed.writer.']
-# Zend Feed reader plugins
+# Zend Feed reader plugins. Plugins should be set as prototype scope.
   feed.reader.dublincoreentry:
     class: Zend\Feed\Reader\Extension\DublinCore\Entry
+    scope: prototype
   feed.reader.dublincorefeed:
     class: Zend\Feed\Reader\Extension\DublinCore\Feed
+    scope: prototype
   feed.reader.contententry:
     class: Zend\Feed\Reader\Extension\Content\Entry
+    scope: prototype
   feed.reader.atomentry:
     class: Zend\Feed\Reader\Extension\Atom\Entry
+    scope: prototype
   feed.reader.atomfeed:
     class: Zend\Feed\Reader\Extension\Atom\Feed
+    scope: prototype
   feed.reader.slashentry:
     class: Zend\Feed\Reader\Extension\Slash\Entry
+    scope: prototype
   feed.reader.wellformedwebentry:
     class: Zend\Feed\Reader\Extension\WellFormedWeb\Entry
+    scope: prototype
   feed.reader.threadentry:
     class: Zend\Feed\Reader\Extension\Thread\Entry
+    scope: prototype
   feed.reader.podcastentry:
     class: Zend\Feed\Reader\Extension\Podcast\Entry
+    scope: prototype
   feed.reader.podcastfeed:
     class: Zend\Feed\Reader\Extension\Podcast\Feed
-# Zend Feed writer plugins
+    scope: prototype
+# Zend Feed writer plugins. Plugins should be set as prototype scope.
   feed.writer.atomrendererfeed:
     class: Zend\Feed\Writer\Extension\Atom\Renderer\Feed
+    scope: prototype
   feed.writer.contentrendererentry:
     class: Zend\Feed\Writer\Extension\Content\Renderer\Entry
+    scope: prototype
   feed.writer.dublincorerendererentry:
     class: Zend\Feed\Writer\Extension\DublinCore\Renderer\Entry
+    scope: prototype
   feed.writer.dublincorerendererfeed:
     class: Zend\Feed\Writer\Extension\DublinCore\Renderer\Feed
+    scope: prototype
   feed.writer.itunesentry:
     class: Zend\Feed\Writer\Extension\ITunes\Entry
+    scope: prototype
   feed.writer.itunesfeed:
     class: Zend\Feed\Writer\Extension\ITunes\Feed
+    scope: prototype
   feed.writer.itunesrendererentry:
     class: Zend\Feed\Writer\Extension\ITunes\Renderer\Entry
+    scope: prototype
   feed.writer.itunesrendererfeed:
     class: Zend\Feed\Writer\Extension\ITunes\Renderer\Feed
+    scope: prototype
   feed.writer.slashrendererentry:
     class: Zend\Feed\Writer\Extension\Slash\Renderer\Entry
+    scope: prototype
   feed.writer.threadingrendererentry:
     class: Zend\Feed\Writer\Extension\Threading\Renderer\Entry
+    scope: prototype
   feed.writer.wellformedwebrendererentry:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
+    scope: prototype
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
     arguments: ['@app.root', '@theme.negotiator', '@theme.initialization', '@request_stack', '@module_handler']

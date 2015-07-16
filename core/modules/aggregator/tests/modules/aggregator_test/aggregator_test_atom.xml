@@ -17,4 +17,12 @@
     <summary>Some text.</summary>
   </entry>
 
+  <entry>
+    <title>We tried to stop them, but we failed.</title>
+    <link href="http://example.org/2003/12/14/atom03" />
+    <id>urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a</id>
+    <updated>2003-12-14T16:30:02Z</updated>
+    <summary>Some other text.</summary>
+  </entry>
+
 </feed>
