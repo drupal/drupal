@@ -43,10 +43,11 @@ use Drupal\Component\Utility\SafeStringInterface;
  * htmlspecialchars() and the entire attribute string is marked safe for output.
  */
 class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface {
+
   /**
    * Stores the attribute data.
    *
-   * @var array
+   * @var \Drupal\Core\Template\AttributeValueBase[]
    */
   protected $storage = array();
 
@@ -258,6 +259,21 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface
         $return .= ' ' . $rendered;
       }
     }
+    return $return;
+  }
+
+  /**
+   * Returns all storage elements as an array.
+   *
+   * @return array
+   *   An associative array of attributes.
+   */
+  public function toArray() {
+    $return = [];
+    foreach ($this->storage as $name => $value) {
+      $return[$name] = $value->value();
+    }
+
     return $return;
   }
 

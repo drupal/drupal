@@ -7,6 +7,7 @@
 
 namespace Drupal\twig_theme_test;
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 
 /**
@@ -53,11 +54,14 @@ class TwigThemeTestController {
    * Renders for testing link_generator functions in a Twig template.
    */
   public function linkGeneratorRender() {
-    return array(
+    return [
       '#theme' => 'twig_theme_test_link_generator',
       '#test_url' => new Url('user.register', [], ['absolute' => TRUE]),
       '#test_url_attribute' => new Url('user.register', [], ['attributes' => ['foo' => 'bar']]),
-    );
+      // Explicitly creating an Attribute object to avoid false positives when
+      // testing Attribute object merging with the twig link() function.
+      '#attributes' => new Attribute(['class' => ['llama', 'kitten', 'panda']]),
+    ];
   }
 
   /**
