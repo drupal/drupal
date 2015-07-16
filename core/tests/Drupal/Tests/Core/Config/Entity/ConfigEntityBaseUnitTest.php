@@ -444,18 +444,38 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
           'label' => 'label',
         ),
       )));
-    $entity_a = $this->entity;
-    $entity_a->label = 'foo';
-    $entity_b = clone $this->entity;
-    $entity_b->label = 'bar';
+
+    $entity_a = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $entity_a->expects($this->atLeastOnce())
+      ->method('label')
+      ->willReturn('foo');
+    $entity_b = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $entity_b->expects($this->atLeastOnce())
+      ->method('label')
+      ->willReturn('bar');
+
+    // Test sorting by label.
     $list = array($entity_a, $entity_b);
     // Suppress errors because of https://bugs.php.net/bug.php?id=50688.
     @usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
     $this->assertSame($entity_b, $list[0]);
+
+    $list = array($entity_b, $entity_a);
+    // Suppress errors because of https://bugs.php.net/bug.php?id=50688.
+    @usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+    $this->assertSame($entity_b, $list[0]);
+
+    // Test sorting by weight.
     $entity_a->weight = 0;
     $entity_b->weight = 1;
+    $list = array($entity_b, $entity_a);
     // Suppress errors because of https://bugs.php.net/bug.php?id=50688.
-    @usort($list, array($entity_a, 'sort'));
+    @usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+    $this->assertSame($entity_a, $list[0]);
+
+    $list = array($entity_a, $entity_b);
+    // Suppress errors because of https://bugs.php.net/bug.php?id=50688.
+    @usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
     $this->assertSame($entity_a, $list[0]);
   }
 
