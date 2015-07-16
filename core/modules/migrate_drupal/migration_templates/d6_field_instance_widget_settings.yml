@@ -36,7 +36,6 @@ process:
       bypass: true
       source: widget_type
       map:
-        text_textfield: text_textfield
         number: number
         email_textfield: email_default
         date_select: datetime_default

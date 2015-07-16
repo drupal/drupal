@@ -87,13 +87,7 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
 
         if ($source_plugin instanceof CckFieldMigrateSourceInterface) {
           foreach ($source_plugin->fieldData() as $field_name => $data) {
-            switch ($data['type']) {
-              case 'text':
-                $this->processTextField($field_name, $data, $migration);
-                break;
-              default:
-                $migration->setProcessOfProperty($field_name, $field_name);
-            }
+            $migration->setProcessOfProperty($field_name, $field_name);
           }
         }
         else {
@@ -108,47 +102,6 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
     }
 
     return $migrations;
-  }
-
-  /**
-   * Manipulate text fields with any per field type processing.
-   *
-   * @param string $field_name
-   *   The field we're processing.
-   * @param array $field_data
-   *   The an array of field type data from the source.
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
-   *   The migration entity.
-   */
-  protected function processTextField($field_name, $field_data, MigrationInterface $migration) {
-    // The data is stored differently depending on whether we're using
-    // db storage.
-    $value_key = $field_data['db_storage'] ? $field_name : "$field_name/value";
-    $format_key = $field_data['db_storage'] ? $field_name . '_format' : "$field_name/format" ;
-
-    $migration->setProcessOfProperty("$field_name/value", $value_key);
-
-    // See \Drupal\migrate_drupal\Plugin\migrate\source\d6\User::baseFields(),
-    // signature_format for an example of the YAML that represents this
-    // process array.
-    $process = [
-      [
-        'plugin' => 'static_map',
-        'bypass' => TRUE,
-        'source' => $format_key,
-        'map' => [0 => NULL]
-      ],
-      [
-        'plugin' => 'skip_on_empty',
-        'method' => 'process',
-      ],
-      [
-        'plugin' => 'migration',
-        'migration' => 'd6_filter_format',
-        'source' => $format_key,
-      ],
-    ];
-    $migration->mergeProcessOfProperty("$field_name/format", $process);
   }
 
 }
