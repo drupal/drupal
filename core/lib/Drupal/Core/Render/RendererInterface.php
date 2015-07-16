@@ -322,6 +322,18 @@ interface RendererInterface {
   public function render(&$elements, $is_root_call = FALSE);
 
   /**
+   * Checks whether a render context is active.
+   *
+   * This is useful only in very specific situations to determine whether the
+   * system is already capable of collecting bubbleable metadata. Normally it
+   * should not be necessary to be concerned about this.
+   *
+   * @return bool
+   *   TRUE if the renderer has a render context active, FALSE otherwise.
+   */
+  public function hasRenderContext();
+
+  /**
    * Executes a callable within a render context.
    *
    * Only for very advanced use cases. Prefer using ::renderRoot() and

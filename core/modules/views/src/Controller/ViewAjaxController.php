@@ -14,6 +14,8 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\views\Ajax\ScrollTopCommand;
@@ -174,9 +176,18 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
-        if ($preview = $view->preview($display_id, $args)) {
-          $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
+        $context = new RenderContext();
+        $preview = $this->renderer->executeInRenderContext($context, function() use ($view, $display_id, $args) {
+          return $view->preview($display_id, $args);
+        });
+        if (!$context->isEmpty()) {
+          $bubbleable_metadata = $context->pop();
+          BubbleableMetadata::createFromRenderArray($preview)
+            ->merge($bubbleable_metadata)
+            ->applyTo($preview);
         }
+        $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
+
         return $response;
       }
       else {

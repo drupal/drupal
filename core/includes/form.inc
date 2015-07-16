@@ -810,7 +810,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
       $query_options['op'] = 'finished';
       $error_url->setOption('query', $query_options);
 
-      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => $error_url->toString()));
+      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => $error_url->toString(TRUE)->getGeneratedUrl()));
 
       // Clear the way for the redirection to the batch processing page, by
       // saving and unsetting the 'destination', if there is any.
@@ -840,7 +840,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
         $function($batch_url->toString(), ['query' => $query_options]);
       }
       else {
-        return new RedirectResponse($batch_url->setAbsolute()->toString());
+        return new RedirectResponse($batch_url->setAbsolute()->toString(TRUE)->getGeneratedUrl());
       }
     }
     else {

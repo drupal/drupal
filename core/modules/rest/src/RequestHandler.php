@@ -7,6 +7,7 @@
 
 namespace Drupal\rest;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -103,10 +104,23 @@ class RequestHandler implements ContainerAwareInterface {
     }
 
     // Serialize the outgoing data for the response, if available.
-    $data = $response->getResponseData();
-    if ($data != NULL) {
-      $output = $serializer->serialize($data, $format);
+    if ($response instanceof ResourceResponse && $data = $response->getResponseData()) {
+      // Serialization can invoke rendering (e.g., generating URLs), but the
+      // serialization API does not provide a mechanism to collect the
+      // bubbleable metadata associated with that (e.g., language and other
+      // contexts), so instead, allow those to "leak" and collect them here in
+      // a render context.
+      // @todo Add test coverage for language negotiation contexts in
+      //   https://www.drupal.org/node/2135829.
+      $context = new RenderContext();
+      $output = $this->container->get('renderer')->executeInRenderContext($context, function() use ($serializer, $data, $format) {
+        return $serializer->serialize($data, $format);
+      });
       $response->setContent($output);
+      if (!$context->isEmpty()) {
+        $response->addCacheableDependency($context->pop());
+      }
+
       $response->headers->set('Content-Type', $request->getMimeType($format));
       // Add rest settings config's cache tags.
       $response->addCacheableDependency($this->container->get('config.factory')->get('rest.settings'));

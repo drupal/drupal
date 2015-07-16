@@ -8,6 +8,8 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Url;
 
 /**
  * Provides a base class for form element plugins.
@@ -111,18 +113,29 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    *   The form element.
    */
   public static function processAutocomplete(&$element, FormStateInterface $form_state, &$complete_form) {
+    $url = NULL;
     $access = FALSE;
+
     if (!empty($element['#autocomplete_route_name'])) {
       $parameters = isset($element['#autocomplete_route_parameters']) ? $element['#autocomplete_route_parameters'] : array();
-
-      $path = \Drupal::urlGenerator()->generate($element['#autocomplete_route_name'], $parameters);
-      $access = \Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser());
+      $url = Url::fromRoute($element['#autocomplete_route_name'], $parameters)->toString(TRUE);
+      /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
+      $access_manager = \Drupal::service('access_manager');
+      $access = $access_manager->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser(), TRUE);
     }
+
     if ($access) {
-      $element['#attributes']['class'][] = 'form-autocomplete';
-      $element['#attached']['library'][] = 'core/drupal.autocomplete';
-      // Provide a data attribute for the JavaScript behavior to bind to.
-      $element['#attributes']['data-autocomplete-path'] = $path;
+      $metadata = BubbleableMetadata::createFromRenderArray($element);
+      if ($access->isAllowed()) {
+        $element['#attributes']['class'][] = 'form-autocomplete';
+        $element['#attached']['library'][] = 'core/drupal.autocomplete';
+        // Provide a data attribute for the JavaScript behavior to bind to.
+        $element['#attributes']['data-autocomplete-path'] = $url->getGeneratedUrl();
+        $metadata->merge($url);
+      }
+      $metadata
+        ->merge(BubbleableMetadata::createFromObject($access))
+        ->applyTo($element);
     }
 
     return $element;

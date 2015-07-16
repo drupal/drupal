@@ -192,12 +192,17 @@ class TextFormat extends RenderElement {
       '#parents' => array_merge($element['#parents'], array('format')),
     );
 
-    $element['format']['help'] = array(
+    $element['format']['help'] = [
       '#type' => 'container',
-      '#attributes' => array('class' => array('filter-help')),
-      '#markup' => \Drupal::l(t('About text formats'), new Url('filter.tips_all', array(), array('attributes' => array('target' => '_blank')))),
+      'about' => [
+        '#type' => 'link',
+        '#title' => t('About text formats'),
+        '#url' => new Url('filter.tips_all'),
+        '#attributes' => ['target' => '_blank'],
+      ],
+      '#attributes' => ['class' => ['filter-help']],
       '#weight' => 0,
-    );
+    ];
 
     $all_formats = filter_formats();
     $format_exists = isset($all_formats[$element['#format']]);

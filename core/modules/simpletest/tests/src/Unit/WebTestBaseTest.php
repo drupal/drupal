@@ -198,4 +198,41 @@ class WebTestBaseTest extends UnitTestCase {
     $this->assertSame($expected, $clicklink_method->invoke($web_test, $label, $index));
   }
 
+  /**
+   * @dataProvider providerTestGetAbsoluteUrl
+   */
+  public function testGetAbsoluteUrl($href, $expected_absolute_path) {
+    $web_test = $this->getMockBuilder('Drupal\simpletest\WebTestBase')
+      ->disableOriginalConstructor()
+      ->setMethods(['getUrl'])
+      ->getMock();
+
+    $web_test->expects($this->any())
+      ->method('getUrl')
+      ->willReturn('http://example.com/drupal/current-path?foo=baz');
+
+    $GLOBALS['base_url'] = 'http://example.com';
+    $GLOBALS['base_path'] = 'drupal';
+
+    $get_absolute_url_method = new \ReflectionMethod($web_test, 'getAbsoluteUrl');
+    $get_absolute_url_method->setAccessible(TRUE);
+
+    $this->assertSame($expected_absolute_path, $get_absolute_url_method->invoke($web_test, $href));
+  }
+
+  /**
+   * Provides test data for testGetAbsoluteUrl.
+   *
+   * @return array
+   */
+  public function providerTestGetAbsoluteUrl() {
+    $data = [];
+    $data['host'] = ['http://example.com/drupal/test-example', 'http://example.com/drupal/test-example'];
+    $data['path'] = ['/drupal/test-example', 'http://example.com/drupal/test-example'];
+    $data['path-with-query'] = ['/drupal/test-example?foo=bar', 'http://example.com/drupal/test-example?foo=bar'];
+    $data['just-query'] = ['?foo=bar', 'http://example.com/drupal/current-path?foo=bar'];
+
+    return $data;
+  }
+
 }

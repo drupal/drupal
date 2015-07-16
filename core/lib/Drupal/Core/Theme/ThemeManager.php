@@ -302,14 +302,23 @@ class ThemeManager implements ThemeManagerInterface {
           $preprocessor_function($variables, $hook, $info);
         }
       }
-      // Allow theme preprocess functions to set $variables['#attached'] and use
-      // it like the #attached property on render arrays. In Drupal 8, this is
-      // the (only) officially supported method of attaching assets from
-      // preprocess functions. Assets attached here should be associated with
-      // the template that we're preprocessing variables for.
-      if (isset($variables['#attached'])) {
-        $preprocess_attached = ['#attached' => $variables['#attached']];
-        drupal_render($preprocess_attached);
+      // Allow theme preprocess functions to set $variables['#attached'] and
+      // $variables['#cache'] and use them like the corresponding element
+      // properties on render arrays. In Drupal 8, this is the (only) officially
+      // supported method of attaching bubbleable metadata from preprocess
+      // functions. Assets attached here should be associated with the template
+      // that we are preprocessing variables for.
+      $preprocess_bubbleable = [];
+      foreach (['#attached', '#cache'] as $key) {
+        if (isset($variables[$key])) {
+          $preprocess_bubbleable[$key] = $variables[$key];
+        }
+      }
+      // We do not allow preprocess functions to define cacheable elements.
+      unset($preprocess_bubbleable['#cache']['keys']);
+      if ($preprocess_bubbleable) {
+        // @todo Inject the Renderer in https://www.drupal.org/node/2529438.
+        drupal_render($preprocess_bubbleable);
       }
     }
 

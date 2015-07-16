@@ -71,17 +71,29 @@ class GlossaryTest extends ViewTestBase {
     $url = Url::fromRoute('view.glossary.page_1');
 
     // Verify cache tags.
-    $this->assertPageCacheContextsAndTags($url, ['languages:' . LanguageInterface::TYPE_CONTENT, 'languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'url', 'user.node_grants:view', 'user.permissions'], [
-      'config:views.view.glossary',
-      'node:' . $nodes_by_char['a'][0]->id(), 'node:' . $nodes_by_char['a'][1]->id(), 'node:' . $nodes_by_char['a'][2]->id(),
-      'node_list',
-      'user:0',
-      'user_list',
-      'rendered',
-      // FinishResponseSubscriber adds this cache tag to responses that have the
-      // 'user.permissions' cache context for anonymous users.
-      'config:user.role.anonymous',
-    ]);
+    $this->assertPageCacheContextsAndTags(
+      $url,
+      [
+        'languages:' . LanguageInterface::TYPE_CONTENT,
+        'languages:' . LanguageInterface::TYPE_INTERFACE,
+        'theme',
+        'url',
+        'user.node_grants:view',
+        'user.permissions',
+        'route',
+      ],
+      [
+        'config:views.view.glossary',
+        'node:' . $nodes_by_char['a'][0]->id(), 'node:' . $nodes_by_char['a'][1]->id(), 'node:' . $nodes_by_char['a'][2]->id(),
+        'node_list',
+        'user:0',
+        'user_list',
+        'rendered',
+        // FinishResponseSubscriber adds this cache tag to responses that have the
+        // 'user.permissions' cache context for anonymous users.
+        'config:user.role.anonymous',
+      ]
+    );
 
     // Check the actual page response.
     $this->drupalGet($url);

@@ -96,6 +96,7 @@ class Full extends SqlBase {
       '#element' => $this->options['id'],
       '#parameters' => $input,
       '#quantity' => $this->options['quantity'],
+      '#route_name' => !empty($this->view->live_preview) ? '<current>' : '<none>',
     );
   }
 

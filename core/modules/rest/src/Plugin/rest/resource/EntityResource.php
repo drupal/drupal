@@ -109,7 +109,10 @@ class EntityResource extends ResourceBase {
       $this->logger->notice('Created entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       // 201 Created responses have an empty body.
-      return new ResourceResponse(NULL, 201, array('Location' => $entity->url('canonical', ['absolute' => TRUE])));
+      $url = $entity->urlInfo('canonical', ['absolute' => TRUE])->toString(TRUE);
+      $response = new ResourceResponse(NULL, 201, ['Location' => $url->getGeneratedUrl()]);
+      $response->addCacheableDependency($url);
+      return $response;
     }
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);

@@ -191,7 +191,7 @@ class FrontPageTest extends ViewTestBase {
    */
   public function testCacheTagsWithCachePluginNone() {
     $this->enablePageCaching();
-    $this->assertFrontPageViewCacheTags(FALSE);
+    $this->doTestFrontPageViewCacheTags(FALSE);
   }
 
   /**
@@ -207,7 +207,7 @@ class FrontPageTest extends ViewTestBase {
     ]);
     $view->save();
 
-    $this->assertFrontPageViewCacheTags(TRUE);
+    $this->doTestFrontPageViewCacheTags(TRUE);
   }
 
   /**
@@ -227,7 +227,7 @@ class FrontPageTest extends ViewTestBase {
     ]);
     $view->save();
 
-    $this->assertFrontPageViewCacheTags(TRUE);
+    $this->doTestFrontPageViewCacheTags(TRUE);
   }
 
   /**
@@ -236,7 +236,7 @@ class FrontPageTest extends ViewTestBase {
    * @param bool $do_assert_views_caches
    *   Whether to check Views' result & output caches.
    */
-  protected function assertFrontPageViewCacheTags($do_assert_views_caches) {
+  protected function doTestFrontPageViewCacheTags($do_assert_views_caches) {
     $view = Views::getView('frontpage');
     $view->setDisplay('page_1');
 
@@ -248,7 +248,9 @@ class FrontPageTest extends ViewTestBase {
       'user.permissions',
       // Default cache contexts of the renderer.
       'theme',
-      'url.query_args.pagers:0',
+      'url.query_args',
+      // Attached feed.
+      'url.site',
     ];
 
     $cache_context_tags = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($cache_contexts)->getCacheTags();

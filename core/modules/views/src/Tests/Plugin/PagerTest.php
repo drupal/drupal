@@ -261,7 +261,7 @@ class PagerTest extends PluginTestBase {
 
     // Test pager cache contexts.
     $this->drupalGet('test_pager_full');
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'timezone', 'url.query_args.pagers:0', 'user.node_grants:view']);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'timezone', 'url.query_args', 'user.node_grants:view']);
   }
 
   /**

@@ -220,7 +220,7 @@ class DbUpdateController extends ControllerBase {
 
     $info[] = $this->t("<strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.");
     $info[] = $this->t('Put your site into <a href="@url">maintenance mode</a>.', array(
-      '@url' => $this->url('system.site_maintenance_mode'),
+      '@url' => Url::fromRoute('system.site_maintenance_mode')->toString(TRUE)->getGeneratedUrl(),
     ));
     $info[] = $this->t('<strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.');
     $info[] = $this->t('Install your new files in the appropriate location, as described in the handbook.');
@@ -388,7 +388,7 @@ class DbUpdateController extends ControllerBase {
     $dblog_exists = $this->moduleHandler->moduleExists('dblog');
     if ($dblog_exists && $this->account->hasPermission('access site reports')) {
       $log_message = $this->t('All errors have been <a href="@url">logged</a>.', array(
-        '@url' => $this->url('dblog.overview'),
+        '@url' => Url::fromRoute('dblog.overview')->toString(TRUE)->getGeneratedUrl(),
       ));
     }
     else {
@@ -396,7 +396,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     if (!empty($_SESSION['update_success'])) {
-      $message = '<p>' . $this->t('Updates were attempted. If you see no failures below, you may proceed happily back to your <a href="@url">site</a>. Otherwise, you may need to update your database manually.', array('@url' => $this->url('<front>'))) . ' ' . $log_message . '</p>';
+      $message = '<p>' . $this->t('Updates were attempted. If you see no failures below, you may proceed happily back to your <a href="@url">site</a>. Otherwise, you may need to update your database manually.', array('@url' => Url::fromRoute('<front>')->toString(TRUE)->getGeneratedUrl())) . ' ' . $log_message . '</p>';
     }
     else {
       $last = reset($_SESSION['updates_remaining']);
@@ -497,7 +497,7 @@ class DbUpdateController extends ControllerBase {
    */
   public function requirements($severity, array $requirements) {
     $options = $severity == REQUIREMENT_WARNING ? array('continue' => 1) : array();
-    $try_again_url = $this->url('system.db_update', $options);
+    $try_again_url = Url::fromRoute('system.db_update', $options)->toString(TRUE)->getGeneratedUrl();
 
     $build['status_report'] = array(
       '#theme' => 'status_report',

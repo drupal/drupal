@@ -382,14 +382,9 @@ abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterfa
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    $contexts = ['url.query_args.pagers:' . $this->options['id']];
-    if ($this->options['expose']['items_per_page']) {
-      $contexts[] = 'url.query_args:items_per_page';
-    }
-    if ($this->options['expose']['offset']) {
-      $contexts[] = 'url.query_args:offset';
-    }
-    return $contexts;
+    // The rendered link needs to play well with any other query parameter used
+    // on the page, like other pagers and exposed filter.
+    return ['url.query_args'];
   }
 
 }

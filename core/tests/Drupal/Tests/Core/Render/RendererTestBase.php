@@ -11,10 +11,9 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Renderer;
 use Drupal\Core\Render\RenderCache;
+use Drupal\Core\Render\Renderer;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,6 +101,9 @@ class RendererTestBase extends UnitTestCase {
     $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->elementInfo = $this->getMock('Drupal\Core\Render\ElementInfoManagerInterface');
     $this->requestStack = new RequestStack();
+    $request = new Request();
+    $request->server->set('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+    $this->requestStack->push($request);
     $this->cacheFactory = $this->getMock('Drupal\Core\Cache\CacheFactoryInterface');
     $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
@@ -129,7 +131,7 @@ class RendererTestBase extends UnitTestCase {
         return new ContextCacheKeys($keys, new CacheableMetadata());
       });
     $this->renderCache = new RenderCache($this->requestStack, $this->cacheFactory, $this->cacheContextsManager);
-    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->renderCache, $this->rendererConfig);
+    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->renderCache, $this->requestStack, $this->rendererConfig);
 
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $this->cacheContextsManager);

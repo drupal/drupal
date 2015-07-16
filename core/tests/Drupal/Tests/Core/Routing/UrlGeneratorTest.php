@@ -23,6 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Confirm that the UrlGenerator is functioning properly.
  *
+ * @coversDefaultClass \Drupal\Core\Routing\UrlGenerator
  * @group Routing
  */
 class UrlGeneratorTest extends UnitTestCase {
@@ -70,11 +71,14 @@ class UrlGeneratorTest extends UnitTestCase {
     $first_route = new Route('/test/one');
     $second_route = new Route('/test/two/{narf}');
     $third_route = new Route('/test/two/');
-    $fourth_route = new Route('/test/four', array(), array(), array(), '', ['https']);
+    $fourth_route = new Route('/test/four', [], [], [], '', ['https']);
+    $none_route = new Route('', [], [], ['_no_path' => TRUE]);
+
     $routes->add('test_1', $first_route);
     $routes->add('test_2', $second_route);
     $routes->add('test_3', $third_route);
     $routes->add('test_4', $fourth_route);
+    $routes->add('<none>', $none_route);
 
     // Create a route provider stub.
     $provider = $this->getMockBuilder('Drupal\Core\Routing\RouteProvider')
@@ -85,22 +89,26 @@ class UrlGeneratorTest extends UnitTestCase {
     // are not passed in and default to an empty array.
     $route_name_return_map = $routes_names_return_map = array();
     $return_map_values = array(
-      array(
+      [
         'route_name' => 'test_1',
         'return' => $first_route,
-      ),
-      array(
+      ],
+      [
         'route_name' => 'test_2',
         'return' => $second_route,
-      ),
-      array(
+      ],
+      [
         'route_name' => 'test_3',
         'return' => $third_route,
-      ),
-      array(
+      ],
+      [
         'route_name' => 'test_4',
         'return' => $fourth_route,
-      ),
+      ],
+      [
+        'route_name' => '<none>',
+        'return' => $none_route,
+      ],
     );
     foreach ($return_map_values as $values) {
       $route_name_return_map[] = array($values['route_name'], $values['return']);
@@ -412,6 +420,43 @@ class UrlGeneratorTest extends UnitTestCase {
         $this->assertEquals($expected_cacheability, BubbleableMetadata::createFromObject($generated_url));
       }
     }
+  }
+
+  /**
+   * Tests generating a relative URL with no path.
+   *
+   * @param array $options
+   *   An array of URL options.
+   * @param string $expected_url
+   *   The expected relative URL.
+   *
+   * @covers ::generateFromRoute
+   *
+   * @dataProvider providerTestNoPath
+   */
+  public function testNoPath($options, $expected_url) {
+    $url = $this->generator->generateFromRoute('<none>', [], $options);
+    $this->assertEquals($expected_url, $url);
+  }
+
+  /**
+   * Data provider for ::testNoPath().
+   */
+  public function providerTestNoPath() {
+    return [
+      // Empty options.
+      [[], ''],
+      // Query parameters only.
+      [['query' => ['foo' => 'bar']], '?foo=bar'],
+      // Multiple query parameters.
+      [['query' => ['foo' => 'bar', 'baz' => '']], '?foo=bar&baz='],
+      // Fragment only.
+      [['fragment' => 'foo'], '#foo'],
+      // Query parameters and fragment.
+      [['query' => ['bar' => 'baz'], 'fragment' => 'foo'], '?bar=baz#foo'],
+      // Multiple query parameters and fragment.
+      [['query' => ['bar' => 'baz', 'foo' => 'bar'], 'fragment' => 'foo'], '?bar=baz&foo=bar#foo'],
+    ];
   }
 
   /**

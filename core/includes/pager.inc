@@ -176,6 +176,7 @@ function template_preprocess_pager(&$variables) {
   $element = $variables['pager']['#element'];
   $parameters = $variables['pager']['#parameters'];
   $quantity = $variables['pager']['#quantity'];
+  $route_name = $variables['pager']['#route_name'];
   global $pager_page_array, $pager_total;
 
   // Nothing to do if there is only one page.
@@ -218,7 +219,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, 0),
     );
-    $items['first']['href'] = \Drupal::url('<current>', [], $options);
+    $items['first']['href'] = \Drupal::url($route_name, [], $options);
     if (isset($tags[0])) {
       $items['first']['text'] = $tags[0];
     }
@@ -227,7 +228,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
     );
-    $items['previous']['href'] = \Drupal::url('<current>', [], $options);
+    $items['previous']['href'] = \Drupal::url($route_name, [], $options);
     if (isset($tags[1])) {
       $items['previous']['text'] = $tags[1];
     }
@@ -243,7 +244,7 @@ function template_preprocess_pager(&$variables) {
       $options = array(
         'query' => pager_query_add_page($parameters, $element, $i - 1),
       );
-      $items['pages'][$i]['href'] = \Drupal::url('<current>', [], $options);
+      $items['pages'][$i]['href'] = \Drupal::url($route_name, [], $options);
       if ($i == $pager_current) {
         $variables['current'] = $i;
       }
@@ -260,7 +261,7 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
     );
-    $items['next']['href'] = \Drupal::url('<current>', [], $options);
+    $items['next']['href'] = \Drupal::url($route_name, [], $options);
     if (isset($tags[3])) {
       $items['next']['text'] = $tags[3];
     }
@@ -269,13 +270,18 @@ function template_preprocess_pager(&$variables) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_max - 1),
     );
-    $items['last']['href'] = \Drupal::url('<current>', [], $options);
+    $items['last']['href'] = \Drupal::url($route_name, [], $options);
     if (isset($tags[4])) {
       $items['last']['text'] = $tags[4];
     }
   }
 
   $variables['items'] = $items;
+
+  // The rendered link needs to play well with any other query parameter
+  // used on the page, like exposed filters, so for the cacheability all query
+  // parameters matter.
+  $variables['#cache']['contexts'][] = 'url.query_args';
 }
 
 /**

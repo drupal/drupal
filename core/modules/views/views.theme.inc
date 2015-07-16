@@ -494,7 +494,9 @@ function template_preprocess_views_view_table(&$variables) {
           'attributes' => array('title' => $title),
           'query' => $query,
         );
-        $variables['header'][$field]['content'] = \Drupal::l($label, new Url('<current>', [], $link_options));
+        // It is ok to specify no URL path here as we will always reload the
+        // current page.
+        $variables['header'][$field]['content'] = \Drupal::l($label, new Url('<none>', [], $link_options));
       }
 
       $variables['header'][$field]['default_classes'] = $fields[$field]->options['element_default_classes'];
@@ -1050,6 +1052,10 @@ function template_preprocess_views_mini_pager(&$variables) {
     }
     $variables['items']['next']['attributes'] = new Attribute();
   }
+
+  // This is is based on the entire current query string. We need to ensure
+  // cacheability is affected accordingly.
+  $variables['#cache']['contexts'][] = 'url.query_args';
 }
 
 /**

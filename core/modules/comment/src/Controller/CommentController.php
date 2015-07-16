@@ -11,6 +11,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -129,7 +130,8 @@ class CommentController extends ControllerBase {
       // Find the current display page for this comment.
       $page = $this->entityManager()->getStorage('comment')->getDisplayOrdinal($comment, $field_definition->getSetting('default_mode'), $field_definition->getSetting('per_page'));
       // @todo: Cleaner sub request handling.
-      $redirect_request = Request::create($entity->url(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+      $subrequest_url = $entity->urlInfo()->toString(TRUE);
+      $redirect_request = Request::create($subrequest_url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);
       // Carry over the session to the subrequest.
       if ($session = $request->getSession()) {
@@ -137,7 +139,16 @@ class CommentController extends ControllerBase {
       }
       // @todo: Convert the pager to use the request object.
       $request->query->set('page', $page);
-      return $this->httpKernel->handle($redirect_request, HttpKernelInterface::SUB_REQUEST);
+      $response = $this->httpKernel->handle($redirect_request, HttpKernelInterface::SUB_REQUEST);
+      if ($response instanceof CacheableResponseInterface) {
+        // @todo Once path aliases have cache tags (see
+        //   https://www.drupal.org/node/2480077), add test coverage that
+        //   the cache tag for a commented entity's path alias is added to the
+        //   comment's permalink response, because there can be blocks or
+        //   other content whose renderings depend on the subrequest's URL.
+        $response->addCacheableDependency($subrequest_url);
+      }
+      return $response;
     }
     throw new NotFoundHttpException();
   }

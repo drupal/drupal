@@ -56,6 +56,7 @@ class CommentRssTest extends CommentTestBase {
     $cache_contexts = [
       'languages:language_interface',
       'theme',
+      'url.site',
       'user.node_grants:view',
       'user.permissions',
       'timezone',

@@ -71,12 +71,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     $cache_contexts = [
       'languages:' . LanguageInterface::TYPE_INTERFACE,
-      'route.menu_active_trails:account',
-      'route.menu_active_trails:footer',
-      'route.menu_active_trails:main',
-      'route.menu_active_trails:tools',
-      // The user login block access is not visible on certain routes.
-      'route.name',
+      'route',
       'theme',
       'timezone',
       'user.permissions',

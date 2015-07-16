@@ -21,7 +21,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {inheritdoc}
    */
-  protected $defaultCacheContexts = ['languages:language_interface', 'theme', 'user'];
+  protected $defaultCacheContexts = ['languages:language_interface', 'theme', 'user', 'url.site'];
 
   /**
    * Modules to enable.

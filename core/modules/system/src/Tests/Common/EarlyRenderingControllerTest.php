@@ -42,6 +42,16 @@ class EarlyRenderingControllerTest extends WebTestBase {
     $this->assertRaw('Hello world!');
     $this->assertCacheTag('foo');
 
+    // AjaxResponse: non-early & early.
+    // @todo Add cache tags assertion when AjaxResponse is made cacheable in
+    //   https://www.drupal.org/node/956186.
+    $this->drupalGet(Url::fromRoute('early_rendering_controller_test.ajax_response'));
+    $this->assertResponse(200);
+    $this->assertRaw('Hello world!');
+    $this->drupalGet(Url::fromRoute('early_rendering_controller_test.ajax_response.early'));
+    $this->assertResponse(200);
+    $this->assertRaw('Hello world!');
+
     // Basic Response object: non-early & early.
     $this->drupalGet(Url::fromRoute('early_rendering_controller_test.response'));
     $this->assertResponse(200);

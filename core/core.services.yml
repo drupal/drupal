@@ -694,9 +694,15 @@ services:
     arguments: ['@route_filter.lazy_collector']
     tags:
       - { name: event_subscriber }
-  url_generator:
+  url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@request_stack']
+    public: false
+    calls:
+      - [setContext, ['@?router.request_context']]
+  url_generator:
+    class: Drupal\Core\Render\MetadataBubblingUrlGenerator
+    arguments: ['@url_generator.non_bubbling', '@renderer']
     calls:
       - [setContext, ['@?router.request_context']]
   redirect.destination:
@@ -1425,7 +1431,7 @@ services:
     arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager']
   renderer:
     class: Drupal\Core\Render\Renderer
-    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_cache', '%renderer.config%']
+    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_cache', '@request_stack', '%renderer.config%']
   early_rendering_controller_wrapper_subscriber:
     class: Drupal\Core\EventSubscriber\EarlyRenderingControllerWrapperSubscriber
     arguments: ['@controller_resolver', '@renderer']

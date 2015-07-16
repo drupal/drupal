@@ -657,7 +657,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
 
   $pathPrefix = '';
   $current_query = $request->query->all();
-  Url::fromRoute('<front>', [], array('script' => &$scriptPath, 'prefix' => &$pathPrefix))->toString();
+  Url::fromRoute('<front>', [], array('script' => &$scriptPath, 'prefix' => &$pathPrefix))->toString(TRUE);
   $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
   $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
   $path_settings = [

@@ -32,6 +32,7 @@ use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Zend\Diactoros\Uri;
 
 /**
  * Test case for typical Drupal tests.
@@ -2393,16 +2394,35 @@ abstract class WebTestBase extends TestBase {
   /**
    * Takes a path and returns an absolute path.
    *
-   * @param $path
+   * This method is implemented in the way that browsers work, see
+   * https://url.spec.whatwg.org/#relative-state for more information about the
+   * possible cases.
+   *
+   * @param string $path
    *   A path from the internal browser content.
    *
-   * @return
+   * @return string
    *   The $path with $base_url prepended, if necessary.
    */
   protected function getAbsoluteUrl($path) {
     global $base_url, $base_path;
 
     $parts = parse_url($path);
+
+    // In case the $path has a host, it is already an absolute URL and we are
+    // done.
+    if (!empty($parts['host'])) {
+      return $path;
+    }
+
+    // In case the $path contains just a query, we turn it into an absolute URL
+    // with the same scheme, host and path, see
+    // https://url.spec.whatwg.org/#relative-state.
+    if (array_keys($parts) === ['query']) {
+      $current_uri = new Uri($this->getUrl());
+      return (string) $current_uri->withQuery($parts['query']);
+    }
+
     if (empty($parts['host'])) {
       // Ensure that we have a string (and no xpath object).
       $path = (string) $path;
@@ -2858,6 +2878,17 @@ abstract class WebTestBase extends TestBase {
   protected function assertCacheContext($expected_cache_context) {
     $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
     $this->assertTrue(in_array($expected_cache_context, $cache_contexts), "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
+  }
+
+  /**
+   * Asserts that a cache context was not present in the last response.
+   *
+   * @param string $not_expected_cache_context
+   *   The expected cache context.
+   */
+  protected function assertNoCacheContext($not_expected_cache_context) {
+    $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
+    $this->assertFalse(in_array($not_expected_cache_context, $cache_contexts), "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
   }
 
   /**

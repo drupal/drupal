@@ -278,12 +278,9 @@ class UrlGenerator implements UrlGeneratorInterface {
    * {@inheritdoc}
    */
   public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
-    $generated_url = $collect_bubbleable_metadata ? new GeneratedUrl() : NULL;
-
     $options += array('prefix' => '');
     $route = $this->getRoute($name);
-    $name = $this->getRouteDebugMessage($name);
-    $this->processRoute($name, $route, $parameters, $generated_url);
+    $generated_url = $collect_bubbleable_metadata ? new GeneratedUrl() : NULL;
 
     $query_params = [];
     // Symfony adds any parameters that are not path slugs as query strings.
@@ -291,6 +288,23 @@ class UrlGenerator implements UrlGeneratorInterface {
       $query_params = $options['query'];
     }
 
+    $fragment = '';
+    if (isset($options['fragment'])) {
+      if (($fragment = trim($options['fragment'])) != '') {
+        $fragment = '#' . $fragment;
+      }
+    }
+
+    // Generate a relative URL having no path, just query string and fragment.
+    if ($route->getOption('_no_path')) {
+      $query = $query_params ? '?' . http_build_query($query_params, '', '&') : '';
+      $url = $query . $fragment;
+      return $collect_bubbleable_metadata ? $generated_url->setGeneratedUrl($url) : $url;
+    }
+
+    $options += array('prefix' => '');
+    $name = $this->getRouteDebugMessage($name);
+    $this->processRoute($name, $route, $parameters, $generated_url);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters, $query_params);
     $path = $this->processPath($path, $options, $generated_url);
 
@@ -298,13 +312,6 @@ class UrlGenerator implements UrlGeneratorInterface {
       $path = ltrim($path, '/');
       $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
       $path = '/' . str_replace('%2F', '/', rawurlencode($prefix)) . $path;
-    }
-
-    $fragment = '';
-    if (isset($options['fragment'])) {
-      if (($fragment = trim($options['fragment'])) != '') {
-        $fragment = '#' . $fragment;
-      }
     }
 
     // The base_url might be rewritten from the language rewrite in domain mode.
@@ -328,11 +335,6 @@ class UrlGenerator implements UrlGeneratorInterface {
 
     $absolute = !empty($options['absolute']);
     if (!$absolute || !$host = $this->context->getHost()) {
-
-      if ($route->getOption('_only_fragment')) {
-        return $collect_bubbleable_metadata ? $generated_url->setGeneratedUrl($fragment) : $fragment;
-      }
-
       $url = $base_url . $path . $fragment;
       return $collect_bubbleable_metadata ? $generated_url->setGeneratedUrl($url) : $url;
     }

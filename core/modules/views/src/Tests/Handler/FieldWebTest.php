@@ -68,23 +68,21 @@ class FieldWebTest extends HandlerTestBase {
     $this->assertResponse(200);
 
     // Only the id and name should be click sortable, but not the name.
-    $this->assertLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'id', 'sort' => 'asc']]));
-    $this->assertLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'name', 'sort' => 'desc']]));
-    $this->assertNoLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'created']]));
+    $this->assertLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']]));
+    $this->assertLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'name', 'sort' => 'desc']]));
+    $this->assertNoLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'created']]));
 
     // Check that the view returns the click sorting cache contexts.
     $expected_contexts = [
       'languages:language_interface',
       'theme',
-      'url.query_args.pagers:0',
-      'url.query_args:order',
-      'url.query_args:sort',
+      'url.query_args',
     ];
     $this->assertCacheContexts($expected_contexts);
 
     // Clicking a click sort should change the order.
     $this->clickLink(t('ID'));
-    $this->assertLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'id', 'sort' => 'desc']]));
+    $this->assertLinkByHref(\Drupal::url('<none>', [], ['query' => ['order' => 'id', 'sort' => 'desc']]));
     // Check that the output has the expected order (asc).
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEqual($ids, range(1, 5));

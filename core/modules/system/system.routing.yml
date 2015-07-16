@@ -385,7 +385,7 @@ system.theme_settings_theme:
 '<none>':
   path: ''
   options:
-    _only_fragment: TRUE
+    _no_path: TRUE
   requirements:
     _access: 'TRUE'
 

@@ -12,6 +12,20 @@ early_rendering_controller_test.render_array.early:
   requirements:
     _access: 'TRUE'
 
+# Controller returning an AjaxResponse.
+early_rendering_controller_test.ajax_response:
+  path: '/early-rendering-controller-test/ajax-response'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::ajaxResponse'
+  requirements:
+    _access: 'TRUE'
+early_rendering_controller_test.ajax_response.early:
+  path: '/early-rendering-controller-test/ajax-response/early'
+  defaults:
+    _controller: '\Drupal\early_rendering_controller_test\EarlyRenderingTestController::ajaxResponseEarly'
+  requirements:
+    _access: 'TRUE'
+
 # Controller returning a basic Response object.
 early_rendering_controller_test.response:
   path: '/early-rendering-controller-test/response'

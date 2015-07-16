@@ -103,6 +103,7 @@ class Mini extends SqlBase {
       '#tags' => $tags,
       '#element' => $this->options['id'],
       '#parameters' => $input,
+      '#route_name' => !empty($this->view->live_preview) ? '<current>' : '<none>',
     );
   }
 

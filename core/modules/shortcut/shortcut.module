@@ -313,7 +313,6 @@ function shortcut_preprocess_page(&$variables) {
       'link' => $link,
       'name' => $variables['title'],
     );
-    $query += \Drupal::destination()->getAsArray();
 
     $shortcut_set = shortcut_current_displayed_set();
 
@@ -341,6 +340,7 @@ function shortcut_preprocess_page(&$variables) {
     }
 
     if (theme_get_setting('third_party_settings.shortcut.module_link')) {
+      $query += \Drupal::destination()->getAsArray();
       $variables['title_suffix']['add_or_remove_shortcut'] = array(
         '#attached' => array(
           'library' => array(

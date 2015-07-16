@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
@@ -14,6 +15,7 @@ use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -44,10 +46,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * metadata is then merged onto the render array.
  *
  * In other words: this just exists to ease the transition to Drupal 8: it
- * allows controllers that return render arrays (the majority) to still do early
- * rendering. But controllers that return responses are already expected to do
- * the right thing: if early rendering is detected in such a case, an exception
- * is thrown.
+ * allows controllers that return render arrays (the majority) and
+ * \Drupal\Core\Ajax\AjaxResponse\AjaxResponse objects (a sizable minority that
+ * often involve a fair amount of rendering) to still do early rendering. But
+ * controllers that return any other kind of response are already expected to
+ * do the right thing, so if early rendering is detected in such a case, an
+ * exception is thrown.
  *
  * @see \Drupal\Core\Render\RendererInterface
  * @see \Drupal\Core\Render\Renderer
@@ -129,15 +133,26 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
     // drupal_render() outside of a render context, then the bubbleable metadata
     // for that is stored in the current render context.
     if (!$context->isEmpty()) {
-      // If a render array is returned by the controller, merge the "lost"
-      // bubbleable metadata.
+      /** @var \Drupal\Core\Render\BubbleableMetadata $early_rendering_bubbleable_metadata */
+      $early_rendering_bubbleable_metadata = $context->pop();
+
+      // If a render array or AjaxResponse is returned by the controller, merge
+      // the "lost" bubbleable metadata.
       if (is_array($response)) {
-        $early_rendering_bubbleable_metadata = $context->pop();
         BubbleableMetadata::createFromRenderArray($response)
           ->merge($early_rendering_bubbleable_metadata)
           ->applyTo($response);
       }
-      // If a Response or domain object is returned, and it cares about
+      elseif ($response instanceof AjaxResponse) {
+        $response->addAttachments($early_rendering_bubbleable_metadata->getAttachments());
+        // @todo Make AjaxResponse cacheable in
+        //   https://www.drupal.org/node/956186. Meanwhile, allow contrib
+        //   subclasses to be.
+        if ($response instanceof CacheableResponseInterface) {
+          $response->addCacheableDependency($early_rendering_bubbleable_metadata);
+        }
+      }
+      // If a non-Ajax Response or domain object is returned and it cares about
       // attachments or cacheability, then throw an exception: early rendering
       // is not permitted in that case. It is the developer's responsibility
       // to not use early rendering.

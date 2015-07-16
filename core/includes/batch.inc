@@ -165,7 +165,7 @@ function _batch_progress_page() {
   $query_options['op'] = $new_op;
   $batch['url']->setOption('query', $query_options);
 
-  $url = $batch['url']->toString();
+  $url = $batch['url']->toString(TRUE)->getGeneratedUrl();
 
   $build = array(
     '#theme' => 'progress_bar',

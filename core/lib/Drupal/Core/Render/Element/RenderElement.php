@@ -10,6 +10,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
@@ -253,7 +254,11 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
 
       // Convert \Drupal\Core\Url object to string.
       if (isset($settings['url']) && $settings['url'] instanceof Url) {
-        $settings['url'] = $settings['url']->setOptions($settings['options'])->toString();
+        $url = $settings['url']->setOptions($settings['options'])->toString(TRUE);
+        BubbleableMetadata::createFromRenderArray($element)
+          ->merge($url)
+          ->applyTo($element);
+        $settings['url'] = $url->getGeneratedUrl();
       }
       else {
         $settings['url'] = NULL;

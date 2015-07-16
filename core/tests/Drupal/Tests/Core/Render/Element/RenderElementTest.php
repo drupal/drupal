@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Render\Element;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,8 +57,8 @@ class RenderElementTest extends UnitTestCase {
 
     $prophecy = $this->prophesize('Drupal\Core\Routing\UrlGeneratorInterface');
     $url = '/test?foo=bar&ajax_form=1';
-    $prophecy->generateFromRoute('<current>', [], ['query' => ['foo' => 'bar', FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]], FALSE)
-      ->willReturn($url);
+    $prophecy->generateFromRoute('<current>', [], ['query' => ['foo' => 'bar', FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]], TRUE)
+      ->willReturn((new GeneratedUrl())->setCacheContexts(['route'])->setGeneratedUrl($url));
 
     $url_generator = $prophecy->reveal();
     $this->container->set('url_generator', $url_generator);
@@ -87,8 +88,8 @@ class RenderElementTest extends UnitTestCase {
 
     $prophecy = $this->prophesize('Drupal\Core\Routing\UrlGeneratorInterface');
     $url = '/test?foo=bar&other=query&ajax_form=1';
-    $prophecy->generateFromRoute('<current>', [], ['query' => ['foo' => 'bar', 'other' => 'query', FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]], FALSE)
-      ->willReturn($url);
+    $prophecy->generateFromRoute('<current>', [], ['query' => ['foo' => 'bar', 'other' => 'query', FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]], TRUE)
+      ->willReturn((new GeneratedUrl())->setCacheContexts(['route'])->setGeneratedUrl($url));
 
     $url_generator = $prophecy->reveal();
     $this->container->set('url_generator', $url_generator);

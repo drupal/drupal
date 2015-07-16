@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResultInterface;
@@ -16,6 +15,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Turns a render array into a HTML string.
@@ -58,7 +58,25 @@ class Renderer implements RendererInterface {
   protected $rendererConfig;
 
   /**
-   * The render context.
+   * Whether we're currently in a ::renderRoot() call.
+   *
+   * @var bool
+   */
+  protected $isRenderingRoot = FALSE;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The render context collection.
+   *
+   * An individual global render context is tied to the current request. We then
+   * need to maintain a different context for each request to correctly handle
+   * rendering in subrequests.
    *
    * This must be static as long as some controllers rebuild the container
    * during a request. This causes multiple renderer instances to co-exist
@@ -66,16 +84,9 @@ class Renderer implements RendererInterface {
    * fail to render correctly. As soon as it is guaranteed that during a request
    * the same container is used, it no longer needs to be static.
    *
-   * @var \Drupal\Core\Render\RenderContext|null
+   * @var \Drupal\Core\Render\RenderContext[]
    */
-  protected static $context;
-
-  /**
-   * Whether we're currently in a ::renderRoot() call.
-   *
-   * @var bool
-   */
-  protected $isRenderingRoot = FALSE;
+  protected static $contextCollection;
 
   /**
    * Constructs a new Renderer.
@@ -88,15 +99,23 @@ class Renderer implements RendererInterface {
    *   The element info.
    * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
    *   The render cache service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RenderCacheInterface $render_cache, array $renderer_config) {
+  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RenderCacheInterface $render_cache, RequestStack $request_stack, array $renderer_config) {
     $this->controllerResolver = $controller_resolver;
     $this->theme = $theme;
     $this->elementInfo = $element_info;
     $this->renderCache = $render_cache;
     $this->rendererConfig = $renderer_config;
+    $this->requestStack = $request_stack;
+
+    // Initialize the context collection if needed.
+    if (!isset(static::$contextCollection)) {
+      static::$contextCollection = new \SplObjectStorage();
+    }
   }
 
   /**
@@ -225,10 +244,11 @@ class Renderer implements RendererInterface {
       return '';
     }
 
-    if (!isset(static::$context)) {
+    $context = $this->getCurrentRenderContext();
+    if (!isset($context)) {
       throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
     }
-    static::$context->push(new BubbleableMetadata());
+    $context->push(new BubbleableMetadata());
 
     // Set the bubbleable rendering metadata that has configurable defaults, if:
     // - this is the root call, to ensure that the final render array definitely
@@ -269,10 +289,10 @@ class Renderer implements RendererInterface {
         }
         // The render cache item contains all the bubbleable rendering metadata
         // for the subtree.
-        static::$context->update($elements);
+        $context->update($elements);
         // Render cache hit, so rendering is finished, all necessary info
         // collected!
-        static::$context->bubble();
+        $context->bubble();
         return $elements['#markup'];
       }
     }
@@ -370,9 +390,9 @@ class Renderer implements RendererInterface {
     if (!empty($elements['#printed'])) {
       // The #printed element contains all the bubbleable rendering metadata for
       // the subtree.
-      static::$context->update($elements);
+      $context->update($elements);
       // #printed, so rendering is finished, all necessary info collected!
-      static::$context->bubble();
+      $context->bubble();
       return '';
     }
 
@@ -499,7 +519,7 @@ class Renderer implements RendererInterface {
     $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
     // We've rendered this element (and its subtree!), now update the context.
-    static::$context->update($elements);
+    $context->update($elements);
 
     // Cache the processed element if both $pre_bubbling_elements and $elements
     // have the metadata necessary to generate a cache ID.
@@ -522,13 +542,13 @@ class Renderer implements RendererInterface {
     if ($is_root_call) {
       $this->replacePlaceholders($elements);
       // @todo remove as part of https://www.drupal.org/node/2511330.
-      if (static::$context->count() !== 1) {
+      if ($context->count() !== 1) {
         throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
       }
     }
 
     // Rendering is finished, all necessary info collected!
-    static::$context->bubble();
+    $context->bubble();
 
     $elements['#printed'] = TRUE;
     $elements['#markup'] = SafeMarkup::set($elements['#markup']);
@@ -538,22 +558,55 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasRenderContext() {
+    return (bool) $this->getCurrentRenderContext();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function executeInRenderContext(RenderContext $context, callable $callable) {
     // Store the current render context.
-    $current_context = static::$context;
+    $previous_context = $this->getCurrentRenderContext();
 
     // Set the provided context and call the callable, it will use that context.
-    static::$context = $context;
+    $this->setCurrentRenderContext($context);
     $result = $callable();
     // @todo Convert to an assertion in https://www.drupal.org/node/2408013
-    if (static::$context->count() > 1) {
+    if ($context->count() > 1) {
       throw new \LogicException('Bubbling failed.');
     }
 
     // Restore the original render context.
-    static::$context = $current_context;
+    $this->setCurrentRenderContext($previous_context);
 
     return $result;
+  }
+
+  /**
+   * Returns the current render context.
+   *
+   * @return \Drupal\Core\Render\RenderContext
+   *   The current render context.
+   */
+  protected function getCurrentRenderContext() {
+    $request = $this->requestStack->getCurrentRequest();
+    return isset(static::$contextCollection[$request]) ? static::$contextCollection[$request] : NULL;
+  }
+
+  /**
+   * Sets the current render context.
+   *
+   * @param \Drupal\Core\Render\RenderContext|null $context
+   *   The render context. This can be NULL for instance when restoring the
+   *   original render context, which is in fact NULL.
+   *
+   * @return $this
+   */
+  protected function setCurrentRenderContext(RenderContext $context = NULL) {
+    $request = $this->requestStack->getCurrentRequest();
+    static::$contextCollection[$request] = $context;
+    return $this;
   }
 
   /**

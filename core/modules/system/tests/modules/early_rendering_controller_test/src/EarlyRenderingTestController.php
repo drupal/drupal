@@ -7,6 +7,8 @@
 
 namespace Drupal\early_rendering_controller_test;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -74,6 +76,18 @@ class EarlyRenderingTestController extends ControllerBase {
     return [
       '#markup' => $this->renderer->render($render_array),
     ];
+  }
+
+  public function ajaxResponse() {
+    $response = new AjaxResponse();
+    $response->addCommand(new InsertCommand(NULL, $this->renderArray()));
+    return $response;
+  }
+
+  public function ajaxResponseEarly() {
+    $response = new AjaxResponse();
+    $response->addCommand(new InsertCommand(NULL, $this->renderArrayEarly()));
+    return $response;
   }
 
   public function response() {

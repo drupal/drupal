@@ -1,0 +1,6 @@
+cache_test.url_bubbling:
+  path: '/cache-test/url-bubbling'
+  defaults:
+    _controller: '\Drupal\cache_test\Controller\CacheTestController::urlBubbling'
+  requirements:
+    _access: 'TRUE'
