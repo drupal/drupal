@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Routing;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
@@ -248,4 +249,23 @@ class RouterTest extends WebTestBase {
     $route = \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
     $this->assertNotNull($route, 'Route exists after module installation');
   }
+
+  /**
+   * Ensure that multiple leading slashes are redirected.
+   */
+  public function testLeadingSlashes() {
+    $request = $this->container->get('request_stack')->getCurrentRequest();
+    $url = $request->getUriForPath('//router_test/test1');
+    $this->drupalGet($url);
+    $this->assertEqual(1, $this->redirectCount, $url . " redirected to " . $this->url);
+    $this->assertUrl($request->getUriForPath('/router_test/test1'));
+
+    // It should not matter how many leading slashes are used and query strings
+    // should be preserved.
+    $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test';
+    $this->drupalGet($url);
+    $this->assertEqual(1, $this->redirectCount, $url . " redirected to " . $this->url);
+    $this->assertUrl($request->getUriForPath('/router_test/test1') . '?qs=test');
+  }
+
 }

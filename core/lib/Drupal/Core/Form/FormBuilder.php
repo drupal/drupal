@@ -725,7 +725,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   protected function buildFormAction() {
     // @todo Use <current> instead of the master request in
     //   https://www.drupal.org/node/2505339.
-    $request_uri = $this->requestStack->getMasterRequest()->getRequestUri();
+    $request = $this->requestStack->getMasterRequest();
+    $request_uri = $request->getRequestUri();
+
+    // Prevent cross site requests via the Form API by using an absolute URL
+    // when the request uri starts with multiple slashes..
+    if (strpos($request_uri, '//') === 0) {
+      $request_uri = $request->getUri();
+    }
 
     // @todo Remove this parsing once these are removed from the request in
     //   https://www.drupal.org/node/2504709.

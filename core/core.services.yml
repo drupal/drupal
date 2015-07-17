@@ -1021,6 +1021,10 @@ services:
     arguments: ['@url_generator', '@router.request_context']
     tags:
       - { name: event_subscriber }
+  redirect_leading_slashes_subscriber:
+    class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
+    tags:
+      - { name: event_subscriber }
   request_close_subscriber:
     class: Drupal\Core\EventSubscriber\RequestCloseSubscriber
     tags:
