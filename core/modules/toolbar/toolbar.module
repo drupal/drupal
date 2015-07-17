@@ -342,19 +342,3 @@ function _toolbar_get_subtrees_hash() {
   $hash = Crypt::hashBase64(serialize($subtrees));
   return [$hash, $cacheability];
 }
-
-/**
- * Returns a cache ID from the user and language IDs.
- *
- * @param int $uid
- *   A user ID.
- * @param string $langcode
- *   The langcode of the current request.
- *
- * @return string
- *   A unique cache ID for the user.
- */
-function _toolbar_get_user_cid($uid, $langcode) {
-  return 'toolbar_' . $uid . ':' . $langcode;
-}
-
