@@ -15,6 +15,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
+use Drupal\Core\Entity\Exception\InvalidLinkTemplateException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -224,6 +225,21 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->clearCachedFieldDefinitions();
     $this->classNameEntityTypeMap = array();
     $this->handlers = array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    /** @var \Drupal\Core\Entity\EntityTypeInterface $definition */
+    parent::processDefinition($definition, $plugin_id);
+
+    // All link templates must have a leading slash.
+    foreach ((array) $definition->getLinkTemplates() as $link_relation_name => $link_template) {
+      if ($link_template[0] != '/') {
+        throw new InvalidLinkTemplateException("Link template '$link_relation_name' for entity type '$plugin_id' must start with a leading slash, the current link template is '$link_template'");
+      }
+    }
   }
 
   /**

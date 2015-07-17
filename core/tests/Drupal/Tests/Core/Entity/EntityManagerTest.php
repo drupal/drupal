@@ -266,6 +266,25 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the processDefinition() method.
+   *
+   * @covers ::processDefinition
+   *
+   * @expectedException \Drupal\Core\Entity\Exception\InvalidLinkTemplateException
+   * @expectedExceptionMessage Link template 'canonical' for entity type 'apple' must start with a leading slash, the current link template is 'path/to/apple'
+   */
+  public function testProcessDefinition() {
+    $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $apple->expects($this->once())
+      ->method('getLinkTemplates')
+      ->willReturn(['canonical' => 'path/to/apple']);
+
+    $this->setUpEntityManager(array('apple' => $apple));
+
+    $this->entityManager->processDefinition($apple, 'apple');
+  }
+
+  /**
    * Tests the getDefinition() method.
    *
    * @covers ::getDefinition
