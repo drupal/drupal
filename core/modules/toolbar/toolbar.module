@@ -215,10 +215,13 @@ function toolbar_toolbar() {
  */
 function toolbar_prerender_toolbar_administration_tray(array $element) {
   $menu_tree = \Drupal::service('toolbar.menu_tree');
-  // Render the top-level administration menu links.
+  // Load the administrative menu. The first level is the "Administration" link.
+  // In order to load the children of that link, start and end on the second
+  // level.
   $parameters = new MenuTreeParameters();
-  $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
-  $tree = $menu_tree->load(NULL, $parameters);
+  $parameters->setMinDepth(2)->setMaxDepth(2)->onlyEnabledLinks();
+  // @todo Make the menu configurable in https://www.drupal.org/node/1869638.
+  $tree = $menu_tree->load('admin', $parameters);
   $manipulators = array(
     array('callable' => 'menu.default_tree_manipulators:checkAccess'),
     array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
@@ -248,7 +251,7 @@ function toolbar_menu_navigation_links(array $tree) {
     // and behaviors to the menu links.
     $link = $element->link;
     $url = $link->getUrlObject();
-    if ($url->isExternal()) {
+    if (!$url->isRouted()) {
       // This is an unusual case, so just get a distinct, safe string.
       $id = substr(Crypt::hashBase64($url->getUri()), 0, 16);
     }
@@ -294,9 +297,13 @@ function toolbar_get_rendered_subtrees() {
  */
 function _toolbar_do_get_rendered_subtrees(array $data) {
   $menu_tree = \Drupal::service('toolbar.menu_tree');
+  // Load the administration menu. The first level is the "Administration" link.
+  // In order to load the children of that link and the subsequent two levels,
+  // start at the second level and end at the fourth.
   $parameters = new MenuTreeParameters();
-  $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->onlyEnabledLinks();
-  $tree = $menu_tree->load(NULL, $parameters);
+  $parameters->setMinDepth(2)->setMaxDepth(4)->onlyEnabledLinks();
+  // @todo Make the menu configurable in https://www.drupal.org/node/1869638.
+  $tree = $menu_tree->load('admin', $parameters);
   $manipulators = array(
     array('callable' => 'menu.default_tree_manipulators:checkAccess'),
     array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
@@ -319,7 +326,8 @@ function _toolbar_do_get_rendered_subtrees(array $data) {
     }
     // Many routes have dots as route name, while some special ones like <front>
     // have <> characters in them.
-    $id = str_replace(array('.', '<', '>'), array('-', '', '' ), $link->getUrlObject()->getRouteName());
+    $url = $link->getUrlObject();
+    $id = str_replace(array('.', '<', '>'), array('-', '', '' ), $url->isRouted() ? $url->getRouteName() : $url->getUri());
 
     $subtrees[$id] = $output;
   }

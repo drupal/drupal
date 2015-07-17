@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\views_ui\Tests;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
  * Tests the UI of generic display path plugin.
@@ -147,6 +149,73 @@ class DisplayPathTest extends UITestBase {
     // The cache contexts associated with the (in)accessible menu links are
     // bubbled.
     $this->assertCacheContext('user.permissions');
+  }
+
+  /**
+   * Tests the regression in https://www.drupal.org/node/2532490.
+   */
+  public function testDefaultMenuTabRegression() {
+    $this->container->get('module_installer')->install(['menu_ui', 'menu_link_content', 'toolbar', 'system']);
+    $admin_user = $this->drupalCreateUser([
+      'administer views',
+      'administer blocks',
+      'bypass node access',
+      'access user profiles',
+      'view all revisions',
+      'administer permissions',
+      'administer menu',
+      'link to any page',
+      'access toolbar',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $edit = [
+      'title[0][value]' => 'Menu title',
+      'link[0][uri]' => '/admin/foo',
+      'menu_parent' => 'admin:system.admin'
+    ];
+    $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, t('Save'));
+
+    $menu_items = \Drupal::entityManager()->getStorage('menu_link_content')->getQuery()
+      ->sort('id', 'DESC')
+      ->pager(1)
+      ->execute();
+    $menu_item = end($menu_items);
+    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link_content */
+    $menu_link_content = MenuLinkContent::load($menu_item);
+
+    $edit = [];
+    $edit['label'] = $this->randomMachineName(16);
+    $view_id = $edit['id'] = strtolower($this->randomMachineName(16));
+    $edit['description'] = $this->randomMachineName(16);
+    $edit['page[create]'] = TRUE;
+    $edit['page[path]'] = 'admin/foo';
+
+    $this->drupalPostForm('admin/structure/views/add', $edit, t('Save and edit'));
+
+    $parameters = new MenuTreeParameters();
+    $parameters->addCondition('id', $menu_link_content->getPluginId());
+    $result = \Drupal::menuTree()->load('admin', $parameters);
+    $plugin_definition = end($result)->link->getPluginDefinition();
+    $this->assertEqual('view.' . $view_id . '.page_1', $plugin_definition['route_name']);
+
+    $this->clickLink(t('No menu'));
+
+    $this->drupalPostForm(NULL, [
+      'menu[type]' => 'default tab',
+      'menu[title]' => 'Menu title',
+    ], t('Apply'));
+
+    $this->assertText('Default tab options');
+
+    $this->drupalPostForm(NULL, [
+      'tab_options[type]' => 'normal',
+      'tab_options[title]' => 'Parent title',
+    ], t('Apply'));
+
+    $this->drupalPostForm(NULL, [], t('Save'));
+    // Assert that saving the view will not cause an exception.
+    $this->assertResponse(200);
   }
 
 }

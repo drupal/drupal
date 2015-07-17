@@ -10,6 +10,7 @@ namespace Drupal\toolbar\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
@@ -382,6 +383,26 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->drupalGet('test-page');
     $back_link = $this->cssSelect('.home-toolbar-tab');
     $this->assertTrue($back_link);
+  }
+
+  /**
+   * Tests that external links added to the menu appear in the toolbar.
+   */
+  public function testExternalLink() {
+    $edit = [
+      'title[0][value]' => 'External URL',
+      'link[0][uri]' => 'http://example.org',
+      'menu_parent' => 'admin:system.admin',
+    ];
+    $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, 'Save');
+
+    // Assert that the new menu link is shown on the menu link listing.
+    $this->drupalGet('admin/structure/menu/manage/admin');
+    $this->assertText('External URL');
+
+    // Assert that the new menu link is shown in the toolbar on a regular page.
+    $this->drupalGet(Url::fromRoute('<front>'));
+    $this->assertText('External URL');
   }
 
   /**
