@@ -7,6 +7,7 @@
 
 namespace Drupal\toolbar\Tests;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -331,7 +332,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
-   * Tests that the 'toolbar/subtrees/{hash}' is reachable.
+   * Tests that the 'toolbar/subtrees/{hash}' is reachable and correct.
    */
   function testSubtreesJsonRequest() {
     $admin_user = $this->adminUser;
@@ -341,6 +342,12 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     $this->drupalGetJSON('toolbar/subtrees/' . $subtrees_hash);
     $this->assertResponse('200');
+    $json_callback_start = substr($this->getRawContent(), 0, 39);
+    $json_callback_end = substr($this->getRawContent(), -2, 2);
+    $json = substr($this->getRawContent(), 39, strlen($this->getRawContent()) - 41);
+    $this->assertTrue($json_callback_start === '/**/Drupal.toolbar.setSubtrees.resolve(' && $json_callback_end === ');', 'Subtrees response is wrapped in callback.');
+    $subtrees = Json::decode($json);
+    $this->assertEqual(array_keys($subtrees), ['system-admin_content', 'system-admin_structure', 'system-themes_page', 'system-modules_list', 'system-admin_config', 'entity-user-collection', 'front'], 'Correct subtrees JSON returned.');
   }
 
   /**

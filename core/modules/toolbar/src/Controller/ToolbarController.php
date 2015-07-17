@@ -22,7 +22,7 @@ class ToolbarController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function subtreesJsonp() {
-    $subtrees = toolbar_get_rendered_subtrees();
+    list($subtrees, $cacheability) = toolbar_get_rendered_subtrees();
     $response = new JsonResponse($subtrees);
     $response->setCallback('Drupal.toolbar.setSubtrees.resolve');
 
