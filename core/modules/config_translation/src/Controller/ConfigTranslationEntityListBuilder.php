@@ -84,8 +84,8 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
     foreach (array_keys($operations) as $operation) {
       // This is a translation UI for translators. Show the translation
       // operation only.

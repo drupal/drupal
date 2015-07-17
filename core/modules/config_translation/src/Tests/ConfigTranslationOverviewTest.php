@@ -23,7 +23,16 @@ class ConfigTranslationOverviewTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contact', 'config_translation', 'views', 'views_ui', 'contextual', 'config_test', 'config_translation_test');
+  public static $modules = [
+    'config_test',
+    'config_translation',
+    'config_translation_test',
+    'contact',
+    'contextual',
+    'entity_test_operation',
+    'views',
+    'views_ui',
+  ];
 
   /**
    * Languages to enable.
@@ -67,6 +76,14 @@ class ConfigTranslationOverviewTest extends WebTestBase {
     $this->drupalGet('admin/config/regional/config-translation');
     $this->assertLinkByHref('admin/config/regional/config-translation/config_test');
     $this->assertLinkByHref('admin/config/people/accounts/translate');
+    // Make sure there is only a single operation for each dropbutton, either
+    // 'List' or 'Translate'.
+    foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
+      $this->assertIdentical(1, $dropbutton->count());
+      foreach ($dropbutton->li as $link) {
+        $this->assertTrue(((string) $link->a === 'Translate') || ((string) $link->a === 'List'));
+      }
+    }
 
     $labels = array(
       '&$nxd~i0',
@@ -85,6 +102,15 @@ class ConfigTranslationOverviewTest extends WebTestBase {
       $this->drupalGet('admin/config/regional/config-translation/config_test');
       $this->assertLinkByHref($base_url . '/translate');
       $this->assertText(SafeMarkup::checkPlain($test_entity->label()));
+
+      // Make sure there is only a single 'Translate' operation for each
+      // dropbutton.
+      foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
+        $this->assertIdentical(1, $dropbutton->count());
+        foreach ($dropbutton->li as $link) {
+          $this->assertIdentical('Translate', (string) $link->a);
+        }
+      }
 
       $entity_type = \Drupal::entityManager()->getDefinition($test_entity->getEntityTypeId());
       $this->drupalGet($base_url . '/translate');

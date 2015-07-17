@@ -1808,13 +1808,15 @@ function hook_entity_field_storage_info_alter(&$fields, \Drupal\Core\Entity\Enti
  *
  * @return array
  *   An operations array as returned by
- *   \Drupal\Core\Entity\EntityListBuilderInterface::getOperations().
+ *   EntityListBuilderInterface::getOperations().
+ *
+ * @see \Drupal\Core\Entity\EntityListBuilderInterface::getOperations()
  */
 function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
   $operations = array();
   $operations['translate'] = array(
     'title' => t('Translate'),
-    'route_name' => 'foo_module.entity.translate',
+    'url' => \Drupal\Core\Url::fromRoute('foo_module.entity.translate'),
     'weight' => 50,
   );
 

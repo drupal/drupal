@@ -41,8 +41,7 @@ interface EntityListBuilderInterface {
    *   An associative array of operation link data for this list, keyed by
    *   operation name, containing the following key-value pairs:
    *   - title: The localized title of the operation.
-   *   - href: The path for the operation.
-   *   - options: An array of URL options for the path.
+   *   - url: An instance of \Drupal\Core\Url for the operation URL.
    *   - weight: The weight of this operation.
    */
   public function getOperations(EntityInterface $entity);
