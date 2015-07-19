@@ -298,11 +298,9 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    *   Returns a route collection of matching routes.
    */
   protected function getRoutesByPath($path) {
-    // Filter out each empty value, though allow '0' and 0, which would be
-    // filtered out by empty().
-    $parts = array_values(array_filter(explode('/', $path), function($value) {
-      return $value !== NULL && $value !== '';
-    }));
+    // Split the path up on the slashes, ignoring multiple slashes in a row
+    // or leading or trailing slashes.
+    $parts = preg_split('@/+@', $path, NULL, PREG_SPLIT_NO_EMPTY);
 
     $collection = new RouteCollection();
 
@@ -311,19 +309,34 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
       return $collection;
     }
 
-    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN ( :patterns[] ) ORDER BY fit DESC, name ASC", array(
-      ':patterns[]' => $ancestors,
+    // The >= check on number_parts allows us to match routes with optional
+    // trailing wildcard parts as long as the pattern matches, since we
+    // dump the route pattern without those optional parts.
+    $routes = $this->connection->query("SELECT name, route, fit FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN ( :patterns[] ) AND number_parts >= :count_parts", array(
+      ':patterns[]' => $ancestors, ':count_parts' => count($parts),
     ))
-      ->fetchAllKeyed();
+      ->fetchAll(\PDO::FETCH_ASSOC);
 
-    foreach ($routes as $name => $route) {
-      $route = unserialize($route);
-      if (preg_match($route->compile()->getRegex(), $path, $matches)) {
-        $collection->add($name, $route);
-      }
+    // We sort by fit and name in PHP to avoid a SQL filesort.
+    usort($routes, array($this, 'routeProviderRouteCompare'));
+
+    foreach ($routes as $row) {
+      $collection->add($row['name'], unserialize($row['route']));
     }
 
     return $collection;
+  }
+
+  /**
+   * Comparison function for usort on routes.
+   */
+  public function routeProviderRouteCompare(array $a, array $b) {
+    if ($a['fit'] == $b['fit']) {
+      return strcmp($a['name'], $b['name']);
+    }
+    // Reverse sort from highest to lowest fit. PHP should cast to int, but
+    // the explicit cast makes this sort more robust against unexpected input.
+    return (int) $a['fit'] < (int) $b['fit'] ? 1 : -1;
   }
 
   /**

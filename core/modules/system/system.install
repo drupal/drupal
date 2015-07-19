@@ -946,7 +946,7 @@ function system_schema() {
       ),
     ),
     'indexes' => array(
-      'pattern_outline_fit' => array('pattern_outline', 'fit'),
+      'pattern_outline_parts' => array('pattern_outline', 'number_parts'),
     ),
     'primary key' => array('name'),
   );
@@ -1084,4 +1084,12 @@ function system_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Change the index on the {router} table.
+ */
+function system_update_8001() {
+  db_drop_index('router', 'pattern_outline_fit');
+  db_add_index('router', 'pattern_outline_parts', array('pattern_outline', 'number_parts'));
 }
