@@ -77,11 +77,6 @@ class RenderCache implements RenderCacheInterface {
       if (isset($cached_element['#cache_redirect'])) {
         return $this->get($cached_element);
       }
-      // Ensure that any safe properties are marked safe.
-      foreach ($cached_element['#safe_cache_properties'] as $cache_property) {
-        SafeMarkup::set($cached_element[$cache_property]);
-      }
-      unset($cached_element['#safe_cache_properties']);
       // Return the cached element.
       return $cached_element;
     }
@@ -333,7 +328,6 @@ class RenderCache implements RenderCacheInterface {
         'tags' => $elements['#cache']['tags'],
         'max-age' => $elements['#cache']['max-age'],
       ],
-      '#safe_cache_properties' => []
     ];
 
     // Preserve cacheable items if specified. If we are preserving any cacheable
@@ -342,10 +336,10 @@ class RenderCache implements RenderCacheInterface {
     // the cache entry size.
     if (!empty($elements['#cache_properties']) && is_array($elements['#cache_properties'])) {
       $data['#cache_properties'] = $elements['#cache_properties'];
-      // Store whether any of the cache properties are safe strings.
+      // Ensure that any safe strings are a SafeString object.
       foreach (Element::properties(array_flip($elements['#cache_properties'])) as $cache_property) {
-        if (isset($elements[$cache_property]) && !is_array($elements[$cache_property]) && SafeMarkup::isSafe($elements[$cache_property])) {
-          $data['#safe_cache_properties'][] = $cache_property;
+        if (isset($elements[$cache_property]) && is_scalar($elements[$cache_property]) && SafeMarkup::isSafe($elements[$cache_property])) {
+          $elements[$cache_property] = SafeString::create($elements[$cache_property]);
         }
       }
 
@@ -357,12 +351,14 @@ class RenderCache implements RenderCacheInterface {
         $data['#markup'] = '';
         // Cache only cacheable children's markup.
         foreach ($cacheable_children as $key) {
-          $cacheable_items[$key] = ['#markup' => $cacheable_items[$key]['#markup']];
+          // We can assume that #markup is safe at this point.
+          $cacheable_items[$key] = ['#markup' => SafeString::create($cacheable_items[$key]['#markup'])];
         }
       }
       $data += $cacheable_items;
     }
 
+    $data['#markup'] = SafeString::create($data['#markup']);
     return $data;
   }
 

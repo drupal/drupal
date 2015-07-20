@@ -60,7 +60,7 @@ class FilterAPITest extends EntityUnitTestBase {
     $text = "<p>Llamas are <not> awesome!</p>";
     $expected_filtered_text = "&lt;p&gt;Llamas are  awesome!&lt;/p&gt;";
 
-    $this->assertIdentical(check_markup($text, 'crazy'), $expected_filtered_text, 'Filters applied in correct order.');
+    $this->assertEqual(check_markup($text, 'crazy'), $expected_filtered_text, 'Filters applied in correct order.');
   }
 
   /**
@@ -73,14 +73,14 @@ class FilterAPITest extends EntityUnitTestBase {
 
     $actual_filtered_text = check_markup($text, 'filtered_html', '', array());
     $this->verbose("Actual:<pre>$actual_filtered_text</pre>Expected:<pre>$expected_filtered_text</pre>");
-    $this->assertIdentical(
+    $this->assertEqual(
       $actual_filtered_text,
       $expected_filtered_text,
       'Expected filter result.'
     );
     $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_MARKUP_LANGUAGE));
     $this->verbose("Actual:<pre>$actual_filtered_text_without_html_generators</pre>Expected:<pre>$expected_filter_text_without_html_generators</pre>");
-    $this->assertIdentical(
+    $this->assertEqual(
       $actual_filtered_text_without_html_generators,
       $expected_filter_text_without_html_generators,
       'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters.'
@@ -91,7 +91,7 @@ class FilterAPITest extends EntityUnitTestBase {
     // most extensive test possible.
     $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE));
     $this->verbose("Actual:<pre>$actual_filtered_text_without_html_generators</pre>Expected:<pre>$expected_filter_text_without_html_generators</pre>");
-    $this->assertIdentical(
+    $this->assertEqual(
       $actual_filtered_text_without_html_generators,
       $expected_filter_text_without_html_generators,
       'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.'

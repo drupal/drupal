@@ -216,7 +216,7 @@ class QuickEditController extends ControllerBase {
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
     }
     else {
-      $output = $this->renderer->renderRoot($form);
+      $output = (string) $this->renderer->renderRoot($form);
       // When working with a hidden form, we don't want its CSS/JS to be loaded.
       if ($request->request->get('nocssjs') !== 'true') {
         $response->setAttachments($form['#attached']);
@@ -228,7 +228,7 @@ class QuickEditController extends ControllerBase {
         $status_messages = array(
           '#type' => 'status_messages'
         );
-        $response->addCommand(new FieldFormValidationErrorsCommand($this->renderer->renderRoot($status_messages)));
+        $response->addCommand(new FieldFormValidationErrorsCommand((string) $this->renderer->renderRoot($status_messages)));
       }
     }
 
@@ -275,7 +275,7 @@ class QuickEditController extends ControllerBase {
       $output = $this->moduleHandler()->invoke($module, 'quickedit_render_field', $args);
     }
 
-    return $this->renderer->renderRoot($output);
+    return (string) $this->renderer->renderRoot($output);
   }
 
   /**

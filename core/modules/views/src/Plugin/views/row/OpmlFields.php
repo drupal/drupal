@@ -217,7 +217,7 @@ class OpmlFields extends RowPluginBase {
     if (empty($this->view->style_plugin) || !is_object($this->view->style_plugin) || empty($field_id)) {
       return '';
     }
-    return $this->view->style_plugin->getField($index, $field_id);
+    return (string) $this->view->style_plugin->getField($index, $field_id);
   }
 
 }

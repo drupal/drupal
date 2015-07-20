@@ -64,7 +64,7 @@ class AjaxRenderer implements MainContentRendererInterface {
       }
     }
 
-    $html = $this->drupalRenderRoot($main_content);
+    $html = (string) $this->drupalRenderRoot($main_content);
     $response->setAttachments($main_content['#attached']);
 
     // The selector for the insert command is NULL as the new content will
@@ -72,7 +72,7 @@ class AjaxRenderer implements MainContentRendererInterface {
     // behavior can be changed with #ajax['method'].
     $response->addCommand(new InsertCommand(NULL, $html));
     $status_messages = array('#type' => 'status_messages');
-    $output = $this->drupalRenderRoot($status_messages);
+    $output = (string) $this->drupalRenderRoot($status_messages);
     if (!empty($output)) {
       $response->addCommand(new PrependCommand(NULL, $output));
     }

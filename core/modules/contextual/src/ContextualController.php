@@ -44,7 +44,7 @@ class ContextualController implements ContainerAwareInterface {
         '#type' => 'contextual_links',
         '#contextual_links' => _contextual_id_to_links($id),
       );
-      $rendered[$id] = $this->container->get('renderer')->renderRoot($element);
+      $rendered[$id] = (string) $this->container->get('renderer')->renderRoot($element);
     }
 
     return new JsonResponse($rendered);

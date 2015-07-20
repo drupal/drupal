@@ -108,7 +108,7 @@ class StyleSerializerTest extends PluginTestBase {
     // Mock the request content type by setting it on the display handler.
     $view->display_handler->setContentType('json');
     $output = $view->preview();
-    $this->assertIdentical($actual_json, drupal_render_root($output), 'The expected JSON preview output was found.');
+    $this->assertIdentical($actual_json, (string) drupal_render_root($output), 'The expected JSON preview output was found.');
 
     // Test a 403 callback.
     $this->drupalGet('test/serialize/denied');

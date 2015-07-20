@@ -253,9 +253,9 @@ class QueryGroupByTest extends ViewUnitTestBase {
     $this->executeView($view);
     $this->assertEqual(2, count($view->result));
 
-    $this->assertEqual(3, $view->getStyle()->getField(0, 'id'));
+    $this->assertEqual('3', $view->getStyle()->getField(0, 'id'));
     $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
-    $this->assertEqual(6, $view->getStyle()->getField(1, 'id'));
+    $this->assertEqual('6', $view->getStyle()->getField(1, 'id'));
     $this->assertEqual('2', $view->getStyle()->getField(1, 'field_test'));
 
     $entities[2]->field_test[0]->value = 3;
@@ -267,15 +267,15 @@ class QueryGroupByTest extends ViewUnitTestBase {
     $this->executeView($view);
     $this->assertEqual(5, count($view->result));
 
-    $this->assertEqual(3, $view->getStyle()->getField(0, 'id'));
+    $this->assertEqual('3', $view->getStyle()->getField(0, 'id'));
     $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
-    $this->assertEqual(3, $view->getStyle()->getField(1, 'id'));
+    $this->assertEqual('3', $view->getStyle()->getField(1, 'id'));
     $this->assertEqual('2', $view->getStyle()->getField(1, 'field_test'));
-    $this->assertEqual(1, $view->getStyle()->getField(2, 'id'));
+    $this->assertEqual('1', $view->getStyle()->getField(2, 'id'));
     $this->assertEqual('3', $view->getStyle()->getField(2, 'field_test'));
-    $this->assertEqual(1, $view->getStyle()->getField(3, 'id'));
+    $this->assertEqual('1', $view->getStyle()->getField(3, 'id'));
     $this->assertEqual('4', $view->getStyle()->getField(3, 'field_test'));
-    $this->assertEqual(1, $view->getStyle()->getField(4, 'id'));
+    $this->assertEqual('1', $view->getStyle()->getField(4, 'id'));
     $this->assertEqual('5', $view->getStyle()->getField(4, 'field_test'));
 
     // Check that translated values are correctly retrieved and are not grouped
@@ -288,7 +288,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     $this->assertEqual(6, count($view->result));
-    $this->assertEqual(3, $view->getStyle()->getField(5, 'id'));
+    $this->assertEqual('3', $view->getStyle()->getField(5, 'id'));
     $this->assertEqual('6', $view->getStyle()->getField(5, 'field_test'));
   }
 

@@ -137,7 +137,6 @@ class RendererPlaceholdersTest extends RendererTestBase {
           'tags' => [],
           'max-age' => Cache::PERMANENT,
         ],
-        '#safe_cache_properties' => [],
       ],
     ];
 
@@ -180,7 +179,6 @@ class RendererPlaceholdersTest extends RendererTestBase {
           'tags' => [],
           'max-age' => Cache::PERMANENT,
         ],
-        '#safe_cache_properties' => [],
       ],
     ];
 
@@ -217,7 +215,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     if ($cid_parts !== FALSE) {
       // Verify render cached placeholder.
       $cached_element = $this->memoryCache->get(implode(':', $cid_parts))->data;
-      $this->assertSame($expected_data, $cached_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by the placeholder being replaced.');
+      $this->assertEquals($expected_data, $cached_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by the placeholder being replaced.');
     }
   }
   /**
@@ -239,8 +237,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // No #cache on parent element.
     $element['#prefix'] = '<p>#cache disabled</p>';
     $output = $this->renderer->renderRoot($element);
-    $this->assertSame('<p>#cache disabled</p><p>This is a rendered placeholder!</p>', $output, 'Output is overridden.');
-    $this->assertSame('<p>#cache disabled</p><p>This is a rendered placeholder!</p>', $element['#markup'], '#markup is overridden.');
+    $this->assertSame('<p>#cache disabled</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
+    $this->assertSame('<p>#cache disabled</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
       'dynamic_animal' => $args[0],
@@ -285,9 +283,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element['#cache'] = ['keys' => ['placeholder_test_GET']];
     $element['#prefix'] = '<p>#cache enabled, GET</p>';
     $output = $this->renderer->renderRoot($element);
-    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', $output, 'Output is overridden.');
+    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
-    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', $element['#markup'], '#markup is overridden.');
+    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
       'dynamic_animal' => $args[0],
@@ -314,7 +312,6 @@ class RendererPlaceholdersTest extends RendererTestBase {
         'tags' => [],
         'max-age' => Cache::PERMANENT,
       ],
-      '#safe_cache_properties' => [],
     ];
     $expected_element['#attached']['placeholders'][$expected_placeholder_markup] = $expected_placeholder_render_array;
     $this->assertEquals($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by placeholder #lazy_builder callbacks.');
@@ -324,9 +321,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element['#cache'] = ['keys' => ['placeholder_test_GET']];
     $element['#prefix'] = '<p>#cache enabled, GET</p>';
     $output = $this->renderer->renderRoot($element);
-    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', $output, 'Output is overridden.');
+    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', $element['#markup'], '#markup is overridden.');
+    $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
       'dynamic_animal' => $args[0],
@@ -354,9 +351,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element['#cache'] = ['keys' => ['placeholder_test_POST']];
     $element['#prefix'] = '<p>#cache enabled, POST</p>';
     $output = $this->renderer->renderRoot($element);
-    $this->assertSame('<p>#cache enabled, POST</p><p>This is a rendered placeholder!</p>', $output, 'Output is overridden.');
+    $this->assertSame('<p>#cache enabled, POST</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
-    $this->assertSame('<p>#cache enabled, POST</p><p>This is a rendered placeholder!</p>', $element['#markup'], '#markup is overridden.');
+    $this->assertSame('<p>#cache enabled, POST</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
       'dynamic_animal' => $args[0],
@@ -386,7 +383,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     $output = $this->renderer->renderRoot($element);
     $this->assertEquals('<p>This is a rendered placeholder!</p>', $output, 'The output has been modified by the indirect, recursive placeholder #lazy_builder callback.');
-    $this->assertSame($element['#markup'], '<p>This is a rendered placeholder!</p>', '#markup is overridden by the indirect, recursive placeholder #lazy_builder callback.');
+    $this->assertSame((string) $element['#markup'], '<p>This is a rendered placeholder!</p>', '#markup is overridden by the indirect, recursive placeholder #lazy_builder callback.');
     $expected_js_settings = [
       'dynamic_animal' => $args[0],
     ];
@@ -549,9 +546,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
 </details></div>
 </details>
 HTML;
-    $this->assertSame($expected_output, $output, 'Output is not overridden.');
+    $this->assertSame($expected_output, (string) $output, 'Output is not overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
-    $this->assertSame($expected_output, $output, '#markup is not overridden.');
+    $this->assertSame($expected_output, (string) $element['#markup'], '#markup is not overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
       'dynamic_animal' => [$args_1[0] => TRUE, $args_2[0] => TRUE, $args_3[0] => TRUE],
@@ -582,7 +579,6 @@ HTML;
         'tags' => [],
         'max-age' => Cache::PERMANENT,
       ],
-      '#safe_cache_properties' => [],
     ];
 
     $dom = Html::load($cached_element['#markup']);
@@ -599,7 +595,7 @@ HTML;
     // GET request: #cache enabled, cache hit.
     $element = $test_element;
     $output = $this->renderer->renderRoot($element);
-    $this->assertSame($expected_output, $output, 'Output is not overridden.');
+    $this->assertSame($expected_output, (string) $output, 'Output is not overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertSame($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each placeholder #lazy_builder callback exist.');
 
@@ -608,8 +604,8 @@ HTML;
     unset($test_element['#cache']);
     $element = $test_element;
     $output = $this->renderer->renderRoot($element);
-    $this->assertSame($expected_output, $output, 'Output is not overridden.');
-    $this->assertSame($expected_output, $output, '#markup is not overridden.');
+    $this->assertSame($expected_output, (string) $output, 'Output is not overridden.');
+    $this->assertSame($expected_output, (string) $element['#markup'], '#markup is not overridden.');
     $this->assertSame($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #lazy_builder callback exist.');
   }
 

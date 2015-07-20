@@ -27,7 +27,7 @@ interface RendererInterface {
    * @param array $elements
    *   The structured array describing the data to be rendered.
    *
-   * @return string
+   * @return \Drupal\Component\Utility\SafeStringInterface
    *   The rendered HTML.
    *
    * @see ::render()
@@ -58,7 +58,7 @@ interface RendererInterface {
    * @param array $elements
    *   The structured array describing the data to be rendered.
    *
-   * @return string
+   * @return \Drupal\Component\Utility\SafeStringInterface
    *   The rendered HTML.
    *
    * @see ::renderRoot()
@@ -302,7 +302,7 @@ interface RendererInterface {
    *   (Internal use only.) Whether this is a recursive call or not. See
    *   ::renderRoot().
    *
-   * @return string
+   * @return \Drupal\Component\Utility\SafeStringInterface
    *   The rendered HTML.
    *
    * @throws \LogicException

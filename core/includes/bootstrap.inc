@@ -563,7 +563,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
 
     $new = array(
       'safe' => SafeMarkup::isSafe($message),
-      'message' => $message,
+      'message' => (string) $message,
     );
     if ($repeat || !in_array($new, $_SESSION['messages'][$type])) {
       $_SESSION['messages'][$type][] = $new;

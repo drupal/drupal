@@ -612,10 +612,10 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Get an view builder.
     $controller = $this->entityManager->getViewBuilder($entity_type);
     $entity2_build = $controller->view($entity2);
-    $entity2_output = $renderer->renderRoot($entity2_build);
+    $entity2_output = (string) $renderer->renderRoot($entity2_build);
     $translation = $this->entityManager->getTranslationFromContext($entity2, $default_langcode);
     $translation_build = $controller->view($translation);
-    $translation_output = $renderer->renderRoot($translation_build);
+    $translation_output = (string) $renderer->renderRoot($translation_build);
     $this->assertIdentical($entity2_output, $translation_output, 'When the entity has no translation no fallback is applied.');
 
     // Checks that entity translations are rendered properly.

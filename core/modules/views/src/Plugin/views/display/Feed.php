@@ -67,7 +67,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $output = $renderer->renderRoot($build);
+    $output = (string) $renderer->renderRoot($build);
 
     if (empty($output)) {
       throw new NotFoundHttpException();

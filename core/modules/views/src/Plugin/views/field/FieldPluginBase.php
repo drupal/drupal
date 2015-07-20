@@ -16,6 +16,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Url as CoreUrl;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -1137,7 +1138,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     else {
       $value = $this->render($values);
       if (is_array($value)) {
-        $value = $this->getRenderer()->render($value);
+        $value = (string) $this->getRenderer()->render($value);
       }
       $this->last_render = $value;
       $this->original_value = $value;
@@ -1150,7 +1151,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);
           if (is_array($value)) {
-            $value = $this->getRenderer()->render($value);
+            $value = (string) $this->getRenderer()->render($value);
           }
           $this->last_render = $value;
           $this->original_value = $this->last_render;
@@ -1168,7 +1169,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
 
       if (is_array($value)) {
-        $value = $this->getRenderer()->render($value);
+        $value = (string) $this->getRenderer()->render($value);
       }
       // This happens here so that renderAsLink can get the unaltered value of
       // this field as a token rather than the altered value.
@@ -1290,7 +1291,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Render this field as user-defined altered text.
    */
   protected function renderAltered($alter, $tokens) {
-    return $this->viewsTokenReplace($alter['text'], $tokens);
+    return SafeString::create($this->viewsTokenReplace($alter['text'], $tokens));
   }
 
   /**

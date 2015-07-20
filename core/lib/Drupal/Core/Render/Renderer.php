@@ -9,6 +9,7 @@ namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -277,15 +278,9 @@ class Renderer implements RendererInterface {
         if ($is_root_call) {
           $this->replacePlaceholders($elements);
         }
-        // Mark the element markup as safe. If we have cached children, we need
-        // to mark them as safe too. The parent markup contains the child
-        // markup, so if the parent markup is safe, then the markup of the
-        // individual children must be safe as well.
-        $elements['#markup'] = SafeMarkup::set($elements['#markup']);
-        if (!empty($elements['#cache_properties'])) {
-          foreach (Element::children($cached_element) as $key) {
-            SafeMarkup::set($cached_element[$key]['#markup']);
-          }
+        // Mark the element markup as safe if is it a string.
+        if (is_string($elements['#markup'])) {
+          $elements['#markup'] = SafeString::create($elements['#markup']);
         }
         // The render cache item contains all the bubbleable rendering metadata
         // for the subtree.
@@ -410,7 +405,7 @@ class Renderer implements RendererInterface {
       $elements['#children'] = '';
     }
 
-    if (isset($elements['#markup'])) {
+    if (!empty($elements['#markup'])) {
       // @todo Decide how to support non-HTML in the render API in
       //   https://www.drupal.org/node/2501313.
       $elements['#markup'] = $this->xssFilterAdminIfUnsafe($elements['#markup']);
@@ -452,7 +447,7 @@ class Renderer implements RendererInterface {
       foreach ($children as $key) {
         $elements['#children'] .= $this->doRender($elements[$key]);
       }
-      $elements['#children'] = SafeMarkup::set($elements['#children']);
+      $elements['#children'] = SafeString::create($elements['#children']);
     }
 
     // If #theme is not implemented and the element has raw #markup as a
@@ -463,7 +458,7 @@ class Renderer implements RendererInterface {
     // required. Eventually #theme_wrappers will expect both #markup and
     // #children to be a single string as #children.
     if (!$theme_is_implemented && isset($elements['#markup'])) {
-      $elements['#children'] = SafeMarkup::set($elements['#markup'] . $elements['#children']);
+      $elements['#children'] = SafeString::create($elements['#markup'] . $elements['#children']);
     }
 
     // Let the theme functions in #theme_wrappers add markup around the rendered
@@ -551,8 +546,7 @@ class Renderer implements RendererInterface {
     $context->bubble();
 
     $elements['#printed'] = TRUE;
-    $elements['#markup'] = SafeMarkup::set($elements['#markup']);
-    return $elements['#markup'];
+    return SafeString::create($elements['#markup']);
   }
 
   /**
@@ -710,17 +704,18 @@ class Renderer implements RendererInterface {
    * Note: This method only filters if $string is not marked safe already. This
    * ensures that HTML intended for display is not filtered.
    *
-   * @param string $string
+   * @param string|\Drupal\Core\Render\SafeString $string
    *   A string.
    *
-   * @return string
-   *   The escaped string. If SafeMarkup::isSafe($string) returns TRUE, it won't
-   *   be escaped again.
+   * @return \Drupal\Core\Render\SafeString
+   *   The escaped string wrapped in a SafeString object. If
+   *   SafeMarkup::isSafe($string) returns TRUE, it won't be escaped again.
    */
   protected function xssFilterAdminIfUnsafe($string) {
-    // @todo https://www.drupal.org/node/2506581 replace with
-    //   SafeMarkup::isSafe() and Xss::filterAdmin().
-    return SafeMarkup::checkAdminXss($string);
+    if (!SafeMarkup::isSafe($string)) {
+      $string = Xss::filterAdmin($string);
+    }
+    return SafeString::create($string);
   }
 
 }

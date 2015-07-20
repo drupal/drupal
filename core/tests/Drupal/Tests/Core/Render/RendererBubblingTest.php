@@ -179,7 +179,6 @@ class RendererBubblingTest extends RendererTestBase {
           'max-age' => Cache::PERMANENT,
         ],
         '#markup' => 'parent',
-        '#safe_cache_properties' => [],
       ],
     ];
     $data[] = [$test_element, [], $expected_cache_items];
@@ -203,7 +202,6 @@ class RendererBubblingTest extends RendererTestBase {
           'max-age' => Cache::PERMANENT,
         ],
         '#markup' => '',
-        '#safe_cache_properties' => [],
       ],
     ];
     $context_orders = [
@@ -245,7 +243,6 @@ class RendererBubblingTest extends RendererTestBase {
           'max-age' => 3600,
         ],
         '#markup' => 'parent',
-        '#safe_cache_properties' => [],
       ],
     ];
     $data[] = [$test_element, ['bar', 'baz', 'foo'], $expected_cache_items];
@@ -294,7 +291,6 @@ class RendererBubblingTest extends RendererTestBase {
           'max-age' => Cache::PERMANENT,
         ],
         '#markup' => 'parent',
-        '#safe_cache_properties' => [],
       ],
     ];
     $data[] = [$test_element, ['bar', 'foo'], $expected_cache_items];
@@ -374,7 +370,6 @@ class RendererBubblingTest extends RendererTestBase {
         'max-age' => Cache::PERMANENT,
       ],
       '#markup' => 'parent',
-      '#safe_cache_properties' => [],
     ]);
 
     // Request 2: role B, the grandchild is accessible => bubbled cache
@@ -400,7 +395,6 @@ class RendererBubblingTest extends RendererTestBase {
         'max-age' => 1800,
       ],
       '#markup' => 'parent',
-      '#safe_cache_properties' => [],
     ]);
 
     // Request 3: role A again, the grandchild is inaccessible again => bubbled
@@ -437,7 +431,6 @@ class RendererBubblingTest extends RendererTestBase {
         'max-age' => Cache::PERMANENT,
       ],
       '#markup' => 'parent',
-      '#safe_cache_properties' => [],
     ]);
 
     // Request 4: role C, both the grandchild and the grandgrandchild are
@@ -465,7 +458,6 @@ class RendererBubblingTest extends RendererTestBase {
         'max-age' => 300,
       ],
       '#markup' => 'parent',
-      '#safe_cache_properties' => [],
     ]);
 
     // Request 5: role A again, verifying the merging like we did for request 3.
@@ -485,7 +477,6 @@ class RendererBubblingTest extends RendererTestBase {
         'max-age' => Cache::PERMANENT,
       ],
       '#markup' => 'parent',
-      '#safe_cache_properties' => [],
     ]);
 
     // Request 6: role B again, verifying the merging like we did for request 3.
@@ -505,7 +496,6 @@ class RendererBubblingTest extends RendererTestBase {
         'max-age' => 1800,
       ],
       '#markup' => 'parent',
-      '#safe_cache_properties' => [],
     ]);
   }
 
@@ -539,7 +529,7 @@ class RendererBubblingTest extends RendererTestBase {
     // - … is not cached DOES get called.
     \Drupal::state()->set('bubbling_nested_pre_render_cached', FALSE);
     \Drupal::state()->set('bubbling_nested_pre_render_uncached', FALSE);
-    $this->memoryCache->set('cached_nested', ['#markup' => 'Cached nested!', '#attached' => [], '#cache' => ['contexts' => [], 'tags' => []], '#safe_cache_properties' => ['#markup']]);
+    $this->memoryCache->set('cached_nested', ['#markup' => 'Cached nested!', '#attached' => [], '#cache' => ['contexts' => [], 'tags' => []]]);
 
     // Simulate the rendering of an entire response (i.e. a root call).
     $output = $this->renderer->renderRoot($test_element);

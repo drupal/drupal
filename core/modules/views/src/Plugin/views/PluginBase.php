@@ -390,7 +390,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         ],
       );
 
-      return $this->getRenderer()->render($build);
+      return (string) $this->getRenderer()->render($build);
     }
     else {
       return $text;

@@ -398,7 +398,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = SafeMarkup::format('Raw "@raw" found', array('@raw' => $raw));
     }
-    return $this->assert(strpos($this->getRawContent(), $raw) !== FALSE, $message, $group);
+    return $this->assert(strpos($this->getRawContent(), (string) $raw) !== FALSE, $message, $group);
   }
 
   /**
@@ -425,7 +425,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = SafeMarkup::format('Raw "@raw" not found', array('@raw' => $raw));
     }
-    return $this->assert(strpos($this->getRawContent(), $raw) === FALSE, $message, $group);
+    return $this->assert(strpos($this->getRawContent(), (string) $raw) === FALSE, $message, $group);
   }
 
   /**

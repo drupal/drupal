@@ -9,6 +9,7 @@ namespace Drupal\Core\Utility;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Link;
@@ -105,6 +106,13 @@ class LinkGenerator implements LinkGeneratorInterface {
     if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
       $variables['options']['attributes']['hreflang'] = $variables['options']['language']->getId();
     }
+
+    // Ensure that query values are strings.
+    array_walk($variables['options']['query'], function(&$value) {
+      if ($value instanceof SafeStringInterface) {
+        $value = (string) $value;
+      }
+    });
 
     // Set the "active" class if the 'set_active_class' option is not empty.
     if (!empty($variables['options']['set_active_class']) && !$url->isExternal()) {

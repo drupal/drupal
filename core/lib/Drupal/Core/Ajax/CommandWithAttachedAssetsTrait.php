@@ -37,10 +37,10 @@ trait CommandWithAttachedAssetsTrait {
     if (is_array($this->content)) {
       $html = \Drupal::service('renderer')->renderRoot($this->content);
       $this->attachedAssets = AttachedAssets::createFromRenderArray($this->content);
-      return $html;
+      return (string) $html;
     }
     else {
-      return $this->content;
+      return (string) $this->content;
     }
   }
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\StringTranslation;
 
+use Drupal\Component\Utility\SafeStringInterface;
+
 /**
  * Provides a class to wrap a translatable string.
  *
@@ -16,7 +18,7 @@ namespace Drupal\Core\StringTranslation;
  *
  * @see \Drupal\Core\Annotation\Translation
  */
-class TranslationWrapper {
+class TranslationWrapper implements SafeStringInterface {
   use StringTranslationTrait;
 
   /**

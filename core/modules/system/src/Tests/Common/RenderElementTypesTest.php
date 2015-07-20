@@ -43,7 +43,7 @@ class RenderElementTypesTest extends KernelTestBase {
    *   Assertion message.
    */
   protected function assertElements(array $elements, $expected_html, $message) {
-    $actual_html = \Drupal::service('renderer')->renderRoot($elements);
+    $actual_html = (string) \Drupal::service('renderer')->renderRoot($elements);
 
     $out = '<table><tr>';
     $out .= '<td valign="top"><pre>' . SafeMarkup::checkPlain($expected_html) . '</pre></td>';

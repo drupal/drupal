@@ -251,18 +251,18 @@ class FieldFieldTest extends ViewUnitTestBase {
     $executable = Views::getView('test_field_field_test');
     $executable->execute();
 
-    $this->assertEqual(1, $executable->getStyle()->getField(0, 'id'));
-    $this->assertEqual(3, $executable->getStyle()->getField(0, 'field_test'));
-    $this->assertEqual(2, $executable->getStyle()->getField(1, 'id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(0, 'id'));
+    $this->assertEqual('3', $executable->getStyle()->getField(0, 'field_test'));
+    $this->assertEqual('2', $executable->getStyle()->getField(1, 'id'));
     // @todo Switch this assertion to assertIdentical('', ...) when
     //   https://www.drupal.org/node/2488006 gets fixed.
-    $this->assertEqual(0, $executable->getStyle()->getField(1, 'field_test'));
-    $this->assertEqual(3, $executable->getStyle()->getField(2, 'id'));
-    $this->assertEqual(8, $executable->getStyle()->getField(2, 'field_test'));
-    $this->assertEqual(4, $executable->getStyle()->getField(3, 'id'));
-    $this->assertEqual(5, $executable->getStyle()->getField(3, 'field_test'));
-    $this->assertEqual(5, $executable->getStyle()->getField(4, 'id'));
-    $this->assertEqual(6, $executable->getStyle()->getField(4, 'field_test'));
+    $this->assertEqual('0', $executable->getStyle()->getField(1, 'field_test'));
+    $this->assertEqual('3', $executable->getStyle()->getField(2, 'id'));
+    $this->assertEqual('8', $executable->getStyle()->getField(2, 'field_test'));
+    $this->assertEqual('4', $executable->getStyle()->getField(3, 'id'));
+    $this->assertEqual('5', $executable->getStyle()->getField(3, 'field_test'));
+    $this->assertEqual('5', $executable->getStyle()->getField(4, 'id'));
+    $this->assertEqual('6', $executable->getStyle()->getField(4, 'field_test'));
   }
 
   /**
@@ -326,10 +326,10 @@ class FieldFieldTest extends ViewUnitTestBase {
     $executable->execute();
 
     for ($i = 0; $i < 5; $i++) {
-      $this->assertEqual($i + 1, $executable->getStyle()->getField($i, 'id'));
+      $this->assertEqual((string) ($i + 1), $executable->getStyle()->getField($i, 'id'));
       $this->assertEqual('test ' . $i, $executable->getStyle()->getField($i, 'name'));
       $entity = EntityTest::load($i + 1);
-      $this->assertEqual('<a href="' . $entity->url() . '" hreflang="' . $entity->language()->getId() . '">test ' . $i . '</a>', $executable->getStyle()->getField($i, 'name_alias'));
+      $this->assertEqual('<a href="' . $entity->url() . '" hreflang="' . $entity->language()->getId() . '">test ' . $i . '</a>', (string) $executable->getStyle()->getField($i, 'name_alias'));
     }
   }
 
@@ -426,24 +426,24 @@ class FieldFieldTest extends ViewUnitTestBase {
     $executable = Views::getView('test_field_field_revision_test');
     $executable->execute();
 
-    $this->assertEqual(1, $executable->getStyle()->getField(0, 'id'));
-    $this->assertEqual(1, $executable->getStyle()->getField(0, 'revision_id'));
-    $this->assertEqual(1, $executable->getStyle()->getField(0, 'field_test'));
+    $this->assertEqual('1', $executable->getStyle()->getField(0, 'id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(0, 'revision_id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(0, 'field_test'));
     $this->assertEqual('base value', $executable->getStyle()->getField(0, 'name'));
 
-    $this->assertEqual(1, $executable->getStyle()->getField(1, 'id'));
-    $this->assertEqual(2, $executable->getStyle()->getField(1, 'revision_id'));
-    $this->assertEqual(2, $executable->getStyle()->getField(1, 'field_test'));
+    $this->assertEqual('1', $executable->getStyle()->getField(1, 'id'));
+    $this->assertEqual('2', $executable->getStyle()->getField(1, 'revision_id'));
+    $this->assertEqual('2', $executable->getStyle()->getField(1, 'field_test'));
     $this->assertEqual('revision value1', $executable->getStyle()->getField(1, 'name'));
 
-    $this->assertEqual(1, $executable->getStyle()->getField(2, 'id'));
-    $this->assertEqual(3, $executable->getStyle()->getField(2, 'revision_id'));
-    $this->assertEqual(3, $executable->getStyle()->getField(2, 'field_test'));
+    $this->assertEqual('1', $executable->getStyle()->getField(2, 'id'));
+    $this->assertEqual('3', $executable->getStyle()->getField(2, 'revision_id'));
+    $this->assertEqual('3', $executable->getStyle()->getField(2, 'field_test'));
     $this->assertEqual('revision value2', $executable->getStyle()->getField(2, 'name'));
 
-    $this->assertEqual(2, $executable->getStyle()->getField(3, 'id'));
-    $this->assertEqual(4, $executable->getStyle()->getField(3, 'revision_id'));
-    $this->assertEqual(4, $executable->getStyle()->getField(3, 'field_test'));
+    $this->assertEqual('2', $executable->getStyle()->getField(3, 'id'));
+    $this->assertEqual('4', $executable->getStyle()->getField(3, 'revision_id'));
+    $this->assertEqual('4', $executable->getStyle()->getField(3, 'field_test'));
     $this->assertEqual('next entity value', $executable->getStyle()->getField(3, 'name'));
   }
 
@@ -484,29 +484,29 @@ class FieldFieldTest extends ViewUnitTestBase {
     $executable = Views::getView('test_field_field_revision_complex_test');
     $executable->execute();
 
-    $this->assertEqual(1, $executable->getStyle()->getField(0, 'id'));
-    $this->assertEqual(1, $executable->getStyle()->getField(0, 'revision_id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(0, 'id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(0, 'revision_id'));
     $this->assertEqual($this->testUsers[0]->getTimeZone(), $executable->getStyle()->getField(0, 'timezone'));
     $this->assertEqual('1, 3, 7', $executable->getStyle()->getField(0, 'field_test_multiple'));
     $this->assertEqual('1', $executable->getStyle()->getField(0, 'field_test_multiple_1'));
     $this->assertEqual('3, 7', $executable->getStyle()->getField(0, 'field_test_multiple_2'));
 
-    $this->assertEqual(1, $executable->getStyle()->getField(1, 'id'));
-    $this->assertEqual(2, $executable->getStyle()->getField(1, 'revision_id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(1, 'id'));
+    $this->assertEqual('2', $executable->getStyle()->getField(1, 'revision_id'));
     $this->assertEqual($this->testUsers[1]->getTimeZone(), $executable->getStyle()->getField(1, 'timezone'));
     $this->assertEqual('0, 3, 5', $executable->getStyle()->getField(1, 'field_test_multiple'));
     $this->assertEqual('0', $executable->getStyle()->getField(1, 'field_test_multiple_1'));
     $this->assertEqual('3, 5', $executable->getStyle()->getField(1, 'field_test_multiple_2'));
 
-    $this->assertEqual(1, $executable->getStyle()->getField(2, 'id'));
-    $this->assertEqual(3, $executable->getStyle()->getField(2, 'revision_id'));
+    $this->assertEqual('1', $executable->getStyle()->getField(2, 'id'));
+    $this->assertEqual('3', $executable->getStyle()->getField(2, 'revision_id'));
     $this->assertEqual($this->testUsers[2]->getTimeZone(), $executable->getStyle()->getField(2, 'timezone'));
     $this->assertEqual('9, 9, 9', $executable->getStyle()->getField(2, 'field_test_multiple'));
     $this->assertEqual('9', $executable->getStyle()->getField(2, 'field_test_multiple_1'));
     $this->assertEqual('9, 9', $executable->getStyle()->getField(2, 'field_test_multiple_2'));
 
-    $this->assertEqual(2, $executable->getStyle()->getField(3, 'id'));
-    $this->assertEqual(4, $executable->getStyle()->getField(3, 'revision_id'));
+    $this->assertEqual('2', $executable->getStyle()->getField(3, 'id'));
+    $this->assertEqual('4', $executable->getStyle()->getField(3, 'revision_id'));
     $this->assertEqual($this->testUsers[3]->getTimeZone(), $executable->getStyle()->getField(3, 'timezone'));
     $this->assertEqual('2, 9, 9', $executable->getStyle()->getField(3, 'field_test_multiple'));
     $this->assertEqual('2', $executable->getStyle()->getField(3, 'field_test_multiple_1'));
@@ -531,9 +531,7 @@ class FieldFieldTest extends ViewUnitTestBase {
     $executable = Views::getView('test_field_field_test');
     $executable->execute();
 
-    // @todo Switch this assertion to assertIdentical('', ...) when
-    //   https://www.drupal.org/node/2488006 gets fixed.
-    $this->assertEqual(0, $executable->getStyle()->getField(1, 'field_test'));
+    $this->assertEqual('', $executable->getStyle()->getField(1, 'field_test'));
   }
 
 }

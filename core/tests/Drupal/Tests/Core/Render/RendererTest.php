@@ -13,6 +13,7 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -46,7 +47,7 @@ class RendererTest extends RendererTestBase {
       $setup_code();
     }
 
-    $this->assertSame($expected, $this->renderer->renderRoot($build));
+    $this->assertSame($expected, (string) $this->renderer->renderRoot($build));
   }
 
   /**
@@ -508,10 +509,10 @@ class RendererTest extends RendererTestBase {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
     if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {
-      $this->assertSame($sensitive_content, $this->renderer->renderRoot($build));
+      $this->assertSame($sensitive_content, (string) $this->renderer->renderRoot($build));
     }
     else {
-      $this->assertSame('', $this->renderer->renderRoot($build));
+      $this->assertSame('', (string) $this->renderer->renderRoot($build));
     }
   }
 
@@ -691,8 +692,8 @@ class RendererTest extends RendererTestBase {
       ],
       // Collect expected property names.
       '#cache_properties' => array_keys(array_filter($expected_results)),
-      'child1' => ['#markup' => '1'],
-      'child2' => ['#markup' => '2'],
+      'child1' => ['#markup' => SafeString::create('1')],
+      'child2' => ['#markup' => SafeString::create('2')],
       // Mark the value as safe.
       '#custom_property' => SafeMarkup::checkPlain('custom_value'),
       '#custom_property_array' => ['custom value'],
@@ -712,7 +713,7 @@ class RendererTest extends RendererTestBase {
       $this->assertEquals($cached, (bool) $expected);
       // Check that only the #markup key is preserved for children.
       if ($cached) {
-        $this->assertSame($data[$property], $original[$property]);
+        $this->assertEquals($data[$property], $original[$property]);
       }
     }
     // #custom_property_array can not be a safe_cache_property.
