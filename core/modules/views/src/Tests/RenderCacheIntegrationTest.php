@@ -124,7 +124,11 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $this->pass('Test pager');
     $this->pass('Page 1');
     \Drupal::request()->query->set('page', 0);
-    $tags_page_1 = Cache::mergeTags($base_tags, $entities[1]->getCacheTags(), $entities[2]->getCacheTags(), $entities[3]->getCacheTags(), $entities[4]->getCacheTags(), $entities[5]->getCacheTags());
+    $tags_page_1 = Cache::mergeTags($base_tags, $entities[1]->getCacheTags());
+    $tags_page_1 = Cache::mergeTags($tags_page_1, $entities[2]->getCacheTags());
+    $tags_page_1 = Cache::mergeTags($tags_page_1, $entities[3]->getCacheTags());
+    $tags_page_1 = Cache::mergeTags($tags_page_1, $entities[4]->getCacheTags());
+    $tags_page_1 = Cache::mergeTags($tags_page_1, $entities[5]->getCacheTags());
     $this->assertViewsCacheTags($view, $tags_page_1, $do_assert_views_caches, $tags_page_1);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_1, $do_assert_views_caches);
     $view->destroy();
@@ -254,7 +258,8 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $entity->save();
 
     $result_tags_with_entity = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
-    $render_tags_with_entity = Cache::mergeTags($base_render_tags, $entities[0]->getCacheTags(), ['entity_test_view']);
+    $render_tags_with_entity = Cache::mergeTags($base_render_tags, $entities[0]->getCacheTags());
+    $render_tags_with_entity = Cache::mergeTags($render_tags_with_entity, ['entity_test_view']);
     $this->assertViewsCacheTags($view, $result_tags_with_entity, $do_assert_views_caches, $render_tags_with_entity);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $render_tags_with_entity, $do_assert_views_caches);
 
@@ -265,9 +270,13 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
       $entity->save();
     }
 
-    $new_entities_cache_tags = Cache::mergeTags($entities[1]->getCacheTags(), $entities[2]->getCacheTags(), $entities[3]->getCacheTags(), $entities[4]->getCacheTags(), $entities[5]->getCacheTags());
+    $new_entities_cache_tags = Cache::mergeTags($entities[1]->getCacheTags(), $entities[2]->getCacheTags());
+    $new_entities_cache_tags = Cache::mergeTags($new_entities_cache_tags, $entities[3]->getCacheTags());
+    $new_entities_cache_tags = Cache::mergeTags($new_entities_cache_tags, $entities[4]->getCacheTags());
+    $new_entities_cache_tags = Cache::mergeTags($new_entities_cache_tags, $entities[5]->getCacheTags());
     $result_tags_page_1 = Cache::mergeTags($base_tags, $new_entities_cache_tags);
-    $render_tags_page_1 = Cache::mergeTags($base_render_tags, $new_entities_cache_tags, ['entity_test_view']);
+    $render_tags_page_1 = Cache::mergeTags($base_render_tags, $new_entities_cache_tags);
+    $render_tags_page_1 = Cache::mergeTags($render_tags_page_1, ['entity_test_view']);
     $this->assertViewsCacheTags($view, $result_tags_page_1, $do_assert_views_caches, $render_tags_page_1);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $render_tags_page_1, $do_assert_views_caches);
   }

@@ -91,12 +91,14 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     // @see \Drupal\block\BlockViewBuilder::viewMultiple()
     $expected_block_cache_keys = ['entity_view', 'block', $block->id()];
     $expected_block_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
-    $expected_block_cache_tags = Cache::mergeTags(['block_view', 'rendered'], $block->getCacheTags(), $block->getPlugin()->getCacheTags());
+    $expected_block_cache_tags = Cache::mergeTags(['block_view', 'rendered'], $block->getCacheTags());
+    $expected_block_cache_tags = Cache::mergeTags($expected_block_cache_tags, $block->getPlugin()->getCacheTags());
 
     // Expected contexts and tags for the BlockContent entity.
     // @see \Drupal\Core\Entity\EntityViewBuilder::getBuildDefaults().
     $expected_entity_cache_contexts = ['theme'];
-    $expected_entity_cache_tags = Cache::mergeTags(['block_content_view'], $this->entity->getCacheTags(), $this->getAdditionalCacheTagsForEntity($this->entity));
+    $expected_entity_cache_tags = Cache::mergeTags(['block_content_view'], $this->entity->getCacheTags());
+    $expected_entity_cache_tags = Cache::mergeTags($expected_entity_cache_tags, $this->getAdditionalCacheTagsForEntity($this->entity));
 
     // Verify that what was render cached matches the above expectations.
     $cid = $this->createCacheId($expected_block_cache_keys, $expected_block_cache_contexts);

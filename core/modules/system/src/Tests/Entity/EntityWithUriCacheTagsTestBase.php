@@ -56,7 +56,9 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
       if (count($additional_cache_contexts)) {
         $redirected_cid = $this->createCacheId($cache_keys, Cache::mergeContexts($entity_cache_contexts, $additional_cache_contexts));
       }
-      $expected_cache_tags = Cache::mergeTags($cache_tag, $view_cache_tag, $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
+      $expected_cache_tags = Cache::mergeTags($cache_tag, $view_cache_tag);
+      $expected_cache_tags = Cache::mergeTags($expected_cache_tags, $this->getAdditionalCacheTagsForEntity($this->entity));
+      $expected_cache_tags = Cache::mergeTags($expected_cache_tags, array($render_cache_tag));
       $this->verifyRenderCache($cid, $expected_cache_tags, $redirected_cid);
     }
 

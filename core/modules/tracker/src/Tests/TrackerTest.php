@@ -79,7 +79,9 @@ class TrackerTest extends WebTestBase {
     // Assert cache contexts, specifically the pager and node access contexts.
     $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions']);
     // Assert cache tags for the visible node and node list cache tag.
-    $this->assertCacheTags(Cache::mergeTags($published->getCacheTags(), $published->getOwner()->getCacheTags(), ['node_list', 'rendered']));
+    $expected_tags = Cache::mergeTags($published->getCacheTags(), $published->getOwner()->getCacheTags());
+    $expected_tags = Cache::mergeTags($expected_tags, ['node_list', 'rendered']);
+    $this->assertCacheTags($expected_tags);
 
     // Delete a node and ensure it no longer appears on the tracker.
     $published->delete();
@@ -144,14 +146,13 @@ class TrackerTest extends WebTestBase {
     $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
     // Assert cache tags for the visible nodes (including owners) and node list
     // cache tag.
-    $tags = Cache::mergeTags(
-      $my_published->getCacheTags(),
-      $my_published->getOwner()->getCacheTags(),
-      $other_published_my_comment->getCacheTags(),
-      $other_published_my_comment->getOwner()->getCacheTags(),
-      ['node_list', 'rendered']
-    );
-    $this->assertCacheTags($tags);
+    $expected_tags = Cache::mergeTags($my_published->getCacheTags(), $my_published->getOwner()->getCacheTags());
+    $expected_tags = Cache::mergeTags($expected_tags, $other_published_my_comment->getCacheTags());
+    $expected_tags = Cache::mergeTags($expected_tags, $other_published_my_comment->getOwner()->getCacheTags());
+    $expected_tags = Cache::mergeTags($expected_tags, ['node_list', 'rendered']);
+
+    $this->assertCacheTags($expected_tags);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
 
     $this->assertLink($my_published->label());
     $this->assertNoLink($unpublished->label());

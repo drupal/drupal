@@ -365,7 +365,8 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     if (isset($entities)) {
       $tags = [];
       foreach ($entities as $entity) {
-        $tags = Cache::mergeTags($tags, $entity->getCacheTags(), $entity->getEntityType()->getListCacheTags());
+        $tags = Cache::mergeTags($tags, $entity->getCacheTags());
+        $tags = Cache::mergeTags($tags, $entity->getEntityType()->getListCacheTags());
       }
       Cache::invalidateTags($tags);
     }

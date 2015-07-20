@@ -24,19 +24,16 @@ class Cache {
   /**
    * Merges arrays of cache contexts and removes duplicates.
    *
-   * @param string[] …
-   *   Arrays of cache contexts to merge.
+   * @param array $a
+   *    Cache contexts array to merge.
+   * @param array $b
+   *    Cache contexts array to merge.
    *
    * @return string[]
    *   The merged array of cache contexts.
    */
-  public static function mergeContexts() {
-    $cache_context_arrays = func_get_args();
-    $cache_contexts = [];
-    foreach ($cache_context_arrays as $contexts) {
-      $cache_contexts = array_merge($cache_contexts, $contexts);
-    }
-    $cache_contexts = array_unique($cache_contexts);
+  public static function mergeContexts(array $a = [], array $b = []) {
+    $cache_contexts = array_unique(array_merge($a, $b));
     \Drupal::service('cache_contexts_manager')->validateTokens($cache_contexts);
     sort($cache_contexts);
     return $cache_contexts;
@@ -53,19 +50,16 @@ class Cache {
    * allows items to be invalidated based on all tags attached to the content
    * they're constituted from.
    *
-   * @param string[] …
-   *   Arrays of cache tags to merge.
+   * @param array $a
+   *    Cache tags array to merge.
+   * @param array $b
+   *    Cache tags array to merge.
    *
    * @return string[]
    *   The merged array of cache tags.
    */
-  public static function mergeTags() {
-    $cache_tag_arrays = func_get_args();
-    $cache_tags = [];
-    foreach ($cache_tag_arrays as $tags) {
-      $cache_tags = array_merge($cache_tags, $tags);
-    }
-    $cache_tags = array_unique($cache_tags);
+  public static function mergeTags(array $a = [], array $b = []) {
+    $cache_tags = array_unique(array_merge($a, $b));
     static::validateTags($cache_tags);
     sort($cache_tags);
     return $cache_tags;
@@ -76,29 +70,25 @@ class Cache {
    *
    * Ensures infinite max-age (Cache::PERMANENT) is taken into account.
    *
-   * @param int …
-   *   Max-age values.
+   * @param int $a
+   *    Max age value to merge.
+   * @param int $b
+   *    Max age value to merge.
    *
    * @return int
    *   The minimum max-age value.
    */
-  public static function mergeMaxAges() {
-    $max_ages = func_get_args();
-
-    // Filter out all max-age values set to cache permanently.
-    if (in_array(Cache::PERMANENT, $max_ages)) {
-      $max_ages = array_filter($max_ages, function ($max_age) {
-        return $max_age !== Cache::PERMANENT;
-      });
-
-      // If nothing is left, then all max-age values were set to cache
-      // permanently, and then that is the result.
-      if (empty($max_ages)) {
-        return Cache::PERMANENT;
-      }
+  public static function mergeMaxAges($a = Cache::PERMANENT, $b = Cache::PERMANENT) {
+    // If one of the values is Cache::PERMANENT, return the other value.
+    if ($a === Cache::PERMANENT){
+      return $b;
+    }
+    if ($b === Cache::PERMANENT){
+      return $a;
     }
 
-    return min($max_ages);
+    // If none or the values are Cache::PERMANENT, return the minimum value.
+    return min($a, $b);
   }
 
   /**

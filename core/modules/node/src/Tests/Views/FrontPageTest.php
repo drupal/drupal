@@ -266,10 +266,12 @@ class FrontPageTest extends ViewTestBase {
       $do_assert_views_caches,
       Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags)
     );
+    $expected_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
+    $expected_tags = Cache::mergeTags($expected_tags, ['rendered', 'config:user.role.anonymous']);
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,
-      Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags, ['rendered', 'config:user.role.anonymous'])
+      $expected_tags
     );
 
     // Create some nodes on the frontpage view. Add more than 10 nodes in order
@@ -312,10 +314,8 @@ class FrontPageTest extends ViewTestBase {
       'node:15',
     ];
     $cache_context_tags = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($cache_contexts)->getCacheTags();
-    $first_page_output_cache_tags = Cache::mergeTags(
-      $first_page_result_cache_tags,
-      $cache_context_tags,
-      [
+    $first_page_output_cache_tags = Cache::mergeTags($first_page_result_cache_tags, $cache_context_tags);
+    $first_page_output_cache_tags = Cache::mergeTags($first_page_output_cache_tags, [
         'config:filter.format.plain_text',
         'node_view',
         'user_view',
