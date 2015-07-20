@@ -43,9 +43,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     $stripped_path = static::getPathWithoutDefaults($route);
     $fit = static::getFit($stripped_path);
     $pattern_outline = static::getPatternOutline($stripped_path);
-    // We count the number of parts including any optional trailing parts. This
-    // allows the RouteProvider to filter candidate routes more efficiently.
-    $num_parts = count(explode('/', trim($route->getPath(), '/')));
+    $num_parts = count(explode('/', trim($pattern_outline, '/')));
 
     return new CompiledRoute(
       $fit,

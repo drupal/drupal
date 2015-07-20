@@ -197,15 +197,6 @@ class RouterTest extends WebTestBase {
     $this->drupalGet('router_test/test14/2');
     $this->assertResponse(200);
     $this->assertText('Route not matched.');
-
-    // Check that very long paths don't cause an error.
-    $path = 'router_test/test1';
-    $suffix = '/d/r/u/p/a/l';
-    for ($i = 0; $i < 10; $i++) {
-      $path .= $suffix;
-      $this->drupalGet($path);
-      $this->assertResponse(404);
-    }
   }
 
   /**
