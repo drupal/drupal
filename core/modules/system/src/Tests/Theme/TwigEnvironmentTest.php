@@ -41,10 +41,10 @@ class TwigEnvironmentTest extends KernelTestBase {
     $unsafe_string = '<script>alert(\'Danger! High voltage!\');</script>';
     $element['test'] = array(
       '#type' => 'inline_template',
-      '#template' => 'test-with-context {{ unsafe_content }}',
+      '#template' => 'test-with-context <label>{{ unsafe_content }}</label>',
       '#context' => array('unsafe_content' => $unsafe_string),
     );
-    $this->assertEqual($renderer->renderRoot($element), 'test-with-context ' . SafeMarkup::checkPlain($unsafe_string));
+    $this->assertEqual($renderer->renderRoot($element), 'test-with-context <label>' . SafeMarkup::checkPlain($unsafe_string) . '</label>');
 
     // Enable twig_auto_reload and twig_debug.
     $settings = Settings::getAll();

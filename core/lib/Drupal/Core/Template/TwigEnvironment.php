@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 
 /**
@@ -201,7 +202,9 @@ class TwigEnvironment extends \Twig_Environment {
   public function renderInline($template_string, array $context = array()) {
     // Prefix all inline templates with a special comment.
     $template_string = '{# inline_template_start #}' . $template_string;
-    return $this->loadTemplate($template_string, NULL)->render($context);
+    // @todo replace with object implementating SafeStringInterface in
+    //   https://www.drupal.org/node/2506581.
+    return SafeMarkup::set($this->loadTemplate($template_string, NULL)->render($context));
   }
 
 }
