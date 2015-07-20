@@ -1,0 +1,8 @@
+history:
+  version: VERSION
+  js:
+    js/tracker-history.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - history/api
