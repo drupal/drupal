@@ -617,6 +617,20 @@ class ManageFieldsTest extends WebTestBase {
   }
 
   /**
+   * Tests that external URLs in the 'destinations' query parameter are blocked.
+   */
+  public function testExternalDestinations() {
+    $options = [
+      'query' => ['destinations' => ['http://example.com']],
+    ];
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.body/storage', [], 'Save field settings', $options);
+    // The external redirect should not fire.
+    $this->assertUrl('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
+    $this->assertResponse(200);
+    $this->assertRaw('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component "http://example.com" is external. You are not allowed to specify an external URL together with internal:/.</em>.');
+  }
+
+  /**
    * Tests that deletion removes field storages and fields as expected for a term.
    */
   function testDeleteTaxonomyField() {

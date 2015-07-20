@@ -7,13 +7,15 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -51,46 +53,86 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   public function checkRedirectUrl(FilterResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceOf RedirectResponse) {
-      $options = array();
-
       $request = $event->getRequest();
+
+      // Let the 'destination' query parameter override the redirect target.
+      // If $response is already a SecuredRedirectResponse, it might reject the
+      // new target as invalid, in which case proceed with the old target.
       $destination = $request->query->get('destination');
-      // A destination from \Drupal::request()->query always overrides the
-      // current RedirectResponse. We do not allow absolute URLs to be passed
-      // via \Drupal::request()->query, as this can be an attack vector, with
-      // the following exception:
-      // - Absolute URLs that point to this site (i.e. same base URL and
-      //   base path) are allowed.
       if ($destination) {
-        if (!UrlHelper::isExternal($destination)) {
-          // The destination query parameter can be a relative URL in the sense
-          // of not including the scheme and host, but its path is expected to
-          // be absolute (start with a '/'). For such a case, prepend the
-          // scheme and host, because the 'Location' header must be absolute.
-          if (strpos($destination, '/') === 0) {
-            $destination = $request->getSchemeAndHttpHost() . $destination;
-          }
-          else {
-            // Legacy destination query parameters can be relative paths that
-            // have not yet been converted to URLs (outbound path processors
-            // and other URL handling still needs to be performed).
-            // @todo As generateFromPath() is deprecated, remove this in
-            //   https://www.drupal.org/node/2418219.
-            $destination = UrlHelper::parse($destination);
-            $path = $destination['path'];
-            $options['query'] = $destination['query'];
-            $options['fragment'] = $destination['fragment'];
-            // The 'Location' HTTP header must always be absolute.
-            $options['absolute'] = TRUE;
-            $destination = $this->urlGenerator->generateFromPath($path, $options);
-          }
+        // The 'Location' HTTP header must always be absolute.
+        $destination = $this->getDestinationAsAbsoluteUrl($destination, $request->getSchemeAndHttpHost());
+        try {
           $response->setTargetUrl($destination);
         }
-        elseif (UrlHelper::externalIsLocal($destination, $this->requestContext->getCompleteBaseUrl())) {
-          $response->setTargetUrl($destination);
+        catch (\InvalidArgumentException $e) {
         }
       }
+
+      // Regardless of whether the target is the original one or the overridden
+      // destination, ensure that all redirects are safe.
+      if (!($response instanceOf SecuredRedirectResponse)) {
+        try {
+          // SecuredRedirectResponse is an abstract class that requires a
+          // concrete implementation. Default to LocalRedirectResponse, which
+          // considers only redirects to within the same site as safe.
+          $safe_response = LocalRedirectResponse::createFromRedirectResponse($response);
+          $safe_response->setRequestContext($this->requestContext);
+        }
+        catch (\InvalidArgumentException $e) {
+          // If the above failed, it's because the redirect target wasn't
+          // local. Do not follow that redirect. Display an error message
+          // instead. We're already catching one exception, so trigger_error()
+          // rather than throw another one.
+          // We don't throw an exception, because this is a client error rather than a
+          // server error.
+          $message = 'Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.';
+          trigger_error($message, E_USER_ERROR);
+          $safe_response = new Response($message, 400);
+        }
+        $event->setResponse($safe_response);
+      }
     }
+  }
+
+  /**
+   * Converts the passed in destination into an absolute URL.
+   *
+   * @param string $destination
+   *   The path for the destination. In case it starts with a slash it should
+   *   have the base path included already.
+   * @param string $scheme_and_host
+   *   The scheme and host string of the current request.
+   *
+   * @return string
+   *   The destination as absolute URL.
+   */
+  protected function getDestinationAsAbsoluteUrl($destination, $scheme_and_host) {
+    if (!UrlHelper::isExternal($destination)) {
+      // The destination query parameter can be a relative URL in the sense of
+      // not including the scheme and host, but its path is expected to be
+      // absolute (start with a '/'). For such a case, prepend the scheme and
+      // host, because the 'Location' header must be absolute.
+      if (strpos($destination, '/') === 0) {
+        $destination = $scheme_and_host . $destination;
+      }
+      else {
+        // Legacy destination query parameters can be relative paths that have
+        // not yet been converted to URLs (outbound path processors and other
+        // URL handling still needs to be performed).
+        // @todo As generateFromPath() is deprecated, remove this in
+        //   https://www.drupal.org/node/2418219.
+        $destination = UrlHelper::parse($destination);
+        $path = $destination['path'];
+        $options = [
+          'query' => $destination['query'],
+          'fragment' => $destination['fragment'],
+          'absolute' => TRUE,
+        ];
+        $destination = $this->urlGenerator->generateFromPath($path, $options);
+      }
+    }
+    return $destination;
   }
 
   /**
