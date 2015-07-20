@@ -87,7 +87,6 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->assertResponse(500);
     $this->assertText('The website encountered an unexpected error. Please try again later.');
     $this->assertText($this->expectedExceptionMessage);
-    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that monekys are found in the control room.');
   }
 
   /**
@@ -99,7 +98,6 @@ class UncaughtExceptionTest extends WebTestBase {
 
     $this->assertRaw('The website encountered an unexpected error.');
     $this->assertRaw($this->expectedExceptionMessage);
-    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the exception of a missing constructor argument was triggered.');
   }
 
   /**
@@ -125,7 +123,6 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->drupalGet('');
 
     $this->assertRaw($this->expectedExceptionMessage);
-    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the error of the container was triggered.');
   }
 
   /**
@@ -153,49 +150,39 @@ class UncaughtExceptionTest extends WebTestBase {
 
     $this->assertRaw('The website encountered an unexpected error');
     $this->assertRaw($this->expectedExceptionMessage);
-    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the exception of the container was triggered.');
   }
 
   /**
    * Tests the case when the database connection is gone.
    */
   public function testLostDatabaseConnection() {
+    $incorrect_username = $this->randomMachineName(16);
+    switch ($this->container->get('database')->driver()) {
+      case 'pgsql':
+      case 'mysql':
+        $this->expectedExceptionMessage = $incorrect_username;
+        break;
+      default:
+        // We can not carry out this test.
+        $this->pass('Unable to run \Drupal\system\Tests\System\UncaughtExceptionTest::testLostDatabaseConnection for this database type.');
+        return;
+    }
+
     // We simulate a broken database connection by rewrite settings.php to no
     // longer have the proper data.
-    $settings['databases']['default']['default']['password'] = (object) array(
-      'value' => $this->randomMachineName(),
+    $settings['databases']['default']['default']['username'] = (object) array(
+      'value' => $incorrect_username,
       'required' => TRUE,
     );
+    $settings['databases']['default']['default']['passowrd'] = (object) array(
+      'value' => $this->randomMachineName(16),
+      'required' => TRUE,
+    );
+
     $this->writeSettings($settings);
 
-    $this->expectedExceptionMessage = '[1045] Access denied for user';
     $this->drupalGet('');
-
-    $this->assertRaw($this->expectedExceptionMessage);
-    $this->assertExceptionFailure($this->expectedExceptionMessage, 'Ensure that the access denied DB connection exception is thrown.');
-  }
-
-  /**
-   * Asserts that an exception is present in the assertions and removes it.
-   *
-   * This ensures that expected failures are passes rather than failures.
-   *
-   * @param string $exception_message
-   *   The exception message to search for.
-   *
-   * @return bool
-   *   TRUE if the exception message was found.
-   */
-  protected function assertExceptionFailure($exception_message, $message) {
-    $found_exception = FALSE;
-    foreach ($this->assertions as &$assertion) {
-      if (strpos($assertion['message'], $exception_message) !== FALSE) {
-        $found_exception = TRUE;
-        $this->deleteAssert($assertion['message_id']);
-        unset($assertion);
-      }
-    }
-    return $this->assertTrue($found_exception, $message);
+    $this->assertRaw('PDOException');
   }
 
   /**
