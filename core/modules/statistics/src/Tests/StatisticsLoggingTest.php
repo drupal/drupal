@@ -36,7 +36,7 @@ class StatisticsLoggingTest extends WebTestBase {
   /**
    * The Guzzle HTTP client.
    *
-   * @var \GuzzleHttp\ClientInterface;
+   * @var \GuzzleHttp\Client;
    */
   protected $client;
 
@@ -61,8 +61,8 @@ class StatisticsLoggingTest extends WebTestBase {
     // Clear the logs.
     db_truncate('node_counter');
 
-    $this->client = \Drupal::httpClient();
-    $this->client->setDefaultOption('config/curl', array(CURLOPT_TIMEOUT => 10));
+    $this->client = \Drupal::service('http_client_factory')
+      ->fromOptions(['config/curl' => [CURLOPT_TIMEOUT => 10]]);
   }
 
   /**
@@ -94,7 +94,7 @@ class StatisticsLoggingTest extends WebTestBase {
     // Manually call statistics.php to simulate ajax data collection behavior.
     $nid = $this->node->id();
     $post = array('nid' => $nid);
-    $this->client->post($stats_path, array('body' => $post));
+    $this->client->post($stats_path, array('form_params' => $post));
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
   }

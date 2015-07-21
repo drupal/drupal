@@ -395,7 +395,7 @@ class Drupal {
   /**
    * Returns the default http client.
    *
-   * @return \GuzzleHttp\ClientInterface
+   * @return \GuzzleHttp\Client
    *   A guzzle http client instance.
    */
   public static function httpClient() {

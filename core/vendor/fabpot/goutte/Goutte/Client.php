@@ -13,10 +13,9 @@ namespace Goutte;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\Response as GuzzleResponse;
-use GuzzleHttp\Post\PostFile;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\BrowserKit\Client as BaseClient;
 use Symfony\Component\BrowserKit\Response;
 
@@ -25,6 +24,7 @@ use Symfony\Component\BrowserKit\Response;
  *
  * @author Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author Michael Dowling <michael@guzzlephp.org>
+ * @author Charles Sarrazin <charles@sarraz.in>
  */
 class Client extends BaseClient
 {
@@ -90,45 +90,46 @@ class Client extends BaseClient
             }
         }
 
-        $body = null;
-        if (!in_array($request->getMethod(), array('GET', 'HEAD'))) {
-            if (null !== $request->getContent()) {
-                $body = $request->getContent();
-            } else {
-                $body = $request->getParameters();
-            }
-        }
-
-        $this->getClient()->setDefaultOption('auth', $this->auth);
+        $cookies = CookieJar::fromArray(
+            $this->getCookieJar()->allRawValues($request->getUri()),
+            $request->getServer()['HTTP_HOST']
+        );
 
         $requestOptions = array(
-            'body' => $body,
-            'cookies' => $this->getCookieJar()->allRawValues($request->getUri()),
+            'cookies' => $cookies,
             'allow_redirects' => false,
-            'timeout' => 30,
+            'auth' => $this->auth,
         );
+
+        if (!in_array($request->getMethod(), array('GET', 'HEAD'))) {
+            if (null !== $content = $request->getContent()) {
+                $requestOptions['body'] = $content;
+            } else {
+                if ($files = $request->getFiles()) {
+                    $requestOptions['multipart'] = [];
+
+                    $this->addPostFields($request->getParameters(), $requestOptions['multipart']);
+                    $this->addPostFiles($files, $requestOptions['multipart']);
+                } else {
+                    $requestOptions['form_params'] = $request->getParameters();
+                }
+            }
+        }
 
         if (!empty($headers)) {
             $requestOptions['headers'] = $headers;
         }
 
-        $guzzleRequest = $this->getClient()->createRequest(
-            $request->getMethod(),
-            $request->getUri(),
-            $requestOptions
-        );
+        $method = $request->getMethod();
+        $uri = $request->getUri();
 
         foreach ($this->headers as $name => $value) {
-            $guzzleRequest->setHeader($name, $value);
-        }
-
-        if ('POST' == $request->getMethod() || 'PUT' == $request->getMethod()) {
-            $this->addPostFiles($guzzleRequest, $request->getFiles());
+            $requestOptions['headers'][$name] = $value;
         }
 
         // Let BrowserKit handle redirects
         try {
-            $response = $this->getClient()->send($guzzleRequest);
+            $response = $this->getClient()->request($method, $uri, $requestOptions);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             if (null === $response) {
@@ -139,33 +140,63 @@ class Client extends BaseClient
         return $this->createResponse($response);
     }
 
-    protected function addPostFiles(RequestInterface $request, array $files, $arrayName = '')
+    protected function addPostFiles(array $files, array &$multipart, $arrayName = '')
     {
+        if (empty($files)) {
+            return;
+        }
+
         foreach ($files as $name => $info) {
             if (!empty($arrayName)) {
                 $name = $arrayName.'['.$name.']';
             }
 
+            $file = [
+                'name' => $name,
+            ];
+
             if (is_array($info)) {
                 if (isset($info['tmp_name'])) {
                     if ('' !== $info['tmp_name']) {
-                        $request->getBody()->addFile(new PostFile($name, fopen($info['tmp_name'], 'r'), isset($info['name']) ? $info['name'] : null));
+                        $file['contents'] = fopen($info['tmp_name'], 'r');
+                        if (isset($info['name'])) {
+                            $file['filename'] = $info['name'];
+                        }
                     } else {
                         continue;
                     }
                 } else {
-                    $this->addPostFiles($request, $info, $name);
+                    $this->addPostFiles($info, $multipart, $name);
+                    continue;
                 }
             } else {
-                $request->getBody()->addFile(new PostFile($name, fopen($info, 'r')));
+                $file['contents'] = fopen($info, 'r');
+            }
+
+            $multipart[] = $file;
+        }
+    }
+
+    public function addPostFields(array $formParams, array &$multipart, $arrayName = '')
+    {
+        foreach ($formParams as $name => $value) {
+            if (!empty($arrayName)) {
+                $name = $arrayName.'['.$name.']';
+            }
+
+            if (is_array($value)) {
+                $this->addPostFields($value, $multipart, $name);
+            } else {
+                $multipart[] = [
+                    'name' => $name,
+                    'contents' => $value,
+                ];
             }
         }
     }
 
-    protected function createResponse(GuzzleResponse $response)
+    protected function createResponse(ResponseInterface $response)
     {
-        $headers = $response->getHeaders();
-
-        return new Response($response->getBody(true), $response->getStatusCode(), $headers);
+        return new Response((string) $response->getBody(), $response->getStatusCode(), $response->getHeaders());
     }
 }

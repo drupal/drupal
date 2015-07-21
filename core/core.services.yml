@@ -379,10 +379,21 @@ services:
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']
+  http_handler_stack:
+    class: GuzzleHttp\HandlerStack
+    public: false
+    factory: GuzzleHttp\HandlerStack::create
+    configurator: ['@http_handler_stack_configurator', configure]
+  http_handler_stack_configurator:
+    class: Drupal\Core\Http\HandlerStackConfigurator
+    public: false
+    arguments: ['@service_container']
   http_client:
-    class: Drupal\Core\Http\Client
-    tags:
-      - { name: service_collector, tag: http_client_subscriber, call: attach }
+    class: GuzzleHttp\Client
+    factory: http_client_factory:fromOptions
+  http_client_factory:
+    class: Drupal\Core\Http\ClientFactory
+    arguments: ['@http_handler_stack']
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
     arguments: ['@access_check.theme']

@@ -157,7 +157,7 @@ EOD;
     // request. This allows the stub test to make requests. The event does not
     // fire here and drupal_generate_test_ua() can not generate a key for a
     // test in a test since the prefix has changed.
-    // @see \Drupal\Core\Test\EventSubscriber\HttpRequestSubscriber::onBeforeSendRequest()
+    // @see \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware::onBeforeSendRequest()
     // @see drupal_generate_test_ua();
     $key_file = DRUPAL_ROOT . '/sites/simpletest/' . substr($this->databasePrefix, 10) . '/.htkey';
     $private_key = Crypt::randomBytesBase64(55);

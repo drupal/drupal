@@ -33,9 +33,7 @@ class UpdateFetcherTest extends UnitTestCase {
    */
   protected function setUp() {
     $config_factory = $this->getConfigFactoryStub(array('update.settings' => array('fetch_url' => 'http://www.example.com')));
-    $http_client_mock = $this->getMockBuilder('Drupal\Core\Http\Client')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $http_client_mock = $this->getMock('\GuzzleHttp\ClientInterface');
     $this->updateFetcher = new UpdateFetcher($config_factory, $http_client_mock);
   }
 

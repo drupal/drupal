@@ -17,7 +17,7 @@
 
     <filter>
         <whitelist>
-            <directory>./src/Behat/Mink/Driver</directory>
+            <directory>./src</directory>
         </whitelist>
     </filter>
 </phpunit>

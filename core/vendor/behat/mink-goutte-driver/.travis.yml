@@ -2,6 +2,10 @@ language: php
 
 php: [5.3, 5.4, 5.5, 5.6, hhvm]
 
+before_install:
+  # Force using Goutte 2 on HHVM for now because Guzzle 6 is broken there
+  - if [ "hhvm" = "$TRAVIS_PHP_VERSION" ]; then composer require fabpot/goutte '~2' --no-update; fi
+
 before_script:
   - export WEB_FIXTURES_HOST=http://localhost
 

@@ -2240,6 +2240,10 @@ function hook_validation_constraint_alter(array &$definitions) {
  * - context_provider: Indicates a block context provider, used for example
  *   by block conditions. It has to implement
  *   \Drupal\Core\Plugin\Context\ContextProviderInterface.
+ * - http_client_middleware: Indicates that the service provides a guzzle
+ *   middleware, see
+ *   https://guzzle.readthedocs.org/en/latest/handlers-and-middleware.html for
+ *   more information.
  *
  * Creating a tag for a service does not do anything on its own, but tags
  * can be discovered or queried in a compiler pass when the container is built,

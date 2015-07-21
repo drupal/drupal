@@ -1,5 +1,116 @@
 # CHANGELOG
 
+## 6.0.2 - 2015-07-04
+
+* Fixed a memory leak in the curl handlers in which references to callbacks
+  were not being removed by `curl_reset`.
+* Cookies are now extracted properly before redirects.
+* Cookies now allow more character ranges.
+* Decoded Content-Encoding responses are now modified to correctly reflect
+  their state if the encoding was automatically removed by a handler. This
+  means that the `Content-Encoding` header may be removed an the
+  `Content-Length` modified to reflect the message size after removing the
+  encoding.
+* Added a more explicit error message when trying to use `form_params` and
+  `multipart` in the same request.
+* Several fixes for HHVM support.
+* Functions are now conditionally required using an additional level of
+  indirection to help with global Composer installations.
+
+## 6.0.1 - 2015-05-27
+
+* Fixed a bug with serializing the `query` request option where the `&`
+  separator was missing.
+* Added a better error message for when `body` is provided as an array. Please
+  use `form_params` or `multipart` instead.
+* Various doc fixes.
+
+## 6.0.0 - 2015-05-26
+
+* See the UPGRADING.md document for more information.
+* Added `multipart` and `form_params` request options.
+* Added `synchronous` request option.
+* Added the `on_headers` request option.
+* Fixed `expect` handling.
+* No longer adding default middlewares in the client ctor. These need to be
+  present on the provided handler in order to work.
+* Requests are no longer initiated when sending async requests with the
+  CurlMultiHandler. This prevents unexpected recursion from requests completing
+  while ticking the cURL loop.
+* Removed the semantics of setting `default` to `true`. This is no longer
+  required now that the cURL loop is not ticked for async requests.
+* Added request and response logging middleware.
+* No longer allowing self signed certificates when using the StreamHandler.
+* Ensuring that `sink` is valid if saving to a file.
+* Request exceptions now include a "handler context" which provides handler
+  specific contextual information.
+* Added `GuzzleHttp\RequestOptions` to allow request options to be applied
+  using constants.
+* `$maxHandles` has been removed from CurlMultiHandler.
+* `MultipartPostBody` is now part of the `guzzlehttp/psr7` package.
+
+## 5.3.0 - 2015-05-19
+
+* Mock now supports `save_to`
+* Marked `AbstractRequestEvent::getTransaction()` as public.
+* Fixed a bug in which multiple headers using different casing would overwrite
+  previous headers in the associative array.
+* Added `Utils::getDefaultHandler()`
+* Marked `GuzzleHttp\Client::getDefaultUserAgent` as deprecated.
+* URL scheme is now always lowercased.
+
+## 6.0.0-beta.1
+
+* Requires PHP >= 5.5
+* Updated to use PSR-7
+  * Requires immutable messages, which basically means an event based system
+    owned by a request instance is no longer possible.
+  * Utilizing the [Guzzle PSR-7 package](https://github.com/guzzle/psr7).
+  * Removed the dependency on `guzzlehttp/streams`. These stream abstractions
+    are available in the `guzzlehttp/psr7` package under the `GuzzleHttp\Psr7`
+    namespace.
+* Added middleware and handler system
+  * Replaced the Guzzle event and subscriber system with a middleware system.
+  * No longer depends on RingPHP, but rather places the HTTP handlers directly
+    in Guzzle, operating on PSR-7 messages.
+  * Retry logic is now encapsulated in `GuzzleHttp\Middleware::retry`, which
+    means the `guzzlehttp/retry-subscriber` is now obsolete.
+  * Mocking responses is now handled using `GuzzleHttp\Handler\MockHandler`.
+* Asynchronous responses
+  * No longer supports the `future` request option to send an async request.
+    Instead, use one of the `*Async` methods of a client (e.g., `requestAsync`,
+    `getAsync`, etc.).
+  * Utilizing `GuzzleHttp\Promise` instead of React's promise library to avoid
+    recursion required by chaining and forwarding react promises. See
+    https://github.com/guzzle/promises
+  * Added `requestAsync` and `sendAsync` to send request asynchronously.
+  * Added magic methods for `getAsync()`, `postAsync()`, etc. to send requests
+    asynchronously.
+* Request options
+  * POST and form updates
+    * Added the `form_fields` and `form_files` request options.
+    * Removed the `GuzzleHttp\Post` namespace.
+    * The `body` request option no longer accepts an array for POST requests.
+  * The `exceptions` request option has been deprecated in favor of the
+    `http_errors` request options.
+  * The `save_to` request option has been deprecated in favor of `sink` request
+    option.
+* Clients no longer accept an array of URI template string and variables for
+  URI variables. You will need to expand URI templates before passing them
+  into a client constructor or request method.
+* Client methods `get()`, `post()`, `put()`, `patch()`, `options()`, etc. are
+  now magic methods that will send synchronous requests.
+* Replaced `Utils.php` with plain functions in `functions.php`.
+* Removed `GuzzleHttp\Collection`.
+* Removed `GuzzleHttp\BatchResults`. Batched pool results are now returned as
+  an array.
+* Removed `GuzzleHttp\Query`. Query string handling is now handled using an
+  associative array passed into the `query` request option. The query string
+  is serialized using PHP's `http_build_query`. If you need more control, you
+  can pass the query string in as a string.
+* `GuzzleHttp\QueryParser` has been replaced with the
+  `GuzzleHttp\Psr7\parse_query`.
+
 ## 5.2.0 - 2015-01-27
 
 * Added `AppliesHeadersInterface` to make applying headers to a request based

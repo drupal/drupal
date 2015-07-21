@@ -6,6 +6,9 @@
  */
 
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Load the common translation API.
@@ -234,15 +237,20 @@ function locale_translation_batch_fetch_finished($success, $results) {
 function locale_translation_http_check($uri) {
   $logger = \Drupal::logger('locale');
   try {
-    $response = \Drupal::httpClient()->head($uri);
+    $actual_uri = NULL;
+    $response = \Drupal::service('http_client_factory')->fromOptions(['allow_redirects' => [
+      'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
+        $actual_uri = (string) $request_uri;
+      }
+    ]])->head($uri);
     $result = array();
 
     // Return the effective URL if it differs from the requested.
-    if ($response->getEffectiveUrl() != $uri) {
-      $result['location'] = $response->getEffectiveUrl();
+    if ($actual_uri && $actual_uri !== $uri) {
+      $result['location'] = $actual_uri;
     }
 
-    $result['last_modified'] = $response->hasHeader('Last-Modified') ? strtotime($response->getHeader('Last-Modified')) : 0;
+    $result['last_modified'] = $response->hasHeader('Last-Modified') ? strtotime($response->getHeaderLine('Last-Modified')) : 0;
     return $result;
   }
   catch (RequestException $e) {

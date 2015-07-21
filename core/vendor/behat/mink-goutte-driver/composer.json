@@ -18,12 +18,12 @@
         "php":                           ">=5.3.1",
         "behat/mink":                    "~1.6@dev",
         "behat/mink-browserkit-driver":  "~1.2@dev",
-        "fabpot/goutte":                 "~1.0.4|~2.0"
+        "fabpot/goutte":                 "~1.0.4|~2.0|~3.1"
     },
 
     "autoload": {
-        "psr-0": {
-            "Behat\\Mink\\Driver": "src/"
+        "psr-4": {
+            "Behat\\Mink\\Driver\\": "src/"
         }
     },
 
