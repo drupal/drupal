@@ -127,8 +127,8 @@ class SimpletestTestForm extends FormBase {
       '#suffix' => '<a href="#" class="simpletest-collapse">(' . $this->t('Collapse') . ')</a>',
     );
     $form['tests']['#attached']['drupalSettings']['simpleTest']['images'] = [
-      $this->renderer->renderPlain($image_collapsed),
-      $this->renderer->renderPlain($image_extended),
+      (string) $this->renderer->renderPlain($image_collapsed),
+      (string) $this->renderer->renderPlain($image_extended),
     ];
 
     // Generate the list of tests arranged by group.

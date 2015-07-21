@@ -124,6 +124,8 @@ class SimpleTestBrowserTest extends WebTestBase {
    * Tests that PHPUnit and KernelTestBase tests work through the UI.
    */
   public function testTestingThroughUI() {
+    $this->drupalGet('admin/config/development/testing');
+    $this->assertTrue(strpos($this->drupalSettings['simpleTest']['images'][0], 'core/misc/menu-collapsed.png') > 0, 'drupalSettings contains a link to core/misc/menu-collapsed.png.');
     // We can not test WebTestBase tests here since they require a valid .htkey
     // to be created. However this scenario is covered by the testception of
     // \Drupal\simpletest\Tests\SimpleTestTest.
