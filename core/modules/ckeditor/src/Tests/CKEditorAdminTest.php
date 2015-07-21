@@ -117,6 +117,18 @@ class CKEditorAdminTest extends WebTestBase {
     $editor = entity_load('editor', 'filtered_html');
     $this->assertFalse($editor, 'No Editor config entity exists yet.');
 
+    // Ensure that drupalSettings is correct.
+    $ckeditor_settings_toolbar = array(
+      '#theme' => 'ckeditor_settings_toolbar',
+      '#editor' => Editor::create(['editor' => 'ckeditor']),
+      '#plugins' => $this->container->get('plugin.manager.ckeditor.plugin')->getButtons(),
+    );
+    $this->assertEqual(
+      $this->drupalSettings['ckeditor']['toolbarAdmin'],
+      $this->container->get('renderer')->renderPlain($ckeditor_settings_toolbar),
+      'CKEditor toolbar settings are rendered as part of drupalSettings.'
+    );
+
     // Ensure the toolbar buttons configuration value is initialized to the
     // expected default value.
     $expected_buttons_value = json_encode($expected_default_settings['toolbar']['rows']);

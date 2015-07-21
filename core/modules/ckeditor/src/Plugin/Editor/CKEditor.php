@@ -157,7 +157,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
         'library' => array('ckeditor/drupal.ckeditor.admin'),
         'drupalSettings' => [
           'ckeditor' => [
-            'toolbarAdmin' => $this->renderer->renderPlain($ckeditor_settings_toolbar),
+            'toolbarAdmin' => (string) $this->renderer->renderPlain($ckeditor_settings_toolbar),
           ],
         ],
       ),
