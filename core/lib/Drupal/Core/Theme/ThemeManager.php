@@ -96,13 +96,6 @@ class ThemeManager implements ThemeManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function render($hook, array $variables) {
-    return $this->theme($hook, $variables);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getActiveTheme(RouteMatchInterface $route_match = NULL) {
     if (!isset($this->activeTheme)) {
       $this->initTheme($route_match);
@@ -137,11 +130,9 @@ class ThemeManager implements ThemeManagerInterface {
   }
 
   /**
-   * Generates themed output (internal use only).
-   *
-   * @see \Drupal\Core\Render\RendererInterface::render();
+   * {@inheritdoc}
    */
-  protected function theme($hook, $variables = array()) {
+  public function render($hook, array $variables) {
     static $default_attributes;
 
     $active_theme = $this->getActiveTheme();
