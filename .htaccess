@@ -28,13 +28,14 @@ DirectoryIndex index.php index.html index.htm
 AddType image/svg+xml svg svgz
 AddEncoding gzip svgz
 
-# Override PHP settings that cannot be changed at runtime. See
+# Most of the following PHP settings cannot be changed at runtime. See
 # sites/default/default.settings.php and
 # Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be
 # changed at runtime.
 
 # PHP 5, Apache 1 and 2.
 <IfModule mod_php5.c>
+  php_value assert.active                   0
   php_flag session.auto_start               off
   php_value mbstring.http_input             pass
   php_value mbstring.http_output            pass

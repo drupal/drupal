@@ -57,6 +57,7 @@
  * - @link queue Queue API @endlink
  * - @link typed_data Typed Data @endlink
  * - @link testing Automated tests @endlink
+ * - @link php_assert PHP Runtime Assert Statements @endlink
  * - @link third_party Integrating third-party applications @endlink
  *
  * @section more_info Further information
@@ -979,6 +980,55 @@
  *
  * PHPUnit tests can also be run from the command line, using the PHPUnit
  * framework. See https://www.drupal.org/node/2116263 for more information.
+ * @}
+ */
+
+/**
+ * @defgroup php_assert PHP Runtime Assert Statements
+ * @{
+ * Use of the assert() statement in Drupal.
+ *
+ * Unit tests also use the term "assertion" to refer to test conditions, so to
+ * avoid confusion the term "runtime assertion" will be used for the assert()
+ * statement throughout the documentation.
+ *
+ * A runtime assertion is a statement that is expected to always be true at
+ * the point in the code it appears at. They are tested using PHP's internal
+ * @link http://www.php.net/assert assert() @endlink statement. If an
+ * assertion is ever FALSE it indicates an error in the code or in module or
+ * theme configuration files. User-provided configuration files should be
+ * verified with standard control structures at all times, not just checked in
+ * development environments with assert() statements on.
+ *
+ * When runtime assertions fail in PHP 7 an \AssertionException is thrown.
+ * Drupal uses an assertion callback to do the same in PHP 5.x so that unit
+ * tests involving runtime assertions will work uniformly across both versions.
+ *
+ * The Drupal project primarily uses runtime assertions to enforce the
+ * expectations of the API by failing when incorrect calls are made by code
+ * under development. While PHP type hinting does this for objects and arrays,
+ * runtime assertions do this for scalars (strings, integers, floats, etc.) and
+ * complex data structures such as cache and render arrays. They ensure that
+ * methods' return values are the documented datatypes. They also verify that
+ * objects have been properly configured and set up by the service container.
+ * Runtime assertions are checked throughout development. They supplement unit
+ * tests by checking scenarios that do not have unit tests written for them,
+ * and by testing the API calls made by all the code in the system.
+ *
+ * When using assert() keep the following in mind:
+ * - Runtime assertions are disabled by default in production and enabled in
+ *   development, so they can't be used as control structures. Use exceptions
+ *   for errors that can occur in production no matter how unlikely they are.
+ * - Assert() functions in a buggy manner prior to PHP 7. If you do not use a
+ *   string for the first argument of the statement but instead use a function
+ *   call or expression then that code will be evaluated even when runtime
+ *   assertions are turned off. To avoid this you must use a string as the
+ *   first argument, and assert will pass this string to the eval() statement.
+ * - Since runtime assertion strings are parsed by eval() use caution when
+ *   using them to work with data that may be unsanitized.
+ *
+ * See https://www.drupal.org/node/2492225 for more information on runtime
+ * assertions.
  * @}
  */
 
