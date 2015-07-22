@@ -152,6 +152,11 @@ class StandardTest extends WebTestBase {
     $this->adminUser->save();
     $this->drupalGet('node/add');
     $this->assertResponse(200);
+
+    // Ensure that there are no pending updates after installation.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('update.php/selection');
+    $this->assertText('No pending updates.');
   }
 
 }

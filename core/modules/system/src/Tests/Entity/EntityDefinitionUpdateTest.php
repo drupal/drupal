@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
@@ -602,6 +603,27 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
       $this->fail($message);
       throw $e;
     }
+  }
+
+  /**
+   * Tests ::applyEntityUpdate() and ::applyFieldUpdate().
+   */
+  public function testSingleActionCalls() {
+    // Ensure that the methods return FALSE when called with bogus information.
+    $this->assertFalse($this->entityDefinitionUpdateManager->applyEntityUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED, 'foo'), 'Calling applyEntityUpdate() with a non-existent entity returns FALSE.');
+    $this->assertFalse($this->entityDefinitionUpdateManager->applyFieldUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED, 'foo', 'bar'), 'Calling applyFieldUpdate() with a non-existent entity returns FALSE.');
+    $this->assertFalse($this->entityDefinitionUpdateManager->applyFieldUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED, 'entity_test_update', 'bar'), 'Calling applyFieldUpdate() with a non-existent field returns FALSE.');
+    $this->assertFalse($this->entityDefinitionUpdateManager->applyEntityUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED, 'entity_test_update'), 'Calling applyEntityUpdate() with an $op that is not applicable to the entity type returns FALSE.');
+    $this->assertFalse($this->entityDefinitionUpdateManager->applyFieldUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_DELETED, 'entity_test_update', 'new_base_field'), 'Calling applyFieldUpdate() with an $op that is not applicable to the field returns FALSE.');
+
+    // Create a new base field.
+    $this->addRevisionableBaseField();
+    $this->assertTrue($this->entityDefinitionUpdateManager->applyFieldUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED, 'entity_test_update', 'new_base_field'), 'Calling applyFieldUpdate() correctly returns TRUE.');
+    $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
+    // Make the entity type revisionable.
+    $this->updateEntityTypeToRevisionable();
+    $this->assertTrue($this->entityDefinitionUpdateManager->applyEntityUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED, 'entity_test_update'), 'Calling applyEntityUpdate() correctly returns TRUE.');
+    $this->assertTrue($this->database->schema()->tableExists('entity_test_update_revision'), "The 'entity_test_update_revision' table has been created.");
   }
 
 }

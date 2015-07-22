@@ -556,13 +556,6 @@ class DbUpdateController extends ControllerBase {
 
     $operations = array();
 
-    // First of all perform entity definition updates, which will update
-    // storage schema if needed, so that module update functions work with
-    // the correct entity schema.
-    if ($this->entityDefinitionUpdateManager->needsUpdates()) {
-      $operations[] = array('update_entity_definitions', array('system', '0 - Update entity definitions'));
-    }
-
     // Resolve any update dependencies to determine the actual updates that will
     // be run and the order they will be run in.
     $start = $this->getModuleUpdates();
@@ -578,7 +571,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     // Determine updates to be performed.
-    foreach ($updates as $update) {
+    foreach ($updates as $function => $update) {
       if ($update['allowed']) {
         // Set the installed version of each module so updates will start at the
         // correct place. (The updates are already sorted, so we can simply base
@@ -587,11 +580,20 @@ class DbUpdateController extends ControllerBase {
           drupal_set_installed_schema_version($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
-        // Add this update function to the batch.
-        $function = $update['module'] . '_update_' . $update['number'];
         $operations[] = array('update_do_one', array($update['module'], $update['number'], $dependency_map[$function]));
       }
     }
+
+    // Lastly, perform entity definition updates, which will update storage
+    // schema if needed. If module update functions need to work with specific
+    // entity schema they should call the entity update service for the specific
+    // update themselves.
+    // @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::applyEntityUpdate()
+    // @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::applyFieldUpdate()
+    if ($this->entityDefinitionUpdateManager->needsUpdates()) {
+      $operations[] = array('update_entity_definitions', array());
+    }
+
     $batch['operations'] = $operations;
     $batch += array(
       'title' => $this->t('Updating'),

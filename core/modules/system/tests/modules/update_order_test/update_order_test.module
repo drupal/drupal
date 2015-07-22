@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the update_order_test module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Only declare the new entity base field once the test is running.
+ */
+if (\Drupal::state()->get('update_order_test', FALSE)) {
+
+  /**
+   * Implements hook_entity_base_field_info().
+   */
+  function update_order_test_entity_base_field_info(EntityTypeInterface $entity_type) {
+    if ($entity_type->id() === 'node') {
+      $fields['update_order_test'] = BaseFieldDefinition::create('integer')
+        ->setLabel(t('Update order test'));
+      return $fields;
+    }
+  }
+
+}

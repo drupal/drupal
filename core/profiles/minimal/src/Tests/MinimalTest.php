@@ -34,5 +34,10 @@ class MinimalTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText(t('Tools'));
     $this->assertText(t('Administration'));
+
+    // Ensure that there are no pending updates after installation.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('update.php/selection');
+    $this->assertText('No pending updates.');
   }
 }

@@ -97,7 +97,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   public function applyUpdates() {
     $change_list = $this->getChangeList();
     if ($change_list) {
-      // getChangeList() only disables the cache and does not invalidate.
+      // self::getChangeList() only disables the cache and does not invalidate.
       // In case there are changes, explicitly invalidate caches.
       $this->entityManager->clearCachedDefinitions();
     }
@@ -107,18 +107,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
       // to revisionable and at the same time add revisionable fields to the
       // entity type.
       if (!empty($change_list['entity_type'])) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
-
-        switch ($change_list['entity_type']) {
-          case static::DEFINITION_CREATED:
-            $this->entityManager->onEntityTypeCreate($entity_type);
-            break;
-
-          case static::DEFINITION_UPDATED:
-            $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
-            $this->entityManager->onEntityTypeUpdate($entity_type, $original);
-            break;
-        }
+        $this->doEntityUpdate($change_list['entity_type'], $entity_type_id);
       }
 
       // Process field storage definition changes.
@@ -127,21 +116,102 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
 
         foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
-          switch ($change) {
-            case static::DEFINITION_CREATED:
-              $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions[$field_name]);
-              break;
-
-            case static::DEFINITION_UPDATED:
-              $this->entityManager->onFieldStorageDefinitionUpdate($storage_definitions[$field_name], $original_storage_definitions[$field_name]);
-              break;
-
-            case static::DEFINITION_DELETED:
-              $this->entityManager->onFieldStorageDefinitionDelete($original_storage_definitions[$field_name]);
-              break;
-          }
+          $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
+          $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
+          $this->doFieldUpdate($change, $storage_definition, $original_storage_definition);
         }
       }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyEntityUpdate($op, $entity_type_id, $reset_cached_definitions = TRUE) {
+    $change_list = $this->getChangeList();
+    if (!isset($change_list[$entity_type_id]) || $change_list[$entity_type_id]['entity_type'] !== $op) {
+      return FALSE;
+    }
+    if ($reset_cached_definitions) {
+      // self::getChangeList() only disables the cache and does not invalidate.
+      // In case there are changes, explicitly invalidate caches.
+      $this->entityManager->clearCachedDefinitions();
+    }
+    $this->doEntityUpdate($op, $entity_type_id);
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFieldUpdate($op, $entity_type_id, $field_name, $reset_cached_definitions = TRUE) {
+    $change_list = $this->getChangeList();
+    if (!isset($change_list[$entity_type_id]['field_storage_definitions']) || $change_list[$entity_type_id]['field_storage_definitions'][$field_name] !== $op) {
+      return FALSE;
+    }
+
+    if ($reset_cached_definitions) {
+      // self::getChangeList() only disables the cache and does not invalidate.
+      // In case there are changes, explicitly invalidate caches.
+      $this->entityManager->clearCachedDefinitions();
+    }
+
+    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+    $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
+    $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
+    $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
+
+    $this->doFieldUpdate($op, $storage_definition, $original_storage_definition);
+    return TRUE;
+  }
+
+  /**
+   * Performs an entity type definition update.
+   *
+   * @param string $op
+   *   The operation to perform, either static::DEFINITION_CREATED or
+   *   static::DEFINITION_UPDATED.
+   * @param string $entity_type_id
+   *   The entity type ID.
+   */
+  protected function doEntityUpdate($op, $entity_type_id) {
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    switch ($op) {
+      case static::DEFINITION_CREATED:
+        $this->entityManager->onEntityTypeCreate($entity_type);
+        break;
+
+      case static::DEFINITION_UPDATED:
+        $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
+        $this->entityManager->onEntityTypeUpdate($entity_type, $original);
+        break;
+    }
+  }
+
+  /**
+   * Performs a field storage definition update.
+   *
+   * @param string $op
+   *   The operation to perform, possible values are static::DEFINITION_CREATED,
+   *   static::DEFINITION_UPDATED or static::DEFINITION_DELETED.
+   * @param array|null $storage_definition
+   *   The new field storage definition.
+   * @param array|null $original_storage_definition
+   *   The original field storage definition.
+   */
+  protected function doFieldUpdate($op, $storage_definition = NULL, $original_storage_definition = NULL) {
+    switch ($op) {
+      case static::DEFINITION_CREATED:
+        $this->entityManager->onFieldStorageDefinitionCreate($storage_definition);
+        break;
+
+      case static::DEFINITION_UPDATED:
+        $this->entityManager->onFieldStorageDefinitionUpdate($storage_definition, $original_storage_definition);
+        break;
+
+      case static::DEFINITION_DELETED:
+        $this->entityManager->onFieldStorageDefinitionDelete($original_storage_definition);
+        break;
     }
   }
 

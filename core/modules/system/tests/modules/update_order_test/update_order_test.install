@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Update hooks for the update_order_test module.
+ */
+
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+
+/**
+ * Only declare the update hooks once the test is running.
+ *
+ * @see \Drupal\system\Tests\Entity\Update\SqlContentEntityStorageSchemaIndexTest
+ */
+if (\Drupal::state()->get('update_order_test', FALSE)) {
+
+  /**
+   * Runs before entity schema updates.
+   */
+  function update_order_test_update_8001() {
+    // Store whether the node__default_langcode index exists when this hook is
+    // invoked.
+    \Drupal::state()->set('update_order_test_update_8001', db_index_exists('node_field_data', 'node__default_langcode'));
+  }
+
+  /**
+   * Runs before entity schema updates.
+   */
+  function update_order_test_update_8002() {
+    // Check and store whether the update_order_test field exists when this
+    // hook is first invoked.
+    \Drupal::state()->set('update_order_test_update_8002_update_order_test_before', db_field_exists('node_field_data', 'update_order_test'));
+
+    // Attempt to apply the update for the update_order_test field and then
+    // check and store again whether it exists.
+    if (\Drupal::service('entity.definition_update_manager')->applyFieldUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED, 'node', 'update_order_test')) {
+      \Drupal::state()->set('update_order_test_update_8002_update_order_test_after', db_field_exists('node_field_data', 'update_order_test'));
+    }
+
+    // Attempt to apply all node entity type updates.
+    if (\Drupal::service('entity.definition_update_manager')->applyEntityUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED, 'node')) {
+      // Node updates have now run. Check and store whether the updated node
+      // indices now exist.
+      \Drupal::state()->set('update_order_test_update_8002_node__default_langcode', db_index_exists('node_field_data', 'node__default_langcode'));
+      \Drupal::state()->set('update_order_test_update_8002_node__id__default_langcode__langcode', db_index_exists('node_field_data', 'node__id__default_langcode__langcode'));
+
+      // User updates have not yet run. Check and store whether the updated
+      // user indices now exist.
+      \Drupal::state()->set('update_order_test_update_8002_user__id__default_langcode__langcode', db_index_exists('users_field_data', 'user__id__default_langcode__langcode'));
+    }
+  }
+
+}

@@ -224,14 +224,10 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 /**
  * Performs entity definition updates, which can trigger schema updates.
  *
- * @param $module
- *   The module whose update will be run.
- * @param $number
- *   The update number to run.
  * @param $context
  *   The batch context array.
  */
-function update_entity_definitions($module, $number, &$context) {
+function update_entity_definitions(&$context) {
   try {
     \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
@@ -243,7 +239,7 @@ function update_entity_definitions($module, $number, &$context) {
     // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
     // \Drupal\Core\Utility\Error::decodeException().
     $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
-    $context['results'][$module][$number] = $ret;
+    $context['results']['core']['update_entity_definitions'] = $ret;
     $context['results']['#abort'][] = 'update_entity_definitions';
   }
 }
