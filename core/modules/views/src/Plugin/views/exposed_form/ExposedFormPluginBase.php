@@ -321,7 +321,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheablePlug
     }
 
     // Set the form to allow redirect.
-    if (empty($this->view->live_preview)) {
+    if (empty($this->view->live_preview) && !\Drupal::request()->isXmlHttpRequest()) {
       $form_state->disableRedirect(FALSE);
     }
     else {
