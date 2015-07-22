@@ -95,6 +95,19 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function addCacheableDependency($other_object) {
+    parent::addCacheableDependency($other_object);
+
+    if ($other_object instanceof AttachmentsInterface) {
+      $this->addAttachments($other_object->getAttachments());
+    }
+
+    return $this;
+  }
+
+  /**
    * Merges two attachments arrays (which live under the '#attached' key).
    *
    * The values under the 'drupalSettings' key are merged in a special way, to

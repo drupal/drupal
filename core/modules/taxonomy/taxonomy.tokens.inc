@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
@@ -92,7 +93,7 @@ function taxonomy_token_info() {
 /**
  * Implements hook_tokens().
  */
-function taxonomy_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function taxonomy_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $replacements = array();
@@ -129,12 +130,14 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
 
         case 'vocabulary':
           $vocabulary = Vocabulary::load($term->bundle());
+          $bubbleable_metadata->addCacheableDependency($vocabulary);
           $replacements[$original] = SafeMarkup::checkPlain($vocabulary->label());
           break;
 
         case 'parent':
           if ($parents = $taxonomy_storage->loadParents($term->id())) {
             $parent = array_pop($parents);
+            $bubbleable_metadata->addCacheableDependency($parent);
             $replacements[$original] = SafeMarkup::checkPlain($parent->getName());
           }
           break;
@@ -143,12 +146,12 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
 
     if ($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'vocabulary')) {
       $vocabulary = Vocabulary::load($term->bundle());
-      $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
+      $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options, $bubbleable_metadata);
     }
 
     if (($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'parent')) && $parents = $taxonomy_storage->loadParents($term->id())) {
       $parent = array_pop($parents);
-      $replacements += $token_service->generate('term', $vocabulary_tokens, array('term' => $parent), $options);
+      $replacements += $token_service->generate('term', $vocabulary_tokens, array('term' => $parent), $options, $bubbleable_metadata);
     }
   }
 

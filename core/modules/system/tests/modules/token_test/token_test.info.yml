@@ -1,0 +1,8 @@
+name: Token test
+type: module
+core: 8.x
+package: Testing
+version: VERSION
+dependencies:
+ - user
+ - node

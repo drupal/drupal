@@ -260,14 +260,17 @@ class FrontPageTest extends ViewTestBase {
       'config:views.view.frontpage',
       'node_list',
     ];
+
+    $render_cache_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
+    $render_cache_tags = Cache::mergeTags($render_cache_tags, ['config:system.site']);
     $this->assertViewsCacheTags(
       $view,
       $empty_node_listing_cache_tags,
       $do_assert_views_caches,
-      Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags)
+      $render_cache_tags
     );
     $expected_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
-    $expected_tags = Cache::mergeTags($expected_tags, ['rendered', 'config:user.role.anonymous']);
+    $expected_tags = Cache::mergeTags($expected_tags, ['rendered', 'config:user.role.anonymous', 'config:system.site']);
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,

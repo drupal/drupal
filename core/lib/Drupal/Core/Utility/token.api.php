@@ -34,22 +34,43 @@ use Drupal\user\Entity\User;
  *   An array of tokens to be replaced. The keys are the machine-readable token
  *   names, and the values are the raw [type:token] strings that appeared in the
  *   original text.
- * @param $data
- *   (optional) An associative array of data objects to be used when generating
- *   replacement values, as supplied in the $data parameter to
- *   \Drupal\Core\Utility\Token::replace().
- * @param $options
- *   (optional) An associative array of options for token replacement; see
+ * @param array $data
+ *   An associative array of data objects to be used when generating replacement
+ *   values, as supplied in the $data parameter to
+ *  \Drupal\Core\Utility\Token::replace().
+ * @param array $options
+ *   An associative array of options for token replacement; see
  *   \Drupal\Core\Utility\Token::replace() for possible values.
+ * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
+ *   The bubbleable metadata. Prior to invoking this hook,
+ *   \Drupal\Core\Utility\Token::generate() collects metadata for all of the
+ *   data objects in $data. For any data sources not in $data, but that are
+ *   used by the token replacement logic, such as global configuration (e.g.,
+ *   'system.site') and related objects (e.g., $node->getOwner()),
+ *   implementations of this hook must add the corresponding metadata.
+ *   For example:
+ *   @code
+ *     $bubbleable_metadata->addCacheableDependency(\Drupal::config('system.site'));
+ *     $bubbleable_metadata->addCacheableDependency($node->getOwner());
+ *   @endcode
  *
- * @return
+ *   Additionally, implementations of this hook, must forward
+ *   $bubbleable_metadata to the chained tokens that they invoke.
+ *   For example:
+ *   @code
+ *     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+ *       $replacements = $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options, $bubbleable_metadata);
+ *     }
+ *   @endcode
+ *
+ * @return array
  *   An associative array of replacement values, keyed by the raw [type:token]
  *   strings from the original text.
  *
  * @see hook_token_info()
  * @see hook_tokens_alter()
  */
-function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $url_options = array('absolute' => TRUE);
@@ -87,6 +108,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : User::load(0);
           $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->label()) : $account->label();
+          $bubbleable_metadata->addCacheableDependency($account);
           break;
 
         case 'created':
@@ -96,11 +118,11 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $replacements = $token_service->generate('user', $author_tokens, array('user' => $node->getOwner()), $options);
+      $replacements = $token_service->generate('user', $author_tokens, array('user' => $node->getOwner()), $options, $bubbleable_metadata);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements = $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options);
+      $replacements = $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options, $bubbleable_metadata);
     }
   }
 
@@ -120,10 +142,14 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
  *   - 'tokens'
  *   - 'data'
  *   - 'options'
+ * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
+ *   The bubbleable metadata. In case you alter an existing token based upon
+ *   a data source that isn't in $context['data'], you must add that
+ *   dependency to $bubbleable_metadata.
  *
  * @see hook_tokens()
  */
-function hook_tokens_alter(array &$replacements, array $context) {
+function hook_tokens_alter(array &$replacements, array $context, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
   $options = $context['options'];
 
   if (isset($options['langcode'])) {

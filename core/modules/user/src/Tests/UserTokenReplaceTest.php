@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
@@ -66,15 +67,52 @@ class UserTokenReplaceTest extends WebTestBase {
     $tests['[user:created:short]'] = format_date($account->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[current-user:name]'] = SafeMarkup::checkPlain(user_format_name($global_account));
 
+    $base_bubbleable_metadata = BubbleableMetadata::createFromObject($account);
+    $metadata_tests = [];
+    $metadata_tests['[user:uid]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:name]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:mail]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:url]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:edit-url]'] = $base_bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[user:last-login]'] = $bubbleable_metadata->addCacheTags(['rendered']);
+    $metadata_tests['[user:last-login:short]'] = $bubbleable_metadata;
+    $metadata_tests['[user:created]'] = $bubbleable_metadata;
+    $metadata_tests['[user:created:short]'] = $bubbleable_metadata;
+    $metadata_tests['[current-user:name]'] = $base_bubbleable_metadata->merge(BubbleableMetadata::createFromObject($global_account)->addCacheContexts(['user']));
+
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('user' => $account), array('langcode' => $language_interface->getId()));
+      $bubbleable_metadata = new BubbleableMetadata();
+      $output = $token_service->replace($input, array('user' => $account), array('langcode' => $language_interface->getId()), $bubbleable_metadata);
       $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
+    }
+
+    // Generate tokens for the anonymous user.
+    $anonymous_user = User::load(0);
+    $tests = [];
+    $tests['[user:uid]'] = t('not yet assigned');
+    $tests['[user:name]'] = SafeMarkup::checkPlain(user_format_name($anonymous_user));
+
+    $base_bubbleable_metadata = BubbleableMetadata::createFromObject($anonymous_user);
+    $metadata_tests = [];
+    $metadata_tests['[user:uid]'] = $base_bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $bubbleable_metadata->addCacheableDependency(\Drupal::config('user.settings'));
+    $metadata_tests['[user:name]'] = $bubbleable_metadata;
+
+    foreach ($tests as $input => $expected) {
+      $bubbleable_metadata = new BubbleableMetadata();
+      $output = $token_service->replace($input, array('user' => $anonymous_user), array('langcode' => $language_interface->getId()), $bubbleable_metadata);
+      $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
 
     // Generate and test unsanitized tokens.
+    $tests = [];
     $tests['[user:name]'] = user_format_name($account);
     $tests['[user:mail]'] = $account->getEmail();
     $tests['[current-user:name]'] = user_format_name($global_account);

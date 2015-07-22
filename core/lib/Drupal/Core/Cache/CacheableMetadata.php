@@ -133,6 +133,35 @@ class CacheableMetadata implements CacheableDependencyInterface {
   }
 
   /**
+   * Adds a dependency on an object: merges its cacheability metadata.
+   *
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $other_object
+   *   The dependency. If the object implements CacheableDependencyInterface,
+   *   then its cacheability metadata will be used. Otherwise, the passed in
+   *   object must be assumed to be uncacheable, so max-age 0 is set.
+   *
+   * @return $this
+   */
+  public function addCacheableDependency($other_object) {
+    if ($other_object instanceof CacheableDependencyInterface) {
+      $this->addCacheTags($other_object->getCacheTags());
+      $this->addCacheContexts($other_object->getCacheContexts());
+      if ($this->maxAge === Cache::PERMANENT) {
+        $this->maxAge = $other_object->getCacheMaxAge();
+      }
+      elseif (($max_age = $other_object->getCacheMaxAge()) && $max_age !== Cache::PERMANENT) {
+        $this->maxAge = Cache::mergeMaxAges($this->maxAge, $max_age);
+      }
+    }
+    else {
+      // Not a cacheable dependency, this can not be cached.
+      $this->maxAge = 0;
+    }
+
+    return $this;
+  }
+
+  /**
    * Merges the values of another CacheableMetadata object with this one.
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $other

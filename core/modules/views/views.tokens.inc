@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\BubbleableMetadata;
 
 /**
  * Implements hook_token_info().
@@ -68,9 +69,7 @@ function views_token_info() {
 /**
  * Implements hook_tokens().
  */
-function views_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $token_service = \Drupal::token();
-
+function views_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
@@ -82,6 +81,8 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
   if ($type == 'view' && !empty($data['view'])) {
     /** @var \Drupal\views\ViewExecutable $view */
     $view = $data['view'];
+
+    $bubbleable_metadata->addCacheableDependency($view->storage);
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
@@ -104,7 +105,8 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
 
         case 'url':
           if ($url = $view->getUrl()) {
-            $replacements[$original] = $url->setOptions($url_options)->toString();
+            $replacements[$original] = $url->setOptions($url_options)
+              ->toString();
           }
           break;
         case 'base-table':
@@ -127,13 +129,6 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
           $per_page = $view->getItemsPerPage() ?: 1;
           $replacements[$original] = (int) ceil(count($view->result) / $per_page);
           break;
-      }
-    }
-
-    // [view:url:*] nested tokens. This only works if Token module is installed.
-    if ($url_tokens = $token_service->findWithPrefix($tokens, 'url')) {
-      if ($path = $view->getUrl()) {
-        $replacements += $token_service->generate('url', $url_tokens, array('path' => $url->getInternalPath()), $options);
       }
     }
   }

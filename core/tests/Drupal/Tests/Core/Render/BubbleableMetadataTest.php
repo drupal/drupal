@@ -648,4 +648,52 @@ class BubbleableMetadataTest extends UnitTestCase {
     ];
   }
 
+
+  /**
+   * @covers ::addCacheableDependency
+   * @dataProvider providerTestMerge
+   *
+   * This only tests at a high level, because it reuses existing logic. Detailed
+   * tests exist for the existing logic:
+   *
+   * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
+   * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
+   * @see \Drupal\Tests\Core\Cache\CacheContextsTest
+   */
+  public function testAddCacheableDependency(BubbleableMetadata $a, $b, BubbleableMetadata $expected) {
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container = new ContainerBuilder();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
+
+    $this->assertEquals($expected, $a->addCacheableDependency($b));
+  }
+
+  /**
+   * Provides test data for testMerge().
+   *
+   * @return array
+   */
+  public function providerTestAddCachableDependency() {
+    return [
+      // Merge in a cacheable metadata.
+      'merge-cacheable-metadata' => [
+        (new BubbleableMetadata())->setCacheContexts(['foo'])->setCacheTags(['foo'])->setCacheMaxAge(20),
+        (new CacheableMetadata())->setCacheContexts(['bar'])->setCacheTags(['bar'])->setCacheMaxAge(60),
+        (new BubbleableMetadata())->setCacheContexts(['foo', 'bar'])->setCacheTags(['foo', 'bar'])->setCacheMaxAge(20)
+      ],
+      'merge-bubbleable-metadata' => [
+        (new BubbleableMetadata())->setCacheContexts(['foo'])->setCacheTags(['foo'])->setCacheMaxAge(20)->setAttachments(['foo' => []]),
+        (new BubbleableMetadata())->setCacheContexts(['bar'])->setCacheTags(['bar'])->setCacheMaxAge(60)->setAttachments(['bar' => []]),
+        (new BubbleableMetadata())->setCacheContexts(['foo', 'bar'])->setCacheTags(['foo', 'bar'])->setCacheMaxAge(20)->setAttachments(['foo' => [], 'bar' => []])
+      ],
+      'merge-attachments-metadata' => [
+        (new BubbleableMetadata())->setAttachments(['foo' => []]),
+        (new BubbleableMetadata())->setAttachments(['baro' => []]),
+        (new BubbleableMetadata())->setAttachments(['foo' => [], 'bar' => []])
+      ],
+    ];
+  }
 }

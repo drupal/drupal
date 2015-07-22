@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
 
 /**
@@ -60,6 +61,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:langcode]'] = SafeMarkup::checkPlain($comment->language()->getId());
     $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
+    $tests['[comment:created]'] = \Drupal::service('date.formatter')->format($comment->getCreatedTime(), 'medium', array('langcode' => $language_interface->getId()));
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), array('langcode' => $language_interface->getId()));
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), array('langcode' => $language_interface->getId()));
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
@@ -71,12 +73,48 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
     $tests['[comment:author:name]'] = SafeMarkup::checkPlain($this->adminUser->getUsername());
 
+    $base_bubbleable_metadata = BubbleableMetadata::createFromObject($comment);
+    $metadata_tests = [];
+    $metadata_tests['[comment:cid]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:hostname]'] = $base_bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $bubbleable_metadata->addCacheableDependency($this->adminUser);
+    $metadata_tests['[comment:author]'] = $bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $bubbleable_metadata->addCacheableDependency($this->adminUser);
+    $metadata_tests['[comment:mail]'] = $bubbleable_metadata;
+    $metadata_tests['[comment:homepage]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:title]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:body]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:langcode]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:url]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:edit-url]'] = $base_bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[comment:created]'] = $bubbleable_metadata->addCacheTags(['rendered']);
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[comment:created:since]'] = $bubbleable_metadata->setCacheMaxAge(0);
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[comment:changed:since]'] = $bubbleable_metadata->setCacheMaxAge(0);
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[comment:parent:cid]'] = $bubbleable_metadata->addCacheTags(['comment:1']);
+    $metadata_tests['[comment:parent:title]'] = $bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[comment:entity]'] = $bubbleable_metadata->addCacheTags(['node:2']);
+    // Test node specific tokens.
+    $metadata_tests['[comment:entity:nid]'] = $bubbleable_metadata;
+    $metadata_tests['[comment:entity:title]'] = $bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[comment:author:uid]'] = $bubbleable_metadata->addCacheTags(['user:2']);
+    $metadata_tests['[comment:author:name]'] = $bubbleable_metadata;
+
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId()));
+      $bubbleable_metadata = new BubbleableMetadata();
+      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId()), $bubbleable_metadata);
       $this->assertEqual($output, $expected, format_string('Sanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
 
     // Generate and test unsanitized tokens.

@@ -5,6 +5,8 @@
  * Builds placeholder replacement tokens for node visitor statistics.
  */
 
+use Drupal\Core\Render\BubbleableMetadata;
+
 /**
  * Implements hook_token_info().
  */
@@ -31,7 +33,7 @@ function statistics_token_info() {
 /**
  * Implements hook_tokens().
  */
-function statistics_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function statistics_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $replacements = array();
@@ -56,7 +58,7 @@ function statistics_tokens($type, $tokens, array $data = array(), array $options
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'last-view')) {
       $statistics = statistics_get($node->id());
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options);
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options, $bubbleable_metadata);
     }
   }
 

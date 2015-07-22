@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\views\Views;
 
 /**
@@ -54,9 +55,25 @@ class TokenReplaceTest extends ViewUnitTestBase {
       '[view:page-count]' => '1',
     );
 
+    $base_bubbleable_metadata = BubbleableMetadata::createFromObject($view->storage);
+    $metadata_tests = [];
+    $metadata_tests['[view:label]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:description]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:id]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:title]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:url]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:total-rows]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:base-table]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:base-field]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:items-per-page]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:current-page]'] = $base_bubbleable_metadata;
+    $metadata_tests['[view:page-count]'] = $base_bubbleable_metadata;
+
     foreach ($expected as $token => $expected_output) {
-      $output = $token_handler->replace($token, array('view' => $view));
+      $bubbleable_metadata = new BubbleableMetadata();
+      $output = $token_handler->replace($token, array('view' => $view), [], $bubbleable_metadata);
       $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', array('%token' => $token)));
+      $this->assertEqual($bubbleable_metadata, $metadata_tests[$token]);
     }
   }
 

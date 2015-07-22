@@ -6,8 +6,10 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -938,7 +940,7 @@ function file_file_predelete(File $file) {
 /**
  * Implements hook_tokens().
  */
-function file_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function file_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $url_options = array('absolute' => TRUE);
@@ -987,30 +989,36 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // These tokens are default variations on the chained tokens handled below.
         case 'created':
+          $date_format = DateFormat::load('medium');
+          $bubbleable_metadata->addCacheableDependency($date_format);
           $replacements[$original] = format_date($file->getCreatedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'changed':
+          $date_format = DateFormat::load('medium');
+          $bubbleable_metadata = $bubbleable_metadata->addCacheableDependency($date_format);
           $replacements[$original] = format_date($file->getChangedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'owner':
-          $name = $file->getOwner()->label();
+          $owner = $file->getOwner();
+          $bubbleable_metadata->addCacheableDependency($owner);
+          $name = $owner->label();
           $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($name) : $name;
           break;
       }
     }
 
     if ($date_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getCreatedTime()), $options);
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getCreatedTime()), $options, $bubbleable_metadata);
     }
 
     if ($date_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getChangedTime()), $options);
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getChangedTime()), $options, $bubbleable_metadata);
     }
 
     if (($owner_tokens = $token_service->findWithPrefix($tokens, 'owner')) && $file->getOwner()) {
-      $replacements += $token_service->generate('user', $owner_tokens, array('user' => $file->getOwner()), $options);
+      $replacements += $token_service->generate('user', $owner_tokens, array('user' => $file->getOwner()), $options, $bubbleable_metadata);
     }
   }
 
