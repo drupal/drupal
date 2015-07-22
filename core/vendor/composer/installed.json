@@ -424,56 +424,6 @@
         ]
     },
     {
-        "name": "sdboyer/gliph",
-        "version": "0.1.8",
-        "version_normalized": "0.1.8.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/sdboyer/gliph.git",
-            "reference": "db9e4b77622f91e2d338cc45f83c2cd0e3cf0e1e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sdboyer/gliph/zipball/db9e4b77622f91e2d338cc45f83c2cd0e3cf0e1e",
-            "reference": "db9e4b77622f91e2d338cc45f83c2cd0e3cf0e1e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*",
-            "satooshi/php-coveralls": "0.6.*"
-        },
-        "time": "2014-08-03 14:34:47",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Gliph": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Sam Boyer",
-                "email": "tech@samboyer.org"
-            }
-        ],
-        "description": "A graph library for PHP.",
-        "homepage": "http://github.com/sdboyer/gliph",
-        "keywords": [
-            "gliph",
-            "graph",
-            "library",
-            "php",
-            "spl"
-        ]
-    },
-    {
         "name": "psr/log",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
