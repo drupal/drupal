@@ -679,7 +679,7 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  * always fatal: the execution of the script will stop as soon as the exception
  * handler exits.
  *
- * @param \Exception|\BaseException $exception
+ * @param \Exception|\Throwable $exception
  *   The exception object that was thrown.
  */
 function _drupal_exception_handler($exception) {
@@ -689,12 +689,13 @@ function _drupal_exception_handler($exception) {
     // Log the message to the watchdog and return an error page to the user.
     _drupal_log_error(Error::decodeException($exception), TRUE);
   }
-  // PHP 7 introduces BaseExceptions.
-  catch (BaseException $exception2) {
-    _drupal_exception_handler_additional($exception, $exception2);
+  // PHP 7 introduces Throwable, which covers both Error and
+  // Exception throwables.
+  catch (\Throwable $error) {
+    _drupal_exception_handler_additional($exception, $error);
   }
   // In order to be compatibile with PHP 5 we also catch regular Exceptions.
-  catch (Exception $exception2) {
+  catch (\Exception $exception2) {
     _drupal_exception_handler_additional($exception, $exception2);
   }
 }
@@ -702,9 +703,9 @@ function _drupal_exception_handler($exception) {
 /**
  * Displays any additional errors caught while handling an exception.
  *
- * @param \Exception|\BaseException $exception
+ * @param \Exception|\Throwable $exception
  *   The first exception object that was thrown.
- * @param \Exception|\BaseException $exception
+ * @param \Exception|\Throwable $exception2
  *   The second exception object that was thrown.
  */
 function _drupal_exception_handler_additional($exception, $exception2) {
@@ -1098,12 +1099,13 @@ function _drupal_shutdown_function() {
       call_user_func_array($callback['callback'], $callback['arguments']);
     }
   }
-  // PHP 7 introduces BaseExceptions.
-  catch (BaseException $exception) {
-    _drupal_shutdown_function_handle_exception($exception);
+  // PHP 7 introduces Throwable, which covers both Error and
+  // Exception throwables.
+  catch (\Throwable $error) {
+    _drupal_shutdown_function_handle_exception($error);
   }
   // In order to be compatibile with PHP 5 we also catch regular Exceptions.
-  catch (Exception $exception) {
+  catch (\Exception $exception) {
     _drupal_shutdown_function_handle_exception($exception);
   }
 }
@@ -1111,7 +1113,7 @@ function _drupal_shutdown_function() {
 /**
  * Displays and logs any errors that may happen during shutdown.
  *
- * @param \Exception|\BaseException $exception
+ * @param \Exception|\Throwable $exception
  *   The exception object that was thrown.
  *
  * @see _drupal_shutdown_function()

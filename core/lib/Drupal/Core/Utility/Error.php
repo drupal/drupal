@@ -33,7 +33,7 @@ class Error {
   /**
    * Decodes an exception and retrieves the correct caller.
    *
-   * @param \Exception|\BaseException $exception
+   * @param \Exception|\Throwable $exception
    *   The exception object that was thrown.
    *
    * @return array
@@ -82,7 +82,7 @@ class Error {
   /**
    * Renders an exception error message without further exceptions.
    *
-   * @param \Exception|\BaseException $exception
+   * @param \Exception|\Throwable $exception
    *   The exception object that was thrown.
    *
    * @return string

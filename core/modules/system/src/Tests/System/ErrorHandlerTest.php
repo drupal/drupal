@@ -52,8 +52,8 @@ class ErrorHandlerTest extends WebTestBase {
       '!message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 66 and defined',
     );
     if (version_compare(PHP_VERSION, '7.0.0-dev') >= 0)  {
-      // In PHP 7, instead of a recoverable fatal error we get a TypeException.
-      $fatal_error['%type'] = 'TypeException';
+      // In PHP 7, instead of a recoverable fatal error we get a TypeError.
+      $fatal_error['%type'] = 'TypeError';
       // The error message also changes in PHP 7.
       $fatal_error['!message'] = 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 66';
     }
@@ -76,9 +76,9 @@ class ErrorHandlerTest extends WebTestBase {
 
     // Remove the recoverable fatal error from the assertions, it's wanted here.
     // Ensure that we just remove this one recoverable fatal error (in PHP 7 this
-    // is a TypeException).
+    // is a TypeError).
     foreach ($this->assertions as $key => $assertion) {
-      if (in_array($assertion['message_group'], ['Recoverable fatal error', 'TypeException']) && strpos($assertion['message'], 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in') !== FALSE) {
+      if (in_array($assertion['message_group'], ['Recoverable fatal error', 'TypeError']) && strpos($assertion['message'], 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in') !== FALSE) {
         unset($this->assertions[$key]);
         $this->deleteAssert($assertion['message_id']);
       }
