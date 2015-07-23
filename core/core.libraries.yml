@@ -52,10 +52,6 @@ drupal:
 
 drupalSettings:
   version: VERSION
-  js:
-    # Need to specify a negative weight like drupal.js until
-    # https://www.drupal.org/node/1945262 is resolved.
-    misc/drupalSettingsLoader.js: { weight: -18 }
   drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
     path:
