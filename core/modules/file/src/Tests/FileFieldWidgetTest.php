@@ -112,8 +112,9 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // names).
     $field_name = 'test_file_field_1';
     $field_name2 = 'test_file_field_2';
-    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => 3));
-    $this->createFileField($field_name2, 'node', $type_name, array('cardinality' => 3));
+    $cardinality = 3;
+    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => $cardinality));
+    $this->createFileField($field_name2, 'node', $type_name, array('cardinality' => $cardinality));
 
     $test_file = $this->getTestFile('text');
 
@@ -215,6 +216,49 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $node = $node_storage->load($nid);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'Node was successfully saved without any files.');
     }
+
+    $upload_files = array($test_file, $test_file);
+    // Try to upload multiple files, but fewer than the maximum.
+    $nid = $this->uploadNodeFiles($upload_files, $field_name, $type_name);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
+    $this->assertEqual(count($node->{$field_name}), count($upload_files), 'Node was successfully saved with mulitple files.');
+
+    // Try to upload more files than allowed on revision.
+    $this->uploadNodeFiles($upload_files, $field_name, $nid, 1);
+    $args = array(
+      '%field' => $field_name,
+      '@count' => $cardinality
+    );
+    $this->assertRaw(t('%field: this field cannot hold more than @count values.', $args));
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
+    $this->assertEqual(count($node->{$field_name}), count($upload_files), 'More files than allowed could not be saved to node.');
+
+    // Try to upload exactly the allowed number of files on revision.
+    $this->uploadNodeFile($test_file, $field_name, $nid, 1);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
+    $this->assertEqual(count($node->{$field_name}), $cardinality, 'Node was successfully revised to maximum number of files.');
+
+    // Try to upload exactly the allowed number of files, new node.
+    $upload_files[] = $test_file;
+    $nid = $this->uploadNodeFiles($upload_files, $field_name, $type_name);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
+    $this->assertEqual(count($node->{$field_name}), $cardinality, 'Node was successfully saved with maximum number of files.');
+
+    // Try to upload more files than allowed, new node.
+    $upload_files[] = $test_file;
+    $this->uploadNodeFiles($upload_files, $field_name, $type_name);
+
+    $args = [
+      '%field' => $field_name,
+      '@max' => $cardinality,
+      '@count' => count($upload_files),
+      '%list' => $test_file->getFileName(),
+    ];
+    $this->assertRaw(t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args));
   }
 
   /**

@@ -147,18 +147,57 @@ abstract class FileFieldTestBase extends WebTestBase {
 
   /**
    * Uploads a file to a node.
+   *
+   * @param \Drupal\file\FileInterface $file
+   *   The File to be uploaded.
+   * @param string $field_name
+   *   The name of the field on which the files should be saved.
+   * @param $nid_or_type
+   *   A numeric node id to upload files to an existing node, or a string
+   *   indicating the desired bundle for a new node.
+   * @param bool $new_revision
+   *   The revision number.
+   * @param array $extras
+   *   Additional values when a new node is created.
+   *
+   * @return int
+   *   The node id.
    */
-  function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE, $extras = array()) {
+  function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = array()) {
+    return $this->uploadNodeFiles([$file], $field_name, $nid_or_type, $new_revision, $extras);
+  }
+
+  /**
+   * Uploads multiple files to a node.
+   *
+   * @param \Drupal\file\FileInterface[] $files
+   *   The files to be uploaded.
+   * @param string $field_name
+   *   The name of the field on which the files should be saved.
+   * @param $nid_or_type
+   *   A numeric node id to upload files to an existing node, or a string
+   *   indicating the desired bundle for a new node.
+   * @param bool $new_revision
+   *   The revision number.
+   * @param array $extras
+   *   Additional values when a new node is created.
+   *
+   * @return int
+   *   The node id.
+   */
+  function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = array()) {
     $edit = array(
       'title[0][value]' => $this->randomMachineName(),
       'revision' => (string) (int) $new_revision,
     );
 
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
     if (is_numeric($nid_or_type)) {
       $nid = $nid_or_type;
+      $node_storage->resetCache(array($nid));
+      $node = $node_storage->load($nid);
     }
     else {
-      $node_storage = $this->container->get('entity.manager')->getStorage('node');
       // Add a new node.
       $extras['type'] = $nid_or_type;
       $node = $this->drupalCreateNode($extras);
@@ -171,13 +210,23 @@ abstract class FileFieldTestBase extends WebTestBase {
       $this->assertNotEqual($nid, $node->getRevisionId(), 'Node revision exists.');
     }
 
-    // Attach a file to the node.
+    // Attach files to the node.
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
-    $name = 'files[' . $field_name . '_0]';
+    // File input name depends on number of files already uploaded.
+    $field_num = count($node->{$field_name});
+    $name = 'files[' . $field_name . "_$field_num]";
     if ($field_storage->getCardinality() != 1) {
       $name .= '[]';
     }
-    $edit[$name] = drupal_realpath($file->getFileUri());
+    foreach ($files as $file) {
+      $file_path = $this->container->get('file_system')->realpath($file->getFileUri());
+      if (count($files) == 1) {
+        $edit[$name] = $file_path;
+      }
+      else {
+        $edit[$name][] = $file_path;
+      }
+    }
     $this->drupalPostForm("node/$nid/edit", $edit, t('Save and keep published'));
 
     return $nid;

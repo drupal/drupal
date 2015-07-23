@@ -350,7 +350,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
         $file = File::load($fid);
         $removed_names[] = $file->getFilename();
       }
-      $args = array('%field' => $field_storage->getFieldName(), '@max' => $field_storage->getCardinality(), '@count' => $keep, '%list' => implode(', ', $removed_names));
+      $args = array('%field' => $field_storage->getName(), '@max' => $field_storage->getCardinality(), '@count' => $uploaded, '%list' => implode(', ', $removed_names));
       $message = t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args);
       drupal_set_message($message, 'warning');
       $values['fids'] = array_slice($values['fids'], 0, $keep);
