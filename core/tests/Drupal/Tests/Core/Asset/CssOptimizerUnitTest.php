@@ -71,7 +71,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // - Stripped comments and white-space.
       // - Retain white-space in selectors. (https://www.drupal.org/node/472820)
       // - Retain pseudo-selectors. (https://www.drupal.org/node/460448)
-      0 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -92,7 +92,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       //   file_create_url(). (https://www.drupal.org/node/1961340)
       // - Imported files that are external (protocol-relative URL or not)
       //   should not be expanded. (https://www.drupal.org/node/2014851)
-      1 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -108,7 +108,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       ),
       // File. Tests:
       // - Retain comment hacks.
-      2 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -126,7 +126,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // - CSS import path is properly interpreted.
       //   (https://www.drupal.org/node/1198904)
       // - Don't adjust data URIs (https://www.drupal.org/node/2142441)
-      5 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -143,7 +143,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // File. Tests:
       // - Any @charaset declaration at the beginning of a file should be
       //   removed without breaking subsequent CSS.
-      6 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -157,7 +157,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         file_get_contents($path . 'charset.css.optimized.css'),
       ),
-      7 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -171,7 +171,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         file_get_contents($path . 'charset.css.optimized.css'),
       ),
-      6 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -185,7 +185,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         '.byte-order-mark-test{content:"☃";}'. "\n",
       ),
-      7 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -199,7 +199,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         '.charset-test{content:"€";}' . "\n",
       ),
-      8 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
@@ -213,7 +213,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         '.byte-order-mark-charset-test{content:"☃";}' . "\n",
       ),
-      9 => array(
+      array(
         array(
           'group' => -100,
           'every_page' => TRUE,
