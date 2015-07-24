@@ -7,8 +7,9 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
  * Provides a default implementation for local action plugins.
  */
 class LocalActionDefault extends PluginBase implements LocalActionInterface, ContainerFactoryPluginInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The route provider to load routes by name.
@@ -68,15 +71,8 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    */
   public function getTitle(Request $request = NULL) {
     // Subclasses may pull in the request or specific attributes as parameters.
-    $options = array();
-    if (!empty($this->pluginDefinition['title_context'])) {
-      $options['context'] = $this->pluginDefinition['title_context'];
-    }
-    $args = array();
-    if (isset($this->pluginDefinition['title_arguments']) && $title_arguments = $this->pluginDefinition['title_arguments']) {
-      $args = (array) $title_arguments;
-    }
-    return $this->t($this->pluginDefinition['title'], $args, $options);
+    // The title from YAML file discovery may be a TranslationWrapper object.
+    return (string) $this->pluginDefinition['title'];
   }
 
   /**

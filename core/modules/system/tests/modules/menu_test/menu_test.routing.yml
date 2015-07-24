@@ -67,6 +67,13 @@ menu_test.router_test3:
   requirements:
     _access: 'FALSE'
 
+menu_test.router_test4:
+  path: '/foo/{bar}/d'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
+
 menu_test.local_action1:
   path: '/menu-test-local-action'
   defaults:
@@ -102,8 +109,36 @@ menu_test.local_action5:
   requirements:
     _access: 'TRUE'
 
+menu_test.contextual_test:
+  path: '/menu-test-contextual/default'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::testContextual'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.contextual_hidden_manage:
+  path: '/menu-test-contextual/{bar}'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.contextual_hidden_manage_edit:
+  path: '/menu-test-contextual/{bar}/edit'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
+
 menu_test.local_task_test_tasks:
   path: '/menu-local-task-test/tasks'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.tasks_default:
+  path: '/menu-local-task-test/default'
   defaults:
     _controller: '\Drupal\menu_test\TestControllers::test1'
   requirements:
@@ -132,6 +167,13 @@ menu_test.local_task_test_tasks_edit:
 
 menu_test.local_task_test_tasks_settings:
   path: '/menu-local-task-test/tasks/settings'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.local_task_test_tasks_settings_dynamic:
+  path: '/menu-local-task-test/tasks/settings-dynamic'
   defaults:
     _controller: '\Drupal\menu_test\TestControllers::test1'
   requirements:

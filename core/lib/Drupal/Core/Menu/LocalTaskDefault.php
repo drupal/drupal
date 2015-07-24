@@ -7,7 +7,8 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
  * Default object used for LocalTaskPlugins.
  */
 class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The route provider to load routes by name.
@@ -75,16 +78,8 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
    * {@inheritdoc}
    */
   public function getTitle(Request $request = NULL) {
-    // Subclasses may pull in the request or specific attributes as parameters.
-    $options = array();
-    if (!empty($this->pluginDefinition['title_context'])) {
-      $options['context'] = $this->pluginDefinition['title_context'];
-    }
-    $args = array();
-    if (isset($this->pluginDefinition['title_arguments']) && $title_arguments = $this->pluginDefinition['title_arguments']) {
-      $args = (array) $title_arguments;
-    }
-    return $this->t($this->pluginDefinition['title'], $args, $options);
+    // The title from YAML file discovery may be a TranslationWrapper object.
+    return (string) $this->pluginDefinition['title'];
   }
 
   /**

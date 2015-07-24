@@ -118,8 +118,9 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $this->discovery = new YamlDiscovery('links.contextual', $this->moduleHandler->getModuleDirectories());
-      $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+      $yaml_discovery = new YamlDiscovery('links.contextual', $this->moduleHandler->getModuleDirectories());
+      $yaml_discovery->addTranslatableProperty('title', 'title_context');
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml_discovery);
     }
     return $this->discovery;
   }

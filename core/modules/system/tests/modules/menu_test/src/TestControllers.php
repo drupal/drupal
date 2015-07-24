@@ -61,4 +61,20 @@ class TestControllers {
     }
   }
 
+  /**
+   * Prints out test data with contextual links.
+   */
+  public function testContextual() {
+    return [
+      '#markup' => 'testContextual',
+      'stuff' => [
+        '#type' => 'contextual_links',
+        '#contextual_links' => [
+          'menu_test_menu' => [
+            'route_parameters' => ['bar' => 1],
+          ]
+        ]
+      ]
+    ];
+  }
 }

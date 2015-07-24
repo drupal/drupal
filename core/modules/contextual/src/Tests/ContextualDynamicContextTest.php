@@ -8,6 +8,7 @@
 namespace Drupal\contextual\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Template\Attribute;
@@ -46,7 +47,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contextual', 'node', 'views', 'views_ui', 'language');
+  public static $modules = array('contextual', 'node', 'views', 'views_ui', 'language', 'menu_test');
 
   protected function setUp() {
     parent::setUp();
@@ -137,6 +138,11 @@ class ContextualDynamicContextTest extends WebTestBase {
     $id = 'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=it';
     $this->drupalGet('node', ['language' => ConfigurableLanguage::createFromLangcode('it')]);
     $this->assertContextualLinkPlaceHolder($id);
+
+    // Get a page where contextual links are directly rendered.
+    $this->drupalGet(Url::fromRoute('menu_test.contextual_test'));
+    $this->assertEscaped("<script>alert('Welcome to the jungle!')</script>");
+    $this->assertLink('Edit menu - contextual');
   }
 
   /**

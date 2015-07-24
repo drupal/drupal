@@ -85,6 +85,16 @@ class TranslationWrapper implements SafeStringInterface {
   }
 
   /**
+   * Gets all options from this translation wrapper.
+   *
+   * @return mixed[]
+   *   The array of options.
+   */
+  public function getOptions() {
+    return $this->options;
+  }
+
+  /**
    * Implements the magic __toString() method.
    */
   public function __toString() {

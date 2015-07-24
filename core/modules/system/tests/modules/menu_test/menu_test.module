@@ -5,6 +5,8 @@
  * Module that implements various hooks for menu tests.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_menu_links_discovered_alter().
  */
@@ -26,20 +28,14 @@ function menu_test_menu_links_discovered_alter(&$links) {
 
 /**
  * Implements hook_menu_local_tasks().
- *
- * If the menu_test.settings configuration 'tasks.add' has been set, adds
- * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks(&$data, $route_name) {
-  if (!\Drupal::config('menu_test.settings')->get('tasks.add')) {
-    return;
-  }
-  if (in_array($route_name, array('menu_test.tasks_default', 'menu_test.tasks_empty', 'menu_test.tasks_tasks'))) {
+  if (in_array($route_name, array('menu_test.tasks_default'))) {
     $data['tabs'][0]['foo'] = array(
       '#theme' => 'menu_local_task',
       '#link' => array(
-        'title' => 'Task 1',
-        'href' => 'task/foo',
+        'title' => "Task 1 <script>alert('Welcome to the jungle!')</script>",
+        'url' => Url::fromRoute('menu_test.router_test1', array('bar' => '1')),
       ),
       '#weight' => 10,
     );
@@ -47,7 +43,7 @@ function menu_test_menu_local_tasks(&$data, $route_name) {
       '#theme' => 'menu_local_task',
       '#link' => array(
         'title' => 'Task 2',
-        'href' => 'task/bar',
+        'url' => Url::fromRoute('menu_test.router_test2', array('bar' => '2')),
       ),
       '#weight' => 20,
     );

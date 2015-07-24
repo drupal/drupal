@@ -72,6 +72,8 @@ class MenuRouterTest extends WebTestBase {
     // Confirm local task links are displayed.
     $this->assertLink('Local task A');
     $this->assertLink('Local task B');
+    $this->assertNoLink('Local task C');
+    $this->assertEscaped("<script>alert('Welcome to the jungle!')</script>", ENT_QUOTES, 'UTF-8');
     // Confirm correct local task href.
     $this->assertLinkByHref(Url::fromRoute('menu_test.router_test1', ['bar' => $machine_name])->toString());
     $this->assertLinkByHref(Url::fromRoute('menu_test.router_test2', ['bar' => $machine_name])->toString());

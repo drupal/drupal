@@ -26,6 +26,22 @@ menu_test.local_action4:
   appears_on:
     - menu_test.local_action1
 
+menu_test.local_action_derivative:
+  route_name: menu_test.local_action4
+  weight: -20
+  deriver: Drupal\menu_test\Plugin\Derivative\LocalActionTest
+  class: Drupal\Core\Menu\LocalActionDefault
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action6:
+  route_name: menu_test.local_action4
+  title: 'Dynamic local action with user input'
+  weight: -15
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalAction5'
+  appears_on:
+    - menu_test.local_action1
+
 menu_test.hidden_menu_add:
   route_name: menu_test.hidden_menu_add
   title: 'Add menu'

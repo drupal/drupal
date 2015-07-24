@@ -142,8 +142,9 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $this->discovery = new YamlDiscovery('links.action', $this->moduleHandler->getModuleDirectories());
-      $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+      $yaml_discovery = new YamlDiscovery('links.action', $this->moduleHandler->getModuleDirectories());
+      $yaml_discovery->addTranslatableProperty('title', 'title_context');
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml_discovery);
     }
     return $this->discovery;
   }

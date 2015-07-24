@@ -40,10 +40,6 @@ function template_preprocess_menu_local_task(&$variables) {
     $active = SafeMarkup::format('<span class="visually-hidden">@label</span>', array('@label' => t('(active tab)')));
     $link_text = t('@local-task-title@active', array('@local-task-title' => $link_text, '@active' => $active));
   }
-  else {
-    // @todo Remove this once https://www.drupal.org/node/2338081 is fixed.
-    $link_text = SafeMarkup::checkPlain($link_text);
-  }
 
   $link['localized_options']['set_active_class'] = TRUE;
 

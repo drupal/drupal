@@ -1,4 +1,3 @@
 config_translation.contextual_links:
-  title: 'Translate @type_name'
   deriver: 'Drupal\config_translation\Plugin\Derivative\ConfigTranslationContextualLinks'
   weight: 100

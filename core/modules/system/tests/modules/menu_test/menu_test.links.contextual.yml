@@ -1,12 +1,13 @@
-menu_test.hidden_manage:
-  title: 'List links'
+menu_test.contextual_hidden_manage:
+  title: 'List links - contextual'
   group: menu_test_menu
-  route_name: menu_test.hidden_manage
+  route_name: menu_test.contextual_hidden_manage
+  class: '\Drupal\menu_test\Plugin\Menu\ContextualLink\TestContextualLink'
 
-menu_test.hidden_manage_edit:
-  title: 'Edit menu'
+menu_test.contextual_hidden_manage_edit:
+  title: 'Edit menu - contextual'
   group: menu_test_menu
-  route_name: menu_test.hidden_manage_edit
+  route_name: menu_test.contextual_hidden_manage_edit
 
 menu_test.hidden_block_configure:
   title: 'Configure block'

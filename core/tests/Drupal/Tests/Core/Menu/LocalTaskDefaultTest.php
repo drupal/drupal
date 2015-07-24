@@ -10,8 +10,8 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Core\Menu\LocalTaskDefault;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -77,9 +77,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   protected function setupLocalTaskDefault() {
     $this->localTaskBase = new TestLocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition);
     $this->localTaskBase
-      ->setRouteProvider($this->routeProvider)
-      ->setStringTranslation($this->stringTranslation);
-
+      ->setRouteProvider($this->routeProvider);
   }
 
   /**
@@ -234,11 +232,12 @@ class LocalTaskDefaultTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitleWithoutContext() {
-    $this->pluginDefinition['title'] = 'Example';
+  public function testGetTitle() {
+    $this->pluginDefinition['title'] = (new TranslationWrapper('Example'))
+      ->setStringTranslation($this->stringTranslation);
     $this->stringTranslation->expects($this->once())
       ->method('translate')
-      ->with($this->pluginDefinition['title'], array(), array())
+      ->with('Example', array(), array())
       ->will($this->returnValue('Example translated'));
 
     $this->setupLocalTaskDefault();
@@ -249,11 +248,12 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * @covers ::getTitle
    */
   public function testGetTitleWithContext() {
-    $this->pluginDefinition['title'] = 'Example';
-    $this->pluginDefinition['title_context'] = 'context';
+    $title = 'Example';
+    $this->pluginDefinition['title'] = (new TranslationWrapper($title, array(), array('context' => 'context')))
+      ->setStringTranslation($this->stringTranslation);
     $this->stringTranslation->expects($this->once())
       ->method('translate')
-      ->with($this->pluginDefinition['title'], array(), array('context' => 'context'))
+      ->with($title, array(), array('context' => 'context'))
       ->will($this->returnValue('Example translated with context'));
 
     $this->setupLocalTaskDefault();
@@ -264,16 +264,16 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * @covers ::getTitle
    */
   public function testGetTitleWithTitleArguments() {
-    $this->pluginDefinition['title'] = 'Example @test';
-    $this->pluginDefinition['title_arguments'] = array('@test' => 'value');
+    $title = 'Example @test';
+    $this->pluginDefinition['title'] = (new TranslationWrapper('Example @test', array('@test' => 'value')))
+      ->setStringTranslation($this->stringTranslation);
     $this->stringTranslation->expects($this->once())
       ->method('translate')
-      ->with($this->pluginDefinition['title'], $this->arrayHasKey('@test'), array())
+      ->with($title, array('@test' => 'value'), array())
       ->will($this->returnValue('Example value'));
 
     $this->setupLocalTaskDefault();
-    $request = new Request();
-    $this->assertEquals('Example value', $this->localTaskBase->getTitle($request));
+    $this->assertEquals('Example value', $this->localTaskBase->getTitle());
   }
 
   /**

@@ -7,8 +7,10 @@
 
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\Discovery\YamlDiscovery
@@ -68,6 +70,44 @@ class YamlDiscoveryTest extends UnitTestCase {
       $this->assertEquals($id, $definition['id']);
       $this->assertEquals(array_search($id, $this->expectedKeys), $definition['provider']);
     }
+  }
+
+  /**
+   * @covers ::getDefinitions
+   */
+  public function testGetDefinitionsWithTranslatableDefinitions() {
+    vfsStream::setup('root');
+
+    $file_1 = <<<'EOS'
+test_plugin:
+  title: test title
+EOS;
+    $file_2 = <<<'EOS'
+test_plugin2:
+  title: test title2
+  title_context: 'test-context'
+EOS;
+    vfsStream::create([
+      'test_1' => [
+        'test_1.test.yml' => $file_1,
+      ],
+      'test_2' => [
+        'test_2.test.yml' => $file_2,
+      ]]
+    );
+
+    $discovery = new YamlDiscovery('test', ['test_1' => vfsStream::url('root/test_1'), 'test_2' => vfsStream::url('root/test_2')]);
+    $discovery->addTranslatableProperty('title', 'title_context');
+    $definitions = $discovery->getDefinitions();
+
+    $this->assertCount(2, $definitions);
+    $plugin_1 = $definitions['test_plugin'];
+    $plugin_2 = $definitions['test_plugin2'];
+
+    $this->assertInstanceOf(TranslationWrapper::class, $plugin_1['title']);
+    $this->assertEquals([], $plugin_1['title']->getOptions());
+    $this->assertInstanceOf(TranslationWrapper::class, $plugin_2['title']);
+    $this->assertEquals(['context' => 'test-context'], $plugin_2['title']->getOptions());
   }
 
   /**

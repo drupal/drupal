@@ -1,4 +1,3 @@
 config_translation.local_tasks:
-  title: 'Translate @type_name'
   deriver: 'Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks'
   weight: 100

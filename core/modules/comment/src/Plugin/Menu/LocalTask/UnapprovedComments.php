@@ -10,12 +10,14 @@ namespace Drupal\comment\Plugin\Menu\LocalTask;
 use Drupal\comment\CommentStorageInterface;
 use Drupal\Core\Menu\LocalTaskDefault;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a local task that shows the amount of unapproved comments.
  */
 class UnapprovedComments extends LocalTaskDefault implements ContainerFactoryPluginInterface {
+  use StringTranslationTrait;
 
   /**
    * The comment storage service.
@@ -57,7 +59,7 @@ class UnapprovedComments extends LocalTaskDefault implements ContainerFactoryPlu
    * {@inheritdoc}
    */
   public function getTitle() {
-    return t('Unapproved comments (@count)', array('@count' => $this->commentStorage->getUnapprovedCount()));
+    return $this->t('Unapproved comments (@count)', array('@count' => $this->commentStorage->getUnapprovedCount()));
   }
 
 }

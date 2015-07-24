@@ -30,6 +30,8 @@ class LocalActionTest extends WebTestBase {
     // Ensure that both menu and route based actions are shown.
     $this->assertLocalAction([
       [Url::fromRoute('menu_test.local_action4'), 'My dynamic-title action'],
+      [Url::fromRoute('menu_test.local_action4'), htmlspecialchars("<script>alert('Welcome to the jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')],
+      [Url::fromRoute('menu_test.local_action4'), htmlspecialchars("<script>alert('Welcome to the derived jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')],
       [Url::fromRoute('menu_test.local_action2'), 'My hook_menu action'],
       [Url::fromRoute('menu_test.local_action3'), 'My YAML discovery action'],
       [Url::fromRoute('menu_test.local_action5'), 'Title override'],
@@ -50,7 +52,11 @@ class LocalActionTest extends WebTestBase {
     foreach ($actions as $action) {
       /** @var \Drupal\Core\Url $url */
       list($url, $title) = $action;
-      $this->assertEqual((string) $elements[$index], $title);
+      // SimpleXML gives us the unescaped text, not the actual escaped markup,
+      // so use a pattern instead to check the raw content.
+      // This behaviour is a bug in libxml, see
+      // https://bugs.php.net/bug.php?id=49437.
+      $this->assertPattern('@<a [^>]*class="[^"]*button-action[^"]*"[^>]*>' . preg_quote($title, '@') . '</@');
       $this->assertEqual($elements[$index]['href'], $url->toString());
       $index++;
     }
