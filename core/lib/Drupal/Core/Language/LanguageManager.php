@@ -87,28 +87,43 @@ class LanguageManager implements LanguageManagerInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns information about all defined language types.
+   *
+   * Defines the three core language types:
+   * - Interface language is the only configurable language type in core. It is
+   *   used by t() as the default language if none is specified.
+   * - Content language is by default non-configurable and inherits the
+   *   interface language negotiated value. It is used by the Field API to
+   *   determine the display language for fields if no explicit value is
+   *   specified.
+   * - URL language is by default non-configurable and is determined through the
+   *   URL language negotiation method or the URL fallback language negotiation
+   *   method if no language can be detected. It is used by l() as the default
+   *   language if none is specified.
+   *
+   * @return array
+   *   An associative array of language type information arrays keyed by
+   *   language type machine name, in the format of
+   *   hook_language_types_info().
    */
   public function getDefinedLanguageTypesInfo() {
-    // This needs to have the same return value as
-    // language_language_type_info(), so that even if the Language module is
-    // not defined, users of this information, such as the Views module, can
-    // access names and descriptions of the default language types.
-    return array(
+    $this->definedLanguageTypesInfo = array(
       LanguageInterface::TYPE_INTERFACE => array(
-        'name' => $this->t('Interface text'),
-        'description' => $this->t('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
+        'name' => new TranslationWrapper('Interface text'),
+        'description' => new TranslationWrapper('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_CONTENT => array(
-        'name' => $this->t('Content'),
-        'description' => $this->t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+        'name' => new TranslationWrapper('Content'),
+        'description' => new TranslationWrapper('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_URL => array(
         'locked' => TRUE,
       ),
     );
+
+    return $this->definedLanguageTypesInfo;
   }
 
   /**
