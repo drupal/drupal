@@ -622,6 +622,11 @@ services:
   language_manager:
     class: Drupal\Core\Language\LanguageManager
     arguments: ['@language.default']
+  language.current_language_context:
+    class: Drupal\Core\Language\ContextProvider\CurrentLanguageContext
+    arguments: ['@language_manager']
+    tags:
+      - { name: 'context_provider' }
   language.default:
     class: Drupal\Core\Language\LanguageDefault
     arguments: ['%language.default_values%']

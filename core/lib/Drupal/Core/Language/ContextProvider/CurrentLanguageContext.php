@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\language\ContextProvider\CurrentLanguageContext.
+ * Contains \Drupal\Core\Language\ContextProvider\CurrentLanguageContext.
  */
 
-namespace Drupal\language\ContextProvider;
+namespace Drupal\Core\Language\ContextProvider;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageManagerInterface;
