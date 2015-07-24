@@ -56,7 +56,7 @@ class GenerateProxyClassCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $class_name = $input->getArgument('class_name');
+    $class_name = ltrim($input->getArgument('class_name'), '\\');
     $namespace_root = $input->getArgument('namespace_root_path');
 
     $match = [];
@@ -76,7 +76,7 @@ class GenerateProxyClassCommand extends Command {
 
 /**
  * @file
- * Contains {{ proxy_class_name }}.
+ * Contains \{{ proxy_class_name }}.
  */
 
 /**
