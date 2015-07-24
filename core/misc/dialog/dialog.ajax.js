@@ -102,7 +102,7 @@
     var $dialog = $(response.selector);
     if (!$dialog.length) {
       // Create the element if needed.
-      $dialog = $('<div id="' + response.selector.replace(/^#/, '') + '"/>').appendTo('body');
+      $dialog = $('<div id="' + response.selector.replace(/^#/, '') + '" class="ui-front"/>').appendTo('body');
     }
     // Set up the wrapper, if there isn't one.
     if (!ajax.wrapper) {
