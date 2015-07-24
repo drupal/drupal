@@ -103,7 +103,8 @@ class BackendCompilerPassTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->setDefinition('service', $service);
     $container->setDefinition('sqlite.service', new Definition(__NAMESPACE__ . '\\ServiceClassSqlite'));
-    $container->set('database', new Connection(new \PDO('sqlite::memory:'), []));
+    $mock = $this->getMockBuilder('Drupal\Core\Database\Driver\sqlite\Connection')->setMethods(NULL)->disableOriginalConstructor()->getMock();
+    $container->set('database', $mock);
     return $container;
   }
 
