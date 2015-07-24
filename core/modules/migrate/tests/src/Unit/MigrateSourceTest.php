@@ -139,12 +139,10 @@ class MigrateSourceTest extends MigrateTestCase {
    * Test that the source count is correct.
    */
   public function testCount() {
-    // Use the Apcu cache backend, which confirms that the cache API is being
-    // properly used.
+
     $container = new ContainerBuilder();
-    $cache_tags_checksum = $this->getMock('\Drupal\Core\Cache\CacheTagsChecksumInterface');
-    $container->register('cache.migrate', 'Drupal\Core\Cache\ApcuBackend')
-      ->setArguments(['migrate', 'migrate', $cache_tags_checksum]);
+    $container->register('cache.migrate', 'Drupal\Core\Cache\NullBackend')
+      ->setArguments(['migrate']);
     \Drupal::setContainer($container);
 
     // Test that the basic count works.
