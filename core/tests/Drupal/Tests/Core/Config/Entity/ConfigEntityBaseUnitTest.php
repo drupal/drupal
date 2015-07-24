@@ -376,10 +376,6 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @depends testSetStatus
    */
   public function testDisable() {
-    $this->cacheTagsInvalidator->expects($this->once())
-      ->method('invalidateTags')
-      ->with(array('config:test_provider.'  . $this->entityTypeId . '.' . $this->id));
-
     $this->entity->setStatus(TRUE);
     $this->assertSame($this->entity, $this->entity->disable());
     $this->assertFalse($this->entity->status());

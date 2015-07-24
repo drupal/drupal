@@ -225,7 +225,9 @@ class Item extends ContentEntityBase implements ItemInterface {
     // handles the regular cases. The Item entity has one special case: a newly
     // created Item is *also* associated with a Feed, so we must invalidate the
     // associated Feed's cache tag.
-    Cache::invalidateTags($this->getCacheTagsToInvalidate());
+    if (!$update) {
+      Cache::invalidateTags($this->getCacheTagsToInvalidate());
+    }
   }
 
   /**

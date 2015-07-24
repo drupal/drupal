@@ -192,8 +192,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function disable() {
-    // An entity was disabled, invalidate its own cache tag.
-    Cache::invalidateTags($this->getCacheTagsToInvalidate());
     return $this->setStatus(FALSE);
   }
 
