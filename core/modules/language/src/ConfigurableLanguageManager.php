@@ -182,14 +182,10 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    */
   public function getDefinedLanguageTypesInfo() {
     if (!isset($this->languageTypesInfo)) {
-      $defaults = parent::getDefinedLanguageTypesInfo();
-
       $info = $this->moduleHandler->invokeAll('language_types_info');
-      $language_info = $info + $defaults;
-
       // Let other modules alter the list of language types.
-      $this->moduleHandler->alter('language_types_info', $language_info);
-      $this->languageTypesInfo = $language_info;
+      $this->moduleHandler->alter('language_types_info', $info);
+      $this->languageTypesInfo = $info;
     }
     return $this->languageTypesInfo;
   }

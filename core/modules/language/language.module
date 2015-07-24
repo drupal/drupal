@@ -283,6 +283,42 @@ function language_get_default_langcode($entity_type, $bundle) {
 }
 
 /**
+ * Implements hook_language_types_info().
+ *
+ * Defines the three core language types:
+ * - Interface language is the only configurable language type in core. It is
+ *   used by t() as the default language if none is specified.
+ * - Content language is by default non-configurable and inherits the interface
+ *   language negotiated value. It is used by the Field API to determine the
+ *   display language for fields if no explicit value is specified.
+ * - URL language is by default non-configurable and is determined through the
+ *   URL language negotiation method or the URL fallback language negotiation
+ *   method if no language can be detected. It is used by l() as the default
+ *   language if none is specified.
+ */
+function language_language_types_info() {
+  return array(
+    LanguageInterface::TYPE_INTERFACE => array(
+      'name' => t('Interface text'),
+      'description' => t('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
+      'locked' => TRUE,
+    ),
+    LanguageInterface::TYPE_CONTENT => array(
+      'name' => t('Content'),
+      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+      'fixed' => array(LanguageNegotiationUI::METHOD_ID),
+      'locked' => TRUE,
+    ),
+    LanguageInterface::TYPE_URL => array(
+      'name' => t('URL'),
+      'description' => t('Order of language detection methods for URLs. The detected language will be used as the default when generating URLs for internal links on the site.'),
+      'fixed' => array(LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationUrlFallback::METHOD_ID),
+      'locked' => TRUE,
+    ),
+  );
+}
+
+/**
  * Reads language prefixes and uses the langcode if no prefix is set.
  */
 function language_negotiation_url_prefixes() {
@@ -503,17 +539,4 @@ function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
       }
     }
   }
-}
-
-/**
- * Implements hook_language_types_info_alter().
- *
- * We can't set the fixed properties in \Drupal\Core\Language\LanguageManager,
- * where the rest of the properties for the default language types are defined.
- * The LanguageNegation classes are only loaded when the language module is
- * enabled and we can't be sure of that in the LanguageManager.
- */
-function language_language_types_info_alter(array &$language_types) {
-  $language_types[LanguageInterface::TYPE_CONTENT]['fixed'] = [LanguageNegotiationUI::METHOD_ID];
-  $language_types[LanguageInterface::TYPE_URL]['fixed'] = [LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationUrlFallback::METHOD_ID];
 }
