@@ -47,6 +47,8 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
       ->register('url_generator', 'Drupal\Core\Routing\NullGenerator')
       ->addArgument(new Reference('request_stack'));
     $container
+      ->register('path_processor_manager', 'Drupal\Core\PathProcessor\NullPathProcessorManager');
+    $container
       ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
 
     // Remove the cache tags invalidator tag from the cache tags storage, so

@@ -648,21 +648,20 @@ function system_js_settings_build(&$settings, AttachedAssetsInterface $assets) {
  * as well as theme_token ajax state.
  */
 function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
-  // url() generates the script and prefix using hook_url_outbound_alter().
-  // Instead of running the hook_url_outbound_alter() again here, extract
-  // them from url().
-  // @todo Make this less hacky: https://www.drupal.org/node/1547376.
   $request = \Drupal::request();
-  $scriptPath = $request->getScriptName();
-
-  $pathPrefix = '';
   $current_query = $request->query->all();
-  Url::fromRoute('<front>', [], array('script' => &$scriptPath, 'prefix' => &$pathPrefix))->toString(TRUE);
+
+  // Let output path processors set a prefix.
+  /** @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor */
+  $path_processor = \Drupal::service('path_processor_manager');
+  $options = ['prefix' => ''];
+  $path_processor->processOutbound('/', $options);
+  $pathPrefix = $options['prefix'];
+
   $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
   $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
   $path_settings = [
     'baseUrl' => $request->getBaseUrl() . '/',
-    'scriptPath' => $scriptPath,
     'pathPrefix' => $pathPrefix,
     'currentPath' => $current_path,
     'currentPathIsAdmin' => $current_path_is_admin,
