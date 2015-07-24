@@ -423,7 +423,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     // class to get the count from the source.
     if ($refresh || !$this->cacheCounts) {
       $count = $this->getIterator()->count();
-      $this->getCache()->set($this->cacheKey, $count, 'cache');
+      $this->getCache()->set($this->cacheKey, $count);
     }
     else {
       // Caching is in play, first try to retrieve a cached count.
@@ -436,7 +436,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         // No cached count, ask the derived class to count 'em up, and cache
         // the result.
         $count = $this->getIterator()->count();
-        $this->getCache()->set($this->cacheKey, $count, 'cache');
+        $this->getCache()->set($this->cacheKey, $count);
       }
     }
     return $count;
