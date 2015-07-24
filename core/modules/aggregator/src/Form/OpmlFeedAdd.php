@@ -122,7 +122,7 @@ class OpmlFeedAdd extends FormBase {
       // @todo Move this to a fetcher implementation.
       try {
         $response = $this->httpClient->get($form_state->getValue('remote'));
-        $data = $response->getBody(TRUE);
+        $data = (string) $response->getBody();
       }
       catch (RequestException $e) {
         $this->logger('aggregator')->warning('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()));

@@ -1364,8 +1364,8 @@ function install_retrieve_file($uri, $destination) {
   }
 
   try {
-    $request = \Drupal::httpClient()->get($uri, array('headers' => array('Accept' => 'text/plain')));
-    $data = $request->getBody(TRUE);
+    $response = \Drupal::httpClient()->get($uri, array('headers' => array('Accept' => 'text/plain')));
+    $data = (string) $response->getBody();
     if (empty($data)) {
       return FALSE;
     }

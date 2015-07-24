@@ -1361,9 +1361,9 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     }
   }
   try {
-    $data = \Drupal::httpClient()
+    $data = (string) \Drupal::httpClient()
       ->get($url)
-      ->getBody(TRUE);
+      ->getBody();
     $local = $managed ? file_save_data($data, $path, $replace) : file_unmanaged_save_data($data, $path, $replace);
   }
   catch (RequestException $exception) {

@@ -64,7 +64,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = array()) {
-    $file_data = $this->httpClient->get($data['uri'][0]['value'])->getBody(TRUE);
+    $file_data = (string) $this->httpClient->get($data['uri'][0]['value'])->getBody();
 
     $path = 'temporary://' . drupal_basename($data['uri'][0]['value']);
     $data['uri'] = file_unmanaged_save_data($file_data, $path);
