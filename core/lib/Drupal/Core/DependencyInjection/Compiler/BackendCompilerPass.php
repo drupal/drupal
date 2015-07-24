@@ -42,11 +42,25 @@ class BackendCompilerPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container) {
-    $default_backend = $container->hasParameter('default_backend') ? $container->getParameter('default_backend') : NULL;
-    // No default backend was configured, so continue as normal.
-    if (!isset($default_backend)) {
-      return;
+    if ($container->hasParameter('default_backend')) {
+      $default_backend = $container->getParameter('default_backend');
+      // Opt out from the default backend.
+      if (!$default_backend) {
+        return;
+      }
     }
+    else {
+      try {
+        $default_backend = $container->get('database')->driver();
+        $container->set('database', NULL);
+      }
+      catch (\Exception $e) {
+        // If Drupal is not installed or a test doesn't define database there
+        // is nothing to override.
+        return;
+      }
+    }
+
 
     foreach ($container->findTaggedServiceIds('backend_overridable') as $id => $attributes) {
       // If the service is already an alias it is not the original backend, so

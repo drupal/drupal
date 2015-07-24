@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 
+use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Alias;
@@ -48,7 +49,7 @@ class BackendCompilerPassTest extends UnitTestCase {
   public function testProcess($expected_class, ContainerBuilder $container) {
     $this->backendPass->process($container);
 
-    $this->assertInstanceOf($expected_class, $container->get('service'));
+    $this->assertEquals($expected_class, get_class($container->get('service')));
   }
 
   /**
@@ -59,26 +60,67 @@ class BackendCompilerPassTest extends UnitTestCase {
   public function providerTestProcess() {
     $data = array();
     // Add a container with no set default_backend.
-    $container = new ContainerBuilder();
-    $prefix = '\\' . __NAMESPACE__ . '\\';
-    $container->setDefinition('service', (new Definition($prefix . 'ServiceClassDefault'))->addTag('backend_overridable'));
-    $container->setDefinition('mysql.service', new Definition($prefix . 'ServiceClassMysql'));
+    $prefix = __NAMESPACE__ . '\\ServiceClass';
+    $service = (new Definition($prefix . 'Default'))->addTag('backend_overridable');
+    $container = $this->getMysqlContainer($service);
 
-    $data[] = array($prefix . 'ServiceClassDefault', $container);
+    $data[] = array($prefix . 'Default', $container);
 
     // Set the default_backend so the mysql service should be used.
-    $container = clone $container;
+    $container = $this->getMysqlContainer($service);
     $container->setParameter('default_backend', 'mysql');
-    $data[] = array($prefix . 'ServiceClassMysql', $container);
+    $data[] = array($prefix . 'Mysql', $container);
 
     // Configure a manual alias for the service, so ensure that it is not
     // overridden by the default backend.
     $container = clone $container;
-    $container->setDefinition('mariadb.service', new Definition($prefix . 'ServiceClassMariaDb'));
+    $container->setDefinition('mariadb.service', new Definition($prefix . 'MariaDb'));
     $container->setAlias('service', new Alias('mariadb.service'));
-    $data[] = array($prefix . 'ServiceClassMariaDb', $container);
+    $data[] = array($prefix . 'MariaDb', $container);
+
+    // Check the database driver is the default.
+    $container = $this->getSqliteContainer($service);
+    $data[] = array($prefix . 'Sqlite', $container);
+
+    // Test the opt out.
+    $container = $this->getSqliteContainer($service);
+    $container->setParameter('default_backend', '');
+    $data[] = array($prefix . 'Default', $container);
 
     return $data;
+  }
+
+  /**
+   * Creates a container with a sqlite database service in it.
+   *
+   * This is necessary because the container clone does not clone the parameter
+   * bag so the setParameter() call effects the parent container as well.
+   *
+   * @param $service
+   * @return ContainerBuilder
+   */
+  protected function getSqliteContainer($service) {
+    $container = new ContainerBuilder();
+    $container->setDefinition('service', $service);
+    $container->setDefinition('sqlite.service', new Definition(__NAMESPACE__ . '\\ServiceClassSqlite'));
+    $container->set('database', new Connection(new \PDO('sqlite::memory:'), []));
+    return $container;
+  }
+
+  /**
+   * Creates a container with a mysql database service definition in it.
+   *
+   * This is necessary because the container clone does not clone the parameter
+   * bag so the setParameter() call effects the parent container as well.
+   *
+   * @param $service
+   * @return ContainerBuilder
+   */
+  protected function getMysqlContainer($service) {
+    $container = new ContainerBuilder();
+    $container->setDefinition('service', $service);
+    $container->setDefinition('mysql.service', new Definition(__NAMESPACE__ . '\\ServiceClassMysql'));
+    return $container;
   }
 
 }
@@ -90,4 +132,7 @@ class ServiceClassMysql extends ServiceClassDefault {
 }
 
 class ServiceClassMariaDb extends ServiceClassMysql {
+}
+
+class ServiceClassSqlite extends ServiceClassDefault {
 }
