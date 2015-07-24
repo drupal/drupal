@@ -196,7 +196,7 @@ class ViewsUIController extends ControllerBase {
    * Returns the form to edit a view.
    *
    * @param \Drupal\views_ui\ViewUI $view
-   *   The view being deleted.
+   *   The view to be edited.
    * @param string|null $display_id
    *   (optional) The display ID being edited. Defaults to NULL, which will load
    *   the first available display.
