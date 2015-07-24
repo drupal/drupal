@@ -13,6 +13,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
@@ -28,7 +30,21 @@ class ConfigTranslationUiTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'contact', 'contact_test', 'config_translation', 'config_translation_test', 'views', 'views_ui', 'contextual', 'filter', 'filter_test');
+  public static $modules = [
+    'config_translation',
+    'config_translation_test',
+    'contact',
+    'contact_test',
+    'contextual',
+    'entity_test',
+    'field_test',
+    'field_ui',
+    'filter',
+    'filter_test',
+    'node',
+    'views',
+    'views_ui',
+  ];
 
   /**
    * Languages to enable.
@@ -698,6 +714,46 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][1]', "$field_value_plural 1 SL");
     $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]', "$field_value_plural 2 SL");
     $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]', "$field_value_plural 3 SL");
+  }
+
+  /**
+   * Tests the translation of field and field storage configuration.
+   */
+  public function testFieldConfigTranslation() {
+    // Add a test field which has a translatable field setting and a
+    // translatable field storage setting.
+    $field_name = strtolower($this->randomMachineName());
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'test_field',
+    ]);
+
+    $translatable_storage_setting = $this->randomString();
+    $field_storage->setSetting('translatable_storage_setting', $translatable_storage_setting);
+    $field_storage->save();
+
+    $bundle = strtolower($this->randomMachineName());
+    entity_test_create_bundle($bundle);
+    $field = FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => $bundle,
+    ]);
+
+    $translatable_field_setting = $this->randomString();
+    $field->setSetting('translatable_field_setting', $translatable_field_setting);
+    $field->save();
+
+    $this->drupalLogin($this->translatorUser);
+
+    $this->drupalGet("/entity_test/structure/$bundle/fields/entity_test.$bundle.$field_name/translate");
+    $this->clickLink('Add');
+
+    $this->assertText('Translatable field setting');
+    $this->assertRaw(SafeMarkup::checkPlain($translatable_field_setting));
+    $this->assertText('Translatable storage setting');
+    $this->assertRaw(SafeMarkup::checkPlain($translatable_storage_setting));
   }
 
   /**
