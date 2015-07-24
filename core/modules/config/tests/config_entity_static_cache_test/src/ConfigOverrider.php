@@ -7,6 +7,7 @@
 
 namespace Drupal\config_entity_static_cache_test;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 
@@ -38,6 +39,13 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
    */
   public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION) {
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($name) {
+    return new CacheableMetadata();
   }
 
 }

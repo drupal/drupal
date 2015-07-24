@@ -1,0 +1,9 @@
+services:
+  cache_context.config_override_integration_test:
+    class: Drupal\config_override_integration_test\Cache\ConfigOverrideIntegrationTestCacheContext
+    tags:
+      - { name: cache.context }
+  config_override_integration_test.config_override:
+    class: Drupal\config_override_integration_test\CacheabilityMetadataConfigOverride
+    tags:
+      - { name: config.factory.override }

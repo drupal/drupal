@@ -70,7 +70,10 @@ class BlockViewBuilder extends EntityViewBuilder {
         '#id' => $entity->id(),
         '#cache' => [
           'keys' => ['entity_view', 'block', $entity->id()],
-          'contexts' => $plugin->getCacheContexts(),
+          'contexts' => Cache::mergeContexts(
+            $entity->getCacheContexts(),
+            $plugin->getCacheContexts()
+          ),
           'tags' => $cache_tags,
           'max-age' => $plugin->getCacheMaxAge(),
         ],

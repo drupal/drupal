@@ -52,4 +52,18 @@ interface RefinableCacheableDependencyInterface extends CacheableDependencyInter
    */
   public function mergeCacheMaxAge($max_age);
 
+  /**
+   * Adds a dependency on an object: merges its cacheability metadata.
+   *
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface|object $other_object
+   *   The dependency. If the object implements CacheableDependencyInterface,
+   *   then its cacheability metadata will be used. Otherwise, the passed in
+   *   object must be assumed to be uncacheable, so max-age 0 is set.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Cache\CacheableMetadata::createFromObject()
+   */
+  public function addCacheableDependency($other_object);
+
 }

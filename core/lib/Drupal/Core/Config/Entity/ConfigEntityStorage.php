@@ -8,13 +8,13 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageBase;
 use Drupal\Core\Config\Config;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Component\Uuid\UuidInterface;
@@ -184,11 +184,41 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     }
 
     // Load all of the configuration entities.
-    $records = array();
+    /** @var \Drupal\Core\Config\Config[] $configs */
+    $configs = [];
+    $records = [];
     foreach ($this->configFactory->loadMultiple($names) as $config) {
-      $records[$config->get($this->idKey)] = $this->overrideFree ? $config->getOriginal(NULL, FALSE) : $config->get();
+      $id = $config->get($this->idKey);
+      $records[$id] = $this->overrideFree ? $config->getOriginal(NULL, FALSE) : $config->get();
+      $configs[$id] = $config;
     }
-    return $this->mapFromStorageRecords($records);
+    $entities = $this->mapFromStorageRecords($records, $configs);
+
+    // Config entities wrap config objects, and therefore they need to inherit
+    // the cacheability metadata of config objects (to ensure e.g. additional
+    // cacheability metadata added by config overrides is not lost).
+    foreach ($entities as $id => $entity) {
+      // But rather than simply inheriting all cacheability metadata of config
+      // objects, we need to make sure the self-referring cache tag that is
+      // present on Config objects is not added to the Config entity. It must be
+      // removed for 3 reasons:
+      // 1. When renaming/duplicating a Config entity, the cache tag of the
+      //    original config object would remain present, which would be wrong.
+      // 2. Some Config entities choose to not use the cache tag that the under-
+      //    lying Config object provides by default (For performance and
+      //    cacheability reasons it may not make sense to have a unique cache
+      //    tag for every Config entity. The DateFormat Config entity specifies
+      //    the 'rendered' cache tag for example, because A) date formats are
+      //    changed extremely rarely, so invalidating all render cache items is
+      //    fine, B) it means fewer cache tags per page.).
+      // 3. Fewer cache tags is better for performance.
+      $self_referring_cache_tag = ['config:' . $configs[$id]->getName()];
+      $config_cacheability = CacheableMetadata::createFromObject($configs[$id]);
+      $config_cacheability->setCacheTags(array_diff($config_cacheability->getCacheTags(), $self_referring_cache_tag));
+      $entity->addCacheableDependency($config_cacheability);
+    }
+
+    return $entities;
   }
 
   /**

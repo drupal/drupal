@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+  theme:
+    - classy
+id: call_to_action
+theme: classy
+region: content
+weight: null
+provider: null
+plugin: 'block_content:d7c9d8ba-663f-41b4-8756-86bc55c44653'
+settings:
+  id: 'block_content:d7c9d8ba-663f-41b4-8756-86bc55c44653'
+  label: 'Shop for cheap now!'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: default
+visibility:
+  request_path:
+    id: request_path
+    pages: ''
+    negate: false

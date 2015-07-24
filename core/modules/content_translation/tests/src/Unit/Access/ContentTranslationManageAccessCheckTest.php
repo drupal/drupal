@@ -9,6 +9,7 @@ namespace Drupal\Tests\content_translation\Unit\Access;
 
 use Drupal\content_translation\Access\ContentTranslationManageAccessCheck;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -21,6 +22,28 @@ use Symfony\Component\Routing\Route;
  * @group content_translation
  */
 class ContentTranslationManageAccessCheckTest extends UnitTestCase {
+
+  /**
+   * The cache contexts manager.
+   *
+   * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheContextsManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $container = new ContainerBuilder();
+    $container->set('cache_contexts_manager', $this->cacheContextsManager);
+    \Drupal::setContainer($container);
+  }
 
   /**
    * Tests the create access method.
@@ -76,6 +99,9 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $entity->expects($this->once())
       ->method('getCacheTags')
       ->will($this->returnValue(array('node:1337')));
+    $entity->expects($this->once())
+      ->method('getCacheContexts')
+      ->willReturn(array());
 
     // Set the route requirements.
     $route = new Route('test_route');

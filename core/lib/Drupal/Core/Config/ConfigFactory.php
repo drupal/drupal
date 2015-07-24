@@ -126,6 +126,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
           $this->cache[$cache_key]->setSettingsOverride($GLOBALS['config'][$name]);
         }
       }
+
+      $this->propagateConfigOverrideCacheability($cache_key, $name);
+
       return $this->cache[$cache_key];
     }
   }
@@ -183,6 +186,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
             $this->cache[$cache_key]->setSettingsOverride($GLOBALS['config'][$name]);
           }
         }
+
+        $this->propagateConfigOverrideCacheability($cache_key, $name);
+
         $list[$name] = $this->cache[$cache_key];
       }
     }
@@ -207,6 +213,20 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       $overrides = NestedArray::mergeDeepArray(array($override->loadOverrides($names), $overrides), TRUE);
     }
     return $overrides;
+  }
+
+  /**
+   * Propagates cacheability of config overrides to cached config objects.
+   *
+   * @param string $cache_key
+   *   The key of the cached config object to update.
+   * @param string $name
+   *   The name of the configuration object to construct.
+   */
+  protected function propagateConfigOverrideCacheability($cache_key, $name) {
+    foreach ($this->configFactoryOverrides as $override) {
+      $this->cache[$cache_key]->addCacheableDependency($override->getCacheableMetadata($name));
+    }
   }
 
   /**

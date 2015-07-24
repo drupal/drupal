@@ -1,4 +1,8 @@
 services:
+  cache_context.pirate_day:
+    class: Drupal\config_override_test\Cache\PirateDayCacheContext
+    tags:
+      - { name: cache.context }
   config_override_test.overrider:
     class: Drupal\config_override_test\ConfigOverrider
     tags:
@@ -7,3 +11,7 @@ services:
     class: Drupal\config_override_test\ConfigOverriderLowPriority
     tags:
       - { name: config.factory.override, priority: -100 }
+  config_override_test.pirate_day_cacheability_metadata_override:
+    class: Drupal\config_override_test\PirateDayCacheabilityMetadataConfigOverride
+    tags:
+      - { name: config.factory.override }

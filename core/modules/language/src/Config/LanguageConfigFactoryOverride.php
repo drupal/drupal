@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Config;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigFactoryOverrideBase;
@@ -220,6 +221,17 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
         $config_translation->delete();
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheableMetadata($name) {
+    $metadata = new CacheableMetadata();
+    if ($this->language) {
+      $metadata->setCacheContexts(['languages:language_interface']);
+    }
+    return $metadata;
   }
 
 }

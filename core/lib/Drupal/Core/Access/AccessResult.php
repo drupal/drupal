@@ -319,10 +319,12 @@ abstract class AccessResult implements AccessResultInterface, CacheableDependenc
    *   The entity whose cache tag to set on the access result.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
+   *   ::addCacheableDependency() instead.
    */
   public function cacheUntilEntityChanges(EntityInterface $entity) {
-    $this->addCacheTags($entity->getCacheTags());
-    return $this;
+    return $this->addCacheableDependency($entity);
   }
 
   /**
@@ -332,9 +334,33 @@ abstract class AccessResult implements AccessResultInterface, CacheableDependenc
    *   The configuration object whose cache tag to set on the access result.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
+   *   ::addCacheableDependency() instead.
    */
   public function cacheUntilConfigurationChanges(ConfigBase $configuration) {
-    $this->addCacheTags($configuration->getCacheTags());
+    return $this->addCacheableDependency($configuration);
+  }
+
+  /**
+   * Adds a dependency on an object: merges its cacheability metadata.
+   *
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface|object $other_object
+   *   The dependency. If the object implements CacheableDependencyInterface,
+   *   then its cacheability metadata will be used. Otherwise, the passed in
+   *   object must be assumed to be uncacheable, so max-age 0 is set.
+   *
+   * @return $this
+   */
+  public function addCacheableDependency($other_object) {
+    if ($other_object instanceof CacheableDependencyInterface) {
+      $this->contexts = Cache::mergeContexts($this->contexts, $other_object->getCacheContexts());
+      $this->tags = Cache::mergeTags($this->tags, $other_object->getCacheTags());
+      $this->maxAge = Cache::mergeMaxAges($this->maxAge, $other_object->getCacheMaxAge());
+    }
+    else {
+      $this->maxAge = 0;
+    }
     return $this;
   }
 

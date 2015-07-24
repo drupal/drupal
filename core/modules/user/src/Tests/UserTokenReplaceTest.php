@@ -75,6 +75,12 @@ class UserTokenReplaceTest extends WebTestBase {
     $metadata_tests['[user:url]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:edit-url]'] = $base_bubbleable_metadata;
     $bubbleable_metadata = clone $base_bubbleable_metadata;
+    // This test runs with the Language module enabled, which means config is
+    // overridden by LanguageConfigFactoryOverride (to provide translations of
+    // config). This causes the interface language cache context to be added for
+    // config entities. The four next tokens use DateFormat Config entities, and
+    // therefore have the interface language cache context.
+    $bubbleable_metadata->addCacheContexts(['languages:language_interface']);
     $metadata_tests['[user:last-login]'] = $bubbleable_metadata->addCacheTags(['rendered']);
     $metadata_tests['[user:last-login:short]'] = $bubbleable_metadata;
     $metadata_tests['[user:created]'] = $bubbleable_metadata;

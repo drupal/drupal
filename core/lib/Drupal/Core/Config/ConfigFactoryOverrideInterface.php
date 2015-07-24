@@ -58,4 +58,15 @@ interface ConfigFactoryOverrideInterface {
    */
   public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION);
 
+  /**
+   * Gets the cacheability metadata associated with the config factory override.
+   *
+   * @param string $name
+   *   The name of the configuration override to get metadata for.
+   *
+   * @return \Drupal\Core\Cache\CacheableMetadata
+   *   A cacheable metadata object.
+   */
+  public function getCacheableMetadata($name);
+
 }
