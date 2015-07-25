@@ -1,0 +1,13 @@
+id: d7_dblog_settings
+label: Drupal 7 database logging configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - dblog_row_limit
+process:
+  row_limit: dblog_row_limit
+destination:
+  plugin: config
+  config_name: dblog.settings
