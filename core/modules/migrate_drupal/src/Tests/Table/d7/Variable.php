@@ -326,6 +326,15 @@ class Variable extends DrupalDumpBase {
       'name' => 'suppress_itok_output',
       'value' => 'b:1;',
     ))->values(array(
+      'name' => 'syslog_facility',
+      'value' => 'i:8;',
+    ))->values(array(
+      'name' => 'syslog_format',
+      'value' => 's:72:"!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message";',
+    ))->values(array(
+      'name' => 'syslog_identity',
+      'value' => 's:6:"drupal";',
+    ))->values(array(
       'name' => 'theme_default',
       'value' => 's:6:"bartik";',
     ))->values(array(
@@ -440,4 +449,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#6e1892883e650f9e71e165fa6737ac4c
+#5b6552f715939e2b33c22779e47e73e3
