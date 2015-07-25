@@ -17,6 +17,12 @@ use Drupal\user\Entity\User;
  */
 class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
 
+  const BASE_TEST_CLASS = 'Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase';
+
+  protected static $blacklist = array(
+    'Drupal\migrate_drupal\Tests\dependencies\MigrateDependenciesTest',
+  );
+
   /**
    * Modules to enable.
    *
@@ -43,6 +49,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'locale',
     'menu_link_content',
     'menu_ui',
+    'migrate_drupal',
     'node',
     'options',
     'search',
@@ -246,101 +253,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       'Vocabulary.php',
       'VocabularyNodeTypes.php',
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getTestClassesList() {
-    $classes = array(
-      __NAMESPACE__ . '\MigrateActionConfigsTest',
-      __NAMESPACE__ . '\MigrateAggregatorConfigsTest',
-      __NAMESPACE__ . '\MigrateAggregatorFeedTest',
-      __NAMESPACE__ . '\MigrateAggregatorItemTest',
-      __NAMESPACE__ . '\MigrateBlockTest',
-      __NAMESPACE__ . '\MigrateBookTest',
-      __NAMESPACE__ . '\MigrateBookConfigsTest',
-      __NAMESPACE__ . '\MigrateCckFieldValuesTest',
-      __NAMESPACE__ . '\MigrateCckFieldRevisionTest',
-      __NAMESPACE__ . '\MigrateCommentTypeTest',
-      __NAMESPACE__ . '\MigrateCommentTest',
-      __NAMESPACE__ . '\MigrateCommentVariableEntityDisplayTest',
-      __NAMESPACE__ . '\MigrateCommentVariableEntityFormDisplayTest',
-      __NAMESPACE__ . '\MigrateCommentVariableEntityFormDisplaySubjectTest',
-      __NAMESPACE__ . '\MigrateCommentVariableFieldTest',
-      __NAMESPACE__ . '\MigrateCommentVariableInstanceTest',
-      __NAMESPACE__ . '\MigrateContactCategoryTest',
-      __NAMESPACE__ . '\MigrateContactConfigsTest',
-      __NAMESPACE__ . '\MigrateBlockContentTest',
-      __NAMESPACE__ . '\MigrateDateFormatTest',
-      __NAMESPACE__ . '\MigrateDblogConfigsTest',
-      __NAMESPACE__ . '\MigrateFieldTest',
-      __NAMESPACE__ . '\MigrateFieldInstanceTest',
-      __NAMESPACE__ . '\MigrateFieldFormatterSettingsTest',
-      __NAMESPACE__ . '\MigrateFieldWidgetSettingsTest',
-      __NAMESPACE__ . '\MigrateFileConfigsTest',
-      __NAMESPACE__ . '\MigrateFileTest',
-      __NAMESPACE__ . '\MigrateFilterFormatTest',
-      __NAMESPACE__ . '\MigrateForumConfigsTest',
-      __NAMESPACE__ . '\MigrateLocaleConfigsTest',
-      __NAMESPACE__ . '\MigrateMenuConfigsTest',
-      __NAMESPACE__ . '\MigrateMenuLinkTest',
-      __NAMESPACE__ . '\MigrateMenuTest',
-      __NAMESPACE__ . '\MigrateNodeBundleSettingsTest',
-      __NAMESPACE__ . '\MigrateNodeConfigsTest',
-      __NAMESPACE__ . '\MigrateNodeRevisionTest',
-      __NAMESPACE__ . '\MigrateNodeTest',
-      __NAMESPACE__ . '\MigrateNodeTypeTest',
-      __NAMESPACE__ . '\MigrateUserProfileValuesTest',
-      __NAMESPACE__ . '\MigrateSearchConfigsTest',
-      __NAMESPACE__ . '\MigrateSearchPageTest',
-      __NAMESPACE__ . '\MigrateSimpletestConfigsTest',
-      __NAMESPACE__ . '\MigrateStatisticsConfigsTest',
-      __NAMESPACE__ . '\MigrateSyslogConfigsTest',
-      __NAMESPACE__ . '\MigrateSystemCronTest',
-      __NAMESPACE__ . '\MigrateSystemFileTest',
-      __NAMESPACE__ . '\MigrateSystemFilterTest',
-      __NAMESPACE__ . '\MigrateSystemImageGdTest',
-      __NAMESPACE__ . '\MigrateSystemImageTest',
-      __NAMESPACE__ . '\MigrateSystemLoggingTest',
-      __NAMESPACE__ . '\MigrateSystemMaintenanceTest',
-      __NAMESPACE__ . '\MigrateSystemPerformanceTest',
-      __NAMESPACE__ . '\MigrateSystemRssTest',
-      __NAMESPACE__ . '\MigrateSystemSiteTest',
-      __NAMESPACE__ . '\MigrateTaxonomyConfigsTest',
-      __NAMESPACE__ . '\MigrateTaxonomyTermTest',
-      __NAMESPACE__ . '\MigrateTaxonomyVocabularyTest',
-      __NAMESPACE__ . '\MigrateTermNodeRevisionTest',
-      __NAMESPACE__ . '\MigrateTermNodeTest',
-      __NAMESPACE__ . '\MigrateTextConfigsTest',
-      __NAMESPACE__ . '\MigrateUpdateConfigsTest',
-      __NAMESPACE__ . '\MigrateUploadEntityDisplayTest',
-      __NAMESPACE__ . '\MigrateUploadEntityFormDisplayTest',
-      __NAMESPACE__ . '\MigrateUploadFieldTest',
-      __NAMESPACE__ . '\MigrateUploadInstanceTest',
-      __NAMESPACE__ . '\MigrateUploadTest',
-      __NAMESPACE__ . '\MigrateUrlAliasTest',
-      __NAMESPACE__ . '\MigrateUserConfigsTest',
-      __NAMESPACE__ . '\MigrateUserContactSettingsTest',
-      __NAMESPACE__ . '\MigrateUserProfileEntityDisplayTest',
-      __NAMESPACE__ . '\MigrateUserProfileEntityFormDisplayTest',
-      __NAMESPACE__ . '\MigrateUserProfileFieldTest',
-      __NAMESPACE__ . '\MigrateUserProfileFieldInstanceTest',
-      __NAMESPACE__ . '\MigrateUserPictureEntityDisplayTest',
-      __NAMESPACE__ . '\MigrateUserPictureEntityFormDisplayTest',
-      __NAMESPACE__ . '\MigrateUserPictureFileTest',
-      __NAMESPACE__ . '\MigrateUserPictureFieldTest',
-      __NAMESPACE__ . '\MigrateUserPictureInstanceTest',
-      __NAMESPACE__ . '\MigrateUserRoleTest',
-      __NAMESPACE__ . '\MigrateUserTest',
-      __NAMESPACE__ . '\MigrateViewModesTest',
-      __NAMESPACE__ . '\MigrateVocabularyEntityDisplayTest',
-      __NAMESPACE__ . '\MigrateVocabularyEntityFormDisplayTest',
-      __NAMESPACE__ . '\MigrateVocabularyFieldInstanceTest',
-      __NAMESPACE__ . '\MigrateVocabularyFieldTest',
-    );
-
-    return $classes;
   }
 
   /**
