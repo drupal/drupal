@@ -188,7 +188,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
       'entity_type' => $this->testEntityTypeName,
       'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'translatable' => FALSE,
+      'translatable' => TRUE,
       'settings' => array(
         'allowed_values' => array(
           array(
@@ -292,7 +292,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
       'langcode' => $this->baseLangcode,
     ));
     $node->save();
-    $node->addTranslation($this->translateToLangcode, array());
+    $node->addTranslation($this->translateToLangcode, $node->toArray());
     $node->save();
 
     return $node;

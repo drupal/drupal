@@ -489,7 +489,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         if (isset($this->values[$name][$langcode])) {
           $value = $this->values[$name][$langcode];
         }
-        $field = \Drupal::service('plugin.manager.field.field_type')->createFieldItemList($this, $name, $value);
+        $field = \Drupal::service('plugin.manager.field.field_type')->createFieldItemList($this->getTranslation($langcode), $name, $value);
         if ($default) {
           // $this->defaultLangcode might not be set if we are initializing the
           // default language code cache, in which case there is no valid
@@ -524,6 +524,19 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $fields = array();
     foreach ($this->getFieldDefinitions() as $name => $definition) {
       if ($include_computed || !$definition->isComputed()) {
+        $fields[$name] = $this->get($name);
+      }
+    }
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslatableFields($include_computed = TRUE) {
+    $fields = [];
+    foreach ($this->getFieldDefinitions() as $name => $definition) {
+      if (($include_computed || !$definition->isComputed()) && $definition->isTranslatable()) {
         $fields[$name] = $this->get($name);
       }
     }
@@ -1041,7 +1054,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         }
         foreach ($values as $langcode => $items) {
           $this->fields[$name][$langcode] = clone $items;
-          $this->fields[$name][$langcode]->setContext($name, $this->getTypedData());
+          $this->fields[$name][$langcode]->setContext($name, $this->getTranslation($langcode)->getTypedData());
         }
       }
 

@@ -175,7 +175,7 @@ interface FieldableEntityInterface extends EntityInterface {
   public function set($field_name, $value, $notify = TRUE);
 
   /**
-   * Gets an array of field item lists.
+   * Gets an array of all field item lists.
    *
    * @param bool $include_computed
    *   If set to TRUE, computed fields are included. Defaults to TRUE.
@@ -184,6 +184,17 @@ interface FieldableEntityInterface extends EntityInterface {
    *   An array of field item lists implementing, keyed by field name.
    */
   public function getFields($include_computed = TRUE);
+
+  /**
+   * Gets an array of field item lists for translatable fields.
+   *
+   * @param bool $include_computed
+   *   If set to TRUE, computed fields are included. Defaults to TRUE.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface[]
+   *   An array of field item lists implementing, keyed by field name.
+   */
+  public function getTranslatableFields($include_computed = TRUE);
 
   /**
    * Reacts to changes to a field.

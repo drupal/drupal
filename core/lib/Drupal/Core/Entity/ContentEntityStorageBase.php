@@ -405,7 +405,12 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
     $args = array_slice(func_get_args(), 2);
     foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
       $translation = $entity->getTranslation($langcode);
-      foreach ($translation->getFields() as $name => $items) {
+      // For non translatable fields, there is only one field object instance
+      // across all translations and it has as parent entity the entity in the
+      // default entity translation. Therefore field methods on non translatable
+      // fields should be invoked only on the default entity translation.
+      $fields = $translation->isDefaultTranslation() ? $translation->getFields() : $translation->getTranslatableFields();
+      foreach ($fields as $name => $items) {
         // call_user_func_array() is way slower than a direct call so we avoid
         // using it if have no parameters.
         $result[$langcode][$name] = $args ? call_user_func_array([$items, $method], $args) : $items->{$method}();
