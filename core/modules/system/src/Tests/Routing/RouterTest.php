@@ -200,6 +200,15 @@ class RouterTest extends WebTestBase {
   }
 
   /**
+   * Tests that a PSR-7 response works.
+   */
+  public function testRouterResponsePsr7() {
+    $this->drupalGet('/router_test/test23');
+    $this->assertResponse(200);
+    $this->assertText('test23');
+  }
+
+  /**
    * Tests the user account on the DIC.
    */
   public function testUserAccount() {

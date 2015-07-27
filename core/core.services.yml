@@ -890,6 +890,11 @@ services:
     class: Drupal\Core\EventSubscriber\RouteMethodSubscriber
     tags:
       - { name: event_subscriber }
+  psr_response_view_subscriber:
+    class: Drupal\Core\EventSubscriber\PsrResponseSubscriber
+    arguments: ['@psr7.http_foundation_factory']
+    tags:
+      - { name: event_subscriber }
 
   # Main content view subscriber plus the renderers it uses.
   main_content_view_subscriber:

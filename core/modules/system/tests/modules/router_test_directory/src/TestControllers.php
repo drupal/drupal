@@ -12,6 +12,8 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\user\UserInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Zend\Diactoros\Response\HtmlResponse;
+
 
 /**
  * Controller routines for testing the routing system.
@@ -100,6 +102,10 @@ class TestControllers {
 
   public function test21() {
     return new CacheableResponse('test21');
+  }
+
+  public function test23() {
+    return new HtmlResponse('test23');
   }
 
   /**
