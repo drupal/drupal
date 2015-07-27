@@ -466,7 +466,6 @@ function content_translation_language_configuration_element_process(array $eleme
       // default to no translatability.
       '#default_value' => $context['bundle'] ? \Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) : FALSE,
       '#element_validate' => array('content_translation_language_configuration_element_validate'),
-      '#prefix' => '<label>' . t('Translation') . '</label>',
     );
 
     $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
