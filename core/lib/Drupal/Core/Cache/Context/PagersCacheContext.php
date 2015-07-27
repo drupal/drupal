@@ -34,10 +34,10 @@ class PagersCacheContext extends RequestStackCacheContextBase implements Calcula
     // The value of the 'page' query argument contains the information that
     // controls *all* pagers.
     if ($pager_id === NULL) {
-      return 'pager' . $this->requestStack->getCurrentRequest()->query->get('page', '');
+      return $this->requestStack->getCurrentRequest()->query->get('page', '');
     }
 
-    return 'pager.' . $pager_id . '.' . pager_find_page($pager_id);
+    return $pager_id . '.' . pager_find_page($pager_id);
   }
 
   /**

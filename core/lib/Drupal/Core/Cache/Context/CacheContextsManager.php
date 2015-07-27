@@ -120,9 +120,9 @@ class CacheContextsManager {
 
     sort($optimized_tokens);
     $keys = [];
-    foreach (static::parseTokens($optimized_tokens) as $context) {
+    foreach (array_combine($optimized_tokens, static::parseTokens($optimized_tokens)) as $context_token => $context) {
       list($context_id, $parameter) = $context;
-      $keys[] = $this->getService($context_id)->getContext($parameter);
+      $keys[] = '[' . $context_token . ']=' . $this->getService($context_id)->getContext($parameter);
     }
 
     // Create the returned object and merge in the cacheability metadata.

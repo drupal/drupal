@@ -27,7 +27,7 @@ class UserCacheContext extends UserCacheContextBase implements CacheContextInter
    * {@inheritdoc}
    */
   public function getContext() {
-    return "u." . $this->user->id();
+    return $this->user->id();
   }
 
   /**

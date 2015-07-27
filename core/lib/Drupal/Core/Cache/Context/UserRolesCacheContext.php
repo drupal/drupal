@@ -40,10 +40,10 @@ class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCa
       return 'is-super-user';
     }
     if ($role === NULL) {
-      return 'r.' . implode(',', $this->user->getRoles());
+      return implode(',', $this->user->getRoles());
     }
     else {
-      return 'r.' . $role . '.' . (in_array($role, $this->user->getRoles()) ? '0' : '1');
+      return (in_array($role, $this->user->getRoles()) ? '0' : '1');
     }
   }
 

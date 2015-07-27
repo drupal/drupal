@@ -49,7 +49,7 @@ class AccountPermissionsCacheContext extends UserCacheContextBase implements Cac
    * {@inheritdoc}
    */
   public function getContext() {
-    return 'ph.' . $this->permissionsHashGenerator->generate($this->user);
+    return $this->permissionsHashGenerator->generate($this->user);
   }
 
   /**

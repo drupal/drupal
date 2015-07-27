@@ -68,7 +68,7 @@ class BookNavigationCacheContext extends ContainerAware implements CacheContextI
     // If we're looking at a book node, get the trail for that node.
     $active_trail = $this->container->get('book.manager')
       ->getActiveTrailIds($node->book['bid'], $node->book);
-    return 'book.' . implode('|', $active_trail);
+    return implode('|', $active_trail);
   }
 
   /**

@@ -96,9 +96,9 @@ class CacheContextsManagerTest extends UnitTestCase {
     ]);
 
     $expected = [
-      'baz.cnenzrgreN',
-      'baz.cnenzrgreO',
-      'bar',
+      '[baz:parameterA]=cnenzrgreN',
+      '[baz:parameterB]=cnenzrgreO',
+      '[foo]=bar',
     ];
     $this->assertEquals($expected, $new_keys->getKeys());
   }
@@ -267,7 +267,7 @@ class BazCacheContext implements CalculatedCacheContextInterface {
     if (!is_string($parameter) || strlen($parameter) ===  0) {
       throw new \Exception();
     }
-    return 'baz.' . str_rot13($parameter);
+    return str_rot13($parameter);
   }
 
   /**
