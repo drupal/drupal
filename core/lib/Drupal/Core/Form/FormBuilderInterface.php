@@ -70,7 +70,7 @@ interface FormBuilderInterface {
    * Builds and processes a form for a given form ID.
    *
    * The form may also be retrieved from the cache if the form was built in a
-   * previous page-load. The form is then passed on for processing, validation
+   * previous page load. The form is then passed on for processing, validation,
    * and submission if there is proper input.
    *
    * @param \Drupal\Core\Form\FormInterface|string $form_id
