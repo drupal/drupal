@@ -315,7 +315,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = array(
       'modules[Testing][locale_test_translate][enable]' => 'locale_test_translate',
     );
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     // Check if translations have been imported.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
@@ -350,7 +350,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = array(
       'modules[Testing][locale_test_translate][enable]' => 'locale_test_translate',
     );
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     // Check if there is no Dutch translation yet.
     $this->assertTranslation('Extraday', '', 'nl');
@@ -394,7 +394,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = array(
       'modules[Testing][locale_test_translate][enable]' => 'locale_test_translate',
     );
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     // Create a custom language with language code 'xx' and a random
     // name.

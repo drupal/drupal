@@ -120,7 +120,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Enable a module.
     $edit = array();
     $edit['modules[Core][taxonomy][enable]'] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees

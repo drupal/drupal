@@ -99,14 +99,15 @@ class ModulesUninstallForm extends FormBase {
 
     $form['filters']['text'] = array(
       '#type' => 'search',
-      '#title' => $this->t('Search'),
+      '#title' => $this->t('Filter modules'),
+      '#title_display' => 'invisible',
       '#size' => 30,
-      '#placeholder' => $this->t('Enter module name'),
+      '#placeholder' => $this->t('Filter by name or description'),
+      '#description' => $this->t('Enter a part of the module name or description'),
       '#attributes' => array(
         'class' => array('table-filter-text'),
         'data-table' => '#system-modules-uninstall',
         'autocomplete' => 'off',
-        'title' => $this->t('Enter a part of the module name or description to filter by.'),
       ),
     );
 

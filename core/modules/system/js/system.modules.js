@@ -3,7 +3,7 @@
  * Module page behaviors.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, debounce) {
 
   "use strict";
 
@@ -15,7 +15,7 @@
    *
    * Text search input: input.table-filter-text
    * Target table:      input.table-filter-text[data-table]
-   * Source text:       .table-filter-text-source
+   * Source text:       .table-filter-text-source, .module-name, .module-description
    *
    * @type {Drupal~behavior}
    */
@@ -30,17 +30,19 @@
 
       function hidePackageDetails(index, element) {
         var $packDetails = $(element);
-        var $visibleRows = $packDetails.find('table:not(.sticky-header)').find('tbody tr:visible');
+        var $visibleRows = $packDetails.find('tbody tr:visible');
         $packDetails.toggle($visibleRows.length > 0);
       }
 
       function filterModuleList(e) {
-        var query = $(e.target).val().toLowerCase();
+        var query = $(e.target).val();
+        // Case insensitive expression to find query at the beginning of a word.
+        var re = new RegExp('\\b' + query, 'i');
 
         function showModuleRow(index, row) {
           var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source');
-          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          var $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
+          var textMatch = $sources.text().search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
         // Search over all rows and packages.
@@ -59,6 +61,13 @@
           // Hide the package <details> if they don't have any visible rows.
           // Note that we first show() all <details> to be able to use ':visible'.
           $details.attr('open', true).each(hidePackageDetails);
+
+          Drupal.announce(
+            Drupal.t(
+              '!modules modules are available in the modified list.',
+              {'!modules': $rowsAndDetails.find('tbody tr:visible').length}
+            )
+          );
         }
         else if (searching) {
           searching = false;
@@ -71,14 +80,24 @@
         }
       }
 
+      function preventEnterKey(event) {
+        if (event.which === 13) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }
+
       if ($table.length) {
         $rowsAndDetails = $table.find('tr, details');
         $rows = $table.find('tbody tr');
         $details = $rowsAndDetails.filter('.package-listing');
 
-        $input.on('keyup', filterModuleList);
+        $input.on({
+          keyup: debounce(filterModuleList, 200),
+          keydown: preventEnterKey
+        });
       }
     }
   };
 
-}(jQuery, Drupal));
+}(jQuery, Drupal, Drupal.debounce));

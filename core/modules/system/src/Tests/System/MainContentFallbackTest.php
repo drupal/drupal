@@ -70,8 +70,8 @@ class MainContentFallbackTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = array();
     $edit['modules[Core][block][enable]'] = 'block';
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->assertText(t('Module Block has been enabled.'), 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');
   }

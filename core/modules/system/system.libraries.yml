@@ -41,6 +41,7 @@ drupal.system.modules:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.debounce
     - core/jquery.once
 
 diff:

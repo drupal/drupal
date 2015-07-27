@@ -125,7 +125,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
         }
       }
       else {
-        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated. Enable the Update Manager module to update and install modules and themes.', array('!update-php' => \Drupal::url('system.db_update'))) . '</p>';
+        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated. Enable the <a href="!update-manager">Update Manager module</a> to update and install modules and themes.', array('!update-php' => \Drupal::url('system.db_update'), '!update-manager' => \Drupal::url('system.modules_list', [], ['fragment' => 'module-update']))) . '</p>';
       }
       return $output;
 

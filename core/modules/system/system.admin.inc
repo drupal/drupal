@@ -259,7 +259,7 @@ function theme_system_modules_details($variables) {
     }
     $details = array(
       '#type' => 'details',
-      '#title' => SafeMarkup::set('<span class="text"> ' . drupal_render($module['description']) . '</span>'),
+      '#title' => SafeMarkup::set('<span class="text module-description">' . drupal_render($module['description']) . '</span>'),
       '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
       '#description' => $description,
     );
@@ -332,7 +332,7 @@ function theme_system_modules_uninstall($variables) {
       array(
         'data' => array(
           '#type' => 'inline_template',
-          '#template' => '{{ module_description }} {% if disabled_header is not empty %} <div class="admin-requirements">{{ disabled_header }}{{ disabled_reasons }}</div> {% endif %}',
+          '#template' => '<span class="text module-description">{{ module_description }}</span>{% if disabled_header is not empty %}<div class="admin-requirements">{{ disabled_header }}{{ disabled_reasons }}</div>{% endif %}',
           '#context' => array(
             'module_description' => drupal_render($form['modules'][$module]['description']),
             'disabled_header' => $disabled_header,

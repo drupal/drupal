@@ -150,16 +150,13 @@ class ModulesListConfirmForm extends ConfirmFormBase {
     $account = $this->currentUser()->id();
     $this->keyValueExpirable->delete($account);
 
-    // Gets list of modules prior to install process.
-    $before = $this->moduleHandler->getModuleList();
-
-    // Install the given modules.
     if (!empty($this->modules['install'])) {
       // Don't catch the exception that this can throw for missing dependencies:
       // the form doesn't allow modules with unmet dependencies, so the only way
       // this can happen is if the filesystem changed between form display and
       // submit, in which case the user has bigger problems.
       try {
+        // Install the given modules.
         $this->moduleInstaller->install(array_keys($this->modules['install']));
       }
       catch (PreExistingConfigException $e) {
@@ -184,12 +181,12 @@ class ModulesListConfirmForm extends ConfirmFormBase {
         );
         return;
       }
-    }
 
-    // Gets module list after install process, flushes caches and displays a
-    // message if there are changes.
-    if ($before != $this->moduleHandler->getModuleList()) {
-      drupal_set_message($this->t('The configuration options have been saved.'));
+      $module_names = array_values($this->modules['install']);
+      drupal_set_message($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', array(
+        '%name' => $module_names[0],
+        '%names' => implode(', ', $module_names),
+      )));
     }
 
     $form_state->setRedirectUrl($this->getCancelUrl());

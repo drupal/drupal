@@ -21,12 +21,12 @@ class DependencyTest extends ModuleTestBase {
     $edit = array(
       'modules[Core][filter][enable]' => TRUE,
     );
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     // Enable module with project namespace to ensure nothing breaks.
     $edit = array(
       'modules[Testing][system_project_namespace_test][enable]' => TRUE,
     );
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertModules(array('system_project_namespace_test'), TRUE);
   }
 
@@ -37,7 +37,7 @@ class DependencyTest extends ModuleTestBase {
     // Attempt to enable Content Translation without Language enabled.
     $edit = array();
     $edit['modules[Multilingual][content_translation][enable]'] = 'content_translation';
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertText(t('Some required modules must be enabled'), 'Dependency required.');
 
     $this->assertModules(array('content_translation', 'language'), FALSE);
@@ -46,8 +46,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertTableCount('language', FALSE);
 
     $this->drupalPostForm(NULL, NULL, t('Continue'));
-    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
-
+    $this->assertText(t('2 modules have been enabled: Content Translation, Language.'), 'Modules status has been updated.');
     $this->assertModules(array('content_translation', 'language'), TRUE);
 
     // Assert that the language YAML files were created.
@@ -109,7 +108,7 @@ class DependencyTest extends ModuleTestBase {
     $edit = array();
     $edit['modules[Testing][requirements1_test][enable]'] = 'requirements1_test';
     $edit['modules[Testing][requirements2_test][enable]'] = 'requirements2_test';
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     // Makes sure the modules were NOT installed.
     $this->assertText(t('Requirements 1 Test failed requirements'), 'Modules status has been updated.');
@@ -140,7 +139,7 @@ class DependencyTest extends ModuleTestBase {
     // is correct.
     $edit = array();
     $edit['modules[Core][color][enable]'] = 'color';
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertModules(array('color'), FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
@@ -148,7 +147,7 @@ class DependencyTest extends ModuleTestBase {
 
     $edit['modules[Core][config][enable]'] = 'config';
     $edit['modules[Core][help][enable]'] = 'help';
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertModules(array('color', 'config', 'help'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
@@ -162,7 +161,7 @@ class DependencyTest extends ModuleTestBase {
   function testUninstallDependents() {
     // Enable the forum module.
     $edit = array('modules[Core][forum][enable]' => 'forum');
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->drupalPostForm(NULL, array(), t('Continue'));
     $this->assertModules(array('forum'), TRUE);
 

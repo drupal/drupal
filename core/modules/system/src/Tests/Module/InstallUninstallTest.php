@@ -77,7 +77,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $edit = array();
       $package = $module->info['package'];
       $edit["modules[$package][$name][enable]"] = TRUE;
-      $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
       // Handle the case where modules were installed along with this one and
       // where we therefore hit a confirmation screen.
@@ -85,7 +85,16 @@ class InstallUninstallTest extends ModuleTestBase {
         $this->drupalPostForm(NULL, array(), t('Continue'));
       }
 
-      $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
+      // List the module display names to check the confirmation message.
+      $module_names = array();
+      foreach ($modules_to_install as $module_to_install) {
+        $module_names[] = $all_modules[$module_to_install]->info['name'];
+      }
+      $expected_text = \Drupal::translation()->formatPlural(count($module_names), 'Module @name has been enabled.', '@count modules have been enabled: @names.', array(
+        '@name' => $module_names[0],
+        '@names' => implode(', ', $module_names),
+      ));
+      $this->assertText($expected_text, 'Modules status has been updated.');
 
       // Check that hook_modules_installed() was invoked with the expected list
       // of modules, that each module's database tables now exist, and that
@@ -138,8 +147,8 @@ class InstallUninstallTest extends ModuleTestBase {
     foreach ($all_modules as $name => $module) {
       $edit['modules[' . $module->info['package'] . '][' . $name . '][enable]'] = TRUE;
     }
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->assertText(t('@count modules have been enabled: ', array('@count' => count($all_modules))), 'Modules status has been updated.');
   }
 
   /**

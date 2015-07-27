@@ -125,7 +125,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertFalse($string, 'Configuration strings have been created upon installation.');
 
     // Enable the image module.
-    $this->drupalPostForm('admin/modules', array('modules[Field types][image][enable]' => "1"), t('Save configuration'));
+    $this->drupalPostForm('admin/modules', array('modules[Field types][image][enable]' => "1"), t('Install'));
     $this->rebuildContainer();
 
     $string = $this->storage->findString(array('source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration'));
@@ -204,12 +204,12 @@ class LocaleConfigTranslationTest extends WebTestBase {
   public function testOptionalConfiguration() {
     $this->assertNodeConfig(FALSE, FALSE);
     // Enable the node module.
-    $this->drupalPostForm('admin/modules', ['modules[Core][node][enable]' => "1"], t('Save configuration'));
+    $this->drupalPostForm('admin/modules', ['modules[Core][node][enable]' => "1"], t('Install'));
     $this->drupalPostForm(NULL, [], t('Continue'));
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, FALSE);
     // Enable the views module (which node provides some optional config for).
-    $this->drupalPostForm('admin/modules', ['modules[Core][views][enable]' => "1"], t('Save configuration'));
+    $this->drupalPostForm('admin/modules', ['modules[Core][views][enable]' => "1"], t('Install'));
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, TRUE);
   }

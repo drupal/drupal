@@ -183,14 +183,15 @@ class ModulesListForm extends FormBase {
 
     $form['filters']['text'] = array(
       '#type' => 'search',
-      '#title' => $this->t('Search'),
+      '#title' => $this->t('Filter modules'),
+      '#title_display' => 'invisible',
       '#size' => 30,
-      '#placeholder' => $this->t('Enter module name'),
+      '#placeholder' => $this->t('Filter by name or description'),
+      '#description' => $this->t('Enter a part of the module name or description'),
       '#attributes' => array(
         'class' => array('table-filter-text'),
         'data-table' => '#system-modules',
         'autocomplete' => 'off',
-        'title' => $this->t('Enter a part of the module name or description to filter by.'),
       ),
     );
 
@@ -238,7 +239,7 @@ class ModulesListForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Save configuration'),
+      '#value' => $this->t('Install'),
       '#button_type' => 'primary',
     );
 
@@ -515,13 +516,15 @@ class ModulesListForm extends FormBase {
       return;
     }
 
-    // Gets list of modules prior to install process.
-    $before = $this->moduleHandler->getModuleList();
-
-    // There seem to be no dependencies that would need approval.
+    // Install the given modules.
     if (!empty($modules['install'])) {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
+        $module_names = array_values($modules['install']);
+        drupal_set_message($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', array(
+          '%name' => $module_names[0],
+          '%names' => implode(', ', $module_names),
+        )));
       }
       catch (PreExistingConfigException $e) {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
@@ -545,12 +548,6 @@ class ModulesListForm extends FormBase {
         );
         return;
       }
-    }
-
-    // Gets module list after install process, flushes caches and displays a
-    // message if there are changes.
-    if ($before != $this->moduleHandler->getModuleList()) {
-      drupal_set_message(t('The configuration options have been saved.'));
     }
   }
 
