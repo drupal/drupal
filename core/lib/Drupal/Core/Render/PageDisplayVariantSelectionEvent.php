@@ -26,6 +26,13 @@ class PageDisplayVariantSelectionEvent extends Event {
   protected $pluginId;
 
   /**
+   * The configuration for the selected page display variant.
+   *
+   * @var array
+   */
+  protected $pluginConfiguration = [];
+
+  /**
    * The current route match.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
@@ -50,9 +57,12 @@ class PageDisplayVariantSelectionEvent extends Event {
    *
    * @param string $plugin_id
    *   The ID of the page display variant plugin to use.
+   *
+   * @return $this
    */
   public function setPluginId($plugin_id) {
     $this->pluginId = $plugin_id;
+    return $this;
   }
 
   /**
@@ -62,6 +72,28 @@ class PageDisplayVariantSelectionEvent extends Event {
    */
   public function getPluginId() {
     return $this->pluginId;
+  }
+
+  /**
+   * Set the configuration for the selected page display variant.
+   *
+   * @param array $configuration
+   *   The configuration for the selected page display variant.
+   *
+   * @return $this
+   */
+  public function setPluginConfiguration(array $configuration) {
+    $this->pluginConfiguration = $configuration;
+    return $this;
+  }
+
+  /**
+   * Get the configuration for the selected page display variant.
+   *
+   * @return array
+   */
+  public function getPluginConfiguration() {
+    return $this->pluginConfiguration;
   }
 
   /**

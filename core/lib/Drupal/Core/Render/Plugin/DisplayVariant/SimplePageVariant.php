@@ -32,6 +32,7 @@ class SimplePageVariant extends VariantBase implements PageVariantInterface {
    */
   public function setMainContent(array $main_content) {
     $this->mainContent = $main_content;
+    return $this;
   }
 
   /**

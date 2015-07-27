@@ -201,7 +201,9 @@ class HtmlRenderer implements MainContentRendererInterface {
       if (!$page_display instanceof PageVariantInterface) {
         throw new \LogicException('Cannot render the main content for this page because the provided display variant does not implement PageVariantInterface.');
       }
-      $page_display->setMainContent($main_content);
+      $page_display
+        ->setMainContent($main_content)
+        ->setConfiguration($event->getPluginConfiguration());
 
       // Generate a #type => page render array using the page display variant,
       // the page display will build the content for the various page regions.
