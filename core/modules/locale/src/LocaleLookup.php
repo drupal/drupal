@@ -117,7 +117,7 @@ class LocaleLookup extends CacheCollector {
       // for example, strings for admin menu items and settings forms are not
       // cached for anonymous users.
       $user = \Drupal::currentUser();
-      $rids = $user ? implode(':', array_keys($user->getRoles())) : '0';
+      $rids = $user ? implode(':', $user->getRoles()) : '';
       $this->cid = "locale:{$this->langcode}:{$this->context}:$rids";
 
       // Getting the roles from the current user might have resulted in t()

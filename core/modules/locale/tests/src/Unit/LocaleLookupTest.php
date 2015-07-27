@@ -111,7 +111,7 @@ class LocaleLookupTest extends UnitTestCase {
 
     $this->cache->expects($this->once())
       ->method('get')
-      ->with('locale:en:irrelevant:0', FALSE);
+      ->with('locale:en:irrelevant:anonymous', FALSE);
 
     $this->storage->expects($this->once())
       ->method('findTranslation')
@@ -183,7 +183,7 @@ class LocaleLookupTest extends UnitTestCase {
 
     $this->cache->expects($this->once())
       ->method('get')
-      ->with('locale:' . $langcode . ':' . $context . ':0', FALSE);
+      ->with('locale:' . $langcode . ':' . $context . ':anonymous', FALSE);
 
     $locale_lookup = new LocaleLookup($langcode, $context, $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack);
     $this->assertSame($expected, $locale_lookup->get($string));
