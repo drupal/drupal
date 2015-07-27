@@ -16,3 +16,131 @@ function block_install() {
   // invalidate all cached HTML output.
   Cache::invalidateTags(['rendered']);
 }
+
+/**
+ * @addtogroup updates-8.0.0-beta
+ * @{
+ */
+
+/**
+ * Update block visibility context mapping.
+ */
+function block_update_8001() {
+  // This update function updates blocks for the change from
+  // https://www.drupal.org/node/2354889.
+
+  // Core visibility context plugins are updated automatically; blocks with
+  // unknown plugins are disabled and their previous visibility settings are
+  // saved in key value storage; see change record
+  // https://www.drupal.org/node/2527840 for more explanation.
+
+  // These are all the contexts that Drupal core provides.
+  $context_service_id_map = [
+    'node.node' => '@node.node_route_context:node',
+    'user.current_user' => '@user.current_user_context:current_user',
+  ];
+
+  foreach (array_keys(\Drupal::languageManager()->getDefinedLanguageTypesInfo()) as $language_type_id) {
+    $context_service_id_map['language.' . $language_type_id] = '@language.current_language_context:' . $language_type_id;
+  }
+
+  // Contributed modules should leverage hook_update_dependencies() in order to
+  // be executed before block_update_8002(), so they can update their context
+  // mappings, if wanted.
+  $config_factory = \Drupal::configFactory();
+  $backup_values = $update_backup = [];
+
+  foreach ($config_factory->listAll('block.block.') as $block_config_name) {
+    $block = $config_factory->getEditable($block_config_name);
+    if ($visibility = $block->get('visibility')) {
+      foreach ($visibility as $condition_plugin_id => &$condition) {
+        foreach ($condition['context_mapping'] as $key => $context) {
+          if (!isset($context_service_id_map[$context])) {
+            // Remove the visibility condition for unknown context mapping
+            // entries, so the update process itself runs through and users can
+            // fix their block placements manually OR alternatively contributed
+            // modules can run their own update functions to update mappings
+            // that they provide.
+            $backup_values[$context][] = $condition_plugin_id;
+            unset($visibility[$condition_plugin_id]);
+            continue;
+          }
+          // Replace the context ID based on the defined mapping.
+          $condition['context_mapping'][$key] = $context_service_id_map[$context];
+        }
+      }
+      $block->set('visibility', $visibility);
+
+      if ($backup_values) {
+        // We not only store the missing context mappings but also the previous
+        // block status, in order to allow contributed and custom modules to do
+        // their own updates.
+        $update_backup[$block->get('id')] = [
+          'missing_context_ids' => $backup_values,
+          'status' => $block->get('status')
+        ];
+      }
+    }
+
+    // Mark the resulting configuration as trusted data. This avoids issues with
+    // future schema changes.
+    $block->save(TRUE);
+  }
+
+  if ($update_backup) {
+    \Drupal::keyValue('update_backup')->set('block_update_8001', $update_backup);
+  }
+
+  return t('Block context IDs updated.');
+}
+
+/**
+ * Disable all blocks with missing context IDs in block_update_8001().
+ */
+function block_update_8002() {
+  $block_update_8001 = \Drupal::keyValue('update_backup')->get('block_update_8001', []);
+
+  $block_ids = array_keys($block_update_8001);
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\Config[] $blocks */
+  $blocks = [];
+  foreach ($block_ids as $block_id) {
+    $blocks[$block_id] = $block = $config_factory->getEditable('block.block.' . $block_id);
+    // This block will have an invalid context mapping service and must be
+    // disabled in order to prevent information disclosure.
+
+    // Disable currently enabled blocks.
+    if ($block_update_8001[$block_id]['status']) {
+      $block->set('status', FALSE);
+      $block->save(TRUE);
+    }
+  }
+
+  // Provides a list of plugin labels, keyed by plugin ID.
+  $condition_plugin_id_label_map = array_column(\Drupal::service('plugin.manager.condition')->getDefinitions(), 'label', 'id');
+
+  // Override with the UI labels we are aware of. Sadly they are not machine
+  // accessible, see
+  // \Drupal\node\Plugin\Condition\NodeType::buildConfigurationForm().
+  $condition_plugin_id_label_map['node_type'] = t('Content types');
+  $condition_plugin_id_label_map['request_path'] = t('Pages');
+  $condition_plugin_id_label_map['user_role'] = t('Roles');
+
+  if (count($block_ids) > 0) {
+    $message = t('Encountered an unknown context mapping key coming probably from a contributed or custom module: One or more mappings could not be updated. Please manually review your visibility settings for the following blocks, which are disabled now:');
+    $message .= '<ul>';
+    foreach ($blocks as $disabled_block_id => $disabled_block) {
+      $message .= '<li>' . t('@label (Visibility: @plugin_ids)', array(
+            '@label' => $disabled_block->get('settings.label'),
+            '@plugin_ids' => implode(', ', array_intersect_key($condition_plugin_id_label_map, array_flip(array_keys($block_update_8001[$disabled_block_id]['missing_context_ids']))))
+          )) . '</li>';
+    }
+    $message .= '</ul>';
+
+    return $message;
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-beta".
+ */

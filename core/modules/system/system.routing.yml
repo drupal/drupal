@@ -454,6 +454,8 @@ system.db_update:
     _title: 'Drupal database update'
     _controller: '\Drupal\system\Controller\DbUpdateController::handle'
     op: 'info'
+  options:
+    _maintenance_access: TRUE
   requirements:
     _access_system_update: 'TRUE'
 
