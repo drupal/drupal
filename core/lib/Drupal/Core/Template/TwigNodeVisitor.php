@@ -21,14 +21,14 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
   /**
    * {@inheritdoc}
    */
-  function enterNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
+  public function enterNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
     return $node;
   }
 
   /**
    * {@inheritdoc}
    */
-  function leaveNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
+  public function leaveNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
     // We use this to inject a call to render_var -> TwigExtension->renderVar()
     // before anything is printed.
     if ($node instanceof \Twig_Node_Print) {
@@ -62,7 +62,7 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
   /**
    * {@inheritdoc}
    */
-  function getPriority() {
+  public function getPriority() {
     // Just above the Optimizer, which is the normal last one.
     return 256;
   }
