@@ -15,3 +15,9 @@ drupal.comment.threaded:
   css:
     theme:
       css/comment/comment.theme.css: {}
+
+search.results:
+  version: VERSION
+  css:
+    theme:
+      css/search/search.theme.css: {}
