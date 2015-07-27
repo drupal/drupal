@@ -22,6 +22,10 @@ contributed modules, and "custom" for custom modules. Note that if you move a
 module to a subdirectory after it has been enabled, you may need to clear the
 Drupal cache so it can be found.
 
+There are number of directories that are ignored when looking for modules. These
+are 'src', 'lib', 'vendor', 'assets', 'css', 'files', 'images', 'js', 'misc',
+'templates', 'includes', 'fixtures' and 'Drupal'.
+
 MULTISITE CONFIGURATION
 -----------------------
 
