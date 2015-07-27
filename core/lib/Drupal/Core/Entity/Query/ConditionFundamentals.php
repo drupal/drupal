@@ -37,14 +37,26 @@ abstract class ConditionFundamentals {
   protected $query;
 
   /**
+   * List of potential namespaces of the classes belonging to this condition.
+   *
+   * @var array
+   */
+  protected $namespaces = array();
+
+  /**
    * Constructs a Condition object.
    *
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
+   * @param QueryInterface $query
+   *   The entity query this condition belongs to.
+   * @param array $namespaces
+   *   List of potential namespaces of the classes belonging to this condition.
    */
-  public function __construct($conjunction, QueryInterface $query) {
+  public function __construct($conjunction, QueryInterface $query, $namespaces = []) {
     $this->conjunction = $conjunction;
     $this->query = $query;
+    $this->namespaces = $namespaces;
   }
 
   /**

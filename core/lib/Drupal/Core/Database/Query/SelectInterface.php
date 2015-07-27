@@ -141,6 +141,18 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function escapeLike($string);
 
   /**
+   * Escapes a field name string.
+   *
+   * Force all field names to be strictly alphanumeric-plus-underscore.
+   * For some database drivers, it may also wrap the field name in
+   * database-specific escape characters.
+   *
+   * @return
+   *   The sanitized field name string.
+   */
+  public function escapeField($string);
+
+  /**
    * Compiles and returns an associative array of the arguments for this prepared statement.
    *
    * @param $queryPlaceholder
@@ -632,4 +644,5 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The called object.
    */
   public function forUpdate($set = TRUE);
+
 }

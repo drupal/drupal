@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity\Query\Sql;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\Condition as SqlCondition;
 use Drupal\Core\Entity\Query\ConditionBase;
@@ -90,13 +89,8 @@ class Condition extends ConditionBase {
    * @see \Drupal\Core\Database\Query\ConditionInterface::condition()
    */
   public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive) {
-    // There is nothing to do for IN () queries except for PostgreSQL for which
-    // the condition arguments need to have case lowered to support not case
-    // sensitive fields.
+    // // There is nothing we can do for IN ().
     if (is_array($condition['value'])) {
-      $entityQueryCondition = Database::getConnection()->getDriverClass('EntityQuery\\Condition');
-      $entityQueryCondition::translateCondition($condition, $case_sensitive);
-
       return;
     }
 

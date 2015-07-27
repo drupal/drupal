@@ -52,7 +52,8 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::conditionAggregateGroupFactory().
    */
   public function conditionAggregateGroupFactory($conjunction = 'AND') {
-    return new ConditionAggregate($conjunction, $this);
+    $class = static::getClass($this->namespaces, 'ConditionAggregate');
+    return new $class($conjunction, $this, $this->namespaces);
   }
 
   /**

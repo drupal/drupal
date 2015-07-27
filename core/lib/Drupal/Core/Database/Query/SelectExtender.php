@@ -210,6 +210,14 @@ class SelectExtender implements SelectInterface {
     return $this->query->escapeLike($string);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeField($string) {
+    $this->query->escapeField($string);
+    return $this;
+  }
+
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     return $this->query->getArguments($queryPlaceholder);
   }

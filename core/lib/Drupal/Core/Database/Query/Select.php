@@ -466,6 +466,13 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
+  public function escapeField($string) {
+    return $this->connection->escapeField($string);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     if (!isset($queryPlaceholder)) {
       $queryPlaceholder = $this;
