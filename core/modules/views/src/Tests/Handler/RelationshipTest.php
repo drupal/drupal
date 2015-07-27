@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\simpletest\UserCreationTrait;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Tests\Plugin\RelationshipJoinTestBase;
 
 /**
@@ -18,6 +18,7 @@ use Drupal\views\Tests\Plugin\RelationshipJoinTestBase;
  * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
 class RelationshipTest extends RelationshipJoinTestBase {
+  use UserCreationTrait;
 
   /**
    * Views used by this test.
@@ -131,6 +132,53 @@ class RelationshipTest extends RelationshipJoinTestBase {
     }
 
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+  }
+
+  /**
+   * Tests rendering of a view with a relationship.
+   */
+  public function testRelationshipRender() {
+    $author1 = $this->createUser();
+    db_query("UPDATE {views_test_data} SET uid = :uid WHERE id = 1", [':uid' => $author1->id()]);
+    $author2 = $this->createUser();
+    db_query("UPDATE {views_test_data} SET uid = :uid WHERE id = 2", [':uid' => $author2->id()]);
+    // Set uid to non-existing author uid for row 3.
+    db_query("UPDATE {views_test_data} SET uid = :uid WHERE id = 3", [':uid' => $author2->id() + 123]);
+
+    $view = Views::getView('test_view');
+    // Add a relationship for authors.
+    $view->getDisplay()->overrideOption('relationships', [
+      'uid' => [
+        'id' => 'uid',
+        'table' => 'views_test_data',
+        'field' => 'uid',
+      ],
+    ]);
+    // Add fields for {views_test_data}.id and author name.
+    $view->getDisplay()->overrideOption('fields', [
+      'id' => [
+        'id' => 'id',
+        'table' => 'views_test_data',
+        'field' => 'id',
+      ],
+      'author' => [
+        'id' => 'author',
+        'table' => 'users_field_data',
+        'field' => 'name',
+        'relationship' => 'uid',
+      ],
+    ]);
+
+    // Render the view.
+    $output = $view->preview();
+    $html = $this->container->get('renderer')->renderRoot($output);
+    $this->setRawContent($html);
+
+    // Check that the output contains correct values.
+    $xpath = '//div[@class="views-row" and div[@class="views-field views-field-id"]=:id and div[@class="views-field views-field-author"]=:author]';
+    $this->assertEqual(1, count($this->xpath($xpath, [':id' => 1, ':author' => $author1->getUsername()])));
+    $this->assertEqual(1, count($this->xpath($xpath, [':id' => 2, ':author' => $author2->getUsername()])));
+    $this->assertEqual(1, count($this->xpath($xpath, [':id' => 3, ':author' => ''])));
   }
 
 }

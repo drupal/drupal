@@ -138,12 +138,17 @@ class EntityFieldRenderer extends RendererBase {
         $build = $this->build[$row->index][$field_id];
         unset($this->build[$row->index][$field_id]);
       }
-      else {
+      elseif (isset($this->build[$row->index])) {
         // In the uncommon case where a field gets rendered several times
         // (typically through direct Views API calls), the pre-computed render
         // array was removed by the unset() above. We have to manually rebuild
         // the render array for the row.
         $build = $this->buildFields([$row])[$row->index][$field_id];
+      }
+      else {
+        // In case the relationship is optional, there might not be any fields
+        // to render for this row.
+        $build = [];
       }
     }
     else {
@@ -199,8 +204,9 @@ class EntityFieldRenderer extends RendererBase {
       $entities_by_bundles = [];
       $field = $this->view->field[current($field_ids)];
       foreach ($values as $result_row) {
-        $entity = $field->getEntity($result_row);
-        $entities_by_bundles[$entity->bundle()][$result_row->index] = $this->getEntityTranslation($entity, $result_row);
+        if ($entity = $field->getEntity($result_row)) {
+          $entities_by_bundles[$entity->bundle()][$result_row->index] = $this->getEntityTranslation($entity, $result_row);
+        }
       }
 
       // Determine unique sets of fields that can be processed by the same
