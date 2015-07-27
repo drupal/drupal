@@ -51,7 +51,7 @@ class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCa
    * {@inheritdoc}
    */
   public function getCacheableMetadata($role = NULL) {
-    return new CacheableMetadata();
+    return (new CacheableMetadata())->setCacheTags(['user:' . $this->user->id()]);
   }
 
 }

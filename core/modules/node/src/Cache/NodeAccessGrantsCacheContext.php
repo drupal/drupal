@@ -93,6 +93,11 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
       return $cacheable_metadata;
     }
 
+    // The node grants may change if the user is updated. (The max-age is set to
+    // zero below, but sites may override this cache context, and change it to a
+    // non-zero value. In such cases, this cache tag is needed for correctness.)
+    $cacheable_metadata->setCacheTags(['user:' . $this->user->id()]);
+
     // If the site is using node grants, this cache context can not be
     // optimized.
     return $cacheable_metadata->setCacheMaxAge(0);
