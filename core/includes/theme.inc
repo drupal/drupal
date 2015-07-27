@@ -1067,30 +1067,6 @@ function template_preprocess_item_list(&$variables) {
 }
 
 /**
- * Prepares variables for feed icon templates.
- *
- * Default template: feed-icon.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - url: An internal system path or a fully qualified external URL of the
- *     feed.
- *   - title: A descriptive title of the feed.
- */
-function template_preprocess_feed_icon(&$variables) {
-  $text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
-  $variables['icon'] = array(
-    '#theme' => 'image__feed_icon',
-    '#uri' => 'core/misc/feed.png',
-    '#width' => 16,
-    '#height' => 16,
-    '#alt' => $text,
-  );
-  // Stripping tags because that's what l() used to do.
-  $variables['attributes']['title'] = strip_tags($text);
-}
-
-/**
  * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables

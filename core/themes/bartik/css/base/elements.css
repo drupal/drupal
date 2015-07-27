@@ -124,6 +124,10 @@ blockquote:after {
 blockquote > p:first-child {
   display: inline;
 }
+.feed-icon {
+  display: block;
+  margin: 25px 0 0 0;
+}
 img {
   max-width: 100%;
   height: auto;

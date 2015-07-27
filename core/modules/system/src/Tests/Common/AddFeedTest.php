@@ -91,7 +91,6 @@ class AddFeedTest extends WebTestBase {
       '#title' => '<>&"\'',
     );
     $text = \Drupal::service('renderer')->renderRoot($variables);
-    preg_match('/title="(.*?)"/', $text, $matches);
-    $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'feed_icon template escapes reserved HTML characters.');
+    $this->assertEqual(trim(strip_tags($text)), 'Subscribe to &lt;&gt;&amp;&quot;&#039;', 'feed_icon template escapes reserved HTML characters.');
   }
 }
