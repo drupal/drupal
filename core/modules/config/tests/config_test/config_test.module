@@ -11,16 +11,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
 /**
- * Loads a ConfigTest object.
- *
- * @param string $id
- *   The ID of the ConfigTest object to load.
- */
-function config_test_load($id) {
-  return entity_load('config_test', $id);
-}
-
-/**
  * Implements hook_cache_flush().
  */
 function config_test_cache_flush() {

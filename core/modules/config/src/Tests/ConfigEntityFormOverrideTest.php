@@ -31,6 +31,8 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
     $overridden_label = 'Overridden label';
     $edited_label = 'Edited label';
 
+    $config_test_storage = $this->container->get('entity.manager')->getStorage('config_test');
+
     // Set up an override.
     $settings['config']['config_test.dynamic.dotted.default']['label'] = (object) array(
       'value' => $overridden_label,
@@ -39,7 +41,7 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
     $this->writeSettings($settings);
 
     // Test that the overridden label is loaded with the entity.
-    $this->assertEqual(config_test_load('dotted.default')->label(), $overridden_label);
+    $this->assertEqual($config_test_storage->load('dotted.default')->label(), $overridden_label);
 
     // Test that the original label on the listing page is intact.
     $this->drupalGet('admin/structure/config_test');
@@ -67,7 +69,7 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
     $this->assertIdentical((string) $elements[0]['value'], $edited_label);
 
     // Test that the overridden label is still loaded with the entity.
-    $this->assertEqual(config_test_load('dotted.default')->label(), $overridden_label);
+    $this->assertEqual($config_test_storage->load('dotted.default')->label(), $overridden_label);
   }
 
 }
