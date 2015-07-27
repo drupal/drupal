@@ -94,6 +94,10 @@ class DialogTest extends AjaxTestBase {
     $this->drupalGet('ajax-test/dialog-contents');
     $this->assertRaw($dialog_contents, 'Non-JS modal dialog page present.');
 
+    // Check that requesting a modal dialog with XMLHttpRequest goes to a page.
+    $this->drupalGetXHR('ajax-test/dialog-contents');
+    $this->assertRaw($dialog_contents, 'Modal dialog page on XMLHttpRequest present.');
+
     // Emulate going to the JS version of the page and check the JSON response.
     $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal')));
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'Modal dialog JSON response matches.');

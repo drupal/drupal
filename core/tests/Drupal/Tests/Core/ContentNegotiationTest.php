@@ -73,7 +73,7 @@ class ContentNegotiationTest extends UnitTestCase {
     $request = new Request();
     $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
-    $this->assertSame('ajax', $this->contentNegotiation->getContentType($request));
+    $this->assertSame('html', $this->contentNegotiation->getContentType($request));
   }
 
 }

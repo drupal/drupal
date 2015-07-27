@@ -37,10 +37,6 @@ class ContentNegotiation {
       return $request->query->get('_format');
     }
 
-    if ($request->isXmlHttpRequest()) {
-      return 'ajax';
-    }
-
     // Do HTML last so that it always wins.
     return 'html';
   }
