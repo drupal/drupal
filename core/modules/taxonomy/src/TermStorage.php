@@ -318,23 +318,24 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function getNodeTerms($nids, $vocabs = array(), $langcode = NULL) {
+  public function getNodeTerms(array $nids, array $vocabs = array(), $langcode = NULL) {
     $query = db_select('taxonomy_term_field_data', 'td');
     $query->innerJoin('taxonomy_index', 'tn', 'td.tid = tn.tid');
     $query->fields('td', array('tid'));
     $query->addField('tn', 'nid', 'node_nid');
     $query->orderby('td.weight');
     $query->orderby('td.name');
-    $query->condition('tn.nid', $nids);
+    $query->condition('tn.nid', $nids, 'IN');
     $query->addTag('term_access');
     if (!empty($vocabs)) {
-      $query->condition('td.vid', $vocabs);
+      $query->condition('td.vid', $vocabs, 'IN');
     }
     if (!empty($langcode)) {
       $query->condition('td.langcode', $langcode);
     }
 
     $results = array();
+    $all_tids = array();
     foreach ($query->execute() as $term_record) {
       $results[$term_record->node_nid][] = $term_record->tid;
       $all_tids[] = $term_record->tid;
@@ -344,7 +345,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $terms = array();
     foreach ($results as $nid => $tids) {
       foreach ($tids as $tid) {
-        $terms[$nid][$tid] = $all_terms[$term_record->tid];
+        $terms[$nid][$tid] = $all_terms[$tid];
       }
     }
     return $terms;
