@@ -1,0 +1,5 @@
+name: 'Theme test with invalid core version'
+type: theme
+description: 'Test theme which has an invalid core version.'
+version: VERSION
+core: 7.x
