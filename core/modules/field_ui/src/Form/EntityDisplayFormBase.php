@@ -567,7 +567,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         if ($form_state->get('plugin_settings_update') === $field_name) {
           // Only store settings actually used by the selected plugin.
           $default_settings = $this->pluginManager->getDefaultSettings($options['type']);
-          $options['settings'] = array_intersect_key($values['settings_edit_form']['settings'], $default_settings);
+          $options['settings'] = isset($values['settings_edit_form']['settings']) ? array_intersect_key($values['settings_edit_form']['settings'], $default_settings) : [];
           $options['third_party_settings'] = isset($values['settings_edit_form']['third_party_settings']) ? $values['settings_edit_form']['third_party_settings'] : [];
           $form_state->set('plugin_settings_update', NULL);
         }

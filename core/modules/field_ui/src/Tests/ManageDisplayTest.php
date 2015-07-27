@@ -163,6 +163,11 @@ class ManageDisplayTest extends WebTestBase {
     $edit = array('fields[field_test][type]' => 'field_no_settings', 'refresh_rows' => 'field_test');
     $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
     $this->assertFieldByName('field_test_settings_edit');
+
+    // Make sure we can save the third party settings when there are no settings available
+    $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
+    $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
+
     // Uninstall the module providing third party settings and ensure the button
     // is no longer there.
     \Drupal::service('module_installer')->uninstall(array('field_third_party_test'));
