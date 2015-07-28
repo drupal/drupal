@@ -43,7 +43,7 @@ function template_preprocess_select(&$variables) {
 }
 
 /**
- * Converts an array of options into HTML, for use in select list form elements.
+ * Converts an options form element into a structured array for output.
  *
  * This function calls itself recursively to obtain the values for each optgroup
  * within the list of options and when the function encounters an object with
@@ -78,13 +78,22 @@ function template_preprocess_select(&$variables) {
  *   $element['#options'] above, or NULL. This parameter is only used internally
  *   and is not intended to be passed in to the initial function call.
  *
- * @return string
- *   An HTML string of options and optgroups for use in a select form element.
+ * @return mixed[]
+ *   A structured, possibly nested, array of options and optgroups for use in a
+ *   select form element.
+ *   - label: A translated string whose value is the text of a single HTML
+ *     option element, or the label attribute for an optgroup.
+ *   - options: Optional, array of options for an optgroup.
+ *   - selected: A boolean that indicates whether the option is selected when
+ *     rendered.
+ *   - type: A string that defines the element type. The value can be 'option'
+ *     or 'optgroup'.
+ *   - value: A string that contains the value attribute for the option.
  */
 function form_select_options($element, $choices = NULL) {
   if (!isset($choices)) {
     if (empty($element['#options'])) {
-      return '';
+      return [];
     }
     $choices = $element['#options'];
   }
@@ -94,29 +103,35 @@ function form_select_options($element, $choices = NULL) {
   $value_is_array = $value_valid && is_array($element['#value']);
   // Check if the element is multiple select and no value has been selected.
   $empty_value = (empty($element['#value']) && !empty($element['#multiple']));
-  $options = '';
+  $options = [];
   foreach ($choices as $key => $choice) {
     if (is_array($choice)) {
-      $options .= '<optgroup label="' . SafeMarkup::checkPlain($key) . '">';
-      $options .= form_select_options($element, $choice);
-      $options .= '</optgroup>';
+      $options[] = [
+        'type' => 'optgroup',
+        'label' => $key,
+        'options' => form_select_options($element, $choice),
+      ];
     }
     elseif (is_object($choice) && isset($choice->option)) {
-      $options .= form_select_options($element, $choice->option);
+      $options = array_merge($options, form_select_options($element, $choice->option));
     }
     else {
+      $option = [];
       $key = (string) $key;
       $empty_choice = $empty_value && $key == '_none';
       if ($value_valid && ((!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value']))) || $empty_choice)) {
-        $selected = ' selected="selected"';
+        $option['selected'] = TRUE;
       }
       else {
-        $selected = '';
+        $option['selected'] = FALSE;
       }
-      $options .= '<option value="' . SafeMarkup::checkPlain($key) . '"' . $selected . '>' . SafeMarkup::checkPlain($choice) . '</option>';
+      $option['type'] = 'option';
+      $option['value'] = $key;
+      $option['label'] = $choice;
+      $options[] = $option;
     }
   }
-  return SafeMarkup::set($options);
+  return $options;
 }
 
 /**
