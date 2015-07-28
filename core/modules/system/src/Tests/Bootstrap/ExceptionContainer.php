@@ -18,7 +18,12 @@ class ExceptionContainer extends Container {
    * {@inheritdoc}
    */
   public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE) {
-    throw new \Exception('Thrown exception during Container::get');
+    if ($id === 'http_kernel') {
+      throw new \Exception('Thrown exception during Container::get');
+    }
+    else {
+      return parent::get($id, $invalidBehavior);
+    }
   }
 
 }
