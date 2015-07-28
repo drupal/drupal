@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateContactCategoryTest.
+ * Contains \Drupal\contact\Tests\Migrate\d6\MigrateContactCategoryTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\contact\Tests\Migrate\d6;
 
 use Drupal\contact\Entity\ContactForm;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate contact categories to contact.form.*.yml.
  *
- * @group migrate_drupal
+ * @group contact
  */
 class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
 

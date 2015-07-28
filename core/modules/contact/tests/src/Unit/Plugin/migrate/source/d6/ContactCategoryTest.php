@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\ContactCategoryTest.
+ * Contains \Drupal\Tests\contact\Unit\Plugin\migrate\source\d6\ContactCategoryTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\contact\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 contact category source plugin.
  *
- * @group migrate_drupal
+ * @group contact
  */
 class ContactCategoryTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\ContactCategory';
+  const PLUGIN_CLASS = 'Drupal\contact\Plugin\migrate\source\d6\ContactCategory';
 
   protected $migrationConfiguration = array(
     'id' => 'test',

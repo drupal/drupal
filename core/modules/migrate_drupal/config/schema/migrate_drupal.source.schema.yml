@@ -146,17 +146,6 @@ migrate.source.d6_comment_variable:
       type: migrate_entity_constant
       label: 'Constants'
 
-migrate.source.d6_contact_settings:
-  type: migrate_source_sql
-  label: 'Drupal 6 contact settings'
-  mapping:
-    variables:
-      type: sequence
-      label: 'Variables'
-      sequence:
-        type: string
-        label: 'Variable'
-
 migrate.source.d6_view_mode:
   type: migrate_source_sql
   label: 'Drupal 6 view mode'

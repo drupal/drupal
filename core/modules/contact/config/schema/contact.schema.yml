@@ -43,3 +43,14 @@ contact.settings:
     user_default_enabled:
       type: boolean
       label: 'Personal contact form enabled by default'
+
+migrate.source.d6_contact_settings:
+  type: migrate_source_sql
+  label: 'Drupal 6 contact settings'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        type: string
+        label: 'Variable'

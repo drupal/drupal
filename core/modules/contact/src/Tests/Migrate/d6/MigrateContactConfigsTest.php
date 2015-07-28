@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateContactConfigsTest.
+ * Contains \Drupal\contact\Tests\Migrate\d6\MigrateContactConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\contact\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to contact.settings.yml.
  *
- * @group migrate_drupal
+ * @group contact
  */
 class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
 
