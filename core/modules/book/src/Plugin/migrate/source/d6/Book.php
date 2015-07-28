@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\Book.
+ * Contains \Drupal\book\Plugin\migrate\source\d6\Book.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\book\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 

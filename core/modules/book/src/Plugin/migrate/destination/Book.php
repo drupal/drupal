@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\Book.
+ * Contains \Drupal\book\Plugin\migrate\destination\Book.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\book\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
 
 /**

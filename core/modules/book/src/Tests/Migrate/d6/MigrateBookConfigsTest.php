@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateBookConfigsTest.
+ * Contains \Drupal\book\Tests\Migrate\d6\MigrateBookConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\book\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to book.settings.yml.
  *
- * @group migrate_drupal
+ * @group book
  */
 class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
 

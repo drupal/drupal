@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateBookTest.
+ * Contains \Drupal\book\Tests\Migrate\d6\MigrateBookTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\book\Tests\Migrate\d6;
 
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
 /**
  * Upgrade book structure.
  *
- * @group migrate_drupal
+ * @group book
  */
 class MigrateBookTest extends MigrateDrupal6TestBase {
 
