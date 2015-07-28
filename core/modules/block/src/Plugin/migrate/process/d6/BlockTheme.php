@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\BlockTheme.
+ * Contains \Drupal\block\Plugin\migrate\process\d6\BlockTheme.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\block\Plugin\migrate\process\d6;
 
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;

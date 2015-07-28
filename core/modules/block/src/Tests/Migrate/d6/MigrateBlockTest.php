@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateBlockTest.
+ * Contains \Drupal\block\Tests\Migrate\d6\MigrateBlockTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\block\Tests\Migrate\d6;
 
 use Drupal\block\Entity\Block;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade block settings to block.block.*.yml.
  *
- * @group migrate_drupal
+ * @group block
  */
 class MigrateBlockTest extends MigrateDrupal6TestBase {
 

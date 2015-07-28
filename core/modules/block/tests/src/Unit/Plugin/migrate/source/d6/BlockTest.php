@@ -2,23 +2,24 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\BlockTest.
+ * Contains \Drupal\Tests\block\Unit\Plugin\migrate\source\d6\BlockTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\block\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 block source plugin.
  *
- * @group migrate_drupal
+ * @coversDefaultClass \Drupal\block\Plugin\migrate\source\d6\Block
+ * @group block
  */
 class BlockTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Block';
+  const PLUGIN_CLASS = 'Drupal\block\Plugin\migrate\source\d6\Block';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
