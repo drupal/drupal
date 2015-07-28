@@ -106,7 +106,7 @@ class Crypt {
 
     $hmac = base64_encode(hash_hmac('sha256', $data, $key, TRUE));
     // Modify the hmac so it's safe to use in URLs.
-    return strtr($hmac, array('+' => '-', '/' => '_', '=' => ''));
+    return str_replace(['+', '/', '='], ['-', '_', ''], $hmac);
   }
 
   /**
@@ -122,7 +122,7 @@ class Crypt {
   public static function hashBase64($data) {
     $hash = base64_encode(hash('sha256', $data, TRUE));
     // Modify the hash so it's safe to use in URLs.
-    return strtr($hash, array('+' => '-', '/' => '_', '=' => ''));
+    return str_replace(['+', '/', '='], ['-', '_', ''], $hash);
   }
 
   /**
@@ -137,7 +137,7 @@ class Crypt {
    * @see \Drupal\Component\Utility\Crypt::randomBytes()
    */
   public static function randomBytesBase64($count = 32) {
-    return strtr(base64_encode(static::randomBytes($count)), array('+' => '-', '/' => '_', '=' => ''));
+    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(static::randomBytes($count)));
   }
 
 }
