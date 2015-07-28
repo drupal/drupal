@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSyslogConfigsTest.
+ * Contains \Drupal\syslog\Tests\Migrate\d6\MigrateSyslogConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\syslog\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to syslog.settings.yml.
  *
- * @group migrate_drupal
+ * @group syslog
  */
 class MigrateSyslogConfigsTest extends MigrateDrupal6TestBase {
 
