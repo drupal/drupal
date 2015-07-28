@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateDblogConfigsTest.
+ * Contains \Drupal\dblog\Tests\Migrate\d6\MigrateDblogConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\dblog\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to dblog.settings.yml.
  *
- * @group migrate_drupal
+ * @group dblog
  */
 class MigrateDblogConfigsTest extends MigrateDrupal6TestBase {
 
