@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Implements hook_requirements().
  */
 function system_requirements($phase) {
+  global $install_state;
   $requirements = array();
 
   // Report Drupal version
@@ -57,6 +58,80 @@ function system_requirements($phase) {
     'title' => t('Web server'),
     'value' => $software,
   );
+
+  // Tests clean URL support.
+  if ($phase == 'install' && $install_state['interactive'] && !isset($_GET['rewrite']) && strpos($software, 'Apache') !== FALSE) {
+    // If the Apache rewrite module is not enabled, Apache version must be >=
+    // 2.2.16 because of the FallbackResource directive in the root .htaccess
+    // file. Since the Apache version reported by the server is dependent on the
+    // ServerTokens setting in httpd.conf, we may not be able to determine if a
+    // given config is valid. Thus we are unable to use version_compare() as we
+    // need have three possible outcomes: the version of Apache is greater than
+    // 2.2.16, is less than 2.2.16, or cannot be determined accurately. In the
+    // first case, we encourage the use of mod_rewrite; in the second case, we
+    // raise an error regarding the minimum Apache version; in the third case,
+    // we raise a warning that the current version of Apache may not be
+    // supported.
+    $rewrite_warning = FALSE;
+    $rewrite_error = FALSE;
+    $apache_version_string = 'Apache';
+
+    // Determine the Apache version number: major, minor and revision.
+    if (preg_match('/Apache\/(\d+)\.?(\d+)?\.?(\d+)?/', $software, $matches)) {
+      $apache_version_string = $matches[0];
+
+      // Major version number
+      if ($matches[1] < 2) {
+        $rewrite_error = TRUE;
+      }
+      else if ($matches[1] == 2) {
+        if (!isset($matches[2])) {
+          $rewrite_warning = TRUE;
+        }
+        else if ($matches[2] < 2) {
+          $rewrite_error = TRUE;
+        }
+        else if ($matches[2] == 2) {
+          if (!isset($matches[3])) {
+            $rewrite_warning = TRUE;
+          }
+          else if ($matches[3] < 16) {
+            $rewrite_error = TRUE;
+          }
+        }
+      }
+    }
+    else {
+      $rewrite_warning = TRUE;
+    }
+
+    if ($rewrite_warning) {
+      $requirements['apache_version'] = array (
+        'title' => t('Apache version'),
+        'value' => $apache_version_string,
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('Due to the settings for ServerTokens in httpd.conf, it is impossible to accurately determine the version of Apache running on this server. The reported value is @reported, to run Drupal without mod_rewrite, a minimum version of 2.2.16 is needed.', array('@reported' => $apache_version_string)),
+      );
+    }
+
+    if ($rewrite_error) {
+      $requirements['Apache version'] = array (
+        'title' => t('Apache version'),
+        'value' => $apache_version_string,
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href="@link">enabling clean URLs</a> page for more information on mod_rewrite.', array('@link' => 'http://drupal.org/node/15365')),
+      );
+    }
+
+    if (!$rewrite_error && !$rewrite_warning) {
+      $requirements['rewrite_module'] = array (
+        'title' => t('Clean URLs'),
+        'value' => t('Disabled'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href="@link">Enable clean URLs</a>', array('@link' => 'http://drupal.org/node/15365')),
+      );
+    }
+  }
 
   // Test PHP version and show link to phpinfo() if it's available
   $phpversion = $phpversion_label = phpversion();
