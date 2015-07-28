@@ -187,7 +187,7 @@ class Html {
    * @see self::getUniqueId()
    */
   public static function getId($id) {
-    $id = strtr(Unicode::strtolower($id), array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+    $id = str_replace([' ', '_', '[', ']'], ['-', '-', '-', ''], Unicode::strtolower($id));
 
     // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
     // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
