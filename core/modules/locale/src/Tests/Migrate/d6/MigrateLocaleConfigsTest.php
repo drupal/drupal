@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateLocaleConfigsTest.
+ * Contains \Drupal\locale\Tests\Migrate\d6\MigrateLocaleConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\locale\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to locale.settings.yml.
  *
- * @group migrate_drupal
+ * @group locale
  */
 class MigrateLocaleConfigsTest extends MigrateDrupal6TestBase {
 
