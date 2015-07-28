@@ -16,3 +16,15 @@ block_content.type.*:
     description:
       type: text
       label: 'Description'
+
+migrate.source.d6_box:
+  type: migrate_source_sql
+  label: 'Drupal 6 box'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        type:
+          type: string
+          label: 'Type'

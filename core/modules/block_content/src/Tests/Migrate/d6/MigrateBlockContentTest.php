@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateBlockContentTest.
+ * Contains \Drupal\block_content\Tests\Migrate\d6\MigrateBlockContentTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\block_content\Tests\Migrate\d6;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade custom blocks.
  *
- * @group migrate_drupal
+ * @group block_content
  */
 class MigrateBlockContentTest extends MigrateDrupal6TestBase {
 

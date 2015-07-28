@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\BoxTest.
+ * Contains \Drupal\Tests\block_content\Unit\Plugin\migrate\source\d6\BoxTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\block_content\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 block boxes source plugin.
  *
- * @group migrate_drupal
+ * @group block_content
  */
 class BoxTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Box';
+  const PLUGIN_CLASS = 'Drupal\block_content\Plugin\migrate\source\d6\Box';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(

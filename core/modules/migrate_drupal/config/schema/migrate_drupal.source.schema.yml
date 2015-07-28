@@ -67,18 +67,6 @@ migrate.source.d6_comment_entity_form_display_subject:
       type: migrate_entity_constant
       label: 'Constants'
 
-migrate.source.d6_box:
-  type: migrate_source_sql
-  label: 'Drupal 6 box'
-  mapping:
-    constants:
-      type: mapping
-      label: 'Constants'
-      mapping:
-        type:
-          type: string
-          label: 'Type'
-
 migrate.source.d6_field_instance_per_form_display:
   type: migrate_source_sql
   label: 'Drupal 6 field instance form display'
