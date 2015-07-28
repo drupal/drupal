@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\MenuLinkSourceTest.
+ * Contains \Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source\d6\MenuLinkSourceTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 menu link source plugin.
  *
- * @group migrate_drupal
+ * @group menu_link_content
  */
 class MenuLinkSourceTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\MenuLink';
+  const PLUGIN_CLASS = 'Drupal\menu_link_content\Plugin\migrate\source\d6\MenuLink';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(

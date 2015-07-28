@@ -1,0 +1,7 @@
+migrate.source.d6_menu_link:
+  type: migrate_source_sql
+  label: 'Drupal 6 menu link'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'

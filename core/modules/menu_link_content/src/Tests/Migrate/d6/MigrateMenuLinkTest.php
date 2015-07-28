@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateMenuLinkTest.
+ * Contains \Drupal\menu_link_content\Tests\Migrate\d6\MigrateMenuLinkTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\menu_link_content\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Menu link migration.
  *
- * @group migrate_drupal
+ * @group menu_link_content
  */
 class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
 
