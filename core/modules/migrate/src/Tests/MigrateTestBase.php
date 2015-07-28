@@ -45,6 +45,13 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected $migrateMessages;
 
+  /**
+   * The primary migration being tested.
+   *
+   * @var \Drupal\migrate\Entity\MigrationInterface
+   */
+  protected $migration;
+
   public static $modules = array('migrate');
 
   /**
@@ -132,12 +139,15 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected function executeMigration($migration) {
     if (is_string($migration)) {
-      $migration = Migration::load($migration);
+      $this->migration = Migration::load($migration);
+    }
+    else {
+      $this->migration = $migration;
     }
     if ($this instanceof MigrateDumpAlterInterface) {
       static::migrateDumpAlter($this);
     }
-    (new MigrateExecutable($migration, $this))->import();
+    (new MigrateExecutable($this->migration, $this))->import();
   }
 
   /**

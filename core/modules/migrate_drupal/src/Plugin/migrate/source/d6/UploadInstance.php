@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
 /**
  * Drupal 6 upload instance source from database.
@@ -18,6 +19,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * )
  */
 class UploadInstance extends DrupalSqlBase {
+
+  use DummyQueryTrait;
 
   /**
    * {@inheritdoc}
@@ -63,19 +66,19 @@ class UploadInstance extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {
-    // Nothing needed here.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fields() {
     return array(
       'node_type' => $this->t('Node type'),
       'max_filesize' => $this->t('Max filesize'),
       'file_extensions' => $this->t('File extensions'),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function count() {
+    return count($this->initializeIterator());
   }
 
 }

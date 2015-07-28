@@ -59,6 +59,13 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   protected $expectedResults = array();
 
   /**
+   * Expected count of source rows.
+   *
+   * @var int
+   */
+  protected $expectedCount = 0;
+
+  /**
    * The source plugin instance under test.
    *
    * @var \Drupal\migrate\Plugin\MigrateSourceInterface
@@ -97,6 +104,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
       ->method('getSourcePlugin')
       ->will($this->returnValue($plugin));
     $this->source = $plugin;
+    $this->expectedCount = count($this->expectedResults);
   }
 
   /**
@@ -104,6 +112,13 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    */
   public function testRetrieval() {
     $this->queryResultTest($this->source, $this->expectedResults);
+  }
+
+  /**
+   * Test the source returns the row count expected.
+   */
+  public function testSourceCount() {
+    $this->assertEquals($this->source->count(), $this->expectedCount);
   }
 
   /**

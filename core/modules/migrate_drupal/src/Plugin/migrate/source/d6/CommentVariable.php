@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
 /**
  * @MigrateSource(
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * )
  */
 class CommentVariable extends DrupalSqlBase {
+
+  use DummyQueryTrait;
 
   /**
    * {@inheritdoc}
@@ -90,13 +93,6 @@ class CommentVariable extends DrupalSqlBase {
       'comment_preview' => $this->t('Preview comment'),
       'comment_form_location' => $this->t('Location of comment submission form'),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
-    // Nothing to do here.
   }
 
   /**

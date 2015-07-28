@@ -10,6 +10,8 @@ namespace Drupal\migrate_drupal\Tests;
 use Drupal\migrate\Tests\MigrateTestBase;
 use Drupal\migrate\Entity\Migration;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\migrate\Plugin\migrate\source\SqlBase;
+use Drupal\Core\Database\Query\SelectInterface;
 
 /**
  * Base class for Drupal migration tests.
@@ -74,4 +76,21 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
       }
     }
   }
+
+  /**
+   * Test that the source plugin provides a valid query and a valid count.
+   */
+  public function testSourcePlugin() {
+    if (isset($this->migration)) {
+      $source = $this->migration->getSourcePlugin();
+      // Make sure a SqlBase source has a valid query.
+      if ($source instanceof SqlBase) {
+        /** @var SqlBase $source */
+        $this->assertTrue($source->query() instanceof SelectInterface, 'SQL source plugin has valid query');
+      }
+      // Validate that any source returns a valid count.
+      $this->assertTrue(is_numeric($source->count()), 'Source plugin returns valid count');
+    }
+  }
+
 }

@@ -23,5 +23,8 @@ class TermSourceWithVocabularyFilterTest extends TermTestBase {
     $this->expectedResults = array_values(array_filter($this->expectedResults, function($result) {
       return $result['vid'] == 5;
     }));
+    // We know there are two rows with vid == 5.
+    $this->expectedCount = 2;
   }
+
 }

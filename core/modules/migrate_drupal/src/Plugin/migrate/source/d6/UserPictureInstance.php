@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
 /**
  * Drupal 6 user picture field instance source.
@@ -20,6 +21,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  */
 class UserPictureInstance extends DrupalSqlBase {
 
+  use DummyQueryTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -31,6 +34,15 @@ class UserPictureInstance extends DrupalSqlBase {
         'max_filesize' => $this->variableGet('user_picture_file_size', '30') . 'KB',
         'max_resolution' => $this->variableGet('user_picture_dimensions', '85x85'),
       )));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function count() {
+    // This source provides a single row, corresponding to a single picture
+    // field to be added to the user entity.
+    return 1;
   }
 
   /**
@@ -50,13 +62,6 @@ class UserPictureInstance extends DrupalSqlBase {
   public function getIds() {
     $ids['id']['type'] = 'string';
     return $ids;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
-    // Nothing to do here.
   }
 
 }
