@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateActionConfigsTest.
+ * Contains \Drupal\action\Tests\Migrate\d6\MigrateActionConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\action\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to action.settings.yml.
  *
- * @group migrate_drupal
+ * @group action
  */
 class MigrateActionConfigsTest extends MigrateDrupal6TestBase {
 
