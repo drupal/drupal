@@ -36,6 +36,11 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
 
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
+      'd6_node_type' => array(
+        array(array('article'), array('article')),
+        array(array('page'), array('page')),
+        array(array('story'), array('story')),
+      ),
       'd6_taxonomy_vocabulary' => array(
         array(array(4), array('tags')),
       ),

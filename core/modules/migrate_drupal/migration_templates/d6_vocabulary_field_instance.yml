@@ -22,4 +22,5 @@ destination:
   plugin: entity:field_config
 migration_dependencies:
   required:
+    - d6_node_type
     - d6_vocabulary_field
