@@ -80,6 +80,13 @@ following the instructions in the INTRODUCTION section at the top of this file:
      database information, and you will also want to copy in any other
      customizations you have added.
 
+     You can find the release notes for your version at
+     https://www.drupal.org/project/drupal. At bottom of the project page under
+     "Downloads" use the link for your version of Drupal to view the release
+     notes. If your version is not listed, use the 'View all releases' link.
+     From this page you can scroll down or use the filter to find your version
+     and its release notes.
+
 4. Download the latest Drupal 8.x release from https://www.drupal.org to a
    directory outside of your web root. Extract the archive and copy the files
    into your Drupal directory.
