@@ -7,54 +7,13 @@
 
 namespace Drupal\views\Routing;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\Plugin\views\display\Page;
-use Drupal\views\ViewExecutableFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a page controller to execute and render a view.
  */
-class ViewPageController implements ContainerInjectionInterface {
-
-  /**
-   * The entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
-   * The view executable factory.
-   *
-   * @var \Drupal\views\ViewExecutableFactory
-   */
-  protected $executableFactory;
-
-  /**
-   * Constructs a ViewPageController object.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage.
-   * @param \Drupal\views\ViewExecutableFactory $executable_factory
-   *   The view executable factory
-   */
-  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory) {
-    $this->storage = $storage;
-    $this->executableFactory = $executable_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager')->getStorage('view'),
-      $container->get('views.executable')
-    );
-  }
+class ViewPageController {
 
   /**
    * Handler a response for a given view and display.

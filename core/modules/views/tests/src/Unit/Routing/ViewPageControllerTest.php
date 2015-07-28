@@ -13,7 +13,6 @@ use Drupal\views\Routing\ViewPageController;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -30,20 +29,6 @@ class ViewPageControllerTest extends UnitTestCase {
   public $pageController;
 
   /**
-   * The mocked view storage.
-   *
-   * @var \Drupal\views\ViewStorage|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $storage;
-
-  /**
-   * The mocked view executable factory.
-   *
-   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $executableFactory;
-
-  /**
    * A render array expected for every page controller render array result.
    *
    * @var array
@@ -56,23 +41,13 @@ class ViewPageControllerTest extends UnitTestCase {
   ];
 
   protected function setUp() {
-    $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $this->pageController = new ViewPageController($this->storage, $this->executableFactory);
+    $this->pageController = new ViewPageController();
   }
 
   /**
    * Tests the page controller.
    */
   public function testPageController() {
-    $this->storage->expects($this->never())
-      ->method('load');
-
     $build = [
       '#type' => 'view',
       '#name' => 'test_page_view',
@@ -102,9 +77,6 @@ class ViewPageControllerTest extends UnitTestCase {
    * Tests the page controller with arguments on a non overridden page view.
    */
   public function testHandleWithArgumentsWithoutOverridden() {
-    $this->storage->expects($this->never())
-      ->method('load');
-
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -139,9 +111,6 @@ class ViewPageControllerTest extends UnitTestCase {
    * Note: This test does not care about upcasting for now.
    */
   public function testHandleWithArgumentsOnOverriddenRoute() {
-    $this->storage->expects($this->never())
-      ->method('load');
-
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -179,9 +148,6 @@ class ViewPageControllerTest extends UnitTestCase {
    * are pulled in.
    */
   public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting() {
-    $this->storage->expects($this->never())
-      ->method('load');
-
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
