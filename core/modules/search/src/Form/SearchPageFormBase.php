@@ -112,6 +112,7 @@ abstract class SearchPageFormBase extends EntityForm {
       '#field_prefix' => 'search/',
       '#default_value' => $this->entity->getPath(),
       '#maxlength' => '255',
+      '#required' => TRUE,
     );
     $form['plugin'] = array(
       '#type' => 'value',
