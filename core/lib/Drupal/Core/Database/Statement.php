@@ -41,6 +41,9 @@ class Statement extends \PDOStatement implements StatementInterface {
     $this->setFetchMode(\PDO::FETCH_OBJ);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute($args = array(), $options = array()) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
@@ -68,14 +71,23 @@ class Statement extends \PDOStatement implements StatementInterface {
     return $return;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getQueryString() {
     return $this->queryString;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchCol($index = 0) {
     return $this->fetchAll(\PDO::FETCH_COLUMN, $index);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAllAssoc($key, $fetch = NULL) {
     $return = array();
     if (isset($fetch)) {
@@ -95,6 +107,9 @@ class Statement extends \PDOStatement implements StatementInterface {
     return $return;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
     $return = array();
     $this->setFetchMode(\PDO::FETCH_NUM);
@@ -104,11 +119,17 @@ class Statement extends \PDOStatement implements StatementInterface {
     return $return;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchField($index = 0) {
     // Call \PDOStatement::fetchColumn to fetch the field.
     return $this->fetchColumn($index);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAssoc() {
     // Call \PDOStatement::fetch to fetch the row.
     return $this->fetch(\PDO::FETCH_ASSOC);
@@ -124,6 +145,44 @@ class Statement extends \PDOStatement implements StatementInterface {
     }
     else {
       throw new RowCountException();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFetchMode($mode, $a1 = NULL, $a2 = array()) {
+    // Call \PDOStatement::setFetchMode to set fetch mode.
+    // \PDOStatement is picky about the number of arguments in some cases so we
+    // need to be pass the exact number of arguments we where given.
+    switch (func_num_args()) {
+      case 1:
+        return parent::setFetchMode($mode);
+      case 2:
+        return parent::setFetchMode($mode, $a1);
+      case 3:
+      default:
+        return parent::setFetchMode($mode, $a1, $a2);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
+    // Call \PDOStatement::fetchAll to fetch all rows.
+    // \PDOStatement is picky about the number of arguments in some cases so we
+    // need to be pass the exact number of arguments we where given.
+    switch (func_num_args()) {
+      case 0:
+        return parent::fetchAll();
+      case 1:
+        return parent::fetchAll($mode);
+      case 2:
+        return parent::fetchAll($mode, $column_index);
+      case 3:
+      default:
+        return parent::fetchAll($mode, $column_index, $constructor_arguments);
     }
   }
 
