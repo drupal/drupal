@@ -688,8 +688,14 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   $library_dependency_resolver = \Drupal::service('library.dependency_resolver');
   if (isset($settings['ajaxPageState']) || in_array('core/drupal.ajax', $library_dependency_resolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()))) {
     if (!defined('MAINTENANCE_MODE')) {
-      $settings['ajaxPageState']['theme_token'] = \Drupal::csrfToken()
-        ->get(\Drupal::theme()->getActiveTheme()->getName());
+      // The theme token is only validated when the theme requested is not the
+      // default, so don't generate it unless necessary.
+      // @see \Drupal\Core\Theme\AjaxBasePageNegotiator::determineActiveTheme()
+      $active_theme_key = \Drupal::theme()->getActiveTheme()->getName();
+      if ($active_theme_key !== \Drupal::service('theme_handler')->getDefault()) {
+        $settings['ajaxPageState']['theme_token'] = \Drupal::csrfToken()
+          ->get($active_theme_key);
+      }
     }
   }
 }
