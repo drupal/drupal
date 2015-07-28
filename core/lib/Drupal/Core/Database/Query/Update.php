@@ -17,6 +17,8 @@ use Drupal\Core\Database\Connection;
  */
 class Update extends Query implements ConditionInterface {
 
+  use QueryConditionTrait;
+
   /**
    * The table to update.
    *
@@ -37,15 +39,6 @@ class Update extends Query implements ConditionInterface {
    * @var array
    */
   protected $arguments = array();
-
-  /**
-   * The condition object for this query.
-   *
-   * Condition handling is handled via composition.
-   *
-   * @var \Drupal\Core\Database\Query\Condition
-   */
-  protected $condition;
 
   /**
    * Array of fields to update to an expression in case of a duplicate record.
@@ -78,82 +71,6 @@ class Update extends Query implements ConditionInterface {
     $this->table = $table;
 
     $this->condition = new Condition('AND');
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
-   */
-  public function condition($field, $value = NULL, $operator = '=') {
-    $this->condition->condition($field, $value, $operator);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
-   */
-  public function isNull($field) {
-    $this->condition->isNull($field);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
-   */
-  public function isNotNull($field) {
-    $this->condition->isNotNull($field);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
-   */
-  public function exists(SelectInterface $select) {
-    $this->condition->exists($select);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
-   */
-  public function notExists(SelectInterface $select) {
-    $this->condition->notExists($select);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
-   */
-  public function &conditions() {
-    return $this->condition->conditions();
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
-   */
-  public function arguments() {
-    return $this->condition->arguments();
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
-   */
-  public function where($snippet, $args = array()) {
-    $this->condition->where($snippet, $args);
-    return $this;
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
-   */
-  public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
-    return $this->condition->compile($connection, $queryPlaceholder);
-  }
-
-  /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
-   */
-  public function compiled() {
-    return $this->condition->compiled();
   }
 
   /**

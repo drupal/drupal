@@ -18,6 +18,8 @@ use Drupal\Core\Database\Connection;
  */
 class Select extends Query implements SelectInterface {
 
+  use QueryConditionTrait;
+
   /**
    * The fields to SELECT.
    *
@@ -70,13 +72,6 @@ class Select extends Query implements SelectInterface {
    * @var array
    */
   protected $group = array();
-
-  /**
-   * The conditional object for the WHERE clause.
-   *
-   * @var \Drupal\Core\Database\Query\Condition
-   */
-  protected $where;
 
   /**
    * The conditional object for the HAVING clause.
@@ -139,7 +134,7 @@ class Select extends Query implements SelectInterface {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
-    $this->where = new Condition($conjunction);
+    $this->condition = new Condition($conjunction);
     $this->having = new Condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
   }
@@ -191,27 +186,12 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function condition($field, $value = NULL, $operator = '=') {
-    $this->where->condition($field, $value, $operator);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function &conditions() {
-    return $this->where->conditions();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function arguments() {
     if (!$this->compiled()) {
       return NULL;
     }
 
-    $args = $this->where->arguments() + $this->having->arguments();
+    $args = $this->condition->arguments() + $this->having->arguments();
 
     foreach ($this->tables as $table) {
       if ($table['arguments']) {
@@ -241,48 +221,8 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function where($snippet, $args = array()) {
-    $this->where->where($snippet, $args);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isNull($field) {
-    $this->where->isNull($field);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isNotNull($field) {
-    $this->where->isNotNull($field);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function exists(SelectInterface $select) {
-    $this->where->exists($select);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function notExists(SelectInterface $select) {
-    $this->where->notExists($select);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
-    $this->where->compile($connection, $queryPlaceholder);
+    $this->condition->compile($connection, $queryPlaceholder);
     $this->having->compile($connection, $queryPlaceholder);
 
     foreach ($this->tables as $table) {
@@ -302,7 +242,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function compiled() {
-    if (!$this->where->compiled() || !$this->having->compiled()) {
+    if (!$this->condition->compiled() || !$this->having->compiled()) {
       return FALSE;
     }
 
@@ -892,9 +832,9 @@ class Select extends Query implements SelectInterface {
     }
 
     // WHERE
-    if (count($this->where)) {
+    if (count($this->condition)) {
       // There is an implicit string cast on $this->condition.
-      $query .= "\nWHERE " . $this->where;
+      $query .= "\nWHERE " . $this->condition;
     }
 
     // GROUP BY
@@ -950,7 +890,7 @@ class Select extends Query implements SelectInterface {
     // want to clone the database connection object as that would duplicate the
     // connection itself.
 
-    $this->where = clone($this->where);
+    $this->condition = clone($this->condition);
     $this->having = clone($this->having);
     foreach ($this->union as $key => $aggregate) {
       $this->union[$key]['query'] = clone($aggregate['query']);

@@ -180,25 +180,4 @@ abstract class Query implements PlaceholderInterface {
     return $this->comments;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function conditionGroupFactory($conjunction = 'AND') {
-    return new Condition($conjunction);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function andConditionGroup() {
-    return $this->conditionGroupFactory('AND');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function orConditionGroup() {
-    return $this->conditionGroupFactory('OR');
-  }
-
 }
