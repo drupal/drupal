@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\SearchConfigurationRankings.
+ * Contains \Drupal\search\Plugin\migrate\process\d6\SearchConfigurationRankings.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\search\Plugin\migrate\process\d6;
 
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;

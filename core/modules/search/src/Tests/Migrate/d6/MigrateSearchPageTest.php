@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSearchPageTest.
+ * Contains \Drupal\search\Tests\Migrate\d6\MigrateSearchPageTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\search\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade search rank settings to search.page.*.yml.
  *
- * @group migrate_drupal
+ * @group search
  */
 class MigrateSearchPageTest extends MigrateDrupal6TestBase {
 

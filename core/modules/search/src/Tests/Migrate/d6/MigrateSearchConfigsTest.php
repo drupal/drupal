@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSearchConfigsTest.
+ * Contains \Drupal\search\Tests\d6\Migrate\SearchConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\search\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to search.settings.yml.
  *
- * @group migrate_drupal
+ * @group search
  */
 class MigrateSearchConfigsTest extends MigrateDrupal6TestBase {
 

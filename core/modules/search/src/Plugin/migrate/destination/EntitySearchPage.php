@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntitySearchPage.
+ * Contains \Drupal\search\Plugin\migrate\destination\EntitySearchPage.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\search\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**
