@@ -111,7 +111,7 @@ class CacheContextOptimizationTest extends KernelTestBase {
 
     // Even though the cache contexts have been optimized to only include 'user'
     // cache context, the element should have been changed because 'user.roles'
-    // cache context defined a cache tag for user entity changes23, which should
+    // cache context defined a cache tag for user entity changes, which should
     // have bubbled up for the element when it was optimized away.
     $authenticated_user->removeRole($role);
     $authenticated_user->save();
