@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSystemImageGdTest.
+ * Contains \Drupal\system\Tests\Migrate\d6\MigrateSystemImageGdTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\system\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade image gd variables to system.*.yml.
  *
- * @group migrate_drupal
+ * @group system
  */
 class MigrateSystemImageGdTest extends MigrateDrupal6TestBase {
 

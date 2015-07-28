@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateDateFormatTest.
+ * Contains \Drupal\system\Tests\Migrate\d6\MigrateDateFormatTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\system\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade date formats to core.date_format.*.yml.
  *
- * @group migrate_drupal
+ * @group system
  */
 class MigrateDateFormatTest extends MigrateDrupal6TestBase {
 

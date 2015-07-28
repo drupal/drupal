@@ -2,19 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateMenuTest.
+ * Contains \Drupal\system\Tests\Migrate\d6\MigrateMenuTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\system\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\system\Entity\Menu;
 
 /**
  * Upgrade menus to system.menu.*.yml.
  *
- * @group migrate_drupal
+ * @group system
  */
 class MigrateMenuTest extends MigrateDrupal6TestBase {
 

@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSystemFileTest.
+ * Contains \Drupal\system\Tests\Migrate\d6\MigrateSystemFileTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\system\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to system.*.yml.
  *
- * @group migrate_drupal
+ * @group system
  */
 class MigrateSystemFileTest extends MigrateDrupal6TestBase {
 

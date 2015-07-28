@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSystemLoggingTest.
+ * Contains \Drupal\system\Tests\Migrate\d6\MigrateSystemLoggingTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\system\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade error_level variable to system.logging.yml.
  *
- * @group migrate_drupal
+ * @group system
  */
 class MigrateSystemLoggingTest extends MigrateDrupal6TestBase {
 
