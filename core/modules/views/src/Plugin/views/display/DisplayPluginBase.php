@@ -2115,13 +2115,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function getMenuLinks() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function render() {
     $rows = (!empty($this->view->result) || $this->view->style_plugin->evenEmpty()) ? $this->view->style_plugin->render($this->view->result) : array();
 
@@ -2475,18 +2468,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function remove() {
-    $menu_links = $this->getMenuLinks();
-    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
-    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-    foreach ($menu_links as $menu_link_id => $menu_link) {
-      $menu_link_manager->removeDefinition("views_view:$menu_link_id");
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isIdentifierUnique($id, $identifier) {
     foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $key => $handler) {
@@ -2609,6 +2590,13 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
       call_user_func($definition['merge_defaults'], $type);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function remove() {
+
   }
 
   /**

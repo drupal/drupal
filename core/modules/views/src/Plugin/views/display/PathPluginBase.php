@@ -29,7 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @see \Drupal\views\EventSubscriber\RouteSubscriber
  */
-abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface {
+abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface, DisplayMenuInterface {
 
   use UrlGeneratorTrait;
 
@@ -519,6 +519,18 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    */
   public function getAlteredRouteNames() {
     return $this->state->get('views.view_route_names') ?: array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function remove() {
+    $menu_links = $this->getMenuLinks();
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    foreach ($menu_links as $menu_link_id => $menu_link) {
+      $menu_link_manager->removeDefinition("views_view:$menu_link_id");
+    }
   }
 
 }

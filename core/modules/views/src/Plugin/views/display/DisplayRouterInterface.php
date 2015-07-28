@@ -71,4 +71,5 @@ interface DisplayRouterInterface extends DisplayPluginInterface {
    * @see \Drupal\views\Plugin\views\display\DisplayRouterInterface::alterRoutes()
    */
   public function getAlteredRouteNames();
+
 }

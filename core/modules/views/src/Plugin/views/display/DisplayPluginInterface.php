@@ -382,16 +382,6 @@ interface DisplayPluginInterface {
   public function renderMoreLink();
 
   /**
-   * Gets menu links, if this display provides some.
-   *
-   * @return array
-   *   The menu links registers for this display.
-   *
-   * @see \Drupal\views\Plugin\Derivative\ViewsMenuLink
-   */
-  public function getMenuLinks();
-
-  /**
    * Renders this display.
    */
   public function render();
