@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\FilterFormat.
+ * Contains \Drupal\filter\Plugin\migrate\source\d6\FilterFormat.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\filter\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;

@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFilterFormatTest.
+ * Contains \Drupal\filter\Tests\Migrate\d6\MigrateFilterFormatTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\filter\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to filter.formats.*.yml.
  *
- * @group migrate_drupal
+ * @group filter
  */
 class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
 

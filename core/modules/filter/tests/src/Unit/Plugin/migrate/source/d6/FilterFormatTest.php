@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\FilterFormatTest.
+ * Contains \Drupal\Tests\filter\Unit\Plugin\migrate\source\d6\FilterFormatTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\filter\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 filter_formats table source plugin.
  *
- * @group migrate_drupal
+ * @group filter
  */
 class FilterFormatTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\FilterFormat';
+  const PLUGIN_CLASS = 'Drupal\filter\Plugin\migrate\source\d6\FilterFormat';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
