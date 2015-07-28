@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTaxonomyVocabularyTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTaxonomyVocabularyTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate taxonomy vocabularies to taxonomy.vocabulary.*.yml.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
 

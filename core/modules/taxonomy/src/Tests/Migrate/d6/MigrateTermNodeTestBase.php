@@ -2,13 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTermNodeTestBase.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTermNodeTestBase.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Base class for Taxonomy/Node migration tests.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\VocabularyPerType.
+ * Contains \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
 /**
  * Gets all the vocabularies based on the node types that have Taxonomy enabled.

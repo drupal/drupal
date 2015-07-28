@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityTaxonomyTerm.
+ * Contains \Drupal\taxonomy\Plugin\migrate\destination\EntityTaxonomyTerm.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\taxonomy\Plugin\migrate\destination;
 
 use Drupal\migrate\Row;
+use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 
 /**
  * @MigrateDestination(

@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTaxonomyTermTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTaxonomyTermTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\taxonomy\Entity\Term;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade taxonomy terms.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
 

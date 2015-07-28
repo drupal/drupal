@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTermNodeRevisionTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTermNodeRevisionTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 
 /**
  * Upgrade taxonomy term node associations.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class MigrateTermNodeRevisionTest extends MigrateTermNodeTestBase {
 

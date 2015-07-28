@@ -1,0 +1,25 @@
+# Schema for the migration source plugins.
+
+migrate.source.d6_taxonomy_vocabulary:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_taxonomy_vocabulary_per_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_taxonomy_vocabulary_per_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 field instance form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'

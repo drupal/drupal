@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateVocabularyFieldTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateVocabularyFieldTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Vocabulary field migration.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
 

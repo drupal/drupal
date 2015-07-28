@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\load\d6\LoadTermNode.
+ * Contains \Drupal\taxonomy\Plugin\migrate\load\d6\LoadTermNode.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\load\d6;
+namespace Drupal\taxonomy\Plugin\migrate\load\d6;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\Entity\MigrationInterface;

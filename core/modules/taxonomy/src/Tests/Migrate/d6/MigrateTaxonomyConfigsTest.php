@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTaxonomyConfigsTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTaxonomyConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to taxonomy.settings.yml.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class MigrateTaxonomyConfigsTest extends MigrateDrupal6TestBase {
 

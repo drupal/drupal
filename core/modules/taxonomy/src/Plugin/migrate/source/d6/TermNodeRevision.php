@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\TermNodeRevision.
+ * Contains \Drupal\taxonomy\Plugin\migrate\source\d6\TermNodeRevision.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
 /**
  * Source returning tids from the term_node table for the non-current revision.

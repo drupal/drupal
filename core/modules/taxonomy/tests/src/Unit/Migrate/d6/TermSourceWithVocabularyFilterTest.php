@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\TermSourceWithVocabularyFilterTest.
+ * Contains \Drupal\Tests\taxonomy\Unit\Migrate\d6\TermSourceWithVocabularyFilterTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\taxonomy\Unit\Migrate\d6;
 
 /**
  * Tests the Drupal 6 taxonomy term source with vocabulary filter.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class TermSourceWithVocabularyFilterTest extends TermTestBase {
 

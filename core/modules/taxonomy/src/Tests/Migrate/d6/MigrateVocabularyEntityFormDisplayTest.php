@@ -2,24 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateVocabularyEntityDisplayTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateVocabularyEntityFormDisplayTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
- * Vocabulary entity display migration.
+ * Vocabulary entity form display migration.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
-class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
+class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.
    *
    * @var array
    */
-  static $modules = array('field', 'node', 'taxonomy', 'text', 'entity_reference');
+  static $modules = array('node', 'taxonomy', 'field', 'text', 'entity_reference');
 
   /**
    * {@inheritdoc}
@@ -45,15 +47,15 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
         'entity_type' => 'node',
         'bundle' => $type,
         'required' => 1,
-          'settings' => array(
-            'handler' => 'default',
-            'handler_settings' => array(
-              'target_bundles' => array(
-                'tags' => 'tags',
-              ),
-              'auto_create' => TRUE,
+        'settings' => array(
+          'handler' => 'default',
+          'handler_settings' => array(
+            'target_bundles' => array(
+              'tags' => 'tags',
             ),
+            'auto_create' => TRUE,
           ),
+        ),
       ))->save();
     }
 
@@ -69,19 +71,19 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
     $this->prepareMigrations($id_mappings);
 
     $this->loadDumps(['Vocabulary.php', 'VocabularyNodeTypes.php']);
-    $this->executeMigration('d6_vocabulary_entity_display');
+    $this->executeMigration('d6_vocabulary_entity_form_display');
   }
 
   /**
    * Tests the Drupal 6 vocabulary-node type association to Drupal 8 migration.
    */
-  public function testVocabularyEntityDisplay() {
+  public function testVocabularyEntityFormDisplay() {
     // Test that the field exists.
-    $component = entity_get_display('node', 'page', 'default')->getComponent('tags');
-    $this->assertIdentical('entity_reference_label', $component['type']);
+    $component = entity_get_form_display('node', 'page', 'default')->getComponent('tags');
+    $this->assertIdentical('options_select', $component['type']);
     $this->assertIdentical(20, $component['weight']);
     // Test the Id map.
-    $this->assertIdentical(array('node', 'article', 'default', 'tags'), entity_load('migration', 'd6_vocabulary_entity_display')->getIdMap()->lookupDestinationID(array(4, 'article')));
+    $this->assertIdentical(array('node', 'article', 'default', 'tags'), entity_load('migration', 'd6_vocabulary_entity_form_display')->getIdMap()->lookupDestinationID(array(4, 'article')));
   }
 
 }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTermNodeTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTermNodeTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\Node;
@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
 /**
  * Upgrade taxonomy term node associations.
  *
- * @group migrate_drupal
+ * @group taxonomy
  */
 class MigrateTermNodeTest extends MigrateTermNodeTestBase {
 

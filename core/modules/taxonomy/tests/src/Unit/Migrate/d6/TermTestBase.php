@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\TermTestBase.
+ * Contains \Drupal\Tests\taxonomy\Unit\Migrate\d6\TermTestBase.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\taxonomy\Unit\Migrate\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
@@ -14,7 +14,7 @@ use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
  */
 abstract class TermTestBase extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Term';
+  const PLUGIN_CLASS = 'Drupal\taxonomy\Plugin\migrate\source\d6\Term';
 
   protected $migrationConfiguration = array(
     'id' => 'test',
