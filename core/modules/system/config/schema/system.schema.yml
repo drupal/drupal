@@ -126,17 +126,6 @@ system.diff:
           type: integer
           label: 'Number of trailing lines in a diff'
 
-system.filter:
-  type: config_object
-  label: 'Filter settings'
-  mapping:
-    protocols:
-      type: sequence
-      label: 'Allowed protocols'
-      sequence:
-        type: string
-        label: 'Protocol'
-
 system.logging:
   type: config_object
   label: 'Logging settings'

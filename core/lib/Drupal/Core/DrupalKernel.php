@@ -466,8 +466,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->container->get('request_stack')->push($request);
 
     // Set the allowed protocols once we have the config available.
-    $allowed_protocols = $this->container->get('config.factory')->get('system.filter')->get('protocols');
-    if (!isset($allowed_protocols)) {
+    $allowed_protocols = $this->container->getParameter('filter_protocols');
+    if (!$allowed_protocols) {
       // \Drupal\Component\Utility\UrlHelper::filterBadProtocol() is called by
       // the installer and update.php, in which case the configuration may not
       // exist (yet). Provide a minimal default set of allowed protocols for

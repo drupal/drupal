@@ -72,19 +72,18 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   The path processor to convert the system path to one suitable for urls.
    * @param \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface $route_processor
    *   The route processor.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
-   *    The config factory.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   A request stack object.
+   * @param string[] $filter_protocols
+   *   (optional) An array of protocols allowed for URL generation.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, RequestStack $request_stack) {
+  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, RequestStack $request_stack, array $filter_protocols = ['http', 'https']) {
     $this->provider = $provider;
     $this->context = new RequestContext();
 
     $this->pathProcessor = $path_processor;
     $this->routeProcessor = $route_processor;
-    $allowed_protocols = $config->get('system.filter')->get('protocols') ?: array('http', 'https');
-    UrlHelper::setAllowedProtocols($allowed_protocols);
+    UrlHelper::setAllowedProtocols($filter_protocols);
     $this->requestStack = $request_stack;
   }
 

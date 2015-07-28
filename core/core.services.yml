@@ -7,6 +7,20 @@ parameters:
     default: keyvalue.database
   factory.keyvalue.expirable:
     default: keyvalue.expirable.database
+  filter_protocols:
+    - http
+    - https
+    - ftp
+    - news
+    - nntp
+    - tel
+    - telnet
+    - mailto
+    - irc
+    - ssh
+    - sftp
+    - webcal
+    - rtsp
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
@@ -712,7 +726,7 @@ services:
       - { name: event_subscriber }
   url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@request_stack']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '%filter_protocols%']
     public: false
     calls:
       - [setContext, ['@?router.request_context']]
@@ -726,7 +740,7 @@ services:
     arguments: ['@request_stack', '@url_generator']
   unrouted_url_assembler:
     class: Drupal\Core\Utility\UnroutedUrlAssembler
-    arguments: ['@request_stack', '@config.factory', '@path_processor_manager']
+    arguments: ['@request_stack', '@path_processor_manager', '%filter_protocols%']
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
     arguments: ['@url_generator', '@module_handler', '@renderer']

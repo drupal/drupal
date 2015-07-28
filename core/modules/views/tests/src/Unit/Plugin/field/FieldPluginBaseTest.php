@@ -168,16 +168,8 @@ class FieldPluginBaseTest extends UnitTestCase {
    * Sets up the unrouted url assembler and the link generator.
    */
   protected function setUpUrlIntegrationServices() {
-    $config = $this->getMockBuilder('Drupal\Core\Config\ImmutableConfig')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $config_factory = $this->getMock('\Drupal\Core\Config\ConfigFactoryInterface');
-    $config_factory->expects($this->any())
-      ->method('get')
-      ->willReturn($config);
-
     $this->pathProcessor = $this->getMock('Drupal\Core\PathProcessor\OutboundPathProcessorInterface');
-    $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $config_factory, $this->pathProcessor);
+    $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $this->pathProcessor);
 
     \Drupal::getContainer()->set('unrouted_url_assembler', $this->unroutedUrlAssembler);
 

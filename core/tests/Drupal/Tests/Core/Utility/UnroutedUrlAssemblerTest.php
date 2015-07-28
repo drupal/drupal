@@ -55,9 +55,8 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     parent::setUp();
 
     $this->requestStack = new RequestStack();
-    $this->configFactory = $this->getConfigFactoryStub(['system.filter' => []]);
     $this->pathProcessor = $this->getMock('Drupal\Core\PathProcessor\OutboundPathProcessorInterface');
-    $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $this->configFactory, $this->pathProcessor);
+    $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $this->pathProcessor);
   }
 
   /**
