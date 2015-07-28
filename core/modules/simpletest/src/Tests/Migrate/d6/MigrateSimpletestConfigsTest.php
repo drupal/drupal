@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateSimpletestConfigsTest.
+ * Contains \Drupal\simpletest\Tests\Migrate\d6\MigrateSimpletestConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\simpletest\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to simpletest.settings.yml.
  *
- * @group migrate_drupal
+ * @group simpletest
  */
 class MigrateSimpletestConfigsTest extends MigrateDrupal6TestBase {
 
