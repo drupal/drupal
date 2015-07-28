@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateAggregatorConfigsTest.
+ * Contains \Drupal\aggregator\Tests\Migrate\d6\MigrateAggregatorConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\aggregator\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to aggregator.settings.yml.
  *
- * @group migrate_drupal
+ * @group aggregator
  */
 class MigrateAggregatorConfigsTest extends MigrateDrupal6TestBase {
 

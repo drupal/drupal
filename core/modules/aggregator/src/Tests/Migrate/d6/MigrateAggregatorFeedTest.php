@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateAggregatorFeedTest.
+ * Contains \Drupal\aggregator\Tests\Migrate\d6\MigrateAggregatorFeedTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\aggregator\Tests\Migrate\d6;
 
 use Drupal\aggregator\Entity\Feed;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to aggregator_feed entities.
  *
- * @group migrate_drupal
+ * @group aggregator
  */
 class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
 

@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateAggregatorItemTest.
+ * Contains \Drupal\aggregator\Tests\Migrate\d6\MigrateAggregatorItemTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\aggregator\Tests\Migrate\d6;
 
 use Drupal\aggregator\Entity\Item;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade aggregator items.
  *
- * @group migrate_drupal
+ * @group aggregator
  */
 class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
 

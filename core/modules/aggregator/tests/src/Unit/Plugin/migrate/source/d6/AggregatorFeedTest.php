@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\AggregatorFeedTest.
+ * Contains \Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6\AggregatorFeedTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 aggregator feed source plugin.
  *
- * @group migrate_drupal
+ * @group aggregator
  */
 class AggregatorFeedTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\AggregatorFeed';
+  const PLUGIN_CLASS = 'Drupal\aggregator\Plugin\migrate\source\d6\AggregatorFeed';
 
   protected $migrationConfiguration = array(
     'id' => 'test',

@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d7\MigrateAggregatorSettingsTest.
+ * Contains \Drupal\aggregator\Tests\Migrate\d7\MigrateAggregatorSettingsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d7;
+namespace Drupal\aggregator\Tests\Migrate\d7;
+
+use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
  * Tests migration of Aggregator's variables to configuration.
  *
- * @group migrate_drupal_7
+ * @group aggregator
  */
 class MigrateAggregatorSettingsTest extends MigrateDrupal7TestBase {
 

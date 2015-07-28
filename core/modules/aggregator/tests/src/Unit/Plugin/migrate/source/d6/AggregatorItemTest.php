@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\AggregatorItemTest.
+ * Contains \Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6\AggregatorItemTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 aggregator item source plugin.
  *
- * @group migrate_drupal
+ * @group aggregator
  */
 class AggregatorItemTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\AggregatorItem';
+  const PLUGIN_CLASS = 'Drupal\aggregator\Plugin\migrate\source\d6\AggregatorItem';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
