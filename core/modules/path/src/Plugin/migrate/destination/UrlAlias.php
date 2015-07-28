@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\UrlAlias.
+ * Contains \Drupal\path\Plugin\migrate\destination\UrlAlias.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\path\Plugin\migrate\destination;
 
 use Drupal\Core\Path\AliasStorage;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
+use Drupal\migrate\Plugin\migrate\destination\DestinationBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 

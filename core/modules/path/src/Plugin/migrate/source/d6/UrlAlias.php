@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\UrlAlias.
+ * Contains \Drupal\path\Plugin\migrate\source\d6\UrlAlias.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\path\Plugin\migrate\source\d6;
+
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**

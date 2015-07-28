@@ -2,21 +2,29 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUrlAliasTest.
+ * Contains \Drupal\path\Tests\Migrate\d6\MigrateUrlAliasTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\path\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\Core\Database\Database;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Url alias migration.
  *
- * @group migrate_drupal
+ * @group path
  */
 class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('path');
 
   /**
    * {@inheritdoc}

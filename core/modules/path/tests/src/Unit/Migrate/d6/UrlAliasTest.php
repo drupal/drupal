@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\UrlAliasTest.
+ * Contains \Drupal\Tests\path\Unit\Migrate\d6\UrlAliasTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\path\Unit\Migrate\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests the D6 url alias migrations.
  *
- * @group migrate_drupal
+ * @group path
  */
 class UrlAliasTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\UrlAlias';
+  const PLUGIN_CLASS = 'Drupal\path\Plugin\migrate\source\d6\UrlAlias';
 
   protected $migrationConfiguration = array(
     'id' => 'test',
