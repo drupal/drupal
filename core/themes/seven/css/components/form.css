@@ -12,7 +12,7 @@ fieldset:not(.fieldgroup) {
   padding: 30px 18px 18px;
   position: relative;
 }
-fieldset:not(.fieldgroup) legend {
+fieldset:not(.fieldgroup) > legend {
   font-size: 1em;
   font-weight: bold;
   letter-spacing: 0.08em;
