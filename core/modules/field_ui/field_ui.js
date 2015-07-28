@@ -9,6 +9,9 @@
 
   /**
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Adds behaviors to the field storage add form.
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach: function (context) {
@@ -56,8 +59,14 @@
   };
 
   /**
+   * Attaches the fieldUIOverview behavior.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the fieldUIOverview behavior.
+   *
+   * @see Drupal.fieldUIOverview.attach
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach: function (context, settings) {
@@ -68,6 +77,8 @@
   };
 
   /**
+   * Namespace for the field UI overview.
+   *
    * @namespace
    */
   Drupal.fieldUIOverview = {
@@ -76,8 +87,11 @@
      * Attaches the fieldUIOverview behavior.
      *
      * @param {HTMLTableElement} table
+     *   The table element for the overview.
      * @param {object} rowsData
+     *   The data of the rows in the table.
      * @param {object} rowHandlers
+     *   Handlers to be added to the rows.
      */
     attach: function (table, rowsData, rowHandlers) {
       var tableDrag = Drupal.tableDrag[table.id];
@@ -243,6 +257,7 @@
    *   Additional data to be populated in the constructed object.
    *
    * @return {Drupal.fieldUIDisplayOverview.field}
+   *   The field row handler constructed.
    */
   Drupal.fieldUIDisplayOverview.field = function (row, data) {
     this.row = row;
@@ -263,6 +278,7 @@
      * Returns the region corresponding to the current form values of the row.
      *
      * @return {string}
+     *   Either 'hidden' or 'content'.
      */
     getRegion: function () {
       return (this.$pluginSelect.val() === 'hidden') ? 'hidden' : 'content';
