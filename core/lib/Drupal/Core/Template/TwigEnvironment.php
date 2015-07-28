@@ -8,6 +8,7 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Render\SafeString;
 
@@ -36,14 +37,15 @@ class TwigEnvironment extends \Twig_Environment {
    *
    * @param string $root
    *   The app root.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache bin.
    * @param \Twig_LoaderInterface $loader
    *   The Twig loader or loader chain.
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, \Twig_LoaderInterface $loader = NULL, $options = array()) {
-    // @todo Pass as arguments from the DIC.
-    $this->cache_object = \Drupal::cache();
+  public function __construct($root, CacheBackendInterface $cache, \Twig_LoaderInterface $loader = NULL, $options = array()) {
+    $this->cache_object = $cache;
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like TwigExtension::escapeFilter() are called.
