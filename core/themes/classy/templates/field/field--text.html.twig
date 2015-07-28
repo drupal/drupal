@@ -14,7 +14,15 @@
  *
  * @see https://www.drupal.org/node/2358529
  *
+ * A 'text-formatted' class is added to assist with default styling of base
+ * elements such as paragraphs and lists that may not have classes assigned to
+ * them. This allows user entered content to have default styling without
+ * interfering with the styles of other UI components such as system generated
+ * lists or other dynamic content.
+ *
+ * @see https://www.drupal.org/node/2539860
+ *
  * @ingroup themeable
  */
 #}
-{% set attributes = attributes.addClass('clearfix') %}
+{% set attributes = attributes.addClass('clearfix', 'text-formatted') %}
