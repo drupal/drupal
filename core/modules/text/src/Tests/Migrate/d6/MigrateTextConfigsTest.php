@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateTextConfigsTest.
+ * Contains \Drupal\text\Tests\Migrate\d6\MigrateTextConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\text\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to text.settings.yml.
  *
- * @group migrate_drupal
+ * @group text
  */
 class MigrateTextConfigsTest extends MigrateDrupal6TestBase {
 
