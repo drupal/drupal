@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
@@ -61,7 +60,7 @@ class TestSqlIdMap extends Sql implements \Iterator {
           'not null' => FALSE,
         );
       default:
-        throw new MigrateException(SafeMarkup::format('@type not supported', array('@type' => $id_definition['type'])));
+        throw new MigrateException($id_definition['type'] . ' not supported');
     }
   }
 }

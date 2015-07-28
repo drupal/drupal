@@ -87,7 +87,7 @@ class ListDataDefinition extends DataDefinition implements ListDataDefinitionInt
       $item_type_definition = \Drupal::typedDataManager()
         ->getDefinition($this->getItemDefinition()->getDataType());
       if (!$item_type_definition) {
-        throw new \LogicException(format_string('An invalid data type @plugin_id has been specified for list items.', array('@plugin_id' => $this->getItemDefinition()->getDataType())));
+        throw new \LogicException("An invalid data type '{$this->getItemDefinition()->getDataType()}' has been specified for list items");
       }
       return $item_type_definition['list_class'];
     }

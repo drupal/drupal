@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\File\FileSystemInterface;
@@ -83,7 +82,7 @@ class EntityFile extends EntityContentBase {
 
     // Ensure the source file exists, if it's a local URI or path.
     if ($this->isLocalUri($source) && !file_exists($source)) {
-      throw new MigrateException(SafeMarkup::format('File @source does not exist.', ['@source' => $source]));
+      throw new MigrateException("File '$source' does not exist.");
     }
 
     // If the start and end file is exactly the same, there is nothing to do.
@@ -99,7 +98,7 @@ class EntityFile extends EntityContentBase {
         $success = $this->writeFile($source, $destination, $replace);
       }
       else {
-        throw new MigrateException(SafeMarkup::format('Could not create directory @dir', ['@dir' => $dir]));
+        throw new MigrateException("Could not create directory '$dir'");
       }
     }
 
@@ -107,7 +106,7 @@ class EntityFile extends EntityContentBase {
       return parent::import($row, $old_destination_id_values);
     }
     else {
-      throw new MigrateException(SafeMarkup::format('File %source could not be copied to %destination.', ['%source' => $source, '%destination' => $destination]));
+      throw new MigrateException("File $source could not be copied to $destination.");
     }
   }
 

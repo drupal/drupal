@@ -215,7 +215,7 @@ class Tables implements TablesInterface {
           $index_prefix .= "$next_index_prefix.";
         }
         else {
-          throw new QueryException(format_string('Invalid specifier @next.', array('@next' => $relationship_specifier)));
+          throw new QueryException("Invalid specifier '$relationship_specifier'");
         }
       }
     }
@@ -247,7 +247,7 @@ class Tables implements TablesInterface {
         return $this->entityTables[$index_prefix . $table];
       }
     }
-    throw new QueryException(format_string('@property not found', array('@property' => $property)));
+    throw new QueryException("'$property' not found");
   }
 
   /**

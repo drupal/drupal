@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\load;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Entity\MigrationInterface;
@@ -44,7 +43,7 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
       throw new MigrateException('Migrations with a load plugin using LoadEntity should have an entity as source.');
     }
     if ($source_plugin->bundleMigrationRequired() && empty($configuration['bundle_migration'])) {
-      throw new MigrateException(SafeMarkup::format('Source plugin @plugin requires the bundle_migration key to be set.', array('@plugin' => $source_plugin->getPluginId())));
+      throw new MigrateException("Source plugin '{$source_plugin->getPluginId()}' requires the bundle_migration key to be set.");
     }
   }
 

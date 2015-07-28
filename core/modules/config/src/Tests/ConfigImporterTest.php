@@ -295,8 +295,8 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $message = SafeMarkup::format('config_test entity with ID @name already exists', array('@name' => 'secondary'));
-    $this->assertEqual($logs[0], SafeMarkup::format('Unexpected error during import with operation @op for @name: @message.', array('@op' => 'create', '@name' => $name_primary, '@message' => $message)));
+    $message = SafeMarkup::format("'config_test' entity with ID '@name' already exists", array('@name' => 'secondary'));
+    $this->assertEqual($logs[0], SafeMarkup::format('Unexpected error during import with operation @op for @name: !message.', array('@op' => 'create', '@name' => $name_primary, '!message' => $message)));
   }
 
   /**

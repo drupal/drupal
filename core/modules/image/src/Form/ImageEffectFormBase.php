@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -61,7 +60,7 @@ abstract class ImageEffectFormBase extends FormBase {
       $this->imageEffect = $this->prepareImageEffect($image_effect);
     }
     catch (PluginNotFoundException $e) {
-      throw new NotFoundHttpException(SafeMarkup::format("Invalid effect id: '@id'.", array('@id' => $image_effect)));
+      throw new NotFoundHttpException("Invalid effect id: '$image_effect'.");
     }
     $request = $this->getRequest();
 

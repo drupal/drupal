@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -34,7 +33,7 @@ class Concat extends ProcessPluginBase {
       return implode($delimiter, $value);
     }
     else {
-      throw new MigrateException(sprintf('%s is not an array', SafeMarkup::checkPlain(var_export($value, TRUE))));
+      throw new MigrateException(sprintf('%s is not an array', var_export($value, TRUE)));
     }
   }
 

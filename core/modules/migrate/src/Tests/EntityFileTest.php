@@ -94,7 +94,7 @@ class EntityFileTest extends KernelTestBase {
       $this->fail('Expected Drupal\migrate\MigrateException when importing ' . $destination);
     }
     catch (MigrateException $e) {
-      $this->assertIdentical($e->getMessage(), 'File ' . $destination . ' does not exist.');
+      $this->assertIdentical($e->getMessage(), "File '$destination' does not exist.");
     }
   }
 

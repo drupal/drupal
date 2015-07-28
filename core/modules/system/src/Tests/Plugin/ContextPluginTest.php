@@ -57,7 +57,7 @@ class ContextPluginTest extends KernelTestBase {
       $plugin->getContextValue('user');
     }
     catch(ContextException $e) {
-      $this->assertIdentical("The entity:user context is required and not present.", $e->getMessage(), 'Requesting a non-set value of a required context should throw a context exception.');
+      $this->assertIdentical("The 'entity:user' context is required and not present.", $e->getMessage(), 'Requesting a non-set value of a required context should throw a context exception.');
     }
 
     // Try to pass the wrong class type as a context value.

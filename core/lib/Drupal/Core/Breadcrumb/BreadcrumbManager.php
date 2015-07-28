@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Breadcrumb;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -95,7 +94,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
         break;
       }
       else {
-        throw new \UnexpectedValueException(SafeMarkup::format('Invalid breadcrumb returned by !class::build().', array('!class' => get_class($builder))));
+        throw new \UnexpectedValueException('Invalid breadcrumb returned by ' . get_class($builder) . '::build().');
       }
     }
     // Allow modules to alter the breadcrumb.

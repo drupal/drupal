@@ -244,7 +244,7 @@ class UrlHelper {
     $base_parts = parse_url($base_url);
 
     if (empty($base_parts['host']) || empty($url_parts['host'])) {
-      throw new \InvalidArgumentException(SafeMarkup::format('A path was passed when a fully qualified domain was expected.'));
+      throw new \InvalidArgumentException('A path was passed when a fully qualified domain was expected.');
     }
 
     if (!isset($url_parts['path']) || !isset($base_parts['path'])) {

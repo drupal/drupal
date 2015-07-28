@@ -148,6 +148,13 @@ router_test.23:
   requirements:
     _access: 'TRUE'
 
+router_test.24:
+  path: '/router_test/test24'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test24'
+  requirements:
+    _access: 'TRUE'
+
 router_test.hierarchy_parent:
   path: '/menu-test/parent'
   defaults:

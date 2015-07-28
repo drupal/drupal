@@ -627,7 +627,7 @@ class ManageFieldsTest extends WebTestBase {
     // The external redirect should not fire.
     $this->assertUrl('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
     $this->assertResponse(200);
-    $this->assertRaw('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component "http://example.com" is external. You are not allowed to specify an external URL together with internal:/.</em>.');
+    $this->assertRaw('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }
 
   /**

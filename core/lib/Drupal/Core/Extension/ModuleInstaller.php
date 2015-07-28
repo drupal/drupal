@@ -13,7 +13,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernelInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Default implementation of the module installer.
@@ -88,10 +87,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $module_list = $module_list ? array_combine($module_list, $module_list) : array();
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
-        throw new MissingDependencyException(SafeMarkup::format('Unable to install modules %modules due to missing modules %missing.', array(
-          '%modules' => implode(', ', $module_list),
-          '%missing' => implode(', ', $missing_modules),
-        )));
+        throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
       }
 
       // Only process currently uninstalled modules.
@@ -107,10 +103,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         foreach (array_keys($module_data[$module]->requires) as $dependency) {
           if (!isset($module_data[$dependency])) {
             // The dependency does not exist.
-            throw new MissingDependencyException(SafeMarkup::format('Unable to install modules: module %module is missing its dependency module %dependency.', array(
-              '%module' => $module,
-              '%dependency' => $dependency,
-            )));
+            throw new MissingDependencyException("Unable to install modules: module '$module' is missing its dependency module $dependency.");
           }
 
           // Skip already installed modules.
@@ -145,10 +138,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (!$enabled) {
         // Throw an exception if the module name is too long.
         if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
-          throw new ExtensionNameLengthException(format_string('Module name %name is over the maximum allowed length of @max characters.', array(
-            '%name' => $module,
-            '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-          )));
+          throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
         }
 
         // Check the validity of the default configuration. This will throw
@@ -329,9 +319,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       foreach ($reasons as $reason) {
         $reason_message[] = implode(', ', $reason);
       }
-      throw new ModuleUninstallValidatorException(format_string('The following reasons prevents the modules from being uninstalled: @reasons', array(
-        '@reasons' => implode('; ', $reason_message),
-      )));
+      throw new ModuleUninstallValidatorException('The following reasons prevents the modules from being uninstalled: ' . implode('; ', $reason_message));
     }
     // Set the actual module weights.
     $module_list = array_map(function ($module) use ($module_data) {

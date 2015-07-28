@@ -8,7 +8,6 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * A menu link plugin for wrapping another menu link, in sensitive situations.
@@ -80,7 +79,7 @@ class InaccessibleMenuLink extends MenuLinkBase {
    * {@inheritdoc}
    */
   public function updateLink(array $new_definition_values, $persist) {
-    throw new PluginException(SafeMarkup::format('Inaccessible menu link plugins do not support updating'));
+    throw new PluginException('Inaccessible menu link plugins do not support updating');
   }
 
 }

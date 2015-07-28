@@ -8,7 +8,6 @@
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Component\Utility\Color;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines GD2 create_new image operation.
@@ -53,7 +52,7 @@ class CreateNew extends GDImageToolkitOperationBase {
   protected function validateArguments(array $arguments) {
     // Assure extension is supported.
     if (!in_array($arguments['extension'], $this->getToolkit()->getSupportedExtensions())) {
-      throw new \InvalidArgumentException(SafeMarkup::format("Invalid extension (@value) specified for the image 'convert' operation", array('@value' => $arguments['extension'])));
+      throw new \InvalidArgumentException("Invalid extension ('{$arguments['extension']}') specified for the image 'convert' operation");
     }
 
     // Assure integers for width and height.
@@ -62,15 +61,15 @@ class CreateNew extends GDImageToolkitOperationBase {
 
     // Fail when width or height are 0 or negative.
     if ($arguments['width'] <= 0) {
-      throw new \InvalidArgumentException(SafeMarkup::format("Invalid width (@value) specified for the image 'create_new' operation", array('@value' => $arguments['width'])));
+      throw new \InvalidArgumentException("Invalid width ('{$arguments['width']}') specified for the image 'create_new' operation");
     }
     if ($arguments['height'] <= 0) {
-      throw new \InvalidArgumentException(SafeMarkup::format("Invalid height (@value) specified for the image 'create_new' operation", array('@value' => $arguments['height'])));
+      throw new \InvalidArgumentException("Invalid height ({$arguments['height']}) specified for the image 'create_new' operation");
     }
 
     // Assure transparent color is a valid hex string.
     if ($arguments['transparent_color'] && !Color::validateHex($arguments['transparent_color'])) {
-      throw new \InvalidArgumentException(SafeMarkup::format("Invalid transparent color (@value) specified for the image 'create_new' operation", array('@value' => $arguments['transparent_color'])));
+      throw new \InvalidArgumentException("Invalid transparent color ({$arguments['transparent_color']}) specified for the image 'create_new' operation");
     }
 
     return $arguments;

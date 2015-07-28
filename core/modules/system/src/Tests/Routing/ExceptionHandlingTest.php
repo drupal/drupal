@@ -120,4 +120,28 @@ class ExceptionHandlingTest extends KernelTestBase {
     $this->assertTrue(strpos($response->getContent(), '<script>alert(\'xss\')</script>') === FALSE);
   }
 
+  /**
+   * Tests exception message escaping.
+   */
+  public function testExceptionEscaping() {
+    // Enable verbose error logging.
+    $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
+
+    // Using SafeMarkup::format().
+    $request = Request::create('/router_test/test24');
+    $request->setFormat('html', ['text/html']);
+
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
+    $kernel = \Drupal::getContainer()->get('http_kernel');
+    $response = $kernel->handle($request)->prepare($request);
+    $this->assertEqual($response->getStatusCode(), Response::HTTP_INTERNAL_SERVER_ERROR);
+    $this->assertEqual($response->headers->get('Content-type'), 'text/html; charset=UTF-8');
+
+    // Test message is properly escaped, and that the unescaped string is not
+    // output at all.
+    $this->setRawContent($response->getContent());
+    $this->assertRaw(SafeMarkup::checkPlain('Escaped content: <p> <br> <h3>'));
+    $this->assertNoRaw('<p> <br> <h3>');
+  }
+
 }

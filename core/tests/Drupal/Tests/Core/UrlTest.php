@@ -779,7 +779,7 @@ class UrlTest extends UnitTestCase {
 
   /**
    * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage The route URI "route:" is invalid.
+   * @expectedExceptionMessage The route URI 'route:' is invalid.
    */
   public function testFromRouteUriWithMissingRouteName() {
     Url::fromUri('route:');

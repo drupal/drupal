@@ -7,7 +7,6 @@
 
 namespace Drupal\accept_header_routing_test\Routing;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
@@ -62,7 +61,7 @@ class AcceptHeaderMatcher implements RouteFilterInterface {
     // We do not throw a
     // \Symfony\Component\Routing\Exception\ResourceNotFoundException here
     // because we don't want to return a 404 status code, but rather a 406.
-    throw new NotAcceptableHttpException(SafeMarkup::format('No route found for the specified formats @formats.', array('@formats' => implode(' ', $acceptable_mime_types))));
+    throw new NotAcceptableHttpException('No route found for the specified formats ' . implode(' ', $acceptable_mime_types));
   }
 
   /**

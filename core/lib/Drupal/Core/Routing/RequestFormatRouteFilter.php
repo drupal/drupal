@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Route;
@@ -51,7 +50,7 @@ class RequestFormatRouteFilter implements RouteFilterInterface {
     // We do not throw a
     // \Symfony\Component\Routing\Exception\ResourceNotFoundException here
     // because we don't want to return a 404 status code, but rather a 406.
-    throw new NotAcceptableHttpException(SafeMarkup::format('No route found for the specified format @format.', ['@format' => $format]));
+    throw new NotAcceptableHttpException("No route found for the specified format $format.");
   }
 
 }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
@@ -324,18 +323,18 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     parent::alterDefinitions($definitions);
     $altered_schema = array_keys($definitions);
     if ($discovered_schema != $altered_schema) {
-      $added_keys = array_diff($altered_schema, $discovered_schema);
-      $removed_keys = array_diff($discovered_schema, $altered_schema);
+      $added_keys = implode(',', array_diff($altered_schema, $discovered_schema));
+      $removed_keys = implode(',', array_diff($discovered_schema, $altered_schema));
       if (!empty($added_keys) && !empty($removed_keys)) {
-        $message = 'Invoking hook_config_schema_info_alter() has added (@added) and removed (@removed) schema definitions';
+        $message = "Invoking hook_config_schema_info_alter() has added ($added_keys) and removed ($removed_keys) schema definitions";
       }
       elseif (!empty($added_keys)) {
-        $message = 'Invoking hook_config_schema_info_alter() has added (@added) schema definitions';
+        $message = "Invoking hook_config_schema_info_alter() has added ($added_keys) schema definitions";
       }
       else {
-        $message = 'Invoking hook_config_schema_info_alter() has removed (@removed) schema definitions';
+        $message = "Invoking hook_config_schema_info_alter() has removed ($removed_keys) schema definitions";
       }
-      throw new ConfigSchemaAlterException(SafeMarkup::format($message, ['@added' => implode(',', $added_keys), '@removed' => implode(',', $removed_keys)]));
+      throw new ConfigSchemaAlterException($message);
     }
   }
 

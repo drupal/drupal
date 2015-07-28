@@ -7,7 +7,6 @@
 
 namespace Drupal\language\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -200,7 +199,7 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
       if (!$bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->target_bundle)) {
-        throw new \LogicException(SafeMarkup::format('Missing bundle entity, entity type %type, entity id %bundle.', array('%type' => $bundle_entity_type_id, '%bundle' => $this->target_bundle)));
+        throw new \LogicException("Missing bundle entity, entity type $bundle_entity_type_id, entity id {$this->target_bundle}.");
       }
       $this->addDependency('config', $bundle_entity->getConfigDependencyName());
     }

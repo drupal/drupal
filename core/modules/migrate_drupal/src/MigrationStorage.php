@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -164,7 +163,7 @@ class MigrationStorage extends BaseMigrationStorage {
    */
   public function save(EntityInterface $entity) {
     if (strpos($entity->id(), ':') !== FALSE) {
-      throw new EntityStorageException(SafeMarkup::format("Dynamic migration %id can't be saved", array('$%id' => $entity->id())));
+      throw new EntityStorageException("Dynamic migration '{$entity->id()}' can't be saved");
     }
     return parent::save($entity);
   }

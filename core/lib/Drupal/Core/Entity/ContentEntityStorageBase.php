@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -83,7 +82,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
     $bundle = FALSE;
     if ($this->bundleKey) {
       if (!isset($values[$this->bundleKey])) {
-        throw new EntityStorageException(SafeMarkup::format('Missing bundle for entity type @type', array('@type' => $this->entityTypeId)));
+        throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
       }
       $bundle = $values[$this->bundleKey];
     }

@@ -9,7 +9,6 @@ namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
 use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -66,7 +65,7 @@ class Context extends ComponentContext implements ContextInterface {
       }
       elseif ($definition->isRequired()) {
         $type = $definition->getDataType();
-        throw new ContextException(SafeMarkup::format("The @type context is required and not present.", array('@type' => $type)));
+        throw new ContextException("The '$type' context is required and not present.");
       }
       return $default_value;
     }

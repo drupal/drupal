@@ -199,9 +199,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       }
     }
     else {
-      throw new StringStorageException(format_string('The string cannot be deleted because it lacks some key fields: @string', array(
-        '@string' => $string->getString(),
-      )));
+      throw new StringStorageException('The string cannot be deleted because it lacks some key fields: ' . $string->getString());
     }
     return $this;
   }
@@ -483,9 +481,7 @@ class StringDatabaseStorage implements StringStorageInterface {
         ->execute();
     }
     else {
-      throw new StringStorageException(format_string('The string cannot be saved: @string', array(
-          '@string' => $string->getString(),
-      )));
+      throw new StringStorageException('The string cannot be saved: ' . $string->getString());
     }
   }
 
@@ -516,9 +512,7 @@ class StringDatabaseStorage implements StringStorageInterface {
         ->execute();
     }
     else {
-      throw new StringStorageException(format_string('The string cannot be updated: @string', array(
-          '@string' => $string->getString(),
-      )));
+      throw new StringStorageException('The string cannot be updated: ' . $string->getString());
     }
   }
 

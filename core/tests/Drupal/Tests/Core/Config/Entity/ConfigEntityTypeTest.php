@@ -9,7 +9,6 @@ namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Entity\ConfigEntityType;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityType
@@ -41,8 +40,6 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * @covers ::getConfigPrefix
    */
   public function testConfigPrefixLengthExceeds() {
-    $message_text = 'The configuration file name prefix @config_prefix exceeds the maximum character limit of @max_char.';
-
     // A provider length of 24 and config_prefix length of 59 (+1 for the .)
     // results in a config length of 84, which is too long.
     $definition = array(
@@ -50,10 +47,10 @@ class ConfigEntityTypeTest extends UnitTestCase {
       'config_prefix' => $this->randomMachineName(59),
     );
     $config_entity = $this->setUpConfigEntityType($definition);
-    $this->setExpectedException('\Drupal\Core\Config\ConfigPrefixLengthException', SafeMarkup::format($message_text, array(
-      '@config_prefix' => $definition['provider'] . '.' . $definition['config_prefix'],
-      '@max_char' => ConfigEntityType::PREFIX_LENGTH,
-    )));
+    $this->setExpectedException(
+      '\Drupal\Core\Config\ConfigPrefixLengthException',
+      "The configuration file name prefix {$definition['provider']}.{$definition['config_prefix']} exceeds the maximum character limit of " . ConfigEntityType::PREFIX_LENGTH
+    );
     $this->assertEmpty($config_entity->getConfigPrefix());
   }
 

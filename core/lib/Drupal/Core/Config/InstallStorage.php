@@ -91,9 +91,7 @@ class InstallStorage extends FileStorage {
     }
     // If any code in the early installer requests a configuration object that
     // does not exist anywhere as default config, then that must be mistake.
-    throw new StorageException(format_string('Missing configuration file: @name', array(
-      '@name' => $name,
-    )));
+    throw new StorageException("Missing configuration file: $name");
   }
 
   /**

@@ -291,7 +291,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   The name of the column to be processed.
    *
    * @expectedException \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
-   * @expectedExceptionMessage Column information not available for the "test" field.
+   * @expectedExceptionMessage Column information not available for the 'test' field.
    *
    * @covers ::getFieldColumnName
    *
@@ -437,7 +437,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * Tests DefaultTableMapping::getFieldTableName() with an invalid parameter.
    *
    * @expectedException \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
-   * @expectedExceptionMessage Table information not available for the "invalid_field_name" field.
+   * @expectedExceptionMessage Table information not available for the 'invalid_field_name' field.
    *
    * @covers ::getFieldTableName
    */

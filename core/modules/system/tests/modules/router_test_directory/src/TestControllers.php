@@ -76,14 +76,7 @@ class TestControllers {
    * This can be used to test if the generated backtrace is properly escaped.
    */
   public function test10() {
-    // Remove the exception logger from the event dispatcher. We are going to
-    // throw an exception to check if it is properly escaped when rendered as a
-    // backtrace. The exception logger does a call to error_log() which is not
-    // handled by the Simpletest error handler and would cause a test failure.
-    $event_dispatcher = \Drupal::service('event_dispatcher');
-    $exception_logger = \Drupal::service('exception.logger');
-    $event_dispatcher->removeSubscriber($exception_logger);
-
+    $this->removeExceptionLogger();
     $this->throwException('<script>alert(\'xss\')</script>');
   }
 
@@ -108,6 +101,11 @@ class TestControllers {
     return new HtmlResponse('test23');
   }
 
+  public function test24() {
+    $this->removeExceptionLogger();
+    throw new \Exception('Escaped content: <p> <br> <h3>');
+  }
+
   /**
    * Throws an exception.
    *
@@ -119,6 +117,16 @@ class TestControllers {
    */
   protected function throwException($message) {
     throw new \Exception($message);
+  }
+
+  protected function removeExceptionLogger() {
+    // Remove the exception logger from the event dispatcher. We are going to
+    // throw an exception to check if it is properly escaped when rendered as a
+    // backtrace. The exception logger does a call to error_log() which is not
+    // handled by the Simpletest error handler and would cause a test failure.
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $exception_logger = \Drupal::service('exception.logger');
+    $event_dispatcher->removeSubscriber($exception_logger);
   }
 
 }

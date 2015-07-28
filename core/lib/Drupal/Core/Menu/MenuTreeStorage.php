@@ -8,7 +8,6 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -476,7 +475,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         $limit = $this->maxDepth() - 1;
       }
       if ($parent['depth'] > $limit) {
-        throw new PluginException(SafeMarkup::format('The link with ID @id or its children exceeded the maximum depth of @depth', array('@id' => $fields['id'], '@depth' => $this->maxDepth())));
+        throw new PluginException("The link with ID {$fields['id']} or its children exceeded the maximum depth of {$this->maxDepth()}");
       }
       $fields['depth'] = $parent['depth'] + 1;
       $i = 1;
@@ -637,7 +636,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     foreach ($properties as $name => $value) {
       if (!in_array($name, $this->definitionFields(), TRUE)) {
         $fields = implode(', ', $this->definitionFields());
-        throw new \InvalidArgumentException(SafeMarkup::format('An invalid property name, @name was specified. Allowed property names are: @fields.', array('@name' => $name, '@fields' => $fields)));
+        throw new \InvalidArgumentException("An invalid property name, $name was specified. Allowed property names are: $fields.");
       }
       $query->condition($name, $value);
     }

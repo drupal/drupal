@@ -110,7 +110,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::urlInfo
    *
    * @expectedException \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
-   * @expectedExceptionMessage No link template "canonical" found for the "test_entity_type" entity type
+   * @expectedExceptionMessage No link template 'canonical' found for the 'test_entity_type' entity type
    *
    * @dataProvider providerTestUrlInfoForInvalidLinkTemplate
    */

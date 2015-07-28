@@ -8,7 +8,6 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -99,7 +98,7 @@ class TypedDataManager extends DefaultPluginManager {
     $type_definition = $this->getDefinition($data_type);
 
     if (!isset($type_definition)) {
-      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $data_type)));
+      throw new \InvalidArgumentException("Invalid data type '$data_type' has been given");
     }
 
     // Allow per-data definition overrides of the used classes, i.e. take over
@@ -179,7 +178,7 @@ class TypedDataManager extends DefaultPluginManager {
   public function createDataDefinition($data_type) {
     $type_definition = $this->getDefinition($data_type);
     if (!isset($type_definition)) {
-      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $data_type)));
+      throw new \InvalidArgumentException("Invalid data type '$data_type' has been given");
     }
     $class = $type_definition['definition_class'];
     return $class::createFromDataType($data_type);
@@ -199,7 +198,7 @@ class TypedDataManager extends DefaultPluginManager {
   public function createListDataDefinition($item_type) {
     $type_definition = $this->getDefinition($item_type);
     if (!isset($type_definition)) {
-      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $item_type)));
+      throw new \InvalidArgumentException("Invalid data type '$item_type' has been given");
     }
     $class = $type_definition['list_definition_class'];
     return $class::createFromItemType($item_type);
@@ -298,7 +297,7 @@ class TypedDataManager extends DefaultPluginManager {
         throw new \InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
       }
       if (!$definition) {
-        throw new \InvalidArgumentException('Property ' . SafeMarkup::checkPlain($property_name) . ' is unknown.');
+        throw new \InvalidArgumentException("Property $property_name is unknown.");
       }
       // Create the prototype without any value, but with initial parenting
       // so that constructors can set up the objects correclty.

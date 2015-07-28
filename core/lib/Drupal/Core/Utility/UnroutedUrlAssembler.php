@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\GeneratedUrl;
@@ -68,7 +67,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       // UrlHelper::isExternal() only returns true for safe protocols.
       return $this->buildExternalUrl($uri, $options, $collect_bubbleable_metadata);
     }
-    throw new \InvalidArgumentException(SafeMarkup::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.', ['@uri' => $uri]));
+    throw new \InvalidArgumentException("The URI '$uri' is invalid. You must use a valid URI scheme. Use base: for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.");
   }
 
   /**

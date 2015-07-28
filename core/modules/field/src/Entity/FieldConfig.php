@@ -110,12 +110,12 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
         throw new FieldException('Attempt to create a field without a field_name.');
       }
       if (empty($values['entity_type'])) {
-        throw new FieldException(SafeMarkup::format('Attempt to create a field @field_name without an entity_type.', array('@field_name' => $values['field_name'])));
+        throw new FieldException("Attempt to create a field '{$values['field_name']}' without an entity_type.");
       }
     }
     // 'bundle' is required in either case.
     if (empty($values['bundle'])) {
-      throw new FieldException(SafeMarkup::format('Attempt to create a field @field_name without a bundle.', array('@field_name' => $values['field_name'])));
+      throw new FieldException("Attempt to create a field '{$values['field_name']}' without a bundle.");
     }
 
     parent::__construct($values, $entity_type);
@@ -288,9 +288,10 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     if (!$this->fieldStorage) {
       $fields = $this->entityManager()->getFieldStorageDefinitions($this->entity_type);
       if (!isset($fields[$this->field_name])) {
-        throw new FieldException(SafeMarkup::format('Attempt to create a field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));      }
+        throw new FieldException('Attempt to create a field {$this->field_name} that does not exist on entity type {$this->entity_type}.');
+      }
       if (!$fields[$this->field_name] instanceof FieldStorageConfigInterface) {
-        throw new FieldException(SafeMarkup::format('Attempt to create a configurable field of non-configurable field storage @field_name.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));
+        throw new FieldException("Attempt to create a configurable field of non-configurable field storage {$this->field_name}.");
       }
       $this->fieldStorage = $fields[$this->field_name];
     }

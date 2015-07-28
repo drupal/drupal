@@ -7,7 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -196,10 +195,7 @@ class SharedTempStore {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
-        throw new TempStoreException(SafeMarkup::format("Couldn't acquire lock to update item %key in %collection temporary storage.", array(
-          '%key' => $key,
-          '%collection' => $this->storage->getCollectionName(),
-        )));
+        throw new TempStoreException("Couldn't acquire lock to update item '$key' in '{$this->storage->getCollectionName()}' temporary storage.");
       }
     }
 
@@ -242,10 +238,7 @@ class SharedTempStore {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
-        throw new TempStoreException(SafeMarkup::format("Couldn't acquire lock to delete item %key from %collection temporary storage.", array(
-          '%key' => $key,
-          '%collection' => $this->storage->getCollectionName(),
-        )));
+        throw new TempStoreException("Couldn't acquire lock to delete item '$key' from {$this->storage->getCollectionName()} temporary storage.");
       }
     }
     $this->storage->delete($key);

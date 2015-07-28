@@ -429,7 +429,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function getName($theme) {
     $themes = $this->listInfo();
     if (!isset($themes[$theme])) {
-      throw new \InvalidArgumentException(SafeMarkup::format('Requested the name of a non-existing theme @theme', array('@theme' => $theme)));
+      throw new \InvalidArgumentException("Requested the name of a non-existing theme $theme");
     }
     return SafeMarkup::checkPlain($themes[$theme]->info['name']);
   }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
@@ -99,24 +98,17 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
   public static function validateName($name) {
     // The name must be namespaced by owner.
     if (strpos($name, '.') === FALSE) {
-      throw new ConfigNameException(SafeMarkup::format('Missing namespace in Config object name @name.', array(
-        '@name' => $name,
-      )));
+      throw new ConfigNameException("Missing namespace in Config object name $name.");
     }
     // The name must be shorter than Config::MAX_NAME_LENGTH characters.
     if (strlen($name) > self::MAX_NAME_LENGTH) {
-      throw new ConfigNameException(SafeMarkup::format('Config object name @name exceeds maximum allowed length of @length characters.', array(
-        '@name' => $name,
-        '@length' => self::MAX_NAME_LENGTH,
-      )));
+      throw new ConfigNameException("Config object name $name exceeds maximum allowed length of " . static::MAX_NAME_LENGTH . " characters.");
     }
 
     // The name must not contain any of the following characters:
     // : ? * < > " ' / \
     if (preg_match('/[:?*<>"\'\/\\\\]/', $name)) {
-      throw new ConfigNameException(SafeMarkup::format('Invalid character in Config object name @name.', array(
-        '@name' => $name,
-      )));
+      throw new ConfigNameException("Invalid character in Config object name $name.");
     }
   }
 
@@ -224,7 +216,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
   protected function validateKeys(array $data) {
     foreach ($data as $key => $value) {
       if (strpos($key, '.') !== FALSE) {
-        throw new ConfigValueException(SafeMarkup::format('@key key contains a dot which is not supported.', array('@key' => $key)));
+        throw new ConfigValueException("$key key contains a dot which is not supported.");
       }
       if (is_array($value)) {
         $this->validateKeys($value);

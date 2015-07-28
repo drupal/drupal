@@ -10,7 +10,6 @@ namespace Drupal\Core\Menu;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
@@ -287,7 +286,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
       }
     }
     else {
-      throw new PluginException(SafeMarkup::format('Menu link plugin with ID @id does not support deletion', array('@id' => $id)));
+      throw new PluginException("Menu link plugin with ID '$id' does not support deletion");
     }
     $this->treeStorage->delete($id);
   }
@@ -355,7 +354,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    */
   public function addDefinition($id, array $definition) {
     if ($this->treeStorage->load($id) || $id === '') {
-      throw new PluginException(SafeMarkup::format('The ID @id already exists as a plugin definition or is not valid', array('@id' => $id)));
+      throw new PluginException("The ID $id already exists as a plugin definition or is not valid");
     }
     // Add defaults, so there is no requirement to specify everything.
     $this->processDefinition($definition, $id);
@@ -402,7 +401,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
     $id = $instance->getPluginId();
 
     if (!$instance->isResettable()) {
-      throw new PluginException(SafeMarkup::format('Menu link %id is not resettable', array('%id' => $id)));
+      throw new PluginException("Menu link $id is not resettable");
     }
     // Get the original data from disk, reset the override and re-save the menu
     // tree for this link.

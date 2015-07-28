@@ -195,10 +195,7 @@ abstract class Entity implements EntityInterface {
         $uri = call_user_func($uri_callback, $this);
       }
       else {
-        throw new UndefinedLinkTemplateException(SafeMarkup::format('No link template "@rel" found for the "@entity_type" entity type', array(
-          '@rel' => $rel,
-          '@entity_type' => $this->getEntityTypeId(),
-        )));
+        throw new UndefinedLinkTemplateException("No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type");
       }
     }
 
@@ -384,12 +381,7 @@ abstract class Entity implements EntityInterface {
     if ($this->getEntityType()->getBundleOf()) {
       // Throw an exception if the bundle ID is longer than 32 characters.
       if (Unicode::strlen($this->id()) > EntityTypeInterface::BUNDLE_MAX_LENGTH) {
-        throw new ConfigEntityIdLengthException(SafeMarkup::format(
-          'Attempt to create a bundle with an ID longer than @max characters: @id.', array(
-            '@max' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
-            '@id' => $this->id(),
-          )
-        ));
+        throw new ConfigEntityIdLengthException("Attempt to create a bundle with an ID longer than " . EntityTypeInterface::BUNDLE_MAX_LENGTH . " characters: $this->id().");
       }
     }
   }

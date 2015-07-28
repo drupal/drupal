@@ -413,17 +413,12 @@ class ConfigTest extends UnitTestCase {
       // Name missing namespace (dot).
       array(
         'MissingNamespace',
-        SafeMarkup::format('Missing namespace in Config object name MissingNamespace.', array(
-          '@name' => 'MissingNamespace',
-        )),
+        'Missing namespace in Config object name MissingNamespace.',
       ),
       // Exceeds length (max length plus an extra dot).
       array(
         str_repeat('a', Config::MAX_NAME_LENGTH) . ".",
-        SafeMarkup::format('Config object name @name exceeds maximum allowed length of @length characters.', array(
-          '@name' => str_repeat('a', Config::MAX_NAME_LENGTH) . ".",
-          '@length' => Config::MAX_NAME_LENGTH,
-        )),
+        'Config object name ' . str_repeat('a', Config::MAX_NAME_LENGTH) . '. exceeds maximum allowed length of ' . Config::MAX_NAME_LENGTH . ' characters.',
       ),
     );
     // Name must not contain : ? * < > " ' / \
@@ -431,9 +426,7 @@ class ConfigTest extends UnitTestCase {
       $name = 'name.' . $char;
       $return[] = array(
         $name,
-        SafeMarkup::format('Invalid character in Config object name @name.', array(
-          '@name' => $name,
-        )),
+        "Invalid character in Config object name $name.",
       );
     }
     return $return;
