@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateForumConfigsTest.
+ * Contains \Drupal\forum\Tests\Migrate\d6\MigrateForumConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\forum\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to forum.settings.yml.
  *
- * @group migrate_drupal
+ * @group forum
  */
 class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
 
