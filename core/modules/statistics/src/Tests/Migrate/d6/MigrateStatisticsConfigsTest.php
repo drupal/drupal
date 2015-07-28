@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateStatisticsConfigsTest.
+ * Contains \Drupal\statistics\Tests\Migrate\d6\MigrateStatisticsConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\statistics\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to statistics.settings.yml.
  *
- * @group migrate_drupal
+ * @group statistics
  */
 class MigrateStatisticsConfigsTest extends MigrateDrupal6TestBase {
 
