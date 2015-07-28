@@ -14,6 +14,7 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * @addtogroup database
@@ -35,6 +36,16 @@ class Connection extends DatabaseConnection {
   protected $needsCleanup = FALSE;
 
   /**
+   * The minimal possible value for the max_allowed_packet setting of MySQL.
+   *
+   * @link https://mariadb.com/kb/en/mariadb/server-system-variables/#max_allowed_packet
+   * @link https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_max_allowed_packet
+   *
+   * @var int
+   */
+  const MIN_MAX_ALLOWED_PACKET = 1024;
+
+  /**
    * Constructs a Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options = array()) {
@@ -47,6 +58,24 @@ class Connection extends DatabaseConnection {
     $this->transactionalDDLSupport = FALSE;
 
     $this->connectionOptions = $connection_options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function query($query, array $args = array(), $options = array()) {
+    try {
+      return parent::query($query, $args, $options);
+    } catch (DatabaseException $e) {
+      if ($e->getPrevious()->errorInfo[1] == 1153) {
+        // If a max_allowed_packet error occurs the message length is truncated.
+        // This should prevent the error from recurring if the exception is
+        // logged to the database using dblog or the like.
+        $message = Unicode::truncateBytes($e->getMessage(), self::MIN_MAX_ALLOWED_PACKET);
+        $e = new DatabaseExceptionWrapper($message, $e->getCode(), $e->getPrevious());
+      }
+      throw $e;
+    }
   }
 
   /**
@@ -278,6 +307,7 @@ class Connection extends DatabaseConnection {
       }
     }
   }
+
 }
 
 
