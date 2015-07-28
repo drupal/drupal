@@ -742,6 +742,13 @@ abstract class WebTestBase extends TestBase {
       'value' => FALSE,
       'required' => TRUE,
     ];
+
+    // Send cacheability headers so tests can check their values.
+    $settings['settings']['send_cacheability_headers'] = (object) [
+      'value' => TRUE,
+      'required' => TRUE,
+    ];
+
     $this->writeSettings($settings);
     // Allow for test-specific overrides.
     $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSite . '/settings.testing.php';
