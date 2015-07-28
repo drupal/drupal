@@ -1321,6 +1321,9 @@ services:
       - [setThemeManager, ['@theme.manager']]
   authentication:
     class: Drupal\Core\Authentication\AuthenticationManager
+    arguments: ['@authentication_collector']
+  authentication_collector:
+    class: Drupal\Core\Authentication\AuthenticationCollector
     tags:
       - { name: service_collector, tag: authentication_provider, call: addProvider }
   authentication_subscriber:
