@@ -74,7 +74,7 @@ abstract class ConfigFactoryOverrideBase implements EventSubscriberInterface {
     }
     elseif ($changed) {
       // Otherwise set the filtered override values back.
-      $override->setData($override_data)->save();
+      $override->setData($override_data)->save(TRUE);
     }
   }
 

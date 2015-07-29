@@ -21,11 +21,16 @@ final class ConfigEvents {
    * object is saved. The event listener method receives a
    * \Drupal\Core\Config\ConfigCrudEvent instance.
    *
+   * See hook_update_N() documentation for safe configuration API usage and
+   * restrictions as this event will be fired when configuration is saved by
+   * hook_update_N().
+   *
    * @Event
    *
    * @see \Drupal\Core\Config\ConfigCrudEvent
    * @see \Drupal\Core\Config\Config::save()
    * @see \Drupal\Core\Config\ConfigFactory::onConfigSave()
+   * @see hook_update_N()
    *
    * @var string
    */
@@ -38,11 +43,16 @@ final class ConfigEvents {
    * object is deleted. The event listener method receives a
    * \Drupal\Core\Config\ConfigCrudEvent instance.
    *
+   * See hook_update_N() documentation for safe configuration API usage and
+   * restrictions as this event will be fired when configuration is deleted by
+   * hook_update_N().
+   *
    * @Event
    *
    * @see \Drupal\Core\Config\ConfigCrudEvent
    * @see \Drupal\Core\Config\Config::delete()
    * @see \Drupal\Core\Config\ConfigFactory::onConfigDelete()
+   * @see hook_update_N()
    *
    * @var string
    */
@@ -55,10 +65,15 @@ final class ConfigEvents {
    * object's name is changed. The event listener method receives a
    * \Drupal\Core\Config\ConfigRenameEvent instance.
    *
+   * See hook_update_N() documentation for safe configuration API usage and
+   * restrictions as this event will be fired when configuration is renamed by
+   * hook_update_N().
+   *
    * @Event
    *
    * @see \Drupal\Core\Config\ConfigRenameEvent
-   * @see \Drupal\Core\Config\ConfigFactoryInterface::rename().
+   * @see \Drupal\Core\Config\ConfigFactoryInterface::rename()
+   * @see hook_update_N()
    *
    * @var string
    */

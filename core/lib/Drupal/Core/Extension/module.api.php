@@ -466,11 +466,30 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * In order to call a function from your mymodule.module or an include file,
  * you need to explicitly load that file first.
  *
- * During database updates the schema of any module could be out of date. For
- * this reason, caution is needed when using any API function within an update
+ * Implementations must ensure that APIs used are safe during updates. During
+ * database updates the schema of any module could be out of date. For this
+ * reason, caution is needed when using any API function within an update
  * function - particularly CRUD functions, functions that depend on the schema
- * (for example by using drupal_write_record()), and any functions that invoke
- * hooks.
+ * (for example by using \Drupal\Core\Entity\Entity::save()), and any functions
+ * that invoke hooks.
+ *
+ * The following actions are examples that are safe:
+ * - Cache invalidation.
+ * - Using \Drupal::configFactory()->getEditable() and \Drupal::config().
+ *   Implementations must:
+ *   - Not make any assumption that the config data is valid.
+ *   - Use the correct data type when changing configuration values as specified
+ *     by its configuration schema at the time the update hook is written. If
+ *     the data type changes in a subsequent code change, a subsequent update
+ *     hook is responsible for ensuring the final data type aligns with the
+ *     configuration schema.
+ *   - Use the $has_trusted_data argument for \Drupal\Core\Config\Config::save()
+ *     so that configuration schemas are not used whilst saving configuration.
+ * - Marking a container for rebuild.
+ *
+ * The following actions are examples that are unsafe:
+ * - Loading, saving, or performing any other operation on an entity.
+ * - Rebuilding the router using \Drupal::service('router.builder')->rebuild().
  *
  * The $sandbox parameter should be used when a multipass update is needed, in
  * circumstances where running the whole update at once could cause PHP to
