@@ -249,7 +249,8 @@
     },
 
     /**
-     * Calls the endpoint URI that will return rendered subtrees with JSONP.
+     * Calls the endpoint URI that builds an AJAX command with the rendered
+     * subtrees.
      *
      * The rendered admin menu subtrees HTML is cached on the client in
      * localStorage until the cache of the admin menu subtrees on the server-
@@ -267,9 +268,10 @@
       //   (3) The orientation of the tray is vertical.
       if (!this.model.get('areSubtreesLoaded') && typeof $activeTab.data('drupal-subtrees') !== 'undefined' && orientation === 'vertical') {
         var subtreesHash = drupalSettings.toolbar.subtreesHash;
+        var theme = drupalSettings.ajaxPageState.theme;
         var endpoint = Drupal.url('toolbar/subtrees/' + subtreesHash);
-        var cachedSubtreesHash = localStorage.getItem('Drupal.toolbar.subtreesHash');
-        var cachedSubtrees = JSON.parse(localStorage.getItem('Drupal.toolbar.subtrees'));
+        var cachedSubtreesHash = localStorage.getItem('Drupal.toolbar.subtreesHash.' + theme);
+        var cachedSubtrees = JSON.parse(localStorage.getItem('Drupal.toolbar.subtrees.' + theme));
         var isVertical = this.model.get('orientation') === 'vertical';
         // If we have the subtrees in localStorage and the subtree hash has not
         // changed, then use the cached data.
@@ -280,13 +282,13 @@
         // toolbar is vertical.
         else if (isVertical) {
           // Remove the cached menu information.
-          localStorage.removeItem('Drupal.toolbar.subtreesHash');
-          localStorage.removeItem('Drupal.toolbar.subtrees');
-          // The response from the server will call the resolve method of the
+          localStorage.removeItem('Drupal.toolbar.subtreesHash.' + theme);
+          localStorage.removeItem('Drupal.toolbar.subtrees.' + theme);
+          // The AJAX response's command will trigger the resolve method of the
           // Drupal.toolbar.setSubtrees Promise.
-          $.ajax(endpoint);
+          Drupal.ajax({url: endpoint}).execute();
           // Cache the hash for the subtrees locally.
-          localStorage.setItem('Drupal.toolbar.subtreesHash', subtreesHash);
+          localStorage.setItem('Drupal.toolbar.subtreesHash.' + theme, subtreesHash);
         }
       }
     }

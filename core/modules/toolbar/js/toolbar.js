@@ -79,7 +79,8 @@
         // asynchronously.
         Drupal.toolbar.setSubtrees.done(function (subtrees) {
           menuModel.set('subtrees', subtrees);
-          localStorage.setItem('Drupal.toolbar.subtrees', JSON.stringify(subtrees));
+          var theme = drupalSettings.ajaxPageState.theme;
+          localStorage.setItem('Drupal.toolbar.subtrees.' + theme, JSON.stringify(subtrees));
           // Indicate on the toolbarModel that subtrees are now loaded.
           model.set('areSubtreesLoaded', true);
         });
@@ -231,6 +232,17 @@
     return '<div class="toolbar-toggle-orientation"><div class="toolbar-lining">' +
       '<button class="toolbar-icon" type="button"></button>' +
       '</div></div>';
+  };
+
+  /**
+   * Ajax command to set the toolbar subtrees.
+   *
+   * @param {Drupal.Ajax} ajax
+   * @param {object} response
+   * @param {number} [status]
+   */
+  Drupal.AjaxCommands.prototype.setToolbarSubtrees = function (ajax, response, status) {
+    Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
 
 }(jQuery, Drupal, drupalSettings));
