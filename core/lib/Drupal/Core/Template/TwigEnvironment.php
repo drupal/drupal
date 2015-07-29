@@ -119,12 +119,7 @@ class TwigEnvironment extends \Twig_Environment {
     if (!class_exists($cls, FALSE)) {
       $cache_filename = $this->getCacheFilename($name);
 
-      if ($cache_filename === FALSE) {
-        $compiled_source = $this->compileSource($this->loader->getSource($name), $name);
-        eval('?' . '>' . $compiled_source);
-      }
-      else {
-
+      if ($cache_filename !== FALSE) {
         // If autoreload is on, check that the template has not been
         // modified since the last compilation.
         if ($this->isAutoReload() && !$this->isFresh($cache_filename, $name)) {
@@ -135,6 +130,10 @@ class TwigEnvironment extends \Twig_Environment {
           $this->updateCompiledTemplate($cache_filename, $name);
           $this->storage()->load($cache_filename);
         }
+      }
+      if (!class_exists($cls, FALSE)) {
+        $compiled_source = $this->compileSource($this->loader->getSource($name), $name);
+        eval('?' . '>' . $compiled_source);
       }
     }
 
