@@ -98,7 +98,7 @@ label[for] {
 }
 .form-item--error-message {
   margin-top: 0.15em;
-  color: #ea2800;
+  color: #e32700;
 }
 .fieldset-wrapper > .form-item--error-message {
   margin-top: 0;
