@@ -693,26 +693,6 @@ function system_requirements($phase) {
     }
   }
 
-  // Ensure that if upgrading from 7 to 8 we have no disabled modules.
-  if ($phase == 'update' && db_table_exists('system')) {
-    $modules = db_query('SELECT name, info FROM {system} WHERE type = :module AND status = 0 AND schema_version <> :schema_uninstalled', array(
-      ':module' => 'module',
-      ':schema_uninstalled' => SCHEMA_UNINSTALLED,
-    ))->fetchAllKeyed(0, 1);
-    array_walk($modules, function (&$value, $key) {
-      $info = unserialize($value);
-      $value = $info['name'];
-    });
-    if (!empty($modules)) {
-      $requirements['disabled_modules'] = array(
-        'severity' => REQUIREMENT_ERROR,
-        'title' => t('Disabled modules'),
-        'value' => \Drupal::translation()->formatPlural(count($modules), 'The %modules module is disabled.', 'The following modules are disabled: %modules', array('%modules' => implode(', ', $modules))),
-        'description' => t('Drupal 8 no longer supports disabled modules. Please either enable or uninstall them before upgrading.'),
-      );
-    }
-  }
-
   // See if trusted hostnames have been configured, and warn the user if they
   // are not set.
   if ($phase == 'runtime') {
