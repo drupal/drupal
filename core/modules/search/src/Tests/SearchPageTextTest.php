@@ -31,6 +31,22 @@ class SearchPageTextTest extends SearchTestBase {
   }
 
   /**
+   * Tests for XSS in search module local task.
+   *
+   * This is a regression test for https://www.drupal.org/node/2338081
+   */
+  function testSearchLabelXSS() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer search')));
+
+    $keys['label'] = '<script>alert("Dont Panic");</script>';
+    $this->drupalPostForm('admin/config/search/pages/manage/node_search', $keys, t('Save search page'));
+
+    $this->drupalLogin($this->searchingUser);
+    $this->drupalGet('search/node');
+    $this->assertEscaped($keys['label']);
+  }
+
+  /**
    * Tests the failed search text, and various other text on the search page.
    */
   function testSearchText() {
@@ -135,6 +151,5 @@ class SearchPageTextTest extends SearchTestBase {
     $this->drupalPostForm('search/node', array('keys' => '.something'), t('Search'));
     $this->assertResponse(200, 'Searching for .something does not lead to a 403 error');
     $this->assertText('no results', 'Searching for .something gives you a no search results page');
-
   }
 }
