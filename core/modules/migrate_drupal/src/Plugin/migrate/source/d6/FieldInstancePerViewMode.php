@@ -7,6 +7,8 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
+use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;
+
 /**
  * The field instance per view mode source class.
  *

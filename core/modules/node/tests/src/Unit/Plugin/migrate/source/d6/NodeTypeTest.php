@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\NodeTypeTest.
+ * Contains \Drupal\Tests\node\Unit\Plugin\migrate\source\d6\NodeTypeTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\node\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 node type source plugin.
  *
- * @group migrate_drupal
+ * @group node
  */
 class NodeTypeTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\NodeType';
+  const PLUGIN_CLASS = 'Drupal\node\Plugin\migrate\source\d6\NodeType';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(

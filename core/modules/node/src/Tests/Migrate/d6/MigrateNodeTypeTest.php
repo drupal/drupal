@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateNodeTypeTest.
+ * Contains \Drupal\node\Tests\Migrate\d6\MigrateNodeTypeTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\NodeType;
 
 /**
  * Upgrade node types to node.type.*.yml.
  *
- * @group migrate_drupal
+ * @group node
  */
 class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 

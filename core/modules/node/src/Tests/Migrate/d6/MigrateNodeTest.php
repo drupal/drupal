@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateNodeTest.
+ * Contains \Drupal\node\Tests\Migrate\d6\MigrateNodeTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
 /**
  * Node content migration.
  *
- * @group migrate_drupal
+ * @group node
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
 

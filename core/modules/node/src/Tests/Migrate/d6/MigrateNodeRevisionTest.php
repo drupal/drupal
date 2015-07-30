@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateNodeRevisionTest.
+ * Contains \Drupal\node\Tests\Migrate\d6\MigrateNodeRevisionTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\Core\Database\Database;
 
 /**
  * Node content revisions migration.
  *
- * @group migrate_drupal
+ * @group node
  */
 class MigrateNodeRevisionTest extends MigrateNodeTestBase {
 

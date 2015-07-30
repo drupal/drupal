@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\NodeRevisionTest.
+ * Contains \Drupal\Tests\node\Unit\Plugin\migrate\source\d6\NodeRevisionTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\node\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 node revision source plugin.
  *
- * @group migrate_drupal
+ * @group node
  */
 class NodeRevisionTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\NodeRevision';
+  const PLUGIN_CLASS = 'Drupal\node\Plugin\migrate\source\d6\NodeRevision';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = [

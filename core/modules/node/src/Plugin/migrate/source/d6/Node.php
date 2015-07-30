@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\Node.
+ * Contains \Drupal\node\Plugin\migrate\source\d6\Node.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\node\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\SourceEntityInterface;

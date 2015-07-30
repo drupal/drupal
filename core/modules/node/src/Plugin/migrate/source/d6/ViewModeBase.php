@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\ViewModeBase.
+ * Contains \Drupal\node\Plugin\migrate\source\d6\ViewModeBase.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\node\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -13,7 +13,6 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * A base class for migrations that require view mode info.
  */
 abstract class ViewModeBase extends DrupalSqlBase {
-
 
   /**
    * {@inheritdoc}

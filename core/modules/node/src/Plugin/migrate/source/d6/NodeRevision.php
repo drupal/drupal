@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\NodeRevision.
+ * Contains \Drupal\node\Plugin\migrate\source\d6\NodeRevision.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\node\Plugin\migrate\source\d6;
 
 /**
  * Drupal 6 node revision source from database.

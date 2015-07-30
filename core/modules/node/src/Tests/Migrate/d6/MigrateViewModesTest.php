@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateViewModesTest.
+ * Contains \Drupal\node\Tests\Migrate\d6\MigrateViewModesTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate view modes.
  *
- * @group migrate_drupal
+ * @group node
  */
 class MigrateViewModesTest extends MigrateDrupal6TestBase {
 

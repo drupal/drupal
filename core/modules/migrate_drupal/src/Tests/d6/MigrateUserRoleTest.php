@@ -21,7 +21,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  static $modules = array('filter');
+  static $modules = array('filter', 'node');
 
   /**
    * {@inheritdoc}

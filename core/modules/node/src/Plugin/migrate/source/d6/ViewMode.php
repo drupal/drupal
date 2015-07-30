@@ -2,15 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\ViewMode.
+ * Contains \Drupal\node\Plugin\migrate\source\d6\ViewMode.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
-
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Entity\MigrationInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+namespace Drupal\node\Plugin\migrate\source\d6;
 
 /**
  * The view mode source.

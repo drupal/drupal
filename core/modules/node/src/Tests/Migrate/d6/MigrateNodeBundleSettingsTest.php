@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateNodeBundleSettingsTest.
+ * Contains \Drupal\node\Tests\Migrate\d6\MigrateNodeBundleSettingsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\node\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Test migrating node settings into the base_field_bundle_override config entity.
  *
- * @group migrate_drupal
+ * @group node
  */
 class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
 
