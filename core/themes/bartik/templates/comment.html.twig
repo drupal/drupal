@@ -70,6 +70,7 @@
 {%
   set classes = [
     'comment',
+    'js-comment',
     status != 'published' ? 'comment--' ~ status,
     comment.owner.anonymous ? 'by-anonymous',
     author_id and author_id == commented_entity.getOwnerId() ? 'by-' ~ commented_entity.getEntityTypeId() ~ '-author',
@@ -77,43 +78,37 @@
   ]
 %}
 <article role="article"{{ attributes.addClass(classes)|without('role') }}>
-  <header class="comment-header">
-    <div class="comment__attribution">
-      {{ user_picture }}
-      <div class="comment__submitted">
-        <p class="comment__author comment__submitted__data">{{ author }}</p>
-        <p class="comment__time comment__submitted__data">{{ created }}</p>
-        <p class="comment__permalink comment__submitted__data">{{ permalink }}</p>
-        {#
-          // Indicate the semantic relationship between parent and child comments
-          // for accessibility. The list is difficult to navigate in a screen
-          // reader without this information.
-        #}
-        {% if parent %}
-          <p class="visually-hidden">{{ parent }}</p>
-        {% endif %}
-      </div>
-    </div>
-  </header>
-  <div class="comment__text">
+  {#
+    Hide the "new" indicator by default, let a piece of JavaScript ask the
+    server which comments are new for the user. Rendering the final "new"
+    indicator here would break the render cache.
+  #}
+  <span class="hidden" data-comment-timestamp="{{ new_indicator_timestamp }}"></span>
+
+  <footer class="comment__meta">
+    {{ user_picture }}
+    <p class="comment__author">{{ author }}</p>
+    <p class="comment__time">{{ created }}</p>
+    <p class="comment__permalink">{{ permalink }}</p>
     {#
-    Hide the "new" indicator by default, let a piece of JavaScript ask
-    the server which comments are new for the user. Rendering the final
-    "new" indicator here would break the render cache.
+      Indicate the semantic relationship between parent and child comments
+      for accessibility. The list is difficult to navigate in a screen
+      reader without this information.
     #}
-    <span class="hidden new" data-comment-timestamp="{{ new_indicator_timestamp }}"></span>
+    {% if parent %}
+      <p class="visually-hidden">{{ parent }}</p>
+    {% endif %}
+  </footer>
+
+  <div{{ content_attributes.addClass('comment__content') }}>
     {% if title %}
       {{ title_prefix }}
-        <h3{{ title_attributes }}>{{ title }}</h3>
+      <h3{{ title_attributes }}>{{ title }}</h3>
       {{ title_suffix }}
     {% endif %}
-    <div{{ content_attributes.addClass('comment__content') }}>
-      {{ content|without('links') }}
-    </div>
-    <footer class="comment__footer">
-      {% if content.links %}
-        <nav>{{ content.links }}</nav>
-      {% endif %}
-    </footer>
+    {{ content|without('links') }}
+    {% if content.links %}
+      <nav>{{ content.links }}</nav>
+    {% endif %}
   </div>
 </article>

@@ -65,7 +65,7 @@
         var $comment = $(placeholder)
           .removeClass('hidden')
           .text(newCommentString)
-          .closest('.comment')
+          .closest('.js-comment')
           // Add 'new' class to the comment, so it can be styled.
           .addClass('new');
 
