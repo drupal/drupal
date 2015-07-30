@@ -40,15 +40,11 @@ class MenuLinkManager implements MenuLinkManagerInterface {
     'route_parameters' => array(),
     // The external URL if this link has one (required if route_name is empty).
     'url' => '',
-    // The static title for the menu link. You can specify placeholders like on
-    // any translatable string and the values in title_arguments.
+    // The static title for the menu link. If this came from a YAML definition
+    // or other safe source this may be a TranslationWrapper object.
     'title' => '',
-    // The values for the menu link placeholders.
-    'title_arguments' => array(),
-    // A context for the title string.
-    // @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
-    'title_context' => '',
-    // The description.
+    // The description. If this came from a YAML definition or other safe source
+    // this may be be a TranslationWrapper object.
     'description' => '',
     // The plugin ID of the parent link (or NULL for a top-level link).
     'parent' => '',
@@ -147,8 +143,10 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $this->discovery = new YamlDiscovery('links.menu', $this->moduleHandler->getModuleDirectories());
-      $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+      $yaml_discovery = new YamlDiscovery('links.menu', $this->moduleHandler->getModuleDirectories());
+      $yaml_discovery->addTranslatableProperty('title', 'title_context');
+      $yaml_discovery->addTranslatableProperty('description', 'description_context');
+      $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml_discovery);
     }
     return $this->discovery;
   }

@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
@@ -47,8 +47,8 @@ function editor_help($route_name, RouteMatchInterface $route_match) {
  * of text editors.
  */
 function editor_menu_links_discovered_alter(array &$links) {
-  $links['filter.admin_overview']['title'] = 'Text formats and editors';
-  $links['filter.admin_overview']['description'] = 'Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).';
+  $links['filter.admin_overview']['title'] = new TranslationWrapper('Text formats and editors');
+  $links['filter.admin_overview']['description'] = new TranslationWrapper('Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).');
 }
 
 /**

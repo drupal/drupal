@@ -354,7 +354,6 @@ class MenuTreeStorageTest extends KernelTestBase {
       'menu_name' => $menu_name,
       'route_name' => $route_name,
       'route_parameters' => $route_parameters,
-      'title_arguments' => array(),
       'title' => 'test',
       'parent' => $parent,
       'options' => array(),

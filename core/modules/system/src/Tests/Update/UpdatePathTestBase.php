@@ -199,4 +199,21 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $this->clickLink(t('Apply pending updates'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function rebuildAll() {
+    parent::rebuildAll();
+
+    // Remove the notices we get due to the menu link rebuild prior to running
+    // the system updates for the schema change.
+    foreach ($this->assertions as $key => $assertion) {
+      if ($assertion['message_group'] == 'Notice' && basename($assertion['file']) == 'MenuTreeStorage.php' && strpos($assertion['message'], 'unserialize(): Error at offset 0') !== FALSE) {
+        unset($this->assertions[$key]);
+        $this->deleteAssert($assertion['message_id']);
+        $this->results['#exception']--;
+      }
+    }
+  }
+
 }

@@ -79,3 +79,7 @@ menu_test.child:
   title: 'Test menu_name child'
   route_name: menu_test.menu_name_test
   parent: menu_test.parent
+
+menu_test.unsafe:
+  route_name: menu_test.menu_name_test
+  deriver: '\Drupal\menu_test\Plugin\Derivative\MenuLinkTestWithUnsafeTitle'

@@ -1140,3 +1140,66 @@ function system_schema() {
 
   return $schema;
 }
+
+/**
+ * Change two fields on the default menu link storage to be serialized data.
+ */
+function system_update_8001(&$sandbox = NULL) {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  if ($schema->tableExists('menu_tree')) {
+
+    if (!isset($sandbox['current'])) {
+      $spec = array(
+        'description' => 'The title for the link. May be a serialized TranslationWrapper.',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      );
+      $schema->changeField('menu_tree', 'title', 'title', $spec);
+      $spec = array(
+        'description' => 'The description of this link - used for admin pages and title attribute.',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      );
+      $schema->changeField('menu_tree', 'description', 'description', $spec);
+
+      $sandbox['current'] = 0;
+      $sandbox['max'] = $database->query('SELECT COUNT(mlid) FROM {menu_tree}')
+        ->fetchField();
+    }
+
+    $menu_links = $database->queryRange('SELECT mlid, title, description FROM {menu_tree} ORDER BY mlid ASC', $sandbox['current'], $sandbox['current'] + 50)
+      ->fetchAllAssoc('mlid');
+
+    foreach ($menu_links as $menu_link) {
+      $menu_link = (array) $menu_link;
+      // Convert title and description to serialized strings.
+      $menu_link['title'] = serialize($menu_link['title']);
+      $menu_link['description'] = serialize($menu_link['description']);
+
+      $database->update('menu_tree')
+        ->fields($menu_link)
+        ->condition('mlid', $menu_link['mlid'])
+        ->execute();
+
+      $sandbox['current']++;
+    }
+
+    $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
+
+    if ($sandbox['#finished'] >= 1) {
+      // Drop unnecessary fields from {menu_tree}.
+      $schema->dropField('menu_tree', 'title_arguments');
+      $schema->dropField('menu_tree', 'title_context');
+    }
+    return t('Menu links converted');
+  }
+  else {
+    return t('Menu link conversion skipped, because the {menu_tree} table did not exist yet.');
+  }
+}
+
