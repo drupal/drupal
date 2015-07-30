@@ -28,7 +28,7 @@ class DateFormatsLockedTest extends WebTestBase {
     $this->drupalGet('admin/config/regional/date-time');
     $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/short');
     $this->assertNoLinkByHref('admin/config/regional/date-time/formats/manage/html_date');
-    $this->assertText('fallback (locked)');
+    $this->assertText('Fallback date format');
     $this->assertNoText('short (locked)');
 
     // Locked date formats are not editable.

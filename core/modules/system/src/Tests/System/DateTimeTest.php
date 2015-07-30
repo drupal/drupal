@@ -88,7 +88,7 @@ class DateTimeTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
     $this->assertUrl(\Drupal::url('entity.date_format.collection', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     $this->assertText(t('Custom date format added.'), 'Date format added confirmation message appears.');
-    $this->assertText($date_format_id, 'Custom date format appears in the date format list.');
+    $this->assertText($name, 'Custom date format appears in the date format list.');
     $this->assertText(t('Delete'), 'Delete link for custom date format appears.');
 
     // Edit the custom date format and re-save without editing the format.
