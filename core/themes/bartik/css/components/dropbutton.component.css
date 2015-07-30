@@ -1,13 +1,15 @@
-/* ---------- Dropbutton ----------- */
-.js .dropbutton-multiple.open .dropbutton-widget {
-  border-radius: 1em;
+/**
+ * @file
+ * Visual styles for Bartik's dropbutton component.
+ */
+
+.js .dropbutton-wrapper .dropbutton-widget {
+  /* This is required to win over specifity of .js td .dropbutton-widget */
+  position: relative;
 }
 .js .dropbutton-widget {
-  position: relative !important;
-  border: 1px solid #e4e4e4;
-  border-bottom-color: #b4b4b4;
-  border-left-color: #d2d2d2;
-  border-right-color: #d2d2d2;
+  border: 1px solid;
+  border-color: #e4e4e4 #d2d2d2 #b4b4b4 #d2d2d2;
   background-color: #fff;
   background-image: -webkit-linear-gradient(top, #f3f3f3, #e8e8e8);
   background-image: linear-gradient(to bottom, #f3f3f3, #e8e8e8);
@@ -16,96 +18,40 @@
   text-align: center;
   margin: 0.125em 0;
   border-radius: 1em;
+  overflow: hidden;
 }
 .js .dropbutton-widget:hover {
-  border-top-color: #e4e4e4;
-  border-bottom-color: #b4b4b4;
-  border-left-color: #d2d2d2;
-  border-right-color: #d2d2d2;
+  border-color: #e4e4e4 #d2d2d2 #b4b4b4 #d2d2d2;
 }
 .js .dropbutton-widget .button {
   border: none;
   margin: 0;
   padding: 0.32em 1em;
-  width: 100%;
-  border-radius: 1em;
-}
-.js .dropbutton-widget .button:hover {
-  border-radius: 1em 0 0 1em; /* LTR */
-}
-[dir="rtl"].js .dropbutton-widget .button:hover {
-  border-radius: 0 1em 1em 0;
-}
-.js .dropbutton-single .dropbutton-widget .dropbutton-action a {
-  color: #3a3a3a;
-}
-.js .dropbutton-single .dropbutton-widget .dropbutton-action a:hover {
-  background: #dedede;
-  border-radius: 1em;
+  background: transparent none;
 }
 .js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
-  color: #3a3a3a;
   margin-right: 0; /* LTR */
 }
 [dir="rtl"].js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
   margin-left: 0;
 }
-.js .dropbutton-multiple .dropbutton-widget .dropbutton-action a:hover {
-  background: #dedede;
-}
-.js .dropbutton-multiple .dropbutton-widget .dropbutton-action:first-child a:hover {
-  border-radius: 1em 0 0 1em; /* LTR */
-}
-[dir="rtl"].js .dropbutton-multiple .dropbutton-widget .dropbutton-action:first-child a:hover {
-  border-radius: 0 1em 1em 0;
-}
-.js .dropbutton-multiple.open .dropbutton-widget .dropbutton-action:first-child a:hover {
-  border-radius: 1em 0 0 0; /* LTR */
-}
-[dir="rtl"].js .dropbutton-multiple.open .dropbutton-widget .dropbutton-action:first-child a:hover {
-  border-radius: 0 1em 0 0;
-}
-.js .dropdown-widget .publish .button {
-  border-radius: 1em 0 0 1em; /* LTR */
-}
-[dir="rtl"].js .dropbutton-widget .publish .button {
-  border-radius: 0 1em 1em 0;
-}
-.js .dropbutton-multiple.open .dropbutton-action:first-child a,
-.js .dropbutton-multiple.open .dropbutton-action:first-child .button {
-  border-radius: 1em 0 0 0; /* LTR */
-}
-[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:first-child a,
-[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:first-child .button {
-  border-radius: 0 1em 0 0;
-}
-.js .dropbutton-multiple.open .dropbutton-action:last-child a,
-.js .dropbutton-multiple.open .dropbutton-action:last-child .button {
-  border-radius: 0 0 0 1em; /* LTR */
-}
-[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:last-child a,
-[dir="rtl"].js .dropbutton-multiple.open .dropbutton-action:last-child .button {
-  border-radius: 0 0 1em 0;
-}
 .js .dropbutton .secondary-action {
   border-top-color: #ccc;
 }
 .js .dropbutton-toggle button {
-  border-radius: 0 1em 1em 0; /* LTR */
   background-color: #e8e8e8;
   background-image: -webkit-linear-gradient(top, #e8e8e8, #d2d2d2);
   background-image: linear-gradient(to bottom, #e8e8e8, #d2d2d2);
 }
-[dir="rtl"].js .dropbutton-toggle button {
-  border-radius: 1em 0 0 1em;
-}
-.js .dropbutton-toggle .button:hover {
+.js .dropbutton-toggle .dropbutton-arrow:hover {
   background: #ccc;
 }
-
 .js .dropbutton a {
-  border-bottom: none;
+  color: #3a3a3a;
+  border-bottom: 0 none;
 }
+.js .dropbutton .dropbutton-action:hover,
 .js .dropbutton a:hover {
-  border-bottom-style: none;
+  background: #dedede;
+  border-bottom: 0 none;
 }
