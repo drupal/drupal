@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateMenuConfigsTest.
+ * Contains \Drupal\menu_ui\Tests\Migrate\d6\MigrateMenuConfigsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\menu_ui\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to menu_ui.settings.yml.
  *
- * @group migrate_drupal
+ * @group menu_ui
  */
 class MigrateMenuConfigsTest extends MigrateDrupal6TestBase {
 
