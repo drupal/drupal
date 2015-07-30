@@ -76,25 +76,27 @@ function color_library_info_alter(&$libraries, $extension) {
     $color_paths = \Drupal::config('color.theme.' . $extension)->get('stylesheets');
     if (!empty($color_paths)) {
       foreach (array_keys($libraries) as $name) {
-        // Override stylesheets.
-        foreach ($libraries[$name]['css'] as $category => $css_assets) {
-          foreach ($css_assets as $path  => $metadata) {
-            // Loop over the path array with recolored CSS files to find matching
-            // paths which could replace the non-recolored paths.
-            foreach ($color_paths as $color_path) {
-              // Color module currently requires unique file names to be used,
-              // which allows us to compare different file paths.
-              if (drupal_basename($path) == drupal_basename($color_path)) {
-                // Replace the path to the new css file.
-                // This keeps the order of the stylesheets intact.
-                $index = array_search($path, array_keys($libraries[$name]['css'][$category]));
-                $preceding_css_assets = array_slice($libraries[$name]['css'][$category], 0, $index);
-                $succeeding_css_assets = array_slice($libraries[$name]['css'][$category], $index + 1);
-                $libraries[$name]['css'][$category] = array_merge(
-                  $preceding_css_assets,
-                  [$color_path => $metadata],
-                  $succeeding_css_assets
-                );
+        if(isset($libraries[$name]['css'])) {
+          // Override stylesheets.
+          foreach ($libraries[$name]['css'] as $category => $css_assets) {
+            foreach ($css_assets as $path  => $metadata) {
+              // Loop over the path array with recolored CSS files to find matching
+              // paths which could replace the non-recolored paths.
+              foreach ($color_paths as $color_path) {
+                // Color module currently requires unique file names to be used,
+                // which allows us to compare different file paths.
+                if (drupal_basename($path) == drupal_basename($color_path)) {
+                  // Replace the path to the new css file.
+                  // This keeps the order of the stylesheets intact.
+                  $index = array_search($path, array_keys($libraries[$name]['css'][$category]));
+                  $preceding_css_assets = array_slice($libraries[$name]['css'][$category], 0, $index);
+                  $succeeding_css_assets = array_slice($libraries[$name]['css'][$category], $index + 1);
+                  $libraries[$name]['css'][$category] = array_merge(
+                    $preceding_css_assets,
+                    [$color_path => $metadata],
+                    $succeeding_css_assets
+                  );
+                }
               }
             }
           }
