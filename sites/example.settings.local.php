@@ -59,13 +59,6 @@ $config['system.performance']['js']['preprocess'] = FALSE;
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 
 /**
- * Send cacheablity headers for debugging purposes.
- *
- * By default, cacheability headers are only sent when behind a reverse proxy.
- */
-$settings['send_cacheability_headers'] = TRUE;
-
-/**
  * Allow test modules and themes to be installed.
  *
  * Drupal ignores test modules and themes by default for performance reasons.
