@@ -71,6 +71,10 @@ abstract class MigrateUploadBase extends MigrateDrupal6TestBase {
       array(array(1), array(1)),
       array(array(2), array(2)),
     );
+    $id_mappings['d6_upload_field_instance'] = [
+      [['story'], ['node', 'story', 'upload']],
+    ];
+
     $this->prepareMigrations($id_mappings);
     $vids = array(1, 2, 3);
     for ($i = 1; $i <= 2; $i++) {

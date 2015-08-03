@@ -25,3 +25,4 @@ migration_dependencies:
   required:
     - d6_file
     - d6_node
+    - d6_upload_field_instance
