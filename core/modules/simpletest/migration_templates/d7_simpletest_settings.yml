@@ -1,0 +1,21 @@
+id: d7_simpletest_settings
+label: Drupal 7 SimpleTest configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - simpletest_clear_results
+    - simpletest_httpauth_method
+    - simpletest_httpauth_password
+    - simpletest_httpauth_username
+    - simpletest_verbose
+process:
+  clear_results: simpletest_clear_results
+  'httpauth/method': simpletest_httpauth_method
+  'httpauth/password': simpletest_httpauth_password
+  'httpauth/username': simpletest_httpauth_username
+  verbose: simpletest_verbose
+destination:
+  plugin: config
+  config_name: simpletest.settings

@@ -290,6 +290,21 @@ class Variable extends DrupalDumpBase {
       'name' => 'search_default_module',
       'value' => 's:4:"node";',
     ))->values(array(
+      'name' => 'simpletest_clear_results',
+      'value' => 'b:1;',
+    ))->values(array(
+      'name' => 'simpletest_httpauth_method',
+      'value' => 'i:1;',
+    ))->values(array(
+      'name' => 'simpletest_httpauth_password',
+      'value' => 's:6:"foobaz";',
+    ))->values(array(
+      'name' => 'simpletest_httpauth_username',
+      'value' => 's:7:"testbot";',
+    ))->values(array(
+      'name' => 'simpletest_verbose',
+      'value' => 'b:1;',
+    ))->values(array(
       'name' => 'site_403',
       'value' => 's:4:"node";',
     ))->values(array(
@@ -449,4 +464,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#5b6552f715939e2b33c22779e47e73e3
+#029f6b476578be5d7449a86251be1c77
