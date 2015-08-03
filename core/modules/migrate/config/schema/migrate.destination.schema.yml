@@ -17,14 +17,6 @@ migrate.destination.config:
       type: string
       label: 'Configuration name'
 
-migrate.destination.entity:user:
-  type: migrate_destination
-  label: 'User'
-  mapping:
-    md5_passwords:
-      type: boolean
-      label: 'Passwords'
-
 migrate.destination.entity:file:
   type: migrate_destination
   label: 'Picture'
