@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -139,10 +140,12 @@ class MigrateSourceTest extends MigrateTestCase {
    * Test that the source count is correct.
    */
   public function testCount() {
-
+    // Mock the cache to validate set() receives appropriate arguments.
     $container = new ContainerBuilder();
-    $container->register('cache.migrate', 'Drupal\Core\Cache\NullBackend')
-      ->setArguments(['migrate']);
+    $cache = $this->getMock(CacheBackendInterface::class);
+    $cache->expects($this->any())->method('set')
+        ->with($this->isType('string'), $this->isType('int'), $this->isType('int'));
+    $container->set('cache.migrate', $cache);
     \Drupal::setContainer($container);
 
     // Test that the basic count works.
