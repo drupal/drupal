@@ -801,6 +801,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translation->translations = &$this->translations;
     $translation->enforceIsNew = &$this->enforceIsNew;
     $translation->newRevision = &$this->newRevision;
+    $translation->entityKeys = &$this->entityKeys;
+    $translation->translatableEntityKeys = &$this->translatableEntityKeys;
     $translation->translationInitialize = FALSE;
     $translation->typedData = NULL;
 
