@@ -284,7 +284,11 @@ class NumberFieldTest extends WebTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
-    $this->assertRaw(round($value, 2), 'Value is displayed.');
+
+    // Ensure that the 'number_decimal' formatter displays the number with the
+    // expected rounding.
+    $this->drupalGet('entity_test/' . $id);
+    $this->assertRaw(round($value, 2));
 
     // Try to create entries with more than one decimal separator; assert fail.
     $wrong_entries = array(
