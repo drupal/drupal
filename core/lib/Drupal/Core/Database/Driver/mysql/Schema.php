@@ -9,6 +9,7 @@ namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
@@ -299,14 +300,17 @@ class Schema extends DatabaseSchema {
    * Shortens indexes to 191 characters if they apply to utf8mb4-encoded
    * fields, in order to comply with the InnoDB index limitation of 756 bytes.
    *
-   * @param $spec
+   * @param array $spec
    *   The table specification.
    *
    * @return array
    *   List of shortened indexes.
+   *
+   * @throws \Drupal\Core\Database\SchemaException
+   *   Thrown if field specification is missing.
    */
-  protected function getNormalizedIndexes($spec) {
-    $indexes = $spec['indexes'];
+  protected function getNormalizedIndexes(array $spec) {
+    $indexes = isset($spec['indexes']) ? $spec['indexes'] : [];
     foreach ($indexes as $index_name => $index_fields) {
       foreach ($index_fields as $index_key => $index_field) {
         // Get the name of the field from the index specification.
@@ -322,6 +326,9 @@ class Schema extends DatabaseSchema {
               $this->shortenIndex($indexes[$index_name][$index_key]);
             }
           }
+        }
+        else {
+          throw new SchemaException("MySQL needs the '$field_name' field specification in order to normalize the '$index_name' index");
         }
       }
     }
@@ -486,7 +493,10 @@ class Schema extends DatabaseSchema {
     return TRUE;
   }
 
-  public function addIndex($table, $name, $fields) {
+  /**
+   * {@inheritdoc}
+   */
+  public function addIndex($table, $name, $fields, array $spec) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
     }
@@ -494,7 +504,10 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", array('@table' => $table, '@name' => $name)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($fields) . ')');
+    $spec['indexes'][$name] = $fields;
+    $indexes = $this->getNormalizedIndexes($spec);
+
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($indexes[$name]) . ')');
   }
 
   public function dropIndex($table, $name) {

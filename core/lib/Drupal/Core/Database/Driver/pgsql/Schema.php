@@ -637,7 +637,10 @@ class Schema extends DatabaseSchema {
     return TRUE;
   }
 
-  public function addIndex($table, $name, $fields) {
+  /**
+   * {@inheritdoc}
+   */
+  public function addIndex($table, $name, $fields, array $spec) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
     }
@@ -779,7 +782,10 @@ class Schema extends DatabaseSchema {
     }
     if (isset($new_keys['indexes'])) {
       foreach ($new_keys['indexes'] as $name => $fields) {
-        $this->addIndex($table, $name, $fields);
+        // Even though $new_keys is not a full schema it still has 'indexes' and
+        // so is a partial schema. Technically addIndex() doesn't do anything
+        // with it so passing an empty array would work as well.
+        $this->addIndex($table, $name, $fields, $new_keys);
       }
     }
   }

@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\simpletest\KernelTestBase;
@@ -99,7 +100,7 @@ class SchemaTest extends KernelTestBase {
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
     $this->assertIdentical($index_exists, FALSE, 'Fake index does not exists');
     // Add index.
-    db_add_index('test_table', 'test_field', array('test_field'));
+    db_add_index('test_table', 'test_field', array('test_field'), $table_specification);
     // Test for created index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
     $this->assertIdentical($index_exists, TRUE, 'Index created.');
@@ -295,6 +296,43 @@ class SchemaTest extends KernelTestBase {
     );
     db_create_table('test_table_index_length', $table_specification);
 
+    $schema_object = Database::getConnection()->schema();
+
+    // Ensure expected exception thrown when adding index with missing info.
+    $expected_exception_message = "MySQL needs the 'test_field_text' field specification in order to normalize the 'test_regular' index";
+    $missing_field_spec = $table_specification;
+    unset($missing_field_spec['fields']['test_field_text']);
+    try {
+      $schema_object->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $missing_field_spec);
+      $this->fail('SchemaException not thrown when adding index with missing information.');
+    }
+    catch (SchemaException $e) {
+      $this->assertEqual($expected_exception_message, $e->getMessage());
+    }
+
+    // Add a separate index.
+    $schema_object->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $table_specification);
+    $table_specification_with_new_index = $table_specification;
+    $table_specification_with_new_index['indexes']['test_separate'] = [['test_field_text', 200]];
+
+    // Ensure that the exceptions of addIndex are thrown as expected.
+
+    try {
+      $schema_object->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $table_specification);
+      $this->fail('\Drupal\Core\Database\SchemaObjectExistsException exception missed.');
+    }
+    catch (SchemaObjectExistsException $e) {
+      $this->pass('\Drupal\Core\Database\SchemaObjectExistsException thrown when index already exists.');
+    }
+
+    try {
+      $schema_object->addIndex('test_table_non_existing', 'test_separate', [['test_field_text', 200]], $table_specification);
+      $this->fail('\Drupal\Core\Database\SchemaObjectDoesNotExistException exception missed.');
+    }
+    catch (SchemaObjectDoesNotExistException $e) {
+      $this->pass('\Drupal\Core\Database\SchemaObjectDoesNotExistException thrown when index already exists.');
+    }
+
     // Get index information.
     $results = db_query('SHOW INDEX FROM {test_table_index_length}');
     $expected_lengths = array(
@@ -316,11 +354,14 @@ class SchemaTest extends KernelTestBase {
         'test_field_string_ascii_long' => 200,
         'test_field_string_short' => NULL,
       ),
+      'test_separate' => array(
+        'test_field_text' => 191,
+      ),
     );
 
     // Count the number of columns defined in the indexes.
     $column_count = 0;
-    foreach ($table_specification['indexes'] as $index) {
+    foreach ($table_specification_with_new_index['indexes'] as $index) {
       foreach ($index as $field) {
         $column_count++;
       }

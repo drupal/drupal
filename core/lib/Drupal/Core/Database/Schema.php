@@ -413,13 +413,51 @@ abstract class Schema implements PlaceholderInterface {
    *   @code
    *     $fields = ['foo', ['bar', 4]];
    *   @endcode
+   * @param array $spec
+   *   The table specification for the table to be altered. This is used in
+   *   order to be able to ensure that the index length is not too long.
+   *   This schema definition can usually be obtained through hook_schema(), or
+   *   in case the table was created by the Entity API, through the schema
+   *   handler listed in the entity class definition. For reference, see
+   *   SqlContentEntityStorageSchema::getDedicatedTableSchema() and
+   *   SqlContentEntityStorageSchema::getSharedTableFieldSchema().
+   *
+   *   In order to prevent human error, it is recommended to pass in the
+   *   complete table specification. However, in the edge case of the complete
+   *   table specification not being available, we can pass in a partial table
+   *   definition containing only the fields that apply to the index:
+   *   @code
+   *   $spec = [
+   *     // Example partial specification for a table:
+   *     'fields' => [
+   *       'example_field' => [
+   *         'description' => 'An example field',
+   *         'type' => 'varchar',
+   *         'length' => 32,
+   *         'not null' => TRUE,
+   *         'default' => '',
+   *       ],
+   *     ],
+   *     'indexes' => [
+   *       'table_example_field' => ['example_field'],
+   *     ],
+   *   ];
+   *   @endcode
+   *   Note that the above is a partial table definition and that we would
+   *   usually pass a complete table definition as obtained through
+   *   hook_schema() instead.
+   *
+   * @see schemaapi
+   * @see hook_schema()
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has an index by that name.
+   *
+   * @todo remove the $spec argument whenever schema introspection is added.
    */
-  abstract public function addIndex($table, $name, $fields);
+  abstract public function addIndex($table, $name, $fields, array $spec);
 
   /**
    * Drop an index.

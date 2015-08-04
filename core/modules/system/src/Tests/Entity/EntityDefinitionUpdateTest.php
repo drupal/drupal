@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
@@ -624,6 +625,50 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->updateEntityTypeToRevisionable();
     $this->assertTrue($this->entityDefinitionUpdateManager->applyEntityUpdate(EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED, 'entity_test_update'), 'Calling applyEntityUpdate() correctly returns TRUE.');
     $this->assertTrue($this->database->schema()->tableExists('entity_test_update_revision'), "The 'entity_test_update_revision' table has been created.");
+  }
+
+  /**
+   * Ensures that a new field and index on a shared table are created.
+   *
+   * @see Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::createSharedTableSchema
+   */
+  public function testCreateFieldAndIndexOnSharedTable() {
+    $this->addBaseField();
+    $this->addBaseFieldIndex();
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
+    $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update_field__new_base_field'), "New index 'entity_test_update_field__new_base_field' has been created on the 'entity_test_update' table.");
+    // Check index size in for MySQL.
+    if (Database::getConnection()->driver() == 'mysql') {
+      $result = Database::getConnection()->query('SHOW INDEX FROM {entity_test_update} WHERE key_name = \'entity_test_update_field__new_base_field\' and column_name = \'new_base_field\'')->fetchObject();
+      $this->assertEqual(191, $result->Sub_part, 'The index length has been restricted to 191 characters for UTF8MB4 compatibility.');
+    }
+  }
+
+  /**
+   * Ensures that a new entity level index is created when data exists.
+   *
+   * @see Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::onEntityTypeUpdate
+   */
+  public function testCreateIndexUsingEntityStorageSchemaWithData() {
+    // Save an entity.
+    $name = $this->randomString();
+    $storage = $this->entityManager->getStorage('entity_test_update');
+    $entity = $storage->create(array('name' => $name));
+    $entity->save();
+
+    // Create an index.
+    $indexes = array(
+      'entity_test_update__type_index' => array('type'),
+    );
+    $this->state->set('entity_test_update.additional_entity_indexes', $indexes);
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__type_index'), "New index 'entity_test_update__type_index' has been created on the 'entity_test_update' table.");
+    // Check index size in for MySQL.
+    if (Database::getConnection()->driver() == 'mysql') {
+      $result = Database::getConnection()->query('SHOW INDEX FROM {entity_test_update} WHERE key_name = \'entity_test_update__type_index\' and column_name = \'type\'')->fetchObject();
+      $this->assertEqual(191, $result->Sub_part, 'The index length has been restricted to 191 characters for UTF8MB4 compatibility.');
+    }
   }
 
 }

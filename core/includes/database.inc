@@ -905,16 +905,22 @@ function db_drop_unique_key($table, $name) {
  *   The name of the index.
  * @param array $fields
  *   An array of field names.
+ * @param array $spec
+ *   The table specification of the table to be altered, as taken from a schema
+ *   definition. See \Drupal\Core\Database\Schema::addIndex() for how to obtain
+ *   this specification.
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
  *   its schema driver, and call addIndex() on it. E.g.
- *   $injected_database->schema()->addIndex($table, $name, $fields);
+ *   $injected_database->schema()->addIndex($table, $name, $fields, $spec);
  *
+ * @see hook_schema()
+ * @see schemaapi
  * @see \Drupal\Core\Database\Schema::addIndex()
  */
-function db_add_index($table, $name, $fields) {
-  return Database::getConnection()->schema()->addIndex($table, $name, $fields);
+function db_add_index($table, $name, $fields, array $spec) {
+  return Database::getConnection()->schema()->addIndex($table, $name, $fields, $spec);
 }
 
 /**

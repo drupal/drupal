@@ -35,7 +35,14 @@ if ($schema_version >= 8001) {
    * Schema version 8001.
    */
   function update_test_schema_update_8001() {
+    $table = [
+      'fields' => [
+        'a' => ['type' => 'int', 'not null' => TRUE],
+        'b' => ['type' => 'blob', 'not null' => FALSE],
+      ],
+    ];
+
     // Add a column.
-    db_add_index('update_test_schema_table', 'test', ['a']);
+    db_add_index('update_test_schema_table', 'test', ['a'], $table);
   }
 }

@@ -330,9 +330,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // Create new indexes and unique keys.
       $entity_schema = $this->getEntitySchema($entity_type, TRUE);
       foreach ($this->getEntitySchemaData($entity_type, $entity_schema) as $table_name => $schema) {
+        // Add fields schema because database driver may depend on this data to
+        // perform index normalization.
+        $schema['fields'] = $entity_schema[$table_name]['fields'];
+
         if (!empty($schema['indexes'])) {
           foreach ($schema['indexes'] as $name => $specifier) {
-            $schema_handler->addIndex($table_name, $name, $specifier);
+            $schema_handler->addIndex($table_name, $name, $specifier, $schema);
           }
         }
         if (!empty($schema['unique keys'])) {
@@ -1139,7 +1143,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
                 // Check if the index exists because it might already have been
                 // created as part of the earlier entity type update event.
                 if (!$schema_handler->indexExists($table_name, $name)) {
-                  $schema_handler->addIndex($table_name, $name, $specifier);
+                  $schema_handler->addIndex($table_name, $name, $specifier, $schema[$table_name]);
                 }
               }
             }
@@ -1273,8 +1277,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $table = $table_mapping->getDedicatedDataTableName($original);
       $revision_table = $table_mapping->getDedicatedRevisionTableName($original);
 
+      // Get the field schemas.
       $schema = $storage_definition->getSchema();
       $original_schema = $original->getSchema();
+
+      // Gets the SQL schema for a dedicated tables.
+      $actual_schema = $this->getDedicatedTableSchema($storage_definition);
 
       foreach ($original_schema['indexes'] as $name => $columns) {
         if (!isset($schema['indexes'][$name]) || $columns != $schema['indexes'][$name]) {
@@ -1302,8 +1310,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               $real_columns[] = $table_mapping->getFieldColumnName($storage_definition, $column_name);
             }
           }
-          $this->database->schema()->addIndex($table, $real_name, $real_columns);
-          $this->database->schema()->addIndex($revision_table, $real_name, $real_columns);
+          $this->database->schema()->addIndex($table, $real_name, $real_columns, $actual_schema[$table]);
+          $this->database->schema()->addIndex($revision_table, $real_name, $real_columns, $actual_schema[$revision_table]);
         }
       }
       $this->saveFieldSchemaData($storage_definition, $this->getDedicatedTableSchema($storage_definition));
@@ -1380,7 +1388,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
             // Create new indexes and unique keys.
             if (!empty($schema[$table_name]['indexes'])) {
               foreach ($schema[$table_name]['indexes'] as $name => $specifier) {
-                $schema_handler->addIndex($table_name, $name, $specifier);
+                $schema_handler->addIndex($table_name, $name, $specifier, $schema[$table_name]);
               }
             }
             if (!empty($schema[$table_name]['unique keys'])) {
