@@ -119,7 +119,7 @@ class DateTimeFieldTest extends WebTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
-    $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]/h4[contains(@class, "form-required")]', TRUE, 'Required markup found');
+    $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]/h4[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
     $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Time element not found.');
 
     // Build up a date in the UTC timezone.

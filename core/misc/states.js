@@ -609,12 +609,12 @@
       if (e.value) {
         var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.form-item, .js-form-wrapper').find('label');
         // Avoids duplicate required markers on initialization.
-        if (!$label.hasClass('form-required').length) {
-          $label.addClass('form-required');
+        if (!$label.hasClass('js-form-required').length) {
+          $label.addClass('js-form-required form-required');
         }
       }
       else {
-        $(e.target).removeAttr('required aria-required').closest('.form-item, .js-form-wrapper').find('label.form-required').removeClass('form-required');
+        $(e.target).removeAttr('required aria-required').closest('.form-item, .js-form-wrapper').find('label.js-form-required').removeClass('js-form-required form-required');
       }
     }
   });

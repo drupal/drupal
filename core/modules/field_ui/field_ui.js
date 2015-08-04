@@ -17,15 +17,16 @@
     attach: function (context) {
       var $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
       if ($form.length) {
-        // Add a few 'form-required' css classes here. We can not use the Form
-        // API '#required' property because both label elements for "add new"
-        // and "re-use existing" can never be filled and submitted at the same
-        // time. The actual validation will happen server-side.
+        // Add a few 'js-form-required' and 'form-required' css classes here.
+        // We can not use the Form API '#required' property because both label
+        // elements for "add new" and "re-use existing" can never be filled and
+        // submitted at the same time. The actual validation will happen
+        // server-side.
         $form.find(
           '.form-item-label label,' +
           '.form-item-field-name label,' +
           '.form-item-existing-storage-label label')
-          .addClass('form-required');
+          .addClass('js-form-required form-required');
 
         var $newFieldType = $form.find('select[name="new_storage_type"]');
         var $existingStorageName = $form.find('select[name="existing_storage_name"]');

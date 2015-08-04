@@ -507,8 +507,8 @@ function template_preprocess_datetime_wrapper(&$variables) {
   }
 
   $variables['required'] = FALSE;
-  // For required datetime fields a 'form-required' class is appended to the
-  // label attributes.
+  // For required datetime fields 'form-required' & 'js-form-required' classes
+  // are appended to the label attributes.
   if (!empty($element['#required'])) {
     $variables['required'] = TRUE;
   }
@@ -1556,6 +1556,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
     $order_class = $element['#field_name'] . '-delta-order';
     $header_attributes = new Attribute(array('class' => array('label')));
     if (!empty($element['#required'])) {
+      $header_attributes['class'][] = 'js-form-required';
       $header_attributes['class'][] = 'form-required';
     }
     $header = array(
