@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableFieldTest.
+ * Contains \Drupal\comment\Tests\Migrate\d6\MigrateCommentVariableFieldTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\comment\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comment variables to field.storage.node.comment.yml.
  *
- * @group migrate_drupal
+ * @group comment
  */
 class MigrateCommentVariableFieldTest extends MigrateDrupal6TestBase {
 

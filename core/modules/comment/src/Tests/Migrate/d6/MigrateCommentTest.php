@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentTest.
+ * Contains \Drupal\comment\Tests\Migrate\d6\MigrateCommentTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\comment\Tests\Migrate\d6;
 
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comments.
  *
- * @group migrate_drupal
+ * @group comment
  */
 class MigrateCommentTest extends MigrateDrupal6TestBase {
 

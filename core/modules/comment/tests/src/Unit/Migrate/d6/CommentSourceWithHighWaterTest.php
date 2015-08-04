@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\CommentSourceWithHighWaterTest.
+ * Contains \Drupal\Tests\comment\Unit\Migrate\d6\CommentSourceWithHighWaterTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\comment\Unit\Migrate\d6;
 
 /**
  * Tests the Drupal 6 comment source w/ high water handling.
  *
- * @group migrate_drupal
+ * @group comment
  */
 class CommentSourceWithHighWaterTest extends CommentTestBase {
 

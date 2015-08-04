@@ -1,0 +1,35 @@
+migrate.source.d6_comment:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment'
+  mapping:
+    constants:
+      type: mapping
+      label: 'Constants'
+      mapping:
+        entity_type:
+          type: string
+          label: 'Entity type'
+
+migrate.source.d6_comment_variable_per_comment_type:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment variable'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_comment_entity_form_display_subject:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment subject entity form display'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'
+
+migrate.source.d6_comment_variable:
+  type: migrate_source_sql
+  label: 'Drupal 6 comment variable'
+  mapping:
+    constants:
+      type: migrate_entity_constant
+      label: 'Constants'

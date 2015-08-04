@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableEntityDisplayTest.
+ * Contains \Drupal\comment\Tests\Migrate\d6\MigrateCommentVariableEntityDisplayTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\comment\Tests\Migrate\d6;
 
 /**
  * Upgrade comment variables to entity.display.node.*.default.yml.
  *
- * @group migrate_drupal
+ * @group comment
  */
 class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisplayBase {
 

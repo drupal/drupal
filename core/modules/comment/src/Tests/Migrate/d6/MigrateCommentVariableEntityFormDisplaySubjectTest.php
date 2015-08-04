@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableEntityFormDisplaySubjectTest.
+ * Contains \Drupal\comment\Tests\Migrate\d6\MigrateCommentVariableEntityFormDisplaySubjectTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\comment\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comment subject variable to core.entity_form_display.comment.*.default.yml
  *
- * @group migrate_drupal
+ * @group comment
  */
 class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupal6TestBase {
 

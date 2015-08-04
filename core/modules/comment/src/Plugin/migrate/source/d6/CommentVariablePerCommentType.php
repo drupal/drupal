@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\CommentVariablePerCommentType.
+ * Contains \Drupal\comment\Plugin\migrate\source\d6\CommentVariablePerCommentType.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\comment\Plugin\migrate\source\d6;
 
 /**
  * @MigrateSource(

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\CommentVariable.
+ * Contains \Drupal\comment\Plugin\migrate\source\d6\CommentVariable.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\comment\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;

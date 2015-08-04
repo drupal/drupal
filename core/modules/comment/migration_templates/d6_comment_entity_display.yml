@@ -1,5 +1,5 @@
-id: d6_comment_entity_form_display
-label: Drupal 6 comment field form display configuration
+id: d6_comment_entity_display
+label: Drupal 6 comment display configuration
 migration_tags:
   - Drupal 6
 source:
@@ -7,19 +7,19 @@ source:
   constants:
     entity_type: node
     field_name: comment
-    form_mode: default
+    view_mode: default
     options:
+      label: hidden
       type: comment_default
       weight: 20
 process:
   entity_type: 'constants/entity_type'
   field_name: 'constants/field_name'
-  form_mode: 'constants/form_mode'
+  view_mode: 'constants/view_mode'
   options: 'constants/options'
-
   bundle: node_type
 destination:
-  plugin: component_entity_form_display
+  plugin: component_entity_display
 migration_dependencies:
   required:
     - d6_comment_field_instance

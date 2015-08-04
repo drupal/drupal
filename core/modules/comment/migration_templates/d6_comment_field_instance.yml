@@ -12,7 +12,6 @@ process:
   entity_type: 'constants/entity_type'
   label: 'constants/label'
   required: 'constants/required'
-
   field_name:
     plugin: static_map
     source: comment_subject_field

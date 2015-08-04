@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityComment.
+ * Contains \Drupal\comment\Plugin\migrate\destination\EntityComment.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\comment\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\Plugin\MigratePluginManager;
+use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -44,8 +44,6 @@ class EntityComment extends EntityContentBase {
    *   The storage for this entity type.
    * @param array $bundles
    *   The list of bundles this entity type has.
-   * @param \Drupal\migrate\Plugin\MigratePluginManager $plugin_manager
-   *   The migrate plugin manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\State\StateInterface $state

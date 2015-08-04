@@ -39,34 +39,6 @@ migrate.source.variable:
           type: string
           label: 'Slash'
 
-migrate.source.d6_comment:
-  type: migrate_source_sql
-  label: 'Drupal 6 comment'
-  mapping:
-    constants:
-      type: mapping
-      label: 'Constants'
-      mapping:
-        entity_type:
-          type: string
-          label: 'Entity type'
-
-migrate.source.d6_comment_variable_per_comment_type:
-  type: migrate_source_sql
-  label: 'Drupal 6 comment variable'
-  mapping:
-    constants:
-      type: migrate_entity_constant
-      label: 'Constants'
-
-migrate.source.d6_comment_entity_form_display_subject:
-  type: migrate_source_sql
-  label: 'Drupal 6 comment subject entity form display'
-  mapping:
-    constants:
-      type: migrate_entity_constant
-      label: 'Constants'
-
 migrate.source.d6_field_instance_per_form_display:
   type: migrate_source_sql
   label: 'Drupal 6 field instance form display'
@@ -93,14 +65,6 @@ migrate.source.variable_multirow:
       sequence:
         type: string
         label: 'Variable'
-
-migrate.source.d6_comment_variable:
-  type: migrate_source_sql
-  label: 'Drupal 6 comment variable'
-  mapping:
-    constants:
-      type: migrate_entity_constant
-      label: 'Constants'
 
 migrate.source.d6_field_formatter_settings:
   type: migrate_source_sql

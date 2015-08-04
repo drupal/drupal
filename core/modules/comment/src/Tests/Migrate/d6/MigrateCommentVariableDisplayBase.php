@@ -2,10 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableDisplayBase.
+ * Contains \Drupal\comment\Tests\Migrate\d6\MigrateCommentVariableDisplayBase.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\comment\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Base class for Drupal 6 comment variables to Drupal 8 entity display tests.

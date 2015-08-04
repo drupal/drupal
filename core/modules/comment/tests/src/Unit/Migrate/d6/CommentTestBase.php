@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\CommentTestBase.
+ * Contains \Drupal\Tests\comment\Unit\Migrate\d6\CommentTestBase.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\comment\Unit\Migrate\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
@@ -16,7 +16,7 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Comment';
+  const PLUGIN_CLASS = 'Drupal\comment\Plugin\migrate\source\d6\Comment';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(

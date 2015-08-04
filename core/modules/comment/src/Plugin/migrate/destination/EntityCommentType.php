@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityCommentType.
+ * Contains \Drupal\comment\Plugin\migrate\destination\EntityCommentType.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\comment\Plugin\migrate\destination;
 
+use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**

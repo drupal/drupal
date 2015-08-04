@@ -16,7 +16,6 @@ process:
   field_name: 'constants/field_name'
   form_mode: 'constants/form_mode'
   options: 'constants/options'
-
   hidden:
     plugin: static_map
     source: comment_type
