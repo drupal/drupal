@@ -15,7 +15,23 @@ use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Provides a base class that loads a database as a starting point.
+ * Provides a base class for writing an update test.
+ *
+ * To write an update test:
+ * - Write the hook_update_N() implementations that you are testing.
+ * - Create one or more database dump files, which will set the database to the
+ *   "before updates" state. Normally, these will add some configuration data to
+ *   the database, set up some tables/fields, etc.
+ * - Create a class that extends this class.
+ * - In your setUp() method, point the $this->databaseDumpFiles variable to the
+ *   database dump files, and then call parent::setUp() to run the base setUp()
+ *   method in this class.
+ * - In your test method, call $this->runUpdates() to run the necessary updates,
+ *   and then use test assertions to verify that the result is what you expect.
+ *
+ * @ingroup update_api
+ *
+ * @see hook_update_N()
  */
 abstract class UpdatePathTestBase extends WebTestBase {
 
@@ -26,6 +42,10 @@ abstract class UpdatePathTestBase extends WebTestBase {
 
  /**
    * The file path(s) to the dumped database(s) to load into the child site.
+   *
+   * The file system/tests/fixtures/update/drupal-8.bare.standard.php.gz is
+   * normally included first -- this sets up the base database from a bare
+   * standard Drupal installation.
    *
    * @var array
    */
@@ -39,14 +59,14 @@ abstract class UpdatePathTestBase extends WebTestBase {
   protected $installProfile = 'standard';
 
   /**
-   * Flag that indicates whether the child site has been upgraded.
+   * Flag that indicates whether the child site has been updated.
    *
    * @var bool
    */
   protected $upgradedSite = FALSE;
 
   /**
-   * Array of errors triggered during the upgrade process.
+   * Array of errors triggered during the update process.
    *
    * @var array
    */
@@ -96,7 +116,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
   }
 
   /**
-   * Overrides WebTestBase::setUp() for upgrade testing.
+   * Overrides WebTestBase::setUp() for update testing.
    *
    * The main difference in this method is that rather than performing the
    * installation via the installer, a database is loaded. Additional work is
@@ -182,7 +202,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
    */
   protected function runUpdates() {
     if (!$this->zlibInstalled) {
-      $this->fail('Missing zlib requirement for upgrade tests.');
+      $this->fail('Missing zlib requirement for update tests.');
       return FALSE;
     }
     // The site might be broken at the time so logging in using the UI might

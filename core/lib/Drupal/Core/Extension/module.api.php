@@ -5,8 +5,54 @@
  * Hooks related to module and update systems.
  */
 
-use Drupal\Core\Utility\UpdateException;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\UpdateException;
+
+
+/**
+ * @defgroup update_api Update API
+ * @{
+ * Updating minor versions of modules
+ *
+ * When you update code in a module, you may need to update stored data so that
+ * the stored data is compatible with the new code. If this update is between
+ * two minor versions of your module within the same major version of Drupal,
+ * you can use the Update API to update the data. This API is described in brief
+ * here; for more details, see https://www.drupal.org/node/2535316. If you are
+ * updating your module for a major version of Drupal (for instance, Drupal 7 to
+ * Drupal 8), updates will not run and you will need to use the
+ * @link migrate Migrate API @endlink instead.
+ *
+ * @section sec_when When to write update code
+ * You need to provide code that performs an update to stored data whenever your
+ * module makes a change to its data model. A data model change is any change
+ * that makes stored data on an existing site incompatible with that site's
+ * updated codebase. Examples:
+ * - Configuration changes: adding/removing/renaming a config key, changing the
+ *   expected data type or value structure, changing dependencies, schema
+ *   changes, etc.
+ * - Database schema changes: adding, changing, or removing a database table or
+ *   field; moving stored data to different fields or tables; changing the
+ *   format of stored data.
+ * - Content entity or field changes: these updates are normally handled
+ *   automatically by the entity system, but should at least be tested.
+ *
+ * @section sec_how How to write update code
+ * Update code for a module is put into an implementation of hook_update_N(),
+ * which goes into file mymodule.install (if your module's machine name is
+ * mymodule). See the documentation of hook_update_N() and
+ * https://www.drupal.org/node/2535316 for details and examples.
+ *
+ * @section sec_test Testing update code
+ * Update code should be tested both manually and by writing an automated test.
+ * Automated tests for update code extend
+ * \Drupal\system\Tests\Update\UpdatePathTestBase -- see that class for details,
+ * and find classes that extend it for examples.
+ *
+ * @see migration
+ * @}
+ */
 
 /**
  * @addtogroup hooks
@@ -421,94 +467,106 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 }
 
 /**
- * Perform a single update.
+ * Perform a single update between minor versions.
  *
- * For each change that requires one or more actions to be performed when
- * updating a site, add a new hook_update_N(), which will be called by
- * update.php. The documentation block preceding this function is stripped of
- * newlines and used as the description for the update on the pending updates
- * task list. Schema updates should adhere to the
- * @link https://www.drupal.org/node/150215 Schema API. @endlink
+ * hook_update_N() can only be used to update between minor versions of a
+ * module. To upgrade between major versions of Drupal (for example, between
+ * Drupal 7 and 8), use the @link migrate Migrate API @endlink instead.
  *
+ * @section sec_naming Naming and documenting your function
+ * For each change in a module that requires one or more actions to be performed
+ * when updating a site, add a new implementation of hook_update_N() to your
+ * mymodule.install file (assuming mymodule is the machine name of your module).
  * Implementations of hook_update_N() are named (module name)_update_(number).
- * The numbers are composed of three parts:
- * - 1 digit for Drupal core compatibility.
- * - 1 digit for your module's major release version (e.g., is this the 8.x-1.*
- *   (1) or 8.x-2.* (2) series of your module).
- * - 2 digits for sequential counting, starting with 01.
- *
+ * The numbers are normally composed of three parts:
+ * - 1 or 2 digits for Drupal core compatibility (Drupal 8, 9, 10, etc.). This
+ *   convention must be followed.
+ * - 1 digit for your module's major release version; for example, for 8.x-1.*
+ *   use 1, for 8.x-2.* use 2, for Core 8.0.x use 0, and for Core 8.1.x use 1.
+ *   This convention is optional but suggested for clarity.
+ * - 2 digits for sequential counting, starting with 01. Note that the x000
+ *   number can never be used: the lowest update number that will be recognized
+ *   and run for major version x is x001.
  * Examples:
- * - mymodule_update_8100(): This is the first update to get the database ready
- *   to run mymodule 8.x-1.*.
- * - mymodule_update_8200(): This is the first update to get the database ready
- *   to run mymodule 8.x-2.*.
+ * - node_update_8001(): The first update for the Drupal 8.0.x version of the
+ *   Drupal Core node module.
+ * - mymodule_update_8101(): The first update for your custom or contributed
+ *   module's 8.x-1.x versions.
+ * - mymodule_update_8201(): The first update for the 8.x-2.x versions.
  *
- * As of Drupal 8.0, the database upgrade system no longer supports updating a
- * database from an earlier major version of Drupal: update.php can be used to
- * upgrade from 7.x-1.x to 7.x-2.x, or 8.x-1.x to 8.x-2.x, but not from 7.x to
- * 8.x. Therefore, only update hooks numbered 8001 or later will run for
- * Drupal 8. 8000 is reserved for the minimum core schema version and defining
- * mymodule_update_8000() will result in an exception. Use the
- * @link https://www.drupal.org/node/2127611 Migration API @endlink instead to
- * migrate data from an earlier major version of Drupal.
+ * Never renumber update functions. The numeric part of the hook implementation
+ * function is stored in the database to keep track of which updates have run,
+ * so it is important to maintain this information consistently.
  *
- * For further information about releases and release numbers see:
- * @link https://www.drupal.org/node/711070 Maintaining a drupal.org project
- * with Git @endlink
+ * The documentation block preceding this function is stripped of newlines and
+ * used as the description for the update on the pending updates task list,
+ * which users will see when they run the update.php script.
  *
- * Never renumber update functions.
+ * @section sec_notes Notes about the function body
+ * Writing hook_update_N() functions is tricky. There are several reasons why
+ * this is the case:
+ * - You do not know when updates will be run: someone could be keeping up with
+ *   every update and run them when the database and code are in the same state
+ *   as when you wrote your update function, or they could have waited until a
+ *   few more updates have come out, and run several at the same time.
+ * - You do not know the state of other modules' updates either.
+ * - Other modules can use hook_update_dependencies() to run updates between
+ *   your module's updates, so you also cannot count on your functions running
+ *   right after one another.
+ * - You do not know what environment your update will run in (which modules
+ *   are installed, whether certain hooks are implemented or not, whether
+ *   services are overridden, etc.).
  *
- * Implementations of this hook should be placed in a mymodule.install file in
- * the same directory as mymodule.module. Drupal core's updates are implemented
- * using the system module as a name and stored in database/updates.inc.
+ * Because of these reasons, you'll need to use care in writing your update
+ * function. Some things to think about:
+ * - Never assume that the database schema is the same when the update will run
+ *   as it is when you wrote the update function. So, when updating a database
+ *   table or field, put the schema information you want to update to directly
+ *   into your function instead of calling your hook_schema() function to
+ *   retrieve it (this is one case where the right thing to do is copy and paste
+ *   the code).
+ * - Never assume that the configuration schema is the same when the update will
+ *   run as it is when you wrote the update function. So, when saving
+ *   configuration, use the $has_trusted_data = TRUE parameter so that schema is
+ *   ignored, and make sure that the configuration data you are saving matches
+ *   the configuration schema at the time when you write the update function
+ *   (later updates may change it again to match new schema changes).
+ * - Be careful about API functions and especially CRUD operations that you use
+ *   in your update function. If they invoke hooks or use services, they may
+ *   not behave as expected, and it may actually not be appropriate to use the
+ *   normal API functions that invoke all the hooks, use the database schema,
+ *   and/or use services in an update function -- you may need to switch to
+ *   using a more direct method (database query, etc.).
+ * - In particular, loading, saving, or performing any other CRUD operation on
+ *   an entity is never safe to do (they always involve hooks and services).
+ * - Never rebuild the router during an update function.
  *
- * Not all module functions are available from within a hook_update_N() function.
- * In order to call a function from your mymodule.module or an include file,
- * you need to explicitly load that file first.
- *
- * Implementations must ensure that APIs used are safe during updates. During
- * database updates the schema of any module could be out of date. For this
- * reason, caution is needed when using any API function within an update
- * function - particularly CRUD functions, functions that depend on the schema
- * (for example by using \Drupal\Core\Entity\Entity::save()), and any functions
- * that invoke hooks.
- *
- * The following actions are examples that are safe:
+ * The following actions are examples of things that are safe to do during
+ * updates:
  * - Cache invalidation.
- * - Using \Drupal::configFactory()->getEditable() and \Drupal::config().
- *   Implementations must:
- *   - Not make any assumption that the config data is valid.
- *   - Use the correct data type when changing configuration values as specified
- *     by its configuration schema at the time the update hook is written. If
- *     the data type changes in a subsequent code change, a subsequent update
- *     hook is responsible for ensuring the final data type aligns with the
- *     configuration schema.
- *   - Use the $has_trusted_data argument for \Drupal\Core\Config\Config::save()
- *     so that configuration schemas are not used whilst saving configuration.
+ * - Using \Drupal::configFactory()->getEditable() and \Drupal::config(), as
+ *   long as you make sure that your update data matches the schema, and you
+ *   use the $has_trusted_data argument in the save operation.
  * - Marking a container for rebuild.
  *
- * The following actions are examples that are unsafe:
- * - Loading, saving, or performing any other operation on an entity.
- * - Rebuilding the router using \Drupal::service('router.builder')->rebuild().
+ * See https://www.drupal.org/node/2535316 for more on writing update functions.
  *
- * The $sandbox parameter should be used when a multipass update is needed, in
- * circumstances where running the whole update at once could cause PHP to
- * timeout. Each pass is run in a way that avoids PHP timeouts, provided each
- * pass remains under the timeout limit. To signify that an update requires
- * at least one more pass, set $sandbox['#finished'] to a number less than 1
- * (you need to do this each pass). The value of $sandbox['#finished'] will be
- * unset between passes but all other data in $sandbox will be preserved. The
- * system will stop iterating this update when $sandbox['#finished'] is left
- * unset or set to a number higher than 1. It is recommended that
- * $sandbox['#finished'] is initially set to 0, and then updated each pass to a
- * number between 0 and 1 that represents the overall % completed for this
- * update, finishing with 1.
+ * @section sec_bulk Batch updates
+ * If running your update all at once could possibly cause PHP to time out, use
+ * the $sandbox parameter to indicate that the Batch API should be used for your
+ * update. In this case, your update function acts as an implementation of
+ * callback_batch_operation(), and $sandbox acts as the batch context
+ * parameter. In your function, read the state information from the previous
+ * run from $sandbox (or initialize), run a chunk of updates, save the state in
+ * $sandbox, and set $sandbox['#finished'] to a value between 0 and 1 to
+ * indicate the percent completed, or 1 if it is finished (you need to do this
+ * explicitly in each pass).
  *
  * See the @link batch Batch operations topic @endlink for more information on
  * how to use the Batch API.
  *
  * @param array $sandbox
- *   Stores information for multipass updates. See above for more information.
+ *   Stores information for batch updates. See above for more information.
  *
  * @throws \Drupal\Core\Utility\UpdateException|PDOException
  *   In case of error, update hooks should throw an instance of
@@ -521,58 +579,67 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *   displayed to the user after the update has completed. If no message is
  *   returned, no message will be presented to the user.
  *
+ * @ingroup update_api
+ *
  * @see batch
  * @see schemaapi
  * @see hook_update_last_removed()
  * @see update_get_update_list()
+ * @see https://www.drupal.org/node/2535316
  */
 function hook_update_N(&$sandbox) {
-  // For non-multipass updates, the signature can simply be;
+  // For non-batch updates, the signature can simply be:
   // function hook_update_N() {
 
-  // For most updates, the following is sufficient.
-  db_add_field('mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE, 'description' => 'My new integer column.'));
+  // Example function body for adding a field to a database table, which does
+  // not require a batch operation:
+  $spec = array(
+    'type' => 'varchar',
+    'description' => "New Col",
+    'length' => 20,
+    'not null' => FALSE,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('mytable1', 'newcol', $spec);
 
-  // However, for more complex operations that may take a long time,
-  // you may hook into Batch API as in the following example.
-
-  // Update 3 users at a time to have an exclamation point after their names.
-  // (They're really happy that we can do batch API in this hook!)
-  if (!isset($sandbox['progress'])) {
-    $sandbox['progress'] = 0;
-    $sandbox['current_uid'] = 0;
-    // We'll -1 to disregard the uid 0...
-    $sandbox['max'] = db_query('SELECT COUNT(DISTINCT uid) FROM {users}')->fetchField() - 1;
+  // Example of what to do if there is an error during your update.
+  if ($some_error_condition_met) {
+    throw new UpdateException('Something went wrong; here is what you should do.');
   }
 
-  $users = db_select('users', 'u')
-    ->fields('u', array('uid', 'name'))
-    ->condition('uid', $sandbox['current_uid'], '>')
-    ->range(0, 3)
-    ->orderBy('uid', 'ASC')
-    ->execute();
+  // Example function body for a batch update. In this example, the values in
+  // a database field are updated.
+  if (!isset($sandbox['progress'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['current_pk'] = 0;
+    $sandbox['max'] = Database::getConnection()->query('SELECT COUNT(myprimarykey) FROM {mytable1}')->fetchField() - 1;
+  }
 
-  foreach ($users as $user) {
-    $user->setUsername($user->getUsername() . '!');
-    db_update('users')
-      ->fields(array('name' => $user->getUsername()))
-      ->condition('uid', $user->id())
+  // Update in chunks of 20.
+  $records = Database::getConnection()->select('mytable1', 'm')
+    ->fields('m', array('myprimarykey', 'otherfield'))
+    ->condition('myprimarykey', $sandbox['current_pk'], '>')
+    ->range(0, 20)
+    ->orderBy('myprimarykey', 'ASC')
+    ->execute();
+  foreach ($records as $record) {
+    // Here, you would make an update something related to this record. In this
+    // example, some text is added to the other field.
+    Database::getConnection()->update('mytable1')
+      ->fields(array('otherfield' => $record->otherfield . '-suffix'))
+      ->condition('myprimarykey', $record->myprimarykey)
       ->execute();
 
     $sandbox['progress']++;
-    $sandbox['current_uid'] = $user->id();
+    $sandbox['current_pk'] = $record->myprimarykey;
   }
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
-  if ($some_error_condition_met) {
-    // In case of an error, simply throw an exception with an error message.
-    throw new UpdateException('Something went wrong; here is what you should do.');
-  }
-
   // To display a message to the user when the update is completed, return it.
-  // If you do not want to display a completion message, simply return nothing.
-  return t('The update did what it was supposed to do.');
+  // If you do not want to display a completion message, return nothing.
+  return t('All foo bars were updated with the new suffix');
 }
 
 /**
@@ -596,6 +663,8 @@ function hook_update_N(&$sandbox) {
  *   update function depends on more than one update from a particular module,
  *   you should always list the highest numbered one here (since updates within
  *   a given module always run in numerical order).
+ *
+ * @ingroup update_api
  *
  * @see update_resolve_dependencies()
  * @see hook_update_N()
@@ -634,6 +703,8 @@ function hook_update_dependencies() {
  *   An integer, corresponding to hook_update_N() which has been removed from
  *   mymodule.install.
  *
+ * @ingroup update_api
+ *
  * @see hook_update_N()
  */
 function hook_update_last_removed() {
@@ -663,6 +734,8 @@ function hook_update_last_removed() {
  *     doesn't matter, but if you need to override an existing Updater, make
  *     sure your Updater has a lighter weight so that it comes first.
  *
+ * @ingroup update_api
+ *
  * @see drupal_get_updaters()
  * @see hook_updater_info_alter()
  */
@@ -691,6 +764,8 @@ function hook_updater_info() {
  * @param array $updaters
  *   Associative array of updaters as defined through hook_updater_info().
  *   Alter this array directly.
+ *
+ * @ingroup update_api
  *
  * @see drupal_get_updaters()
  * @see hook_updater_info()
