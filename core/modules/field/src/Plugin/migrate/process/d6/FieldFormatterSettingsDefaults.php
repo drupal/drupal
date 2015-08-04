@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldFormatterSettingsDefaults.
+ * Contains \Drupal\field\Plugin\migrate\process\d6\FieldFormatterSettingsDefaults.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\field\Plugin\migrate\process\d6;
 
-use Drupal\migrate\MigrateException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;

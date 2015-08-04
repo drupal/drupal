@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFieldInstanceTest.
+ * Contains \Drupal\field\Tests\Migrate\d6\MigrateFieldInstanceTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate field instances.
  *
- * @group migrate_drupal
+ * @group field
  */
 class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
 

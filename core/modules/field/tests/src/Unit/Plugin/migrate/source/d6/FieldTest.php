@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\FieldTest.
+ * Contains \Drupal\Tests\field\Unit\Plugin\migrate\source\d6\FieldTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\field\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 field source plugin.
  *
- * @group migrate_drupal
+ * @group field
  */
 class FieldTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Field';
+  const PLUGIN_CLASS = 'Drupal\field\Plugin\migrate\source\d6\Field';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(

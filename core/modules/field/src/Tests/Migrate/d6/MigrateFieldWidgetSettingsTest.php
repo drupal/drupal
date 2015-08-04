@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFieldWidgetSettingsTest.
+ * Contains \Drupal\field\Tests\Migrate\d6\MigrateFieldWidgetSettingsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\field\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate field widget settings.
  *
- * @group migrate_drupal
+ * @group field
  */
 class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
 

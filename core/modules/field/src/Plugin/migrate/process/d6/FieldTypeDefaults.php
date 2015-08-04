@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldTypeDefaults.
+ * Contains \Drupal\field\Plugin\migrate\process\d6\FieldTypeDefaults.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\field\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\ProcessPluginBase;
@@ -13,7 +13,7 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
- * Gives us a change to set per field defaults.
+ * Gives us a chance to set per field defaults.
  *
  * @MigrateProcessPlugin(
  *   id = "field_type_defaults"

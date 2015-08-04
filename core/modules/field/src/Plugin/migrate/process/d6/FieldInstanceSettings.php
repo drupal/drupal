@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FieldInstanceSettings.
+ * Contains \Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\field\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;

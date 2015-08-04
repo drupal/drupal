@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFieldTest.
+ * Contains \Drupal\field\Tests\Migrate\d6\MigrateFieldTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate fields.
  *
- * @group migrate_drupal
+ * @group field
  */
 class MigrateFieldTest extends MigrateDrupal6TestBase {
 

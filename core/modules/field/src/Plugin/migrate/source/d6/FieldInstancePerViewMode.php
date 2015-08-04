@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\FieldInstancePerViewMode.
+ * Contains \Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\field\Plugin\migrate\source\d6;
 
 use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;
 

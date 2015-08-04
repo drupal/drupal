@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFieldFormatterSettingsTest.
+ * Contains \Drupal\field\Tests\Migrate\d6\MigrateFieldFormatterSettingsTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade field formatter settings to entity.display.*.*.yml.
  *
- * @group migrate_drupal
+ * @group field
  */
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 

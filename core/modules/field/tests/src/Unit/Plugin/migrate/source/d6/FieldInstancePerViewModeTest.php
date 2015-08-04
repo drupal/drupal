@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\FieldInstancePerViewModeTest.
+ * Contains \Drupal\Tests\field\Unit\Plugin\migrate\source\d6\FieldInstancePerViewModeTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\field\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 fields per view mode source plugin.
  *
- * @group migrate_drupal
+ * @group field
  */
 class FieldInstancePerViewModeTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\FieldInstancePerViewMode';
+  const PLUGIN_CLASS = 'Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
