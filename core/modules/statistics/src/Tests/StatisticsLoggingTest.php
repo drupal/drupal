@@ -24,7 +24,7 @@ class StatisticsLoggingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'statistics', 'block');
+  public static $modules = array('node', 'statistics', 'block', 'locale');
 
   /**
    * User with permissions to create and edit pages.
@@ -32,6 +32,13 @@ class StatisticsLoggingTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $authUser;
+
+  /**
+   * Associative array representing a hypothetical Drupal language.
+   *
+   * @var array
+   */
+  protected $language;
 
   /**
    * The Guzzle HTTP client.
@@ -48,10 +55,30 @@ class StatisticsLoggingTest extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     }
 
-    $this->authUser = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
+    $this->authUser = $this->drupalCreateUser(array(
+      // For node creation.
+      'access content',
+      'create page content',
+      'edit own page content',
+      // For language negotiation administration.
+      'administer languages',
+      'access administration pages',
+    ));
 
     // Ensure we have a node page to access.
     $this->node = $this->drupalCreateNode(array('title' => $this->randomMachineName(255), 'uid' => $this->authUser->id()));
+
+    // Add a custom language and enable path-based language negotiation.
+    $this->drupalLogin($this->authUser);
+    $this->language = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => 'xx',
+      'label' => $this->randomMachineName(16),
+      'direction' => 'ltr',
+    );
+    $this->drupalPostForm('admin/config/regional/language/add', $this->language, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/detection', array('language_interface[enabled][language-url]' => 1), t('Save settings'));
+    $this->drupalLogout();
 
     // Enable access logging.
     $this->config('statistics.settings')
@@ -69,32 +96,40 @@ class StatisticsLoggingTest extends WebTestBase {
    * Verifies node hit counter logging and script placement.
    */
   function testLogging() {
-    global $base_url;
     $path = 'node/' . $this->node->id();
     $module_path = drupal_get_path('module', 'statistics');
-    $stats_path = $base_url . '/' . $module_path . '/statistics.php';
-    $expected_library = $module_path . '/statistics.js';
-    $expected_settings = '"statistics":{"data":{"nid":"' . $this->node->id() . '"}';
+    $stats_path = base_path() . $module_path . '/statistics.php';
+    $lib_path = base_path() . $module_path . '/statistics.js';
+    $expected_library = '/<script src=".*?' . preg_quote($lib_path, '/.') . '.*?">/is';
 
     // Verify that logging scripts are not found on a non-node page.
     $this->drupalGet('node');
-    $this->assertNoRaw($expected_library, 'Statistics library JS not found on node page.');
-    $this->assertNoRaw($expected_settings, 'Statistics settings not found on node page.');
+    $settings = $this->getDrupalSettings();
+    $this->assertNoPattern($expected_library, 'Statistics library JS not found on node page.');
+    $this->assertFalse(isset($settings['statistics']), 'Statistics settings not found on node page.');
 
     // Verify that logging scripts are not found on a non-existent node page.
     $this->drupalGet('node/9999');
-    $this->assertNoRaw($expected_library, 'Statistics library JS not found on non-existent node page.');
-    $this->assertNoRaw($expected_settings, 'Statistics settings not found on non-existent node page.');
+    $settings = $this->getDrupalSettings();
+    $this->assertNoPattern($expected_library, 'Statistics library JS not found on non-existent node page.');
+    $this->assertFalse(isset($settings['statistics']), 'Statistics settings not found on node page.');
 
     // Verify that logging scripts are found on a valid node page.
     $this->drupalGet($path);
-    $this->assertRaw($expected_library, 'Found statistics library JS on node page.');
-    $this->assertRaw($expected_settings, 'Found statistics settings on node page.');
+    $settings = $this->getDrupalSettings();
+    $this->assertPattern($expected_library, 'Found statistics library JS on node page.');
+    $this->assertIdentical($this->node->id(), $settings['statistics']['data']['nid'], 'Found statistics settings on node page.');
+
+    // Verify the same when loading the site in a non-default language.
+    $this->drupalGet($this->language['langcode'] . '/' . $path);
+    $settings = $this->getDrupalSettings();
+    $this->assertPattern($expected_library, 'Found statistics library JS on a valid node page in a non-default language.');
+    $this->assertIdentical($this->node->id(), $settings['statistics']['data']['nid'], 'Found statistics settings on valid node page in a non-default language.');
 
     // Manually call statistics.php to simulate ajax data collection behavior.
-    $nid = $this->node->id();
-    $post = array('nid' => $nid);
-    $this->client->post($stats_path, array('form_params' => $post));
+    global $base_root;
+    $post = array('nid' => $this->node->id());
+    $this->client->post($base_root . $stats_path, array('form_params' => $post));
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
   }
