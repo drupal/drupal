@@ -9,13 +9,20 @@ namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
+use Drupal\migrate\Event\MigrateEvents;
+use Drupal\migrate\Event\MigrateMapSaveEvent;
+use Drupal\migrate\Event\MigrateMapDeleteEvent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines the sql based ID map implementation.
@@ -25,7 +32,14 @@ use Drupal\migrate\Row;
  *
  * @PluginID("sql")
  */
-class Sql extends PluginBase implements MigrateIdMapInterface {
+class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * An event dispatcher instance to use for map events.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
 
   /**
    * The migration map table name.
@@ -137,10 +151,23 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration to do.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->migration = $migration;
+    $this->eventDispatcher = $event_dispatcher;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('event_dispatcher')
+    );
   }
 
   /**
@@ -504,6 +531,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
       $fields['last_imported'] = time();
     }
     if ($keys) {
+      // Notify anyone listening of the map row we're about to save.
+      $this->eventDispatcher->dispatch(MigrateEvents::MAP_SAVE, new MigrateMapSaveEvent($this, $keys + $fields));
       $this->getDatabase()->merge($this->mapTableName())
         ->key($keys)
         ->fields($fields)
@@ -620,6 +649,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
     }
 
     if (!$messages_only) {
+      // Notify anyone listening of the map row we're about to delete.
+      $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id_values));
       $map_query->execute();
     }
     $message_query->execute();
@@ -638,6 +669,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
         $map_query->condition('destid' . $count, $key_value);
         $count++;
       }
+      // Notify anyone listening of the map row we're about to delete.
+      $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id));
       $map_query->execute();
       $count = 1;
       foreach ($source_id as $key_value) {
@@ -673,6 +706,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
     if (count($this->migration->getSourcePlugin()->getIds()) == 1) {
       $sourceids = array();
       foreach ($source_id_values as $source_id) {
+        // Notify anyone listening of the map rows we're about to delete.
+        $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id));
         $sourceids[] = $source_id;
       }
       $this->getDatabase()->delete($this->mapTableName())
@@ -684,6 +719,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
     }
     else {
       foreach ($source_id_values as $source_id) {
+        // Notify anyone listening of the map rows we're deleting.
+        $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id));
         $map_query = $this->getDatabase()->delete($this->mapTableName());
         $message_query = $this->getDatabase()->delete($this->messageTableName());
         $count = 1;

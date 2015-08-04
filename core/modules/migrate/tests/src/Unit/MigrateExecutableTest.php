@@ -50,8 +50,8 @@ class MigrateExecutableTest extends MigrateTestCase {
     parent::setUp();
     $this->migration = $this->getMigration();
     $this->message = $this->getMock('Drupal\migrate\MigrateMessageInterface');
-
-    $this->executable = new TestMigrateExecutable($this->migration, $this->message);
+    $event_dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->executable = new TestMigrateExecutable($this->migration, $this->message, $event_dispatcher);
     $this->executable->setStringTranslation($this->getStringTranslationStub());
     $this->executable->setTimeThreshold(0.1);
     $this->executable->limit = array('unit' => 'second', 'value' => 1);

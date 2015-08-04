@@ -10,8 +10,13 @@ namespace Drupal\migrate;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Event\MigrateEvents;
+use Drupal\migrate\Event\MigrateImportEvent;
+use Drupal\migrate\Event\MigratePostRowSaveEvent;
+use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a migrate executable class.
@@ -174,19 +179,29 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $sourceValues;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a MigrateExecutable and verifies and sets the memory limit.
    *
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration to run.
    * @param \Drupal\migrate\MigrateMessageInterface $message
    *   The message to record.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message) {
+  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
     $this->message = $message;
     $this->migration->getIdMap()->setMessage($message);
+    $this->eventDispatcher = $event_dispatcher;
     // Record the memory limit in bytes
     $limit = trim(ini_get('memory_limit'));
     if ($limit == '-1') {
@@ -234,9 +249,23 @@ class MigrateExecutable implements MigrateExecutableInterface {
   }
 
   /**
+   * Gets the event dispatcher.
+   *
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected function getEventDispatcher() {
+    if (!$this->eventDispatcher) {
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
+    return $this->eventDispatcher;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function import() {
+    $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_IMPORT, new MigrateImportEvent($this->migration));
+
     // Knock off migration if the requirements haven't been met.
     try {
       $this->migration->checkRequirements();
@@ -284,7 +313,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
       if ($save) {
         try {
+          $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROW_SAVE, new MigratePreRowSaveEvent($this->migration, $row));
           $destination_id_values = $destination->import($row, $id_map->lookupDestinationId($this->sourceIdValues));
+          $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROW_SAVE, new MigratePostRowSaveEvent($this->migration, $row, $destination_id_values));
           if ($destination_id_values) {
             // We do not save an idMap entry for config.
             if ($destination_id_values !== TRUE) {
@@ -345,6 +376,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     #$this->progressMessage($return);
 
     $this->migration->setMigrationResult($return);
+    $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration));
     return $return;
   }
 

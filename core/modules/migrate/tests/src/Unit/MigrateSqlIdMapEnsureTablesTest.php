@@ -181,31 +181,33 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       ->getMock();
     $database->expects($this->any())
       ->method('schema')
-      ->will($this->returnValue($schema));
+      ->willReturn($schema);
     $migration = $this->getMigration();
     $plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $plugin->expects($this->any())
       ->method('getIds')
-      ->will($this->returnValue(array(
+      ->willReturn(array(
       'source_id_property' => array(
         'type' => 'integer',
       ),
-    )));
+    ));
     $migration->expects($this->any())
       ->method('getSourcePlugin')
-      ->will($this->returnValue($plugin));
+      ->willReturn($plugin);
     $plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $plugin->expects($this->any())
       ->method('getIds')
-      ->will($this->returnValue(array(
+      ->willReturn(array(
       'destination_id_property' => array(
         'type' => 'string',
       ),
-    )));
+    ));
     $migration->expects($this->any())
       ->method('getDestinationPlugin')
-      ->will($this->returnValue($plugin));
-    $map = new TestSqlIdMap($database, array(), 'sql', array(), $migration);
+      ->willReturn($plugin);
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $map = new TestSqlIdMap($database, array(), 'sql', array(), $migration, $event_dispatcher);
     $map->getDatabase();
   }
 

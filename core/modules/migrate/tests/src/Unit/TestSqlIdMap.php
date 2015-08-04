@@ -11,6 +11,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a SQL ID map for use in tests.
@@ -31,9 +32,9 @@ class TestSqlIdMap extends Sql implements \Iterator {
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration to do.
    */
-  public function __construct(Connection $database, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(Connection $database, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
     $this->database = $database;
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher);
   }
 
   /**

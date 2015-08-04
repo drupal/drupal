@@ -238,8 +238,11 @@ class MigrateSourceTest extends MigrateTestCase {
    *   The migrate executable.
    */
   protected function getMigrateExecutable($migration) {
+    /** @var \Drupal\migrate\MigrateMessageInterface $message */
     $message = $this->getMock('Drupal\migrate\MigrateMessageInterface');
-    return new MigrateExecutable($migration, $message);
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    return new MigrateExecutable($migration, $message, $event_dispatcher);
   }
 
 }

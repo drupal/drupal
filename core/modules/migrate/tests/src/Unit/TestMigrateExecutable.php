@@ -8,7 +8,10 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessageInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests MigrateExecutable.
