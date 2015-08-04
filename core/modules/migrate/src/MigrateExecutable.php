@@ -32,20 +32,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $migration;
 
   /**
-   * The number of successfully imported rows since feedback was given.
-   *
-   * @var int
-   */
-  protected $successesSinceFeedback;
-
-  /**
-   * The number of rows that were successfully processed.
-   *
-   * @var int
-   */
-  protected $totalSuccesses;
-
-  /**
    * Status of one row.
    *
    * The value is a MigrateIdMapInterface::STATUS_* constant, for example:
@@ -54,15 +40,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @var int
    */
   protected $sourceRowStatus;
-
-  /**
-   * The number of rows processed.
-   *
-   * The total attempted, whether or not they were successful.
-   *
-   * @var int
-   */
-  protected $totalProcessed;
 
   /**
    * The queued messages not yet saved.
@@ -76,63 +53,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $queuedMessages = array();
 
   /**
-   * The options that can be set when executing the migration.
-   *
-   * Values can be set for:
-   * - 'limit': Sets a time limit.
-   *
-   * @var array
-   */
-  protected $options;
-
-  /**
-   * The PHP max_execution_time.
-   *
-   * @var int
-   */
-  protected $maxExecTime;
-
-  /**
-   * The ratio of the memory limit at which an operation will be interrupted.
-   *
-   * @var float
-   */
-  protected $memoryThreshold = 0.85;
-
-  /**
-   * The ratio of the time limit at which an operation will be interrupted.
-   *
-   * @var float
-   */
-  public $timeThreshold = 0.90;
-
-  /**
-   * The time limit when executing the migration.
-   *
-   * @var array
-   */
-  public $limit = array();
-
-  /**
    * The configuration values of the source.
    *
    * @var array
    */
   protected $sourceIdValues;
-
-  /**
-   * The number of rows processed since feedback was given.
-   *
-   * @var int
-   */
-  protected $processedSinceFeedback = 0;
-
-  /**
-   * The PHP memory_limit expressed in bytes.
-   *
-   * @var int
-   */
-  protected $memoryLimit;
 
   /**
    * The rollback action to be saved for the current row.
@@ -202,31 +127,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $this->message = $message;
     $this->migration->getIdMap()->setMessage($message);
     $this->eventDispatcher = $event_dispatcher;
-    // Record the memory limit in bytes
-    $limit = trim(ini_get('memory_limit'));
-    if ($limit == '-1') {
-      $this->memoryLimit = PHP_INT_MAX;
-    }
-    else {
-      if (!is_numeric($limit)) {
-        $last = strtolower(substr($limit, -1));
-        switch ($last) {
-          case 'g':
-            $limit *= 1024;
-          case 'm':
-            $limit *= 1024;
-          case 'k':
-            $limit *= 1024;
-            break;
-          default:
-            throw new MigrateException($this->t('Invalid PHP memory_limit !limit',
-              array('!limit' => $limit)));
-        }
-      }
-      $this->memoryLimit = $limit;
-    }
-    // Record the maximum execution time limit.
-    $this->maxExecTime = ini_get('max_execution_time');
   }
 
   /**
@@ -321,8 +221,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
             if ($destination_id_values !== TRUE) {
               $id_map->saveIdMapping($row, $destination_id_values, $this->sourceRowStatus, $this->rollbackAction);
             }
-            $this->successesSinceFeedback++;
-            $this->totalSuccesses++;
           }
           else {
             $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED, $this->rollbackAction);
@@ -343,8 +241,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $this->handleException($e);
         }
       }
-      $this->totalProcessed++;
-      $this->processedSinceFeedback++;
       if ($high_water_property = $this->migration->get('highWaterProperty')) {
         $this->migration->saveHighWater($row->getSourceProperty($high_water_property['name']));
       }
@@ -353,12 +249,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
       unset($sourceValues, $destinationValues);
       $this->sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
-      if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
-        break;
-      }
-      if ($this->timeOptionExceeded()) {
-        break;
-      }
       try {
         $source->next();
       }
@@ -369,11 +259,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
         return MigrationInterface::RESULT_FAILED;
       }
     }
-
-    /**
-     * @TODO uncomment this
-     */
-    #$this->progressMessage($return);
 
     $this->migration->setMigrationResult($return);
     $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration));
@@ -442,40 +327,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   }
 
   /**
-   * Tests whether we've exceeded the designated time limit.
-   *
-   * @return bool
-   *   TRUE if the threshold is exceeded, FALSE if not.
-   */
-  protected function timeOptionExceeded() {
-    // If there is no time limit, then it is not exceeded.
-    if (!$time_limit = $this->getTimeLimit()) {
-      return FALSE;
-    }
-    // Calculate if the time limit is exceeded.
-    $time_elapsed = $this->getTimeElapsed();
-    if ($time_elapsed >= $time_limit) {
-      return TRUE;
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTimeLimit() {
-    $limit = $this->limit;
-    if (isset($limit['unit']) && isset($limit['value']) && ($limit['unit'] == 'seconds' || $limit['unit'] == 'second')) {
-      return $limit['value'];
-    }
-    else {
-      return NULL;
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function saveMessage($message, $level = MigrationInterface::MESSAGE_ERROR) {
@@ -497,143 +348,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->saveMessage($queued_message['message'], $queued_message['level']);
     }
     $this->queuedMessages = array();
-  }
-
-  /**
-   * Checks for exceptional conditions, and display feedback.
-   *
-   * Standard top-of-loop stuff, common between rollback and import.
-   */
-  protected function checkStatus() {
-    if ($this->memoryExceeded()) {
-      return MigrationInterface::RESULT_INCOMPLETE;
-    }
-    if ($this->maxExecTimeExceeded()) {
-      return MigrationInterface::RESULT_INCOMPLETE;
-    }
-    /*
-     * @TODO uncomment this
-    if ($this->getStatus() == MigrationInterface::STATUS_STOPPING) {
-      return MigrationBase::RESULT_STOPPED;
-    }
-    */
-    // If feedback is requested, produce a progress message at the proper time
-    /*
-     * @TODO uncomment this
-    if (isset($this->feedback)) {
-      if (($this->feedback_unit == 'seconds' && time() - $this->lastfeedback >= $this->feedback) ||
-          ($this->feedback_unit == 'items' && $this->processed_since_feedback >= $this->feedback)) {
-        $this->progressMessage(MigrationInterface::RESULT_INCOMPLETE);
-      }
-    }
-    */
-
-    return MigrationInterface::RESULT_COMPLETED;
-  }
-
-  /**
-   * Tests whether we've exceeded the desired memory threshold.
-   *
-   * If so, output a message.
-   *
-   * @return bool
-   *   TRUE if the threshold is exceeded, otherwise FALSE.
-   */
-  protected function memoryExceeded() {
-    $usage = $this->getMemoryUsage();
-    $pct_memory = $usage / $this->memoryLimit;
-    if (!$threshold = $this->memoryThreshold) {
-      return FALSE;
-    }
-    if ($pct_memory > $threshold) {
-      $this->message->display(
-        $this->t('Memory usage is !usage (!pct% of limit !limit), reclaiming memory.',
-          array('!pct' => round($pct_memory*100),
-                '!usage' => $this->formatSize($usage),
-                '!limit' => $this->formatSize($this->memoryLimit))),
-        'warning');
-      $usage = $this->attemptMemoryReclaim();
-      $pct_memory = $usage / $this->memoryLimit;
-      // Use a lower threshold - we don't want to be in a situation where we keep
-      // coming back here and trimming a tiny amount
-      if ($pct_memory > (0.90 * $threshold)) {
-        $this->message->display(
-          $this->t('Memory usage is now !usage (!pct% of limit !limit), not enough reclaimed, starting new batch',
-            array('!pct' => round($pct_memory*100),
-                  '!usage' => $this->formatSize($usage),
-                  '!limit' => $this->formatSize($this->memoryLimit))),
-          'warning');
-        return TRUE;
-      }
-      else {
-        $this->message->display(
-          $this->t('Memory usage is now !usage (!pct% of limit !limit), reclaimed enough, continuing',
-            array('!pct' => round($pct_memory*100),
-                  '!usage' => $this->formatSize($usage),
-                  '!limit' => $this->formatSize($this->memoryLimit))),
-          'warning');
-        return FALSE;
-      }
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-  /**
-   * Returns the memory usage so far.
-   *
-   * @return int
-   *   The memory usage.
-   */
-  protected function getMemoryUsage() {
-    return memory_get_usage();
-  }
-
-  /**
-   * Tries to reclaim memory.
-   *
-   * @return int
-   *   The memory usage after reclaim.
-   */
-  protected function attemptMemoryReclaim() {
-    // First, try resetting Drupal's static storage - this frequently releases
-    // plenty of memory to continue.
-    drupal_static_reset();
-    // @TODO: explore resetting the container.
-    return memory_get_usage();
-  }
-
-  /**
-   * Generates a string representation for the given byte count.
-   *
-   * @param int $size
-   *   A size in bytes.
-   *
-   * @return string
-   *   A translated string representation of the size.
-   */
-  protected function formatSize($size) {
-    return format_size($size);
-  }
-
-  /**
-   * Tests whether we're approaching the PHP maximum execution time limit.
-   *
-   * @return bool
-   *   TRUE if the threshold is exceeded, FALSE if not.
-   */
-  protected function maxExecTimeExceeded() {
-    return $this->maxExecTime && (($this->getTimeElapsed() / $this->maxExecTime) > $this->timeThreshold);
-  }
-
-  /**
-   * Returns the time elapsed.
-   *
-   * This allows a test to set a fake elapsed time.
-   */
-  protected function getTimeElapsed() {
-    return time() - REQUEST_TIME;
   }
 
   /**

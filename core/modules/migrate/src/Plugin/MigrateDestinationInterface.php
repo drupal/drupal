@@ -55,33 +55,6 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
    */
   public function fields(MigrationInterface $migration = NULL);
 
-
-  /**
-   * Allows pre-processing of an import.
-   *
-   * Derived classes may implement preImport() to do any processing they need
-   * done before over all source rows.
-   */
-  public function preImport();
-
-  /**
-   * Allows pre-processing of a rollback.
-   */
-  public function preRollback();
-
-  /**
-   * Allows post-processing of an import.
-   *
-   * Derived classes may implement postImport(), to do any processing they need
-   * done after looping over all source rows.
-   */
-  public function postImport();
-
-  /**
-   * Allows post-processing of a rollback.
-   */
-  public function postRollback();
-
   /**
    * Import the row.
    *

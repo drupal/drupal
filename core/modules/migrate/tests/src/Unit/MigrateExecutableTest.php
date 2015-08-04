@@ -53,8 +53,6 @@ class MigrateExecutableTest extends MigrateTestCase {
     $event_dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->executable = new TestMigrateExecutable($this->migration, $this->message, $event_dispatcher);
     $this->executable->setStringTranslation($this->getStringTranslationStub());
-    $this->executable->setTimeThreshold(0.1);
-    $this->executable->limit = array('unit' => 'second', 'value' => 1);
   }
 
   /**
@@ -120,11 +118,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue($destination));
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
-
-    $this->assertSame(1, $this->executable->getSuccessesSinceFeedback());
-    $this->assertSame(1, $this->executable->getTotalSuccesses());
-    $this->assertSame(1, $this->executable->getTotalProcessed());
-    $this->assertSame(1, $this->executable->getProcessedSinceFeedback());
   }
 
   /**
@@ -170,11 +163,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->method('saveIdMapping');
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
-
-    $this->assertSame(1, $this->executable->getSuccessesSinceFeedback());
-    $this->assertSame(1, $this->executable->getTotalSuccesses());
-    $this->assertSame(1, $this->executable->getTotalProcessed());
-    $this->assertSame(1, $this->executable->getProcessedSinceFeedback());
   }
 
   /**
@@ -347,44 +335,6 @@ class MigrateExecutableTest extends MigrateTestCase {
   }
 
   /**
-   * Tests time limit option method.
-   */
-  public function testTimeOptionExceeded() {
-    // Assert time limit of one second (test configuration default) is exceeded.
-    $this->executable->setTimeElapsed(1);
-    $this->assertTrue($this->executable->timeOptionExceeded());
-    // Assert time limit not exceeded.
-    $this->executable->limit = array('unit' => 'seconds', 'value' => (int) $_SERVER['REQUEST_TIME'] - 3600);
-    $this->assertFalse($this->executable->timeOptionExceeded());
-    // Assert no time limit.
-    $this->executable->limit = array();
-    $this->assertFalse($this->executable->timeOptionExceeded());
-  }
-
-  /**
-   * Tests get time limit method.
-   */
-  public function testGetTimeLimit() {
-    // Assert time limit has a unit of one second (test configuration default).
-    $limit = $this->executable->limit;
-    $this->assertArrayHasKey('unit', $limit);
-    $this->assertSame('second', $limit['unit']);
-    $this->assertSame($limit['value'], $this->executable->getTimeLimit());
-    // Assert time limit has a unit of multiple seconds.
-    $this->executable->limit = array('unit' => 'seconds', 'value' => 30);
-    $limit = $this->executable->limit;
-    $this->assertArrayHasKey('unit', $limit);
-    $this->assertSame('seconds', $limit['unit']);
-    $this->assertSame($limit['value'], $this->executable->getTimeLimit());
-    // Assert no time limit.
-    $this->executable->limit = array();
-    $limit = $this->executable->limit;
-    $this->assertArrayNotHasKey('unit', $limit);
-    $this->assertArrayNotHasKey('value', $limit);
-    $this->assertNull($this->executable->getTimeLimit());
-  }
-
-  /**
    * Tests saving of queued messages.
    */
   public function testSaveQueuedMessages() {
@@ -433,22 +383,6 @@ class MigrateExecutableTest extends MigrateTestCase {
     );
     $this->executable->queueMessage('message 3', MigrationInterface::MESSAGE_INFORMATIONAL);
     $this->assertAttributeEquals($expected_messages, 'queuedMessages', $this->executable);
-  }
-
-  /**
-   * Tests maximum execution time (max_execution_time) of an import.
-   */
-  public function testMaxExecTimeExceeded() {
-    // Assert no max_execution_time value.
-    $this->executable->setMaxExecTime(0);
-    $this->assertFalse($this->executable->maxExecTimeExceeded());
-    // Assert default max_execution_time value does not exceed.
-    $this->executable->setMaxExecTime(30);
-    $this->assertFalse($this->executable->maxExecTimeExceeded());
-    // Assert max_execution_time value is exceeded.
-    $this->executable->setMaxExecTime(1);
-    $this->executable->setTimeElapsed(2);
-    $this->assertTrue($this->executable->maxExecTimeExceeded());
   }
 
   /**

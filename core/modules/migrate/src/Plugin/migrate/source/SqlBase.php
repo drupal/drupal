@@ -29,11 +29,6 @@ abstract class SqlBase extends SourcePluginBase {
   protected $query;
 
   /**
-   * @var \Drupal\migrate\Entity\MigrationInterface
-   */
-  protected $migration;
-
-  /**
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;

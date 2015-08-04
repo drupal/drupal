@@ -37,14 +37,6 @@ interface MigrateExecutableInterface {
   public function processRow(Row $row, array $process = NULL, $value = NULL);
 
   /**
-   * Returns the time limit.
-   *
-   * @return null|int
-   *   The time limit, NULL if no limit or if the units were not in seconds.
-   */
-  public function getTimeLimit();
-
-  /**
    * Passes messages through to the map class.
    *
    * @param string $message
