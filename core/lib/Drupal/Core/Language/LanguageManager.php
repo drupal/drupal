@@ -207,6 +207,7 @@ class LanguageManager implements LanguageManagerInterface {
     $locked_language = array(
       'default' => FALSE,
       'locked' => TRUE,
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     // This is called very early while initializing the language system. Prevent
     // early t() calls by using the TranslationWrapper.
