@@ -88,7 +88,7 @@ class NodeForm extends ContentEntityForm {
       // Rebuild the form.
       $form_state->setRebuild();
       $this->entity = $preview->getFormObject()->getEntity();
-      unset($this->entity->in_preview);
+      $this->entity->in_preview = NULL;
 
       // Remove the stale temp store entry for existing nodes.
       if (!$this->entity->isNew()) {

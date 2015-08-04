@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
@@ -21,13 +22,14 @@ use Drupal\node\Entity\NodeType;
 class PagePreviewTest extends NodeTestBase {
 
   use EntityReferenceTestTrait;
+  use CommentTestTrait;
 
   /**
-   * Enable the node and taxonomy modules to test both on the preview.
+   * Enable the comment, node and taxonomy modules to test on the preview.
    *
    * @var array
    */
-  public static $modules = array('node', 'taxonomy');
+  public static $modules = array('node', 'taxonomy', 'comment');
 
   /**
    * The name of the created field.
@@ -38,6 +40,7 @@ class PagePreviewTest extends NodeTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $this->addDefaultCommentField('node', 'page');
 
     $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
     $this->drupalLogin($web_user);
@@ -138,6 +141,14 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
     $this->assertFieldByName($term_key, $edit[$term_key] . ' (' . $this->term->id() . ')', 'Term field displayed.');
+
+    // Return to page preview to check everything is as expected.
+    $this->drupalPostForm(NULL, array(), t('Preview'));
+    $this->assertTitle(t('@title | Drupal', array('@title' => $edit[$title_key])), 'Basic page title is preview.');
+    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertText($edit[$body_key], 'Body displayed.');
+    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertLink(t('Back to content editing'));
 
     // Assert the content is kept when reloading the page.
     $this->drupalGet('node/add/page', array('query' => array('uuid' => $uuid)));
