@@ -173,37 +173,11 @@ class UpdateScriptTest extends WebTestBase {
    * Tests update.php after performing a successful update.
    */
   function testSuccessfulUpdateFunctionality() {
-    $schema_version = drupal_get_installed_schema_version('update_script_test');
-    $this->assertEqual($schema_version, 8001, 'update_script_test is initially installed with schema version 8001.');
-
-    // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
-    $this->assertEqual($schema_version, 8000, 'update_script_test schema version overridden to 8000.');
-
-    // Click through update.php with 'administer software updates' permission.
-    $this->drupalLogin($this->updateUser);
-    $this->drupalGet($this->updateUrl, array('external' => TRUE));
-    $this->clickLink(t('Continue'));
-    $this->clickLink(t('Apply pending updates'));
-
-    // Verify that updates were completed successfully.
-    $this->assertText('Updates were attempted.');
-    $this->assertLink('site');
-    $this->assertText('The update_script_test_update_8001() update was executed successfully.');
-
-    // Verify that no 7.x updates were run.
-    $this->assertNoText('The update_script_test_update_7200() update was executed successfully.');
-    $this->assertNoText('The update_script_test_update_7201() update was executed successfully.');
-
-    // Verify that there are no links to different parts of the workflow.
-    $this->assertNoLink('Administration pages');
-    $this->assertNoLinkByHref('update.php', 0);
-    $this->assertNoLink('logged');
-
-    // Verify the front page can be visited following the upgrade.
-    $this->clickLink('Front page');
-    $this->assertResponse(200);
+    $initial_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
+    $this->assertFalse($initial_maintenance_mode, 'Site is not in maintenance mode.');
+    $this->updateScriptTest($initial_maintenance_mode);
+    $final_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
+    $this->assertEqual($final_maintenance_mode, $initial_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
 
     // Reset the static cache to ensure we have the most current setting.
     $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
@@ -226,6 +200,64 @@ class UpdateScriptTest extends WebTestBase {
     $this->assertLink('Administration pages');
     $this->assertNoLinkByHref('update.php', 1);
     $this->clickLink('Administration pages');
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Tests update.php while in maintenance mode.
+   */
+  function testMaintenanceModeUpdateFunctionality() {
+    $this->container->get('state')
+      ->set('system.maintenance_mode', TRUE);
+    $initial_maintenance_mode = $this->container->get('state')
+      ->get('system.maintenance_mode');
+    $this->assertTrue($initial_maintenance_mode, 'Site is in maintenance mode.');
+    $this->updateScriptTest($initial_maintenance_mode);
+    $final_maintenance_mode = $this->container->get('state')
+      ->get('system.maintenance_mode');
+    $this->assertEqual($final_maintenance_mode, $initial_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
+  }
+
+  /**
+   * Helper function to run updates via the browser.
+   */
+  protected function updateScriptTest($maintenance_mode) {
+    $schema_version = drupal_get_installed_schema_version('update_script_test');
+    $this->assertEqual($schema_version, 8001, 'update_script_test is initially installed with schema version 8001.');
+
+    // Set the installed schema version to one less than the current update.
+    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
+    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $this->assertEqual($schema_version, 8000, 'update_script_test schema version overridden to 8000.');
+
+    // Click through update.php with 'administer software updates' permission.
+    $this->drupalLogin($this->updateUser);
+    if ($maintenance_mode) {
+      $this->assertText('Operating in maintenance mode.');
+    }
+    else {
+      $this->assertNoText('Operating in maintenance mode.');
+    }
+    $this->drupalGet($this->updateUrl, array('external' => TRUE));
+    $this->clickLink(t('Continue'));
+    $this->clickLink(t('Apply pending updates'));
+
+    // Verify that updates were completed successfully.
+    $this->assertText('Updates were attempted.');
+    $this->assertLink('site');
+    $this->assertText('The update_script_test_update_8001() update was executed successfully.');
+
+    // Verify that no 7.x updates were run.
+    $this->assertNoText('The update_script_test_update_7200() update was executed successfully.');
+    $this->assertNoText('The update_script_test_update_7201() update was executed successfully.');
+
+    // Verify that there are no links to different parts of the workflow.
+    $this->assertNoLink('Administration pages');
+    $this->assertNoLinkByHref('update.php', 0);
+    $this->assertNoLink('logged');
+
+    // Verify the front page can be visited following the upgrade.
+    $this->clickLink('Front page');
     $this->assertResponse(200);
   }
 

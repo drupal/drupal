@@ -544,13 +544,13 @@ class DbUpdateController extends ControllerBase {
    *   The current request object.
    */
   protected function triggerBatch(Request $request) {
-    // During the update, bring the site offline so that schema changes do not
-    // affect visiting users.
-    $maintenance_mode = $this->config('system.maintenance')->get('enabled');
-    if (isset($maintenance_mode)) {
-      $_SESSION['maintenance_mode'] = $maintenance_mode;
-    }
-    if (empty($_SESSION['maintenance_mode'])) {
+    $maintenance_mode = $this->state->get('system.maintenance_mode', FALSE);
+    // Store the current maintenance mode status in the session so that it can
+    // be restored at the end of the batch.
+    $_SESSION['maintenance_mode'] = $maintenance_mode;
+    // During the update, always put the site into maintenance mode so that
+    // in-progress schema changes do not affect visiting users.
+    if (empty($maintenance_mode)) {
       $this->state->set('system.maintenance_mode', TRUE);
     }
 
@@ -630,11 +630,11 @@ class DbUpdateController extends ControllerBase {
     $_SESSION['updates_remaining'] = $operations;
 
     // Now that the update is done, we can put the site back online if it was
-    // previously in maintenance mode.
-    if (isset($_SESSION['maintenance_mode'])) {
+    // previously not in maintenance mode.
+    if (empty($_SESSION['maintenance_mode'])) {
       \Drupal::state()->set('system.maintenance_mode', FALSE);
-      unset($_SESSION['maintenance_mode']);
     }
+    unset($_SESSION['maintenance_mode']);
   }
 
   /**
