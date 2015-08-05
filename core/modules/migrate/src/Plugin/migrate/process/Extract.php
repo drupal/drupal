@@ -33,7 +33,12 @@ class Extract extends ProcessPluginBase {
     }
     $new_value = NestedArray::getValue($value, $this->configuration['index'], $key_exists);
     if (!$key_exists) {
-      throw new MigrateException('Array index missing, extraction failed.');
+      if (isset($this->configuration['default'])) {
+        $new_value = $this->configuration['default'];
+      }
+      else {
+        throw new MigrateException('Array index missing, extraction failed.');
+      }
     }
     return $new_value;
   }

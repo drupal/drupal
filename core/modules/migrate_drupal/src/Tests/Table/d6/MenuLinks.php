@@ -5154,8 +5154,34 @@ class MenuLinks extends DrupalDumpBase {
       'p8' => '0',
       'p9' => '0',
       'updated' => '0',
+    ))->values(array(
+      'menu_name' => 'secondary-links',
+      'mlid' => '393',
+      'plid' => '0',
+      'link_path' => 'user/login',
+      'router_path' => 'user/login',
+      'link_title' => 'Test 3',
+      'options' => 'a:0:{}',
+      'module' => 'menu',
+      'hidden' => '0',
+      'external' => '0',
+      'has_children' => '1',
+      'expanded' => '0',
+      'weight' => '15',
+      'depth' => '1',
+      'customized' => '1',
+      'p1' => '138',
+      'p2' => '0',
+      'p3' => '0',
+      'p4' => '0',
+      'p5' => '0',
+      'p6' => '0',
+      'p7' => '0',
+      'p8' => '0',
+      'p9' => '0',
+      'updated' => '0',
     ))->execute();
   }
 
 }
-#a594b05a60a1a549e86f4c190c2f2f4e
+#8e902b6a6367838c553b463060befdd3
