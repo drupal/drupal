@@ -90,7 +90,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * Sets extra headers on successful responses.
    *
-   * @param Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
    *   The event to process.
    */
   public function onRespond(FilterResponseEvent $event) {
