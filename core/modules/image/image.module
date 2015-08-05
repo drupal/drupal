@@ -278,7 +278,7 @@ function template_preprocess_image_style(&$variables) {
     'height' => $variables['height'],
   );
 
-  $style->transformDimensions($dimensions);
+  $style->transformDimensions($dimensions, $variables['uri']);
 
   $variables['image'] = array(
     '#theme' => 'image',

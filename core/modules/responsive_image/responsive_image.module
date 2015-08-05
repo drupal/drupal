@@ -302,6 +302,7 @@ function template_preprocess_responsive_image(&$variables) {
  *       ID.
  *     - width: The width of the image (if known).
  *     - height: The height of the image (if known).
+ *     - uri: The URI of the image file.
  * @param \Drupal\breakpoint\BreakpointInterface $breakpoint
  *   The breakpoint for this source tag.
  * @param array $multipliers
@@ -324,7 +325,7 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
         // Loop through the image styles for this breakpoint and multiplier.
         foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
           // Get the dimensions.
-          $dimensions = responsive_image_get_image_dimensions($image_style_name, array('width' => $width, 'height' => $height));
+          $dimensions = responsive_image_get_image_dimensions($image_style_name, array('width' => $width, 'height' => $height), $variables['uri']);
           // Get MIME type.
           $derivative_mime_type = responsive_image_get_mime_type($image_style_name, $extension);
           $derivative_mime_types[] = $derivative_mime_type;
@@ -385,12 +386,14 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
  *   An associative array containing:
  *   - width: The width of the source image (if known).
  *   - height: The height of the source image (if known).
+ * @param string $uri
+ *   The URI of the image file.
  *
  * @return array
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
  */
-function responsive_image_get_image_dimensions($image_style_name, array $dimensions) {
+function responsive_image_get_image_dimensions($image_style_name, array $dimensions, $uri) {
   // Determine the dimensions of the styled image.
   if ($image_style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
     $dimensions = array(
@@ -398,11 +401,8 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
       'height' => 1,
     );
   }
-  else {
-    $entity = ImageStyle::load($image_style_name);
-    if ($entity instanceof Drupal\image\Entity\ImageStyle) {
-      $entity->transformDimensions($dimensions);
-    }
+  elseif ($entity = ImageStyle::load($image_style_name)) {
+    $entity->transformDimensions($dimensions, $uri);
   }
 
   return $dimensions;

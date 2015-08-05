@@ -307,9 +307,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function transformDimensions(array &$dimensions) {
+  public function transformDimensions(array &$dimensions, $uri) {
     foreach ($this->getEffects() as $effect) {
-      $effect->transformDimensions($dimensions);
+      $effect->transformDimensions($dimensions, $uri);
     }
   }
 

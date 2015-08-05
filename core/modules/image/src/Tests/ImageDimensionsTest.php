@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -39,7 +40,7 @@ class ImageDimensionsTest extends WebTestBase {
     /** @var $style \Drupal\image\ImageStyleInterface */
     $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
     $style->save();
-    $generated_uri = 'public://styles/test/public/'. drupal_basename($original_uri);
+    $generated_uri = 'public://styles/test/public/'. \Drupal::service('file_system')->basename($original_uri);
     $url = $style->buildUrl($original_uri);
 
     $variables = array(
@@ -231,6 +232,48 @@ class ImageDimensionsTest extends WebTestBase {
     $style->addImageEffect($effect);
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" alt="" class="image-style-test" />');
+
+    // Test URI dependent image effect.
+    $style = ImageStyle::create(['name' => 'test_uri', 'label' => 'Test URI']);
+    $effect = [
+      'id' => 'image_module_test_uri_dependent',
+      'data' => [],
+      'weight' => 0,
+    ];
+    $style->addImageEffect($effect);
+    $style->save();
+    $variables = [
+      '#theme' => 'image_style',
+      '#style_name' => 'test_uri',
+      '#uri' => $original_uri,
+      '#width' => 40,
+      '#height' => 20,
+    ];
+    // PNG original image. Should be resized to 100x100.
+    $generated_uri = 'public://styles/test_uri/public/'. \Drupal::service('file_system')->basename($original_uri);
+    $url = $style->buildUrl($original_uri);
+    $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="100" height="100" alt="" class="image-style-test-uri" />');
+    $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
+    $this->drupalGet($url);
+    $this->assertResponse(200, 'Image was generated at the URL.');
+    $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 100);
+    $this->assertEqual($image_file->getHeight(), 100);
+    // GIF original image. Should be resized to 50x50.
+    $file = $files[1];
+    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+    $generated_uri = 'public://styles/test_uri/public/'. \Drupal::service('file_system')->basename($original_uri);
+    $url = $style->buildUrl($original_uri);
+    $variables['#uri'] = $original_uri;
+    $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="50" height="50" alt="" class="image-style-test-uri" />');
+    $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
+    $this->drupalGet($url);
+    $this->assertResponse(200, 'Image was generated at the URL.');
+    $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 50);
+    $this->assertEqual($image_file->getHeight(), 50);
   }
 
   /**

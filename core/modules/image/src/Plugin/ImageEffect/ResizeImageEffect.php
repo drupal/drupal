@@ -36,7 +36,7 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function transformDimensions(array &$dimensions) {
+  public function transformDimensions(array &$dimensions, $uri) {
     // The new image will have the exact dimensions defined for the effect.
     $dimensions['width'] = $this->configuration['width'];
     $dimensions['height'] = $this->configuration['height'];

@@ -127,8 +127,18 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @param array $dimensions
    *   Associative array passed by reference. Implementations have to store the
    *   resulting width and height, in pixels.
+   * @param string $uri
+   *   Original image file URI. It is passed in to allow effects to
+   *   optionally use this information to retrieve additional image metadata
+   *   to determine dimensions of the styled image.
+   *   ImageStyleInterface::transformDimensions key objective is to calculate
+   *   styled image dimensions without performing actual image operations, so
+   *   be aware that performing IO on the URI may lead to decrease in
+   *   performance.
+   *
+   * @see ImageEffectInterface::transformDimensions
    */
-  public function transformDimensions(array &$dimensions);
+  public function transformDimensions(array &$dimensions, $uri);
 
   /**
    * Determines the extension of the derivative without generating it.

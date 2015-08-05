@@ -43,8 +43,16 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurablePl
    *   - height: the height in pixels, or NULL if unknown
    *   When either of the dimensions are NULL, the corresponding HTML attribute
    *   will be omitted when an image style using this image effect is used.
+   * @param string $uri
+   *   Original image file URI. It is passed in to allow an effect to
+   *   optionally use this information to retrieve additional image metadata
+   *   to determine dimensions of the styled image.
+   *   ImageEffectInterface::transformDimensions key objective is to calculate
+   *   styled image dimensions without performing actual image operations, so
+   *   be aware that performing IO on the URI may lead to decrease in
+   *   performance.
    */
-  public function transformDimensions(array &$dimensions);
+  public function transformDimensions(array &$dimensions, $uri);
 
   /**
    * Returns the extension the derivative would have have after applying this
