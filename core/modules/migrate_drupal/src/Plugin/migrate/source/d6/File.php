@@ -58,7 +58,6 @@ class File extends DrupalSqlBase {
     return $query;
   }
 
-
   /**
    * {@inheritdoc}
    */
