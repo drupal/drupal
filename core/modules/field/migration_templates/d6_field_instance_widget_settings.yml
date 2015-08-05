@@ -2,6 +2,9 @@ id: d6_field_instance_widget_settings
 label: Drupal 6 field instance widget configuration
 migration_tags:
   - Drupal 6
+builder:
+  plugin: d6_cck_migration
+  cck_plugin_method: processFieldWidget
 source:
   plugin: d6_field_instance_per_form_display
   constants:

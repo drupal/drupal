@@ -20,4 +20,4 @@ destination:
   plugin: book
 migration_dependencies:
   required:
-    - d6_node
+    - d6_node:*

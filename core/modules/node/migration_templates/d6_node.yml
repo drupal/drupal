@@ -2,6 +2,8 @@ id: d6_node
 label: Drupal 6 nodes
 migration_tags:
   - Drupal 6
+builder:
+  plugin: d6_node
 source:
   plugin: d6_node
 process:

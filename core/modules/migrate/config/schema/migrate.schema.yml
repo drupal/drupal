@@ -28,6 +28,9 @@ migrate.migration.*:
     destination:
       type: migrate.destination.[plugin]
       label: 'Destination'
+    template:
+      type: string
+      label: 'Template'
     migration_dependencies:
       type: mapping
       label: 'Dependencies'

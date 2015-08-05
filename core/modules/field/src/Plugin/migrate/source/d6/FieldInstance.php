@@ -24,28 +24,12 @@ class FieldInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('content_node_field_instance', 'cnfi')
-      ->fields('cnfi', array(
-        'field_name',
-        'type_name',
-        'weight',
-        'label',
-        'widget_type',
-        'widget_settings',
-        'display_settings',
-        'description',
-        'widget_module',
-        'widget_active',
-        'description',
-      ))
-      ->fields('cnf', array(
-        'required',
-        'active',
-        'global_settings',
-      ));
-
+    $query = $this->select('content_node_field_instance', 'cnfi')->fields('cnfi');
+    if (isset($this->configuration['node_type'])) {
+      $query->condition('cnfi.type_name', $this->configuration['node_type']);
+    }
     $query->join('content_node_field', 'cnf', 'cnf.field_name = cnfi.field_name');
-    $query->orderBy('weight');
+    $query->fields('cnf');
 
     return $query;
   }

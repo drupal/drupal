@@ -14,4 +14,4 @@ destination:
 migration_dependencies:
   required:
     - d6_cck_field_values
-    - d6_node_revision
+    - d6_node_revision:*

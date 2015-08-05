@@ -16,6 +16,6 @@ destination:
   plugin: entity:node
 migration_dependencies:
   required:
-    - d6_node
+    - d6_node:*
     - d6_field_formatter_settings
     - d6_field_instance_widget_settings

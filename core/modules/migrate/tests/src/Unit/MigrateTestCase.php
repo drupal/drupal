@@ -28,29 +28,41 @@ abstract class MigrateTestCase extends UnitTestCase {
     $this->migrationConfiguration += ['migrationClass' => 'Drupal\migrate\Entity\Migration'];
     $this->idMap = $this->getMock('Drupal\migrate\Plugin\MigrateIdMapInterface');
 
-    $this->idMap->expects($this->any())
+    $this->idMap
       ->method('getQualifiedMapTableName')
-      ->will($this->returnValue('test_map'));
+      ->willReturn('test_map');
 
     $migration = $this->getMockBuilder($this->migrationConfiguration['migrationClass'])
       ->disableOriginalConstructor()
       ->getMock();
-    $migration->expects($this->any())
-      ->method('checkRequirements')
-      ->will($this->returnValue(TRUE));
-    $migration->expects($this->any())
-      ->method('getIdMap')
-      ->will($this->returnValue($this->idMap));
+
+    $migration->method('checkRequirements')
+      ->willReturn(TRUE);
+
+    $migration->method('getIdMap')
+      ->willReturn($this->idMap);
+
+    $migration->method('getMigrationDependencies')
+      ->willReturn([
+        'required' => [],
+        'optional' => [],
+      ]);
+
     $configuration = &$this->migrationConfiguration;
-    $migration->expects($this->any())->method('get')->will($this->returnCallback(function ($argument) use (&$configuration) {
-      return isset($configuration[$argument]) ? $configuration[$argument] : '';
-    }));
-    $migration->expects($this->any())->method('set')->will($this->returnCallback(function ($argument, $value) use (&$configuration) {
+
+    $migration->method('get')
+      ->willReturnCallback(function ($argument) use (&$configuration) {
+        return isset($configuration[$argument]) ? $configuration[$argument] : '';
+      });
+
+    $migration->method('set')
+      ->willReturnCallback(function ($argument, $value) use (&$configuration) {
       $configuration[$argument] = $value;
-    }));
-    $migration->expects($this->any())
-      ->method('id')
-      ->will($this->returnValue($configuration['id']));
+    });
+
+    $migration->method('id')
+      ->willReturn($configuration['id']);
+
     return $migration;
   }
 

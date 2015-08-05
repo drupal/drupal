@@ -233,6 +233,13 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   protected $dependencies = [];
 
   /**
+   * The ID of the template from which this migration was derived, if any.
+   *
+   * @var string|NULL
+   */
+  protected $template;
+
+  /**
    * The entity manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface

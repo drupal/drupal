@@ -8,6 +8,9 @@ services:
   migrate.template_storage:
     class: Drupal\migrate\MigrateTemplateStorage
     arguments: ['@module_handler']
+  migrate.migration_builder:
+    class: Drupal\migrate\MigrationBuilder
+    arguments: ['@plugin.manager.migrate.builder']
   plugin.manager.migrate.source:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']
@@ -20,3 +23,6 @@ services:
   plugin.manager.migrate.id_map:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [id_map, '@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.migrate.builder:
+    class: Drupal\migrate\Plugin\MigratePluginManager
+    arguments: [builder, '@container.namespaces', '@cache.discovery', '@module_handler']

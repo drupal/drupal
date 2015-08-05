@@ -12,6 +12,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
@@ -47,11 +48,13 @@ class MigrationStorage extends BaseMigrationStorage {
    *   The UUID service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Entity\Query\QueryFactoryInterface $query_factory
+   *   The entity query factory.
    * @param \Drupal\migrate_drupal\Plugin\MigratePluginManager
    *  The cckfield plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MigratePluginManager $cck_plugin_manager) {
-    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, QueryFactoryInterface $query_factory, MigratePluginManager $cck_plugin_manager) {
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $query_factory);
     $this->cckPluginManager = $cck_plugin_manager;
   }
 
@@ -64,6 +67,7 @@ class MigrationStorage extends BaseMigrationStorage {
       $container->get('config.factory'),
       $container->get('uuid'),
       $container->get('language_manager'),
+      $container->get('entity.query.config'),
       $container->get('plugin.manager.migrate.cckfield')
     );
   }
