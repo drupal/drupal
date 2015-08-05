@@ -190,6 +190,19 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+    // Test theme function for responsive image, but using the test formatter.
+    $display_options = array(
+      'type' => 'responsive_image_test',
+      'settings' => array(
+        'image_link' => 'file',
+        'responsive_image_style' => 'style_one',
+      ),
+    );
+    $display = entity_get_display('node', 'article', 'default');
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    $this->drupalGet('node/' . $nid);
 
     // Use the responsive image formatter linked to file formatter.
     $display_options = array(

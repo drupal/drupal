@@ -90,7 +90,10 @@ function template_preprocess_responsive_image_formatter(&$variables) {
     $attributes['title'] = $item->title;
   }
   $attributes['alt'] = $item->alt;
-  $attributes += $variables['item_attributes'];
+  // Need to check that item_attributes has a value since it can be NULL.
+  if ($variables['item_attributes']) {
+    $attributes += $variables['item_attributes'];
+  }
   if (($entity = $item->entity) && empty($item->uri)) {
     $variables['responsive_image']['#uri'] = $entity->getFileUri();
   }

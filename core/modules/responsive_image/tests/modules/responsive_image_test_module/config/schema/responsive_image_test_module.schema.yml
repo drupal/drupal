@@ -1,0 +1,11 @@
+# Schema for the configuration files of the Responsive image test theme module.
+field.formatter.settings.responsive_image_test:
+  type: mapping
+  label: 'Responsive image list format settings'
+  mapping:
+    responsive_image_style:
+      type: string
+      label: 'Responsive image style'
+    image_link:
+      type: string
+      label: 'Link image to'
