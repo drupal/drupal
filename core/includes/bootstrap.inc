@@ -514,7 +514,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
  * @endcode
  *
- * @param string $message
+ * @param string|\Drupal\Component\Utility\SafeStringInterface $message
  *   (optional) The translated message to be displayed to the user. For
  *   consistency with other messages, it should begin with a capital letter and
  *   end with a period.
@@ -561,12 +561,15 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
       $_SESSION['messages'][$type] = array();
     }
 
-    $new = array(
-      'safe' => SafeMarkup::isSafe($message),
-      'message' => (string) $message,
-    );
-    if ($repeat || !in_array($new, $_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type][] = $new;
+    // Convert strings which are in the safe markup list to SafeString objects.
+    if (is_string($message) && SafeMarkup::isSafe($message)) {
+      $message = \Drupal\Core\Render\SafeString::create($message);
+    }
+
+    // Do not use strict type checking so that equivalent string and
+    // SafeStringInterface objects are detected.
+    if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
+      $_SESSION['messages'][$type][] = $message;
     }
 
     // Mark this page as being uncacheable.
@@ -604,18 +607,6 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
-    foreach ($messages as $message_type => $message_typed_messages) {
-      foreach ($message_typed_messages as $key => $message) {
-        // Because the messages are stored in the session, the safe status of
-        // the messages also needs to be stored in the session. We retrieve the
-        // safe status here and determine whether to mark the string as safe or
-        // let autoescape do its thing. See drupal_set_message().
-        if ($message['safe']) {
-          $message['message'] = SafeMarkup::set($message['message']);
-        }
-        $messages[$message_type][$key] = $message['message'];
-      }
-    }
     if ($type) {
       if ($clear_queue) {
         unset($_SESSION['messages'][$type]);

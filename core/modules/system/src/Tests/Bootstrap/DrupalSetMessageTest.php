@@ -24,23 +24,30 @@ class DrupalSetMessageTest extends WebTestBase {
   public static $modules = array('system_test');
 
   /**
-   * Tests setting messages and removing one before it is displayed.
+   * Tests drupal_set_message().
    */
-  function testSetRemoveMessages() {
+  function testDrupalSetMessage() {
     // The page at system-test/drupal-set-message sets two messages and then
     // removes the first before it is displayed.
     $this->drupalGet('system-test/drupal-set-message');
     $this->assertNoText('First message (removed).');
-    $this->assertText('Second message (not removed).');
-  }
+    $this->assertRaw(t('Second message with <em>markup!</em> (not removed).'));
 
-  /**
-   * Tests setting duplicated messages.
-   */
-  function testDuplicatedMessages() {
-    $this->drupalGet('system-test/drupal-set-message');
+    // Ensure duplicate messages are handled as expected.
     $this->assertUniqueText('Non Duplicated message');
     $this->assertNoUniqueText('Duplicated message');
+
+    // Ensure SafeString objects are rendered as expected.
+    $this->assertRaw('SafeString with <em>markup!</em>');
+    $this->assertUniqueText('SafeString with markup!');
+    $this->assertRaw('SafeString2 with <em>markup!</em>');
+
+    // Ensure when the same message is of different types it is not duplicated.
+    $this->assertUniqueText('Non duplicate SafeString / string.');
+    $this->assertNoUniqueText('Duplicate SafeString / string.');
+
+    // Ensure that strings that are not marked as safe are escaped.
+    $this->assertEscaped('<em>This<span>markup will be</span> escaped</em>.');
   }
 
 }
