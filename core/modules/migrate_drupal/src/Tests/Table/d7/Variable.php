@@ -356,6 +356,9 @@ class Variable extends DrupalDumpBase {
       'name' => 'theme_default',
       'value' => 's:6:"bartik";',
     ))->values(array(
+      'name' => 'tracker_batch_size',
+      'value' => 'i:999;',
+    ))->values(array(
       'name' => 'user_admin_role',
       'value' => 's:1:"3";',
     ))->values(array(
@@ -467,4 +470,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#b936ad0308ecdde6a8fe71fd158c6719
+#e0f7be890a222531c707941d0fedf479

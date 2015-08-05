@@ -1,0 +1,13 @@
+id: d7_tracker_settings
+label: Drupal 7 tracker settings
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - tracker_batch_size
+process:
+  cron_index_limit: tracker_batch_size
+destination:
+  plugin: config
+  config_name: tracker.settings
