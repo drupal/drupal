@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\statistics\Tests\Migrate\d6\MigrateStatisticsConfigsTest.
+ * Contains \Drupal\statistics\Tests\Migrate\MigrateStatisticsConfigsTest.
  */
 
-namespace Drupal\statistics\Tests\Migrate\d6;
+namespace Drupal\statistics\Tests\Migrate;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -32,7 +32,7 @@ class MigrateStatisticsConfigsTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
     $this->loadDumps(['Variable.php']);
-    $this->executeMigration('d6_statistics_settings');
+    $this->executeMigration('statistics_settings');
   }
 
   /**

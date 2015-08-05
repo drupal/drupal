@@ -329,6 +329,15 @@ class Variable extends DrupalDumpBase {
       'name' => 'site_slogan',
       'value' => 's:10:"The Slogan";',
     ))->values(array(
+      'name' => 'statistics_block_top_all_num',
+      'value' => 'i:55;',
+    ))->values(array(
+      'name' => 'statistics_block_top_day_num',
+      'value' => 'i:30;',
+    ))->values(array(
+      'name' => 'statistics_block_top_last_num',
+      'value' => 'i:9;',
+    ))->values(array(
       'name' => 'statistics_count_content_views',
       'value' => 'i:1;',
     ))->values(array(
@@ -470,4 +479,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#e0f7be890a222531c707941d0fedf479
+#9023663998fea3fa823d287d8a53ab9f

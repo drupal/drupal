@@ -1,7 +1,8 @@
-id: d6_statistics_settings
-label: Drupal 6 statistics configuration
+id: statistics_settings
+label: Statistics configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:
