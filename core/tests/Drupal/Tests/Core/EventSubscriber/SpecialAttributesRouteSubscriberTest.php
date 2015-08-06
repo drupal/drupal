@@ -12,7 +12,6 @@ use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @coversDefaultClass \Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
@@ -21,36 +20,27 @@ use Symfony\Component\Routing\RouteCollection;
 class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
 
   /**
-   * The tested route subscriber.
-   *
-   * @var \Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
-   */
-  protected  $specialAttributesRouteSubscriber;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->specialAttributesRouteSubscriber = new SpecialAttributesRouteSubscriber();
-  }
-
-  /**
    * Provides a list of routes with invalid route variables.
    *
    * @return array
    *   An array of invalid routes.
    */
   public function providerTestOnRouteBuildingInvalidVariables() {
-    $routes = array();
-    $routes[] = array(new Route('/test/{system_path}'));
-    $routes[] = array(new Route('/test/{_legacy}'));
-    $routes[] = array(new Route('/test/{' . RouteObjectInterface::ROUTE_OBJECT . '}'));
-    $routes[] = array(new Route('/test/{' . RouteObjectInterface::ROUTE_NAME . '}'));
-    $routes[] = array(new Route('/test/{_content}'));
-    $routes[] = array(new Route('/test/{_form}'));
-    $routes[] = array(new Route('/test/{_raw_variables}'));
+    // Build an array of mock route objects based on paths.
+    $routes = [];
+    $paths = [
+      '/test/{system_path}',
+      '/test/{_legacy}',
+      '/test/{' . RouteObjectInterface::ROUTE_OBJECT . '}',
+      '/test/{' . RouteObjectInterface::ROUTE_NAME . '}',
+      '/test/{_content}',
+      '/test/{_form}',
+      '/test/{_raw_variables}',
+    ];
+
+    foreach ($paths as $path) {
+      $routes[] = [new Route($path)];
+    }
 
     return $routes;
   }
@@ -62,11 +52,18 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    *   An array of valid routes.
    */
   public function providerTestOnRouteBuildingValidVariables() {
-    $routes = array();
-    $routes[] = array(new Route('/test/{account}'));
-    $routes[] = array(new Route('/test/{node}'));
-    $routes[] = array(new Route('/test/{user}'));
-    $routes[] = array(new Route('/test/{entity_test}'));
+    // Build an array of mock route objects based on paths.
+    $routes = [];
+    $paths = [
+      '/test/{account}',
+      '/test/{node}',
+      '/test/{user}',
+      '/test/{entity_test}',
+    ];
+
+    foreach ($paths as $path) {
+      $routes[] = [new Route($path)];
+    }
 
     return $routes;
   }
@@ -78,12 +75,16 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    *   The route to check.
    *
    * @dataProvider providerTestOnRouteBuildingValidVariables
+   *
+   * @covers ::onAlterRoutes
    */
   public function testOnRouteBuildingValidVariables(Route $route) {
-    $route_collection = new RouteCollection();
+    $route_collection = $this->getMock('Symfony\Component\Routing\RouteCollection', NULL);
     $route_collection->add('test', $route);
+
     $event = new RouteBuildEvent($route_collection, 'test');
-    $this->specialAttributesRouteSubscriber->onAlterRoutes($event);
+    $subscriber = new SpecialAttributesRouteSubscriber();
+    $this->assertNull($subscriber->onAlterRoutes($event));
   }
 
   /**
@@ -95,12 +96,16 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @dataProvider providerTestOnRouteBuildingInvalidVariables
    * @expectedException \PHPUnit_Framework_Error_Warning
    * @expectedExceptionMessage uses reserved variable names
+   *
+   * @covers ::onAlterRoutes
    */
   public function testOnRouteBuildingInvalidVariables(Route $route) {
-    $route_collection = new RouteCollection();
+    $route_collection = $this->getMock('Symfony\Component\Routing\RouteCollection', NULL);
     $route_collection->add('test', $route);
+
     $event = new RouteBuildEvent($route_collection, 'test');
-    $this->specialAttributesRouteSubscriber->onAlterRoutes($event);
+    $subscriber = new SpecialAttributesRouteSubscriber();
+    $subscriber->onAlterRoutes($event);
   }
 
 }

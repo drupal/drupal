@@ -44,14 +44,10 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
    *
    * @param \Drupal\Core\Routing\RouteBuildEvent $event
    *   The route build event.
-   *
-   * @return bool
-   *   Returns TRUE if the variables were successfully replaced, otherwise
-   *   FALSE.
    */
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
-    return $this->alterRoutes($collection);
+    $this->alterRoutes($collection);
   }
 
 }
