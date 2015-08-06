@@ -206,7 +206,10 @@ function template_preprocess_fieldset(&$variables) {
   $variables['children'] = $element['#children'];
   $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 
-  $variables['legend']['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
+  if (isset($element['#title']) && $element['#title'] !== '') {
+    $variables['legend']['title'] = ['#markup' => $element['#title']];
+  }
+
   $variables['legend']['attributes'] = new Attribute();
   $variables['legend_span']['attributes'] = new Attribute();
 
@@ -504,7 +507,10 @@ function template_preprocess_form_element(&$variables) {
 function template_preprocess_form_element_label(&$variables) {
   $element = $variables['element'];
   // If title and required marker are both empty, output no label.
-  $variables['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
+  if (isset($element['#title']) && $element['#title'] !== '') {
+    $variables['title'] = ['#markup' => $element['#title']];
+  }
+
   $variables['attributes'] = array();
 
   // Pass elements title_display to template.

@@ -38,6 +38,14 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected $testLanguageSelector = TRUE;
 
   /**
+   * Flag that tells whether the HTML escaping of all languages works or not
+   * after SafeMarkup change.
+   *
+   * @var bool
+   */
+  protected $testHTMLEscapeForAllLanguages = FALSE;
+
+  /**
    * Default cache contexts expected on a non-translated entity.
    *
    * Cache contexts will not be checked if this list is empty.
@@ -104,6 +112,13 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       'target' => $langcode
     ], array('language' => $language));
     $this->drupalPostForm($add_url, $this->getEditValues($values, $langcode), $this->getFormSubmitActionForNewTranslation($entity, $langcode));
+
+    // Assert that HTML is escaped in "all languages" in UI after SafeMarkup
+    // change.
+    if ($this->testHTMLEscapeForAllLanguages) {
+      $this->assertNoRaw('&lt;span class=&quot;translation-entity-all-languages&quot;&gt;(all languages)&lt;/span&gt;');
+      $this->assertRaw('<span class="translation-entity-all-languages">(all languages)</span>');
+    }
 
     // Ensure that the content language cache context is not yet added to the
     // page.

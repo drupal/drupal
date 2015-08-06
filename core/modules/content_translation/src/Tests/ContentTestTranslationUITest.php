@@ -15,6 +15,11 @@ namespace Drupal\content_translation\Tests;
 class ContentTestTranslationUITest extends ContentTranslationUITestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $testHTMLEscapeForAllLanguages = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
