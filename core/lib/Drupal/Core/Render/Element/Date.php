@@ -40,6 +40,8 @@ class Date extends FormElement {
       '#process' => [[$class, 'processDate']],
       '#pre_render' => [[$class, 'preRenderDate']],
       '#theme_wrappers' => ['form_element'],
+      '#attributes' => ['type' => 'date'],
+      '#date_date_format' => 'Y-m-d',
     ];
   }
 

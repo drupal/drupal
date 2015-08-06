@@ -533,7 +533,7 @@ class FormTest extends WebTestBase {
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
     $actual_count = count($disabled_elements);
-    $expected_count = 41;
+    $expected_count = 42;
     $this->assertEqual($actual_count, $expected_count, SafeMarkup::format('Found @actual elements with disabled property (expected @expected).', array(
       '@actual' => count($disabled_elements),
       '@expected' => $expected_count,

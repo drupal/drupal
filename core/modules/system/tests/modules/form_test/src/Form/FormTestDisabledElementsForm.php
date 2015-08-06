@@ -142,6 +142,15 @@ class FormTestDisabledElementsForm extends FormBase {
       '#date_timezone' => 'Europe/Berlin',
     );
 
+    $form['disabled_container']['disabled_container_date'] = array(
+      '#type' => 'date',
+      '#title' => 'date',
+      '#default_value' => '2001-01-13',
+      '#expected_value' => '2001-01-13',
+      '#test_hijack_value' => '2013-01-01',
+      '#date_timezone' => 'Europe/Berlin',
+    );
+
 
     // Try to hijack the email field with a valid email.
     $form['disabled_container']['disabled_container_email'] = array(
