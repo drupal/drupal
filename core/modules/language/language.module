@@ -284,6 +284,9 @@ function language_get_default_langcode($entity_type, $bundle) {
 
 /**
  * Reads language prefixes and uses the langcode if no prefix is set.
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::config('language.negotiation')->get('url.prefixes') instead.
  */
 function language_negotiation_url_prefixes() {
   return \Drupal::config('language.negotiation')->get('url.prefixes');
@@ -293,7 +296,8 @@ function language_negotiation_url_prefixes() {
  * Update the list of prefixes from the installed languages.
  */
 function language_negotiation_url_prefixes_update() {
-  $prefixes = language_negotiation_url_prefixes();
+  $config = \Drupal::configFactory()->getEditable('language.negotiation');
+  $prefixes = $config->get('url.prefixes');
   foreach (\Drupal::languageManager()->getLanguages() as $language) {
     // The prefix for this language should be updated if it's not assigned yet
     // or the prefix is set to the empty string.
@@ -304,36 +308,17 @@ function language_negotiation_url_prefixes_update() {
     }
     // Otherwise we keep the configured prefix.
   }
-  language_negotiation_url_prefixes_save($prefixes);
-}
-
-/**
- * Saves language prefix settings.
- */
-function language_negotiation_url_prefixes_save(array $prefixes) {
-  // @todo https://www.drupal.org/node/2403229 $prefixes can contain
-  //   configuration overrides.
-  \Drupal::configFactory()->getEditable('language.negotiation')
-  ->set('url.prefixes', $prefixes)
-  ->save();
+  $config->set('url.prefixes', $prefixes)->save();
 }
 
 /**
  * Reads language domains.
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::config('language.negotiation')->get('url.domains') instead.
  */
 function language_negotiation_url_domains() {
   return \Drupal::config('language.negotiation')->get('url.domains');
-}
-
-/**
- * Saves the language domain settings.
- */
-function language_negotiation_url_domains_save(array $domains) {
-  // @todo https://www.drupal.org/node/2403229 $domains can contain
-  //   configuration overrides.
-  \Drupal::configFactory()->getEditable('language.negotiation')
-  ->set('url.domains', $domains)
-  ->save();
 }
 
 /**
@@ -376,9 +361,10 @@ function language_configurable_language_insert(ConfigurableLanguageInterface $la
   }
 
   // Add language to the list of language domains.
-  $domains = language_negotiation_url_domains();
+  $config = \Drupal::configFactory()->getEditable('language.negotiation');
+  $domains = $config->get('url.domains');
   $domains[$language->id()] = '';
-  language_negotiation_url_domains_save($domains);
+  $config->set('url.domains', $domains)->save();
 }
 
 /**
@@ -386,14 +372,16 @@ function language_configurable_language_insert(ConfigurableLanguageInterface $la
  */
 function language_configurable_language_delete(ConfigurableLanguageInterface $language) {
   // Remove language from language prefix list.
-  $prefixes = language_negotiation_url_prefixes();
+  $config = \Drupal::configFactory()->getEditable('language.negotiation');
+  $prefixes = $config->get('url.prefixes');
   unset($prefixes[$language->id()]);
-  language_negotiation_url_prefixes_save($prefixes);
+  $config->set('url.prefixes', $prefixes)->save();
 
   // Remove language from language domain list.
-  $domains = language_negotiation_url_domains();
+  $config = \Drupal::configFactory()->getEditable('language.negotiation');
+  $domains = $config->get('url.domains');
   unset($domains[$language->id()]);
-  language_negotiation_url_domains_save($domains);
+  $config->set('url.domains', $domains)->save();
 }
 
 /**

@@ -111,8 +111,8 @@ class NegotiationUrlForm extends ConfigFormBase {
     );
 
     $languages = $this->languageManager->getLanguages();
-    $prefixes = language_negotiation_url_prefixes();
-    $domains = language_negotiation_url_domains();
+    $prefixes = $config->get('url.prefixes');
+    $domains = $config->get('url.domains');
     foreach ($languages as $langcode => $language) {
       $t_args = array('%language' => $language->getName(), '%langcode' => $language->getId());
       $form['prefix'][$langcode] = array(
@@ -211,11 +211,10 @@ class NegotiationUrlForm extends ConfigFormBase {
     // Save selected format (prefix or domain).
     $this->config('language.negotiation')
       ->set('url.source', $form_state->getValue('language_negotiation_url_part'))
+      // Save new domain and prefix values.
+      ->set('url.prefixes', $form_state->getValue('prefix'))
+      ->set('url.domains', $form_state->getValue('domain'))
       ->save();
-
-    // Save new domain and prefix values.
-    language_negotiation_url_prefixes_save($form_state->getValue('prefix'));
-    language_negotiation_url_domains_save($form_state->getValue('domain'));
 
     parent::submitForm($form, $form_state);
   }
