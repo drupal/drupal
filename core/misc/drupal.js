@@ -43,61 +43,17 @@ if (window.jQuery) {
   "use strict";
 
   /**
-   * Custom error type thrown after attach/detach if one or more behaviors
-   * failed.
+   * Helper to rethrow errors asynchronously.
    *
-   * @memberof Drupal
+   * This way Errors bubbles up outside of the original callstack, making it
+   * easier to debug errors in the browser.
    *
-   * @constructor
-   *
-   * @augments Error
-   *
-   * @param {Array} list
-   *   An array of errors thrown during attach/detach.
-   * @param {string} event
-   *   A string containing either 'attach' or 'detach'.
-   *
-   * @inner
+   * @param {Error|string} error
+   *   The error to be thrown.
    */
-  function DrupalBehaviorError(list, event) {
-
-    /**
-     * Setting name helps debuggers.
-     *
-     * @type {string}
-     */
-    this.name = 'DrupalBehaviorError';
-
-    /**
-     * Execution phase errors were triggered.
-     *
-     * @type {string}
-     */
-    this.event = event || 'attach';
-
-    /**
-     * All thrown errors.
-     *
-     * @type {Array.<Error>}
-     */
-    this.list = list;
-    // Makes the list of errors readable.
-    var messageList = [];
-    messageList.push(this.event);
-    var il = this.list.length;
-    for (var i = 0; i < il; i++) {
-      messageList.push(this.list[i].behavior + ': ' + this.list[i].error.message);
-    }
-
-    /**
-     * Final message to send to debuggers.
-     *
-     * @type {string}
-     */
-    this.message = messageList.join(' ; ');
-  }
-
-  DrupalBehaviorError.prototype = new Error();
+  Drupal.throwError = function (error) {
+    setTimeout(function () { throw error; }, 0);
+  };
 
   /**
    * Callback function initializing code run on page load and Ajax requests.
@@ -186,7 +142,6 @@ if (window.jQuery) {
   Drupal.attachBehaviors = function (context, settings) {
     context = context || document;
     settings = settings || drupalSettings;
-    var errors = [];
     var behaviors = Drupal.behaviors;
     // Execute all of them.
     for (var i in behaviors) {
@@ -196,13 +151,9 @@ if (window.jQuery) {
           behaviors[i].attach(context, settings);
         }
         catch (e) {
-          errors.push({behavior: i, error: e});
+          Drupal.throwError(e);
         }
       }
-    }
-    // Once all behaviors have been processed, inform the user about errors.
-    if (errors.length) {
-      throw new DrupalBehaviorError(errors, 'attach');
     }
   };
 
@@ -256,7 +207,6 @@ if (window.jQuery) {
     context = context || document;
     settings = settings || drupalSettings;
     trigger = trigger || 'unload';
-    var errors = [];
     var behaviors = Drupal.behaviors;
     // Execute all of them.
     for (var i in behaviors) {
@@ -266,13 +216,9 @@ if (window.jQuery) {
           behaviors[i].detach(context, settings, trigger);
         }
         catch (e) {
-          errors.push({behavior: i, error: e});
+          Drupal.throwError(e);
         }
       }
-    }
-    // Once all behaviors have been processed, inform the user about errors.
-    if (errors.length) {
-      throw new DrupalBehaviorError(errors, 'detach:' + trigger);
     }
   };
 
