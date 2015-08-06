@@ -501,7 +501,7 @@ function _filter_url($text, $filter) {
   // we cannot cleanly differ between protocols here without hard-coding MAILTO,
   // so '//' is optional for all protocols.
   // @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
-  $protocols = \Drupal::getContainer()->getParameter('filter_protocols') ?: ['http', 'https'];
+  $protocols = \Drupal::getContainer()->getParameter('filter_protocols');
   $protocols = implode(':(?://)?|', $protocols) . ':(?://)?';
 
   $valid_url_path_characters = "[\p{L}\p{M}\p{N}!\*\';:=\+,\.\$\/%#\[\]\-_~@&]";

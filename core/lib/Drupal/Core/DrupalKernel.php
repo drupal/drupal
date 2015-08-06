@@ -465,16 +465,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Put the request on the stack.
     $this->container->get('request_stack')->push($request);
 
-    // Set the allowed protocols once we have the config available.
-    $allowed_protocols = $this->container->getParameter('filter_protocols');
-    if (!$allowed_protocols) {
-      // \Drupal\Component\Utility\UrlHelper::filterBadProtocol() is called by
-      // the installer and update.php, in which case the configuration may not
-      // exist (yet). Provide a minimal default set of allowed protocols for
-      // these cases.
-      $allowed_protocols = array('http', 'https');
-    }
-    UrlHelper::setAllowedProtocols($allowed_protocols);
+    // Set the allowed protocols.
+    UrlHelper::setAllowedProtocols($this->container->getParameter('filter_protocols'));
 
     // Override of Symfony's mime type guesser singleton.
     MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
