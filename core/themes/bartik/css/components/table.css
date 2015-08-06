@@ -1,4 +1,7 @@
-/* ------------------ Table Styles ------------------ */
+/**
+ * @file
+ * Styles for Bartik's tables.
+ */
 
 table {
   border: 0;
@@ -49,6 +52,7 @@ tr th {
 [dir="rtl"] tr th {
   text-align: right;
 }
+
 /**
  * Responsive tables.
  */
