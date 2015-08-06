@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -121,8 +122,8 @@ class LanguageFormatter extends StringFormatter {
     // either displayed in its configured form (loaded directly from config
     // storage by LanguageManager::getLanguages()) or in its native language
     // name. That only depends on formatter settings and no language condition.
-    $languages = $this->getSetting('native_language') ? $this->languageManager->getNativeLanguages() : $this->languageManager->getLanguages();
-    return $item->language ? SafeMarkup::checkPlain($languages[$item->language->getId()]->getName()) : '';
+    $languages = $this->getSetting('native_language') ? $this->languageManager->getNativeLanguages(LanguageInterface::STATE_ALL) : $this->languageManager->getLanguages(LanguageInterface::STATE_ALL);
+    return $item->language && isset($languages[$item->language->getId()]) ? SafeMarkup::checkPlain($languages[$item->language->getId()]->getName()) : '';
   }
 
 }

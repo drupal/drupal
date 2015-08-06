@@ -196,6 +196,7 @@ display:
           value:
             fr: fr
             es: es
+            und: und
           group: 1
           exposed: false
           expose:

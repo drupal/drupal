@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests\Views;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Plugin\views\PluginBase;
@@ -65,6 +66,9 @@ class NodeLanguageTest extends NodeTestBase {
     // "English", or "Spanish", as there is a language field in the view
     // that prints out those words.
     $this->nodeTitles = array(
+      LanguageInterface::LANGCODE_NOT_SPECIFIED => array(
+        'First node und',
+      ),
       'es' => array(
         'Primero nodo es',
         'Segundo nodo es',
@@ -90,6 +94,13 @@ class NodeLanguageTest extends NodeTestBase {
       }
       $node->save();
     }
+    // Create non-translatable nodes.
+    foreach ($this->nodeTitles[LanguageInterface::LANGCODE_NOT_SPECIFIED] as $index => $title) {
+      $node = $this->drupalCreateNode(array('title' => $title, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'type' => 'page', 'promote' => 1));
+      $node->body->value = $this->randomMachineName(32);
+      $node->save();
+    }
+
     $this->container->get('router.builder')->rebuild();
 
     $user = $this->drupalCreateUser(array('access content overview', 'access content'));
@@ -146,6 +157,10 @@ class NodeLanguageTest extends NodeTestBase {
     // Test the front page view filter. Only node titles in the current language
     // should be displayed on the front page by default.
     foreach ($this->nodeTitles as $langcode => $titles) {
+      // The frontpage view does not display content without a language.
+      if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
+        continue;
+      }
       $this->drupalGet(($langcode == 'en' ? '' : "$langcode/") . 'node');
       foreach ($titles as $title) {
         $this->assertText($title);
@@ -188,6 +203,9 @@ class NodeLanguageTest extends NodeTestBase {
     $config->set('display.default.display_options.filters.langcode.value', array(PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT => PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT));
     $config->save();
     foreach ($this->nodeTitles as $langcode => $titles) {
+      if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
+        continue;
+      }
       $this->drupalGet(($langcode == 'en' ? '' : "$langcode/") . 'node');
       foreach ($this->nodeTitles as $control_langcode => $control_titles) {
         foreach ($control_titles as $title) {
