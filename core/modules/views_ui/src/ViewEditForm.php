@@ -414,13 +414,20 @@ class ViewEditForm extends ViewFormBase {
         elseif ($view->status() && $view->getExecutable()->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->getExecutable()->displayHandlers->get($display['id'])->getPath();
           if ($path && (strpos($path, '%') === FALSE)) {
+            $uri = "base:$path";
+            if (!parse_url($path, PHP_URL_SCHEME)) {
+              // @todo Views should expect and store a leading /. See:
+              //   https://www.drupal.org/node/2423913
+              $url = Url::fromUserInput('/' . ltrim($uri, '/'));
+            }
+            else {
+              $url = Url::fromUri($uri);
+            }
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
               '#title' => $this->t('View !display_title', array('!display_title' => $display_title)),
               '#options' => array('alt' => array($this->t("Go to the real page for this display"))),
-              // @todo Use Url::fromPath() once
-              //   https://www.drupal.org/node/2351379 is resolved.
-              '#url' => Url::fromUri("base:$path"),
+              '#url' => $url,
               '#prefix' => '<li class="view">',
               "#suffix" => '</li>',
             );

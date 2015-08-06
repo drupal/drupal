@@ -24,14 +24,14 @@ class DisplayPageWebTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_page_display', 'test_page_display_arguments', 'test_page_display_menu');
+  public static $testViews = array('test_page_display', 'test_page_display_arguments', 'test_page_display_menu', 'test_page_display_path');
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['menu_ui', 'block'];
+  public static $modules = ['menu_ui', 'block', 'views_ui'];
 
   protected function setUp() {
     parent::setUp();
@@ -136,6 +136,38 @@ class DisplayPageWebTest extends PluginTestBase {
     $view = Views::getView('test_page_display');
     $xpath = $this->cssSelect('div.view:contains("' . $view->getTitle() . '")');
     $this->assertFalse($xpath, 'The view title was not displayed in the view markup.');
+  }
+
+  /**
+   * Tests the views page path functionality.
+   */
+  public function testPagePaths() {
+    $this->drupalLogin($this->rootUser);
+    $this->assertPagePath('0');
+    $this->assertPagePath('9999');
+  }
+
+  /**
+   * Tests that we can successfully change a view page display path.
+   *
+   * @param string $path
+   *   Path that will be set as the view page display path.
+   *
+   * @return boolean
+   *   Assertion result.
+   */
+  public function assertPagePath($path) {
+    $view = Views::getView('test_page_display_path');
+    $view->initDisplay('page_1');
+    $view->displayHandlers->get('page_1')->overrideOption('path', $path);
+    $view->save();
+    $this->container->get('router.builder')->rebuild();
+    // Check if we successfully changed the path.
+    $this->drupalGet($path);
+    $success = $this->assertResponse(200);
+    // Check if we don't get any error on the view edit page.
+    $this->drupalGet('admin/structure/views/view/test_page_display_path');
+    return $success && $this->assertResponse(200);
   }
 
 }
