@@ -1,87 +1,63 @@
-/* ----------------- Featured Bottom ----------------- */
+/**
+* @file
+* Visual styles for Bartik's featured bottom component.
+*/
 
-#featured-bottom-wrapper {
-  background-color: #f0f0f0;
+.featured-bottom {
   background: rgba(30, 50, 10, 0.08);
   border-top: 1px solid #e7e7e7;
 }
-.region-featured-bottom-first,
-.region-featured-bottom-second,
-.region-featured-bottom-third {
-  box-sizing: border-box;
-  padding: 0 20px 0;
+.featured-bottom .region {
+  padding: 0 20px;
 }
 @media all and (min-width: 560px) {
-  .region-featured-bottom-first,
-  .region-featured-bottom-second,
-  .region-featured-bottom-third {
+  .featured-bottom .region {
     float: left; /* LTR */
     position: relative;
     box-sizing: border-box;
     padding: 20px 15px 30px;
     width: 33%;
   }
-  [dir="rtl"] .region-featured-bottom-first,
-  [dir="rtl"] .region-featured-bottom-second,
-  [dir="rtl"] .region-featured-bottom-third {
+  [dir="rtl"] .featured-bottom .region {
     float: right;
-  }
-  .region-featured-bottom-second {
-    padding: 20px 5px 30px;
   }
 }
 @media all and (min-width: 851px) {
-  .region-featured-bottom-first,
-  .region-featured-bottom-second,
-  .region-featured-bottom-third {
+  .featured-bottom .region {
     padding: 0 20px;
   }
 }
-#featured-bottom h2 {
+.featured-bottom h2 {
   color: #000;
   font-size: 1.4em;
   margin-bottom: 0.6em;
   text-shadow: 0 1px 0 #fff;
   text-align: center;
-  line-height: 1;
+  line-height: 1em;
 }
-#featured-bottom .block {
+.featured-bottom .block {
   margin-bottom: 1em;
   padding-bottom: 1em;
   border-bottom: 1px solid #dfdfdf;
-  line-height: 1.3;
+  line-height: 1.3em;
 }
-#featured-bottom .block:last-child {
+.featured-bottom .block:last-child {
   border-bottom: none;
 }
-#featured-bottom .block ul li,
-#featured-bottom .block ol li {
-  list-style: none;
-}
-#featured-bottom .block ul,
-#featured-bottom .block ol {
+.featured-bottom ul,
+.featured-bottom ol {
   padding-left: 0;
 }
-#featured-bottom #block-user-login .form-text {
+.featured-bottom ul li,
+.featured-bottom ol li {
+  list-style: none;
+}
+.featured-bottom input:not(.form-submit) {
   width: 185px;
 }
-#featured-bottom #block-user-online p {
-  margin-bottom: 0;
+.region-featured-bottom-third .feed-icon {
+  float: right;
 }
-#featured-bottom #block-node-syndicate h2 {
-  overflow: hidden;
-  width: 0;
-  height: 0;
-}
-#featured-bottom-third #block-node-syndicate {
-  text-align: right;
-}
-#featured-bottom #block-search-form .form-type-search input {
-  width: 185px;
-}
-#featured-bottom-second #block-system-powered-by {
+.region-featured-bottom-second .block-system-powered-by-block {
   text-align: center;
-}
-#featured-bottom-third #block-system-powered-by {
-  text-align: right;
 }
