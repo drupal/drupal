@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Batch;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -21,7 +22,7 @@ class ProcessingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('batch_test');
+  public static $modules = array('batch_test', 'test_page_test');
 
   /**
    * Tests batches triggered outside of form submission.
@@ -32,6 +33,18 @@ class ProcessingTest extends WebTestBase {
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
+  }
+
+  /**
+   * Tests batches that redirect in the batch finished callback.
+   */
+  function testBatchRedirectFinishedCallback() {
+    // Displaying the page triggers batch 1.
+    $this->drupalGet('batch-test/finish-redirect');
+    $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
+    $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
+    $this->assertText('Test page text.', 'Custom redirection after batch execution displays the correct page.');
+    $this->assertUrl(Url::fromRoute('test_page_test.test_page'));
   }
 
   /**

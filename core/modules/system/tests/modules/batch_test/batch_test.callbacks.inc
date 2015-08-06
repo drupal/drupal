@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements callback_batch_operation().
@@ -121,6 +123,16 @@ function _batch_test_finished_0($success, $results, $operations) {
  */
 function _batch_test_finished_1($success, $results, $operations) {
   _batch_test_finished_helper(1, $success, $results, $operations);
+}
+
+/**
+ * Implements callback_batch_finished().
+ *
+ * Triggers 'finished' callback for batch 1.
+ */
+function _batch_test_finished_1_finished($success, $results, $operations) {
+  _batch_test_finished_helper(1, $success, $results, $operations);
+  return new RedirectResponse(Url::fromRoute('test_page_test.test_page', [], ['absolute' => TRUE])->toString());
 }
 
 /**

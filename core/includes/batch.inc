@@ -406,6 +406,7 @@ function _batch_next_set() {
  */
 function _batch_finished() {
   $batch = &batch_get();
+  $batch_finished_redirect = NULL;
 
   // Execute the 'finished' callbacks for each batch set, if defined.
   foreach ($batch['sets'] as $batch_set) {
@@ -417,7 +418,13 @@ function _batch_finished() {
       if (is_callable($batch_set['finished'])) {
         $queue = _batch_queue($batch_set);
         $operations = $queue->getAllItems();
-        call_user_func_array($batch_set['finished'], array($batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval($batch_set['elapsed'] / 1000)));
+        $batch_set_result = call_user_func_array($batch_set['finished'], array($batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval($batch_set['elapsed'] / 1000)));
+        // If a batch 'finished' callback requested a redirect after the batch
+        // is complete, save that for later use. If more than one batch set
+        // returned a redirect, the last one is used.
+        if ($batch_set_result instanceof RedirectResponse) {
+          $batch_finished_redirect = $batch_set_result;
+        }
       }
     }
   }
@@ -448,8 +455,13 @@ function _batch_finished() {
       \Drupal::request()->query->set('destination', $_batch['destination']);
     }
 
-    // Determine the target path to redirect to.
-    if (!isset($_batch['form_state'])) {
+    // Determine the target path to redirect to. If a batch 'finished' callback
+    // returned a redirect response object, use that. Otherwise, fall back on
+    // the form redirection.
+    if (isset($batch_finished_redirect)) {
+      return $batch_finished_redirect;
+    }
+    elseif (!isset($_batch['form_state'])) {
       $_batch['form_state'] = new FormState();
     }
     if ($_batch['form_state']->getRedirect() === NULL) {

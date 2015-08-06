@@ -31,6 +31,14 @@ batch_test.no_form:
   requirements:
     _access: 'TRUE'
 
+batch_test.finish_redirect:
+  path: '/batch-test/finish-redirect'
+  defaults:
+    _controller: '\Drupal\batch_test\Controller\BatchTestController::testFinishRedirect'
+    _title: 'Simple page with finish redirect call'
+  requirements:
+    _access: 'TRUE'
+
 batch_test.test_form:
   path: '/batch-test'
   defaults:

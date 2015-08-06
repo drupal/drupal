@@ -73,6 +73,21 @@ class BatchTestController {
   }
 
   /**
+   * Fires a batch process without a form submission and a finish redirect.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+   *   A redirect response if the batch is progressive. No return value otherwise.
+   */
+  public function testFinishRedirect() {
+    batch_test_stack(NULL, TRUE);
+
+    $batch = _batch_test_batch_1();
+    $batch['finished'] = '_batch_test_finished_1_finished';
+    batch_set($batch);
+    return batch_process('batch-test/redirect');
+  }
+
+  /**
    * Submits the 'Chained' form programmatically.
    *
    * Programmatic form: the page submits the 'Chained' form through
