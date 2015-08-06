@@ -1649,7 +1649,7 @@ class ViewExecutable implements \Serializable {
   /**
    * Sets the used response object of the view.
    *
-   * @param Symfony\Component\HttpFoundation\Response $response
+   * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response object which should be set.
    */
   public function setResponse(Response $response) {
