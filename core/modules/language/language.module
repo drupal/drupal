@@ -427,12 +427,12 @@ function language_form_alter(&$form, FormStateInterface $form_state) {
   // Content entity forms may have added a langcode field. But content language
   // configuration should decide if it should be exposed or not in the forms.
   $form_object = $form_state->getFormObject();
-  if ($form_object instanceof ContentEntityFormInterface) {
+  if ($form_object instanceof ContentEntityFormInterface && $form_object->getEntity()->getEntityType()->hasKey('langcode')) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_object->getEntity();
     $entity_type = $entity->getEntityType();
     $langcode_key = $entity_type->getKey('langcode');
-    if (isset($form[$langcode_key]) && $entity_type->isTranslatable()) {
+    if (isset($form[$langcode_key])) {
       $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($entity->getEntityTypeId(), $entity->bundle());
       $form[$langcode_key]['#access'] = $language_configuration->isLanguageAlterable();
     }
