@@ -218,6 +218,7 @@ class WebTestBaseTest extends UnitTestCase {
     $get_absolute_url_method->setAccessible(TRUE);
 
     $this->assertSame($expected_absolute_path, $get_absolute_url_method->invoke($web_test, $href));
+    unset($GLOBALS['base_url'], $GLOBALS['base_path']);
   }
 
   /**

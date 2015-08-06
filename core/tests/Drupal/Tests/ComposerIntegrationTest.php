@@ -22,6 +22,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    */
   protected function getErrorMessages() {
     $messages = [
+      0 => 'No errors found',
       JSON_ERROR_DEPTH => 'The maximum stack depth has been exceeded',
       JSON_ERROR_STATE_MISMATCH => 'Invalid or malformed JSON',
       JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
@@ -63,9 +64,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       $json = file_get_contents($path . '/composer.json');
 
       $result = json_decode($json);
-      if (is_null($result)) {
-        $this->fail($this->getErrorMessages()[json_last_error()]);
-      }
+      $this->assertNotNull($result, $this->getErrorMessages()[json_last_error()]);
     }
   }
 

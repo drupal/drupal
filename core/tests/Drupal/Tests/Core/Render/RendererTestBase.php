@@ -80,6 +80,13 @@ class RendererTestBase extends UnitTestCase {
   protected $memoryCache;
 
   /**
+   * The simulated "current" user role, for use in tests with cache contexts.
+   *
+   * @var string
+   */
+  protected $currentUserRole;
+
+  /**
    * The mocked renderer configuration.
    *
    * @var array
@@ -113,10 +120,10 @@ class RendererTestBase extends UnitTestCase {
     $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
+    $current_user_role = &$this->currentUserRole;
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
-      ->willReturnCallback(function($context_tokens) {
-        global $current_user_role;
+      ->willReturnCallback(function($context_tokens) use (&$current_user_role) {
         $keys = [];
         foreach ($context_tokens as $context_id) {
           switch ($context_id) {

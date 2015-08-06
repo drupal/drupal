@@ -75,6 +75,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
     // Saving and deleting should always fail.
     $this->assertFalse($php_read->save($name, $code));
     $this->assertFalse($php_read->delete($name));
+    unset($GLOBALS[$random]);
   }
 
   /**

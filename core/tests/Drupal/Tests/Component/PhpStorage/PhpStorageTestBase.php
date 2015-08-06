@@ -60,6 +60,7 @@ abstract class PhpStorageTestBase extends UnitTestCase {
     // Ensure delete() can be called on a non-existing file. It should return
     // FALSE, but not trigger errors.
     $this->assertFalse($php->delete($name), 'Delete fails on missing file');
+    unset($GLOBALS[$random]);
   }
 
 }

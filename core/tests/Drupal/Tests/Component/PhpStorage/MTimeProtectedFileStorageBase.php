@@ -124,6 +124,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
       $this->assertSame($php->load($name), $this->expected[$i]);
       $this->assertSame($GLOBALS['hacked'], $this->expected[$i]);
     }
+    unset($GLOBALS['hacked']);
   }
 
 }

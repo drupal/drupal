@@ -599,7 +599,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
       'null' => NULL,
     ]];
 
-    $this->renderer->renderRoot($element);
+    $result = $this->renderer->renderRoot($element);
+    $this->assertInstanceOf('\Drupal\Core\Render\SafeString', $result);
+    $this->assertEquals('<p>This is a rendered placeholder!</p>', (string) $result);
   }
 
   /**

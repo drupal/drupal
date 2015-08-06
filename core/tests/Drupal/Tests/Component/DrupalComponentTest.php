@@ -68,15 +68,12 @@ class DrupalComponentTest extends UnitTestCase {
    */
   protected function assertNoCoreUsage($class_path) {
     $contents = file_get_contents($class_path);
-    if (preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches)) {
-      foreach ($matches[0] as $line) {
-        if ((strpos($line, '@see ') === FALSE)) {
-          $this->fail(
-            "Illegal reference to 'Drupal\\Core' namespace in $class_path"
-          );
-        }
-      }
-    }
+    preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches);
+    $matches = array_filter($matches[0], function($line) {
+      // Filter references to @see as they don't really matter.
+      return strpos($line, '@see') === FALSE;
+    });
+    $this->assertEmpty($matches, "Checking for illegal reference to 'Drupal\\Core' namespace in $class_path");
   }
 
   /**
