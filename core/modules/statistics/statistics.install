@@ -57,3 +57,17 @@ function statistics_schema() {
 
   return $schema;
 }
+
+/**
+ * Disable the Statistics module if the node module is not enabled.
+ */
+function statistics_update_8001() {
+  if (!\Drupal::moduleHandler()->moduleExists('node')) {
+    if (\Drupal::service('module_installer')->uninstall(array('statistics'), TRUE)) {
+      return 'The statistics module depends on the node module and has therefore been uninstalled.';
+    }
+    else {
+      return 'There was an error uninstalling the statistcs module.';
+    }
+  }
+}
