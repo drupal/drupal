@@ -79,7 +79,12 @@ display:
           table: aggregator_item
           field: timestamp
           id: timestamp
-          plugin_id: date
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
+          plugin_id: field
           entity_type: aggregator_item
           entity_field: timestamp
         author:

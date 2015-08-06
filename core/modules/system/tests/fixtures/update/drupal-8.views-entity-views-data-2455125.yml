@@ -1,16 +1,17 @@
+uuid: e693b165-0e14-4dee-9909-9f0892037c23
 langcode: en
 status: true
 dependencies:
   module:
-    - aggregator
-id: test_style_opml
-label: test_style_opml
+    - user
+id: update_test
+label: 'Update Test'
 module: views
 description: ''
-tag: default
-base_table: aggregator_feed
-base_field: fid
-core: '8'
+tag: ''
+base_table: users_field_data
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -19,58 +20,63 @@ display:
     position: 0
     display_options:
       access:
-        type: none
+        type: perm
+        options:
+          perm: 'access user profiles'
       cache:
         type: tag
+        options: {  }
       query:
         type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
       exposed_form:
         type: basic
-      pager:
-        type: full
         options:
-          items_per_page: 10
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: none
+        options:
+          items_per_page: 0
+          offset: 0
       style:
         type: default
       row:
-        type: 'entity:aggregator_feed'
+        type: fields
       fields:
-        title:
-          id: title
-          table: aggregator_feed
-          field: title
+        name:
+          id: name
+          table: users_field_data
+          field: name
+          entity_type: user
+          entity_field: name
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
-          label: Title
           exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -80,13 +86,10 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
-          hide_empty: false
-          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: aggregator_title
-          settings:
-            display_as_link: false
+          type: user_name
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -97,17 +100,14 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
-          entity_type: aggregator_feed
-          entity_field: title
-        url:
-          id: url
-          table: aggregator_feed
-          field: url
+        created:
+          id: created
+          table: users_field_data
+          field: created
           relationship: none
           group_type: group
           admin_label: ''
-          label: URL
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -140,7 +140,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -148,18 +148,20 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          display_as_link: false
-          plugin_id: url
-          entity_type: aggregator_feed
-          entity_field: url
-        description:
-          id: description
-          table: aggregator_feed
-          field: description
+          date_format: long
+          custom_date_format: ''
+          timezone: Africa/Abidjan
+          entity_type: user
+          entity_field: created
+          plugin_id: date
+        created_1:
+          id: created_1
+          table: users_field_data
+          field: created
           relationship: none
           group_type: group
           admin_label: ''
-          label: Description
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -192,7 +194,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -200,17 +202,20 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: xss
-          entity_type: aggregator_feed
-          entity_field: description
-        modified:
-          id: modified
-          table: aggregator_feed
-          field: modified
+          date_format: 'raw time ago'
+          custom_date_format: ''
+          timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: date
+        created_2:
+          id: created_2
+          table: users_field_data
+          field: created
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Last modified'
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -243,7 +248,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -251,51 +256,39 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          type: timestamp
-          settings:
-            date_format: html_date
-            custom_date_format: ''
-            timezone: ''
-          plugin_id: field
-          entity_type: aggregator_feed
-          entity_field: modified
+          date_format: 'time ago'
+          custom_date_format: ''
+          timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: date
       filters: {  }
       sorts: {  }
-      title: test_style_opml
+      title: 'Update Test'
       header: {  }
       footer: {  }
       empty: {  }
       relationships: {  }
       arguments: {  }
-  feed_1:
-    display_plugin: feed
-    id: feed_1
-    display_title: Feed
-    position: 2
-    display_options:
-      pager:
-        type: some
-      style:
-        type: opml
-        options:
-          grouping: {  }
-      row:
-        type: opml_fields
-        options:
-          type_field: rss
-          text_field: title
-          created_field: modified
-          description_field: description
-          html_url_field: ''
-          language_field: ''
-          xml_url_field: url
-          url_field: ''
-      path: test-feed-opml-style
-      displays: {  }
-  page:
-    display_plugin: page
-    id: page_1
-    display_title: Page
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
     position: 1
     display_options:
-      path: test-opml-style
+      display_extenders: {  }
+      allow:
+        items_per_page: false
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false

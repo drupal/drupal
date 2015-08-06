@@ -38,8 +38,12 @@ display:
           table: users_field_data
           field: changed
           label: 'Updated date'
-          date_format: html_date
-          plugin_id: date
+          plugin_id: field
+          type: timestamp
+          settings:
+            date_format: html_date
+            custom_date_format: ''
+            timezone: ''
           entity_type: user
           entity_field: changed
       filters: {  }

@@ -84,7 +84,11 @@ class NodeRevision extends WizardPluginBase {
     $display_options['fields']['changed']['alter']['html'] = FALSE;
     $display_options['fields']['changed']['hide_empty'] = FALSE;
     $display_options['fields']['changed']['empty_zero'] = FALSE;
-    $display_options['fields']['changed']['plugin_id'] = 'date';
+    $display_options['fields']['changed']['plugin_id'] = 'field';
+    $display_options['fields']['changed']['type'] = 'timestamp';
+    $display_options['fields']['changed']['settings']['date_format'] = 'medium';
+    $display_options['fields']['changed']['settings']['custom_date_format'] = '';
+    $display_options['fields']['changed']['settings']['timezone'] = '';
 
     /* Field: Content revision: Title */
     $display_options['fields']['title']['id'] = 'title';

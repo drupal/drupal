@@ -448,10 +448,12 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: medium
-          custom_date_format: ''
-          timezone: ''
-          plugin_id: date
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
+          plugin_id: field
           entity_type: file
           entity_field: created
         changed:
@@ -502,10 +504,12 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: medium
-          custom_date_format: ''
-          timezone: ''
-          plugin_id: date
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
+          plugin_id: field
           entity_type: file
           entity_field: changed
         count:

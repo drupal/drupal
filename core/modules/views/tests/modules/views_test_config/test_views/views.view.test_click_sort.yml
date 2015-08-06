@@ -29,7 +29,12 @@ display:
           table: views_test_data
           field: created
           label: created
-          plugin_id: date
+          plugin_id: field
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
       access:
         type: none
       cache:

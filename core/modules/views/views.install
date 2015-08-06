@@ -11,3 +11,111 @@
 function views_install() {
   module_set_weight('views', 10);
 }
+
+/**
+ * @addtogroup updates-8.0.0-beta
+ * @{
+ */
+
+/**
+ * Update views field plugins.
+ */
+function views_update_8001(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $ids = [];
+  $message = NULL;
+  $ago_formats = [
+    'time ago',
+    'time hence',
+    'time span',
+    'raw time ago',
+    'raw time hence',
+    'raw time span',
+    'inverse time span',
+  ];
+
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $view = $config_factory->getEditable($view_config_name);
+
+    $displays = $view->get('display');
+
+    foreach ($displays as $display_name => $display) {
+      if (!empty($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => $field) {
+          if (isset($field['entity_type']) && $field['plugin_id'] === 'date') {
+            $ids[] = $view->get('id');
+
+            // Grab the settings we need to move to a different place in the
+            // config schema.
+            $date_format = !empty($field['date_format']) ? $field['date_format'] : 'medium';
+            $custom_date_format = !empty($field['custom_date_format']) ? $field['custom_date_format'] : '';
+            $timezone = !empty($field['timezone']) ? $field['timezone'] : '';
+
+            // Save off the base part of the config path we are updating.
+            $base = "display.$display_name.display_options.fields.$field_name";
+
+            if (in_array($date_format, $ago_formats)) {
+              // Update the field to use the Field API formatter.
+              $view->set($base . '.plugin_id', 'field');
+              $view->set($base . '.type', 'timestamp_ago');
+
+              // Ensure the granularity is an integer, which is defined in the
+              // field.formatter.settings.timestamp_ago schema.
+              $granularity = is_numeric($custom_date_format) ? (int) $custom_date_format : 2;
+
+              // Add the new settings.
+              if ($date_format === 'time ago' || $date_format === 'time hence' || $date_format === 'time span') {
+                $view->set($base . '.settings.future_format', '@interval hence');
+                $view->set($base . '.settings.past_format', '@interval ago');
+                $view->set($base . '.settings.granularity', $granularity);
+              }
+              elseif ($date_format === 'raw time ago' || $date_format === 'raw time hence') {
+                $view->set($base . '.settings.future_format', '@interval');
+                $view->set($base . '.settings.past_format', '@interval');
+                $view->set($base . '.settings.granularity', $granularity);
+              }
+              elseif ($date_format === 'raw time span') {
+                $view->set($base . '.settings.future_format', '@interval');
+                $view->set($base . '.settings.past_format', '-@interval');
+                $view->set($base . '.settings.granularity', $granularity);
+              }
+              elseif ($date_format === 'inverse time span') {
+                $view->set($base . '.settings.future_format', '-@interval');
+                $view->set($base . '.settings.past_format', '@interval');
+                $view->set($base . '.settings.granularity', $granularity);
+              }
+            }
+            else {
+              // Update the field to use the Field API formatter.
+              $view->set($base . '.plugin_id', 'field');
+              $view->set($base . '.type', 'timestamp');
+
+              // Add the new settings, and make sure everything is a string
+              // to conform with the field.formatter.settings.timestamp schema.
+              $view->set($base . '.settings.date_format', (string) $date_format);
+              $view->set($base . '.settings.custom_date_format', (string) $custom_date_format);
+              $view->set($base . '.settings.timezone', (string) $timezone);
+            }
+
+            // Remove the old settings.
+            $view->clear($base . '.date_format');
+            $view->clear($base . '.custom_date_format');
+            $view->clear($base . '.timezone');
+          }
+        }
+      }
+    }
+
+    $view->save(TRUE);
+  }
+
+  if (!empty($ids)) {
+    $message = \Drupal::translation()->translate('Updated field plugins for views: @ids', ['@ids' => implode(', ', array_unique($ids))]);
+  }
+
+  return $message;
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-beta".
+ */

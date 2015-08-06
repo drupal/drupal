@@ -57,7 +57,12 @@ display:
           id: created
           table: views_test_data
           field: created
-          plugin_id: date
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
+          plugin_id: field
       sorts:
         created:
           id: created

@@ -62,7 +62,12 @@ display:
           field: created
           id: created
           table: node_field_data
-          plugin_id: date
+          plugin_id: field
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
           entity_type: node
           entity_field: created
         nid:

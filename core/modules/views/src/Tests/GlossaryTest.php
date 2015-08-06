@@ -74,6 +74,7 @@ class GlossaryTest extends ViewTestBase {
     $this->assertPageCacheContextsAndTags(
       $url,
       [
+        'timezone',
         'languages:' . LanguageInterface::TYPE_CONTENT,
         'languages:' . LanguageInterface::TYPE_INTERFACE,
         'theme',

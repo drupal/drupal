@@ -353,7 +353,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       case 'timestamp':
       case 'created':
       case 'changed':
-        $views_field['field']['id'] = 'date';
+        $views_field['field']['id'] = 'field';
         $views_field['argument']['id'] = 'date';
         $views_field['filter']['id'] = 'date';
         $views_field['sort']['id'] = 'date';
