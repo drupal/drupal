@@ -184,30 +184,23 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
         // Only show the add comment form if the user has permission.
         $elements['#cache']['contexts'][] = 'user.roles';
         if ($this->currentUser->hasPermission('post comments')) {
-          // All users in the "anonymous" role can use the same form: it is fine
-          // for this form to be stored in the render cache.
-          if ($this->currentUser->isAnonymous()) {
-            $comment = $this->storage->create(array(
-              'entity_type' => $entity->getEntityTypeId(),
-              'entity_id' => $entity->id(),
-              'field_name' => $field_name,
-              'comment_type' => $this->getFieldSetting('comment_type'),
-              'pid' => NULL,
-            ));
-            $output['comment_form'] = $this->entityFormBuilder->getForm($comment);
-          }
-          // All other users need a user-specific form, which would break the
-          // render cache: hence use a #lazy_builder callback.
-          else {
-            $output['comment_form'] = [
-              '#lazy_builder' => ['comment.lazy_builders:renderForm', [
-                $entity->getEntityTypeId(),
-                $entity->id(),
-                $field_name,
-                $this->getFieldSetting('comment_type'),
-              ]],
-              '#create_placeholder' => TRUE,
-            ];
+          $output['comment_form'] = [
+            '#lazy_builder' => ['comment.lazy_builders:renderForm', [
+              $entity->getEntityTypeId(),
+              $entity->id(),
+              $field_name,
+              $this->getFieldSetting('comment_type'),
+            ]],
+          ];
+
+          // @todo Remove this in https://www.drupal.org/node/2543334. Until
+          //   then, \Drupal\Core\Render\Renderer::hasPoorCacheability() isn't
+          //   integrated with cache context bubbling, so this duplicates the
+          //   contexts added by \Drupal\comment\CommentForm::form().
+          $output['comment_form']['#cache']['contexts'][] = 'user.permissions';
+          $output['comment_form']['#cache']['contexts'][] = 'user.roles:authenticated';
+          if ($this->currentUser->isAuthenticated()) {
+            $output['comment_form']['#cache']['contexts'][] = 'user';
           }
         }
       }

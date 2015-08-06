@@ -84,6 +84,37 @@ parameters:
     #
     # @default ['languages:language_interface', 'theme', 'user.permissions']
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
+    # Renderer automatic placeholdering conditions:
+    #
+    # Drupal allows portions of the page to be automatically deferred when
+    # rendering to improve cache performance. That is especially helpful for
+    # cache contexts that vary widely, such as the active user. On some sites
+    # those may be different, however, such as sites with only a handful of
+    # users. If you know what the high-cardinality cache contexts are for your
+    # site, specify those here. If you're not sure, the defaults are fairly safe
+    # in general.
+    #
+    # For more information about rendering optimizations see
+    # https://www.drupal.org/developing/api/8/render/arrays/cacheability#optimizing
+    auto_placeholder_conditions:
+      # Max-age at or below which caching is not considered worthwhile.
+      #
+      # Disable by setting to -1.
+      #
+      # @default 0
+      max-age: 0
+      # Cache contexts with a high cardinality.
+      #
+      # Disable by setting to [].
+      #
+      # @default ['session', 'user']
+      contexts: ['session', 'user']
+      # Tags with a high invalidation frequency.
+      #
+      # Disable by setting to [].
+      #
+      # @default []
+      tags: []
   factory.keyvalue:
     {}
     # Default key/value storage service to use.

@@ -3,6 +3,10 @@ parameters:
   twig.config: {}
   renderer.config:
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
+    auto_placeholder_conditions:
+      max-age: 0
+      contexts: ['session', 'user']
+      tags: []
   factory.keyvalue:
     default: keyvalue.database
   factory.keyvalue.expirable:

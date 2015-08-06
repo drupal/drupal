@@ -89,6 +89,11 @@ class RendererTestBase extends UnitTestCase {
       'languages:language_interface',
       'theme',
     ],
+    'auto_placeholder_conditions' => [
+      'max-age' => 0,
+      'contexts' => ['session', 'user'],
+      'tags' =>  ['current-temperature'],
+    ],
   ];
 
   /**

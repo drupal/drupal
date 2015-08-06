@@ -78,6 +78,16 @@ class CommentForm extends ContentEntityForm {
     $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
     $config = $this->config('user.settings');
 
+    // In several places within this function, we vary $form on:
+    // - The current user's permissions.
+    // - Whether the current user is authenticated or anonymous.
+    // - The 'user.settings' configuration.
+    // - The comment field's definition.
+    $form['#cache']['contexts'][] = 'user.permissions';
+    $form['#cache']['contexts'][] = 'user.roles:authenticated';
+    $this->renderer->addCacheableDependency($form, $config);
+    $this->renderer->addCacheableDependency($form, $field_definition->getConfig($entity->bundle()));
+
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = Html::getUniqueId('comment_form');
     $form['#theme'] = array('comment_form__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form');
@@ -89,10 +99,6 @@ class CommentForm extends ContentEntityForm {
       $form['#attached']['library'][] = 'core/drupal.form';
       $form['#attributes']['data-user-info-from-browser'] = TRUE;
     }
-
-    // Vary per role, because we check a permission above and attach an asset
-    // library only for authenticated users.
-    $form['#cache']['contexts'][] = 'user.roles';
 
     // If not replying to a comment, use our dedicated page callback for new
     // Comments on entities.
@@ -164,6 +170,7 @@ class CommentForm extends ContentEntityForm {
       $form['author']['name']['#value'] = $form['author']['name']['#default_value'];
       $form['author']['name']['#theme'] = 'username';
       $form['author']['name']['#account'] = $this->currentUser;
+      $form['author']['name']['#cache']['contexts'][] = 'user';
     }
     elseif($this->currentUser->isAnonymous()) {
       $form['author']['name']['#attributes']['data-drupal-default-value'] = $config->get('anonymous');
@@ -209,10 +216,6 @@ class CommentForm extends ContentEntityForm {
       ),
       '#access' => $is_admin,
     );
-
-    $this->renderer->addCacheableDependency($form, $config);
-    // The form depends on the field definition.
-    $this->renderer->addCacheableDependency($form, $field_definition->getConfig($entity->bundle()));
 
     return parent::form($form, $form_state, $comment);
   }
