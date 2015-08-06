@@ -158,6 +158,7 @@ class BasicTest extends WizardTestBase {
     $view4['rest_export[create]'] = 1;
     $view4['rest_export[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view4, t('Save and edit'));
+    $this->assertRaw(t('The view %view has been saved.', array('%view' => $view4['label'])));
 
     // Check that the REST export path works.
     $this->drupalGet($view4['rest_export[path]']);

@@ -192,7 +192,7 @@ class ViewAddForm extends ViewFormBase {
       return;
     }
     $this->entity->save();
-
+    drupal_set_message($this->t('The view %name has been saved.', array('%name' => $form_state->getValue('label'))));
     $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
 
