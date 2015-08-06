@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render\Element;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element\HtmlTag;
 
@@ -84,7 +85,11 @@ class HtmlTagTest extends UnitTestCase {
    * @covers ::preRenderConditionalComments
    * @dataProvider providerPreRenderConditionalComments
    */
-  public function testPreRenderConditionalComments($element, $expected) {
+  public function testPreRenderConditionalComments($element, $expected, $set_safe = FALSE) {
+    if ($set_safe) {
+      SafeMarkup::set($element['#prefix']);
+      SafeMarkup::set($element['#suffix']);
+    }
     $this->assertSame($expected, HtmlTag::preRenderConditionalComments($element));
   }
 
@@ -141,6 +146,26 @@ class HtmlTagTest extends UnitTestCase {
     $expected['#prefix'] = "\n<!--[if gt IE 8]><!-->\n";
     $expected['#suffix'] = "<!--<![endif]-->\n";
     $tags[] = array($element, $expected);
+
+    // Prefix and suffix filtering if not safe.
+    $element = array(
+      '#tag' => 'link',
+      '#browsers' => array(
+        'IE' => FALSE,
+      ),
+      '#prefix' => '<blink>prefix</blink>',
+      '#suffix' => '<blink>suffix</blink>',
+    );
+    $expected = $element;
+    $expected['#prefix'] = "\n<!--[if !IE]><!-->\nprefix";
+    $expected['#suffix'] = "suffix<!--<![endif]-->\n";
+    $tags[] = array($element, $expected);
+
+    // Prefix and suffix filtering if marked as safe. This has to come after the
+    // previous test case.
+    $expected['#prefix'] = "\n<!--[if !IE]><!-->\n<blink>prefix</blink>";
+    $expected['#suffix'] = "<blink>suffix</blink><!--<![endif]-->\n";
+    $tags[] = array($element, $expected, TRUE);
 
     return $tags;
   }

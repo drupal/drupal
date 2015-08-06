@@ -174,8 +174,14 @@ class HtmlTag extends RenderElement {
 
     // Ensure what we are dealing with is safe.
     // This would be done later anyway in drupal_render().
-    $prefix = isset($elements['#prefix']) ? Xss::filterAdmin($elements['#prefix']) : '';
-    $suffix = isset($elements['#suffix']) ? Xss::filterAdmin($elements['#suffix']) : '';
+    $prefix = isset($element['#prefix']) ? $element['#prefix'] : '';
+    if ($prefix && !SafeMarkup::isSafe($prefix)) {
+      $prefix = Xss::filterAdmin($prefix);
+    }
+    $suffix = isset($element['#suffix']) ? $element['#suffix'] : '';
+    if ($suffix && !SafeMarkup::isSafe($suffix)) {
+      $suffix = Xss::filterAdmin($suffix);
+    }
 
     // Now calling SafeMarkup::set is safe, because we ensured the
     // data coming in was at least admin escaped.
