@@ -465,7 +465,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       // series of fields individually for cases such as views tables.
       $entity_type_id = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
-      $key = $entity_type_id . ':' . $bundle . ':' . $field_name . ':' . crc32(serialize($display_options));
+      $key = $entity_type_id . ':' . $bundle . ':' . $field_name . ':' . hash('crc32b', serialize($display_options));
       if (!isset($this->singleFieldDisplays[$key])) {
         $this->singleFieldDisplays[$key] = EntityViewDisplay::create(array(
           'targetEntityType' => $entity_type_id,

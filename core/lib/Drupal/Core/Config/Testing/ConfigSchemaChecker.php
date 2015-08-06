@@ -73,7 +73,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
 
     $name = $saved_config->getName();
     $data = $saved_config->get();
-    $checksum = crc32(serialize($data));
+    $checksum = hash('crc32b', serialize($data));
     $exceptions = array(
       // Following are used to test lack of or partial schema. Where partial
       // schema is provided, that is explicitly tested in specific tests.

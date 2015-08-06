@@ -277,7 +277,7 @@ class TypedDataManager extends DefaultPluginManager {
     if ($settings = $root_definition->getSettings()) {
       // Hash the settings into a string. crc32 is the fastest way to hash
       // something for non-cryptographic purposes.
-      $parts[] = crc32(serialize($settings));
+      $parts[] = hash('crc32b', serialize($settings));
     }
     // Property path for the requested data object. When creating a list item,
     // use 0 in the key as all items look the same.
