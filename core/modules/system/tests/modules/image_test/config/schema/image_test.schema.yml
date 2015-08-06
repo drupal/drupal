@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Image Test module.
 
 system.image.test_toolkit:
-  type: mapping
+  type: config_object
   label: 'Image test toolkit'
   mapping:
     test_parameter:

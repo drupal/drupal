@@ -28,7 +28,7 @@ views.style.mapping_test:
           label: 'Toggle title field'
 
 views_test_data.tests:
-  type: mapping
+  type: config_object
   label: 'Views test data tests'
   mapping:
     handler_access_callback:

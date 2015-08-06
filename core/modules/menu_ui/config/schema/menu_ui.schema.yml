@@ -1,7 +1,7 @@
 # Schema for configuration files of the Menu UI module.
 
 menu_ui.settings:
-  type: mapping
+  type: config_object
   label: 'Menu settings'
   mapping:
     override_parent_selector:

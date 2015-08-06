@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Hook Menu Test module.
 
 menu_test.menu_item:
-  type: mapping
+  type: config_object
   label: 'Menu test'
   mapping:
     title:
