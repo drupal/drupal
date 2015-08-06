@@ -4,5 +4,6 @@ description: 'Provides a translation interface for configuration.'
 package: Multilingual
 version: VERSION
 core: 8.x
+configure: config_translation.mapper_list
 dependencies:
   - locale
