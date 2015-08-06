@@ -101,6 +101,38 @@ class SearchIntegrationTest extends ViewTestBase {
     $this->assertNoLink('pizza');
     $this->assertNoLink('sandwich');
     $this->assertOneLink('cola');
+
+    // Test sorting.
+    $node = [
+      'title' => "Drupal's search rocks.",
+      'type' => $type->id(),
+    ];
+    $this->drupalCreateNode($node);
+    $node['title'] = "Drupal's search rocks really rocks!";
+    $this->drupalCreateNode($node);
+    $this->cronRun();
+    $this->drupalGet('test-arg/rocks');
+    $xpath = '//div[@class="views-row"]//a';
+    /** @var \SimpleXMLElement[] $results */
+    $results = $this->xpath($xpath);
+    $this->assertEqual((string) $results[0], "Drupal's search rocks really rocks!");
+    $this->assertEqual((string) $results[1], "Drupal's search rocks.");
+
+    // Test sorting with another set of titles.
+    $node = [
+      'title' => "Testing one two two two",
+      'type' => $type->id(),
+    ];
+    $this->drupalCreateNode($node);
+    $node['title'] = "Testing one one one";
+    $this->drupalCreateNode($node);
+    $this->cronRun();
+    $this->drupalGet('test-arg/one');
+    $xpath = '//div[@class="views-row"]//a';
+    /** @var \SimpleXMLElement[] $results */
+    $results = $this->xpath($xpath);
+    $this->assertEqual((string) $results[0], "Testing one one one");
+    $this->assertEqual((string) $results[1], "Testing one two two two");
   }
 
   /**

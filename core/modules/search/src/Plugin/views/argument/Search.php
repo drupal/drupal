@@ -93,10 +93,11 @@ class Search extends ArgumentPluginBase {
       $join = Views::pluginManager('join')->createInstance('standard', $definition);
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
+      // Add the search score field to the query.
       $this->search_score = $this->query->addField('', "$search_index.score * $search_total.count", 'score', array('function' => 'sum'));
 
+      // Add the conditions set up by the search query to the views query.
       $search_condition->condition("$search_index.type", $this->searchType);
-
       $search_dataset = $this->query->addTable('node_search_dataset');
       $conditions = $this->searchQuery->conditions();
       $condition_conditions =& $conditions->conditions();
@@ -110,6 +111,16 @@ class Search extends ArgumentPluginBase {
       $search_conditions =& $search_condition->conditions();
       $search_conditions = array_merge($search_conditions, $condition_conditions);
 
+      // Add the keyword conditions, as is done in
+      // SearchQuery::prepareAndNormalize(), but simplified because we are
+      // only concerned with relevance ranking so we do not need to normalize.
+      $or = db_or();
+      foreach ($words as $word) {
+        $or->condition("$search_index.word", $word);
+      }
+      $search_condition->condition($or);
+
+      // Add the GROUP BY and HAVING expressions to the query.
       $this->query->addWhere(0, $search_condition);
       $this->query->addGroupBy("$search_index.sid");
       $matches = $this->searchQuery->matches();

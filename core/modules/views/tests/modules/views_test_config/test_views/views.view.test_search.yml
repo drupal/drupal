@@ -107,21 +107,15 @@ display:
           entity_type: node
           entity_field: status
       sorts:
-        created:
-          id: created
-          table: node_field_data
-          field: created
-          order: DESC
+        score:
+          id: score
+          table: node_search_index
+          field: score
           relationship: none
           group_type: group
           admin_label: ''
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
-          plugin_id: date
-          entity_type: node
-          entity_field: created
+          order: DESC
+          plugin_id: search_score
       title: ''
       header: {  }
       footer: {  }
