@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Extension;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
+use Drupal\Core\Updater\Updater;
 
 /**
  * Tests InfoParser class and exception.
@@ -82,6 +83,19 @@ class InfoParserUnitTest extends KernelTestBase {
     $this->assertEqual($info_values['simple_string'], 'A simple string', 'Simple string value was parsed correctly.', 'System');
     $this->assertEqual($info_values['version'], \Drupal::VERSION, 'Constant value was parsed correctly.', 'System');
     $this->assertEqual($info_values['double_colon'], 'dummyClassName::', 'Value containing double-colon was parsed correctly.', 'System');
+  }
+
+  /**
+   * Tests project and child project showing correct title.
+   *
+   * @see https://drupal.org/node/2409515
+   */
+  public function testGetProjectTitleWithChild() {
+    // Get the project title from it's directory. If it can't find the title
+    // it will choose the first project title in the directory.
+    $directory = \Drupal::root() . '/core/modules/system/tests/modules/module_handler_test_multiple';
+    $title = Updater::getProjectTitle($directory);
+    $this->assertEqual('module handler test multiple', $title);
   }
 
 }
