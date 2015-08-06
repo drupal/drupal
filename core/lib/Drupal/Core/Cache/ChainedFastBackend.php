@@ -39,6 +39,15 @@ namespace Drupal\Core\Cache;
  * Because this backend will mark all the cache entries in a bin as out-dated
  * for each write to a bin, it is best suited to bins with fewer changes.
  *
+ * Note that this is designed specifically for combining a fast inconsistent
+ * cache backend with a slower consistent cache back-end. To still function
+ * correctly, it needs to do a consistency check (see the "last write timestamp"
+ * logic). This contrasts with \Drupal\Core\Cache\BackendChain, which assumes
+ * both chained cache backends are consistent, thus a consistency check being
+ * pointless.
+ *
+ * @see \Drupal\Core\Cache\BackendChain
+ *
  * @ingroup cache
  */
 class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorInterface {

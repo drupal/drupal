@@ -20,6 +20,8 @@ namespace Drupal\Core\Cache;
  * to ensure fast retrieval on the next request. On cache sets and deletes, both
  * backends will be invoked to ensure consistency.
  *
+ * @see \Drupal\Core\Cache\ChainedFastBackend
+ *
  * @ingroup cache
  */
 

@@ -569,6 +569,9 @@
  *  $settings['cache']['default'] = 'cache.custom';
  * @endcode
  *
+ * Finally, you can chain multiple cache backends together, see
+ * \Drupal\Core\Cache\ChainedFastBackend and \Drupal\Core\Cache\BackendChain.
+ *
  * @see https://www.drupal.org/node/1884796
  * @}
  */
