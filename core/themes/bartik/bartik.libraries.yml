@@ -4,7 +4,6 @@ global-styling:
     base:
       css/base/elements.css: {}
     component:
-      css/components/admin.css: {}
       css/components/block.css: {}
       css/components/book.css: {}
       css/components/breadcrumb.css: {}
@@ -12,6 +11,7 @@ global-styling:
       css/components/comments.css: {}
       css/components/content.css: {}
       css/components/contextual.css: {}
+      css/components/demo-block.css: {}
       # @see https://www.drupal.org/node/2389735
       css/components/dropbutton.component.css: {}
       css/components/featured-top.css: {}

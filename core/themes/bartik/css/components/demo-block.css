@@ -1,0 +1,21 @@
+/**
+ * @file
+ * Visual styles for Bartik's block demonstration.
+ */
+
+.demo-block {
+  background: #ffff66;
+  border: 1px dotted #9f9e00;
+  color: #000;
+  font: 90% "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  text-shadow: none;
+}
+.featured-top .demo-block {
+  font-size: 0.55em;
+}
+.header .demo-block {
+  width: 500px;
+}
