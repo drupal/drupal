@@ -27,13 +27,6 @@ use Symfony\Component\HttpFoundation\Request;
 class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Stores the help text associated with the active menu item.
-   *
-   * @var string
-   */
-  protected $help;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -93,19 +86,6 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function blockAccess(AccountInterface $account) {
-    $this->help = $this->getActiveHelp($this->request);
-    if ($this->help) {
-      return AccessResult::allowed();
-    }
-    else {
-      return AccessResult::forbidden();
-    }
-  }
-
-  /**
    * Returns the help associated with the active menu item.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -125,9 +105,15 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-    return array(
-      '#children' => $this->help,
-    );
+    $help = $this->getActiveHelp($this->request);
+    if (!$help) {
+      return [];
+    }
+    else {
+      return [
+        '#children' => $help,
+      ];
+    }
   }
 
   /**

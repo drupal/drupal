@@ -32,6 +32,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     'route.menu_active_trails:main',
     'route.menu_active_trails:tools',
     'timezone',
+    'url',
     'user'
   ];
 

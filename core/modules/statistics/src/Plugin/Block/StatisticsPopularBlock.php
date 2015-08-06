@@ -23,27 +23,6 @@ use Drupal\Core\Session\AccountInterface;
 class StatisticsPopularBlock extends BlockBase {
 
   /**
-   * Number of day's top views to display.
-   *
-   * @var int
-   */
-  protected $day_list;
-
-  /**
-   * Number of all time views to display.
-   *
-   * @var int
-   */
-  protected $all_time_list;
-
-  /**
-   * Number of most recent views to display.
-   *
-   * @var int
-   */
-  protected $last_list;
-
-  /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
@@ -58,23 +37,7 @@ class StatisticsPopularBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    $access = AccessResult::allowedIfHasPermission($account, 'access content');
-    if ($account->hasPermission('access content')) {
-      $daytop = $this->configuration['top_day_num'];
-      if (!$daytop || !($result = statistics_title_list('daycount', $daytop)) || !($this->day_list = node_title_list($result, $this->t("Today's:")))) {
-        return AccessResult::forbidden()->inheritCacheability($access);
-      }
-      $alltimetop = $this->configuration['top_all_num'];
-      if (!$alltimetop || !($result = statistics_title_list('totalcount', $alltimetop)) || !($this->all_time_list = node_title_list($result, $this->t('All time:')))) {
-        return AccessResult::forbidden()->inheritCacheability($access);
-      }
-      $lasttop = $this->configuration['top_last_num'];
-      if (!$lasttop || !($result = statistics_title_list('timestamp', $lasttop)) || !($this->last_list = node_title_list($result, $this->t('Last viewed:')))) {
-        return AccessResult::forbidden()->inheritCacheability($access);
-      }
-      return $access;
-    }
-    return AccessResult::forbidden()->inheritCacheability($access);
+    return AccessResult::allowedIfHasPermission($account, 'access content');
   }
 
   /**
@@ -123,18 +86,25 @@ class StatisticsPopularBlock extends BlockBase {
   public function build() {
     $content = array();
 
-    if ($this->day_list) {
-      $content['top_day'] = $this->day_list;
-      $content['top_day']['#suffix'] = '<br />';
+    if ($this->configuration['top_day_num'] > 0) {
+      $result = statistics_title_list('daycount', $this->configuration['top_day_num']);
+      if ($result) {
+        $content['top_day'] = node_title_list($result, $this->t("Today's:"));
+        $content['top_day']['#suffix'] = '<br />';
+      }
     }
 
-    if ($this->all_time_list) {
-      $content['top_all'] = $this->all_time_list;
-      $content['top_all']['#suffix'] = '<br />';
+    if ($this->configuration['top_all_num'] > 0) {
+      $result = statistics_title_list('totalcount', $this->configuration['top_all_num']);
+      if ($result) {
+        $content['top_all'] = node_title_list($result, $this->t('All time:'));
+        $content['top_all']['#suffix'] = '<br />';
+      }
     }
 
-    if ($this->last_list) {
-      $content['top_last'] = $this->last_list;
+    if ($this->configuration['top_last_num'] > 0) {
+      $result = statistics_title_list('timestamp', $this->configuration['top_last_num']);
+      $content['top_last'] = node_title_list($result, $this->t('Last viewed:'));
       $content['top_last']['#suffix'] = '<br />';
     }
 
