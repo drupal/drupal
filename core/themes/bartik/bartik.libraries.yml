@@ -35,7 +35,6 @@ global-styling:
       css/components/site-footer.css: {}
       css/components/table.css: {}
       css/components/tabs.css: {}
-      css/components/tips.css: {}
       css/components/toolbar.css: {}
       css/components/featured-bottom.css: {}
       css/components/user.css: {}
