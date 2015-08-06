@@ -1,4 +1,7 @@
-/* ---------------- Buttons    ---------------- */
+/**
+ * @file
+ * Styles for Bartik's buttons.
+ */
 
 .button {
   background-color: #fff;
@@ -31,13 +34,5 @@
   background: #ededed;
   border-color: #bbb;
   color: #717171;
-  cursor: default;
-}
-.image-button.is-disabled:hover,
-.image-button.is-disabled:active,
-.image-button.is-disabled:focus,
-.image-button.is-disabled {
-  background: transparent;
-  opacity: 0.5;
   cursor: default;
 }

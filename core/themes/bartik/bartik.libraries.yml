@@ -42,6 +42,7 @@ global-styling:
       css/components/vertical-tabs.component.css: {}
       css/components/views.css: {}
       css/components/buttons.css: {}
+      css/components/image-button.css: {}
       css/components/ui-dialog.css: {}
     layout:
       css/layout.css: {}
