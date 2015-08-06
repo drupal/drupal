@@ -646,10 +646,10 @@ field.field_settings.integer:
       type: integer
       label: 'Maximum'
     prefix:
-      type: string
+      type: label
       label: 'Prefix'
     suffix:
-      type: string
+      type: label
       label: 'Suffix'
 
 field.value.integer:
@@ -684,10 +684,10 @@ field.field_settings.decimal:
       type: float
       label: 'Maximum'
     prefix:
-      type: string
+      type: label
       label: 'Prefix'
     suffix:
-      type: string
+      type: label
       label: 'Suffix'
 
 field.value.decimal:
@@ -715,10 +715,10 @@ field.field_settings.float:
       type: float
       label: 'Maximum'
     prefix:
-      type: string
+      type: label
       label: 'Prefix'
     suffix:
-      type: string
+      type: label
       label: 'Suffix'
 
 field.value.float:
