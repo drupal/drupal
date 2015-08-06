@@ -22,6 +22,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
@@ -1084,8 +1085,9 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  *   can be passed in to save another run of
  *   \Drupal\Core\Render\Element::children().
  *
- * @return string
+ * @return string|\Drupal\Component\Utility\SafeStringInterface
  *   The rendered HTML of all children of the element.
+ *
  * @see drupal_render()
  */
 function drupal_render_children(&$element, $children_keys = NULL) {
@@ -1098,7 +1100,7 @@ function drupal_render_children(&$element, $children_keys = NULL) {
       $output .= drupal_render($element[$key]);
     }
   }
-  return SafeMarkup::set($output);
+  return SafeString::create($output);
 }
 
 /**
