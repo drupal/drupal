@@ -76,7 +76,10 @@ trait AssertContentTrait {
    */
   protected function getTextContent() {
     if (!isset($this->plainTextContent)) {
-      $this->plainTextContent = Xss::filter($this->getRawContent(), array());
+      $raw_content = $this->getRawContent();
+      // Strip everything between the HEAD tags.
+      $raw_content = preg_replace('@<head>(.+?)</head>@si', '', $raw_content);
+      $this->plainTextContent = Xss::filter($raw_content, array());
     }
     return $this->plainTextContent;
   }
