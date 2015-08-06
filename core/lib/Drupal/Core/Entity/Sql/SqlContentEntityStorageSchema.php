@@ -285,7 +285,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     // If a migration is required, we can't proceed.
     if ($this->requiresEntityDataMigration($entity_type, $original)) {
-      throw new EntityStorageException('The SQL storage cannot change the schema for an existing entity type with data.');
+      throw new EntityStorageException('The SQL storage cannot change the schema for an existing entity type (' . $entity_type->id() . ') with data.');
     }
 
     // If we have no data just recreate the entity schema from scratch.
@@ -415,7 +415,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // @todo Add purging to all fields: https://www.drupal.org/node/2282119.
     try {
       if (!($storage_definition instanceof FieldStorageConfigInterface) && $this->storage->countFieldData($storage_definition, TRUE)) {
-        throw new FieldStorageDefinitionUpdateForbiddenException('Unable to delete a field with data that cannot be purged.');
+        throw new FieldStorageDefinitionUpdateForbiddenException('Unable to delete a field (' . $storage_definition->getName() . ' in ' . $storage_definition->getTargetEntityTypeId() . ' entity) with data that cannot be purged.');
       }
     }
     catch (DatabaseException $e) {
@@ -1268,7 +1268,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
     else {
       if ($storage_definition->getColumns() != $original->getColumns()) {
-        throw new FieldStorageDefinitionUpdateForbiddenException("The SQL storage cannot change the schema for an existing field with data.");
+        throw new FieldStorageDefinitionUpdateForbiddenException('The SQL storage cannot change the schema for an existing field (' . $storage_definition->getName() . ' in ' . $storage_definition->getTargetEntityTypeId() . ' entity) with data.');
       }
       // There is data, so there are no column changes. Drop all the prior
       // indexes and create all the new ones, except for all the priors that
@@ -1357,7 +1357,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
     else {
       if ($storage_definition->getColumns() != $original->getColumns()) {
-        throw new FieldStorageDefinitionUpdateForbiddenException("The SQL storage cannot change the schema for an existing field with data.");
+        throw new FieldStorageDefinitionUpdateForbiddenException('The SQL storage cannot change the schema for an existing field (' . $storage_definition->getName() . ' in ' . $storage_definition->getTargetEntityTypeId() . ' entity) with data.');
       }
 
       $updated_field_name = $storage_definition->getName();
