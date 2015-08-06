@@ -170,6 +170,11 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   left: auto;
   right: 0;
 }
+/* Layer the links just above the toolbar-tray. */
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon{
+  position: relative;
+  z-index: 502;
+}
 /* Hide secondary menus when the tray is horizontal. */
 .toolbar-oriented .toolbar-tray-horizontal .menu-item ul {
   display: none;

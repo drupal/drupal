@@ -238,13 +238,13 @@
     adjustPlacement: function () {
       var $trays = this.$el.find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
-        $trays.css('padding-top', 0);
+        $trays.css('margin-top', 0);
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
       }
       else {
         // The toolbar container is invisible. Its placement is used to
         // determine the container for the trays.
-        $trays.css('padding-top', this.$el.find('.toolbar-bar').outerHeight());
+        $trays.css('margin-top', this.$el.find('.toolbar-bar').outerHeight());
       }
     },
 
