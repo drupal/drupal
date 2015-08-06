@@ -222,7 +222,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     $query = $this->factory->get('entity_test_mulrev');
     $group_blue = $query->andConditionGroup()->condition("$figures.color", array('blue'), 'IN');
     $group_red = $query->andConditionGroup()->condition("$figures.color", array('red'), 'IN');
-    $query
+    $this->queryResults = $query
       ->condition($group_blue)
       ->condition($group_red)
       ->sort('id')
