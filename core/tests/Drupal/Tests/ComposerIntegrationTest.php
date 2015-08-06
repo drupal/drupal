@@ -69,4 +69,28 @@ class ComposerIntegrationTest extends UnitTestCase {
     }
   }
 
+  /**
+   * Tests core's composer.json replace section.
+   *
+   * Verify that all core modules are also listed in the 'replace' section of
+   * core's composer.json.
+   */
+  public function testAllModulesReplaced() {
+    $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
+    $composer_replace_packages = $json->replace;
+
+    $folders = scandir($this->root . '/core/modules');
+
+    $module_names = [];
+    foreach ($folders as $file_name) {
+      if ($file_name !== '.' && $file_name !== '..' && is_dir($file_name)) {
+        $module_names[] = $file_name;
+      }
+    }
+
+    foreach ($module_names as $module_name) {
+      $this->assertTrue(array_key_exists('drupal/'.$module_name, $composer_replace_packages), 'Found ' . $module_name . ' in replace list of composer.json');
+    }
+  }
+
 }
