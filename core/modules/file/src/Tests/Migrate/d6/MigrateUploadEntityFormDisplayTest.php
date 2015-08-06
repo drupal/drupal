@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUploadEntityFormDisplayTest.
+ * Contains \Drupal\file\Tests\Migrate\d6\MigrateUploadEntityFormDisplayTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\file\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upload form entity display.
  *
- * @group migrate_drupal
+ * @group file
  */
 class MigrateUploadEntityFormDisplayTest extends MigrateDrupal6TestBase {
 

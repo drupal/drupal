@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\UploadInstance.
+ * Contains \Drupal\file\Plugin\migrate\source\d6\UploadInstance.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\file\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;

@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\EntityFileTest.
+ * Contains \Drupal\file\Tests\Migrate\EntityFileTest.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\file\Tests\Migrate;
 
 use Drupal\Core\Site\Settings;
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\migrate\destination\EntityFile;
+use Drupal\file\Plugin\migrate\destination\EntityFile;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\migrate\MigrateException;
@@ -18,7 +18,7 @@ use Drupal\simpletest\KernelTestBase;
 /**
  * Tests the entity file destination plugin.
  *
- * @group migrate
+ * @group file
  */
 class EntityFileTest extends KernelTestBase {
 
@@ -30,7 +30,7 @@ class EntityFileTest extends KernelTestBase {
   public static $modules = array('system', 'entity_test', 'user', 'file');
 
   /**
-   * @var \Drupal\migrate\Tests\TestEntityFile $destination
+   * @var \Drupal\file\Tests\Migrate\TestEntityFile $destination
    */
   protected $destination;
 

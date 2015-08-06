@@ -4,7 +4,6 @@ migration_tags:
   - Drupal 6
 source:
   plugin: d6_upload
-
 process:
   nid: nid
   vid: vid

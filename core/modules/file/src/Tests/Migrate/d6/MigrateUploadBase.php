@@ -2,10 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUploadBase.
+ * Contains \Drupal\file\Tests\Migrate\d6\MigrateUploadBase.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\file\Tests\Migrate\d6;
+
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Base class for file/upload migration tests.

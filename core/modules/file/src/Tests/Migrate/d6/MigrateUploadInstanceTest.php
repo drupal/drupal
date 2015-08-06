@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUploadInstanceTest.
+ * Contains \Drupal\file\Tests\Migrate\d6\MigrateUploadInstanceTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upload field instance migration.
  *
- * @group migrate_drupal
+ * @group file
  */
 class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
 

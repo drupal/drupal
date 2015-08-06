@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateUploadTest.
+ * Contains \Drupal\file\Tests\Migrate\d6\MigrateUploadTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\node\Entity\Node;
 
 /**
  * Migrate association data between nodes and files.
  *
- * @group migrate_drupal
+ * @group file
  */
 class MigrateUploadTest extends MigrateUploadBase {
 

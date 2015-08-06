@@ -5,7 +5,7 @@
  * Contains \Drupal\migrate\Plugin\migrate\destination\EntityFile.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\file\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -15,6 +15,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -50,14 +50,6 @@ migrate.source.variable_multirow:
         type: string
         label: 'Variable'
 
-migrate.source.d6_upload_instance:
-  type: migrate_source_sql
-  label: 'Drupal 6 upload form display'
-  mapping:
-    constants:
-      type: migrate_entity_constant
-      label: 'Constants'
-
 migrate_entity_constant:
   type: mapping
   mapping:

@@ -1,0 +1,7 @@
+migrate.destination.entity:file:
+  type: migrate_destination
+  label: 'File'
+  mapping:
+    source_path_property:
+      type: string
+      label: 'Source path'

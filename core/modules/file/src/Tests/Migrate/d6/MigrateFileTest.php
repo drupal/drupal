@@ -2,21 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateFileTest.
+ * Contains \Drupal\file\Tests\Migrate\d6\MigrateFileTest.
  */
 
-namespace Drupal\migrate_drupal\Tests\d6;
+namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\Component\Utility\Random;
 use Drupal\migrate\Tests\MigrateDumpAlterInterface;
 use Drupal\Core\Database\Database;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\simpletest\TestBase;
 use Drupal\file\Entity\File;
 
 /**
  * file migration.
  *
- * @group migrate_drupal
+ * @group file
  */
 class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlterInterface {
 

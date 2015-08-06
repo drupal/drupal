@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\FileTest.
+ * Contains \Drupal\Tests\file\Unit\Plugin\migrate\source\d6\FileTest.
  */
 
-namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
+namespace Drupal\Tests\file\Unit\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
  * Tests D6 file source plugin.
  *
- * @group migrate_drupal
+ * @group file
  */
 class FileTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\File';
+  const PLUGIN_CLASS = 'Drupal\file\Plugin\migrate\source\d6\File';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
