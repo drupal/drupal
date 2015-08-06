@@ -57,6 +57,10 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
       throw new \Exception('Oh oh, bananas in the instruments.');
     }
 
+    if (\Drupal::state()->get('error_service_test.break_logger')) {
+      throw new \Exception('Deforestation');
+    }
+
     return $this->app->handle($request, $type, $catch);
   }
 

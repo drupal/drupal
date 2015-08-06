@@ -159,7 +159,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     catch (\Exception $e) {
       // We can't log, for example because the database connection is not
       // available. At least try to log to PHP error log.
-      error_log(sprintf('Failed to log error: %type: !message in %function (line %line of %file).', $error['%type'], $error['%function'], $error['%line'], $error['%file']));
+      error_log(strtr('Failed to log error: %type: !message in %function (line %line of %file).', $error));
     }
   }
 

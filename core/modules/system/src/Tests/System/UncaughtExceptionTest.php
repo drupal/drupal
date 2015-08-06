@@ -186,6 +186,35 @@ class UncaughtExceptionTest extends WebTestBase {
   }
 
   /**
+   * Tests fallback to PHP error log when an exception is thrown while logging.
+   */
+  public function testLoggerException() {
+    // Ensure the test error log is empty before these tests.
+    $this->assertNoErrorsLogged();
+
+    $this->expectedExceptionMessage = 'Deforestation';
+    \Drupal::state()->set('error_service_test.break_logger', TRUE);
+
+    $this->drupalGet('');
+    $this->assertResponse(500);
+    $this->assertText('The website encountered an unexpected error. Please try again later.');
+    $this->assertRaw($this->expectedExceptionMessage);
+
+    // Find fatal error logged to the simpletest error.log
+    $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
+    $this->assertIdentical(count($errors), 1, 'Exactly one line logged to the PHP error log');
+
+    $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
+    $expected_line = 61;
+    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
+    $this->assert(strpos($errors[0], $expected_entry) !== FALSE, 'Original error logged to the PHP error log when an exception is thrown by a logger');
+
+    // The exception is expected. Do not interpret it as a test failure. Not
+    // using File API; a potential error must trigger a PHP warning.
+    unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function error($message = '', $group = 'Other', array $caller = NULL) {

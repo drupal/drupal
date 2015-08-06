@@ -6,3 +6,8 @@ services:
   # Set up a service with a missing class dependency.
   broken_class_with_missing_dependency:
     class: Drupal\error_service_test\LonelyMonkeyClass
+  logger.broken:
+    class: Drupal\error_service_test\Logger\TestLog
+    tags:
+      - { name: logger }
+      - { name: backend_overridable }
