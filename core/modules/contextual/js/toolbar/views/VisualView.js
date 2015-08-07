@@ -20,10 +20,10 @@
       };
 
       return {
-        'click': function () {
+        click: function () {
           this.model.set('isViewing', !this.model.get('isViewing'));
         },
-        'touchend': touchEndToClick
+        touchend: touchEndToClick
       };
     },
 

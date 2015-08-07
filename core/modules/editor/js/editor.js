@@ -89,7 +89,7 @@
         buttons: [
           {
             text: Drupal.t('Continue'),
-            'class': 'button button--primary',
+            class: 'button button--primary',
             click: function () {
               changeTextEditor(field, newFormatID);
               confirmationDialog.close();
@@ -97,7 +97,7 @@
           },
           {
             text: Drupal.t('Cancel'),
-            'class': 'button',
+            class: 'button',
             click: function () {
               // Restore the active format ID: cancel changing text format. We cannot
               // simply call event.preventDefault() because jQuery's change event is
@@ -309,8 +309,8 @@
         url: Drupal.url('editor/filter_xss/' + format.format),
         type: 'POST',
         data: {
-          'value': field.value,
-          'original_format_id': originalFormatID
+          value: field.value,
+          original_format_id: originalFormatID
         },
         dataType: 'json',
         success: function (xssFilteredValue) {

@@ -271,7 +271,7 @@
             .detach()
             .appendTo('.ckeditor-toolbar-disabled > .ckeditor-toolbar-available > ul');
           // Update the toolbar value field.
-          this.model.set({'isDirty': true}, {broadcast: false});
+          this.model.set({isDirty: true}, {broadcast: false});
         }
       }
     },

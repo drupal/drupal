@@ -131,7 +131,7 @@
         // not the first 'Home' toolbar tab).
         if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
           Drupal.toolbar.models.toolbarModel.set({
-            'activeTab': $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
+            activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
           });
         }
       });
@@ -188,31 +188,31 @@
       switch (label) {
         case 'toolbar.narrow':
           model.set({
-            'isOriented': mql.matches,
-            'isTrayToggleVisible': false
+            isOriented: mql.matches,
+            isTrayToggleVisible: false
           });
           // If the toolbar doesn't have an explicit orientation yet, or if the
           // narrow media query doesn't match then set the orientation to
           // vertical.
           if (!mql.matches || !model.get('orientation')) {
-            model.set({'orientation': 'vertical'}, {validate: true});
+            model.set({orientation: 'vertical'}, {validate: true});
           }
           break;
 
         case 'toolbar.standard':
           model.set({
-            'isFixed': mql.matches
+            isFixed: mql.matches
           });
           break;
 
         case 'toolbar.wide':
           model.set({
-            'orientation': ((mql.matches) ? 'horizontal' : 'vertical')
+            orientation: ((mql.matches) ? 'horizontal' : 'vertical')
           }, {validate: true});
           // The tray orientation toggle visibility does not need to be
           // validated.
           model.set({
-            'isTrayToggleVisible': mql.matches
+            isTrayToggleVisible: mql.matches
           });
           break;
 

@@ -169,9 +169,9 @@
       switch (to) {
         case 'closed':
           this.set({
-            'isActive': false,
-            'inTempStore': false,
-            'isDirty': false
+            isActive: false,
+            inTempStore: false,
+            isDirty: false
           });
           break;
 
@@ -264,8 +264,8 @@
           options.reason = 'stop';
           this.get('fields').each(function (fieldModel) {
             fieldModel.set({
-              'inTempStore': false,
-              'state': 'inactive'
+              inTempStore: false,
+              state: 'inactive'
             }, options);
           });
           break;
@@ -392,9 +392,9 @@
             entityModel.save({
               success: function () {
                 entityModel.set({
-                  'state': 'deactivating',
-                  'isCommitting': false
-                }, {'saved': true});
+                  state: 'deactivating',
+                  isCommitting: false
+                }, {saved: true});
               },
               error: function () {
                 // Reset the "isCommitting" mutex.

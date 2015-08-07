@@ -107,7 +107,7 @@
     /**
      * @type {object}
      */
-    events: {'click': 'onClick'},
+    events: {click: 'onClick'},
 
     /**
      * Handles edit mode toggle interactions.

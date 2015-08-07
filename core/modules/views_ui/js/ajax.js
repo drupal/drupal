@@ -117,8 +117,8 @@
     collapseReplaced: false,
     attach: function (context, settings) {
       var base_element_settings = {
-        'event': 'click',
-        'progress': {'type': 'fullscreen'}
+        event: 'click',
+        progress: {type: 'fullscreen'}
       };
       // Bind AJAX behaviors to all items showing the class.
       $('a.views-ajax-link', context).once('views-ajax').each(function () {

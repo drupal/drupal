@@ -46,7 +46,7 @@
       $('.use-ajax').once('ajax').each(function () {
         var element_settings = {};
         // Clicked links look better with the throbber than the progress bar.
-        element_settings.progress = {'type': 'throbber'};
+        element_settings.progress = {type: 'throbber'};
 
         // For anchor tags, these will go to the target of the anchor rather
         // than the usual location.
@@ -75,7 +75,7 @@
         element_settings.event = 'click';
         // Clicked form buttons look better with the throbber than the progress
         // bar.
-        element_settings.progress = {'type': 'throbber'};
+        element_settings.progress = {type: 'throbber'};
         element_settings.base = $(this).attr('id');
         element_settings.element = this;
 
@@ -276,7 +276,7 @@
         message: Drupal.t('Please wait...')
       },
       submit: {
-        'js': true
+        js: true
       }
     };
 

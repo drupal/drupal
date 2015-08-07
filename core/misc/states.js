@@ -93,14 +93,14 @@
    * @prop {function} Number
    */
   states.Dependent.comparisons = {
-    'RegExp': function (reference, value) {
+    RegExp: function (reference, value) {
       return reference.test(value);
     },
-    'Function': function (reference, value) {
+    Function: function (reference, value) {
       // The "reference" variable is a comparison function.
       return reference(value);
     },
-    'Number': function (reference, value) {
+    Number: function (reference, value) {
       // If "reference" is a number and "value" is a string, then cast
       // reference as a string before applying the strict comparison in
       // compare().
@@ -441,7 +441,7 @@
     // 'empty' describes the state to be monitored.
     empty: {
       // 'keyup' is the (native DOM) event that we watch for.
-      'keyup': function () {
+      keyup: function () {
         // The function associated to that trigger returns the new value for the
         // state.
         return this.val() === '';
@@ -449,7 +449,7 @@
     },
 
     checked: {
-      'change': function () {
+      change: function () {
         // prop() and attr() only takes the first element into account. To
         // support selectors matching multiple checkboxes, iterate over all and
         // return whether any is checked.
@@ -467,7 +467,7 @@
 
     // For radio buttons, only return the value if the radio button is selected.
     value: {
-      'keyup': function () {
+      keyup: function () {
         // Radio buttons share the same :input[name="key"] selector.
         if (this.length > 1) {
           // Initial checked value of radios is undefined, so we return false.
@@ -475,7 +475,7 @@
         }
         return this.val();
       },
-      'change': function () {
+      change: function () {
         // Radio buttons share the same :input[name="key"] selector.
         if (this.length > 1) {
           // Initial checked value of radios is undefined, so we return false.
@@ -486,7 +486,7 @@
     },
 
     collapsed: {
-      'collapsed': function (e) {
+      collapsed: function (e) {
         return (typeof e !== 'undefined' && 'value' in e) ? e.value : !this.is('[open]');
       }
     }
@@ -550,18 +550,18 @@
    * @name Drupal.states.State.aliases
    */
   states.State.aliases = {
-    'enabled': '!disabled',
-    'invisible': '!visible',
-    'invalid': '!valid',
-    'untouched': '!touched',
-    'optional': '!required',
-    'filled': '!empty',
-    'unchecked': '!checked',
-    'irrelevant': '!relevant',
-    'expanded': '!collapsed',
-    'open': '!collapsed',
-    'closed': 'collapsed',
-    'readwrite': '!readonly'
+    enabled: '!disabled',
+    invisible: '!visible',
+    invalid: '!valid',
+    untouched: '!touched',
+    optional: '!required',
+    filled: '!empty',
+    unchecked: '!checked',
+    irrelevant: '!relevant',
+    expanded: '!collapsed',
+    open: '!collapsed',
+    closed: 'collapsed',
+    readwrite: '!readonly'
   };
 
   states.State.prototype = {

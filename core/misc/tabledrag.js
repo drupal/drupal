@@ -1341,7 +1341,7 @@
       }
     }
 
-    return {'min': minIndent, 'max': maxIndent};
+    return {min: minIndent, max: maxIndent};
   };
 
   /**

@@ -35,7 +35,10 @@
     var checkboxes;
     var lastChecked;
     var $table = $(table);
-    var strings = {'selectAll': Drupal.t('Select all rows in this table'), 'selectNone': Drupal.t('Deselect all rows in this table')};
+    var strings = {
+      selectAll: Drupal.t('Select all rows in this table'),
+      selectNone: Drupal.t('Deselect all rows in this table')
+    };
     var updateSelectAll = function (state) {
       // Update table's select-all checkbox (and sticky header's if available).
       $table.prev('table.sticky-header').addBack().find('th.select-all input[type="checkbox"]').each(function () {

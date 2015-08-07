@@ -292,7 +292,7 @@
         $stickyCell = this.$stickyHeaderCells.eq($that.index());
         display = $that.css('display');
         if (display !== 'none') {
-          $stickyCell.css({'width': $that.css('width'), 'display': display});
+          $stickyCell.css({width: $that.css('width'), display: display});
         }
         else {
           $stickyCell.css('display', 'none');

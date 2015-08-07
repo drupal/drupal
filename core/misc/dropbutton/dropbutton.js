@@ -60,7 +60,7 @@
    */
   function DropButton(dropbutton, settings) {
     // Merge defaults with settings.
-    var options = $.extend({'title': Drupal.t('List additional actions')}, settings);
+    var options = $.extend({title: Drupal.t('List additional actions')}, settings);
     var $dropbutton = $(dropbutton);
 
     /**

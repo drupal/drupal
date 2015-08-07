@@ -213,7 +213,7 @@
         dialogType: 'modal',
         selector: '.ckeditor-dialog-loading-link',
         url: url,
-        progress: {'type': 'throbber'},
+        progress: {type: 'throbber'},
         submit: {
           editor_object: existingValues
         }
