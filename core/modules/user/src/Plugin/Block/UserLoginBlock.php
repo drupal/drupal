@@ -90,8 +90,13 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
   public function build() {
     $form = \Drupal::formBuilder()->getForm('Drupal\user\Form\UserLoginForm');
     unset($form['name']['#attributes']['autofocus']);
+    // When unsetting field descriptions, also unset aria-describedby attributes
+    // to avoid introducing an accessibility bug.
+    // @todo Do this automatically in https://www.drupal.org/node/2547063.
     unset($form['name']['#description']);
+    unset($form['name']['#attributes']['aria-describedby']);
     unset($form['pass']['#description']);
+    unset($form['pass']['#attributes']['aria-describedby']);
     $form['name']['#size'] = 15;
     $form['pass']['#size'] = 15;
     $form['#action'] = $this->url('<current>', [], ['query' => $this->getDestinationArray(), 'external' => FALSE]);
