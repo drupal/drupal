@@ -229,8 +229,16 @@ function theme_system_modules_details($variables) {
 
     // Add the module label and expand/collapse functionality.
     $id = Html::getUniqueId('module-' . $key);
-    $col2 = '<label id="' . $id . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
-    $row[] = array('class' => array('module'), 'data' => SafeMarkup::set($col2));
+    $col2 = [
+      '#type' => 'inline_template',
+      '#template' => '<label id="{{ id }}" for="{{ enable_id }}" class="module-name table-filter-text-source">{{ module_name }}</label>',
+      '#context' => [
+        'id' => $id,
+        'enable_id' => $module['enable']['#id'],
+        'module_name' => $module['name'],
+      ],
+    ];
+    $row[] = ['class' => ['module'], 'data' => $col2];
 
     // Add the description, along with any modules it requires.
     $description = '';
@@ -255,14 +263,18 @@ function theme_system_modules_details($variables) {
       $description .= $links;
       $description .= '</div>';
     }
+    $title = [
+      '#type' => 'inline_template',
+      '#template' => '<span class="text module-description">{{ module_description }}</span>',
+      '#context' => ['module_description' => $module['description']],
+    ];
     $details = array(
       '#type' => 'details',
-      '#title' => SafeMarkup::set('<span class="text module-description">' . drupal_render($module['description']) . '</span>'),
+      '#title' => $title,
       '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
       '#description' => $description,
     );
-    $col4 = drupal_render($details);
-    $row[] = array('class' => array('description', 'expand'), 'data' => $col4);
+    $row[] = ['class' => ['description', 'expand'], 'data' => $details];
 
     $rows[] = $module['#attributes'] + array('data' => $row);
   }
