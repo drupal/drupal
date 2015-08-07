@@ -13,3 +13,12 @@ services:
   update.fetcher:
     class: Drupal\update\UpdateFetcher
     arguments: ['@config.factory', '@http_client']
+  update.root:
+    class: SplString
+    factory: update.root.factory:get
+    tags:
+      - { name: parameter_service }
+  update.root.factory:
+    class: Drupal\update\UpdateRootFactory
+    arguments: ['@kernel', '@request_stack']
+    public: false

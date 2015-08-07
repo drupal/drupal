@@ -139,7 +139,13 @@ if ($is_allowed) {
   }
   // If a batch is running, let it run.
   elseif ($request->query->has('batch')) {
-    $content = ['#markup' => _batch_page($request)];
+    $content = _batch_page($request);
+    // If _batch_page() returns a response object (likely a JsonResponse for
+    // JavaScript-based batch processing), send it immediately.
+    if ($content instanceof Response) {
+      $content->send();
+      exit;
+    }
   }
   else {
     if (empty($_SESSION['authorize_operation']) || empty($_SESSION['authorize_filetransfer_info'])) {

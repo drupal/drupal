@@ -28,6 +28,11 @@ use Drupal\Core\Updater\UpdaterException;
  *   - updater_name: The name of the Drupal\Core\Updater\Updater class to use
  *     for this project.
  *   - local_url: The locally installed location of new code to update with.
+ *
+ * @return \Symfony\Component\HttpFoundation\Response|null
+ *   The result of processing the batch that updates the projects. If this is
+ *   an instance of \Symfony\Component\HttpFoundation\Response the calling code
+ *   should use that response for the current page request.
  */
 function update_authorize_run_update($filetransfer, $projects) {
   $operations = array();
@@ -50,8 +55,8 @@ function update_authorize_run_update($filetransfer, $projects) {
     'finished' => 'update_authorize_update_batch_finished',
     'file' => drupal_get_path('module', 'update') . '/update.authorize.inc',
   );
-
   batch_set($batch);
+
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();
 }
@@ -74,6 +79,11 @@ function update_authorize_run_update($filetransfer, $projects) {
  * @param string $local_url
  *   The URL to the locally installed temp directory where the project has
  *   already been downloaded and extracted into.
+ *
+ * @return \Symfony\Component\HttpFoundation\Response|null
+ *   The result of processing the batch that installs the project. If this is
+ *   an instance of \Symfony\Component\HttpFoundation\Response the calling code
+ *   should use that response for the current page request.
  */
 function update_authorize_run_install($filetransfer, $project, $updater_name, $local_url) {
   $operations[] = array(
@@ -147,7 +157,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
     return;
   }
 
-  $updater = new $updater_name($local_url);
+  $updater = new $updater_name($local_url, \Drupal::getContainer()->get('update.root'));
 
   try {
     if ($updater->isInstalled()) {

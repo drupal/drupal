@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Configure update settings for this site.
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UpdateReady extends FormBase {
 
   /**
-   * The app root.
+   * The root location under which updated projects will be saved.
    *
    * @var string
    */
@@ -52,7 +53,7 @@ class UpdateReady extends FormBase {
    * Constructs a new UpdateReady object.
    *
    * @param string $root
-   *   The app root.
+   *   The root location under which updated projects will be saved.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The object that manages enabled modules in a Drupal installation.
    * @param \Drupal\Core\State\StateInterface $state
@@ -79,7 +80,7 @@ class UpdateReady extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('app.root'),
+      $container->get('update.root'),
       $container->get('module_handler'),
       $container->get('state'),
       $container->get('site.path')
@@ -139,7 +140,7 @@ class UpdateReady extends FormBase {
       $project_real_location = NULL;
       foreach ($projects as $project => $url) {
         $project_location = $directory . '/' . $project;
-        $updater = Updater::factory($project_location);
+        $updater = Updater::factory($project_location, $this->root);
         $project_real_location = drupal_realpath($project_location);
         $updates[] = array(
           'project' => $project,
@@ -156,7 +157,10 @@ class UpdateReady extends FormBase {
       if (fileowner($project_real_location) == fileowner($this->sitePath)) {
         $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
         $filetransfer = new Local($this->root);
-        update_authorize_run_update($filetransfer, $updates);
+        $response = update_authorize_run_update($filetransfer, $updates);
+        if ($response instanceof Response) {
+          $form_state->setResponse($response);
+        }
       }
       // Otherwise, go through the regular workflow to prompt for FTP/SSH
       // credentials and invoke update_authorize_run_update() indirectly with

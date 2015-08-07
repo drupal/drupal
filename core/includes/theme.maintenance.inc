@@ -124,7 +124,10 @@ function theme_authorize_report($variables) {
           '#message' => $log_message['message'],
           '#success' => $log_message['success'],
         );
-        $items[] = drupal_render($authorize_message);
+        $items[] = array(
+          '#markup' => drupal_render($authorize_message),
+          '#wrapper_attributes' => array('class' => $log_message['success'] ? 'authorize-results__success' : 'authorize-results__failure'),
+        );
       }
       $item_list = array(
         '#theme' => 'item_list',
@@ -151,13 +154,6 @@ function theme_authorize_report($variables) {
  * @ingroup themeable
  */
 function theme_authorize_message($variables) {
-  $message = $variables['message'];
-  $success = $variables['success'];
-  if ($success) {
-    $item = array('data' => array('#markup' => $message), 'class' => array('authorize-results__success'));
-  }
-  else {
-    $item = array('data' => array('#markup' => $message), 'class' => array('authorize-results__failure'));
-  }
-  return $item;
+  $item = array('#markup' => $variables['message']);
+  return drupal_render($item);
 }

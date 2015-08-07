@@ -20,7 +20,7 @@ class Module extends Updater implements UpdaterInterface {
    *
    * If the module is already installed, drupal_get_path() will return
    * a valid path and we should install it there (although we need to use an
-   * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
+   * absolute path, so we prepend the root path). If we're installing a new
    * module, we always want it to go into /modules, since that's
    * where all the documentation recommends users install their modules, and
    * there's no way that can conflict on a multi-site installation, since
@@ -31,20 +31,30 @@ class Module extends Updater implements UpdaterInterface {
    *   A directory path.
    */
   public function getInstallDirectory() {
-    if ($relative_path = drupal_get_path('module', $this->name)) {
+    if ($this->isInstalled() && ($relative_path = drupal_get_path('module', $this->name))) {
       $relative_path = dirname($relative_path);
     }
     else {
-      $relative_path = 'modules';
+      $relative_path = $this->getRootDirectoryRelativePath();
     }
-    return DRUPAL_ROOT . '/' . $relative_path;
+    return $this->root . '/' . $relative_path;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getRootDirectoryRelativePath() {
+    return 'modules';
   }
 
   /**
    * Implements Drupal\Core\Updater\UpdaterInterface::isInstalled().
    */
   public function isInstalled() {
-    return (bool) drupal_get_path('module', $this->name);
+    // Check if the module exists in the file system, regardless of whether it
+    // is enabled or not.
+    $modules = \Drupal::state()->get('system.module.files', array());
+    return isset($modules[$this->name]);
   }
 
   /**

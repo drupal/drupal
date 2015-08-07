@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides the file transfer authorization form.
@@ -226,7 +227,10 @@ class FileTransferAuthorizeForm extends FormBase {
           $filetransfer = $this->getFiletransfer($filetransfer_backend, $form_connection_settings[$filetransfer_backend]);
 
           // Now run the operation.
-          $this->runOperation($filetransfer);
+          $response = $this->runOperation($filetransfer);
+          if ($response instanceof Response) {
+            $form_state->setResponse($response);
+          }
         }
         catch (\Exception $e) {
           // If there is no database available, we don't care and just skip
@@ -333,13 +337,18 @@ class FileTransferAuthorizeForm extends FormBase {
    *
    * @param $filetransfer
    *   The FileTransfer object to use for running the operation.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response|null
+   *   The result of running the operation. If this is an instance of
+   *   \Symfony\Component\HttpFoundation\Response the calling code should use
+   *   that response for the current page request.
    */
   protected function runOperation($filetransfer) {
     $operation = $_SESSION['authorize_operation'];
     unset($_SESSION['authorize_operation']);
 
     require_once $this->root . '/' . $operation['file'];
-    call_user_func_array($operation['callback'], array_merge(array($filetransfer), $operation['arguments']));
+    return call_user_func_array($operation['callback'], array_merge(array($filetransfer), $operation['arguments']));
   }
 
 }

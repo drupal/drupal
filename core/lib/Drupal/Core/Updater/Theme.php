@@ -20,7 +20,7 @@ class Theme extends Updater implements UpdaterInterface {
    *
    * If the theme is already installed, drupal_get_path() will return
    * a valid path and we should install it there (although we need to use an
-   * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
+   * absolute path, so we prepend the root path). If we're installing a new
    * theme, we always want it to go into /themes, since that's
    * where all the documentation recommends users install their themes, and
    * there's no way that can conflict on a multi-site installation, since
@@ -31,20 +31,30 @@ class Theme extends Updater implements UpdaterInterface {
    *   A directory path.
    */
   public function getInstallDirectory() {
-    if ($relative_path = drupal_get_path('theme', $this->name)) {
+    if ($this->isInstalled() && ($relative_path = drupal_get_path('theme', $this->name))) {
       $relative_path = dirname($relative_path);
     }
     else {
-      $relative_path = 'themes';
+      $relative_path = $this->getRootDirectoryRelativePath();
     }
-    return DRUPAL_ROOT . '/' . $relative_path;
+    return $this->root . '/' . $relative_path;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getRootDirectoryRelativePath() {
+    return 'themes';
   }
 
   /**
    * Implements Drupal\Core\Updater\UpdaterInterface::isInstalled().
    */
   public function isInstalled() {
-    return (bool) drupal_get_path('theme', $this->name);
+    // Check if the theme exists in the file system, regardless of whether it
+    // is enabled or not.
+    $themes = \Drupal::state()->get('system.theme.files', array());
+    return isset($themes[$this->name]);
   }
 
   /**

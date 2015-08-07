@@ -35,12 +35,20 @@ interface UpdaterInterface {
   public static function getProjectName($directory);
 
   /**
-   * Returns the path to the default install location.
+   * Returns the path to the default install location for the current project.
    *
    * @return string
    *   An absolute path to the default install location.
    */
   public function getInstallDirectory();
+
+  /**
+   * Returns the name of the root directory under which projects will be copied.
+   *
+   * @return string
+   *   A relative path to the root directory.
+   */
+  public static function getRootDirectoryRelativePath();
 
   /**
    * Determines if the Updater can handle the project provided in $directory.
