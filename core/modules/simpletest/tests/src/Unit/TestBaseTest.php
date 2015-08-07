@@ -73,7 +73,7 @@ class TestBaseTest extends UnitTestCase {
       array(FALSE, 'curry   paste'),
       array(TRUE, 'curry paste'),
       array(TRUE, 'thai green curry paste'),
-      array(FALSE, '@startswithat'),
+      array(TRUE, '@startswithat'),
       array(TRUE, 'contains@at'),
     );
   }

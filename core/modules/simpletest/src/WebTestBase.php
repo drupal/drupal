@@ -1248,6 +1248,8 @@ abstract class WebTestBase extends TestBase {
         CURLOPT_SSL_VERIFYHOST => FALSE,
         CURLOPT_HEADERFUNCTION => array(&$this, 'curlHeaderCallback'),
         CURLOPT_USERAGENT => $this->databasePrefix,
+        // Disable support for the @ prefix for uploading files.
+        CURLOPT_SAFE_UPLOAD => TRUE,
       );
       if (isset($this->httpAuthCredentials)) {
         $curl_options[CURLOPT_HTTPAUTH] = $this->httpAuthMethod;
@@ -1609,9 +1611,6 @@ abstract class WebTestBase extends TestBase {
    *   $edit = array();
    *   $edit['name[]'] = array('value1', 'value2');
    *   @endcode
-   *
-   *   Note that when a form contains file upload fields, other
-   *   fields cannot start with the '@' character.
    * @param $submit
    *   Value of the submit button whose click is to be emulated. For example,
    *   t('Save'). The processing of the request depends on this value. For
