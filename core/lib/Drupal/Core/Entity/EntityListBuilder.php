@@ -40,9 +40,12 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   protected $entityType;
 
   /**
-   * The number of entities to list per page.
+   * The number of entities to list per page, or FALSE to list all entities.
    *
-   * @var int
+   * For example, set this to FALSE if the list uses client-side filters that
+   * require all entities to be listed (like the views overview).
+   *
+   * @var int|false
    */
   protected $limit = 50;
 
@@ -92,12 +95,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    *   An array of entity IDs.
    */
   protected function getEntityIds() {
-    $query = $this->getStorage()->getQuery();
-    $keys = $this->entityType->getKeys();
-    return $query
-      ->sort($keys['id'])
-      ->pager($this->limit)
-      ->execute();
+    $query = $this->getStorage()->getQuery()
+      ->sort($this->entityType->getKey('id'));
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $query->pager($this->limit);
+    }
+    return $query->execute();
   }
 
   /**
@@ -227,9 +232,13 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
         $build['table']['#rows'][$entity->id()] = $row;
       }
     }
-    $build['pager'] = array(
-      '#type' => 'pager',
-    );
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $build['pager'] = array(
+        '#type' => 'pager',
+      );
+    }
     return $build;
   }
 
