@@ -139,30 +139,6 @@ class SafeMarkup {
   }
 
   /**
-   * Applies a very permissive XSS/HTML filter for admin-only use.
-   *
-   * Note: This method only filters if $string is not marked safe already.
-   *
-   * @deprecated as of Drupal 8.0.x, will be removed before Drupal 8.0.0. If the
-   *   string used as part of a @link theme_render render array @endlink use
-   *   #markup to allow the render system to filter automatically. If the result
-   *   is not being used directly in the rendering system (for example, when its
-   *   result is being combined with other strings before rendering), use
-   *   Xss::filterAdmin(). Otherwise, use SafeMarkup::xssFilter() and the tag
-   *   list provided by Xss::getAdminTagList() instead. In the rare instance
-   *   that the caller does not want to filter strings that are marked safe
-   *   already, it needs to check SafeMarkup::isSafe() itself.
-   *
-   * @see \Drupal\Component\Utility\SafeMarkup::xssFilter()
-   * @see \Drupal\Component\Utility\SafeMarkup::isSafe()
-   * @see \Drupal\Component\Utility\Xss::filterAdmin()
-   * @see \Drupal\Component\Utility\Xss::getAdminTagList()
-   */
-  public static function checkAdminXss($string) {
-    return static::isSafe($string) ? $string : static::xssFilter($string, Xss::getAdminTagList());
-  }
-
-  /**
    * Filters HTML for XSS vulnerabilities and marks the result as safe.
    *
    * Calling this method unnecessarily will result in bloating the safe string
