@@ -69,6 +69,7 @@ class DateTimeFieldTest extends WebTestBase {
       'access content',
       'view test entity',
       'administer entity_test content',
+      'administer entity_test form display',
       'administer content types',
       'administer node fields',
     ));
@@ -383,6 +384,38 @@ class DateTimeFieldTest extends WebTestBase {
    */
   function testDatelistWidget() {
     $field_name = $this->fieldStorage->getName();
+
+    // Ensure field is set to a date only field.
+    $this->fieldStorage->setSetting('datetime_type', 'date');
+    $this->fieldStorage->save();
+
+    // Change the widget to a datelist widget.
+    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+      ->setComponent($field_name, array(
+        'type' => 'datetime_datelist',
+        'settings' => array(
+          'date_order' => 'YMD',
+        ),
+      ))
+      ->save();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+
+    // Display creation form.
+    $this->drupalGet('entity_test/add');
+
+    // Assert that Hour and Minute Elements do not appear on Date Only
+    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element not found on Date Only.');
+    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element not found on Date Only.');
+
+    // Go to the form display page to assert that increment option does not appear on Date Only
+    $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
+    $this->drupalGet($fieldEditUrl);
+
+    // Click on the widget settings button to open the widget settings form.
+    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
+    $xpathIncr = "//select[starts-with(@id, \"edit-fields-$field_name-settings-edit-form-settings-increment\")]";
+    $this->assertNoFieldByXPath($xpathIncr, NULL, 'Increment element not found for Date Only.');
+
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
@@ -399,6 +432,14 @@ class DateTimeFieldTest extends WebTestBase {
       ))
       ->save();
     \Drupal::entityManager()->clearCachedFieldDefinitions();
+
+    // Go to the form display page to assert that increment option does appear on Date Time
+    $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
+    $this->drupalGet($fieldEditUrl);
+
+    // Click on the widget settings button to open the widget settings form.
+    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
+    $this->assertFieldByXPath($xpathIncr, NULL, 'Increment element found for Date and time.');
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
