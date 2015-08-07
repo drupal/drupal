@@ -423,7 +423,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $keys = array_filter($entity_type->getKeys());
 
     // Fail with an exception for non-fieldable entity types.
-    if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+    if (!$entity_type->isSubclassOf(FieldableEntityInterface::class)) {
       throw new \LogicException("Getting the base fields is not supported for entity type {$entity_type->getLabel()}.");
     }
 
@@ -655,7 +655,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         // bundles, and we do not expect to have so many different entity
         // types for this to become a bottleneck.
         foreach ($this->getDefinitions() as $entity_type_id => $entity_type) {
-          if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+          if ($entity_type->isSubclassOf(FieldableEntityInterface::class)) {
             $bundles = array_keys($this->getBundleInfo($entity_type_id));
             foreach ($this->getBaseFieldDefinitions($entity_type_id) as $field_name => $base_field_definition) {
               $this->fieldMap[$entity_type_id][$field_name] = [
@@ -1205,7 +1205,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
 
     $this->setLastInstalledDefinition($entity_type);
-    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+    if ($entity_type->isSubclassOf(FieldableEntityInterface::class)) {
       $this->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->getFieldStorageDefinitions($entity_type_id));
     }
   }
