@@ -1,0 +1,22 @@
+/**
+ * @file
+ * Visual styles for fields.
+ */
+
+.field .field-label {
+  font-weight: bold;
+}
+.field-label-inline .field-label,
+.field-label-inline .field-items {
+  float:left; /*LTR*/
+  margin-right: 0.5em; /*LTR*/
+}
+[dir="rtl"] .field-label-inline .field-label,
+[dir="rtl"] .field-label-inline .field-items {
+  float: right;
+  margin-left: 0.5em;
+  margin-right: 0;
+}
+.field-label-inline .field-label::after {
+  content: ':';
+}

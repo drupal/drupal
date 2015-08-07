@@ -1,0 +1,45 @@
+/**
+ * @file
+ * Throbber.
+ */
+
+.ajax-progress {
+  display: inline-block;
+  padding: 1px 5px 2px 5px;
+}
+[dir="rtl"] .ajax-progress {
+  float: right;
+}
+.ajax-progress-throbber .throbber {
+  background: transparent url(../../../../misc/throbber-active.gif) no-repeat 0px center;
+  display: inline;
+  padding: 1px 5px 2px;
+}
+.ajax-progress-throbber .message {
+  display: inline;
+  padding: 1px 5px 2px;
+}
+tr .ajax-progress-throbber .throbber {
+  margin: 0 2px;
+}
+.ajax-progress-bar {
+  width: 16em;
+}
+
+/* Full screen throbber */
+.ajax-progress-fullscreen {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+  background-color: #232323;
+  background-image: url(../../../../misc/loading-small.gif);
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 7px;
+  height: 24px;
+  opacity: 0.9;
+  padding: 4px;
+  width: 24px;
+}

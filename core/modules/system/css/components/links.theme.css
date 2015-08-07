@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Visual styles for links.
+ */
+
+ul.inline,
+ul.links.inline {
+  display: inline;
+  padding-left: 0;
+}
+ul.inline li {
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
+}
+ul.links a.is-active {
+  color: #000;
+}

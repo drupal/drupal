@@ -1,0 +1,13 @@
+/**
+ * @file
+ * Table header behavior.
+ *
+ * @see tableheader.js
+ */
+
+table.sticky-header {
+  background-color: #fff;
+  margin-top: 0;
+  z-index: 500;
+  top: 0;
+}

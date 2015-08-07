@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Inline items.
+ */
+
+.container-inline label:after,
+.container-inline .label:after {
+  content: ':';
+}
+.form-type-radios .container-inline label:after {
+  content: '';
+}
+.form-type-radios .container-inline .form-type-radio {
+  margin: 0 1em;
+}
+.container-inline .form-actions,
+.container-inline.form-actions {
+  margin-top: 0;
+  margin-bottom: 0;
+}

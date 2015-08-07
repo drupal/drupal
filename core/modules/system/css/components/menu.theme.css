@@ -1,0 +1,34 @@
+/**
+ * @file
+ * Visual styles for menu.
+ */
+
+ul.menu {
+  list-style: none outside;
+  margin-left: 1em; /* LTR */
+  padding: 0;
+  text-align: left; /* LTR */
+}
+[dir="rtl"] ul.menu {
+  margin-left: 0;
+  margin-right: 1em;
+  text-align: right;
+}
+.menu-item--expanded {
+  list-style-image: url(../../../../misc/menu-expanded.png);
+  list-style-type: circle;
+}
+.menu-item--collapsed {
+  list-style-image: url(../../../../misc/menu-collapsed.png); /* LTR */
+  list-style-type: disc;
+}
+[dir="rtl"] .menu-item--collapsed {
+  list-style-image: url(../../../../misc/menu-collapsed-rtl.png);
+}
+.menu-item {
+  padding-top: 0.2em;
+  margin: 0;
+}
+ul.menu a.is-active {
+  color: #000;
+}

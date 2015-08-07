@@ -3,9 +3,49 @@ base:
   css:
     # Adjust the weights to load these early.
     component:
-      css/system.module.css: { every_page: true, weight: -10, }
+      css/components/ajax-progress.module.css: { every_page: true, weight: -10 }
+      css/components/align.module.css: { every_page: true, weight: -10 }
+      css/components/autocomplete-loading.module.css: { every_page: true, weight: -10 }
+      css/components/fieldgroup.module.css: { every_page: true, weight: -10 }
+      css/components/container-inline.module.css: { every_page: true, weight: -10 }
+      css/components/clearfix.module.css: { every_page: true, weight: -10 }
+      css/components/details.module.css: { every_page: true, weight: -10 }
+      css/components/hidden.module.css: { every_page: true, weight: -10 }
+      css/components/js.module.css: { every_page: true, weight: -10 }
+      css/components/nowrap.module.css: { every_page: true, weight: -10 }
+      css/components/position-container.module.css: { every_page: true, weight: -10 }
+      css/components/progress.module.css: { every_page: true, weight: -10 }
+      css/components/reset-appearance.module.css: { every_page: true, weight: -10 }
+      css/components/resize.module.css: { every_page: true, weight: -10 }
+      css/components/sticky-header.module.css: { every_page: true, weight: -10 }
+      css/components/tabledrag.module.css: { every_page: true, weight: -10 }
     theme:
-      css/system.theme.css: { every_page: true, weight: -10 }
+      css/components/action-links.theme.css: { every_page: true, weight: -10 }
+      css/components/breadcrumb.theme.css: { every_page: true, weight: -10 }
+      css/components/button.theme.css: { every_page: true, weight: -10 }
+      css/components/collapse-processed.theme.css: { every_page: true, weight: -10 }
+      css/components/container-inline.theme.css: { every_page: true, weight: -10 }
+      css/components/details.theme.css: { every_page: true, weight: -10 }
+      css/components/exposed-filters.theme.css: { every_page: true, weight: -10 }
+      css/components/field.theme.css: { every_page: true, weight: -10 }
+      css/components/form.theme.css: { every_page: true, weight: -10 }
+      css/components/icons.theme.css: { every_page: true, weight: -10 }
+      css/components/inline-form.theme.css: { every_page: true, weight: -10 }
+      css/components/item-list.theme.css: { every_page: true, weight: -10 }
+      css/components/link.theme.css: { every_page: true, weight: -10 }
+      css/components/links.theme.css: { every_page: true, weight: -10 }
+      css/components/menu.theme.css: { every_page: true, weight: -10 }
+      css/components/messages.theme.css: { every_page: true, weight: -10 }
+      css/components/more-link.theme.css: { every_page: true, weight: -10 }
+      css/components/node.theme.css: { every_page: true, weight: -10 }
+      css/components/pager.theme.css: { every_page: true, weight: -10 }
+      css/components/progress.theme.css: { every_page: true, weight: -10 }
+      css/components/tableselect.theme.css: { every_page: true, weight: -10 }
+      css/components/tabledrag.theme.css: { every_page: true, weight: -10 }
+      css/components/tablesort.theme.css: { every_page: true, weight: -10 }
+      css/components/tabs.theme.css: { every_page: true, weight: -10 }
+      css/components/textarea.theme.css: { every_page: true, weight: -10 }
+      css/components/tree-child.theme.css: { every_page: true, weight: -10 }
 
 admin:
   version: VERSION

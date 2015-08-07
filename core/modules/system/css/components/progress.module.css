@@ -1,0 +1,50 @@
+/**
+ * @file
+ * Progress behavior.
+ *
+ * @see progress.js
+ */
+
+.progress {
+  position: relative;
+}
+.progress__track {
+  background-color: #fff;
+  border: 1px solid;
+  margin-top: 5px;
+  max-width: 100%;
+  min-width: 100px;
+  height: 16px;
+}
+.progress__bar {
+  background-color: #000;
+  height: 1.5em;
+  min-width: 3%;
+  max-width: 100%;
+}
+.progress__description,
+.progress__percentage {
+  color: #555;
+  overflow: hidden;
+  font-size: .875em;
+  margin-top: 0.2em;
+}
+.progress__description {
+  float: left; /* LTR */
+}
+[dir="rtl"] .progress__description {
+  float: right;
+}
+.progress__percentage {
+  float: right; /* LTR */
+}
+[dir="rtl"] .progress__percentage {
+  float: left;
+}
+.progress--small .progress__track {
+  height: 7px;
+}
+.progress--small .progress__bar {
+  height: 7px;
+  background-size: 20px 20px;
+}

@@ -1,0 +1,14 @@
+/**
+ * @file
+ * Table select behavior.
+ *
+ * @see tableselect.js
+ */
+
+tr.selected td {
+  background: #ffc;
+}
+td.checkbox,
+th.checkbox {
+  text-align: center;
+}
