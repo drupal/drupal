@@ -508,7 +508,7 @@ EOD;
    * @param bool $add_ellipsis
    *   If TRUE, add '...' to the end of the truncated string (defaults to
    *   FALSE). The string length will still fall within $max_length.
-   * @param bool $min_wordsafe_length
+   * @param int $min_wordsafe_length
    *   If $wordsafe is TRUE, the minimum acceptable length for truncation (before
    *   adding an ellipsis, if $add_ellipsis is TRUE). Has no effect if $wordsafe
    *   is FALSE. This can be used to prevent having a very short resulting string

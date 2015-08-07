@@ -7,8 +7,8 @@
 
 namespace Drupal\dblog\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
@@ -339,10 +339,10 @@ class DbLogTest extends WebTestBase {
     $this->assertLogMessage(t('Session closed for %name.', array('%name' => $name)), 'DBLog event was recorded: [logout user]');
     // Delete user.
     $message = t('Deleted user: %name %email.', array('%name' => $name, '%email' => '<' . $user->getEmail() . '>'));
-    $message_text = Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE);
+    $message_text = Unicode::truncate(Html::decodeEntities(strip_tags($message)), 56, TRUE, TRUE);
     // Verify that the full message displays on the details page.
     $link = FALSE;
-    if ($links = $this->xpath('//a[text()="' . html_entity_decode($message_text) . '"]')) {
+    if ($links = $this->xpath('//a[text()="' . $message_text . '"]')) {
       // Found link with the message text.
       $links = array_shift($links);
       foreach ($links->attributes() as $attr => $value) {
@@ -695,11 +695,8 @@ class DbLogTest extends WebTestBase {
    *   The message to pass to simpletest.
    */
   protected function assertLogMessage($log_message, $message) {
-    $message_text = Unicode::truncate(Xss::filter($log_message, array()), 56, TRUE, TRUE);
-    // After \Drupal\Component\Utility\Xss::filter(), HTML entities should be
-    // converted to their character equivalents because assertLink() uses this
-    // string in xpath() to query the Document Object Model (DOM).
-    $this->assertLink(html_entity_decode($message_text), 0, $message);
+    $message_text = Unicode::truncate(Html::decodeEntities(strip_tags($log_message)), 56, TRUE, TRUE);
+    $this->assertLink($message_text, 0, $message);
   }
 
   /**
@@ -730,4 +727,17 @@ class DbLogTest extends WebTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertText('Dblog test log message');
   }
+
+  /**
+   * Make sure HTML tags are filtered out in the log overview links.
+   */
+  public function testOverviewLinks() {
+    $this->drupalLogin($this->adminUser);
+    $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing elit."]);
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertResponse(200);
+    // Make sure HTML tags are filtered out.
+    $this->assertRaw('title="&amp;lt;script&amp;gt;alert(&#039;foo&#039;);&amp;lt;/script&amp;gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Entry #0">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;Lorem ipsum dolor sit…</a>');
+  }
+
 }

@@ -184,10 +184,9 @@ class DbLogController extends ControllerBase {
     foreach ($result as $dblog) {
       $message = $this->formatMessage($dblog);
       if ($message && isset($dblog->wid)) {
-        // Truncate link_text to 56 chars of message.
-        // @todo Reevaluate the SafeMarkup::set() in
-        //   https://www.drupal.org/node/2399261.
-        $log_text = SafeMarkup::set(Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE));
+        // Truncate link_text to 56 chars of message. The l() call will escape
+        // any unsafe HTML entities in the final text.
+        $log_text = Unicode::truncate(Html::decodeEntities(strip_tags($message)), 56, TRUE, TRUE);
         $message = $this->l($log_text, new Url('dblog.event', array('event_id' => $dblog->wid), array(
           'attributes' => array(
             // Provide a title for the link for useful hover hints.
