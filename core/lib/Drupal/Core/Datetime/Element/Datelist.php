@@ -55,19 +55,21 @@ class Datelist extends DateElementBase {
     $date = NULL;
     if ($input !== FALSE) {
       $return = $input;
-      if (isset($input['ampm'])) {
-        if ($input['ampm'] == 'pm' && $input['hour'] < 12) {
-          $input['hour'] += 12;
+      if (empty(static::checkEmptyInputs($input, $parts))) {
+        if (isset($input['ampm'])) {
+          if ($input['ampm'] == 'pm' && $input['hour'] < 12) {
+            $input['hour'] += 12;
+          }
+          elseif ($input['ampm'] == 'am' && $input['hour'] == 12) {
+            $input['hour'] -= 12;
+          }
+          unset($input['ampm']);
         }
-        elseif ($input['ampm'] == 'am' && $input['hour'] == 12) {
-          $input['hour'] -= 12;
+        $timezone = !empty($element['#date_timezone']) ? $element['#date_timezone'] : NULL;
+        $date = DrupalDateTime::createFromArray($input, $timezone);
+        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+          static::incrementRound($date, $increment);
         }
-        unset($input['ampm']);
-      }
-      $timezone = !empty($element['#date_timezone']) ? $element['#date_timezone'] : NULL;
-      $date = DrupalDateTime::createFromArray($input, $timezone);
-      if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
-        static::incrementRound($date, $increment);
       }
     }
     else {
@@ -250,7 +252,7 @@ class Datelist extends DateElementBase {
           $title = '';
       }
 
-      $default = !empty($element['#value'][$part]) ? $element['#value'][$part] : '';
+      $default = isset($element['#value'][$part]) && trim($element['#value'][$part]) != '' ? $element['#value'][$part] : '';
       $value = $date instanceOf DrupalDateTime && !$date->hasErrors() ? $date->format($format) : $default;
       if (!empty($value) && $part != 'ampm') {
         $value = intval($value);
@@ -265,7 +267,7 @@ class Datelist extends DateElementBase {
         '#attributes' => $element['#attributes'],
         '#options' => $options,
         '#required' => $element['#required'],
-        '#error_no_message' => TRUE,
+        '#error_no_message' => FALSE,
       );
     }
 
@@ -300,6 +302,7 @@ class Datelist extends DateElementBase {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
     if ($input_exists) {
+      $all_empty = static::checkEmptyInputs($input, $element['#date_part_order']);
 
       // If there's empty input and the field is not required, set it to empty.
       if (empty($input['year']) && empty($input['month']) && empty($input['day']) && !$element['#required']) {
@@ -309,6 +312,11 @@ class Datelist extends DateElementBase {
       elseif (empty($input['year']) && empty($input['month']) && empty($input['day']) && $element['#required']) {
         $form_state->setError($element, t('The %field date is required.'));
       }
+      elseif (!empty($all_empty)) {
+        foreach ($all_empty as $value){
+          $form_state->setError($element[$value], t('A value must be selected for %part.', array('%part' => $value)));
+        }
+      }
       else {
         // If the input is valid, set it.
         $date = $input['object'];
@@ -317,10 +325,32 @@ class Datelist extends DateElementBase {
         }
         // If the input is invalid, set an error.
         else {
-          $form_state->setError($element, t('The %field date is invalid.'));
+          $form_state->setError($element, t('The %field date is invalid.', array('%field' => !empty($element['#title']) ? $element['#title'] : '')));
         }
       }
     }
+  }
+
+  /**
+   * Checks the input array for empty values.
+   *
+   * Input array keys are checked against values in the parts array. Elements
+   * not in the parts array are ignored. Returns an array representing elements
+   * from the input array that have no value. If no empty values are found,
+   * returned array is empty.
+   *
+   * @param array $input
+   *   Array of individual inputs to check for value.
+   * @param array $parts
+   *   Array to check input against, ignoring elements not in this array.
+   *
+   * @return array
+   *   Array of keys from the input array that have no value, may be empty.
+   */
+  protected static function checkEmptyInputs($input, $parts) {
+    // Filters out empty array values, any valid value would have a string length.
+    $filtered_input = array_filter($input, 'strlen');
+    return array_diff($parts, array_keys($filtered_input));
   }
 
   /**

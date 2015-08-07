@@ -519,6 +519,84 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
     $this->assertOptionSelected("edit-$field_name-0-value-hour", '17', 'Correct hour selected.');
     $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
+
+    // Test the widget for partial completion of fields.
+    entity_get_form_display($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'default')
+      ->setComponent($field_name, array(
+        'type' => 'datetime_datelist',
+        'settings' => array(
+          'increment' => 1,
+          'date_order' => 'YMD',
+          'time_type' => '24',
+        ),
+      ))
+      ->save();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+
+    // Test the widget for validation notifications.
+    foreach ($this->datelistDataProvider() as $data) {
+      list($date_value, $expected) = $data;
+
+      // Display creation form.
+      $this->drupalGet('entity_test/add');
+
+      // Submit a partial date and ensure and error message is provided.
+      $edit = array();
+      foreach ($date_value as $part => $value) {
+        $edit["{$field_name}[0][value][$part]"] = $value;
+      }
+
+      $this->drupalPostForm(NULL, $edit, t('Save'));
+      $this->assertResponse(200);
+      $this->assertText(t($expected));
+    }
+
+    // Test the widget for complete input with zeros as part of selections.
+    $this->drupalGet('entity_test/add');
+
+    $date_value = array('year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => '0');
+    $edit = array();
+    foreach ($date_value as $part => $value) {
+      $edit["{$field_name}[0][value][$part]"] = $value;
+    }
+
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
+
+    // Test the widget to ensure zeros are not deselected on validation.
+    $this->drupalGet('entity_test/add');
+
+    $date_value = array('year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => '0');
+    $edit = array();
+    foreach ($date_value as $part => $value) {
+      $edit["{$field_name}[0][value][$part]"] = $value;
+    }
+
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
+    $this->assertOptionSelected("edit-$field_name-0-value-minute", '0', 'Correct minute selected.');
+ }
+
+  /**
+   * The data provider for testing the validation of the datelist widget.
+   *
+   * @return array
+   *   An array of datelist input permutations to test.
+   */
+  protected function datelistDataProvider() {
+    return [
+      // Year only selected, validation error on Month, Day, Hour, Minute.
+      [['year' => 2012, 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], '4 errors have been found: Month, Day, Hour, Minute'],
+      // Year and Month selected, validation error on Day, Hour, Minute.
+      [['year' => 2012, 'month' => '12', 'day' => '', 'hour' => '', 'minute' => ''], '3 errors have been found: Day, Hour, Minute'],
+      // Year, Month and Day selected, validation error on Hour, Minute.
+      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => ''], '2 errors have been found: Hour, Minute'],
+      // Year, Month, Day and Hour selected, validation error on Minute only.
+      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => ''], '1 error has been found: Minute'],
+    ];
   }
 
   /**
