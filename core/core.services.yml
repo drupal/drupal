@@ -596,7 +596,7 @@ services:
     public: false
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@class_resolver']
+    arguments: ['@psr7.http_message_factory', '@class_resolver']
   class_resolver:
     class: Drupal\Core\DependencyInjection\ClassResolver
     calls:

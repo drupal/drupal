@@ -7,11 +7,13 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Routing\RouteMatch;
-use Psr\Log\LoggerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 
 /**
  * ControllerResolver to enhance controllers beyond Symfony's basic handling.
@@ -38,12 +40,23 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   protected $classResolver;
 
   /**
+   * The PSR-7 converter.
+   *
+   * @var \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface
+   */
+  protected $httpMessageFactory;
+
+  /**
    * Constructs a new ControllerResolver.
+   *
+   * @param \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface $http_message_factory
+   *   The PSR-7 converter.
    *
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
    */
-  public function __construct(ClassResolverInterface $class_resolver) {
+  public function __construct(HttpMessageFactoryInterface $http_message_factory, ClassResolverInterface $class_resolver) {
+    $this->httpMessageFactory = $http_message_factory;
     $this->classResolver = $class_resolver;
   }
 
@@ -94,10 +107,10 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
    *   A PHP callable.
    *
    * @throws \LogicException
-   *   If the controller cannot be parsed
+   *   If the controller cannot be parsed.
    *
    * @throws \InvalidArgumentException
-   *   If the controller class does not exist
+   *   If the controller class does not exist.
    */
   protected function createController($controller) {
     // Controller in the service:method notation.
@@ -135,7 +148,10 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
       elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
         $arguments[] = $request;
       }
-      elseif ($param->getClass() && ($param->getClass()->name == 'Drupal\Core\Routing\RouteMatchInterface' || is_subclass_of($param->getClass()->name, 'Drupal\Core\Routing\RouteMatchInterface'))) {
+      elseif ($param->getClass() && $param->getClass()->name === ServerRequestInterface::class) {
+        $arguments[] = $this->httpMessageFactory->createRequest($request);
+      }
+      elseif ($param->getClass() && ($param->getClass()->name == RouteMatchInterface::class || is_subclass_of($param->getClass()->name, RouteMatchInterface::class))) {
         $arguments[] = RouteMatch::createFromRequest($request);
       }
       elseif ($param->isDefaultValueAvailable()) {

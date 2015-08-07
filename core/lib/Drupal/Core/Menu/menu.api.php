@@ -122,6 +122,22 @@
  * For example, the placeholder '{myvar}' in a route will become the $myvar
  * parameter to the method.
  *
+ * Additionally, if a parameter is typed to one of the following special classes
+ * the system will pass those values as well.
+ *
+ * - \Symfony\Component\HttpFoundation\Request: The raw Symfony request object.
+ *   It is generally only useful if the controller needs access to the query
+ *   parameters of the request. By convention, this parameter is usually named
+ *   $request.
+ * - \Psr\Http\Message\ServerRequestInterface: The raw request, represented
+ *   using the PSR-7 ServerRequest format. This object is derived as necessary
+ *   from the Symfony request, so if either will suffice the Symfony request
+ *   will be slightly more performant. By convention this parameter is usually
+ *   named $request.
+ * - \Drupal\Core\Routing\RouteMatchInterface: The "route match" data from
+ *   this request. This object contains various standard data derived from
+ *   the request and routing process. Consult the interface for details.
+ *
  * Most controllers will need to display some information stored in the Drupal
  * database, which will involve using one or more Drupal services (see the
  * @link container Services and container topic @endlink). In order to properly
