@@ -32,7 +32,7 @@ class StyleUnformattedTest extends StyleTestBase {
     $output = $view->preview();
     $this->storeViewPreview(\Drupal::service('renderer')->renderRoot($output));
 
-    $rows = $this->elements->body->div->div->div;
+    $rows = $this->elements->body->div->div;
     $count = 0;
     $count_result = count($view->result);
     foreach ($rows as $row) {

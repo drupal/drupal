@@ -53,7 +53,7 @@ class StyleMappingTest extends StyleTestBase {
     $output = $view->preview();
     $rendered_output = \Drupal::service('renderer')->renderRoot($output);
     $this->storeViewPreview($rendered_output);
-    $rows = $this->elements->body->div->div->div;
+    $rows = $this->elements->body->div->div;
     $data_set = $this->dataSet();
 
     $count = 0;

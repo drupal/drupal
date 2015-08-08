@@ -39,55 +39,30 @@
 %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-  {% if title %}
-    {{ title }}
-  {% endif %}
+  {{ title }}
   {{ title_suffix }}
+
   {% if header %}
-    <div>
+    <header>
       {{ header }}
-    </div>
-  {% endif %}
-  {% if exposed %}
-    <div>
-      {{ exposed }}
-    </div>
-  {% endif %}
-  {% if attachment_before %}
-    <div>
-      {{ attachment_before }}
-    </div>
+    </header>
   {% endif %}
 
-  {% if rows %}
-    <div>
-      {{ rows }}
-    </div>
-  {% elseif empty %}
-    <div>
-      {{ empty }}
-    </div>
-  {% endif %}
+  {{ exposed }}
+  {{ attachment_before }}
 
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
-  {% if attachment_after %}
-    <div>
-      {{ attachment_after }}
-    </div>
-  {% endif %}
-  {% if more %}
-    {{ more }}
-  {% endif %}
+  {{ rows }}
+  {{ empty }}
+  {{ pager }}
+
+  {{ attachment_after }}
+  {{ more }}
+
   {% if footer %}
-    <div>
+    <footer>
       {{ footer }}
-    </div>
+    </footer>
   {% endif %}
-  {% if feed_icons %}
-    <div>
-      {{ feed_icons }}
-    </div>
-  {% endif %}
+
+  {{ feed_icons }}
 </div>
