@@ -37,7 +37,7 @@ global-styling:
       css/components/tabs.css: {}
       css/components/toolbar.css: {}
       css/components/featured-bottom.css: {}
-      css/components/user.css: {}
+      css/components/password-suggestions.css: {}
       # @see https://www.drupal.org/node/2389735
       css/components/vertical-tabs.component.css: {}
       css/components/views.css: {}
