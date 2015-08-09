@@ -18,7 +18,8 @@ use Drupal\Core\TypedData\ComplexDataInterface;
  * complex data type.
  *
  * By default there is no metadata for contained properties. Extending classes
- * may want to override Map::getPropertyDefinitions() to define it.
+ * may want to override MapDataDefinition::getPropertyDefinitions() to define
+ * it.
  *
  * @ingroup typed_data
  *
@@ -50,17 +51,6 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    * @var \Drupal\Core\TypedData\TypedDataInterface[]
    */
   protected $properties = array();
-
-  /**
-   * Gets an array of property definitions of contained properties.
-   *
-   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
-   *   An array of property definitions of contained properties, keyed by
-   *   property name.
-   */
-  protected function getPropertyDefinitions() {
-    return $this->definition->getPropertyDefinitions();
-  }
 
   /**
    * {@inheritdoc}
