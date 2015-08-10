@@ -127,7 +127,18 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
    */
   public function getButtons() {
     $button = function($name, $direction = 'ltr') {
-      return '<a href="#" class="cke-icon-only cke_' . $direction . '" role="button" title="' . $name . '" aria-label="' . $name . '"><span class="cke_button_icon cke_button__' . str_replace(' ', '', $name) . '_icon">' . $name . '</span></a>';
+      // In the markup below, we mostly use the name (which may include spaces),
+      // but in one spot we use it as a CSS class, so strip spaces.
+      $class_name = str_replace(' ', '', $name);
+      return [
+        '#type' => 'inline_template',
+        '#template' => '<a href="#" class="cke-icon-only cke_{{ direction }}" role="button" title="{{ name }}" aria-label="{{ name }}"><span class="cke_button_icon cke_button__{{ classname }}_icon">{{ name }}</span></a>',
+        '#context' => [
+          'direction' => $direction,
+          'name' => $name,
+          'classname' => $class_name,
+        ],
+      ];
     };
 
     return array(
@@ -256,7 +267,13 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       ),
       'Format' => array(
         'label' => t('HTML block format'),
-        'image_alternative' => '<a href="#" role="button" aria-label="' . t('Format') . '"><span class="ckeditor-button-dropdown">' . t('Format') . '<span class="ckeditor-button-arrow"></span></span></a>',
+        'image_alternative' => [
+          '#type' => 'inline_template',
+          '#template' => '<a href="#" role="button" aria-label="{{ format_text }}"><span class="ckeditor-button-dropdown">{{ format_text }}<span class="ckeditor-button-arrow"></span></span></a>',
+          '#context' => [
+            'format_text' => t('Format'),
+          ],
+        ],
       ),
       // "table" plugin.
       'Table' => array(
@@ -282,7 +299,13 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       // No plugin, separator "button" for toolbar builder UI use only.
       '-' => array(
         'label' => t('Separator'),
-        'image_alternative' => '<a href="#" role="button" aria-label="' . t('Button separator') . '" class="ckeditor-separator"></a>',
+        'image_alternative' => [
+          '#type' => 'inline_template',
+          '#template' => '<a href="#" role="button" aria-label="{{ button_separator_text }}" class="ckeditor-separator"></a>',
+          '#context' => [
+            'button_separator_text' => t('Button separator'),
+          ],
+        ],
         'attributes' => array(
           'class' => array('ckeditor-button-separator'),
           'data-drupal-ckeditor-type' => 'separator',

@@ -7,6 +7,7 @@
 
 namespace Drupal\ckeditor\Tests;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\simpletest\WebTestBase;
@@ -175,6 +176,22 @@ class CKEditorAdminTest extends WebTestBase {
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
     $this->assertIdentical($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+
+    // Check that the markup we're setting for the toolbar buttons (actually in
+    // JavaScript's drupalSettings, and Unicode-escaped) is correctly rendered.
+    $this->drupalGet('admin/config/content/formats/manage/filtered_html');
+    // Create function to encode HTML as we expect it in drupalSettings.
+    $json_encode = function($html) {
+      return trim(Json::encode($html), '"');
+    };
+    // Check the Button separator.
+    $this->assertRaw($json_encode('<li data-drupal-ckeditor-button-name="-" class="ckeditor-button-separator ckeditor-multiple-button" data-drupal-ckeditor-type="separator"><a href="#" role="button" aria-label="Button separator" class="ckeditor-separator"></a></li>'));
+    // Check the Format dropdown.
+    $this->assertRaw($json_encode('<li data-drupal-ckeditor-button-name="Format" class="ckeditor-button"><a href="#" role="button" aria-label="Format"><span class="ckeditor-button-dropdown">Format<span class="ckeditor-button-arrow"></span></span></a></li>'));
+    // Check the Styles dropdown.
+    $this->assertRaw($json_encode('<li data-drupal-ckeditor-button-name="Styles" class="ckeditor-button"><a href="#" role="button" aria-label="Styles"><span class="ckeditor-button-dropdown">Styles<span class="ckeditor-button-arrow"></span></span></a></li>'));
+    // Check strikethrough.
+    $this->assertRaw($json_encode('<li data-drupal-ckeditor-button-name="Strike" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="strike" aria-label="strike"><span class="cke_button_icon cke_button__strike_icon">strike</span></a></li>'));
 
     // Now enable the ckeditor_test module, which provides one configurable
     // CKEditor plugin — this should not affect the Editor config entity.
