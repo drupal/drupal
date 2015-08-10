@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\State\StateInterface;
@@ -76,11 +78,23 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
   protected $cache;
 
   /**
+   * The cache tag invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagInvalidator;
+
+  /**
    * A path processor manager for resolving the system path.
    *
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
    */
   protected $pathProcessor;
+
+  /**
+   * Cache ID prefix used to load routes.
+   */
+  const ROUTE_LOAD_CID_PREFIX = 'route_provider.route_load:';
 
   /**
    * Constructs a new PathMatcher.
@@ -95,16 +109,19 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    *   The cache backend.
    * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
    *   The path processor.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
+   *   The cache tag invalidator.
    * @param string $table
-   *   The table in the database to use for matching.
+   *   (Optional) The table in the database to use for matching. Defaults to 'router'
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router') {
     $this->connection = $connection;
     $this->state = $state;
-    $this->tableName = $table;
     $this->currentPath = $current_path;
     $this->cache = $cache_backend;
+    $this->cacheTagInvalidator = $cache_tag_invalidator;
     $this->pathProcessor = $path_processor;
+    $this->tableName = $table;
   }
 
   /**
@@ -189,8 +206,18 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
 
     $routes_to_load = array_diff($names, array_keys($this->routes), array_keys($this->serializedRoutes));
     if ($routes_to_load) {
-      $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN ( :names[] )', array(':names[]' => $routes_to_load));
-      $routes = $result->fetchAllKeyed();
+
+      $cid = static::ROUTE_LOAD_CID_PREFIX . hash('sha512', serialize($routes_to_load));
+      if ($cache = $this->cache->get($cid)) {
+        $routes = $cache->data;
+      }
+      else {
+        $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN ( :names[] )', array(':names[]' => $routes_to_load));
+        $routes = $result->fetchAllKeyed();
+
+        $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
+      }
+
       $this->serializedRoutes += $routes;
     }
   }
@@ -339,6 +366,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
   public function reset() {
     $this->routes  = array();
     $this->serializedRoutes = array();
+    $this->cacheTagInvalidator->invalidateTags(['routes']);
   }
 
   /**

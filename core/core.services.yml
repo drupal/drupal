@@ -699,13 +699,13 @@ services:
     arguments: ['@current_route_match']
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
-    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager']
+    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator']
     tags:
       - { name: event_subscriber }
       - { name: backend_overridable }
   router.route_preloader:
     class: Drupal\Core\Routing\RoutePreloader
-    arguments: ['@router.route_provider', '@state']
+    arguments: ['@router.route_provider', '@state', '@cache.bootstrap']
     tags:
       - { name: 'event_subscriber' }
   router.matcher.final_matcher:
