@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityDateFormat.
+ * Contains \Drupal\system\Plugin\migrate\destination\EntityDateFormat.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\system\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 
 /**
  * @MigrateDestination(

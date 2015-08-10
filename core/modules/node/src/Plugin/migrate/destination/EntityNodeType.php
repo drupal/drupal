@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityNodeType.
+ * Contains \Drupal\node\Plugin\migrate\destination\EntityNodeType.
  */
 
-namespace Drupal\migrate\Plugin\migrate\destination;
+namespace Drupal\node\Plugin\migrate\destination;
 
+use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**

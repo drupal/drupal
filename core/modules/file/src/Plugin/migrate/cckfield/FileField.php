@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\FileField.
+ * Contains \Drupal\file\Plugin\migrate\cckfield\FileField.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;
+namespace Drupal\file\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
  * @PluginID("filefield")

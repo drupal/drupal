@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\FilterFormatPermission.
+ * Contains \Drupal\filter\Plugin\migrate\process\d6\FilterFormatPermission.
  */
 
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\filter\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;

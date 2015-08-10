@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\InternalUri.
+ * Contains \Drupal\menu_link_content\Plugin\migrate\process\d6\InternalUri.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\menu_link_content\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;

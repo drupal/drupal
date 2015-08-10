@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\CckFile.
+ * Contains \Drupal\file\Plugin\migrate\process\d6\CckFile.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\file\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;

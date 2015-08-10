@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\LinkField.
+ * Contains \Drupal\link\Plugin\migrate\cckfield\LinkField.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;
+namespace Drupal\link\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
  * @PluginID("link")

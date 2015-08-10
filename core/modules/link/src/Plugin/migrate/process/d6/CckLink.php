@@ -2,17 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\CckLink.
+ * Contains \Drupal\link\Plugin\migrate\process\d6\CckLink.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
+namespace Drupal\link\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\migrate\process\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

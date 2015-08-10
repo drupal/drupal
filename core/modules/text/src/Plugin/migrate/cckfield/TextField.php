@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\cckfield\TextField.
+ * Contains \Drupal\text\Plugin\migrate\cckfield\TextField.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;
+namespace Drupal\text\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
  * @PluginID("text")
