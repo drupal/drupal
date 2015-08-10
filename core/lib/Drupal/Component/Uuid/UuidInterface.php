@@ -8,7 +8,7 @@
 namespace Drupal\Component\Uuid;
 
 /**
- * Interface that defines a UUID backend.
+ * Interface for generating UUIDs.
  */
 interface UuidInterface {
 
