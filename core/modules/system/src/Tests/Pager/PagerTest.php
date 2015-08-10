@@ -96,6 +96,29 @@ class PagerTest extends WebTestBase {
   }
 
   /**
+   * Test proper functioning of the ellipsis.
+   */
+  public function testPagerEllipsis() {
+    // Insert 100 extra log messages to get 9 pages.
+    $logger = $this->container->get('logger.factory')->get('pager_test');
+    for ($i = 0; $i < 100; $i++) {
+      $logger->debug($this->randomString());
+    }
+    $this->drupalGet('admin/reports/dblog');
+    $elements = $this->cssSelect(".pager__item--ellipsis:contains('…')");
+    $this->assertEqual(count($elements), 0, 'No ellipsis has been set.');
+
+    // Insert an extra 50 log messages to get 10 pages.
+    $logger = $this->container->get('logger.factory')->get('pager_test');
+    for ($i = 0; $i < 50; $i++) {
+      $logger->debug($this->randomString());
+    }
+    $this->drupalGet('admin/reports/dblog');
+    $elements = $this->cssSelect(".pager__item--ellipsis:contains('…')");
+    $this->assertEqual(count($elements), 1, 'Found the ellipsis.');
+  }
+
+  /**
    * Asserts pager items and links.
    *
    * @param int $current_page

@@ -250,7 +250,7 @@ function template_preprocess_pager(&$variables) {
       }
     }
     // Add an ellipsis if there are further next pages.
-    if ($i < $pager_max) {
+    if ($i < $pager_max + 1) {
       $variables['ellipses']['next'] = TRUE;
     }
   }
