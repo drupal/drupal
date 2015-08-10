@@ -163,6 +163,15 @@ services:
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
     arguments: ['@cache_tags.invalidator.checksum']
+  cache.backend.memory:
+    class: Drupal\Core\Cache\MemoryBackendFactory
+  # A special cache bin that does not persist beyond the length of the request.
+  cache.static:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin, default_backend: cache.backend.memory }
+    factory: cache_factory:get
+    arguments: [static]
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -1340,7 +1349,7 @@ services:
     arguments: ['@current_user', '@session_handler.write_safe']
   user_permissions_hash_generator:
     class: Drupal\Core\Session\PermissionsHashGenerator
-    arguments: ['@private_key', '@cache.default']
+    arguments: ['@private_key', '@cache.default', '@cache.static']
   current_user:
     class: Drupal\Core\Session\AccountProxy
   session_configuration:

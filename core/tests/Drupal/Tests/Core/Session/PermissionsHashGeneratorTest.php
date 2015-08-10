@@ -62,6 +62,13 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   protected $cache;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $staticCache;
+
+  /**
    * The permission hash class being tested.
    *
    * @var \Drupal\Core\Session\PermissionsHashGeneratorInterface
@@ -138,12 +145,15 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
     $this->cache = $this->getMockBuilder('Drupal\Core\Cache\CacheBackendInterface')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->staticCache = $this->getMockBuilder('Drupal\Core\Cache\CacheBackendInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
 
-    $this->permissionsHash = new PermissionsHashGenerator($this->privateKey, $this->cache);
+    $this->permissionsHash = new PermissionsHashGenerator($this->privateKey, $this->cache, $this->staticCache);
   }
 
   /**
-   * Tests the generate() method.
+   * @covers ::generate
    */
   public function testGenerate() {
     // Ensure that the super user (user 1) always gets the same hash.
@@ -162,14 +172,22 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests the generate method with cache returned.
+   * @covers ::generate
    */
-  public function testGenerateCache() {
+  public function testGeneratePersistentCache() {
     // Set expectations for the mocked cache backend.
     $expected_cid = 'user_permissions_hash:administrator,authenticated';
 
     $mock_cache = new \stdClass();
     $mock_cache->data = 'test_hash_here';
+
+    $this->staticCache->expects($this->once())
+      ->method('get')
+      ->with($expected_cid)
+      ->will($this->returnValue(FALSE));
+    $this->staticCache->expects($this->once())
+      ->method('set')
+      ->with($expected_cid, $this->isType('string'));
 
     $this->cache->expects($this->once())
       ->method('get')
@@ -182,11 +200,44 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::generate
+   */
+  public function testGenerateStaticCache() {
+    // Set expectations for the mocked cache backend.
+    $expected_cid = 'user_permissions_hash:administrator,authenticated';
+
+    $mock_cache = new \stdClass();
+    $mock_cache->data = 'test_hash_here';
+
+    $this->staticCache->expects($this->once())
+      ->method('get')
+      ->with($expected_cid)
+      ->will($this->returnValue($mock_cache));
+    $this->staticCache->expects($this->never())
+      ->method('set');
+
+    $this->cache->expects($this->never())
+      ->method('get');
+    $this->cache->expects($this->never())
+      ->method('set');
+
+    $this->permissionsHash->generate($this->account2);
+  }
+
+  /**
    * Tests the generate method with no cache returned.
    */
   public function testGenerateNoCache() {
     // Set expectations for the mocked cache backend.
     $expected_cid = 'user_permissions_hash:administrator,authenticated';
+
+    $this->staticCache->expects($this->once())
+      ->method('get')
+      ->with($expected_cid)
+      ->will($this->returnValue(FALSE));
+    $this->staticCache->expects($this->once())
+      ->method('set')
+      ->with($expected_cid, $this->isType('string'));
 
     $this->cache->expects($this->once())
       ->method('get')

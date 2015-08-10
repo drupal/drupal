@@ -217,4 +217,13 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
     return [];
   }
 
+  /**
+   * Reset statically cached variables.
+   *
+   * This is only used by tests.
+   */
+  public function reset() {
+    $this->cache = [];
+  }
+
 }

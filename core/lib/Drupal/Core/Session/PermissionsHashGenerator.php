@@ -26,11 +26,18 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
   protected $privateKey;
 
   /**
-   * The cache backend interface to use for the permission hash cache.
+   * The cache backend interface to use for the persistent cache.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
+
+  /**
+   * The cache backend interface to use for the static cache.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $static;
 
   /**
    * Constructs a PermissionsHashGenerator object.
@@ -38,11 +45,14 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend interface to use for the permission hash cache.
+   *   The cache backend interface to use for the persistent cache.
+   * @param \Drupal\Core\Cache\CacheBackendInterface
+   *   The cache backend interface to use for the static cache.
    */
-  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache) {
+  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache, CacheBackendInterface $static) {
     $this->privateKey = $private_key;
     $this->cache = $cache;
+    $this->static = $static;
   }
 
   /**
@@ -60,13 +70,20 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
     $sorted_roles = $account->getRoles();
     sort($sorted_roles);
     $role_list = implode(',', $sorted_roles);
-    if ($cache = $this->cache->get("user_permissions_hash:$role_list")) {
-      $permissions_hash = $cache->data;
+    $cid = "user_permissions_hash:$role_list";
+    if ($static_cache = $this->static->get($cid)) {
+      return $static_cache->data;
     }
     else {
-      $permissions_hash = $this->doGenerate($sorted_roles);
       $tags = Cache::buildTags('config:user.role', $sorted_roles, '.');
-      $this->cache->set("user_permissions_hash:$role_list", $permissions_hash, Cache::PERMANENT, $tags);
+      if ($cache = $this->cache->get($cid)) {
+        $permissions_hash = $cache->data;
+      }
+      else {
+        $permissions_hash = $this->doGenerate($sorted_roles);
+        $this->cache->set($cid, $permissions_hash, Cache::PERMANENT, $tags);
+      }
+      $this->static->set($cid, $permissions_hash, Cache::PERMANENT, $tags);
     }
 
     return $permissions_hash;
