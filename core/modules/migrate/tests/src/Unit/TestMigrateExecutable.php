@@ -8,15 +8,26 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\MigrateMessageInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests MigrateExecutable.
  */
 class TestMigrateExecutable extends MigrateExecutable {
+
+  /**
+   * The fake memory usage in bytes.
+   *
+   * @var int
+   */
+  protected $memoryUsage;
+
+  /**
+   * The cleared memory usage.
+   *
+   * @var int
+   */
+  protected $clearedMemoryUsage;
 
   /**
    * Sets the string translation service.
@@ -57,6 +68,70 @@ class TestMigrateExecutable extends MigrateExecutable {
       $this->saveMessage($message);
     }
     $this->message->display($message);
+  }
+
+  /**
+   * Allows access to the protected memoryExceeded method.
+   *
+   * @return bool
+   *   The memoryExceeded value.
+   */
+  public function memoryExceeded() {
+    return parent::memoryExceeded();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function attemptMemoryReclaim() {
+    return $this->clearedMemoryUsage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getMemoryUsage() {
+    return $this->memoryUsage;
+  }
+
+  /**
+   * Sets the fake memory usage.
+   *
+   * @param int $memory_usage
+   *   The fake memory usage value.
+   * @param int $cleared_memory_usage
+   *   (optional) The fake cleared memory value.
+   */
+  public function setMemoryUsage($memory_usage, $cleared_memory_usage = NULL) {
+    $this->memoryUsage = $memory_usage;
+    $this->clearedMemoryUsage = $cleared_memory_usage;
+  }
+
+  /**
+   * Sets the memory limit.
+   *
+   * @param int $memory_limit
+   *   The memory limit.
+   */
+  public function setMemoryLimit($memory_limit) {
+    $this->memoryLimit = $memory_limit;
+  }
+
+  /**
+   * Sets the memory threshold.
+   *
+   * @param float $threshold
+   *   The new threshold.
+   */
+  public function setMemoryThreshold($threshold) {
+    $this->memoryThreshold = $threshold;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function formatSize($size) {
+    return $size;
   }
 
 }

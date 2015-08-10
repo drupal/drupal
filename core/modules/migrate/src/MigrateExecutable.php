@@ -53,6 +53,20 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $queuedMessages = array();
 
   /**
+   * The ratio of the memory limit at which an operation will be interrupted.
+   *
+   * @var float
+   */
+  protected $memoryThreshold = 0.85;
+
+  /**
+   * The PHP memory_limit expressed in bytes.
+   *
+   * @var int
+   */
+  protected $memoryLimit;
+
+  /**
    * The configuration values of the source.
    *
    * @var array
@@ -127,6 +141,30 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $this->message = $message;
     $this->migration->getIdMap()->setMessage($message);
     $this->eventDispatcher = $event_dispatcher;
+    // Record the memory limit in bytes
+    $limit = trim(ini_get('memory_limit'));
+    if ($limit == '-1') {
+      $this->memoryLimit = PHP_INT_MAX;
+    }
+    else {
+      if (!is_numeric($limit)) {
+        $last = strtolower(substr($limit, -1));
+        switch ($last) {
+          case 'g':
+            $limit *= 1024;
+          case 'm':
+            $limit *= 1024;
+          case 'k':
+            $limit *= 1024;
+            break;
+          default:
+            $limit = PHP_INT_MAX;
+            $this->message->display($this->t('Invalid PHP memory_limit !limit, setting to unlimited.',
+              array('!limit' => $limit)));
+        }
+      }
+      $this->memoryLimit = $limit;
+    }
   }
 
   /**
@@ -249,6 +287,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
       unset($sourceValues, $destinationValues);
       $this->sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
+      if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
+        break;
+      }
+
       try {
         $source->next();
       }
@@ -368,6 +410,102 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->saveMessage($message);
     }
     $this->message->display($message, 'error');
+  }
+
+  /**
+   * Checks for exceptional conditions, and display feedback.
+   */
+  protected function checkStatus() {
+    if ($this->memoryExceeded()) {
+      return MigrationInterface::RESULT_INCOMPLETE;
+    }
+    return MigrationInterface::RESULT_COMPLETED;
+  }
+
+  /**
+   * Tests whether we've exceeded the desired memory threshold.
+   *
+   * If so, output a message.
+   *
+   * @return bool
+   *   TRUE if the threshold is exceeded, otherwise FALSE.
+   */
+  protected function memoryExceeded() {
+    $usage = $this->getMemoryUsage();
+    $pct_memory = $usage / $this->memoryLimit;
+    if (!$threshold = $this->memoryThreshold) {
+      return FALSE;
+    }
+    if ($pct_memory > $threshold) {
+      $this->message->display(
+        $this->t('Memory usage is !usage (!pct% of limit !limit), reclaiming memory.',
+          array('!pct' => round($pct_memory*100),
+                '!usage' => $this->formatSize($usage),
+                '!limit' => $this->formatSize($this->memoryLimit))),
+        'warning');
+      $usage = $this->attemptMemoryReclaim();
+      $pct_memory = $usage / $this->memoryLimit;
+      // Use a lower threshold - we don't want to be in a situation where we keep
+      // coming back here and trimming a tiny amount
+      if ($pct_memory > (0.90 * $threshold)) {
+        $this->message->display(
+          $this->t('Memory usage is now !usage (!pct% of limit !limit), not enough reclaimed, starting new batch',
+            array('!pct' => round($pct_memory*100),
+                  '!usage' => $this->formatSize($usage),
+                  '!limit' => $this->formatSize($this->memoryLimit))),
+          'warning');
+        return TRUE;
+      }
+      else {
+        $this->message->display(
+          $this->t('Memory usage is now !usage (!pct% of limit !limit), reclaimed enough, continuing',
+            array('!pct' => round($pct_memory*100),
+                  '!usage' => $this->formatSize($usage),
+                  '!limit' => $this->formatSize($this->memoryLimit))),
+          'warning');
+        return FALSE;
+      }
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Returns the memory usage so far.
+   *
+   * @return int
+   *   The memory usage.
+   */
+  protected function getMemoryUsage() {
+    return memory_get_usage();
+  }
+
+  /**
+   * Tries to reclaim memory.
+   *
+   * @return int
+   *   The memory usage after reclaim.
+   */
+  protected function attemptMemoryReclaim() {
+    // First, try resetting Drupal's static storage - this frequently releases
+    // plenty of memory to continue.
+    drupal_static_reset();
+    // @TODO: explore resetting the container.
+    return memory_get_usage();
+  }
+
+  /**
+   * Generates a string representation for the given byte count.
+   *
+   * @param int $size
+   *   A size in bytes.
+   *
+   * @return string
+   *   A translated string representation of the size.
+   */
+  protected function formatSize($size) {
+    return format_size($size);
   }
 
 }
