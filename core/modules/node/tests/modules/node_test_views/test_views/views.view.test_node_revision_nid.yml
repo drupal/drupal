@@ -52,6 +52,15 @@ display:
           plugin_id: node_nid
           entity_type: node
           entity_field: nid
+      sorts:
+        vid:
+          id: vid
+          table: node_field_revision
+          field: vid
+          order: ASC
+          plugin_id: field
+          entity_type: node
+          entity_field: vid
     display_plugin: default
     display_title: Master
     id: default
