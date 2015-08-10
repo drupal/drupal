@@ -76,7 +76,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
       $reader = parent::getAnnotationReader();
 
       // Add the Core annotation classes like @Translation.
-      $reader->addNamespace('Drupal\Core\Annotation', array(dirname(dirname(__DIR__)) . '/Annotation'));
+      $reader->addNamespace('Drupal\Core\Annotation');
       $this->annotationReader = $reader;
     }
     return $this->annotationReader;
