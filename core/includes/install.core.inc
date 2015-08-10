@@ -6,7 +6,6 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
 use Drupal\Core\Installer\Exception\InstallerException;
@@ -1133,14 +1132,24 @@ function install_database_errors($database, $settings_file) {
     // Run tasks associated with the database type. Any errors are caught in the
     // calling function.
     Database::addConnectionInfo('default', 'default', $database);
-    try {
-      db_run_tasks($driver);
-    }
-    catch (TaskException $e) {
+
+    $errors = db_installer_object($driver)->runTasks();
+    if (count($errors)) {
+      $error_message = [
+        '#type' => 'inline_template',
+        '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider.{% endtrans%}{{ errors }}',
+        '#context' => [
+          'errors' => [
+            '#theme' => 'item_list',
+            '#items' => $errors,
+          ],
+        ],
+      ];
+
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
       // them in the error array with standard numeric keys.
-      $errors[$driver . '][0'] = $e->getMessage();
+      $errors[$driver . '][0'] = \Drupal::service('renderer')->renderPlain($error_message);
     }
   }
   return $errors;

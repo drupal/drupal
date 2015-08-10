@@ -1069,19 +1069,6 @@ function install_profile_info($profile, $langcode = 'en') {
 }
 
 /**
- * Ensures the environment for a Drupal database on a predefined connection.
- *
- * This will run tasks that check that Drupal can perform all of the functions
- * on a database, that Drupal needs. Tasks include simple checks like CREATE
- * TABLE to database specific functions like stored procedures and client
- * encoding.
- */
-function db_run_tasks($driver) {
-  db_installer_object($driver)->runTasks();
-  return TRUE;
-}
-
-/**
  * Returns a database installer object.
  *
  * @param $driver

@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Database\Install;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 
 /**
@@ -128,6 +127,9 @@ abstract class Tasks {
 
   /**
    * Run database tasks and tests to see if Drupal can run on the database.
+   *
+   * @return array
+   *   A list of error messages.
    */
   public function runTasks() {
     // We need to establish a connection before we can run tests.
@@ -143,21 +145,15 @@ abstract class Tasks {
           }
         }
         else {
-          throw new TaskException(t("Failed to run all tasks against the database server. The task %task wasn't found.", array('%task' => $task['function'])));
+          $this->fail(t("Failed to run all tasks against the database server. The task %task wasn't found.", array('%task' => $task['function'])));
         }
       }
     }
-    // Check for failed results and compile message
-    $message = '';
-    foreach ($this->results as $result => $success) {
-      if (!$success) {
-        $message = SafeMarkup::isSafe($result) ? $result : SafeMarkup::checkPlain($result);
-      }
-    }
-    if (!empty($message)) {
-      $message = SafeMarkup::set('Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider.' . $message);
-      throw new TaskException($message);
-    }
+    // Filter out the success messages from results.
+    $errors = array_filter($this->results, function ($value) {
+      return !$value;
+    });
+    return array_keys($errors);
   }
 
   /**
