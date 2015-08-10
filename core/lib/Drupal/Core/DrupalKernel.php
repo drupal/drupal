@@ -594,6 +594,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @return Response
    *   A Response instance
+   *
+   * @throws \Exception
+   *   If the passed in exception cannot be turned into a response.
    */
   protected function handleException(\Exception $e, $request, $type) {
     if ($e instanceof HttpExceptionInterface) {
@@ -602,24 +605,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       return $response;
     }
     else {
-      // @todo: _drupal_log_error() and thus _drupal_exception_handler() prints
-      // the message directly. Extract a function which generates and returns it
-      // instead, then remove the output buffer hack here.
-      ob_start();
-      try {
-        // @todo: The exception handler prints the message directly. Extract a
-        // function which returns the message instead.
-        _drupal_exception_handler($e);
-      }
-      catch (\Exception $e) {
-        $message = Settings::get('rebuild_message', 'If you have just changed code (for example deployed a new module or moved an existing one) read <a href="https://www.drupal.org/documentation/rebuild">https://www.drupal.org/documentation/rebuild</a>');
-        if ($message && Settings::get('rebuild_access', FALSE)) {
-          $rebuild_path = $GLOBALS['base_url'] . '/rebuild.php';
-          $message .= " or run the <a href=\"$rebuild_path\">rebuild script</a>";
-        }
-        print $message;
-      }
-      return new Response(ob_get_clean(), 500);
+      throw $e;
     }
   }
 

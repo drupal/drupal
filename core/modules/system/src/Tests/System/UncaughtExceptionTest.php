@@ -90,14 +90,74 @@ class UncaughtExceptionTest extends WebTestBase {
   }
 
   /**
+   * Tests uncaught exception handling with custom exception handler.
+   */
+  public function testUncaughtExceptionCustomExceptionHandler() {
+    $settings_filename = $this->siteDirectory . '/settings.php';
+    chmod($settings_filename, 0777);
+    $settings_php = file_get_contents($settings_filename);
+    $settings_php .= "\n";
+    $settings_php .= "set_exception_handler(function() {\n";
+    $settings_php .= "  header('HTTP/1.1 418 I\'m a teapot');\n";
+    $settings_php .= "  print('Oh oh, flying teapots');\n";
+    $settings_php .= "});\n";
+    file_put_contents($settings_filename, $settings_php);
+
+    \Drupal::state()->set('error_service_test.break_bare_html_renderer', TRUE);
+
+    $this->drupalGet('');
+    $this->assertResponse(418);
+    $this->assertNoText('The website encountered an unexpected error. Please try again later.');
+    $this->assertNoText('Oh oh, bananas in the instruments');
+    $this->assertText('Oh oh, flying teapots');
+  }
+
+  /**
    * Tests a missing dependency on a service.
    */
   public function testMissingDependency() {
     $this->expectedExceptionMessage = 'Argument 1 passed to Drupal\error_service_test\LonelyMonkeyClass::__construct() must be an instance of Drupal\Core\Database\Connection, non';
     $this->drupalGet('broken-service-class');
+    $this->assertResponse(500);
 
     $this->assertRaw('The website encountered an unexpected error.');
     $this->assertRaw($this->expectedExceptionMessage);
+  }
+
+  /**
+   * Tests a missing dependency on a service with a custom error handler.
+   */
+  public function testMissingDependencyCustomErrorHandler() {
+    $settings_filename = $this->siteDirectory . '/settings.php';
+    chmod($settings_filename, 0777);
+    $settings_php = file_get_contents($settings_filename);
+    $settings_php .= "\n";
+    $settings_php .= "set_error_handler(function() {\n";
+    $settings_php .= "  header('HTTP/1.1 418 I\'m a teapot');\n";
+    $settings_php .= "  print('Oh oh, flying teapots');\n";
+    $settings_php .= "  exit();\n";
+    $settings_php .= "});\n";
+    file_put_contents($settings_filename, $settings_php);
+
+    $this->drupalGet('broken-service-class');
+    $this->assertResponse(418);
+    $this->assertRaw('Oh oh, flying teapots');
+
+    $message = 'Argument 1 passed to Drupal\error_service_test\LonelyMonkeyClass::__construct() must be an instance of Drupal\Core\Database\Connection, non';
+
+    $this->assertNoRaw('The website encountered an unexpected error.');
+    $this->assertNoRaw($message);
+
+    $found_exception = FALSE;
+    foreach ($this->assertions as &$assertion) {
+      if (strpos($assertion['message'], $message) !== FALSE) {
+        $found_exception = TRUE;
+        $this->deleteAssert($assertion['message_id']);
+        unset($assertion);
+      }
+    }
+
+    $this->assertTrue($found_exception, 'Ensure that the exception of a missing constructor argument was triggered.');
   }
 
   /**
@@ -121,6 +181,7 @@ class UncaughtExceptionTest extends WebTestBase {
 
     $this->expectedExceptionMessage = 'Argument 1 passed to Drupal\system\Tests\Bootstrap\ErrorContainer::Drupal\system\Tests\Bootstrap\{closur';
     $this->drupalGet('');
+    $this->assertResponse(500);
 
     $this->assertRaw($this->expectedExceptionMessage);
   }
@@ -146,6 +207,7 @@ class UncaughtExceptionTest extends WebTestBase {
 
     $this->expectedExceptionMessage = 'Thrown exception during Container::get';
     $this->drupalGet('');
+    $this->assertResponse(500);
 
 
     $this->assertRaw('The website encountered an unexpected error');
@@ -182,6 +244,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('');
+    $this->assertResponse(500);
     $this->assertRaw('PDOException');
   }
 
