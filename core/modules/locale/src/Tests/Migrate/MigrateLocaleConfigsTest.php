@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\locale\Tests\Migrate\d6\MigrateLocaleConfigsTest.
+ * Contains \Drupal\locale\Tests\Migrate\MigrateLocaleConfigsTest.
  */
 
-namespace Drupal\locale\Tests\Migrate\d6;
+namespace Drupal\locale\Tests\Migrate;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -32,7 +32,7 @@ class MigrateLocaleConfigsTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
     $this->loadDumps(['Variable.php']);
-    $this->executeMigration('d6_locale_settings');
+    $this->executeMigration('locale_settings');
   }
 
   /**

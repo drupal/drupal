@@ -1,7 +1,8 @@
-id: d6_locale_settings
-label: Drupal 6 locale configuration
+id: locale_settings
+label: Locale configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:

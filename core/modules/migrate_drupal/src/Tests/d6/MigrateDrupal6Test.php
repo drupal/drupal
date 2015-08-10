@@ -102,7 +102,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_file',
     'd6_filter_format',
     'd6_forum_settings',
-    'd6_locale_settings',
+    'locale_settings',
     'd6_menu_settings',
     'd6_menu',
     'd6_menu_links',
