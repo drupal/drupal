@@ -38,8 +38,9 @@ interface EntityOwnerInterface {
   /**
    * Returns the entity owner's user ID.
    *
-   * @return int
-   *   The owner user ID.
+   * @return int|null
+   *   The owner user ID, or NULL in case the user ID field has not been set on
+   *   the entity.
    */
   public function getOwnerId();
 
