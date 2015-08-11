@@ -8,7 +8,6 @@
 namespace Drupal\block\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides dynamic tabs based on active themes.
  */
 class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
-
-  /**
-   * Stores the theme settings config object.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
 
   /**
    * The theme handler.
@@ -35,13 +27,10 @@ class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
   /**
    * Constructs a new ThemeLocalTask.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
-    $this->config = $config_factory->get('system.theme');
+  public function __construct(ThemeHandlerInterface $theme_handler) {
     $this->themeHandler = $theme_handler;
   }
 
@@ -50,7 +39,6 @@ class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('config.factory'),
       $container->get('theme_handler')
     );
   }
@@ -59,7 +47,7 @@ class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    $default_theme = $this->config->get('default');
+    $default_theme = $this->themeHandler->getDefault();
 
     foreach ($this->themeHandler->listInfo() as $theme_name => $theme) {
       if ($theme->status) {
