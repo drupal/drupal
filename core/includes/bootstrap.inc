@@ -302,7 +302,6 @@ function _drupal_add_http_header($name, $value, $append = FALSE) {
   $headers = &drupal_static('drupal_http_headers', array());
 
   $name_lower = strtolower($name);
-  _drupal_set_preferred_header_name($name);
 
   if ($value === FALSE) {
     $headers[$name_lower] = FALSE;
@@ -341,24 +340,6 @@ function drupal_get_http_header($name = NULL) {
   else {
     return $headers;
   }
-}
-
-/**
- * Sets the preferred name for the HTTP header.
- *
- * Header names are case-insensitive, but for maximum compatibility they should
- * follow "common form" (see RFC 2616, section 4.2).
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   See https://www.drupal.org/node/2181523.
- */
-function _drupal_set_preferred_header_name($name = NULL) {
-  static $header_names = array();
-
-  if (!isset($name)) {
-    return $header_names;
-  }
-  $header_names[strtolower($name)] = $name;
 }
 
 /**
