@@ -786,6 +786,23 @@ abstract class Connection {
     return new $class($this, $table, $options);
   }
 
+  /**
+   * Prepares and returns an UPSERT query object.
+   *
+   * @param string $table
+   *   The table to use for the upsert query.
+   * @param array $options
+   *   (optional) An array of options on the query.
+   *
+   * @return \Drupal\Core\Database\Query\Upsert
+   *   A new Upsert query object.
+   *
+   * @see \Drupal\Core\Database\Query\Upsert
+   */
+  public function upsert($table, array $options = array()) {
+    $class = $this->getDriverClass('Upsert');
+    return new $class($this, $table, $options);
+  }
 
   /**
    * Prepares and returns an UPDATE query object.

@@ -93,8 +93,16 @@ class Schema extends DatabaseSchema {
   public function queryTableInformation($table) {
     // Generate a key to reference this table's information on.
     $key = $this->connection->prefixTables('{' . $table . '}');
-    if (strpos($key, '.') === FALSE) {
+
+    // Take into account that temporary tables are stored in a different schema.
+    // \Drupal\Core\Database\Connection::generateTemporaryTableName() sets the
+    // 'db_temporary_' prefix to all temporary tables.
+    if (strpos($key, '.') === FALSE && strpos($table, 'db_temporary_') === FALSE) {
       $key = 'public.' . $key;
+    }
+    else {
+      $schema = $this->connection->query('SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()')->fetchField();
+      $key = $schema . '.' . $key;
     }
 
     if (!isset($this->tableInformation[$key])) {

@@ -16,43 +16,7 @@ use Drupal\Core\Database\Database;
  */
 class Insert extends Query {
 
-  /**
-   * The table on which to insert.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
-   * An array of fields on which to insert.
-   *
-   * @var array
-   */
-  protected $insertFields = array();
-
-  /**
-   * An array of fields that should be set to their database-defined defaults.
-   *
-   * @var array
-   */
-  protected $defaultFields = array();
-
-  /**
-   * A nested array of values to insert.
-   *
-   * $insertValues is an array of arrays. Each sub-array is either an
-   * associative array whose keys are field names and whose values are field
-   * values to insert, or a non-associative array of values in the same order
-   * as $insertFields.
-   *
-   * Whether multiple insert sets will be run in a single query or multiple
-   * queries is left to individual drivers to implement in whatever manner is
-   * most appropriate. The order of values in each sub-array must match the
-   * order of fields in $insertFields.
-   *
-   * @var array
-   */
-  protected $insertValues = array();
+  use InsertTrait;
 
   /**
    * A SelectQuery object to fetch the rows that should be inserted.
@@ -77,96 +41,6 @@ class Insert extends Query {
     }
     parent::__construct($connection, $options);
     $this->table = $table;
-  }
-
-  /**
-   * Adds a set of field->value pairs to be inserted.
-   *
-   * This method may only be called once. Calling it a second time will be
-   * ignored. To queue up multiple sets of values to be inserted at once,
-   * use the values() method.
-   *
-   * @param $fields
-   *   An array of fields on which to insert. This array may be indexed or
-   *   associative. If indexed, the array is taken to be the list of fields.
-   *   If associative, the keys of the array are taken to be the fields and
-   *   the values are taken to be corresponding values to insert. If a
-   *   $values argument is provided, $fields must be indexed.
-   * @param $values
-   *   An array of fields to insert into the database. The values must be
-   *   specified in the same order as the $fields array.
-   *
-   * @return \Drupal\Core\Database\Query\Insert
-   *   The called object.
-   */
-  public function fields(array $fields, array $values = array()) {
-    if (empty($this->insertFields)) {
-      if (empty($values)) {
-        if (!is_numeric(key($fields))) {
-          $values = array_values($fields);
-          $fields = array_keys($fields);
-        }
-      }
-      $this->insertFields = $fields;
-      if (!empty($values)) {
-        $this->insertValues[] = $values;
-      }
-    }
-
-    return $this;
-  }
-
-  /**
-   * Adds another set of values to the query to be inserted.
-   *
-   * If $values is a numeric-keyed array, it will be assumed to be in the same
-   * order as the original fields() call. If it is associative, it may be
-   * in any order as long as the keys of the array match the names of the
-   * fields.
-   *
-   * @param $values
-   *   An array of values to add to the query.
-   *
-   * @return \Drupal\Core\Database\Query\Insert
-   *   The called object.
-   */
-  public function values(array $values) {
-    if (is_numeric(key($values))) {
-      $this->insertValues[] = $values;
-    }
-    else {
-      // Reorder the submitted values to match the fields array.
-      foreach ($this->insertFields as $key) {
-        $insert_values[$key] = $values[$key];
-      }
-      // For consistency, the values array is always numerically indexed.
-      $this->insertValues[] = array_values($insert_values);
-    }
-    return $this;
-  }
-
-  /**
-   * Specifies fields for which the database defaults should be used.
-   *
-   * If you want to force a given field to use the database-defined default,
-   * not NULL or undefined, use this method to instruct the database to use
-   * default values explicitly. In most cases this will not be necessary
-   * unless you are inserting a row that is all default values, as you cannot
-   * specify no values in an INSERT query.
-   *
-   * Specifying a field both in fields() and in useDefaults() is an error
-   * and will not execute.
-   *
-   * @param $fields
-   *   An array of values for which to use the default values
-   *   specified in the table definition.
-   *
-   * @return \Drupal\Core\Database\Query\Insert
-   *   The called object.
-   */
-  public function useDefaults(array $fields) {
-    $this->defaultFields = $fields;
-    return $this;
   }
 
   /**
@@ -265,13 +139,13 @@ class Insert extends Query {
   /**
    * Preprocesses and validates the query.
    *
-   * @return
+   * @return bool
    *   TRUE if the validation was successful, FALSE if not.
    *
    * @throws \Drupal\Core\Database\Query\FieldsOverlapException
    * @throws \Drupal\Core\Database\Query\NoFieldsException
    */
-  public function preExecute() {
+  protected function preExecute() {
     // Confirm that the user did not try to specify an identical
     // field and default field.
     if (array_intersect($this->insertFields, $this->defaultFields)) {
