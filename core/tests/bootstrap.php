@@ -87,5 +87,8 @@ drupal_phpunit_register_extension_dirs($loader, $dirs);
 setlocale(LC_ALL, 'C');
 
 // Set the default timezone. While this doesn't cause any tests to fail, PHP
-// complains if 'date.timezone' is not set in php.ini.
-date_default_timezone_set('UTC');
+// complains if 'date.timezone' is not set in php.ini. The Australia/Sydney
+// timezone is chosen so all tests are run using an edge case scenario (UTC+10
+// and DST). This choice is made to prevent timezone related regressions and
+// reduce the fragility of the testing system in general.
+date_default_timezone_set('Australia/Sydney');

@@ -169,7 +169,7 @@ class DateTest extends UnitTestCase {
    */
   public function testGetSampleDateFormats() {
     $timestamp = strtotime('2015-03-22 14:23:00');
-    $expected = $this->dateFormatter->getSampleDateFormats('en', $timestamp, 'Europe/London');
+    $expected = $this->dateFormatter->getSampleDateFormats('en', $timestamp, 'Australia/Sydney');
 
     // Removed characters related to timezone 'e' and 'T', as test does not have
     // timezone set.
