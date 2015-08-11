@@ -11,6 +11,12 @@ use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines an interface for menu local tasks.
+ *
+ * Menu local tasks are are typically rendered as navigation tabs above the
+ * content region, though other presentations are possible. It is convention
+ * that the titles of these tasks should be short verbs if possible.
+ *
+ * @see \Drupal\Core\Menu\LocalTaskManagerInterface
  */
 interface LocalTaskInterface {
 
