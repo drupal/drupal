@@ -376,7 +376,7 @@ function template_preprocess_textarea(&$variables) {
   Element\RenderElement::setAttributes($element, array('form-textarea'));
   $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);
-  $variables['value'] = SafeMarkup::checkPlain($element['#value']);
+  $variables['value'] = $element['#value'];
   $variables['resizable'] = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
   $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 }
