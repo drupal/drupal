@@ -594,7 +594,6 @@ function template_preprocess_links(&$variables) {
       );
       // Convert the attributes array into an Attribute object.
       $heading['attributes'] = new Attribute($heading['attributes']);
-      $heading['text'] = SafeMarkup::checkPlain($heading['text']);
     }
 
     $variables['links'] = array();
@@ -1325,7 +1324,7 @@ function template_preprocess_page(&$variables) {
   $variables['front_page']        = \Drupal::url('<front>');
   $variables['language']          = $language_interface;
   $variables['logo']              = theme_get_setting('logo.url');
-  $variables['site_name']         = (theme_get_setting('features.name') ? SafeMarkup::checkPlain($site_config->get('name')) : '');
+  $variables['site_name']         = (theme_get_setting('features.name') ? $site_config->get('name') : '');
   $variables['site_slogan']['#markup'] = (theme_get_setting('features.slogan') ? $site_config->get('slogan') : '');
 
   // An exception might be thrown.
@@ -1506,7 +1505,7 @@ function template_preprocess_field(&$variables, $hook) {
   // Always set the field label - allow themes to decide whether to display it.
   // In addition the label should be rendered but hidden to support screen
   // readers.
-  $variables['label'] = SafeMarkup::checkPlain($element['#title']);
+  $variables['label'] = $element['#title'];
 
   static $default_attributes;
   if (!isset($default_attributes)) {
