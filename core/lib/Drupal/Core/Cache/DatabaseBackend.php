@@ -190,7 +190,7 @@ class DatabaseBackend implements CacheBackendInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::setMultiple()
    */
-  public function doSetMultiple(array $items) {
+  protected function doSetMultiple(array $items) {
     $values = array();
 
     foreach ($items as $cid => $item) {
