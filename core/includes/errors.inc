@@ -248,7 +248,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // An exception must halt script execution.
       exit;
     }
-    else {
+
+    if ($message) {
       if (\Drupal::hasService('session')) {
         // Message display is dependent on sessions being available.
         drupal_set_message(SafeMarkup::set($message), $class, TRUE);
