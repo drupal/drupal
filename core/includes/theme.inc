@@ -1746,17 +1746,10 @@ function drupal_common_theme() {
     'maintenance_task_list' => array(
       'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
     ),
-    'authorize_message' => array(
-      'variables' => array('message' => NULL, 'success' => TRUE),
-      'function' => 'theme_authorize_message',
-      'path' => 'core/includes',
-      'file' => 'theme.maintenance.inc',
-    ),
     'authorize_report' => array(
-      'variables' => array('messages' => array()),
-      'function' => 'theme_authorize_report',
-      'path' => 'core/includes',
-      'file' => 'theme.maintenance.inc',
+      'variables' => ['messages' => [], 'attributes' => []],
+      'includes' => ['core/includes/theme.maintenance.inc'],
+      'template' => 'authorize-report',
     ),
     // From pager.inc.
     'pager' => array(

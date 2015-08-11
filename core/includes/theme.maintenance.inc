@@ -100,60 +100,37 @@ function _drupal_maintenance_theme() {
 }
 
 /**
- * Returns HTML for a results report of an operation run by authorize.php.
+ * Prepares variables for authorize.php operation report templates.
  *
- * @param $variables
+ * This report displays the results of an operation run via authorize.php.
+ *
+ * Default template: authorize-report.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - messages: An array of result messages.
- *
- * @ingroup themeable
  */
-function theme_authorize_report($variables) {
-  $messages = $variables['messages'];
-  $output = '';
-  if (!empty($messages)) {
-    $output .= '<div class="authorize-results">';
-    foreach ($messages as $heading => $logs) {
-      $items = array();
+function template_preprocess_authorize_report(&$variables) {
+  $messages = [];
+  if (!empty($variables['messages'])) {
+    foreach ($variables['messages'] as $heading => $logs) {
+      $items = [];
       foreach ($logs as $number => $log_message) {
         if ($number === '#abort') {
           continue;
         }
-        $authorize_message = array(
-          '#theme' => 'authorize_message',
-          '#message' => $log_message['message'],
-          '#success' => $log_message['success'],
-        );
-        $items[] = array(
-          '#markup' => drupal_render($authorize_message),
-          '#wrapper_attributes' => array('class' => $log_message['success'] ? 'authorize-results__success' : 'authorize-results__failure'),
-        );
+        $class = 'authorize-results__' . ($log_message['success'] ? 'success' : 'failure');
+        $items[] = [
+          '#wrapper_attributes' => ['class' => [$class]],
+          '#markup' => $log_message['message'],
+        ];
       }
-      $item_list = array(
+      $messages[] = [
         '#theme' => 'item_list',
         '#items' => $items,
         '#title' => $heading,
-      );
-      $output .= drupal_render($item_list);
+      ];
     }
-    $output .= '</div>';
   }
-  return $output;
-}
-
-/**
- * Returns HTML for a single log message from the authorize.php batch operation.
- *
- * @param $variables
- *   An associative array containing:
- *   - message: The log message.
- *     It's the caller's responsibility to ensure this string contains no
- *     dangerous HTML such as SCRIPT tags.
- *   - success: A boolean indicating failure or success.
- *
- * @ingroup themeable
- */
-function theme_authorize_message($variables) {
-  $item = array('#markup' => $variables['message']);
-  return drupal_render($item);
+  $variables['messages'] = $messages;
 }

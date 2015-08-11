@@ -11,6 +11,7 @@
  */
 
 use Drupal\Core\Updater\UpdaterException;
+use Drupal\Core\Url;
 
 /**
  * Updates existing projects when invoked by authorize.php.
@@ -239,7 +240,19 @@ function update_authorize_update_batch_finished($success, $results) {
   // Since we're doing an update of existing code, always add a task for
   // running update.php.
   $results['tasks'][] = t('Your modules have been downloaded and updated.');
-  $results['tasks'][] = t('<a href="@update">Run database updates</a>', array('@update' => \Drupal::url('system.db_update')));
+  $results['tasks'][] = [
+    '#type' => 'link',
+    '#url' => Url::fromRoute('system.db_update'),
+    '#title' => t('Run database updates'),
+    // Since this is being called outsite of the primary front controller,
+    // the base_url needs to be set explicitly to ensure that links are
+    // relative to the site root.
+    // @todo Simplify with https://www.drupal.org/node/2548095
+    '#options' => [
+      'absolute' => TRUE,
+      'base_url' => $GLOBALS['base_url'],
+    ],
+  ];
 
   // Unset the variable since it is no longer needed.
   unset($_SESSION['maintenance_mode']);

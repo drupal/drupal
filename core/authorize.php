@@ -120,15 +120,31 @@ if ($is_allowed) {
       '#messages' => $results['messages'],
     );
 
-    $links = array();
     if (is_array($results['tasks'])) {
-      $links += $results['tasks'];
+      $links = $results['tasks'];
     }
     else {
-      $links = array_merge($links, array(
-        \Drupal::l(t('Administration pages'), new Url('system.admin')),
-        \Drupal::l(t('Front page'), new Url('<front>')),
-      ));
+      // Since this is being called outsite of the primary front controller,
+      // the base_url needs to be set explicitly to ensure that links are
+      // relative to the site root.
+      // @todo Simplify with https://www.drupal.org/node/2548095
+      $default_options = [
+        '#type' => 'link',
+        '#options' => [
+          'absolute' => TRUE,
+          'base_url' => $GLOBALS['base_url'],
+        ],
+      ];
+      $links = [
+        $default_options + [
+          '#url' => Url::fromRoute('system.admin'),
+          '#title' => t('Administration pages'),
+        ],
+        $default_options + [
+          '#url' => Url::fromRoute('<front>'),
+          '#title' => t('Front page'),
+        ],
+      ];
     }
 
     $content['next_steps'] = array(

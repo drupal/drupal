@@ -75,6 +75,18 @@ class UpdateUploadTest extends UpdateTestBase {
     // module now exists in the expected place in the filesystem.
     $this->assertRaw(t('Installed %project_name successfully', array('%project_name' => 'update_test_new_module')));
     $this->assertTrue(file_exists($installedInfoFilePath), 'The new module exists in the filesystem after it is installed with the Update Manager.');
+    // Ensure the links are relative to the site root and not
+    // core/authorize.php.
+    $this->assertLink(t('Install another module'));
+    $this->assertLinkByHref(Url::fromRoute('update.module_install')->toString());
+    $this->assertLink(t('Enable newly added modules'));
+    $this->assertLinkByHref(Url::fromRoute('system.modules_list')->toString());
+    $this->assertLink(t('Administration pages'));
+    $this->assertLinkByHref(Url::fromRoute('system.admin')->toString());
+    // Ensure we can reach the "Install another module" link.
+    $this->clickLink(t('Install another module'));
+    $this->assertResponse(200);
+    $this->assertUrl('admin/modules/install');
   }
 
   /**

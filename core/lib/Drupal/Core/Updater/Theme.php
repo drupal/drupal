@@ -91,9 +91,26 @@ class Theme extends Updater implements UpdaterInterface {
    * Overrides Drupal\Core\Updater\Updater::postInstallTasks().
    */
   public function postInstallTasks() {
-    return array(
-      \Drupal::l(t('Install newly added themes'), new Url('system.themes_page')),
-      \Drupal::l(t('Administration pages'), new Url('system.admin')),
-    );
+    // Since this is being called outsite of the primary front controller,
+    // the base_url needs to be set explicitly to ensure that links are
+    // relative to the site root.
+    // @todo Simplify with https://www.drupal.org/node/2548095
+    $default_options = [
+      '#type' => 'link',
+      '#options' => [
+        'absolute' => TRUE,
+        'base_url' => $GLOBALS['base_url'],
+      ],
+    ];
+    return [
+      $default_options + [
+        '#url' => Url::fromRoute('system.themes_page'),
+        '#title' => t('Install newly added themes'),
+      ],
+      $default_options + [
+        '#url' => Url::fromRoute('system.admin'),
+        '#title' => t('Administration pages'),
+      ],
+    ];
   }
 }

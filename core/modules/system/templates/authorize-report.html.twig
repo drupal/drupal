@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default theme implementation for authorize.php operation report templates.
+ *
+ * This report displays the results of an operation run via authorize.php.
+ *
+ * Available variables:
+ * - messages: A list of result messages.
+ * - attributes: HTML attributes for the element.
+ *
+ * @see template_preprocess_authorize_report()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if messages %}
+  <div{{ attributes.addClass('authorize-results') }}>
+    {% for message_group in messages %}
+      {{ message_group }}
+    {% endfor %}
+  </div>
+{% endif %}

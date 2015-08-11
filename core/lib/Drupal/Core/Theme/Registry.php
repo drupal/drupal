@@ -442,6 +442,13 @@ class Registry implements DestructableInterface {
           $result[$hook]['includes'] = $cache[$hook]['includes'];
         }
 
+        // Load the includes, as they may contain preprocess functions.
+        if (isset($info['includes'])) {
+          foreach ($info['includes'] as $include_file) {
+            include_once $this->root . '/' . $include_file;
+          }
+        }
+
         // If the theme implementation defines a file, then also use the path
         // that it defined. Otherwise use the default path. This allows
         // system.module to declare theme functions on behalf of core .include
