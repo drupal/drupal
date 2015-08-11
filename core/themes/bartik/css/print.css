@@ -23,8 +23,8 @@ body {
 .shortcut-action {
   display: none;
 }
-.one-sidebar #content,
-.two-sidebars #content {
+.one-sidebar .main-content,
+.two-sidebars .main-content {
   width: 100%;
 }
 .featured-bottom {

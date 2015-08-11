@@ -131,8 +131,23 @@
   margin-right: 0;
   padding: 5px 5px 5px 2px;
 }
-.comment--unpublished .comment__content:after,
-.node--unpublished .comment__content:after {
+
+/**
+ * @todo: unpublished nodes have class .node--unpublished.
+ * change this to .comment--unpublished.
+ */
+.unpublished .comment-text .comment-arrow {
+  border-left: 1px solid #fff4f4;
+  border-right: 1px solid #fff4f4;
+}
+.unpublished {
+  padding: 20px 15px 0;
+}
+.comment-footer {
+  display: table-row;
+}
+.comment--unpublished .comment__text:after,
+.node--unpublished .comment__text:after {
   border-right-color: #fff4f4; /* LTR */
 }
 [dir="rtl"] .comment--unpublished .comment__content:after,

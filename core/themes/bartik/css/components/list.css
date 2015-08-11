@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Visual styles for Bartik's lists.
+ */
+
+ul.links {
+  color: #68696b;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.821em;
+}

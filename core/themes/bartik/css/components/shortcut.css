@@ -1,13 +1,13 @@
 /* -------------- Shortcut Links -------------- */
 
 .shortcut-wrapper {
-  margin: 2.2em 0 1.1em 0; /* Same as usual h1#page-title margin. */
+  margin: 2.2em 0 1.1em 0; /* Same as usual .page-title margin. */
 }
-.shortcut-wrapper h1#page-title {
+.shortcut-wrapper .page-title {
   float: left; /* LTR */
   margin: 0;
 }
-[dir="rtl"] .shortcut-wrapper h1#page-title {
+[dir="rtl"] .shortcut-wrapper .page-title {
   float: right;
 }
 .shortcut-action {

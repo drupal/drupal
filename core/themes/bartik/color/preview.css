@@ -103,10 +103,10 @@
 }
 .color-preview-sidebar h2 {
   border-bottom: 1px solid #d6d6d6;
-  font-size: 1.071em;
   font-weight: normal;
-  line-height: 1.2;
-  margin: 0 0 0.5em;
+  margin-top: 0;
+  margin-right: 0;
+  margin-left: 0;
   padding-bottom: 5px;
   text-shadow: 0 1px 0 #fff;
 }
@@ -168,8 +168,6 @@
 .color-preview-footer-columns h2 {
   border-bottom: 1px solid #555;
   border-color: rgba(255, 255, 255, 0.15);
-  font-size: 1em;
-  margin-bottom: 0;
   padding-bottom: 3px;
   text-transform: uppercase;
 }

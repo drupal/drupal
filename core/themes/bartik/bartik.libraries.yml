@@ -9,20 +9,25 @@ global-styling:
       css/components/breadcrumb.css: {}
       css/components/captions.css: {}
       css/components/comments.css: {}
-      css/components/content.css: {}
       css/components/contextual.css: {}
       css/components/demo-block.css: {}
       # @see https://www.drupal.org/node/2389735
       css/components/dropbutton.component.css: {}
       css/components/featured-top.css: {}
       css/components/feed-icon.css: {}
+      css/components/field.css: {}
       css/components/form.css: {}
       css/components/forum.css: {}
       css/components/header.css: {}
       css/components/region-help.css: {}
       css/components/item-list.css: {}
       css/components/list-group.css: {}
+      css/components/list.css: {}
+      css/components/main-content.css: {}
+      css/components/messages.css: {}
+      css/components/node.css: {}
       css/components/node-preview.css: {}
+      css/components/page-title.css: {}
       css/components/pager.css: {}
       css/components/panel.css: {}
       css/components/primary-menu.css: {}
@@ -38,6 +43,7 @@ global-styling:
       css/components/toolbar.css: {}
       css/components/featured-bottom.css: {}
       css/components/password-suggestions.css: {}
+      css/components/ui.widget.css: {}
       # @see https://www.drupal.org/node/2389735
       css/components/vertical-tabs.component.css: {}
       css/components/views.css: {}

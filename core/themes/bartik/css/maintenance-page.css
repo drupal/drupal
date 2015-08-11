@@ -24,10 +24,10 @@ body.maintenance-page {
 .maintenance-page #main {
   margin: 0;
 }
-.maintenance-page #content .section {
+.maintenance-page .content .section {
   padding: 0 0 0 10px; /* LTR */
 }
-[dir="rtl"] .maintenance-page #content .section {
+[dir="rtl"] .maintenance-page .content .section {
   padding-left: 0;
   padding-right: 10px;
 }
@@ -50,7 +50,7 @@ body.maintenance-page {
 .maintenance-page #name-and-slogan a:focus {
   color: #777;
 }
-.maintenance-page  h1#page-title {
+.maintenance-page  .page-title {
   line-height: 1em;
   margin-top: 0;
 }
