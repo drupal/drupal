@@ -147,17 +147,26 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::set().
+   * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
-    Cache::validateTags($tags);
-    $tags = array_unique($tags);
-    // Sort the cache tags so that they are stored consistently in the database.
-    sort($tags);
+    $this->setMultiple([
+      $cid => [
+        'data' => $data,
+        'expire' => $expire,
+        'tags' => $tags,
+      ],
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $items) {
     $try_again = FALSE;
     try {
       // The bin might not yet exist.
-      $this->doSet($cid, $data, $expire, $tags);
+      $this->doSetMultiple($items);
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the bins.
@@ -169,39 +178,19 @@ class DatabaseBackend implements CacheBackendInterface {
     }
     // Now that the bin has been created, try again if necessary.
     if ($try_again) {
-      $this->doSet($cid, $data, $expire, $tags);
+      $this->doSetMultiple($items);
     }
   }
 
   /**
-   * Actually set the cache.
+   * Stores multiple items in the persistent cache.
+   *
+   * @param array $items
+   *   An array of cache items, keyed by cid.
+   *
+   * @see \Drupal\Core\Cache\CacheBackendInterface::setMultiple()
    */
-  protected function doSet($cid, $data, $expire, $tags) {
-    $fields = array(
-      'created' => round(microtime(TRUE), 3),
-      'expire' => $expire,
-      'tags' => implode(' ', $tags),
-      'checksum' => $this->checksumProvider->getCurrentChecksum($tags),
-    );
-    if (!is_string($data)) {
-      $fields['data'] = serialize($data);
-      $fields['serialized'] = 1;
-    }
-    else {
-      $fields['data'] = $data;
-      $fields['serialized'] = 0;
-    }
-
-    $this->connection->merge($this->bin)
-      ->key('cid', $this->normalizeCid($cid))
-      ->fields($fields)
-      ->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setMultiple(array $items) {
+  public function doSetMultiple(array $items) {
     $values = array();
 
     foreach ($items as $cid => $item) {
@@ -216,7 +205,7 @@ class DatabaseBackend implements CacheBackendInterface {
       sort($item['tags']);
 
       $fields = array(
-        'cid' => $cid,
+        'cid' => $this->normalizeCid($cid),
         'expire' => $item['expire'],
         'created' => round(microtime(TRUE), 3),
         'tags' => implode(' ', $item['tags']),
@@ -234,34 +223,20 @@ class DatabaseBackend implements CacheBackendInterface {
       $values[] = $fields;
     }
 
-    // Use a transaction so that the database can write the changes in a single
-    // commit. The transaction is started after calculating the tag checksums
-    // since that can create a table and this causes an exception when using
-    // PostgreSQL.
-    $transaction = $this->connection->startTransaction();
-
-    try {
-      // Delete all items first so we can do one insert. Rather than multiple
-      // merge queries.
-      $this->deleteMultiple(array_keys($items));
-
-      $query = $this->connection
-        ->insert($this->bin)
-        ->fields(array('cid', 'expire', 'created', 'tags', 'checksum', 'data', 'serialized'));
-      foreach ($values as $fields) {
-        // Only pass the values since the order of $fields matches the order of
-        // the insert fields. This is a performance optimization to avoid
-        // unnecessary loops within the method.
-        $query->values(array_values($fields));
-      }
-
-      $query->execute();
+    // Use an upsert query which is atomic and optimized for multiple-row
+    // merges.
+    $query = $this->connection
+      ->upsert($this->bin)
+      ->key('cid')
+      ->fields(array('cid', 'expire', 'created', 'tags', 'checksum', 'data', 'serialized'));
+    foreach ($values as $fields) {
+      // Only pass the values since the order of $fields matches the order of
+      // the insert fields. This is a performance optimization to avoid
+      // unnecessary loops within the method.
+      $query->values(array_values($fields));
     }
-    catch (\Exception $e) {
-      $transaction->rollback();
-      // @todo Log something here or just re throw?
-      throw $e;
-    }
+
+    $query->execute();
   }
 
   /**
