@@ -176,7 +176,6 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
       'access' => TRUE,
       'label' => 'Long text field',
       'editor' => 'editor',
-      'aria' => 'Entity entity_test 1, field Long text field',
       'custom' => array(
         'format' => 'full_html',
         'formatHasTransformations' => FALSE,

@@ -454,7 +454,8 @@
         });
       }
       else {
-        label = entityLabel;
+        // @todo Add XSS regression test coverage in https://www.drupal.org/node/2547437
+        label = Drupal.checkPlain(entityLabel);
       }
 
       this.$el

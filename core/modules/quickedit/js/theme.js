@@ -59,7 +59,8 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditEntityToolbarLabel = function (settings) {
-    return '<span class="field">' + settings.fieldLabel + '</span>' + settings.entityLabel;
+    // @todo Add XSS regression test coverage in https://www.drupal.org/node/2547437
+    return '<span class="field">' + Drupal.checkPlain(settings.fieldLabel) + '</span>' + Drupal.checkPlain(settings.entityLabel);
   };
 
   /**

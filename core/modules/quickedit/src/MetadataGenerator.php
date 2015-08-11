@@ -89,10 +89,9 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     $label = $items->getFieldDefinition()->getLabel();
     $editor = $this->editorManager->createInstance($editor_id);
     $metadata = array(
-      'label' => SafeMarkup::checkPlain($label),
+      'label' => $label,
       'access' => TRUE,
       'editor' => $editor_id,
-      'aria' => t('Entity @type @id, field @field', array('@type' => $entity->getEntityTypeId(), '@id' => $entity->id(), '@field' => $label)),
     );
     $custom_metadata = $editor->getMetadata($items);
     if (count($custom_metadata)) {

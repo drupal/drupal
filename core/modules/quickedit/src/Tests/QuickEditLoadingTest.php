@@ -174,7 +174,6 @@ class QuickEditLoadingTest extends WebTestBase {
         'label' => 'Body',
         'access' => TRUE,
         'editor' => 'form',
-        'aria' => 'Entity node 1, field Body',
       )
     );
     $this->assertIdentical(Json::decode($response), $expected, 'The metadata HTTP request answers with the correct JSON response.');
@@ -333,7 +332,6 @@ class QuickEditLoadingTest extends WebTestBase {
         'label' => 'Title',
         'access' => TRUE,
         'editor' => 'plain_text',
-        'aria' => 'Entity node 1, field Title',
       )
     );
     $this->assertIdentical(Json::decode($response), $expected, 'The metadata HTTP request answers with the correct JSON response.');
