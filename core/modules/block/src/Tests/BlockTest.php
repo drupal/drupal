@@ -8,8 +8,8 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Html;
-use Drupal\simpletest\WebTestBase;
 use Drupal\block\Entity\Block;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -441,6 +441,43 @@ class BlockTest extends BlockTestBase {
     \Drupal::state()->set('test_block_access', TRUE);
     $this->drupalGet('<front>');
     $this->assertText('Hello test world');
+  }
+
+  /**
+   * Tests block_user_role_delete.
+   */
+  public function testBlockUserRoleDelete() {
+    $role1 = Role::create(['id' => 'test_role1', 'name' => $this->randomString()]);
+    $role1->save();
+
+    $role2 = Role::create(['id' => 'test_role2', 'name' => $this->randomString()]);
+    $role2->save();
+
+    $block = Block::create([
+      'id' => $this->randomMachineName(),
+      'plugin' => 'system_powered_by_block',
+    ]);
+
+    $block->setVisibilityConfig('user_role', [
+      'roles' => [
+        $role1->id() => $role1->id(),
+        $role2->id() => $role2->id(),
+      ],
+    ]);
+
+    $block->save();
+
+    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
+      $role1->id() => $role1->id(),
+      $role2->id() => $role2->id()
+    ]);
+
+    $role1->delete();
+
+    $block = Block::load($block->id());
+    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
+      $role2->id() => $role2->id()
+    ]);
   }
 
 }

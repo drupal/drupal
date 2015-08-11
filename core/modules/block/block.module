@@ -245,7 +245,7 @@ function block_user_role_delete($role) {
     $visibility = $block->getVisibility();
     if (isset($visibility['user_role']['roles'][$role->id()])) {
       unset($visibility['user_role']['roles'][$role->id()]);
-      $block->getPlugin()->setVisibilityConfig('user_role', $visibility['user_role']);
+      $block->setVisibilityConfig('user_role', $visibility['user_role']);
       $block->save();
     }
   }
