@@ -725,21 +725,6 @@ function node_user_predelete($account) {
 }
 
 /**
- * Title callback: Displays the node's title.
- *
- * @param \Drupal\node\NodeInterface $node
- *   The node entity.
- *
- * @return
- *   An unsanitized string that is the title of the node.
- *
- * @see node_menu()
- */
-function node_page_title(NodeInterface $node) {
-  return $node->label();
-}
-
-/**
  * Finds the most recently changed nodes that are available to the current user.
  *
  * @param $number
