@@ -2,6 +2,8 @@ id: d6_profile_values
 label: Drupal 6 profile values
 migration_tags:
   - Drupal 6
+builder:
+  plugin: d6_profile_values
 source:
   plugin: d6_profile_field_values
 load:
