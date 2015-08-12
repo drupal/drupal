@@ -192,8 +192,9 @@ abstract class Tasks {
    * Check the engine version.
    */
   protected function checkEngineVersion() {
+    // Ensure that the database server has the right version.
     if ($this->minimumVersion() && version_compare(Database::getConnection()->version(), $this->minimumVersion(), '<')) {
-      $this->fail(t("The database version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
+      $this->fail(t("The database server version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
     }
   }
 

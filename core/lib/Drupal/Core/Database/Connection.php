@@ -1234,6 +1234,13 @@ abstract class Connection {
   }
 
   /**
+   * Returns the version of the database client.
+   */
+  public function clientVersion() {
+    return $this->connection->getAttribute(\PDO::ATTR_CLIENT_VERSION);
+  }
+
+  /**
    * Determines if this driver supports transactions.
    *
    * @return bool
