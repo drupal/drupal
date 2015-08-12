@@ -100,16 +100,10 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node3->label(), 'Node found in block.');
 
     // Check to make sure nodes are in the right order.
-    $this->assertTrue($this->xpath('//div[@id="block-test-block"]//div[@class="item-list"]/ul/li[1]/span[1]/span/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
+    $this->assertTrue($this->xpath('//div[@id="block-test-block"]//div[@class="item-list"]/ul/li[1]/div/span/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
 
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
-
-    // Verify that the More link is shown and leads to the admin content page.
-    $this->drupalGet('');
-    $this->clickLink('More');
-    $this->assertResponse('200');
-    $this->assertUrl('admin/content');
 
     // Set the number of recent nodes to show to 10.
     $block->getPlugin()->setConfigurationValue('items_per_page', 10);
