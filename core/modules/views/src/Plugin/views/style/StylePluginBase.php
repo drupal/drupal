@@ -11,10 +11,10 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\SafeString;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
+use Drupal\views\Render\ViewsRenderPipelineSafeString;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -708,7 +708,7 @@ abstract class StylePluginBase extends PluginBase {
             foreach ($this->rendered_fields[$index] as &$rendered_field) {
               // Placeholders and rendered fields have been processed by the
               // render system and are therefore safe.
-              $rendered_field = SafeString::create(str_replace($placeholders, $values, $rendered_field));
+              $rendered_field = ViewsRenderPipelineSafeString::create(str_replace($placeholders, $values, $rendered_field));
             }
           }
         }
@@ -745,7 +745,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param string $field
    *   The ID of the field.
    *
-   * @return \Drupal\Core\Render\SafeString|null
+   * @return \Drupal\Component\Utility\SafeStringInterface|null
    *   The output of the field, or NULL if it was empty.
    */
   public function getField($index, $field) {

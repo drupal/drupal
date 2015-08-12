@@ -16,10 +16,10 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Renderer;
-use Drupal\Core\Render\SafeString;
 use Drupal\Core\Url as CoreUrl;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\Render\ViewsRenderPipelineSafeString;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
@@ -1291,7 +1291,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Render this field as user-defined altered text.
    */
   protected function renderAltered($alter, $tokens) {
-    return SafeString::create($this->viewsTokenReplace($alter['text'], $tokens));
+    return ViewsRenderPipelineSafeString::create($this->viewsTokenReplace($alter['text'], $tokens));
   }
 
   /**
