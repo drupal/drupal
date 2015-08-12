@@ -11,7 +11,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
 /**
- * Drupal 6 role source from database.
+ * Drupal 6 filter source from database.
  *
  * @MigrateSource(
  *   id = "d6_filter_format"
@@ -23,10 +23,7 @@ class FilterFormat extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('filter_formats', 'f')
-      ->fields('f', array('format', 'name', 'roles', 'cache'))
-      ->orderBy('format');
-    return $query;
+    return $this->select('filter_formats', 'f')->fields('f');
   }
 
   /**
@@ -35,9 +32,10 @@ class FilterFormat extends DrupalSqlBase {
   public function fields() {
     return array(
       'format' => $this->t('Format ID.'),
-      'name' => $this->t('The name of the filter format.'),
-      'roles' => $this->t('The user roles that can use the format.'),
-      'cache' => $this->t('Flag to indicate whether format is cacheable. (1 = cacheable, 0 = not cacheable).'),
+      'name' => $this->t('The name of the format.'),
+      'cache' => $this->t('Whether the format is cacheable.'),
+      'roles' => $this->t('The role IDs which can use the format.'),
+      'filters' => $this->t('The filters configured for the format.'),
     );
   }
 
@@ -50,8 +48,7 @@ class FilterFormat extends DrupalSqlBase {
     $row->setSourceProperty('roles', array_values(array_filter(explode(',', $roles))));
     $format = $row->getSourceProperty('format');
     // Find filters for this row.
-    $results = $this->database
-      ->select('filters', 'f', array('fetch' => \PDO::FETCH_ASSOC))
+    $results = $this->select('filters', 'f')
       ->fields('f', array('module', 'delta', 'weight'))
       ->condition('format', $format)
       ->execute();

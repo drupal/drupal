@@ -119,7 +119,7 @@ class Filter extends DrupalDumpBase {
       'name' => 'filter_html',
       'weight' => '1',
       'status' => '1',
-      'settings' => 'a:3:{s:12:"allowed_html";s:74:"<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>";s:16:"filter_html_help";i:1;s:20:"filter_html_nofollow";i:0;}',
+      'settings' => 'a:3:{s:12:"allowed_html";s:22:"<div> <span> <ul> <li>";s:16:"filter_html_help";i:1;s:20:"filter_html_nofollow";i:0;}',
     ))->values(array(
       'format' => 'filtered_html',
       'module' => 'filter',
@@ -140,7 +140,7 @@ class Filter extends DrupalDumpBase {
       'name' => 'filter_url',
       'weight' => '0',
       'status' => '1',
-      'settings' => 'a:1:{s:17:"filter_url_length";i:72;}',
+      'settings' => 'a:1:{s:17:"filter_url_length";s:3:"128";}',
     ))->values(array(
       'format' => 'full_html',
       'module' => 'filter',
@@ -215,4 +215,4 @@ class Filter extends DrupalDumpBase {
   }
 
 }
-#26810a92f8dcd637a67b91e218441083
+#d47ad1c59579daa0db744321977c5e4b
