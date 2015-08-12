@@ -8,6 +8,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\SafeString;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
@@ -183,17 +184,18 @@ class HtmlTag extends RenderElement {
       $suffix = Xss::filterAdmin($suffix);
     }
 
-    // Now calling SafeMarkup::set is safe, because we ensured the
-    // data coming in was at least admin escaped.
+    // We ensured above that $expression is either a string we created or is
+    // admin XSS filtered, and that $prefix and $suffix are also admin XSS
+    // filtered if they are unsafe. Thus, all these strings are safe.
     if (!$browsers['!IE']) {
       // "downlevel-hidden".
-      $element['#prefix'] = SafeMarkup::set("\n<!--[if $expression]>\n" . $prefix);
-      $element['#suffix'] = SafeMarkup::set($suffix . "<![endif]-->\n");
+      $element['#prefix'] = SafeString::create("\n<!--[if $expression]>\n" . $prefix);
+      $element['#suffix'] = SafeString::create($suffix . "<![endif]-->\n");
     }
     else {
       // "downlevel-revealed".
-      $element['#prefix'] = SafeMarkup::set("\n<!--[if $expression]><!-->\n" . $prefix);
-      $element['#suffix'] = SafeMarkup::set($suffix . "<!--<![endif]-->\n");
+      $element['#prefix'] = SafeString::create("\n<!--[if $expression]><!-->\n" . $prefix);
+      $element['#suffix'] = SafeString::create($suffix . "<!--<![endif]-->\n");
     }
 
     return $element;

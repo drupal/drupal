@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Render\Element;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\SafeString;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element\HtmlTag;
 
@@ -87,10 +87,10 @@ class HtmlTagTest extends UnitTestCase {
    */
   public function testPreRenderConditionalComments($element, $expected, $set_safe = FALSE) {
     if ($set_safe) {
-      SafeMarkup::set($element['#prefix']);
-      SafeMarkup::set($element['#suffix']);
+      $element['#prefix'] = SafeString::create($element['#prefix']);
+      $element['#suffix'] = SafeString::create($element['#suffix']);
     }
-    $this->assertSame($expected, HtmlTag::preRenderConditionalComments($element));
+    $this->assertEquals($expected, HtmlTag::preRenderConditionalComments($element));
   }
 
   /**
