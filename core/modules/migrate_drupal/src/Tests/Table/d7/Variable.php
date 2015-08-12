@@ -287,11 +287,17 @@ class Variable extends DrupalDumpBase {
       'name' => 'search_active_modules',
       'value' => 'a:2:{s:4:"node";s:4:"node";s:4:"user";s:4:"user";}',
     ))->values(array(
+      'name' => 'search_and_or_limit',
+      'value' => 'i:7;',
+    ))->values(array(
       'name' => 'search_cron_limit',
       'value' => 's:3:"100";',
     ))->values(array(
       'name' => 'search_default_module',
       'value' => 's:4:"node";',
+    ))->values(array(
+      'name' => 'search_tag_weights',
+      'value' => 'a:12:{s:2:"h1";i:25;s:2:"h2";i:18;s:2:"h3";i:15;s:2:"h4";i:12;s:2:"h5";i:9;s:2:"h6";i:6;s:1:"u";i:3;s:1:"b";i:3;s:1:"i";i:3;s:6:"strong";i:3;s:2:"em";i:3;s:1:"a";i:10;}',
     ))->values(array(
       'name' => 'simpletest_clear_results',
       'value' => 'b:1;',
@@ -470,4 +476,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#e0f7be890a222531c707941d0fedf479
+#a571d354b6652603b017f9647ce0975e

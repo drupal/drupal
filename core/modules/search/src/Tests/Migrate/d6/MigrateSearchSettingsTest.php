@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\search\Tests\d6\Migrate\SearchConfigsTest.
+ * Contains \Drupal\search\Tests\Migrate\d6\MigrateSearchSettingsTest.
  */
 
 namespace Drupal\search\Tests\Migrate\d6;
@@ -15,7 +15,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  *
  * @group search
  */
-class MigrateSearchConfigsTest extends MigrateDrupal6TestBase {
+class MigrateSearchSettingsTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 
