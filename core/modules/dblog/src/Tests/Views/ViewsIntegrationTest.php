@@ -73,11 +73,12 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     $entries[] = array(
       'message' => '@token1 !token2',
       // Setup a link with a tag which is filtered by
-      // \Drupal\Component\Utility\Xss::filterAdmin().
+      // \Drupal\Component\Utility\Xss::filterAdmin() in order to make sure
+      // that strings which are not marked as safe get filtered.
       'variables' => array(
         '@token1' => $this->randomMachineName(),
         '!token2' => $this->randomMachineName(),
-        'link' => \Drupal::l(SafeMarkup::set('<object>Link</object>'), new Url('<front>')),
+        'link' => '<a href="' . \Drupal::url('<front>') . '"><object>Link</object></a>',
       ),
     );
     $logger_factory = $this->container->get('logger.factory');
@@ -95,7 +96,14 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
 
     foreach ($entries as $index => $entry) {
       $this->assertEqual($view->style_plugin->getField($index, 'message'), SafeMarkup::format($entry['message'], $entry['variables']));
-      $this->assertEqual($view->style_plugin->getField($index, 'link'), Xss::filterAdmin($entry['variables']['link']));
+      $link_field = $view->style_plugin->getField($index, 'link');
+      // The 3rd entry contains some unsafe markup that needs to get filtered.
+      if ($index == 2) {
+        // Make sure that unsafe link differs from the rendered link, so we know
+        // that some filtering actually happened.
+        $this->assertNotEqual($link_field, $entry['variables']['link']);
+      }
+      $this->assertEqual($link_field, Xss::filterAdmin($entry['variables']['link']));
     }
 
     // Disable replacing variables and check that the tokens aren't replaced.
