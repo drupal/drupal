@@ -10,7 +10,7 @@
  */
 
 /**
- * Integration test helper
+ * Integration test helper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Karma Dordrak <drak@zikula.org>
@@ -74,7 +74,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
         $loader = new Twig_Loader_Array($templates);
 
-        foreach ($outputs as $match) {
+        foreach ($outputs as $i => $match) {
             $config = array_merge(array(
                 'cache' => false,
                 'strict_variables' => true,
@@ -83,6 +83,14 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $twig->addGlobal('global', 'global');
             foreach ($this->getExtensions() as $extension) {
                 $twig->addExtension($extension);
+            }
+
+            // avoid using the same PHP class name for different cases
+            // only for PHP 5.2+
+            if (PHP_VERSION_ID >= 50300) {
+                $p = new ReflectionProperty($twig, 'templateClassPrefix');
+                $p->setAccessible(true);
+                $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
             }
 
             try {
@@ -122,14 +130,14 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             }
 
             if (false !== $exception) {
-                list($class, ) = explode(':', $exception);
+                list($class) = explode(':', $exception);
                 $this->assertThat(null, new PHPUnit_Framework_Constraint_Exception($class));
             }
 
             $expected = trim($match[3], "\n ");
 
             if ($expected != $output) {
-                echo 'Compiled template that failed:';
+                printf("Compiled templates that failed on case %d:\n", $i + 1);
 
                 foreach (array_keys($templates) as $name) {
                     echo "Template: $name\n";

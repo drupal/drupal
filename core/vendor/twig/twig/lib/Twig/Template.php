@@ -45,10 +45,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
     abstract public function getTemplateName();
 
     /**
-     * {@inheritdoc}
+     * @deprecated since 1.20 (to be removed in 2.0)
      */
     public function getEnvironment()
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.20 and will be removed in 2.0.', E_USER_DEPRECATED);
+
         return $this->env;
     }
 
@@ -57,6 +59,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * This method is for internal use only and should never be called
      * directly.
+     *
+     * @param array $context
      *
      * @return Twig_TemplateInterface|false The parent template or false if there is no parent
      */
@@ -73,7 +77,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return false;
             }
 
-            if ($parent instanceof Twig_Template) {
+            if ($parent instanceof self) {
                 return $this->parents[$parent->getTemplateName()] = $parent;
             }
 
@@ -150,9 +154,25 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         if (null !== $template) {
+            // avoid RCEs when sandbox is enabled
+            if (!$template instanceof Twig_Template) {
+                throw new \LogicException('A block must be a method on a Twig_Template instance.');
+            }
+
             try {
                 $template->$block($context, $blocks);
             } catch (Twig_Error $e) {
+                if (!$e->getTemplateFile()) {
+                    $e->setTemplateFile($template->getTemplateName());
+                }
+
+                // this is mostly useful for Twig_Error_Loader exceptions
+                // see Twig_Error_Loader
+                if (false === $e->getTemplateLine()) {
+                    $e->setTemplateLine(-1);
+                    $e->guess();
+                }
+
                 throw $e;
             } catch (Exception $e) {
                 throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
@@ -247,13 +267,20 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $this->env->resolveTemplate($template);
             }
 
-            if ($template instanceof Twig_Template) {
+            if ($template instanceof self) {
                 return $template;
             }
 
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
-            $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            if (!$e->getTemplateFile()) {
+                $e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+            }
+
+            if ($e->getTemplateLine()) {
+                throw $e;
+            }
+
             if (!$line) {
                 $e->guess();
             } else {
@@ -352,7 +379,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string $item              The variable to return from the context
      * @param bool   $ignoreStrictCheck Whether to ignore the strict variable check or not
      *
-     * @return The content of the context variable
+     * @return mixed The content of the context variable
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
@@ -383,10 +410,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the attribute does not exist and Twig is running in strict mode and $isDefinedTest is false
      */
-    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
+    protected function getAttribute($object, $item, array $arguments = array(), $type = self::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false)
     {
         // array
-        if (Twig_Template::METHOD_CALL !== $type) {
+        if (self::METHOD_CALL !== $type) {
             $arrayItem = is_bool($item) || is_float($item) ? (int) $item : $item;
 
             if ((is_array($object) && array_key_exists($arrayItem, $object))
@@ -399,7 +426,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return $object[$arrayItem];
             }
 
-            if (Twig_Template::ARRAY_CALL === $type || !is_object($object)) {
+            if (self::ARRAY_CALL === $type || !is_object($object)) {
                 if ($isDefinedTest) {
                     return false;
                 }
@@ -418,8 +445,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     } else {
                         $message = sprintf('Key "%s" for array with keys "%s" does not exist', $arrayItem, implode(', ', array_keys($object)));
                     }
-                } elseif (Twig_Template::ARRAY_CALL === $type) {
-                    $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                } elseif (self::ARRAY_CALL === $type) {
+                    if (null === $object) {
+                        $message = sprintf('Impossible to access a key ("%s") on a null variable', $item);
+                    } else {
+                        $message = sprintf('Impossible to access a key ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+                    }
+                } elseif (null === $object) {
+                    $message = sprintf('Impossible to access an attribute ("%s") on a null variable', $item);
                 } else {
                     $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
                 }
@@ -437,11 +470,17 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object), -1, $this->getTemplateName());
+            if (null === $object) {
+                $message = sprintf('Impossible to invoke a method ("%s") on a null variable', $item);
+            } else {
+                $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
+            }
+
+            throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
         }
 
         // object property
-        if (Twig_Template::METHOD_CALL !== $type) {
+        if (self::METHOD_CALL !== $type && !$object instanceof self) { // Twig_Template does not have public properties, and we don't want to allow access to internal ones
             if (isset($object->$item) || array_key_exists((string) $item, $object)) {
                 if ($isDefinedTest) {
                     return true;
@@ -459,7 +498,24 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // object method
         if (!isset(self::$cache[$class]['methods'])) {
-            self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+            // get_class_methods returns all methods accessible in the scope, but we only want public ones to be accessible in templates
+            if ($object instanceof self) {
+                $ref = new ReflectionClass($class);
+                $methods = array();
+
+                foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
+                    $methodName = strtolower($refMethod->name);
+
+                    // Accessing the environment from templates is forbidden to prevent untrusted changes to the environment
+                    if ('getenvironment' !== $methodName) {
+                        $methods[$methodName] = true;
+                    }
+                }
+
+                self::$cache[$class]['methods'] = $methods;
+            } else {
+                self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+            }
         }
 
         $call = false;

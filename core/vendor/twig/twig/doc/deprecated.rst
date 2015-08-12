@@ -107,9 +107,30 @@ Loaders
 * As of Twig 1.x, ``Twig_Loader_String`` is deprecated and will be removed in
   2.0.
 
+Node Visitors
+-------------
+
+* Because of the removal of ``Twig_NodeInterface`` in 2.0, you need to extend
+  ``Twig_BaseNodeVistor`` instead of implementing ``Twig_NodeVisitorInterface``
+  directly to make your node visitors compatible with both Twig 1.x and 2.x.
+
 Globals
 -------
 
 * As of Twig 2.x, the ability to register a global variable after the runtime
   or the extensions have been initialized is not possible anymore (but
   changing the value of an already registered global is possible).
+
+* As of Twig 1.x, the ``_self`` global variable is deprecated except for usage
+  in the ``from`` and the ``import`` tags. In Twig 2.0, ``_self`` is not
+  exposed anymore but still usable in the ``from`` and the ``import`` tags.
+
+Miscellaneous
+-------------
+
+* As of Twig 1.x, ``Twig_Environment::clearTemplateCache()`` is deprecated and
+  will be removed in 2.0.
+
+* As of Twig 1.x, ``Twig_Template::getEnvironment()`` and
+  ``Twig_TemplateInterface::getEnvironment()`` are deprecated and will be
+  removed in 2.0.

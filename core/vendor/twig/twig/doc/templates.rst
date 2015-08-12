@@ -93,7 +93,7 @@ access the variable attribute:
     don't put the braces around them.
 
 If a variable or attribute does not exist, you will receive a ``null`` value
-when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables`` 
+when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
 is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
@@ -124,7 +124,7 @@ Global Variables
 
 The following variables are always available in templates:
 
-* ``_self``: references the current template;
+* ``_self``: references the current template (deprecated since Twig 1.20);
 * ``_context``: references the current context;
 * ``_charset``: references the current charset.
 
@@ -541,6 +541,9 @@ macro call:
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
 
+If extra positional arguments are passed to a macro call, they end up in the
+special ``varargs`` variable as a list of values.
+
 .. _twig-expressions:
 
 Expressions
@@ -668,6 +671,10 @@ You can combine multiple expressions with the following operators:
 .. note::
 
     Twig also support bitwise operators (``b-and``, ``b-xor``, and ``b-or``).
+
+.. note::
+
+    Operators are case sensitive.
 
 Comparisons
 ~~~~~~~~~~~
@@ -800,6 +807,8 @@ inserted into the string:
 
     {{ "foo #{bar} baz" }}
     {{ "foo #{1 + 2} baz" }}
+
+.. _templates-whitespace-control:
 
 Whitespace Control
 ------------------
