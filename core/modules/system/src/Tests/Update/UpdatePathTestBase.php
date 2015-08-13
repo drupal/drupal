@@ -246,6 +246,9 @@ abstract class UpdatePathTestBase extends WebTestBase {
    * {@inheritdoc}
    */
   protected function rebuildAll() {
+    // We know the rebuild causes notices, so don't exit on failure.
+    $die_on_fail = $this->dieOnFail;
+    $this->dieOnFail = FALSE;
     parent::rebuildAll();
 
     // Remove the notices we get due to the menu link rebuild prior to running
@@ -257,6 +260,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
         $this->results['#exception']--;
       }
     }
+    $this->dieOnFail = $die_on_fail;
   }
 
 }
