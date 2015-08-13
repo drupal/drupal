@@ -562,12 +562,8 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
 /**
  * Perform alterations to the breadcrumb built by the BreadcrumbManager.
  *
- * @param array $breadcrumb
- *   An array of breadcrumb link a tags, returned by the breadcrumb manager
- *   build method, for example
- *   @code
- *     array('<a href="/">Home</a>');
- *   @endcode
+ * @param \Drupal\Core\Breadcrumb\Breadcrumb $breadcrumb
+ *   A breadcrumb object returned by BreadcrumbBuilderInterface::build().
  * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
  *   The current route match.
  * @param array $context
@@ -578,9 +574,9 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  *
  * @ingroup menu
  */
-function hook_system_breadcrumb_alter(array &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
+function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
   // Add an item to the end of the breadcrumb.
-  $breadcrumb[] = Drupal::l(t('Text'), 'example_route_name');
+  $breadcrumb->addLink(Drupal::l(t('Text'), 'example_route_name'));
 }
 
 /**

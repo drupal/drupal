@@ -8,6 +8,7 @@
 namespace Drupal\forum\Breadcrumb;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Link;
@@ -65,14 +66,18 @@ abstract class ForumBreadcrumbBuilderBase  implements BreadcrumbBuilderInterface
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
-    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
+    $breadcrumb = new Breadcrumb();
+    $breadcrumb->setCacheContexts(['route']);
+
+    $links[] = Link::createFromRoute($this->t('Home'), '<front>');
 
     $vocabulary = $this->entityManager
       ->getStorage('taxonomy_vocabulary')
       ->load($this->config->get('vocabulary'));
-    $breadcrumb[] = Link::createFromRoute($vocabulary->label(), 'forum.index');
+    $breadcrumb->addCacheableDependency($vocabulary);
+    $links[] = Link::createFromRoute($vocabulary->label(), 'forum.index');
 
-    return $breadcrumb;
+    return $breadcrumb->setLinks($links);
   }
 
 }

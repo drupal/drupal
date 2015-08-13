@@ -7,15 +7,32 @@
 
 namespace Drupal\Tests\forum\Unit\Breadcrumb;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @coversDefaultClass \Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder
  * @group forum
  */
 class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $cache_contexts_manager->expects($this->any())
+      ->method('validate_tokens');
+    $container = new Container();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
+  }
 
   /**
    * Tests ForumNodeBreadcrumbBuilder::applies().
@@ -112,25 +129,21 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function testBuild() {
     // Build all our dependencies, backwards.
-    $term1 = $this->getMockBuilder('Drupal\Core\Entity\EntityInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $term1->expects($this->any())
-      ->method('label')
-      ->will($this->returnValue('Something'));
-    $term1->expects($this->any())
-      ->method('id')
-      ->will($this->returnValue(1));
+    $prophecy = $this->prophesize('Drupal\taxonomy\Entity\Term');
+    $prophecy->label()->willReturn('Something');
+    $prophecy->id()->willReturn(1);
+    $prophecy->getCacheTags()->willReturn(['taxonomy_term:1']);
+    $prophecy->getCacheContexts()->willReturn([]);
+    $prophecy->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $term1 = $prophecy->reveal();
 
-    $term2 = $this->getMockBuilder('Drupal\Core\Entity\EntityInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $term2->expects($this->any())
-      ->method('label')
-      ->will($this->returnValue('Something else'));
-    $term2->expects($this->any())
-      ->method('id')
-      ->will($this->returnValue(2));
+    $prophecy = $this->prophesize('Drupal\taxonomy\Entity\Term');
+    $prophecy->label()->willReturn('Something else');
+    $prophecy->id()->willReturn(2);
+    $prophecy->getCacheTags()->willReturn(['taxonomy_term:2']);
+    $prophecy->getCacheContexts()->willReturn([]);
+    $prophecy->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $term2 = $prophecy->reveal();
 
     $forum_manager = $this->getMockBuilder('Drupal\forum\ForumManagerInterface')
       ->disableOriginalConstructor()
@@ -142,15 +155,17 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       ->method('getParents')
       ->will($this->returnValue(array($term1, $term2)));
 
-    $vocab_item = $this->getMock('Drupal\taxonomy\VocabularyInterface');
-    $vocab_item->expects($this->any())
-      ->method('label')
-      ->will($this->returnValue('Forums'));
+    $prophecy = $this->prophesize('Drupal\taxonomy\VocabularyInterface');
+    $prophecy->label()->willReturn('Forums');
+    $prophecy->id()->willReturn(5);
+    $prophecy->getCacheTags()->willReturn(['taxonomy_vocabulary:5']);
+    $prophecy->getCacheContexts()->willReturn([]);
+    $prophecy->getCacheMaxAge()->willReturn(Cache::PERMANENT);
     $vocab_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $vocab_storage->expects($this->any())
       ->method('load')
       ->will($this->returnValueMap(array(
-        array('forums', $vocab_item),
+        array('forums', $prophecy->reveal()),
       )));
 
     $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManagerInterface')
@@ -203,7 +218,11 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       Link::createFromRoute('Forums', 'forum.index'),
       Link::createFromRoute('Something', 'forum.page', array('taxonomy_term' => 1)),
     );
-    $this->assertEquals($expected1, $breadcrumb_builder->build($route_match));
+    $breadcrumb = $breadcrumb_builder->build($route_match);
+    $this->assertEquals($expected1, $breadcrumb->getLinks());
+    $this->assertEquals(['route'], $breadcrumb->getCacheContexts());
+    $this->assertEquals(['taxonomy_term:1', 'taxonomy_vocabulary:5'], $breadcrumb->getCacheTags());
+    $this->assertEquals(Cache::PERMANENT, $breadcrumb->getCacheMaxAge());
 
     // Second test.
     $expected2 = array(
@@ -212,7 +231,11 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       Link::createFromRoute('Something else', 'forum.page', array('taxonomy_term' => 2)),
       Link::createFromRoute('Something', 'forum.page', array('taxonomy_term' => 1)),
     );
-    $this->assertEquals($expected2, $breadcrumb_builder->build($route_match));
+    $breadcrumb = $breadcrumb_builder->build($route_match);
+    $this->assertEquals($expected2, $breadcrumb->getLinks());
+    $this->assertEquals(['route'], $breadcrumb->getCacheContexts());
+    $this->assertEquals(['taxonomy_term:1', 'taxonomy_term:2', 'taxonomy_vocabulary:5'], $breadcrumb->getCacheTags());
+    $this->assertEquals(Cache::PERMANENT, $breadcrumb->getCacheMaxAge());
   }
 
 }

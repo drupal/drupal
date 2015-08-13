@@ -62,6 +62,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
+  cache_context.url.path:
+    class: Drupal\Core\Cache\Context\PathCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
   cache_context.url.query_args:
     class: Drupal\Core\Cache\Context\QueryArgsCacheContext
     arguments: ['@request_stack']

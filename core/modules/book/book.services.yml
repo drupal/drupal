@@ -26,6 +26,8 @@ services:
   cache_context.route.book_navigation:
     class: Drupal\book\Cache\BookNavigationCacheContext
     arguments: ['@request_stack']
+    calls:
+      - [setContainer, ['@service_container']]
     tags:
       - { name: cache.context}
 

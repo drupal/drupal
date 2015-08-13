@@ -29,18 +29,21 @@ class ForumNodeBreadcrumbBuilder extends ForumBreadcrumbBuilderBase {
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = parent::build($route_match);
+    $breadcrumb->addCacheContexts(['route']);
 
     $parents = $this->forumManager->getParents($route_match->getParameter('node')->forum_tid);
     if ($parents) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = Link::createFromRoute($parent->label(), 'forum.page',
+        $breadcrumb->addCacheableDependency($parent);
+        $breadcrumb->addLink(Link::createFromRoute($parent->label(), 'forum.page',
           array(
             'taxonomy_term' => $parent->id(),
           )
-        );
+        ));
       }
     }
+
     return $breadcrumb;
   }
 

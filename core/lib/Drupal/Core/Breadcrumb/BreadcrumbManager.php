@@ -75,7 +75,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
-    $breadcrumb = array();
+    $breadcrumb = new Breadcrumb();
     $context = array('builder' => NULL);
     // Call the build method of registered breadcrumb builders,
     // until one of them returns an array.
@@ -85,11 +85,9 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
         continue;
       }
 
-      $build = $builder->build($route_match);
+      $breadcrumb = $builder->build($route_match);
 
-      if (is_array($build)) {
-        // The builder returned an array of breadcrumb links.
-        $breadcrumb = $build;
+      if ($breadcrumb instanceof Breadcrumb) {
         $context['builder'] = $builder;
         break;
       }
@@ -99,7 +97,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
     }
     // Allow modules to alter the breadcrumb.
     $this->moduleHandler->alter('system_breadcrumb', $breadcrumb, $route_match, $context);
-    // Fall back to an empty breadcrumb.
+
     return $breadcrumb;
   }
 

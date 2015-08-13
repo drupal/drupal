@@ -24,7 +24,7 @@ class BookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('book', 'block', 'node_access_test');
+  public static $modules = array('book', 'block', 'node_access_test', 'book_test');
 
   /**
    * A book node.
@@ -107,6 +107,45 @@ class BookTest extends WebTestBase {
     $this->drupalLogout();
 
     return $nodes;
+  }
+
+  /**
+   * Tests the book navigation cache context.
+   *
+   * @see \Drupal\book\Cache\BookNavigationCacheContext
+   */
+  public function testBookNavigationCacheContext() {
+    // Create a page node.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $page = $this->drupalCreateNode();
+
+    // Create a book, consisting of book nodes.
+    $book_nodes = $this->createBook();
+
+    // Enable the debug output.
+    \Drupal::state()->set('book_test.debug_book_navigation_cache_context', TRUE);
+
+    $this->drupalLogin($this->bookAuthor);
+
+    // On non-node route.
+    $this->drupalGet('');
+    $this->assertRaw('[route.book_navigation]=book.none');
+
+    // On non-book node route.
+    $this->drupalGet($page->urlInfo());
+    $this->assertRaw('[route.book_navigation]=book.none');
+
+    // On book node route.
+    $this->drupalGet($book_nodes[0]->urlInfo());
+    $this->assertRaw('[route.book_navigation]=0|2|3');
+    $this->drupalGet($book_nodes[1]->urlInfo());
+    $this->assertRaw('[route.book_navigation]=0|2|3|4');
+    $this->drupalGet($book_nodes[2]->urlInfo());
+    $this->assertRaw('[route.book_navigation]=0|2|3|5');
+    $this->drupalGet($book_nodes[3]->urlInfo());
+    $this->assertRaw('[route.book_navigation]=0|2|6');
+    $this->drupalGet($book_nodes[4]->urlInfo());
+    $this->assertRaw('[route.book_navigation]=0|2|7');
   }
 
   /**
@@ -303,7 +342,7 @@ class BookTest extends WebTestBase {
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
     $edit = array();
-    $edit['title[0][value]'] = $number . ' - SimpleTest test node ' . $this->randomMachineName(10);
+    $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - SimpleTest test node ' . $this->randomMachineName(10);
     $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;
 
