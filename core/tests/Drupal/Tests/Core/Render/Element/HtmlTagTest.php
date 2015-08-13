@@ -35,7 +35,7 @@ class HtmlTagTest extends UnitTestCase {
   public function testPreRenderHtmlTag($element, $expected) {
     $result = HtmlTag::preRenderHtmlTag($element);
     $this->assertArrayHasKey('#markup', $result);
-    $this->assertSame($expected, $result['#markup']);
+    $this->assertEquals($expected, $result['#markup']);
   }
 
   /**
@@ -77,6 +77,36 @@ class HtmlTagTest extends UnitTestCase {
     // No script tags.
     $element['#noscript'] = TRUE;
     $tags[] = array($element, '<noscript><div class="test" id="id">value</div>' . "\n" . '</noscript>');
+
+    // Ensure that #tag is sanitised.
+    $element = array(
+      '#tag' => 'p><script>alert()</script><p',
+      '#value' => 'value',
+    );
+    $tags[] = array($element, "<p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>value</p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>\n");
+
+    // Ensure that #value is not filtered if it is marked as safe.
+    $element = array(
+      '#tag' => 'p',
+      '#value' => SafeString::create('<script>value</script>'),
+    );
+    $tags[] = array($element, "<p><script>value</script></p>\n");
+
+    // Ensure that #value is filtered if it is not safe.
+    $element = array(
+      '#tag' => 'p',
+      '#value' => '<script>value</script>',
+    );
+    $tags[] = array($element, "<p>value</p>\n");
+
+    // Ensure that #value_prefix and #value_suffix are not filtered.
+    $element = array(
+      '#tag' => 'p',
+      '#value' => 'value',
+      '#value_prefix' => '<script>value</script>',
+      '#value_suffix' => '<script>value</script>',
+    );
+    $tags[] = array($element, "<p><script>value</script>value<script>value</script></p>\n");
 
     return $tags;
   }

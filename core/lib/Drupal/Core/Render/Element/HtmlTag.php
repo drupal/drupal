@@ -47,13 +47,8 @@ class HtmlTag extends RenderElement {
   /**
    * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
    *
-   * Note: It is the caller's responsibility to sanitize any input parameters.
-   * This callback does not perform sanitization. Despite the result of this
-   * pre-render callback being a #markup element, it is not passed through
-   * \Drupal\Component\Utility\Xss::filterAdmin(). This is because it is marked
-   * safe here, which causes
-   * \Drupal\Core\Render\Renderer::xssFilterAdminIfUnsafe() to regard it as safe
-   * and bypass the call to \Drupal\Component\Utility\Xss::filterAdmin().
+   * Note: It is the caller's responsibility to sanitize #value_prefix and
+   * #value_suffix. They are not filtered by this function.
    *
    * @param array $element
    *   An associative array containing:
@@ -61,16 +56,17 @@ class HtmlTag extends RenderElement {
    *     - meta: To provide meta information, such as a page refresh.
    *     - link: To refer to stylesheets and other contextual information.
    *     - script: To load JavaScript.
-   *     The value of #tag is not escaped or sanitized, so do not pass in user
-   *     input.
+   *     The value of #tag is escaped.
    *   - #attributes: (optional) An array of HTML attributes to apply to the
-   *     tag.
+   *     tag. The attributes are escaped, see \Drupal\Core\Template\Attribute.
    *   - #value: (optional) A string containing tag content, such as inline
-   *     CSS.
+   *     CSS. The value of #value will be XSS admin filtered if it is not safe.
    *   - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
-   *     wrapper prefix.
+   *     wrapper prefix. The value of #value_prefix cannot be filtered and is
+   *     assumed to be safe.
    *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
-   *     wrapper suffix.
+   *     wrapper suffix. The value of #value_suffix cannot be filtered and is
+   *     assumed to be safe.
    *   - #noscript: (optional) If TRUE, the markup (including any prefix or
    *     suffix) will be wrapped in a <noscript> element. (Note that passing
    *     any non-empty value here will add the <noscript> tag.)
@@ -80,35 +76,30 @@ class HtmlTag extends RenderElement {
   public static function preRenderHtmlTag($element) {
     $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
 
+    // An HTML tag should not contain any special characters. Escape them to
+    // ensure this cannot be abused.
+    $escaped_tag = htmlspecialchars($element['#tag'], ENT_QUOTES, 'UTF-8');
+    $markup = '<' . $escaped_tag . $attributes;
     // Construct a void element.
     if (in_array($element['#tag'], self::$voidElements)) {
-      // This function is intended for internal use, so we assume that no unsafe
-      // values are passed in #tag. The attributes are already safe because
-      // Attribute output is already automatically sanitized.
-      // @todo Escape this properly instead? https://www.drupal.org/node/2296101
-      $markup = SafeMarkup::set('<' . $element['#tag'] . $attributes . " />\n");
+      $markup .= " />\n";
     }
     // Construct all other elements.
     else {
-      $markup = '<' . $element['#tag'] . $attributes . '>';
+      $markup .= '>';
       if (isset($element['#value_prefix'])) {
         $markup .= $element['#value_prefix'];
       }
-      $markup .= $element['#value'];
+      $markup .= SafeMarkup::isSafe($element['#value']) ? $element['#value'] : Xss::filterAdmin($element['#value']);
       if (isset($element['#value_suffix'])) {
         $markup .= $element['#value_suffix'];
       }
-      $markup .= '</' . $element['#tag'] . ">\n";
-      // @todo We cannot actually guarantee this markup is safe. Consider a fix
-      //   in: https://www.drupal.org/node/2296101
-      $markup = SafeMarkup::set($markup);
+      $markup .= '</' . $escaped_tag . ">\n";
     }
     if (!empty($element['#noscript'])) {
-      $element['#markup'] = SafeMarkup::format('<noscript>@markup</noscript>', ['@markup' => $markup]);
+      $markup = "<noscript>$markup</noscript>";
     }
-    else {
-      $element['#markup'] = $markup;
-    }
+    $element['#markup'] = SafeString::create($markup);
     return $element;
   }
 
