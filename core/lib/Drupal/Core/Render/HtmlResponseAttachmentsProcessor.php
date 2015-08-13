@@ -107,8 +107,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
     $variables = $this->processAssetLibraries($attached, $placeholders);
 
-    // Handle all non-asset attachments. This populates drupal_get_html_head()
-    // and drupal_get_http_header().
+    // Handle all non-asset attachments. This populates drupal_get_html_head().
     $all_attached = ['#attached' => $attached];
     drupal_process_attached($all_attached);
 
@@ -120,9 +119,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // Now replace the placeholders in the response content with the real data.
     $this->renderPlaceholders($response, $placeholders, $variables);
 
-    // Finally set the headers on the response.
-    $headers = drupal_get_http_header();
-    $this->setHeaders($response, $headers);
+    // Finally set the headers on the response if any bubbled.
+    if (!empty($attached['http_header'])) {
+      $this->setHeaders($response, $attached['http_header']);
+    }
 
     return $response;
   }
@@ -205,13 +205,17 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   The headers to set.
    */
   protected function setHeaders(HtmlResponse $response, array $headers) {
-    foreach ($headers as $name => $value) {
+    foreach ($headers as $values) {
+      $name = $values[0];
+      $value = $values[1];
+      $replace = !empty($values[2]);
+
       // Drupal treats the HTTP response status code like a header, even though
       // it really is not.
-      if ($name === 'status') {
+      if (strtolower($name) === 'status') {
         $response->setStatusCode($value);
       }
-      $response->headers->set($name, $value, FALSE);
+      $response->headers->set($name, $value, $replace);
     }
   }
 
