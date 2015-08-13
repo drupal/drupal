@@ -45,7 +45,7 @@ base:
       css/components/tablesort.theme.css: { every_page: true, weight: -10 }
       css/components/tabs.theme.css: { every_page: true, weight: -10 }
       css/components/textarea.theme.css: { every_page: true, weight: -10 }
-      css/components/tree-child.theme.css: { every_page: true, weight: -10 }
+      css/components/tree-child.module.css: { every_page: true, weight: -10 }
 
 admin:
   version: VERSION
