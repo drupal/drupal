@@ -68,7 +68,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
       if (is_array($cache_keys)) {
         $token_render_array['#cache']['keys'] = $cache_keys;
       }
-      $token = hash('sha1', serialize($token_render_array));
+      $token = hash('crc32b', serialize($token_render_array));
       return SafeMarkup::format('<drupal-render-placeholder callback="@callback" arguments="@arguments" token="@token"></drupal-render-placeholder>', [
         '@callback' => 'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
         '@arguments' => '0=' . $args[0],
@@ -440,7 +440,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     $this->setUpRequest('GET');
 
-    $token = hash('sha1', serialize($expected_placeholder_render_array));
+    $token = hash('crc32b', serialize($expected_placeholder_render_array));
     $expected_placeholder_markup = '<drupal-render-placeholder callback="Drupal\Tests\Core\Render\PlaceholdersTest::callback" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>';
     $this->assertSame($expected_placeholder_markup, Html::normalize($expected_placeholder_markup), 'Placeholder unaltered by Html::normalize() which is used by FilterHtmlCorrector.');
 

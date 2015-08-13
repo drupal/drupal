@@ -707,7 +707,7 @@ class Renderer implements RendererInterface {
     $attributes = new Attribute();
     $attributes['callback'] = $placeholder_render_array['#lazy_builder'][0];
     $attributes['arguments'] = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
-    $attributes['token'] = hash('sha1', serialize($placeholder_render_array));
+    $attributes['token'] = hash('crc32b', serialize($placeholder_render_array));
     $placeholder_markup = SafeMarkup::format('<drupal-render-placeholder@attributes></drupal-render-placeholder>', ['@attributes' => $attributes]);
 
     // Build the placeholder element to return.
