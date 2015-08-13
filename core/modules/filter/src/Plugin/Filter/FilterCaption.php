@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Render\FilteredString;
 
 /**
  * Provides a filter to caption elements.
@@ -59,7 +60,10 @@ class FilterCaption extends FilterBase {
         $node->removeAttribute('class');
         $filter_caption = array(
           '#theme' => 'filter_caption',
-          '#node' => SafeMarkup::set($node->C14N()),
+          // We pass the unsanitized string because this is a text format
+          // filter, and after filtering, we always assume the output is safe.
+          // @see \Drupal\filter\Element\ProcessedText::preRenderText()
+          '#node' => FilteredString::create($node->C14N()),
           '#tag' => $node->tagName,
           '#caption' => $caption,
           '#classes' => $classes,

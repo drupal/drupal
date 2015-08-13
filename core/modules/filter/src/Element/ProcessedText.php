@@ -8,13 +8,13 @@
 namespace Drupal\filter\Element;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Render\Renderer;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\FilterInterface;
+use Drupal\filter\Render\FilteredString;
 
 /**
  * Provides a processed text render element.
@@ -124,7 +124,7 @@ class ProcessedText extends RenderElement {
     // safe, but it has been passed through the filter system and checked with
     // a text format, so it must be printed as is. (See the note about security
     // in the method documentation above.)
-    $element['#markup'] = SafeMarkup::set($text);
+    $element['#markup'] = FilteredString::create($text);
 
     // Set the updated bubbleable rendering metadata and the text format's
     // cache tag.
