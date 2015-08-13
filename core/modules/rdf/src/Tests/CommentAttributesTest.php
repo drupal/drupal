@@ -264,14 +264,14 @@ class CommentAttributesTest extends CommentTestBase {
     // Comment date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $comment->getCreatedTime()),
+      'value' => format_date($comment->getCreatedTime(), 'custom', 'c', 'UTC'),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/date', $expected_value), 'Comment date found in RDF output (dc:date).');
     // Comment date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $comment->getCreatedTime()),
+      'value' => format_date($comment->getCreatedTime(), 'custom', 'c', 'UTC'),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/created', $expected_value), 'Comment date found in RDF output (dc:created).');

@@ -831,6 +831,15 @@ abstract class WebTestBase extends TestBase {
       ->set('css.preprocess', FALSE)
       ->set('js.preprocess', FALSE)
       ->save();
+
+    // Set an explicit time zone to not rely on the system one, which may vary
+    // from setup to setup. The Australia/Sydney time zone is chosen so all
+    // tests are run using an edge case scenario (UTC+10 and DST). This choice
+    // is made to prevent time zone related regressions and reduce the
+    // fragility of the testing system in general.
+    $config->getEditable('system.date')
+      ->set('timezone.default', 'Australia/Sydney')
+      ->save();
   }
 
   /**

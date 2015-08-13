@@ -356,7 +356,7 @@ class StandardProfileTest extends WebTestBase {
     // Created date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date_iso8601($node->get('created')->value),
+      'value' => format_date($node->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/dateCreated', $expected_value), "$message_prefix created date was found (schema:dateCreated) in teaser.");
@@ -445,7 +445,7 @@ class StandardProfileTest extends WebTestBase {
     // Comment created date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date_iso8601($this->articleComment->get('created')->value),
+      'value' => format_date($this->articleComment->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/dateCreated', $expected_value), 'Article comment created date was found (schema:dateCreated).');
