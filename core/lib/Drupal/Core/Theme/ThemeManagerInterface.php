@@ -26,8 +26,8 @@ interface ThemeManagerInterface {
    * @param array $variables
    *   An associative array of theme variables.
    *
-   * @return string
-   *   The rendered output.
+   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   *   The rendered output, or a SafeString object.
    */
   public function render($hook, array $variables);
 

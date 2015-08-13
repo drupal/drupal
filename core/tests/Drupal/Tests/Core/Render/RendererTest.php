@@ -47,7 +47,15 @@ class RendererTest extends RendererTestBase {
       $setup_code();
     }
 
-    $this->assertSame($expected, (string) $this->renderer->renderRoot($build));
+    if (isset($build['#markup'])) {
+      $this->assertFalse(SafeMarkup::isSafe($build['#markup']), 'The #markup value is not marked safe before rendering.');
+    }
+    $render_output = $this->renderer->renderRoot($build);
+    $this->assertSame($expected, (string) $render_output);
+    if ($render_output !== '') {
+      $this->assertTrue(SafeMarkup::isSafe($render_output), 'Output of render is marked safe.');
+      $this->assertTrue(SafeMarkup::isSafe($build['#markup']), 'The #markup value is marked safe after rendering.');
+    }
   }
 
   /**

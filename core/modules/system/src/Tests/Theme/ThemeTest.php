@@ -13,6 +13,7 @@ use Drupal\test_theme\ThemeClass;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Drupal\Component\Utility\SafeStringInterface;
 
 /**
  * Tests low-level theme functions.
@@ -59,12 +60,19 @@ class ThemeTest extends WebTestBase {
    * Test that _theme() returns expected data types.
    */
   function testThemeDataTypes() {
-    // theme_test_false is an implemented theme hook so \Drupal::theme() service should
-    // return a string, even though the theme function itself can return anything.
-    $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo');
+    // theme_test_false is an implemented theme hook so \Drupal::theme() service
+    // should return a string or an object that implements SafeStringInterface,
+    // even though the theme function itself can return anything.
+    $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => '');
     foreach ($foos as $type => $example) {
       $output = \Drupal::theme()->render('theme_test_foo', array('foo' => $example));
-      $this->assertTrue(is_string($output), format_string('\Drupal::theme() returns a string for data type !type.', array('!type' => $type)));
+      $this->assertTrue($output instanceof SafeStringInterface || is_string($output), format_string('\Drupal::theme() returns an object that implements SafeStringInterface or a string for data type !type.', array('!type' => $type)));
+      if ($output instanceof SafeStringInterface) {
+        $this->assertIdentical((string) $example, $output->__toString());
+      }
+      elseif (is_string($output)) {
+        $this->assertIdentical($output, '', 'A string will be return when the theme returns an empty string.');
+      }
     }
 
     // suggestionnotimplemented is not an implemented theme hook so \Drupal::theme() service

@@ -518,7 +518,7 @@ class Renderer implements RendererInterface {
     $prefix = isset($elements['#prefix']) ? $this->xssFilterAdminIfUnsafe($elements['#prefix']) : '';
     $suffix = isset($elements['#suffix']) ? $this->xssFilterAdminIfUnsafe($elements['#suffix']) : '';
 
-    $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
+    $elements['#markup'] = SafeString::create($prefix . $elements['#children'] . $suffix);
 
     // We've rendered this element (and its subtree!), now update the context.
     $context->update($elements);
@@ -553,7 +553,7 @@ class Renderer implements RendererInterface {
     $context->bubble();
 
     $elements['#printed'] = TRUE;
-    return SafeString::create($elements['#markup']);
+    return $elements['#markup'];
   }
 
   /**
