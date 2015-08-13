@@ -11,7 +11,6 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -437,7 +436,7 @@ function update_mail($key, &$message, $params) {
   $language = \Drupal::languageManager()->getLanguage($langcode);
   $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => \Drupal::config('system.site')->get('name')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
-    $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $langcode);
+    $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
   }
   $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . \Drupal::url('update.status', [], ['absolute' => TRUE, 'language' => $language]);
   if (update_manager_access()) {
@@ -464,16 +463,13 @@ function update_mail($key, &$message, $params) {
  *   or 'contrib'.
  * @param $msg_reason
  *   Integer constant specifying why message is generated.
- * @param $report_link
- *   (optional) Boolean that controls if a link to the updates report should be
- *   added. Defaults to FALSE.
  * @param $langcode
  *   (optional) A language code to use. Defaults to NULL.
  *
  * @return
  *   The properly translated error message for the given key.
  */
-function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $langcode = NULL) {
+function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
   $text = '';
   switch ($msg_reason) {
     case UPDATE_NOT_SECURE:
@@ -524,23 +520,8 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
       }
       break;
   }
-  if (!empty($langcode)) {
-    $language = \Drupal::languageManager()->getLanguage($langcode);
-  }
-  else {
-    $language = NULL;
-  }
-  if ($report_link) {
-    if (update_manager_access()) {
-      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', array('@available_updates' => \Drupal::url('update.report_update', [], ['language' => $language])), array('langcode' => $langcode));
-    }
-    else {
-      $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => \Drupal::url('update.status', [], ['language' => $language])), array('langcode' => $langcode));
-    }
-  }
 
-  // All strings are t() and empty space concatenated so return SafeMarkup.
-  return SafeMarkup::set($text);
+  return $text;
 }
 
 /**

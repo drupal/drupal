@@ -107,8 +107,17 @@ function _update_requirement_check($project, $type) {
   $status = $project['status'];
   if ($status != UPDATE_CURRENT) {
     $requirement['reason'] = $status;
-    $requirement['description'] = _update_message_text($type, $status, TRUE);
     $requirement['severity'] = REQUIREMENT_ERROR;
+    // Append the available updates link to the message from
+    // _update_message_text(), and format the two translated strings together in
+    // a single paragraph.
+    $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
+    if (update_manager_access()) {
+      $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', ['@available_updates' => \Drupal::url('update.report_update')])];
+    }
+    else {
+      $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href="@available_updates">available updates</a> page for more information.', ['@available_updates' => \Drupal::url('update.status')])];
+    }
   }
   switch ($status) {
     case UPDATE_NOT_SECURE:
