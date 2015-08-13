@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Update;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -34,6 +35,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @see hook_update_N()
  */
 abstract class UpdatePathTestBase extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable after the database is loaded.
@@ -99,6 +102,15 @@ abstract class UpdatePathTestBase extends WebTestBase {
    * @var string
    */
   protected $updateUrl;
+
+  /**
+   * Disable strict config schema checking.
+   *
+   * The schema is verified at the end of running the update.
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
 
   /**
    * Constructs an UpdatePathTestCase object.
@@ -217,6 +229,17 @@ abstract class UpdatePathTestBase extends WebTestBase {
 
     // Run the update hooks.
     $this->clickLink(t('Apply pending updates'));
+
+    // The config schema can be incorrect while the update functions are being
+    // executed. But once the update has been completed, it needs to be valid
+    // again. Assert the schema of all configuration objects now.
+    $names = $this->container->get('config.storage')->listAll();
+    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
+    $typed_config = $this->container->get('config.typed');
+    foreach ($names as $name) {
+      $config = $this->config($name);
+      $this->assertConfigSchema($typed_config, $name, $config->get());
+    }
   }
 
   /**

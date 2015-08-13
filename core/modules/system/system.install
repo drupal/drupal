@@ -1203,3 +1203,10 @@ function system_update_8001(&$sandbox = NULL) {
   }
 }
 
+/**
+ * Removes the system.filter configuration.
+ */
+function system_update_8002() {
+  \Drupal::configFactory()->getEditable('system.filter')->delete();
+  return t('The system.filter configuration has been moved to a container parameter, see default.services.yml for more information.');
+}
