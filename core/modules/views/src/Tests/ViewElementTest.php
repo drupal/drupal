@@ -127,7 +127,7 @@ class ViewElementTest extends ViewTestBase {
 
     // Set the content as our rendered array.
     $render = $this->render;
-    $render['#embed'] = TRUE;
+    $render['view']['#embed'] = TRUE;
     $this->setRawContent($renderer->renderRoot($render));
 
     $xpath = $this->xpath('//div[@class="views-element-container"]');
@@ -173,7 +173,7 @@ class ViewElementTest extends ViewTestBase {
 
     // Test the render array again.
     $render = $this->render;
-    $render['#embed'] = TRUE;
+    $render['view']['#embed'] = TRUE;
     $this->setRawContent($renderer->renderRoot($render));
     // There should be 1 row in the results, 'John' arg 25.
     $xpath = $this->xpath('//div[@class="view-content"]/div');
@@ -183,6 +183,15 @@ class ViewElementTest extends ViewTestBase {
     $this->drupalGet('views_test_data_element_embed_form');
     $xpath = $this->xpath('//div[@class="view-content"]/div');
     $this->assertEqual(count($xpath), 1);
+
+    // Tests the render array with an exposed filter.
+    $render = $this->render;
+    $render['view']['#display_id'] = 'embed_2';
+    $render['view']['#embed'] = TRUE;
+    $this->setRawContent($renderer->renderRoot($render));
+
+    // Ensure that the exposed form is rendered.
+    $this->assertEqual(1, count($this->xpath('//form[@class="views-exposed-form"]')));
   }
 
 }

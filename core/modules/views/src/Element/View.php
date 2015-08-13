@@ -58,7 +58,7 @@ class View extends RenderElement {
 
     if ($view && $view->access($element['#display_id'])) {
       if (!empty($element['#embed'])) {
-        $element += $view->preview($element['#display_id'], $element['#arguments']);
+        $element['view_build'] = $view->preview($element['#display_id'], $element['#arguments']);
       }
       else {
         // Add contextual links to the view. We need to attach them to the dummy

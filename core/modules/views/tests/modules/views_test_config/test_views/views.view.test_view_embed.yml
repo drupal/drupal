@@ -59,3 +59,40 @@ display:
     display_title: Embedded
     id: embed_1
     position: 1
+  embed_2:
+    display_options:
+      defaults:
+        filters: false
+        exposed_form: false
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      filters:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Id
+            description: ''
+            identifier: id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+    display_plugin: embed
+    display_title: Embedded
+    id: embed_2
+    position: 2
