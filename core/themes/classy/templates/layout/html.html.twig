@@ -19,9 +19,10 @@
  * - page: The rendered page markup.
  * - page_bottom: Closing rendered markup. This variable should be printed after
  *   'page'.
- * - styles: Style tags necessary to import all necessary CSS files in the head.
- * - scripts: Script tags necessary to load the JavaScript files and settings
- *   in the head.
+ * - styles: HTML necessary to import all necessary CSS files in <head>.
+ * - scripts: HTML necessary to load JavaScript files and settings in <head>.
+ * - scripts_bottom: HTML necessary to load JavaScript files before closing
+ *   <body> tag.
  * - db_offline: A flag indicating if the database is offline.
  *
  * @see template_preprocess_html()
