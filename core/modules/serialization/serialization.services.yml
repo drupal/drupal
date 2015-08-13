@@ -30,6 +30,10 @@ services:
       arguments: ['Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem']
       tags:
         - { name: normalizer, priority: 20 }
+  serializer.normalizer.safe_string:
+      class: Drupal\serialization\Normalizer\SafeStringNormalizer
+      tags:
+        - { name: normalizer }
   serializer.normalizer.typed_data:
     class: Drupal\serialization\Normalizer\TypedDataNormalizer
     tags:

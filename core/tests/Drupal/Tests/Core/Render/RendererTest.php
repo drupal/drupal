@@ -36,6 +36,18 @@ class RendererTest extends RendererTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    // Reset the static list of SafeStrings to prevent bleeding between tests.
+    $reflected_class = new \ReflectionClass('\Drupal\Component\Utility\SafeMarkup');
+    $reflected_property = $reflected_class->getProperty('safeStrings');
+    $reflected_property->setAccessible(true);
+    $reflected_property->setValue([]);
+  }
+
+  /**
    * @covers ::render
    * @covers ::doRender
    *
@@ -47,7 +59,15 @@ class RendererTest extends RendererTestBase {
       $setup_code();
     }
 
-    $this->assertSame($expected, (string) $this->renderer->renderRoot($build));
+    if (isset($build['#markup'])) {
+      $this->assertFalse(SafeMarkup::isSafe($build['#markup']), 'The #markup value is not marked safe before rendering.');
+    }
+    $render_output = $this->renderer->renderRoot($build);
+    $this->assertSame($expected, (string) $render_output);
+    if ($render_output !== '') {
+      $this->assertTrue(SafeMarkup::isSafe($render_output), 'Output of render is marked safe.');
+      $this->assertTrue(SafeMarkup::isSafe($build['#markup']), 'The #markup value is marked safe after rendering.');
+    }
   }
 
   /**
