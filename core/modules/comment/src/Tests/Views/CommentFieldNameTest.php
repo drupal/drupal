@@ -91,11 +91,11 @@ class CommentFieldNameTest extends CommentTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['field_name']->advancedRender($view->result[0]);
     });
-    $this->assertEqual($this->comment->getFieldName(), $output);
+    $this->assertIdentical($this->comment->getFieldName(), $output);
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['field_name']->advancedRender($view->result[1]);
     });
-    $this->assertEqual($this->customComment->getFieldName(), $output);
+    $this->assertIdentical($this->customComment->getFieldName(), $output);
   }
 
 }

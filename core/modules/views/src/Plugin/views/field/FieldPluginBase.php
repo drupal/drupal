@@ -10,7 +10,6 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -1139,7 +1138,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     else {
       $value = $this->render($values);
       if (is_array($value)) {
-        $value = $this->getRenderer()->render($value);
+        $value = (string) $this->getRenderer()->render($value);
       }
       $this->last_render = $value;
       $this->original_value = $value;
@@ -1170,16 +1169,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
 
       if (is_array($value)) {
-        $value = $this->getRenderer()->render($value);
+        $value = (string) $this->getRenderer()->render($value);
       }
       // This happens here so that renderAsLink can get the unaltered value of
       // this field as a token rather than the altered value.
       $this->last_render = $value;
     }
 
-    // String cast is necessary to test emptiness of SafeStringInterface
-    // objects.
-    if (empty((string) $this->last_render)) {
+    if (empty($this->last_render)) {
       if ($this->isValueEmpty($this->last_render, $this->options['empty_zero'], FALSE)) {
         $alter = $this->options['alter'];
         $alter['alter_text'] = 1;
@@ -1188,6 +1185,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $this->last_render = $this->renderText($alter);
       }
     }
+    // @todo Fix this in https://www.drupal.org/node/2280961.
+    $this->last_render = SafeMarkup::set($this->last_render);
+
 
     return $this->last_render;
   }
@@ -1196,10 +1196,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE) {
-    // Convert SafeStringInterface to a string for checking.
-    if ($value instanceof SafeStringInterface) {
-      $value = (string) $value;
-    }
     if (!isset($value)) {
       $empty = TRUE;
     }
@@ -1217,14 +1213,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function renderText($alter) {
-    // We need to preserve the safeness of the value regardless of the
-    // alterations made by this method. Any alterations or replacements made
-    // within this method need to ensure that at the minimum the result is
-    // XSS admin filtered. See self::renderAltered() as an example that does.
-    $value_is_safe = SafeMarkup::isSafe($this->last_render);
-    // Cast to a string so that empty checks and string functions work as
-    // expected.
-    $value = (string) $this->last_render;
+    $value = $this->last_render;
 
     if (!empty($alter['alter_text']) && $alter['text'] !== '') {
       $tokens = $this->getRenderTokens($alter);
@@ -1250,9 +1239,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($alter['phase'] == static::RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty) {
       // If we got here then $alter contains the value of "No results text"
       // and so there is nothing left to do.
-      if ($value_is_safe) {
-        $value = ViewsRenderPipelineSafeString::create($value);
-      }
       return $value;
     }
 
@@ -1289,12 +1275,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if (!empty($alter['nl2br'])) {
       $value = nl2br($value);
     }
-
-    // Preserve whether or not the string is safe. Since $suffix comes from
-    // \Drupal::l(), it is safe to append.
-    if ($value_is_safe) {
-      $value = ViewsRenderPipelineSafeString::create($value . $suffix);
-    }
     $this->last_render_text = $value;
 
     if (!empty($alter['make_link']) && (!empty($alter['path']) || !empty($alter['url']))) {
@@ -1304,42 +1284,20 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $value = $this->renderAsLink($alter, $value, $tokens);
     }
 
-    // Preserve whether or not the string is safe. Since $suffix comes from
-    // \Drupal::l(), it is safe to append.
-    if ($value_is_safe) {
-      return ViewsRenderPipelineSafeString::create($value . $suffix);
-    }
-    else {
-      // If the string is not already marked safe, it is still OK to return it
-      // because it will be sanitized by Twig.
-      return $value . $suffix;
-    }
+    return $value . $suffix;
   }
 
   /**
    * Render this field as user-defined altered text.
    */
   protected function renderAltered($alter, $tokens) {
-    return $this->viewsTokenReplace($alter['text'], $tokens);
+    return ViewsRenderPipelineSafeString::create($this->viewsTokenReplace($alter['text'], $tokens));
   }
 
   /**
-   * Trims the field down to the specified length.
-   *
-   * @param array $alter
-   *   The alter array of options to use.
-   *     - max_length: Maximum length of the string, the rest gets truncated.
-   *     - word_boundary: Trim only on a word boundary.
-   *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
-   *     - html: Make sure that the html is correct.
-   *
-   * @param string $value
-   *   The string which should be trimmed.
-   *
-   * @return string
-   *   The rendered trimmed string.
+   * {@inheritdoc}
    */
-  protected function renderTrimText($alter, $value) {
+  public function renderTrimText($alter, $value) {
     if (!empty($alter['strip_tags'])) {
       // NOTE: It's possible that some external fields might override the
       // element type.

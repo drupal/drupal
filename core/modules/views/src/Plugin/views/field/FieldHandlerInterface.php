@@ -167,10 +167,8 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   The values retrieved from a single row of a view's query result.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
-   *   The rendered output. If the output is safe it will be wrapped in an
-   *   object that implements SafeStringInterface. If it is empty or unsafe it
-   *   will be a string.
+   * @return string
+   *   The rendered output.
    *
    */
   public function render(ResultRow $values);
@@ -204,10 +202,8 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   The values retrieved from a single row of a view's query result.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
-   *   The advanced rendered output. If the output is safe it will be wrapped in
-   *   an object that implements SafeStringInterface. If it is empty or unsafe
-   *   it will be a string.
+   * @return string
+   *   The advanced rendered output.
    *
    */
   public function advancedRender(ResultRow $values);
@@ -240,12 +236,28 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
    *     - html: Make sure that the html is correct.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
-   *   The rendered output. If the output is safe it will be wrapped in an
-   *   object that implements SafeStringInterface. If it is empty or unsafe it
-   *   will be a string.
+   * @return string
+   *   The rendered string.
    */
   public function renderText($alter);
+
+  /**
+   * Trims the field down to the specified length.
+   *
+   * @param array $alter
+   *   The alter array of options to use.
+   *     - max_length: Maximum length of the string, the rest gets truncated.
+   *     - word_boundary: Trim only on a word boundary.
+   *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
+   *     - html: Make sure that the html is correct.
+   *
+   * @param string $value
+   *   The string which should be trimmed.
+   *
+   * @return string
+   *   The rendered trimmed string.
+   */
+  public function renderTrimText($alter, $value);
 
   /**
    * Gets the 'render' tokens to use for advanced rendering.
@@ -268,10 +280,8 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   Holds single row of a view's result set.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
-   *   Returns rendered output of the given theme implementation. If the output
-   *   is safe it will be wrapped in an object that implements
-   *   SafeStringInterface. If it is empty or unsafe it will be a string.
+   * @return string|false
+   *   Returns rendered output of the given theme implementation.
    */
   function theme(ResultRow $values);
 

@@ -64,9 +64,9 @@ class FieldFileSizeTest extends ViewUnitTestBase {
     // Test with the bytes option.
     $view->field['age']->options['file_size_display'] = 'bytes';
     $this->assertEqual($view->field['age']->advancedRender($view->result[0]), '');
-    $this->assertEqual($view->field['age']->advancedRender($view->result[1]), '10');
-    $this->assertEqual($view->field['age']->advancedRender($view->result[2]), '1000');
-    $this->assertEqual($view->field['age']->advancedRender($view->result[3]), '10000');
+    $this->assertEqual($view->field['age']->advancedRender($view->result[1]), 10);
+    $this->assertEqual($view->field['age']->advancedRender($view->result[2]), 1000);
+    $this->assertEqual($view->field['age']->advancedRender($view->result[3]), 10000);
   }
 
 }
