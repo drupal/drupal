@@ -324,7 +324,46 @@ class RouteProviderTest extends KernelTestBase {
       $this->assertEqual(array('narf', 'poink'), array_keys($routes_array), 'Ensure the fitness was taken into account.');
       $this->assertNotNull($routes->get('narf'), 'The first matching route was found.');
       $this->assertNotNull($routes->get('poink'), 'The second matching route was found.');
-      $this->assertNull($routes->get('eep'), 'Noin-matching route was not found.');
+      $this->assertNull($routes->get('eep'), 'Non-matching route was not found.');
+    }
+    catch (ResourceNotFoundException $e) {
+      $this->fail('No matching route found with default argument value.');
+    }
+  }
+
+  /**
+   * Confirms that we can find multiple routes that match the request equally.
+   */
+  function testOutlinePathMatchDefaultsCollision3() {
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $collection = new RouteCollection();
+    $collection->add('poink', new Route('/some/{value}/path'));
+    // Add a second route matching the same path pattern.
+    $collection->add('poink2', new Route('/some/{object}/path'));
+    $collection->add('narf', new Route('/some/here/path'));
+    $collection->add('eep', new Route('/something/completely/different'));
+
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
+    $dumper->addRoutes($collection);
+    $dumper->dump();
+
+    $path = '/some/over-there/path';
+
+    $request = Request::create($path, 'GET');
+
+    try {
+      $routes = $provider->getRouteCollectionForRequest($request);
+      $routes_array = $routes->all();
+
+      $this->assertEqual(count($routes), 2, 'The correct number of routes was found.');
+      $this->assertEqual(array('poink', 'poink2'), array_keys($routes_array), 'Ensure the fitness and name were taken into account in the sort.');
+      $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
+      $this->assertNotNull($routes->get('poink2'), 'The second matching route was found.');
+      $this->assertNull($routes->get('eep'), 'Non-matching route was not found.');
     }
     catch (ResourceNotFoundException $e) {
       $this->fail('No matching route found with default argument value.');

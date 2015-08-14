@@ -1001,7 +1001,7 @@ function system_schema() {
       ),
     ),
     'indexes' => array(
-      'pattern_outline_fit' => array('pattern_outline', 'fit'),
+      'pattern_outline_parts' => array('pattern_outline', 'number_parts'),
     ),
     'primary key' => array('name'),
   );
@@ -1209,4 +1209,35 @@ function system_update_8001(&$sandbox = NULL) {
 function system_update_8002() {
   \Drupal::configFactory()->getEditable('system.filter')->delete();
   return t('The system.filter configuration has been moved to a container parameter, see default.services.yml for more information.');
+}
+
+/**
+ * Change the index on the {router} table.
+ */
+function system_update_8003() {
+  $database = \Drupal::database();
+  $database->schema()->dropIndex('router', 'pattern_outline_fit');
+  $database->schema()->addIndex(
+    'router',
+    'pattern_outline_parts',
+    ['pattern_outline', 'number_parts'],
+    [
+      'fields' => [
+        'pattern_outline' => [
+          'description' => 'The pattern',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'number_parts' => [
+          'description' => 'Number of parts in this router path.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'size' => 'small',
+        ],
+      ],
+    ]
+  );
 }
