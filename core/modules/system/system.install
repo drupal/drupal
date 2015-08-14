@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -137,9 +138,7 @@ function system_requirements($phase) {
   if (function_exists('phpinfo')) {
     // $phpversion is safe and output of l() is safe, so this value is safe.
     if ($phase === 'runtime') {
-      $phpversion_label = [
-        '#markup' => $phpversion . ' (' . \Drupal::l(t('more information'), new Url('system.php')) . ')',
-      ];
+      $phpversion_label = SafeMarkup::set($phpversion . ' (' . \Drupal::l(t('more information'), new Url('system.php')) . ')');
     }
     $requirements['php'] = array(
       'title' => t('PHP'),
@@ -416,6 +415,8 @@ function system_requirements($phase) {
     $threshold_warning = $cron_config->get('threshold.requirements_warning');
     // Cron error threshold defaults to two weeks.
     $threshold_error = $cron_config->get('threshold.requirements_error');
+    // Cron configuration help text.
+    $help = t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'https://www.drupal.org/cron'));
 
     // Determine when cron last ran.
     $cron_last = \Drupal::state()->get('system.cron_last');
@@ -434,25 +435,24 @@ function system_requirements($phase) {
 
     // Set summary and description based on values determined above.
     $summary = t('Last run !time ago', array('!time' => \Drupal::service('date.formatter')->formatTimeDiffSince($cron_last)));
+    $description = '';
+    if ($severity != REQUIREMENT_INFO) {
+      $description = t('Cron has not run recently.') . ' ' . $help;
+    }
+
+    $description .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => \Drupal::url('system.run_cron')));
+    $description .= '<br />' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => \Drupal::url('system.cron', array('key' => \Drupal::state()->get('system.cron_key'), array('absolute' => TRUE)))));
 
     $requirements['cron'] = array(
       'title' => t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
+      // @todo This string is concatenated from t() calls, safe drupal_render()
+      //   output, whitespace, and <br /> tags, so is safe. However, as a best
+      //   practice, we should not use SafeMarkup::set() around a variable. Fix
+      //   in: https://www.drupal.org/node/2296929.
+      'description' => SafeMarkup::set($description),
     );
-    if ($severity != REQUIREMENT_INFO) {
-      $requirements['cron']['description'][] = ['#markup' => t('Cron has not run recently.')];
-      $requirements['cron']['description'][] = [
-        '#prefix' => ' ',
-        '#markup' => t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', ['@cron-handbook' => 'https://www.drupal.org/cron']),
-        '#suffix' => ' ',
-      ];
-    }
-    $requirements['cron']['description'][] = ['#markup' => t('You can <a href="@cron">run cron manually</a>.', ['@cron' => \Drupal::url('system.run_cron')])];
-    $requirements['cron']['description'][] = [
-      '#prefix' => '<br />',
-      '#markup' => t('To run cron from outside the site, go to <a href="@cron">@cron</a>', ['@cron' => \Drupal::url('system.cron', ['key' => \Drupal::state()->get('system.cron_key'), ['absolute' => TRUE]])]),
-    ];
   }
   if ($phase != 'install') {
     $filesystem_config = \Drupal::config('system.file');
