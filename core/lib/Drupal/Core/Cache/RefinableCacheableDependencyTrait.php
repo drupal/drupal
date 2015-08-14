@@ -44,7 +44,7 @@ trait RefinableCacheableDependencyTrait {
     }
     else {
       // Not a cacheable dependency, this can not be cached.
-      $this->maxAge = 0;
+      $this->cacheMaxAge = 0;
     }
     return $this;
   }
@@ -53,7 +53,9 @@ trait RefinableCacheableDependencyTrait {
    * {@inheritdoc}
    */
   public function addCacheContexts(array $cache_contexts) {
-    $this->cacheContexts = Cache::mergeContexts($this->cacheContexts, $cache_contexts);
+    if ($cache_contexts) {
+      $this->cacheContexts = Cache::mergeContexts($this->cacheContexts, $cache_contexts);
+    }
     return $this;
   }
 
@@ -61,7 +63,9 @@ trait RefinableCacheableDependencyTrait {
    * {@inheritdoc}
    */
   public function addCacheTags(array $cache_tags) {
-    $this->cacheTags = Cache::mergeTags($this->cacheTags, $cache_tags);
+    if ($cache_tags) {
+      $this->cacheTags = Cache::mergeTags($this->cacheTags, $cache_tags);
+    }
     return $this;
   }
 

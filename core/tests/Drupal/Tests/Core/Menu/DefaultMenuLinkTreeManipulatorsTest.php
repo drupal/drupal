@@ -8,6 +8,8 @@
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
@@ -76,6 +78,11 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       ->getMock();
 
     $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->queryFactory);
+
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
+    $container = new Container();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
   }
 
   /**

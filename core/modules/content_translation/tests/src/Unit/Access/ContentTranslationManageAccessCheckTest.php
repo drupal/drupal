@@ -10,6 +10,7 @@ namespace Drupal\Tests\content_translation\Unit\Access;
 use Drupal\content_translation\Access\ContentTranslationManageAccessCheck;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -96,6 +97,12 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
       ->method('getTranslationLanguages')
       ->with()
       ->will($this->returnValue(array()));
+    $entity->expects($this->once())
+      ->method('getCacheContexts')
+      ->willReturn([]);
+    $entity->expects($this->once())
+      ->method('getCacheMaxAge')
+      ->willReturn(Cache::PERMANENT);
     $entity->expects($this->once())
       ->method('getCacheTags')
       ->will($this->returnValue(array('node:1337')));

@@ -8,6 +8,8 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityCreateAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -32,6 +34,11 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
+    $container = new Container();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -40,9 +47,8 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * @return array
    */
   public function providerTestAccess() {
-    $no_access = AccessResult::neutral()->cachePerPermissions();
-    $access = AccessResult::allowed()->cachePerPermissions();
-    $no_access_due_to_errors = AccessResult::neutral();
+    $no_access = FALSE;
+    $access = TRUE;
 
     return array(
       array('', 'entity_test', $no_access, $no_access),
@@ -51,10 +57,10 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       array('test_entity', 'entity_test:test_entity', $no_access, $no_access),
       array('test_entity', 'entity_test:{bundle_argument}', $access, $access),
       array('test_entity', 'entity_test:{bundle_argument}', $no_access, $no_access),
-      array('', 'entity_test:{bundle_argument}', $no_access, $no_access_due_to_errors),
+      array('', 'entity_test:{bundle_argument}', $no_access, $no_access, FALSE),
       // When the bundle is not provided, access should be denied even if the
       // access control handler would allow access.
-      array('', 'entity_test:{bundle_argument}', $access, $no_access_due_to_errors),
+      array('', 'entity_test:{bundle_argument}', $access, $no_access, FALSE),
     );
   }
 
@@ -63,7 +69,15 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    *
    * @dataProvider providerTestAccess
    */
-  public function testAccess($entity_bundle, $requirement, $access, $expected) {
+  public function testAccess($entity_bundle, $requirement, $access, $expected, $expect_permission_context = TRUE) {
+
+    // Set up the access result objects for allowing or denying access.
+    $access_result = $access ? AccessResult::allowed()->cachePerPermissions() : AccessResult::neutral()->cachePerPermissions();
+    $expected_access_result = $expected ? AccessResult::allowed() : AccessResult::neutral();
+    if ($expect_permission_context) {
+      $expected_access_result->cachePerPermissions();
+    }
+
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
     // Don't expect a call to the access control handler when we have a bundle
@@ -73,7 +87,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       $access_control_handler->expects($this->once())
         ->method('createAccess')
         ->with($entity_bundle)
-        ->will($this->returnValue($access));
+        ->will($this->returnValue($access_result));
 
       $entity_manager->expects($this->any())
         ->method('getAccessControlHandler')
@@ -101,7 +115,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue($raw_variables));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertEquals($expected, $applies_check->access($route, $route_match, $account));
+    $this->assertEquals($expected_access_result, $applies_check->access($route, $route_match, $account));
   }
 
 }

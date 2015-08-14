@@ -100,7 +100,10 @@ class MenuLinkTreeTest extends UnitTestCase {
    *
    * @dataProvider providerTestBuildCacheability
    */
-  public function testBuildCacheability($description, $tree, $expected_build) {
+  public function testBuildCacheability($description, $tree, $expected_build, $access, array $access_cache_contexts = []) {
+    if ($access !== NULL) {
+      $access->addCacheContexts($access_cache_contexts);
+    }
     $build = $this->menuLinkTree->build($tree);
     sort($expected_build['#cache']['contexts']);
     $this->assertEquals($expected_build, $build, $description);
@@ -175,13 +178,12 @@ class MenuLinkTreeTest extends UnitTestCase {
       'description' => 'Empty tree.',
       'tree' => [],
       'expected_build' => $base_expected_build_empty,
+      'access' => NULL,
+      'access_cache_contexts' => [],
     ];
 
     for ($i = 0; $i < count($access_scenarios); $i++) {
       list($access, $access_cache_contexts) = $access_scenarios[$i];
-      if ($access !== NULL) {
-        $access->addCacheContexts($access_cache_contexts);
-      }
 
       for ($j = 0; $j < count($links_scenarios); $j++) {
         $links = $links_scenarios[$j];
@@ -203,6 +205,8 @@ class MenuLinkTreeTest extends UnitTestCase {
           'description' => "Single-item tree; access=$i; link=$j.",
           'tree' => $tree,
           'expected_build' => $expected_build,
+          'access' => $access,
+          'access_cache_contexts' => $access_cache_contexts,
         ];
 
         // Single-level tree.
@@ -221,6 +225,8 @@ class MenuLinkTreeTest extends UnitTestCase {
           'description' => "Single-level tree; access=$i; link=$j.",
           'tree' => $tree,
           'expected_build' => $expected_build,
+          'access' => $access,
+          'access_cache_contexts' => $access_cache_contexts,
         ];
 
         // Multi-level tree.
@@ -251,6 +257,8 @@ class MenuLinkTreeTest extends UnitTestCase {
           'description' => "Multi-level tree; access=$i; link=$j.",
           'tree' => $tree,
           'expected_build' => $expected_build,
+          'access' => $access,
+          'access_cache_contexts' => $access_cache_contexts,
         ];
       }
     }

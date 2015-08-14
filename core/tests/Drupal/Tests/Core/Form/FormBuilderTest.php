@@ -19,12 +19,33 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormBuilder
  * @group Form
  */
 class FormBuilderTest extends FormTestBase {
+
+  /**
+   * The dependency injection container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->container = new ContainerBuilder();
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
+    $this->container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($this->container);
+  }
 
   /**
    * Tests the getFormId() method with a string based form ID.
@@ -571,7 +592,7 @@ class FormBuilderTest extends FormTestBase {
     $data['access-false-root'] = [$clone, $expected_access];
 
     $clone = $element;
-    $access_result = AccessResult::forbidden()->addCacheContexts(['user']);
+    $access_result = AccessResult::forbidden();
     $clone['#access'] = $access_result;
 
     $expected_access = [];
@@ -603,11 +624,9 @@ class FormBuilderTest extends FormTestBase {
 
     // Allow access on the most outer level but forbid otherwise.
     $clone = $element;
-    $access_result_allowed = AccessResult::allowed()
-      ->addCacheContexts(['user']);
+    $access_result_allowed = AccessResult::allowed();
     $clone['#access'] = $access_result_allowed;
-    $access_result_forbidden = AccessResult::forbidden()
-      ->addCacheContexts(['user']);
+    $access_result_forbidden = AccessResult::forbidden();
     $clone['child0']['#access'] = $access_result_forbidden;
 
     $expected_access = [];

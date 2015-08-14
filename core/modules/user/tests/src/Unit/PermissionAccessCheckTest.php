@@ -11,6 +11,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\PermissionAccessCheck;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\user\Access\PermissionAccessCheck
@@ -27,10 +29,22 @@ class PermissionAccessCheckTest extends UnitTestCase {
   public $accessCheck;
 
   /**
+   * The dependency injection container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->container = new ContainerBuilder();
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
+    $this->container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($this->container);
 
     $this->accessCheck = new PermissionAccessCheck();
   }
@@ -41,15 +55,13 @@ class PermissionAccessCheckTest extends UnitTestCase {
    * @return array
    */
   public function providerTestAccess() {
-    $allowed = AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions']);
-    $neutral = AccessResult::allowedIf(FALSE)->addCacheContexts(['user.permissions']);
     return [
-      [[], AccessResult::allowedIf(FALSE)],
-      [['_permission' => 'allowed'], $allowed],
-      [['_permission' => 'denied'], $neutral],
-      [['_permission' => 'allowed+denied'], $allowed],
-      [['_permission' => 'allowed+denied+other'], $allowed],
-      [['_permission' => 'allowed,denied'], $neutral],
+      [[], FALSE],
+      [['_permission' => 'allowed'], TRUE, ['user.permissions']],
+      [['_permission' => 'denied'], FALSE, ['user.permissions']],
+      [['_permission' => 'allowed+denied'], TRUE, ['user.permissions']],
+      [['_permission' => 'allowed+denied+other'], TRUE, ['user.permissions']],
+      [['_permission' => 'allowed,denied'], FALSE, ['user.permissions']],
     ];
   }
 
@@ -59,7 +71,8 @@ class PermissionAccessCheckTest extends UnitTestCase {
    * @dataProvider providerTestAccess
    * @covers ::access
    */
-  public function testAccess($requirements, $access) {
+  public function testAccess($requirements, $access, array $contexts = []) {
+    $access_result = AccessResult::allowedIf($access)->addCacheContexts($contexts);
     $user = $this->getMock('Drupal\Core\Session\AccountInterface');
     $user->expects($this->any())
       ->method('hasPermission')
@@ -71,7 +84,7 @@ class PermissionAccessCheckTest extends UnitTestCase {
       ));
     $route = new Route('', [], $requirements);
 
-    $this->assertEquals($access, $this->accessCheck->access($route, $user));
+    $this->assertEquals($access_result, $this->accessCheck->access($route, $user));
   }
 
 }

@@ -8,10 +8,10 @@
 namespace Drupal\Tests\quickedit\Unit\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\Container;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
-use Drupal\field\FieldStorageConfigInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -33,6 +33,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->editAccessCheck = new EditEntityFieldAccessCheck();
+
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
+    $container = new Container();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -41,34 +46,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * @see \Drupal\Tests\edit\Unit\quickedit\Access\EditEntityFieldAccessCheckTest::testAccess()
    */
   public function providerTestAccess() {
-    $editable_entity = $this->createMockEntity();
-    $editable_entity->expects($this->any())
-      ->method('access')
-      ->will($this->returnValue(AccessResult::allowed()->cachePerPermissions()));
-
-    $non_editable_entity = $this->createMockEntity();
-    $non_editable_entity->expects($this->any())
-      ->method('access')
-      ->will($this->returnValue(AccessResult::neutral()->cachePerPermissions()));
-
-    $field_storage_with_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $field_storage_with_access->expects($this->any())
-      ->method('access')
-      ->will($this->returnValue(AccessResult::allowed()));
-    $field_storage_without_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $field_storage_without_access->expects($this->any())
-      ->method('access')
-      ->will($this->returnValue(AccessResult::neutral()));
-
     $data = array();
-    $data[] = array($editable_entity, $field_storage_with_access, AccessResult::allowed()->cachePerPermissions());
-    $data[] = array($non_editable_entity, $field_storage_with_access, AccessResult::neutral()->cachePerPermissions());
-    $data[] = array($editable_entity, $field_storage_without_access, AccessResult::neutral()->cachePerPermissions());
-    $data[] = array($non_editable_entity, $field_storage_without_access, AccessResult::neutral()->cachePerPermissions());
+    $data[] = array(TRUE, TRUE, AccessResult::allowed());
+    $data[] = array(FALSE, TRUE, AccessResult::neutral());
+    $data[] = array(TRUE, FALSE, AccessResult::neutral());
+    $data[] = array(FALSE, FALSE, AccessResult::neutral());
 
     return $data;
   }
@@ -76,16 +58,28 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
   /**
    * Tests the method for checking access to routes.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   A mocked entity.
-   * @param \Drupal\field\FieldStorageConfigInterface $field_storage
-   *   A mocked field storage.
-   * @param bool|null $expected_result
+   * @param bool $entity_is_editable
+   *   Whether the subject entity is editable.
+   * @param bool $field_storage_is_accessible
+   *   Whether the user has access to the field storage entity.
+   * @param \Drupal\Core\Access\AccessResult $expected_result
    *   The expected result of the access call.
    *
    * @dataProvider providerTestAccess
    */
-  public function testAccess(EntityInterface $entity, FieldStorageConfigInterface $field_storage = NULL, $expected_result) {
+  public function testAccess($entity_is_editable, $field_storage_is_accessible, AccessResult $expected_result) {
+    $entity = $this->createMockEntity();
+    $entity->expects($this->any())
+      ->method('access')
+      ->willReturn(AccessResult::allowedIf($entity_is_editable)->cachePerPermissions());
+
+    $field_storage = $this->getMock('Drupal\field\FieldStorageConfigInterface');
+    $field_storage->expects($this->any())
+      ->method('access')
+      ->willReturn(AccessResult::allowedIf($field_storage_is_accessible));
+
+    $expected_result->cachePerPermissions();
+
     $field_name = 'valid';
     $entity_with_field = clone $entity;
     $entity_with_field->expects($this->any())

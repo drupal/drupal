@@ -11,50 +11,16 @@ namespace Drupal\Core\Cache;
  *
  * @ingroup cache
  *
- * @todo Use RefinableCacheableDependencyInterface and the corresponding trait in
- *   https://www.drupal.org/node/2526326.
  */
-class CacheableMetadata implements CacheableDependencyInterface {
+class CacheableMetadata implements RefinableCacheableDependencyInterface {
 
-  /**
-   * Cache contexts.
-   *
-   * @var string[]
-   */
-  protected $contexts = [];
-
-  /**
-   * Cache tags.
-   *
-   * @var string[]
-   */
-  protected $tags = [];
-
-  /**
-   * Cache max-age.
-   *
-   * @var int
-   */
-  protected $maxAge = Cache::PERMANENT;
+  use RefinableCacheableDependencyTrait;
 
   /**
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return $this->tags;
-  }
-
-  /**
-   * Adds cache tags.
-   *
-   * @param string[] $cache_tags
-   *   The cache tags to be added.
-   *
-   * @return $this
-   */
-  public function addCacheTags(array $cache_tags) {
-    $this->tags = Cache::mergeTags($this->tags, $cache_tags);
-    return $this;
+    return $this->cacheTags;
   }
 
   /**
@@ -66,7 +32,7 @@ class CacheableMetadata implements CacheableDependencyInterface {
    * @return $this
    */
   public function setCacheTags(array $cache_tags) {
-    $this->tags = $cache_tags;
+    $this->cacheTags = $cache_tags;
     return $this;
   }
 
@@ -74,20 +40,7 @@ class CacheableMetadata implements CacheableDependencyInterface {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return $this->contexts;
-  }
-
-  /**
-   * Adds cache contexts.
-   *
-   * @param string[] $cache_contexts
-   *   The cache contexts to be added.
-   *
-   * @return $this
-   */
-  public function addCacheContexts(array $cache_contexts) {
-    $this->contexts = Cache::mergeContexts($this->contexts, $cache_contexts);
-    return $this;
+    return $this->cacheContexts;
   }
 
   /**
@@ -99,7 +52,7 @@ class CacheableMetadata implements CacheableDependencyInterface {
    * @return $this
    */
   public function setCacheContexts(array $cache_contexts) {
-    $this->contexts = $cache_contexts;
+    $this->cacheContexts = $cache_contexts;
     return $this;
   }
 
@@ -107,7 +60,7 @@ class CacheableMetadata implements CacheableDependencyInterface {
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
-    return $this->maxAge;
+    return $this->cacheMaxAge;
   }
 
   /**
@@ -128,36 +81,7 @@ class CacheableMetadata implements CacheableDependencyInterface {
       throw new \InvalidArgumentException('$max_age must be an integer');
     }
 
-    $this->maxAge = $max_age;
-    return $this;
-  }
-
-  /**
-   * Adds a dependency on an object: merges its cacheability metadata.
-   *
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $other_object
-   *   The dependency. If the object implements CacheableDependencyInterface,
-   *   then its cacheability metadata will be used. Otherwise, the passed in
-   *   object must be assumed to be uncacheable, so max-age 0 is set.
-   *
-   * @return $this
-   */
-  public function addCacheableDependency($other_object) {
-    if ($other_object instanceof CacheableDependencyInterface) {
-      $this->addCacheTags($other_object->getCacheTags());
-      $this->addCacheContexts($other_object->getCacheContexts());
-      if ($this->maxAge === Cache::PERMANENT) {
-        $this->maxAge = $other_object->getCacheMaxAge();
-      }
-      elseif (($max_age = $other_object->getCacheMaxAge()) && $max_age !== Cache::PERMANENT) {
-        $this->maxAge = Cache::mergeMaxAges($this->maxAge, $max_age);
-      }
-    }
-    else {
-      // Not a cacheable dependency, this can not be cached.
-      $this->maxAge = 0;
-    }
-
+    $this->cacheMaxAge = $max_age;
     return $this;
   }
 
@@ -175,34 +99,34 @@ class CacheableMetadata implements CacheableDependencyInterface {
 
     // This is called many times per request, so avoid merging unless absolutely
     // necessary.
-    if (empty($this->contexts)) {
-      $result->contexts = $other->contexts;
+    if (empty($this->cacheContexts)) {
+      $result->cacheContexts = $other->cacheContexts;
     }
-    elseif (empty($other->contexts)) {
-      $result->contexts = $this->contexts;
+    elseif (empty($other->cacheContexts)) {
+      $result->cacheContexts = $this->cacheContexts;
     }
     else {
-      $result->contexts = Cache::mergeContexts($this->contexts, $other->contexts);
+      $result->cacheContexts = Cache::mergeContexts($this->cacheContexts, $other->cacheContexts);
     }
 
-    if (empty($this->tags)) {
-      $result->tags = $other->tags;
+    if (empty($this->cacheTags)) {
+      $result->cacheTags = $other->cacheTags;
     }
-    elseif (empty($other->tags)) {
-      $result->tags = $this->tags;
+    elseif (empty($other->cacheTags)) {
+      $result->cacheTags = $this->cacheTags;
     }
     else {
-      $result->tags = Cache::mergeTags($this->tags, $other->tags);
+      $result->cacheTags = Cache::mergeTags($this->cacheTags, $other->cacheTags);
     }
 
-    if ($this->maxAge === Cache::PERMANENT) {
-      $result->maxAge = $other->maxAge;
+    if ($this->cacheMaxAge === Cache::PERMANENT) {
+      $result->cacheMaxAge = $other->cacheMaxAge;
     }
-    elseif ($other->maxAge === Cache::PERMANENT) {
-      $result->maxAge = $this->maxAge;
+    elseif ($other->cacheMaxAge === Cache::PERMANENT) {
+      $result->cacheMaxAge = $this->cacheMaxAge;
     }
     else {
-      $result->maxAge = Cache::mergeMaxAges($this->maxAge, $other->maxAge);
+      $result->cacheMaxAge = Cache::mergeMaxAges($this->cacheMaxAge, $other->cacheMaxAge);
     }
     return $result;
   }
@@ -214,9 +138,9 @@ class CacheableMetadata implements CacheableDependencyInterface {
    *   A render array.
    */
   public function applyTo(array &$build) {
-    $build['#cache']['contexts'] = $this->contexts;
-    $build['#cache']['tags'] = $this->tags;
-    $build['#cache']['max-age'] = $this->maxAge;
+    $build['#cache']['contexts'] = $this->cacheContexts;
+    $build['#cache']['tags'] = $this->cacheTags;
+    $build['#cache']['max-age'] = $this->cacheMaxAge;
   }
 
   /**
@@ -229,9 +153,9 @@ class CacheableMetadata implements CacheableDependencyInterface {
    */
   public static function createFromRenderArray(array $build) {
     $meta = new static();
-    $meta->contexts = (isset($build['#cache']['contexts'])) ? $build['#cache']['contexts'] : [];
-    $meta->tags = (isset($build['#cache']['tags'])) ? $build['#cache']['tags'] : [];
-    $meta->maxAge = (isset($build['#cache']['max-age'])) ? $build['#cache']['max-age'] : Cache::PERMANENT;
+    $meta->cacheContexts = (isset($build['#cache']['contexts'])) ? $build['#cache']['contexts'] : [];
+    $meta->cacheTags = (isset($build['#cache']['tags'])) ? $build['#cache']['tags'] : [];
+    $meta->cacheMaxAge = (isset($build['#cache']['max-age'])) ? $build['#cache']['max-age'] : Cache::PERMANENT;
     return $meta;
   }
 
@@ -249,16 +173,16 @@ class CacheableMetadata implements CacheableDependencyInterface {
   public static function createFromObject($object) {
     if ($object instanceof CacheableDependencyInterface) {
       $meta = new static();
-      $meta->contexts = $object->getCacheContexts();
-      $meta->tags = $object->getCacheTags();
-      $meta->maxAge = $object->getCacheMaxAge();
+      $meta->cacheContexts = $object->getCacheContexts();
+      $meta->cacheTags = $object->getCacheTags();
+      $meta->cacheMaxAge = $object->getCacheMaxAge();
       return $meta;
     }
 
     // Objects that don't implement CacheableDependencyInterface must be assumed
     // to be uncacheable, so set max-age 0.
     $meta = new static();
-    $meta->maxAge = 0;
+    $meta->cacheMaxAge = 0;
     return $meta;
   }
 
