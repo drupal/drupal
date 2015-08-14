@@ -448,16 +448,14 @@ system.batch_page.json:
   options:
     _admin_route: TRUE
 
+# Note: This route just exists for generating URLs, the dedicated
+# frontcontroller is used if the URL is accessed.
 system.db_update:
   path: '/update.php/{op}'
   defaults:
-    _title: 'Drupal database update'
-    _controller: '\Drupal\system\Controller\DbUpdateController::handle'
     op: 'info'
-  options:
-    _maintenance_access: TRUE
   requirements:
-    _access_system_update: 'TRUE'
+    _access: 'TRUE'
 
 system.admin_content:
   path: '/admin/content'

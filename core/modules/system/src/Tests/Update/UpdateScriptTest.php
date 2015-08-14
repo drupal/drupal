@@ -153,7 +153,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->clickLink(t('Continue'));
     $this->assertText(t('No pending updates.'));
     $this->assertNoLink('Administration pages');
-    $this->assertNoLinkByHref('update.php', 0);
+    $this->assertNoLinkByHrefInMainRegion('update.php', 0);
     $this->clickLink('Front page');
     $this->assertResponse(200);
 
@@ -164,7 +164,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->clickLink(t('Continue'));
     $this->assertText(t('No pending updates.'));
     $this->assertLink('Administration pages');
-    $this->assertNoLinkByHref('update.php', 1);
+    $this->assertNoLinkByHrefInMainRegion('update.php', 1);
     $this->clickLink('Administration pages');
     $this->assertResponse(200);
   }
@@ -198,7 +198,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->assertText('Updates were attempted.');
     $this->assertLink('logged');
     $this->assertLink('Administration pages');
-    $this->assertNoLinkByHref('update.php', 1);
+    $this->assertNoLinkByHrefInMainRegion('update.php', 1);
     $this->clickLink('Administration pages');
     $this->assertResponse(200);
   }
@@ -253,7 +253,7 @@ class UpdateScriptTest extends WebTestBase {
 
     // Verify that there are no links to different parts of the workflow.
     $this->assertNoLink('Administration pages');
-    $this->assertNoLinkByHref('update.php', 0);
+    $this->assertNoLinkByHrefInMainRegion('update.php', 0);
     $this->assertNoLink('logged');
 
     // Verify the front page can be visited following the upgrade.
