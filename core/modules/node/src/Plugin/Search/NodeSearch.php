@@ -332,11 +332,9 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       unset($build['#theme']);
       $build['#pre_render'][] = array($this, 'removeSubmittedInfo');
 
-      // Fetch comment count for snippet.
-      $rendered = SafeMarkup::set(
-        $this->renderer->renderPlain($build) . ' ' .
-        SafeMarkup::escape($this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode)))
-      );
+      // Fetch comments for snippet.
+      $rendered = $this->renderer->renderPlain($build);
+      $rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode));
 
       $extra = $this->moduleHandler->invokeAll('node_search_result', array($node, $item->langcode));
 

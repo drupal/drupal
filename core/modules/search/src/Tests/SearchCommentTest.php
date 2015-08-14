@@ -126,6 +126,23 @@ class SearchCommentTest extends SearchTestBase {
     $edit_comment['comment_body[0][format]'] = $full_html_format_id;
     $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $edit_comment, t('Save'));
 
+    // Post a comment with an evil script tag in the comment subject and a
+    // script tag nearby a keyword in the comment body. Use the 'FULL HTML' text
+    // format so the script tag stored.
+    $edit_comment2 = array();
+    $edit_comment2['subject[0][value]'] = "<script>alert('subjectkeyword');</script>";
+    $edit_comment2['comment_body[0][value]'] = "nearbykeyword<script>alert('somethinggeneric');</script>";
+    $edit_comment2['comment_body[0][format]'] = $full_html_format_id;
+    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit_comment2, t('Save'));
+
+    // Post a comment with a keyword inside an evil script tag in the comment
+    // body. Use the 'FULL HTML' text format so the script tag is stored.
+    $edit_comment3 = array();
+    $edit_comment3['subject[0][value]'] = 'asubject';
+    $edit_comment3['comment_body[0][value]'] = "<script>alert('insidekeyword');</script>";
+    $edit_comment3['comment_body[0][format]'] = $full_html_format_id;
+    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit_comment3, t('Save'));
+
     // Invoke search index update.
     $this->drupalLogout();
     $this->cronRun();
@@ -151,6 +168,39 @@ class SearchCommentTest extends SearchTestBase {
     $this->assertText($comment_body, 'Comment body text found in search results.');
     $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
     $this->assertNoEscaped($edit_comment['comment_body[0][value]'], 'HTML in comment body is not escaped.');
+
+    // Search for the evil script comment subject.
+    $edit = array(
+      'keys' => 'subjectkeyword',
+    );
+    $this->drupalPostForm('search/node', $edit, t('Search'));
+
+    // Verify the evil comment subject is escaped in search results.
+    $this->assertRaw('&lt;script&gt;alert(&#039;<strong>subjectkeyword</strong>&#039;);');
+    $this->assertNoRaw('<script>');
+
+    // Search for the keyword near the evil script tag in the comment body.
+    $edit = [
+      'keys' => 'nearbykeyword',
+    ];
+    $this->drupalPostForm('search/node', $edit, t('Search'));
+
+    // Verify that nearby script tag in the evil comment body is stripped from
+    // search results.
+    $this->assertRaw('<strong>nearbykeyword</strong>');
+    $this->assertNoRaw('<script>');
+
+    // Search for contents inside the evil script tag in the comment body.
+    $edit = [
+      'keys' => 'insidekeyword',
+    ];
+    $this->drupalPostForm('search/node', $edit, t('Search'));
+
+    // @todo Verify the actual search results.
+    //   https://www.drupal.org/node/2551135
+
+    // Verify there is no script tag in search results.
+    $this->assertNoRaw('<script>');
 
     // Hide comments.
     $this->drupalLogin($this->adminUser);

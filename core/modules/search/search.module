@@ -618,7 +618,8 @@ function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
 /**
  * Returns snippets from a piece of text, with search keywords highlighted.
  *
- * Used for formatting search results.
+ * Used for formatting search results. All HTML tags will be stripped from
+ * $text.
  *
  * @param string $keys
  *   A string containing a search query.

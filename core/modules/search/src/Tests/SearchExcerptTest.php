@@ -39,7 +39,7 @@ class SearchExcerptTest extends WebTestBase {
     // important for HTML formatting. Remove these for comparison.
     $expected = 'The quick brown fox &amp; jumps over the lazy dog';
     $result = preg_replace('| +|', ' ', search_excerpt('nothing', $text));
-    $this->assertEqual(preg_replace('| +|', ' ', $result), $expected, 'Entire string is returned when keyword is not found in short string');
+    $this->assertEqual(preg_replace('| +|', ' ', $result), $expected, 'Entire string, stripped of HTML tags, is returned when keyword is not found in short string');
 
     $result = preg_replace('| +|', ' ', search_excerpt('fox', $text));
     $this->assertEqual($result, 'The quick brown <strong>fox</strong> &amp; jumps over the lazy dog', 'Found keyword is highlighted');
