@@ -96,7 +96,7 @@ class EditorSecurityTest extends WebTestBase {
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
-            'allowed_html' => '<h4> <h5> <h6> <p> <br> <strong> <a>',
+            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
           )
         ),
       ),
@@ -111,7 +111,7 @@ class EditorSecurityTest extends WebTestBase {
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
-            'allowed_html' => '<h4> <h5> <h6> <p> <br> <strong> <a>',
+            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
           )
         ),
       ),
@@ -131,7 +131,7 @@ class EditorSecurityTest extends WebTestBase {
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
-            'allowed_html' => '<h4> <h5> <h6> <p> <br> <strong> <a> <embed>',
+            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a> <embed>',
           )
         ),
       ),

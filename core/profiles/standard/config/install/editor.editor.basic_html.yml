@@ -25,6 +25,10 @@ settings:
             - Blockquote
             - DrupalImage
         -
+          name: 'Block Formatting'
+          items:
+            - Format
+        -
           name: Tools
           items:
             - Source
