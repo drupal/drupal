@@ -213,6 +213,17 @@ abstract class RESTTestBase extends WebTestBase {
         );
       case 'user':
         return array('name' => $this->randomMachineName());
+
+      case 'comment':
+        return [
+          'subject' => $this->randomMachineName(),
+          'entity_type' => 'node',
+          'comment_type' => 'comment',
+          'comment_body' => $this->randomString(),
+          'entity_id' => 'invalid',
+          'field_name' => 'comment',
+        ];
+
       default:
         return array();
     }
@@ -312,6 +323,22 @@ abstract class RESTTestBase extends WebTestBase {
           case 'delete':
             return array('delete any resttest content');
         }
+
+      case 'comment':
+        switch ($operation) {
+          case 'view':
+            return ['access comments'];
+
+          case 'create':
+            return ['post comments', 'skip comment approval'];
+
+          case 'update':
+            return ['edit own comments'];
+
+          case 'delete':
+            return ['administer comments'];
+        }
+        break;
 
       case 'user':
         switch ($operation) {

@@ -7,11 +7,13 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the creation of resources.
@@ -20,12 +22,13 @@ use Drupal\user\Entity\User;
  */
 class CreateTest extends RESTTestBase {
 
+  use CommentTestTrait;
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test');
+  public static $modules = array('hal', 'rest', 'entity_test', 'comment');
 
   /**
    * The 'serializer' service.
@@ -36,6 +39,7 @@ class CreateTest extends RESTTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $this->addDefaultCommentField('node', 'resttest');
     // Get the 'serializer' service.
     $this->serializer = $this->container->get('serializer');
   }
@@ -225,6 +229,52 @@ class CreateTest extends RESTTestBase {
   }
 
   /**
+   * Test comment creation.
+   */
+  protected function testCreateComment() {
+    $node = Node::create([
+      'type' => 'resttest',
+      'title' => 'some node',
+    ]);
+    $node->save();
+    $entity_type = 'comment';
+    // Enable the REST service for 'comment' entity type.
+    $this->enableService('entity:' . $entity_type, 'POST');
+    // Create two accounts that have the required permissions to create
+    // resources, The second one has administrative permissions.
+    $accounts = $this->createAccountPerEntity($entity_type);
+    $account = end($accounts);
+
+    $this->drupalLogin($account);
+    $entity_values = $this->entityValues($entity_type);
+    $entity_values['entity_id'] = $node->id();
+
+    $entity = Comment::create($entity_values);
+
+    // Changed field can never be added.
+    unset($entity->changed);
+
+    $serialized = $this->serializer->serialize($entity, $this->defaultFormat, ['account' => $account]);
+
+    // Create the entity over the REST API.
+    $this->assertCreateEntityOverRestApi($entity_type, $serialized);
+
+    // Get the new entity ID from the location header and try to read it from
+    // the database.
+    $this->assertReadEntityIdFromHeaderAndDb($entity_type, $entity, $entity_values);
+
+    // Try to send invalid data that cannot be correctly deserialized.
+    $this->assertCreateEntityInvalidData($entity_type);
+
+    // Try to send no data at all, which does not make sense on POST requests.
+    $this->assertCreateEntityNoData($entity_type);
+
+    // Try to send invalid data to trigger the entity validation constraints.
+    // Send a UUID that is too long.
+    $this->assertCreateEntityInvalidSerialized($entity, $entity_type);
+  }
+
+  /**
    * Tests several valid and invalid create requests for 'user' entity type.
    */
   public function testCreateUser() {
@@ -293,6 +343,7 @@ class CreateTest extends RESTTestBase {
     // Add administrative permissions for nodes and users.
     $permissions[] = 'administer nodes';
     $permissions[] = 'administer users';
+    $permissions[] = 'administer comments';
     // Create an administrative user.
     $accounts[] = $this->drupalCreateUser($permissions);
 

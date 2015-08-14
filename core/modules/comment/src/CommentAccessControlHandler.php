@@ -80,15 +80,26 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
       // No user can change read-only fields.
       $read_only_fields = array(
         'hostname',
-        'uuid',
+        'changed',
         'cid',
         'thread',
+      );
+      // These fields can be edited during comment creation.
+      $create_only_fields = [
         'comment_type',
-        'pid',
+        'uuid',
         'entity_id',
         'entity_type',
         'field_name',
-      );
+        'pid',
+      ];
+      if ($items && ($entity = $items->getEntity()) && $entity->isNew() && in_array($field_definition->getName(), $create_only_fields, TRUE)) {
+        // We are creating a new comment, user can edit create only fields.
+        return AccessResult::allowedIfHasPermission($account, 'post comments')->addCacheableDependency($entity);
+      }
+      // We are editing an existing comment - create only fields are now read
+      // only.
+      $read_only_fields = array_merge($read_only_fields, $create_only_fields);
       if (in_array($field_definition->getName(), $read_only_fields, TRUE)) {
         return AccessResult::forbidden();
       }

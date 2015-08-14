@@ -53,15 +53,23 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
   protected $readOnlyFields = array(
     'changed',
     'hostname',
-    'uuid',
     'cid',
     'thread',
-    'comment_type',
+  );
+
+  /**
+   * These fields can be edited on create only.
+   *
+   * @var array
+   */
+  protected $createOnlyFields = [
+    'uuid',
     'pid',
+    'comment_type',
     'entity_id',
     'entity_type',
     'field_name',
-  );
+  ];
 
   /**
    * These fields can only be edited by the admin or anonymous users if allowed.
@@ -244,6 +252,28 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
           '!field' => $field,
         ]));
         $this->assertFalse($may_update, SafeMarkup::format('User @user !state update field !field on comment @comment', [
+          '@user' => $set['user']->getUsername(),
+          '!state' => $may_update ? 'can' : 'cannot',
+          '@comment' => $set['comment']->getSubject(),
+          '!field' => $field,
+        ]));
+      }
+    }
+
+    // Check create-only fields.
+    foreach ($this->createOnlyFields as $field) {
+      // Check view operation.
+      foreach ($permutations as $set) {
+        $may_view = $set['comment']->{$field}->access('view', $set['user']);
+        $may_update = $set['comment']->{$field}->access('edit', $set['user']);
+        $this->assertEqual($may_view, $field != 'hostname' && ($set['user']->hasPermission('administer comments') ||
+            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user !state view field !field on comment @comment', [
+          '@user' => $set['user']->getUsername(),
+          '!state' => $may_view ? 'can' : 'cannot',
+          '@comment' => $set['comment']->getSubject(),
+          '!field' => $field,
+        ]));
+        $this->assertEqual($may_update, $set['user']->hasPermission('post comments') && $set['comment']->isNew(), SafeMarkup::format('User @user !state update field !field on comment @comment', [
           '@user' => $set['user']->getUsername(),
           '!state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
