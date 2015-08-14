@@ -119,7 +119,7 @@ class EntityType implements EntityTypeInterface {
    *
    * @var string
    */
-  protected $bundle_entity_type = 'bundle';
+  protected $bundle_entity_type = NULL;
 
   /**
    * The name of the entity type for which bundles are provided.
@@ -762,6 +762,32 @@ class EntityType implements EntityTypeInterface {
   public function addConstraint($constraint_name, $options = NULL) {
     $this->constraints[$constraint_name] = $options;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleConfigDependency($bundle) {
+    // If this entity type uses entities to manage its bundles then depend on
+    // the bundle entity.
+    if ($bundle_entity_type_id = $this->getBundleEntityType()) {
+      if (!$bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($bundle)) {
+        throw new \LogicException(sprintf('Missing bundle entity, entity type %s, entity id %s.', $bundle_entity_type_id, $bundle));
+      }
+      $config_dependency = [
+        'type' => 'config',
+        'name' => $bundle_entity->getConfigDependencyName(),
+      ];
+    }
+    else {
+      // Depend on the provider of the entity type.
+      $config_dependency = [
+        'type' => 'module',
+        'name' => $this->getProvider(),
+      ];
+    }
+
+    return $config_dependency;
   }
 
 }

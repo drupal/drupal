@@ -256,19 +256,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     parent::calculateDependencies();
     $target_entity_type = $this->entityManager()->getDefinition($this->targetEntityType);
 
-    $bundle_entity_type_id = $target_entity_type->getBundleEntityType();
-    if ($bundle_entity_type_id != 'bundle') {
-      // If the target entity type uses entities to manage its bundles then
-      // depend on the bundle entity.
-      if (!$bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle)) {
-        throw new \LogicException("Missing bundle entity, entity type $bundle_entity_type_id, entity id {$this->bundle}.");
-      }
-      $this->addDependency('config', $bundle_entity->getConfigDependencyName());
-    }
-    else {
-      // Depend on the provider of the entity type.
-      $this->addDependency('module', $target_entity_type->getProvider());
-    }
+    // Create dependency on the bundle.
+    $bundle_config_dependency = $target_entity_type->getBundleConfigDependency($this->bundle);
+    $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
 
     // If field.module is enabled, add dependencies on 'field_config' entities
     // for both displayed and hidden fields. We intentionally leave out base

@@ -732,4 +732,17 @@ interface EntityTypeInterface {
    */
   public function addConstraint($constraint_name, $options = NULL);
 
+  /**
+   * Gets the config dependency info for this entity, if any exists.
+   *
+   * @param string $bundle
+   *   The bundle name.
+   *
+   * @return array
+   *   An associative array containing the following keys:
+   *   - 'type': The config dependency type (e.g. 'module', 'config').
+   *   - 'name': The name of the config dependency.
+   */
+  public function getBundleConfigDependency($bundle);
+
 }

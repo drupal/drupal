@@ -80,7 +80,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $values = array('targetEntityType' => $target_entity_type_id);
     $target_entity_type->expects($this->any())
       ->method('getBundleEntityType')
-      ->will($this->returnValue('bundle'));
+      ->will($this->returnValue(NULL));
 
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')
@@ -109,16 +109,9 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $bundle_id = $this->randomMachineName(10);
     $values = array('targetEntityType' => $target_entity_type_id , 'bundle' => $bundle_id);
 
-    $bundle_entity_type_id = $this->randomMachineName(17);
-    $bundle_entity = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityInterface');
-    $bundle_entity
-      ->expects($this->once())
-      ->method('getConfigDependencyName')
-      ->will($this->returnValue('test_module.type.' . $bundle_id));
-
     $target_entity_type->expects($this->any())
-                     ->method('getBundleEntityType')
-                     ->will($this->returnValue($bundle_entity_type_id));
+      ->method('getBundleConfigDependency')
+      ->will($this->returnValue(array('type' => 'config', 'name' => 'test_module.type.' . $bundle_id)));
 
     $this->entityManager->expects($this->at(0))
                         ->method('getDefinition')
@@ -128,17 +121,6 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
                         ->method('getDefinition')
                         ->with($this->entityTypeId)
                         ->will($this->returnValue($this->entityType));
-
-    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
-    $storage->expects($this->once())
-      ->method('load')
-      ->with($bundle_id)
-      ->will($this->returnValue($bundle_entity));
-
-    $this->entityManager->expects($this->once())
-                        ->method('getStorage')
-                        ->with($bundle_entity_type_id)
-                        ->will($this->returnValue($storage));
 
     $entity = new RdfMapping($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies();

@@ -88,26 +88,10 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     // Mock the interfaces necessary to create a dependency on a bundle entity.
-    $bundle_entity = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
-    $bundle_entity->expects($this->any())
-      ->method('getConfigDependencyName')
-      ->will($this->returnValue('test.test_entity_type.id'));
-
-    $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
-    $storage->expects($this->any())
-      ->method('load')
-      ->with('test_bundle')
-      ->will($this->returnValue($bundle_entity));
-
-    $this->entityManager->expects($this->any())
-      ->method('getStorage')
-      ->with('bundle_entity_type')
-      ->will($this->returnValue($storage));
-
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
-      ->method('getBundleEntityType')
-      ->will($this->returnValue('bundle_entity_type'));
+      ->method('getBundleConfigDependency')
+      ->will($this->returnValue(array('type' => 'config', 'name' => 'test.test_entity_type.id')));
 
     $this->entityManager->expects($this->any())
       ->method('getDefinition')

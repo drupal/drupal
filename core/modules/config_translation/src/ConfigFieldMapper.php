@@ -32,7 +32,8 @@ class ConfigFieldMapper extends ConfigEntityMapper {
   public function getBaseRouteParameters() {
     $parameters = parent::getBaseRouteParameters();
     $base_entity_info = $this->entityManager->getDefinition($this->pluginDefinition['base_entity_type']);
-    $parameters[$base_entity_info->getBundleEntityType()] = $this->entity->getTargetBundle();
+    $bundle_parameter_key = $base_entity_info->getBundleEntityType() ?: 'bundle';
+    $parameters[$bundle_parameter_key] = $this->entity->getTargetBundle();
     return $parameters;
   }
 

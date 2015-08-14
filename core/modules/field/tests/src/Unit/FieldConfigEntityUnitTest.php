@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\field\Unit;
 
+use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -115,26 +116,10 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     // Mock the interfaces necessary to create a dependency on a bundle entity.
-    $bundle_entity = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
-    $bundle_entity->expects($this->any())
-      ->method('getConfigDependencyName')
-      ->will($this->returnValue('test.test_entity_type.id'));
-
-    $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
-    $storage->expects($this->any())
-      ->method('load')
-      ->with('test_bundle')
-      ->will($this->returnValue($bundle_entity));
-
-    $this->entityManager->expects($this->any())
-      ->method('getStorage')
-      ->with('bundle_entity_type')
-      ->will($this->returnValue($storage));
-
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
-      ->method('getBundleEntityType')
-      ->will($this->returnValue('bundle_entity_type'));
+      ->method('getBundleConfigDependency')
+      ->will($this->returnValue(array('type' => 'config', 'name' => 'test.test_entity_type.id')));
 
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')
@@ -192,10 +177,10 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->with('bundle_entity_type')
       ->will($this->returnValue($storage));
 
-    $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $target_entity_type->expects($this->any())
-      ->method('getBundleEntityType')
-      ->will($this->returnValue('bundle_entity_type'));
+    $target_entity_type = new EntityType(array(
+      'id' => 'test_entity_type',
+      'bundle_entity_type' => 'bundle_entity_type',
+    ));
 
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')

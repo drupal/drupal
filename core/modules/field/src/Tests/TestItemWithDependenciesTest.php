@@ -50,7 +50,7 @@ class TestItemWithDependenciesTest extends FieldUnitTestBase {
     $this->assertEqual([
       'content' => ['node:article:uuid'],
       'config' => ['field.storage.entity_test.field_test'],
-      'module' => ['field_test', 'test_module']
+      'module' => ['entity_test', 'field_test', 'test_module']
     ], $field->getDependencies());
   }
 

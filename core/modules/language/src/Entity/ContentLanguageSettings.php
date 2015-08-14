@@ -194,15 +194,12 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
-    $bundle_entity_type_id = $this->entityManager()->getDefinition($this->target_entity_type_id)->getBundleEntityType();
-    if ($bundle_entity_type_id != 'bundle') {
-      // If the target entity type uses entities to manage its bundles then
-      // depend on the bundle entity.
-      if (!$bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->target_bundle)) {
-        throw new \LogicException("Missing bundle entity, entity type $bundle_entity_type_id, entity id {$this->target_bundle}.");
-      }
-      $this->addDependency('config', $bundle_entity->getConfigDependencyName());
-    }
+
+    // Create dependency on the bundle.
+    $entity_type = \Drupal::entityManager()->getDefinition($this->target_entity_type_id);
+    $bundle_config_dependency = $entity_type->getBundleConfigDependency($this->target_bundle);
+    $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
+
     return $this->dependencies;
   }
 

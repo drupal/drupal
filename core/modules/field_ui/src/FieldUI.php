@@ -81,7 +81,8 @@ class FieldUI {
    *   An array that can be used a route parameter.
    */
   public static function getRouteBundleParameter(EntityTypeInterface $entity_type, $bundle) {
-    return array($entity_type->getBundleEntityType() => $bundle);
+    $bundle_parameter_key = $entity_type->getBundleEntityType() ?: 'bundle';
+    return array($bundle_parameter_key => $bundle);
   }
 
 }

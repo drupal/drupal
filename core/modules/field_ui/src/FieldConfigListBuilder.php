@@ -124,11 +124,9 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $field_config) {
     /** @var \Drupal\field\FieldConfigInterface $field_config */
     $field_storage = $field_config->getFieldStorageDefinition();
-    $target_bundle_entity_type_id = $this->entityManager->getDefinition($this->targetEntityTypeId)->getBundleEntityType();
     $route_parameters = array(
-      $target_bundle_entity_type_id => $this->targetBundle,
       'field_config' => $field_config->id(),
-    );
+    ) + FieldUI::getRouteBundleParameter($this->entityManager->getDefinition($this->targetEntityTypeId), $this->targetBundle);
 
     $row = array(
       'id' => Html::getClass($field_config->getName()),
