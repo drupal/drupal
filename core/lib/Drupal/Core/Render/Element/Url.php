@@ -25,7 +25,7 @@ use Drupal\Core\Render\Element;
  *   '#size' => 30,
  *   ...
  * );
- * @end_code
+ * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
  *
