@@ -247,6 +247,9 @@ function rdf_comment_storage_load($comments) {
  */
 function rdf_theme() {
   return array(
+    'rdf_wrapper' => array(
+      'variables' => array('attributes' => array(), 'content' => NULL),
+    ),
     'rdf_metadata' => array(
       'variables' => array('metadata' => array()),
     ),
@@ -440,11 +443,19 @@ function rdf_preprocess_comment(&$variables) {
   // Adds RDFa markup for the relation between the comment and its author.
   $author_mapping = $mapping->getPreparedFieldMapping('uid');
   if (!empty($author_mapping)) {
-    $author_attributes = array('rel' => $author_mapping['properties']);
-    // Wraps the author variable and the submitted variable which are both
-    // available in comment.html.twig.
-    $variables['author'] = SafeMarkup::set('<span ' . new Attribute($author_attributes) . '>' . $variables['author'] . '</span>');
-    $variables['submitted'] = SafeMarkup::set('<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>');
+    $author_attributes = ['rel' => $author_mapping['properties']];
+    // Wraps the 'author' and 'submitted' variables which are both available in
+    // comment.html.twig.
+    $variables['author'] = [
+      '#theme' => 'rdf_wrapper',
+      '#content' => $variables['author'],
+      '#attributes' => $author_attributes,
+    ];
+    $variables['submitted'] = [
+      '#theme' => 'rdf_wrapper',
+      '#content' => $variables['submitted'],
+      '#attributes' => $author_attributes,
+    ];
   }
   // Adds RDFa markup for the date of the comment.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
@@ -457,11 +468,12 @@ function rdf_preprocess_comment(&$variables) {
       '#theme' => 'rdf_metadata',
       '#metadata' => array($date_attributes),
     );
-    $created_metadata_markup = drupal_render($rdf_metadata);
-    // Appends the markup to the created variable and the submitted variable
-    // which are both available in comment.html.twig.
-    $variables['created'] = SafeMarkup::set(SafeMarkup::escape($variables['created']) . $created_metadata_markup);
-    $variables['submitted'] = SafeMarkup::set($variables['submitted'] . $created_metadata_markup);
+    // Ensure the original variable is represented as a render array.
+    $created = !is_array($variables['created']) ? ['#markup' => $variables['created']] : $variables['created'];
+    $submitted = !is_array($variables['submitted']) ? ['#markup' => $variables['submitted']] : $variables['submitted'];
+    // Make render array and RDF metadata available in comment.html.twig.
+    $variables['created'] = [$created, $rdf_metadata];
+    $variables['submitted'] = [$submitted, $rdf_metadata];
   }
   $title_mapping = $mapping->getPreparedFieldMapping('subject');
   if (!empty($title_mapping)) {

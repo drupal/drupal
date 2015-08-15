@@ -145,6 +145,24 @@ class CommentAttributesTest extends CommentTestBase {
   }
 
   /**
+   * Tests comment author link markup has not been broken by RDF.
+   */
+  public function testCommentRdfAuthorMarkup() {
+    // Post a comment as a registered user.
+    $this->saveComment($this->node->id(), $this->webUser->id());
+
+    // Give the user access to view user profiles so the profile link shows up.
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access user profiles']);
+    $this->drupalLogin($this->webUser);
+
+    // Ensure that the author link still works properly after the author output
+    // is modified by the RDF module.
+    $this->drupalGet('node/' . $this->node->id());
+    $this->assertLink($this->webUser->getUsername());
+    $this->assertLinkByHref('user/' . $this->webUser->id());
+  }
+
+  /**
    * Tests if RDFa markup for meta information is present in comments.
    *
    * Tests presence of RDFa markup for the title, date and author and homepage
