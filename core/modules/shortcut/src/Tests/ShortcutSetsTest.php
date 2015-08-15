@@ -7,7 +7,6 @@
 
 namespace Drupal\shortcut\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
@@ -133,9 +132,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetSwitchNoSetName() {
     $edit = array('set' => 'new');
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, t('Change set'));
-    $this->assertRaw(\Drupal::translation()->formatPlural(1, '1 error has been found: !errors', '@count errors have been found: !errors', [
-      '!errors' => SafeMarkup::set('<a href="#edit-label">Label</a>')
-    ]));
+    $this->assertRaw('1 error has been found: <a href="#edit-label">Label</a>');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
     $this->assertFieldByXPath("//input[@name='label' and contains(concat(' ', normalize-space(@class), ' '), ' error ')]", NULL, 'The new set label field has the error class');
