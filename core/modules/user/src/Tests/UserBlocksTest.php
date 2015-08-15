@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -49,9 +48,7 @@ class UserBlocksTest extends WebTestBase {
     $edit['name'] = $this->randomMachineName();
     $edit['pass'] = $this->randomMachineName();
     $this->drupalPostForm('node', $edit, t('Log in'));
-    $this->assertRaw(\Drupal::translation()->formatPlural(1, '1 error has been found: !errors', '@count errors have been found: !errors', [
-      '!errors' => SafeMarkup::set('<a href="#edit-name">Username</a>')
-    ]));
+    $this->assertRaw('1 error has been found: <a href="#edit-name">Username</a>');
     $this->assertText(t('Sorry, unrecognized username or password.'));
 
     // Create a user with some permission that anonymous users lack.
