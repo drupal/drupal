@@ -42,7 +42,6 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
       ),
     ));
 
-    $this->loadDumps(['MenuLinks.php']);
     $this->executeMigration('d6_menu_links');
   }
 

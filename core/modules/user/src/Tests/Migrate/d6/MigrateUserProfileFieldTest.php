@@ -24,13 +24,6 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps([
-      'ProfileFields.php',
-      'Users.php',
-      'ProfileValues.php',
-      'UsersRoles.php',
-      'EventTimezones.php',
-    ]);
     $this->executeMigration('d6_user_profile_field');
   }
 

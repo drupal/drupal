@@ -26,7 +26,6 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->loadDumps(['FileManaged.php', 'Variable.php']);
     $this->installEntitySchema('file');
 
     $fs = \Drupal::service('file_system');

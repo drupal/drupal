@@ -51,7 +51,6 @@ class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
       'translatable' => '0',
     ))->save();
 
-    $this->loadDumps(['NodeType.php', 'Variable.php']);
     $this->executeMigration('d6_upload_field_instance');
   }
 

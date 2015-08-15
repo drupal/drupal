@@ -49,7 +49,6 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupal6TestBase {
       'type' => 'comment',
       'translatable' => '0',
     ))->save();
-    $this->loadDumps(['Variable.php', 'NodeType.php']);
     $this->executeMigration('d6_comment_field_instance');
   }
 

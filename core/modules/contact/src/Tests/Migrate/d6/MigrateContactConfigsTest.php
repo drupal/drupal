@@ -39,7 +39,6 @@ class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $this->loadDumps(['Variable.php', 'Contact.php']);
     $this->executeMigration('d6_contact_settings');
   }
 

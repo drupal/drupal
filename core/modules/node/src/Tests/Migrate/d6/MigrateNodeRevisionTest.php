@@ -29,8 +29,6 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    $this->loadDumps(['Users.php']);
-
     // Create our users for the node authors.
     $query = Database::getConnection('default', 'migrate')->query('SELECT * FROM {users} WHERE uid NOT IN (0, 1)');
     while(($row = $query->fetchAssoc()) !== FALSE) {

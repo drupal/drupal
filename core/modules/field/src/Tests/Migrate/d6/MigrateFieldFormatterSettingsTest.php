@@ -64,14 +64,6 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-
-    $this->loadDumps([
-      'ContentNodeFieldInstance.php',
-      'ContentNodeField.php',
-      'ContentFieldTest.php',
-      'ContentFieldTestTwo.php',
-      'ContentFieldMultivalue.php',
-    ]);
     $this->executeMigration('d6_field_formatter_settings');
   }
 

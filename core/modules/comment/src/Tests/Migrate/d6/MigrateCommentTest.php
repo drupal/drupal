@@ -56,16 +56,6 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
       'd6_comment_entity_form_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
     );
     $this->prepareMigrations($id_mappings);
-
-    $this->loadDumps([
-      'Node.php',
-      'NodeRevisions.php',
-      'ContentTypeStory.php',
-      'ContentTypeTestPlanet.php',
-      'Variable.php',
-      'NodeType.php',
-      'Comments.php',
-    ]);
     $this->executeMigration('d6_comment');
   }
 

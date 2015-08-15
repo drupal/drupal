@@ -30,9 +30,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
     $this->installConfig(array('node'));
-    $this->loadDumps(['NodeType.php', 'Variable.php']);
     $this->executeMigration('d6_node_type');
   }
 

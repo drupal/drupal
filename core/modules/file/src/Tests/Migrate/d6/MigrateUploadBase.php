@@ -94,13 +94,6 @@ abstract class MigrateUploadBase extends MigrateDrupal6TestBase {
         $node->save();
       }
     }
-    $this->loadDumps([
-      'Node.php',
-      'NodeRevisions.php',
-      'ContentTypeStory.php',
-      'ContentTypeTestPlanet.php',
-      'Upload.php',
-    ]);
   }
 
 }

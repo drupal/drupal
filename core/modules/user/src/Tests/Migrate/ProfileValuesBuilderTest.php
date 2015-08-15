@@ -17,14 +17,6 @@ class ProfileValuesBuilderTest extends MigrateDrupal6TestBase {
   public static $modules = ['migrate', 'migrate_drupal', 'user'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->loadDumps(['ProfileFields.php', 'ProfileValues.php']);
-  }
-
-  /**
    * Tests that profile fields are merged into the d6_profile_values migration's
    * process pipeline by the d6_profile_values builder.
    */

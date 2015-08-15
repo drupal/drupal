@@ -87,19 +87,6 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
     file_put_contents($file->getFileUri(), file_get_contents('core/modules/simpletest/files/image-2.jpg'));
     $file->save();
 
-    $this->loadDumps([
-      'Filters.php',
-      'FilterFormats.php',
-      'Variable.php',
-      'ProfileFields.php',
-      'Permission.php',
-      'Role.php',
-      'Users.php',
-      'ProfileValues.php',
-      'UsersRoles.php',
-      'EventTimezones.php',
-    ]);
-
     $id_mappings = array(
       'd6_user_role' => array(
         array(array(1), array('anonymous user')),

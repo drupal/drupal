@@ -39,8 +39,6 @@ class MigrateUploadEntityDisplayTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-
-    $this->loadDumps(['NodeType.php', 'Variable.php']);
     $this->executeMigration('d6_upload_entity_display');
   }
 

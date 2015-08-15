@@ -17,18 +17,6 @@ class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
   public static $modules = ['migrate', 'migrate_drupal', 'node'];
 
   /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-    $this->loadDumps([
-      'ContentNodeField.php',
-      'ContentNodeFieldInstance.php',
-      'NodeType.php',
-    ]);
-  }
-
-  /**
    * Tests creating migrations from a template, using a builder plugin.
    */
   public function testCreateMigrations() {

@@ -24,7 +24,6 @@ class MigrateMenuTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['MenuCustom.php']);
     $this->executeMigration('d6_menu');
   }
 

@@ -24,7 +24,6 @@ class MigrateTrackerSettingsTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(['tracker']);
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d7_tracker_settings');
   }
 

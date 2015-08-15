@@ -29,7 +29,6 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Vocabulary.php', 'VocabularyNodeTypes.php']);
     $this->executeMigration('d6_taxonomy_vocabulary');
   }
 

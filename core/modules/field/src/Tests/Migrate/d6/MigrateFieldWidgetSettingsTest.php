@@ -61,13 +61,6 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $this->loadDumps([
-      'ContentNodeFieldInstance.php',
-      'ContentNodeField.php',
-      'ContentFieldTest.php',
-      'ContentFieldTestTwo.php',
-      'ContentFieldMultivalue.php',
-    ]);
     $this->executeMigration('d6_field_instance_widget_settings');
   }
 

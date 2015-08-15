@@ -66,13 +66,6 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     entity_create('node_type', array('type' => 'story'))->save();
     entity_create('node_type', array('type' => 'test_page'))->save();
 
-    $this->loadDumps([
-      'ContentNodeFieldInstance.php',
-      'ContentNodeField.php',
-      'ContentFieldTest.php',
-      'ContentFieldTestTwo.php',
-      'ContentFieldMultivalue.php',
-    ]);
     $this->createFields();
     $this->executeMigration('d6_field_instance');
   }

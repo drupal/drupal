@@ -57,7 +57,6 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    $this->loadDumps(['NodeType.php', 'Variable.php']);
     $this->executeMigration('d6_node_setting_promote');
     $this->executeMigration('d6_node_setting_status');
     $this->executeMigration('d6_node_setting_sticky');

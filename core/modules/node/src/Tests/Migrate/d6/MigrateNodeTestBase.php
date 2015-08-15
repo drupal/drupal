@@ -94,20 +94,6 @@ abstract class MigrateNodeTestBase extends MigrateDrupal6TestBase {
     ));
     $node->enforceIsNew();
     $node->save();
-
-    $this->loadDumps([
-      'Node.php',
-      'NodeRevisions.php',
-      'ContentTypeStory.php',
-      'ContentTypeTestPlanet.php',
-      'NodeType.php',
-      'Variable.php',
-      'ContentNodeFieldInstance.php',
-      'ContentNodeField.php',
-      'ContentFieldTest.php',
-      'ContentFieldTestTwo.php',
-      'ContentFieldMultivalue.php',
-    ]);
   }
 
 }

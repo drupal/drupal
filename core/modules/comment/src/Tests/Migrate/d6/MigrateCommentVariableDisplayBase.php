@@ -64,7 +64,6 @@ abstract class MigrateCommentVariableDisplayBase extends MigrateDrupal6TestBase 
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $this->loadDumps(['Variable.php', 'NodeType.php']);
     $this->executeMigration(static::MIGRATION);
 
   }

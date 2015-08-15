@@ -45,7 +45,6 @@ class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
     ));
     $entity->enforceIsNew();
     $entity->save();
-    $this->loadDumps(['AggregatorItem.php']);
     $this->executeMigration('d6_aggregator_item');
   }
 

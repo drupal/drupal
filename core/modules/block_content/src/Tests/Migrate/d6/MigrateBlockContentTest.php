@@ -35,7 +35,6 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
         array(array(2), array('full_html'))
       )
     ));
-    $this->loadDumps(['Boxes.php']);
     $this->executeMigration('d6_custom_block');
   }
 

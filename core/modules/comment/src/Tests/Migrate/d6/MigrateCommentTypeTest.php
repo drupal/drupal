@@ -24,12 +24,9 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installConfig(['node', 'comment']);
-
-    $this->loadDumps(['Variable.php', 'NodeType.php']);
     $this->executeMigration('d6_comment_type');
   }
 

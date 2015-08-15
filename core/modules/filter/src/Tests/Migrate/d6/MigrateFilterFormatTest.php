@@ -26,7 +26,6 @@ class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Filters.php', 'FilterFormats.php', 'Variable.php']);
     $this->executeMigration('d6_filter_format');
   }
 

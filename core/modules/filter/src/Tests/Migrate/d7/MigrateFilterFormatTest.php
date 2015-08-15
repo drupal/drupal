@@ -28,7 +28,6 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Filter.php', 'FilterFormat.php', 'Variable.php']);
     $this->executeMigration('d7_filter_format');
   }
 

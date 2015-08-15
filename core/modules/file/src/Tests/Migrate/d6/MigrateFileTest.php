@@ -44,7 +44,6 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->installEntitySchema('file');
     $this->installConfig(['file']);
 
-    $this->loadDumps(['Files.php']);
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $migration = entity_load('migration', 'd6_file');
     $source = $migration->get('source');
@@ -73,8 +72,6 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
 
     // Test that we can re-import and also test with file_directory_path set.
     db_truncate(entity_load('migration', 'd6_file')->getIdMap()->mapTableName())->execute();
-
-    $this->loadDumps(['Variable.php']);
 
     // Update the file_directory_path.
     Database::getConnection('default', 'migrate')

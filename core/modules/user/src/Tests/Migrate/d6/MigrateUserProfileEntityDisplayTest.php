@@ -73,14 +73,6 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
       'type' => 'boolean',
     ))->save();
 
-    $this->loadDumps([
-      'ProfileFields.php',
-      'Users.php',
-      'ProfileValues.php',
-      'UsersRoles.php',
-      'EventTimezones.php',
-    ]);
-
     $field_data = Database::getConnection('default', 'migrate')
       ->select('profile_fields', 'u')
       ->fields('u')

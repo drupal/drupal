@@ -36,7 +36,6 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
         array(array(1), array('vocabulary_1_i_0_')),
       )
     ));
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d6_forum_settings');
   }
 

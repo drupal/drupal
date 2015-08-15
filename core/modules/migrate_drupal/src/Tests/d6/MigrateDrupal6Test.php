@@ -209,52 +209,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function getDumps() {
-    return array(
-      'AggregatorFeed.php',
-      'AggregatorItem.php',
-      'Blocks.php',
-      'BlocksRoles.php',
-      'Book.php',
-      'Boxes.php',
-      'Comments.php',
-      'Contact.php',
-      'ContentFieldMultivalue.php',
-      'ContentFieldTest.php',
-      'ContentFieldTestTwo.php',
-      'ContentNodeField.php',
-      'ContentNodeFieldInstance.php',
-      'ContentTypeStory.php',
-      'ContentTypeTestPlanet.php',
-      'EventTimezones.php',
-      'Files.php',
-      'FilterFormats.php',
-      'Filters.php',
-      'MenuCustom.php',
-      'MenuLinks.php',
-      'Node.php',
-      'NodeRevisions.php',
-      'NodeType.php',
-      'Permission.php',
-      'ProfileFields.php',
-      'ProfileValues.php',
-      'Role.php',
-      'TermData.php',
-      'TermHierarchy.php',
-      'TermNode.php',
-      'Upload.php',
-      'UrlAlias.php',
-      'Users.php',
-      'UsersRoles.php',
-      'Variable.php',
-      'Vocabulary.php',
-      'VocabularyNodeTypes.php',
-    );
-  }
-
-  /**
    * Returns the path to the dump directory.
    *
    * @return string

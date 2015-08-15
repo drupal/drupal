@@ -29,7 +29,6 @@ class MigrateDblogConfigsTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(static::$modules);
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d7_dblog_settings');
   }
 

@@ -44,7 +44,6 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
       'vid' => 'test_vocab',
     ))->save();
 
-    $this->loadDumps(['Vocabulary.php', 'VocabularyNodeTypes.php']);
     $this->executeMigration('d6_vocabulary_field');
   }
 

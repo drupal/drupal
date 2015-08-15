@@ -69,8 +69,6 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
       )
     );
     $this->prepareMigrations($id_mappings);
-
-    $this->loadDumps(['Vocabulary.php', 'VocabularyNodeTypes.php']);
     $this->executeMigration('d6_vocabulary_entity_display');
   }
 

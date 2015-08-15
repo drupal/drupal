@@ -30,7 +30,8 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['System.php']);
+    $tables = file_scan_directory($this->getDumpDirectory(), '/.php$/', array('recurse' => FALSE));
+    $this->loadDumps(array_keys($tables));
 
     $this->installEntitySchema('user');
     $this->installConfig(['migrate_drupal', 'system']);
@@ -44,14 +45,6 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    */
   protected function getDumpDirectory() {
     return __DIR__ . '/Table';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function loadDumps(array $files, $method = 'load') {
-    $files = array_map(function($file) { return $this->getDumpDirectory() . '/' . $file; }, $files);
-    parent::loadDumps($files, $method);
   }
 
   /**

@@ -37,14 +37,6 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-
-    $this->loadDumps([
-      'Permission.php',
-      'Role.php',
-      'Filters.php',
-      'FilterFormats.php',
-      'Variable.php',
-    ]);
     $this->executeMigration('d6_user_role');
   }
 

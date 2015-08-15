@@ -31,7 +31,6 @@ class MigrateAggregatorConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d6_aggregator_settings');
   }
 

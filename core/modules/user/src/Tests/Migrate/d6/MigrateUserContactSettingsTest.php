@@ -29,13 +29,6 @@ class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
 
     $this->installSchema('user', array('users_data'));
 
-    $this->loadDumps([
-      'Users.php',
-      'ProfileValues.php',
-      'UsersRoles.php',
-      'EventTimezones.php',
-    ]);
-
     $id_mappings = array(
       'd6_user' => array(
         array(array(2), array(2)),

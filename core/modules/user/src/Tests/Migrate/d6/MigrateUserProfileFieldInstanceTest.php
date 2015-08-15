@@ -32,13 +32,6 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
     $this->createFields();
-    $this->loadDumps(array(
-      'ProfileFields.php',
-      'Users.php',
-      'ProfileValues.php',
-      'UsersRoles.php',
-      'EventTimezones.php',
-    ));
     $this->executeMigration('d6_user_profile_field_instance');
   }
 

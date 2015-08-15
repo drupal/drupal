@@ -23,7 +23,6 @@ class MigrateSearchSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d7_search_settings');
   }
 

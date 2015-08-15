@@ -82,17 +82,6 @@ abstract class MigrateTermNodeTestBase extends MigrateDrupal6TestBase {
         $node->save();
       }
     }
-    $this->loadDumps([
-      'Node.php',
-      'NodeRevisions.php',
-      'ContentTypeStory.php',
-      'ContentTypeTestPlanet.php',
-      'TermNode.php',
-      'TermHierarchy.php',
-      'TermData.php',
-      'Vocabulary.php',
-      'VocabularyNodeTypes.php',
-    ]);
   }
 
 }

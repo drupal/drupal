@@ -29,13 +29,6 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps([
-      'ContentNodeFieldInstance.php',
-      'ContentNodeField.php',
-      'ContentFieldTest.php',
-      'ContentFieldTestTwo.php',
-      'ContentFieldMultivalue.php',
-    ]);
     $this->executeMigration('d6_field');
   }
 

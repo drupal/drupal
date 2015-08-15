@@ -25,7 +25,6 @@ class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('aggregator_feed');
-    $this->loadDumps(['AggregatorFeed.php']);
     $this->executeMigration('d6_aggregator_feed');
   }
 

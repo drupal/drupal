@@ -24,7 +24,6 @@ class MigrateSimpletestSettingsTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(static::$modules);
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d7_simpletest_settings');
   }
 

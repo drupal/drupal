@@ -21,7 +21,6 @@ class MigrateSystemPerformanceTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d6_system_performance');
   }
 

@@ -55,7 +55,6 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
   public function testAggregatorMigrateDependencies() {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_aggregator_item');
-    $this->loadDumps(['AggregatorItem.php']);
     $executable = new MigrateExecutable($migration, $this);
     $this->startCollectingMessages();
     $executable->import();

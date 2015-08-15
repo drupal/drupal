@@ -29,14 +29,6 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
   protected static $blacklist = [];
 
   /**
-   * Get the dump classes required for this migration test.
-   *
-   * @return array
-   *   The list of files containing dumps.
-   */
-  protected abstract function getDumps();
-
-  /**
    * Get the test classes that needs to be run for this test.
    *
    * @return array
@@ -73,14 +65,10 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
     parent::tearDown();
   }
 
-
   /**
    * Test the complete Drupal migration.
    */
   public function testDrupal() {
-    $dumps = $this->getDumps();
-    $this->loadDumps($dumps);
-
     $classes = $this->getTestClassesList();
     foreach ($classes as $class) {
       if (is_subclass_of($class, '\Drupal\migrate\Tests\MigrateDumpAlterInterface')) {

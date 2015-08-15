@@ -42,7 +42,6 @@ class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupal6T
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $this->loadDumps(['Variable.php', 'NodeType.php']);
     $this->executeMigration('d6_comment_entity_form_display_subject');
   }
 

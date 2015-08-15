@@ -41,7 +41,6 @@ class MigrateCommentVariableFieldTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $this->loadDumps(['Variable.php', 'NodeType.php']);
     $this->executeMigration('d6_comment_field');
   }
 

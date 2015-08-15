@@ -32,7 +32,6 @@ class MigrateBlockedIPsTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installSchema('ban', ['ban_ip']);
-    $this->loadDumps(['BlockedIps.php']);
     $this->executeMigration('d7_blocked_ips');
   }
 
