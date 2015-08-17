@@ -88,35 +88,57 @@
           // back to from where the user tried to drag it.
           regionField.trigger('change');
         }
-        else if ($rowElement.prev('tr').is('.region-message')) {
+
+        // Update region and weight fields if the region has been changed.
+        if (!regionField.is('.block-region-' + regionName)) {
           var weightField = $rowElement.find('select.block-weight');
           var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
-
-          if (!regionField.is('.block-region-' + regionName)) {
-            regionField.removeClass('block-region-' + oldRegionName).addClass('block-region-' + regionName);
-            weightField.removeClass('block-weight-' + oldRegionName).addClass('block-weight-' + regionName);
-            regionField.val(regionName);
-          }
+          regionField.removeClass('block-region-' + oldRegionName).addClass('block-region-' + regionName);
+          weightField.removeClass('block-weight-' + oldRegionName).addClass('block-weight-' + regionName);
+          regionField.val(regionName);
         }
+
+        updateBlockWeights(table, regionName);
       };
 
       // Add the behavior to each region select list.
-      $(context).find('select.block-region-select').once('block-region-select').each(function () {
-        $(this).on('change', function (event) {
+      $(context).find('select.block-region-select').once('block-region-select')
+        .on('change', function (event) {
           // Make our new row and select field.
           var row = $(this).closest('tr');
           var select = $(this);
-          tableDrag.rowObject = new tableDrag.row(row);
 
           // Find the correct region and insert the row as the last in the region.
           table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').eq(-1).before(row);
 
+          updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, row);
           // Remove focus from selectbox.
           select.trigger('blur');
         });
-      });
+
+      /**
+       * Update block weights in the given region.
+       *
+       * @param {jQuery} $table
+       *   Table with draggable items.
+       * @param {string} region
+       *   Machine name of region containing blocks to update.
+       */
+      var updateBlockWeights = function ($table, region) {
+        // Calculate minimum weight.
+        var weight = -Math.round($table.find('.draggable').length / 2);
+        // Update the block weights.
+        $table.find('.region-' + region + '-message').nextUntil('.region-title')
+          .find('select.block-weight').val(function () {
+            // Increment the weight before assigning it to prevent using the
+            // absolute minimum available weight. This way we always have an
+            // unused upper and lower bound, which makes manually setting the
+            // weights easier for users who prefer to do it that way.
+            return ++weight;
+          });
+      };
 
       var checkEmptyRegions = function (table, rowObject) {
         table.find('tr.region-message').each(function () {
