@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -78,9 +79,9 @@ class LocalTasksTest extends WebTestBase {
     ]);
 
     // Verify that script tags are escaped on output.
-    $title = htmlspecialchars("Task 1 <script>alert('Welcome to the jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $title = Html::escape("Task 1 <script>alert('Welcome to the jungle!')</script>");
     $this->assertLocalTaskAppers($title);
-    $title = htmlspecialchars("<script>alert('Welcome to the derived jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $title = Html::escape("<script>alert('Welcome to the derived jungle!')</script>");
     $this->assertLocalTaskAppers($title);
 
     // Verify that local tasks appear as defined in the router.
@@ -92,7 +93,7 @@ class LocalTasksTest extends WebTestBase {
       ['menu_test.local_task_test_tasks_settings_dynamic', []],
     ]);
 
-    $title = htmlspecialchars("<script>alert('Welcome to the jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $title = Html::escape("<script>alert('Welcome to the jungle!')</script>");
     $this->assertLocalTaskAppers($title);
 
     // Ensure the view tab is active.

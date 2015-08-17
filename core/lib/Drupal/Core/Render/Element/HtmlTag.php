@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\SafeString;
 use Drupal\Component\Utility\Xss;
@@ -78,7 +79,7 @@ class HtmlTag extends RenderElement {
 
     // An HTML tag should not contain any special characters. Escape them to
     // ensure this cannot be abused.
-    $escaped_tag = htmlspecialchars($element['#tag'], ENT_QUOTES, 'UTF-8');
+    $escaped_tag = Html::escape($element['#tag']);
     $markup = '<' . $escaped_tag . $attributes;
     // Construct a void element.
     if (in_array($element['#tag'], self::$voidElements)) {

@@ -259,4 +259,54 @@ class HtmlTest extends UnitTestCase {
     );
   }
 
+  /**
+   * Tests Html::escape().
+   *
+   * @dataProvider providerEscape
+   * @covers ::escape
+   */
+  public function testEscape($expected, $text) {
+    $this->assertEquals($expected, Html::escape($text));
+  }
+
+  /**
+   * Data provider for testEscape().
+   *
+   * @see testCheckPlain()
+   */
+  public function providerEscape() {
+    return array(
+      array('Drupal', 'Drupal'),
+      array('&lt;script&gt;', '<script>'),
+      array('&amp;lt;script&amp;gt;', '&lt;script&gt;'),
+      array('&amp;#34;', '&#34;'),
+      array('&quot;', '"'),
+      array('&amp;quot;', '&quot;'),
+      array('&#039;', "'"),
+      array('&amp;#039;', '&#039;'),
+      array('©', '©'),
+      array('→', '→'),
+      array('➼', '➼'),
+      array('€', '€'),
+    );
+  }
+
+  /**
+   * Tests relationship between escaping and decoding HTML entities.
+   *
+   * @covers ::decodeEntities
+   * @covers ::escape
+   */
+  public function testDecodeEntitiesAndEscape() {
+    $string = "<em>répét&eacute;</em>";
+    $escaped = Html::escape($string);
+    $this->assertSame('&lt;em&gt;répét&amp;eacute;&lt;/em&gt;', $escaped);
+    $decoded = Html::decodeEntities($escaped);
+    $this->assertSame('<em>répét&eacute;</em>', $decoded);
+    $decoded = Html::decodeEntities($decoded);
+    $this->assertSame('<em>répété</em>', $decoded);
+    $escaped = Html::escape($decoded);
+    $this->assertSame('&lt;em&gt;répété&lt;/em&gt;', $escaped);
+  }
+
 }

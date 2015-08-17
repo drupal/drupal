@@ -223,7 +223,7 @@ class SafeMarkup {
    * @see drupal_validate_utf8()
    */
   public static function checkPlain($text) {
-    $string = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    $string = Html::escape($text);
     static::$safeStrings[$string]['html'] = TRUE;
     return $string;
   }

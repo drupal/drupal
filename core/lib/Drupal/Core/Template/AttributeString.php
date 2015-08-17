@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\Html;
+
 /**
  * A class that represents most standard HTML attributes.
  *
@@ -28,7 +30,7 @@ class AttributeString extends AttributeValueBase {
    * Implements the magic __toString() method.
    */
   public function __toString() {
-    return htmlspecialchars($this->value, ENT_QUOTES, 'UTF-8');
+    return Html::escape($this->value);
   }
 
 }

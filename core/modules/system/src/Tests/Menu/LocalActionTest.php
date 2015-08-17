@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -30,8 +31,8 @@ class LocalActionTest extends WebTestBase {
     // Ensure that both menu and route based actions are shown.
     $this->assertLocalAction([
       [Url::fromRoute('menu_test.local_action4'), 'My dynamic-title action'],
-      [Url::fromRoute('menu_test.local_action4'), htmlspecialchars("<script>alert('Welcome to the jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')],
-      [Url::fromRoute('menu_test.local_action4'), htmlspecialchars("<script>alert('Welcome to the derived jungle!')</script>", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')],
+      [Url::fromRoute('menu_test.local_action4'), Html::escape("<script>alert('Welcome to the jungle!')</script>")],
+      [Url::fromRoute('menu_test.local_action4'), Html::escape("<script>alert('Welcome to the derived jungle!')</script>")],
       [Url::fromRoute('menu_test.local_action2'), 'My hook_menu action'],
       [Url::fromRoute('menu_test.local_action3'), 'My YAML discovery action'],
       [Url::fromRoute('menu_test.local_action5'), 'Title override'],
