@@ -90,6 +90,9 @@ function template_preprocess_views_view_fields(&$variables) {
       $object = new stdClass();
       $object->handler = $view->field[$id];
       $object->inline = !empty($variables['options']['inline'][$id]);
+      // Set up default value of the flag that indicates whether to display a
+      // colon after the label.
+      $object->has_label_colon = FALSE;
 
       $object->element_type = $object->handler->elementType(TRUE, !$variables['options']['default_field_elements'], $object->inline);
       if ($object->element_type) {
@@ -101,18 +104,7 @@ function template_preprocess_views_view_fields(&$variables) {
         if ($classes = $object->handler->elementClasses($row->index)) {
           $attributes['class'][] = $classes;
         }
-        $attributes = new Attribute($attributes);
-
-        $pre = '<' . $object->element_type;
-        $pre .= $attributes;
-        $field_output = $pre . '>' . $field_output . '</' . $object->element_type . '>';
-      }
-
-      // Protect ourselves somewhat for backward compatibility. This will
-      // prevent old templates from producing invalid HTML when no element type
-      // is selected.
-      if (empty($object->element_type)) {
-        $object->element_type = 'span';
+        $object->element_attributes = new Attribute($attributes);
       }
 
       $object->content = $field_output;
@@ -130,16 +122,14 @@ function template_preprocess_views_view_fields(&$variables) {
       $object->class = Html::cleanCssIdentifier($id);
 
       $previous_inline = $object->inline;
-      $object->inline_html = $object->handler->elementWrapperType(TRUE, TRUE);
-      if ($object->inline_html === '' && $variables['options']['default_field_elements']) {
-        $object->inline_html = $object->inline ? 'span' : 'div';
+      // Set up field wrapper element.
+      $object->wrapper_element = $object->handler->elementWrapperType(TRUE, TRUE);
+      if ($object->wrapper_element === '' && $variables['options']['default_field_elements']) {
+        $object->wrapper_element = $object->inline ? 'span' : 'div';
       }
 
-      // Set up the wrapper HTML.
-      $object->wrapper_prefix = '';
-      $object->wrapper_suffix = '';
-
-      if ($object->inline_html) {
+      // Set up field wrapper attributes if field wrapper was set.
+      if ($object->wrapper_element) {
         $attributes = array();
         if ($object->handler->options['element_default_classes']) {
           $attributes['class'][] = 'views-field';
@@ -149,26 +139,24 @@ function template_preprocess_views_view_fields(&$variables) {
         if ($classes = $object->handler->elementWrapperClasses($row->index)) {
           $attributes['class'][] = $classes;
         }
-        $attributes = new Attribute($attributes);
-
-        $object->wrapper_prefix = '<' . $object->inline_html;
-        $object->wrapper_prefix .= $attributes;
-        $object->wrapper_prefix .= '>';
-        $object->wrapper_suffix = '</' . $object->inline_html . '>';
+        $object->wrapper_attributes = new Attribute($attributes);
       }
 
-      // Set up the label for the value and the HTML to make it easier
-      // on the template.
-      $object->label = SafeMarkup::checkPlain($view->field[$id]->label());
-      $object->label_html = '';
+      // Set up field label
+      $object->label = $view->field[$id]->label();
+
+      // Set up field label wrapper and its attributes.
       if ($object->label) {
-        $object->label_html .= $object->label;
+        // Add a colon in a label suffix.
         if ($object->handler->options['element_label_colon']) {
-          $object->label_html .= ': ';
+          $object->has_label_colon = TRUE;
         }
 
-        $object->elementLabelType = $object->handler->elementLabelType(TRUE, !$variables['options']['default_field_elements']);
-        if ($object->elementLabelType) {
+        // Set up label HTML element.
+        $object->label_element = $object->handler->elementLabelType(TRUE, !$variables['options']['default_field_elements']);
+
+        // Set up label attributes.
+        if ($object->label_element) {
           $attributes = array();
           if ($object->handler->options['element_default_classes']) {
             $attributes['class'][] = 'views-label';
@@ -179,13 +167,7 @@ function template_preprocess_views_view_fields(&$variables) {
           if ($element_label_class) {
             $attributes['class'][] = $element_label_class;
           }
-          $attributes = new Attribute($attributes);
-
-          $pre = '<' . $object->elementLabelType;
-          $pre .= $attributes;
-          $pre .= '>';
-
-          $object->label_html = $pre . $object->label_html . '</' . $object->elementLabelType . '>';
+          $object->label_attributes = new Attribute($attributes);
         }
       }
 
@@ -219,12 +201,32 @@ function theme_views_view_fields($variables) {
     if (!empty($field->separator)) {
       $output .= $field->separator;
     }
-
-    $output .= $field->wrapper_prefix;
-    $output .= $field->label_html;
+    $wrapper_element = Html::escape($field->wrapper_element);
+    if ($wrapper_element) {
+      $output .= '<' . $wrapper_element . $field->wrapper_attributes . '>';
+      if (isset($field->label_element) && !empty($field->label_element)) {
+        $label_element = Html::escape($field->label_element);
+        $output .= '<' . $label_element . $field->label_attributes . '>';
+      }
+      $output .= Html::escape($field->label);
+      if ($field->has_label_colon) {
+        $output .= ': ';
+      }
+      if (isset($label_element)) {
+        $output .= '</' . $label_element . '>';
+      }
+    }
+    $element_type = Html::escape($field->element_type);
+    if ($element_type) {
+      $output .= '<' . $element_type . $field->element_attributes . '>';
+    }
     $output .= $field->content;
-
-    $output .= $field->wrapper_suffix;
+    if ($element_type) {
+      $output .= '</' . $element_type . '>';
+    }
+    if ($wrapper_element) {
+      $output .= '</' . $wrapper_element . '>';
+    }
   }
 
   return $output;

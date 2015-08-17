@@ -11,13 +11,16 @@
  *   - class: The safe class ID to use.
  *   - handler: The Views field handler controlling this field.
  *   - inline: Whether or not the field should be inline.
- *   - inline_html: Either div or span based on the 'inline' flag.
- *   - wrapper_prefix: A complete wrapper containing the inline_html to use.
- *   - wrapper_suffix: The closing tag for the wrapper.
+ *   - wrapper_element: An HTML element for a wrapper.
+ *   - wrapper_attributes: List of attributes for wrapper element.
  *   - separator: An optional separator that may appear before a field.
  *   - label: The field's label text.
- *   - label_html: The full HTML of the label to use including configured
- *     element type.
+ *   - label_element: An HTML element for a label wrapper.
+ *   - label_attributes: List of attributes for label wrapper.
+ *   - has_label_colon: A boolean indicating whether to display a colon after
+ *     the label.
+ *   - element_type: An HTML element for the field content.
+ *   - element_attributes: List of attributes for HTML element for field content.
  * - row: The raw result from the query, with all data it fetched.
  *
  * @see template_preprocess_views_view_fields()
@@ -31,11 +34,24 @@ See http://api.drupal.org/api/function/theme_views_view_fields/8 for details.
 After copying this file to your theme's folder and customizing it, remove this
 comment.
 #}
-{% for field in fields %}
+{% for field in fields -%}
   {{ field.separator }}
-
-  {{ field.wrapper_prefix }}
-    {{ field.label_html }}
+  {%- if field.wrapper_element -%}
+    <{{ field.wrapper_element }}{{ field.wrapper_attributes }}>
+  {%- endif %}
+  {%- if field.label -%}
+    {%- if field.label_element -%}
+      <{{ field.label_element }}{{ field.label_attributes }}>{{ field.label }}{{ field.has_label_colon ? ': ' }}</{{ field.label_element }}>
+    {%- else -%}
+      {{ field.label }}{{ field.has_label_colon ? ': ' }}
+    {%- endif %}
+  {%- endif %}
+  {%- if field.element_type -%}
+    <{{ field.element_type }}{{ field.element_attributes }}>{{ field.content }}</{{ field.element_type }}>
+  {%- else -%}
     {{ field.content }}
-  {{ field.wrapper_suffix }}
-{% endfor %}
+  {%- endif %}
+  {%- if field.wrapper_element -%}
+    </{{ field.wrapper_element }}>
+  {%- endif %}
+{%- endfor %}

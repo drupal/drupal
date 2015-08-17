@@ -242,7 +242,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
     if ($this->options['element_type']) {
-      return SafeMarkup::checkPlain($this->options['element_type']);
+      return $this->options['element_type'];
     }
 
     if ($default_empty) {
@@ -270,7 +270,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
     if ($this->options['element_label_type']) {
-      return SafeMarkup::checkPlain($this->options['element_label_type']);
+      return $this->options['element_label_type'];
     }
 
     if ($default_empty) {
@@ -290,7 +290,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
     if ($this->options['element_wrapper_type']) {
-      return SafeMarkup::checkPlain($this->options['element_wrapper_type']);
+      return $this->options['element_wrapper_type'];
     }
 
     if ($default_empty) {
