@@ -20,9 +20,10 @@ function drupal_phpunit_find_extension_directories($scan_directory) {
   $extensions = array();
   $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($scan_directory, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
   foreach ($dirs as $dir) {
-    if (strpos($dir->getPathname(), 'info.yml') !== FALSE) {
+    if (strpos($dir->getPathname(), '.info.yml') !== FALSE) {
       // Cut off ".info.yml" from the filename for use as the extension name.
-      $extensions[substr($dir->getFilename(), 0, -9)] = $dir->getPathInfo()->getRealPath();
+      $extensions[substr($dir->getFilename(), 0, -9)] = $dir->getPathInfo()
+        ->getRealPath();
     }
   }
   return $extensions;
@@ -35,10 +36,19 @@ function drupal_phpunit_find_extension_directories($scan_directory) {
  *   An array of directories under which contributed extensions may exist.
  */
 function drupal_phpunit_contrib_extension_directory_roots() {
-  $sites_path = __DIR__ . '/../../sites';
-  $paths = array();
+  $root = dirname(dirname(__DIR__));
+  $paths = array(
+    $root . '/core/modules',
+    $root . '/core/profiles',
+    $root . '/modules',
+    $root . '/profiles',
+  );
+  $sites_path = $root . '/sites';
   // Note this also checks sites/../modules and sites/../profiles.
   foreach (scandir($sites_path) as $site) {
+    if ($site[0] === '.' || $site === 'simpletest') {
+      continue;
+    }
     $path = "$sites_path/$site";
     $paths[] = is_dir("$path/modules") ? realpath("$path/modules") : NULL;
     $paths[] = is_dir("$path/profiles") ? realpath("$path/profiles") : NULL;
@@ -49,37 +59,43 @@ function drupal_phpunit_contrib_extension_directory_roots() {
 /**
  * Registers the namespace for each extension directory with the autoloader.
  *
- * @param Composer\Autoload\ClassLoader $loader
- *   The supplied autoloader.
  * @param array $dirs
  *   An associative array of extension directories, keyed by extension name.
+ *
+ * @return array
+ *   An associative array of extension directories, keyed by their namespace.
  */
-function drupal_phpunit_register_extension_dirs(Composer\Autoload\ClassLoader $loader, $dirs) {
+function drupal_phpunit_get_extension_namespaces($dirs) {
+  $namespaces = array();
   foreach ($dirs as $extension => $dir) {
     if (is_dir($dir . '/src')) {
       // Register the PSR-4 directory for module-provided classes.
-      $loader->addPsr4('Drupal\\' . $extension . '\\', $dir . '/src');
+      $namespaces['Drupal\\' . $extension . '\\'][] = $dir . '/src';
     }
     if (is_dir($dir . '/tests/src')) {
       // Register the PSR-4 directory for PHPUnit test classes.
-      $loader->addPsr4('Drupal\\Tests\\' . $extension . '\\', $dir . '/tests/src');
+      $namespaces['Drupal\\Tests\\' . $extension . '\\'][] = $dir . '/tests/src';
     }
   }
+  return $namespaces;
 }
 
 // Start with classes in known locations.
 $loader = require __DIR__ . '/../../autoload.php';
 $loader->add('Drupal\\Tests', __DIR__);
+$loader->add('Drupal\\KernelTests', __DIR__);
 
-// Scan for arbitrary extension namespaces from core and contrib.
-$extension_roots = array_merge(array(
-  __DIR__ . '/../modules',
-  __DIR__ . '/../profiles',
-), drupal_phpunit_contrib_extension_directory_roots());
+if (!isset($GLOBALS['namespaces'])) {
+  // Scan for arbitrary extension namespaces from core and contrib.
+  $extension_roots = drupal_phpunit_contrib_extension_directory_roots();
 
-$dirs = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
-$dirs = array_reduce($dirs, 'array_merge', array());
-drupal_phpunit_register_extension_dirs($loader, $dirs);
+  $dirs = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
+  $dirs = array_reduce($dirs, 'array_merge', array());
+  $GLOBALS['namespaces'] = drupal_phpunit_get_extension_namespaces($dirs);
+}
+foreach ($GLOBALS['namespaces'] as $prefix => $paths) {
+  $loader->addPsr4($prefix, $paths);
+}
 
 // Set sane locale settings, to ensure consistent string, dates, times and
 // numbers handling.

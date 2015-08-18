@@ -195,10 +195,17 @@ class InstallStorage extends FileStorage {
       // We don't have to use ExtensionDiscovery here because our list of
       // extensions was already obtained through an ExtensionDiscovery scan.
       $directory = $this->getComponentFolder($extension_object);
-      if (file_exists($directory)) {
-        $files = new \GlobIterator(\Drupal::root() . '/' . $directory . '/*' . $extension);
+      if (is_dir($directory)) {
+        // glob() directly calls into libc glob(), which is not aware of PHP
+        // stream wrappers. Same for \GlobIterator (which additionally requires
+        // an absolute realpath() on Windows).
+        // @see https://github.com/mikey179/vfsStream/issues/2
+        $files = scandir($directory);
+
         foreach ($files as $file) {
-          $folders[$file->getBasename($extension)] = $directory;
+          if ($file[0] !== '.' && fnmatch('*' . $extension, $file)) {
+            $folders[basename($file, $extension)] = $directory;
+          }
         }
       }
     }
@@ -215,10 +222,17 @@ class InstallStorage extends FileStorage {
     $extension = '.' . $this->getFileExtension();
     $folders = array();
     $directory = $this->getCoreFolder();
-    if (file_exists($directory)) {
-      $files = new \GlobIterator(\Drupal::root() . '/' . $directory . '/*' . $extension);
+    if (is_dir($directory)) {
+      // glob() directly calls into libc glob(), which is not aware of PHP
+      // stream wrappers. Same for \GlobIterator (which additionally requires an
+      // absolute realpath() on Windows).
+      // @see https://github.com/mikey179/vfsStream/issues/2
+      $files = scandir($directory);
+
       foreach ($files as $file) {
-        $folders[$file->getBasename($extension)] = $directory;
+        if ($file[0] !== '.' && fnmatch('*' . $extension, $file)) {
+          $folders[basename($file, $extension)] = $directory;
+        }
       }
     }
     return $folders;

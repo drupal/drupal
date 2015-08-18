@@ -7,6 +7,7 @@
 
 namespace Drupal\Core;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * This interface extends Symfony's KernelInterface and adds methods for
  * responding to modules being enabled or disabled during its lifetime.
  */
-interface DrupalKernelInterface extends HttpKernelInterface {
+interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInterface {
 
   /**
    * Boots the current kernel.

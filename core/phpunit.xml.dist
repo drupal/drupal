@@ -22,6 +22,16 @@
       <!-- Exclude Drush tests. -->
       <exclude>./drush/tests</exclude>
     </testsuite>
+    <testsuite name="kernel">
+      <directory>./tests/Drupal/KernelTests</directory>
+      <directory>./modules/*/tests/src/Kernel</directory>
+      <directory>../modules/*/tests/src/Kernel</directory>
+      <directory>../sites/*/modules/*/tests/src/Kernel</directory>
+      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
+      <exclude>./vendor</exclude>
+      <!-- Exclude Drush tests. -->
+      <exclude>./drush/tests</exclude>
+    </testsuite>
     <testsuite name="functional">
       <directory>./tests/Drupal/FunctionalTests</directory>
       <directory>./modules/*/tests/src/Functional</directory>

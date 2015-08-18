@@ -15,6 +15,7 @@ use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -151,12 +152,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $serviceYamls;
 
   /**
-   * List of discovered service provider class names.
+   * List of discovered service provider class names or objects.
    *
    * This is a nested array whose top-level keys are 'app' and 'site', denoting
    * the origin of a service provider. Site-specific providers have to be
    * collected separately, because they need to be processed last, so as to be
    * able to override services from application service providers.
+   *
+   * Allowing objects is for example used to allow
+   * \Drupal\KernelTests\KernelTestBase to register itself as service provider.
    *
    * @var array
    */
@@ -430,6 +434,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
+  public function setContainer(ContainerInterface $container = NULL) {
+    if (isset($this->container)) {
+      throw new \Exception('The container should not override an existing container.');
+    }
+    if ($this->booted) {
+      throw new \Exception('The container cannot be set after a booted kernel.');
+    }
+
+    $this->container = $container;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadLegacyIncludes() {
     require_once $this->root . '/core/includes/common.inc';
     require_once $this->root . '/core/includes/database.inc';
@@ -514,7 +533,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Add site-specific service providers.
     if (!empty($GLOBALS['conf']['container_service_providers'])) {
       foreach ($GLOBALS['conf']['container_service_providers'] as $class) {
-        if (class_exists($class)) {
+        if ((is_string($class) && class_exists($class)) || (is_object($class) && ($class instanceof ServiceProviderInterface || $class instanceof ServiceModifierInterface))) {
           $this->serviceProviderClasses['site'][] = $class;
         }
       }
@@ -745,6 +764,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
+    // If we haven't booted yet but there is a container, then we're asked to
+    // boot the container injected via setContainer().
+    // @see \Drupal\KernelTests\KernelTestBase::setUp()
+    if (isset($this->container) && !$this->booted) {
+     $container = $this->container;
+    }
+
     // If the module list hasn't already been set in updateModules and we are
     // not forcing a rebuild, then try and load the container from the disk.
     if (empty($this->moduleList) && !$this->containerNeedsRebuild) {
@@ -760,6 +786,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
+    // If there is still no container, build a new one from scratch.
     if (!isset($container)) {
       $container = $this->compileContainer();
     }
@@ -1149,7 +1176,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     );
     foreach ($this->serviceProviderClasses as $origin => $classes) {
       foreach ($classes as $name => $class) {
-        $this->serviceProviders[$origin][$name] = new $class;
+        if (!is_object($class)) {
+          $this->serviceProviders[$origin][$name] = new $class;
+        }
+        else {
+          $this->serviceProviders[$origin][$name] = $class;
+        }
       }
     }
   }

@@ -5,14 +5,14 @@
  * Contains \Drupal\system\Tests\PhpStorage\PhpStorageFactoryTest.
  */
 
-namespace Drupal\system\Tests\PhpStorage;
+namespace Drupal\Tests\system\Kernel\PhpStorage;
 
 use Drupal\Component\PhpStorage\MTimeProtectedFileStorage;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\simpletest\KernelTestBase;
 use Drupal\system\PhpStorage\MockPhpStorage;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the PHP storage factory.
@@ -21,6 +21,18 @@ use Drupal\system\PhpStorage\MockPhpStorage;
  * @see \Drupal\Core\PhpStorage\PhpStorageFactory
  */
 class PhpStorageFactoryTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Empty the PHP storage settings, as KernelTestBase sets it by default.
+    $settings = Settings::getAll();
+    unset($settings['php_storage']);
+    new Settings($settings);
+  }
 
   /**
    * Tests the get() method with no settings.
@@ -59,7 +71,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
     $this->setSettings('test', array('directory' => NULL));
     $php = PhpStorageFactory::get('test');
     $this->assertTrue($php instanceof MockPhpStorage, 'An MockPhpStorage instance was returned from overridden settings.');
-    $this->assertIdentical(\Drupal::root() . '/' . PublicStream::basePath() . '/php', $php->getConfigurationValue('directory'), 'Default file directory was used.');
+    $this->assertIdentical(PublicStream::basePath() . '/php', $php->getConfigurationValue('directory'), 'Default file directory was used.');
 
     // Test that a default storage class is set if it's empty.
     $this->setSettings('test', array('class' => NULL));

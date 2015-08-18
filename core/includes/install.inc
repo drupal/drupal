@@ -210,7 +210,7 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
     }
     $variable_names['$'. $setting] = $setting;
   }
-  $contents = file_get_contents(DRUPAL_ROOT . '/' . $settings_file);
+  $contents = file_get_contents($settings_file);
   if ($contents !== FALSE) {
     // Initialize the contents for the settings.php file if it is empty.
     if (trim($contents) === '') {
@@ -315,7 +315,7 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
     }
 
     // Write the new settings file.
-    if (file_put_contents(DRUPAL_ROOT . '/' . $settings_file, $buffer) === FALSE) {
+    if (file_put_contents($settings_file, $buffer) === FALSE) {
       throw new Exception(t('Failed to modify %settings. Verify the file permissions.', array('%settings' => $settings_file)));
     }
     else {

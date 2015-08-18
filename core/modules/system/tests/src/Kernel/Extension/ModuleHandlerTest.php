@@ -5,11 +5,11 @@
  * Contains \Drupal\system\Tests\Extension\ModuleHandlerTest.
  */
 
-namespace Drupal\system\Tests\Extension;
+namespace Drupal\Tests\system\Kernel\Extension;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\simpletest\KernelTestBase;
 use \Drupal\Core\Extension\ModuleUninstallValidatorException;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests ModuleHandler functionality.
@@ -21,10 +21,13 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system');
-
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
+
+    // @todo ModuleInstaller calls system_rebuild_module_data which is part of
+    //   system.module, see https://www.drupal.org/node/2208429.
+    include_once $this->root . '/core/modules/system/system.module';
+
     // Set up the state values so we know where to find the files when running
     // drupal_get_filename().
     // @todo Remove as part of https://www.drupal.org/node/2186491
@@ -34,8 +37,8 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function containerBuild(ContainerBuilder $container) {
-    parent::containerBuild($container);
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
     // Put a fake route bumper on the container to be called during uninstall.
     $container
       ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
@@ -45,24 +48,9 @@ class ModuleHandlerTest extends KernelTestBase {
    * The basic functionality of retrieving enabled modules.
    */
   function testModuleList() {
-    // Prime the drupal_get_filename() static cache with the location of the
-    // testing profile as it is not the currently active profile and we don't
-    // yet have any cached way to retrieve its location.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    drupal_get_filename('profile', 'testing', 'core/profiles/testing/testing.info.yml');
-    // Build a list of modules, sorted alphabetically.
-    $profile_info = install_profile_info('testing', 'en');
-    $module_list = $profile_info['dependencies'];
+    $module_list = array();
 
-    // Installation profile is a module that is expected to be loaded.
-    $module_list[] = 'testing';
-
-    sort($module_list);
-    // Compare this list to the one returned by the module handler. We expect
-    // them to match, since all default profile modules have a weight equal to 0
-    // (except for block.module, which has a lower weight but comes first in
-    // the alphabet anyway).
-    $this->assertModuleList($module_list, 'Testing profile');
+    $this->assertModuleList($module_list, 'Initial');
 
     // Try to install a new module.
     $this->moduleInstaller()->install(array('ban'));
@@ -98,7 +86,6 @@ class ModuleHandlerTest extends KernelTestBase {
   protected function assertModuleList(Array $expected_values, $condition) {
     $expected_values = array_values(array_unique($expected_values));
     $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
-    $enabled_modules = sort($enabled_modules);
     $this->assertEqual($expected_values, $enabled_modules, format_string('@condition: extension handler returns correct results', array('@condition' => $condition)));
   }
 
@@ -196,7 +183,7 @@ class ModuleHandlerTest extends KernelTestBase {
   function testUninstallProfileDependency() {
     $profile = 'minimal';
     $dependency = 'dblog';
-    $this->settingsSet('install_profile', $profile);
+    $this->setSetting('install_profile', $profile);
     // Prime the drupal_get_filename() static cache with the location of the
     // minimal profile as it is not the currently active profile and we don't
     // yet have any cached way to retrieve its location.

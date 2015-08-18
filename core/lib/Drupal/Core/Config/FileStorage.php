@@ -193,19 +193,23 @@ class FileStorage implements StorageInterface {
    * Implements Drupal\Core\Config\StorageInterface::listAll().
    */
   public function listAll($prefix = '') {
-    // glob() silently ignores the error of a non-existing search directory,
-    // even with the GLOB_ERR flag.
     $dir = $this->getCollectionDirectory();
-    if (!file_exists($dir)) {
+    if (!is_dir($dir)) {
       return array();
     }
     $extension = '.' . static::getFileExtension();
-    // \GlobIterator on Windows requires an absolute path.
-    $files = new \GlobIterator(realpath($dir) . '/' . $prefix . '*' . $extension);
+
+    // glob() directly calls into libc glob(), which is not aware of PHP stream
+    // wrappers. Same for \GlobIterator (which additionally requires an absolute
+    // realpath() on Windows).
+    // @see https://github.com/mikey179/vfsStream/issues/2
+    $files = scandir($dir);
 
     $names = array();
     foreach ($files as $file) {
-      $names[] = $file->getBasename($extension);
+      if ($file[0] !== '.' && fnmatch($prefix . '*' . $extension, $file)) {
+        $names[] = basename($file, $extension);
+      }
     }
 
     return $names;
@@ -299,13 +303,15 @@ class FileStorage implements StorageInterface {
             $collections[] = $collection . '.' . $sub_collection;
           }
         }
-        // Check that the collection is valid by searching if for configuration
+        // Check that the collection is valid by searching it for configuration
         // objects. A directory without any configuration objects is not a valid
         // collection.
-        // \GlobIterator on Windows requires an absolute path.
-        $files = new \GlobIterator(realpath($directory . '/' . $collection) . '/*.' . $this->getFileExtension());
-        if (count($files)) {
-          $collections[] = $collection;
+        // @see \Drupal\Core\Config\FileStorage::listAll()
+        foreach (scandir($directory . '/' . $collection) as $file) {
+          if ($file[0] !== '.' && fnmatch('*.' . $this->getFileExtension(), $file)) {
+            $collections[] = $collection;
+            break;
+          }
         }
       }
     }

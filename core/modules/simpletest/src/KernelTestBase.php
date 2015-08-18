@@ -33,6 +33,9 @@ use Symfony\Component\HttpFoundation\Request;
  * Additional modules needed in a test may be loaded and added to the fixed
  * module list.
  *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.2.x. Use
+ *   \Drupal\KernelTests\KernelTestBase instead.
+ *
  * @see \Drupal\simpletest\KernelTestBase::$modules
  * @see \Drupal\simpletest\KernelTestBase::enableModules()
  *

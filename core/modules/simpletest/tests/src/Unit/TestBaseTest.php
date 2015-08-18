@@ -117,7 +117,7 @@ class TestBaseTest extends UnitTestCase {
     $this->assertEquals($length, strlen($string));
     // randomString() should always include an ampersand ('&')  and a
     // greater than ('>') if $length is greater than 3.
-    if ($length > 3) {
+    if ($length > 4) {
       $this->assertContains('&', $string);
       $this->assertContains('>', $string);
     }

@@ -709,7 +709,7 @@ function simpletest_script_command($test_id, $test_class) {
  * @see simpletest_script_run_one_test()
  */
 function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
-  if (strpos($test_class, 'Drupal\\Tests\\') === 0) {
+  if (is_subclass_of($test_class, '\PHPUnit_Framework_TestCase')) {
     // PHPUnit test, move on.
     return;
   }

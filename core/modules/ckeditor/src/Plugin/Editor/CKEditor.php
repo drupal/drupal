@@ -331,10 +331,12 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     if (empty($langcodes)) {
       $langcodes = array();
       // Collect languages included with CKEditor based on file listing.
-      $ckeditor_languages = new \GlobIterator(\Drupal::root() . '/core/assets/vendor/ckeditor/lang/*.js');
-      foreach ($ckeditor_languages as $language_file) {
-        $langcode = $language_file->getBasename('.js');
-        $langcodes[$langcode] = $langcode;
+      $files = scandir('core/assets/vendor/ckeditor/lang');
+      foreach ($files as $file) {
+        if ($file[0] !== '.' && fnmatch('*.js', $file)) {
+          $langcode = basename($file, '.js');
+          $langcodes[$langcode] = $langcode;
+        }
       }
       \Drupal::cache()->set('ckeditor.langcodes', $langcodes);
     }
