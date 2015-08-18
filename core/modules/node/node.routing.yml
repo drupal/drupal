@@ -81,8 +81,7 @@ node.revision_delete_confirm:
 entity.node_type.collection:
   path: '/admin/structure/types'
   defaults:
-    _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
-    entity_type: 'node_type'
+    _entity_list: 'node_type'
     _title: 'Content types'
   requirements:
     _permission: 'administer content types'
