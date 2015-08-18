@@ -31,7 +31,7 @@
         $passwordInputParentWrapper
           .find('input.js-password-confirm')
           .parent()
-          .append('<div class="password-confirm js-password-confirm">' + translate.confirmTitle + ' <span></span></div>')
+          .append('<div aria-live="polite" aria-atomic="true" class="password-confirm js-password-confirm">' + translate.confirmTitle + ' <span></span></div>')
           .addClass('confirm-parent');
 
         var $confirmInput = $passwordInputParentWrapper.find('input.js-password-confirm');
@@ -40,7 +40,7 @@
 
         // If the password strength indicator is enabled, add its markup.
         if (settings.password.showStrengthIndicator) {
-          var passwordMeter = '<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div class="password-strength__title">' + translate.strengthTitle + ' </div><div class="password-strength__text js-password-strength__text" aria-live="assertive"></div></div>';
+          var passwordMeter = '<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div aria-live="polite" aria-atomic="true" class="password-strength__title">' + translate.strengthTitle + ' <span class="password-strength__text js-password-strength__text"></span></div></div>';
           $confirmInput.parent().after('<div class="password-suggestions description"></div>');
           $passwordInputParent.append(passwordMeter);
           $passwordSuggestions = $passwordInputParentWrapper.find('div.password-suggestions').hide();
