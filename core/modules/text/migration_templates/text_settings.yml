@@ -1,7 +1,8 @@
-id: d6_text_settings
-label: Drupal 6 teaser length configuration
+id: text_settings
+label: Drupal teaser length configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:

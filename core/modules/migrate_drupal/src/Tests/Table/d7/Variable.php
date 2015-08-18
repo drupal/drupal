@@ -359,6 +359,9 @@ class Variable extends DrupalDumpBase {
       'name' => 'syslog_identity',
       'value' => 's:6:"drupal";',
     ))->values(array(
+      'name' => 'teaser_length',
+      'value' => 'i:1024;',
+    ))->values(array(
       'name' => 'theme_default',
       'value' => 's:6:"bartik";',
     ))->values(array(
@@ -476,4 +479,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#a571d354b6652603b017f9647ce0975e
+#dbc0f593050ff48cc18dfa4fed47daaf

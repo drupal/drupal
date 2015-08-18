@@ -133,7 +133,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_taxonomy_vocabulary',
     'd6_term_node_revision:*',
     'd6_term_node:*',
-    'd6_text_settings',
+    'text_settings',
     'd6_update_settings',
     'd6_upload_entity_display',
     'd6_upload_entity_form_display',

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\text\Tests\Migrate\d6\MigrateTextConfigsTest.
+ * Contains \Drupal\text\Tests\Migrate\MigrateTextConfigsTest.
  */
 
-namespace Drupal\text\Tests\Migrate\d6;
+namespace Drupal\text\Tests\Migrate;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -31,7 +31,7 @@ class MigrateTextConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_text_settings');
+    $this->executeMigration('text_settings');
   }
 
   /**
