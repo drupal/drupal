@@ -47,7 +47,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         }
         $path = $entity_route->getPath();
 
-        $options = array();
+        $options = $entity_route->getOptions();
         if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
           $options['parameters'][$bundle_entity_type] = array(
             'type' => 'entity:' . $bundle_entity_type,

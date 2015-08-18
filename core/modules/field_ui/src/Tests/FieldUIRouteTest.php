@@ -112,4 +112,13 @@ class FieldUIRouteTest extends WebTestBase {
     $this->assertLink('Manage form display');
   }
 
+  /**
+   * Asserts that admin routes are correctly marked as such.
+   */
+  public function testAdminRoute() {
+    $route = \Drupal::service('router.route_provider')->getRouteByName('entity.entity_test.field_ui_fields');
+    $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
+    $this->assertTrue($is_admin, 'Admin route correctly marked for "Manage fields" page.');
+  }
+
 }
