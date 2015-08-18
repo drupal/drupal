@@ -21,8 +21,27 @@ use Drupal\Core\Render\SafeString;
  * @see core\vendor\twig\twig\lib\Twig\Environment.php
  */
 class TwigEnvironment extends \Twig_Environment {
+
+  /**
+   * The cache object used for auto-refresh via mtime.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
   protected $cache_object = NULL;
+
+  /**
+   * The PhpStorage object used for storing the templates.
+   *
+   * @var \Drupal\Core\PhpStorage\PhpStorageFactory
+   */
   protected $storage = NULL;
+
+  /**
+   * The template cache filename prefix.
+   *
+   * @var string
+   */
+  protected $templateCacheFilenamePrefix;
 
   /**
    * Static cache of template classes.
@@ -39,13 +58,16 @@ class TwigEnvironment extends \Twig_Environment {
    *   The app root.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache bin.
+   * @param string $twig_extension_hash
+   *   The Twig extension hash.
    * @param \Twig_LoaderInterface $loader
    *   The Twig loader or loader chain.
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, CacheBackendInterface $cache, \Twig_LoaderInterface $loader = NULL, $options = array()) {
+  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, \Twig_LoaderInterface $loader = NULL, $options = array()) {
     $this->cache_object = $cache;
+    $this->templateCacheFilenamePrefix = $twig_extension_hash;
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like TwigExtension::escapeFilter() are called.
@@ -86,6 +108,26 @@ class TwigEnvironment extends \Twig_Environment {
     // Save the last modification time
     $cid = 'twig:' . $cache_filename;
     $this->cache_object->set($cid, REQUEST_TIME);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheFilename($name) {
+    // We override the cache filename in order to avoid issues with not using
+    // shared filesystems. The Twig templates for example rely on available Twig
+    // extensions, so we use the twig extension hash which varies by extensions
+    // and their mtime.
+    // @see \Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass
+
+    if (!$this->cache) {
+      return FALSE;
+    }
+
+    $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
+
+    // The first part is what is invalidated.
+    return $this->templateCacheFilenamePrefix . '_' . basename($name) . '_' . $class;
   }
 
   /**
