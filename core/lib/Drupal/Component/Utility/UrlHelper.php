@@ -272,7 +272,7 @@ class UrlHelper {
     // Get the plain text representation of the attribute value (i.e. its
     // meaning).
     $string = Html::decodeEntities($string);
-    return SafeMarkup::checkPlain(static::stripDangerousProtocols($string));
+    return Html::escape(static::stripDangerousProtocols($string));
   }
 
   /**
