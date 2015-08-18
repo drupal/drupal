@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\filter\BooleanOperatorString
  */
-class FilterBooleanOperatorStringTest extends ViewUnitTestBase {
+class FilterBooleanOperatorStringTest extends ViewKernelTestBase {
 
   /**
    * The modules to enable for this test.

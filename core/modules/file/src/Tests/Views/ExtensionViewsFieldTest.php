@@ -10,7 +10,7 @@ namespace Drupal\file\Tests\Views;
 use Drupal\Core\Render\RenderContext;
 use Drupal\file\Entity\File;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group file
  */
-class ExtensionViewsFieldTest extends ViewUnitTestBase {
+class ExtensionViewsFieldTest extends ViewKernelTestBase {
 
   /**
    * {@inheritdoc}

@@ -12,7 +12,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\views\Views;
  *
  * @group comment
  */
-class CommentUserNameTest extends ViewUnitTestBase {
+class CommentUserNameTest extends ViewKernelTestBase {
 
   /**
    * Admin user.

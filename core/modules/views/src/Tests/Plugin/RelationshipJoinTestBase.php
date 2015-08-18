@@ -15,7 +15,7 @@ use Drupal\views\Views;
  * @see \Drupal\views\Tests\Handler\JoinTest
  * @see \Drupal\views\Tests\Plugin\RelationshipTest
  */
-abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
+abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
 
   /**
    * Modules to enable.
@@ -30,7 +30,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
   protected $rootUser;
 
   /**
-   * Overrides \Drupal\views\Tests\ViewUnitTestBase::setUpFixtures().
+   * Overrides \Drupal\views\Tests\ViewKernelTestBase::setUpFixtures().
    */
   protected function setUpFixtures() {
     $this->installEntitySchema('user');

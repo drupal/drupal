@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;
  *
  * @group views
  */
-class QueryTest extends ViewUnitTestBase {
+class QueryTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

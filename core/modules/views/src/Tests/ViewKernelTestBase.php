@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\ViewUnitTestBase.
+ * Contains \Drupal\views\Tests\ViewKernelTestBase.
  */
 
 namespace Drupal\views\Tests;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @see \Drupal\views\Tests\ViewTestBase
  */
-abstract class ViewUnitTestBase extends KernelTestBase {
+abstract class ViewKernelTestBase extends KernelTestBase {
 
   use ViewResultAssertionTrait;
 

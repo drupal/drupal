@@ -13,14 +13,14 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
  * Tests the views integration of dblog module.
  *
  * @group dblog
  */
-class ViewsIntegrationTest extends ViewUnitTestBase {
+class ViewsIntegrationTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

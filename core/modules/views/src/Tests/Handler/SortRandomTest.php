@@ -9,7 +9,7 @@ namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class SortRandomTest extends ViewUnitTestBase {
+class SortRandomTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

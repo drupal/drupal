@@ -16,7 +16,7 @@ use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Views;
 use Drupal\Component\Utility\SafeMarkup;
 
-class ModuleTest extends ViewUnitTestBase {
+class ModuleTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

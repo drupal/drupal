@@ -14,7 +14,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class PluginInstanceTest extends ViewUnitTestBase {
+class PluginInstanceTest extends ViewKernelTestBase {
 
   /**
    * All views plugin types.

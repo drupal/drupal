@@ -22,7 +22,7 @@ use Drupal\views\Views;
  * @see \Drupal\views\Entity\View
  * @see \Drupal\Core\Config\Entity\ConfigEntityStorage
  */
-class ViewStorageTest extends ViewUnitTestBase {
+class ViewStorageTest extends ViewKernelTestBase {
 
   /**
    * Properties that should be stored in the configuration.

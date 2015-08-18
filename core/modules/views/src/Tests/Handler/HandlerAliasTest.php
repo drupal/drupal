@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class HandlerAliasTest extends ViewUnitTestBase {
+class HandlerAliasTest extends ViewKernelTestBase {
 
   public static $modules = array('user');
 

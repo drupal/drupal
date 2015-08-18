@@ -11,14 +11,14 @@ use Drupal\Core\Entity\EntityTypeEvent;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\system\Tests\Entity\EntityDefinitionTestTrait;
 use Drupal\views\Entity\View;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
  * Tests \Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
  *
  * @group Views
  */
-class ViewsEntitySchemaSubscriberIntegrationTest extends ViewUnitTestBase {
+class ViewsEntitySchemaSubscriberIntegrationTest extends ViewKernelTestBase {
 
   use EntityDefinitionTestTrait;
 

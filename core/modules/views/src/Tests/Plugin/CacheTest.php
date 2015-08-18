@@ -9,7 +9,7 @@ namespace Drupal\views\Tests\Plugin;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\node\Entity\Node;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 
@@ -19,7 +19,7 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
  * @group views
  * @see views_plugin_cache
  */
-class CacheTest extends ViewUnitTestBase {
+class CacheTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\Handler\FieldUnitTest.
+ * Contains \Drupal\views\Tests\Handler\FieldKernelTest.
  */
 
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Render\RenderContext;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Views;
 
@@ -18,7 +18,7 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
-class FieldUnitTest extends ViewUnitTestBase {
+class FieldKernelTest extends ViewKernelTestBase {
 
   public static $modules = array('user');
 

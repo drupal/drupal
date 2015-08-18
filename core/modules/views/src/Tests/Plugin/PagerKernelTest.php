@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class PagerKernelTest extends ViewUnitTestBase {
+class PagerKernelTest extends ViewKernelTestBase {
 
   /**
    * {@inheritdoc}

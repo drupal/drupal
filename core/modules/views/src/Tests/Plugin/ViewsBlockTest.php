@@ -10,14 +10,14 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
  * Tests native behaviors of the block views plugin.
  *
  * @group views
  */
-class ViewsBlockTest extends ViewUnitTestBase {
+class ViewsBlockTest extends ViewKernelTestBase {
 
   /**
    * Modules to enable.

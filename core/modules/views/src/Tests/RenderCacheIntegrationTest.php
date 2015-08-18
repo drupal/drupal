@@ -19,7 +19,7 @@ use Drupal\views\Entity\View;
  *
  * @group views
  */
-class RenderCacheIntegrationTest extends ViewUnitTestBase {
+class RenderCacheIntegrationTest extends ViewKernelTestBase {
 
   use AssertViewsCacheTagsTrait;
 

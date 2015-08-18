@@ -14,7 +14,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\field\Field;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -23,7 +23,7 @@ use Drupal\views\Views;
  * @see \Drupal\views\Plugin\views\field\Field
  * @group views
  */
-class FieldFieldTest extends ViewUnitTestBase {
+class FieldFieldTest extends ViewKernelTestBase {
 
   /**
    * {@inheritdoc}

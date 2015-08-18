@@ -9,7 +9,7 @@ namespace Drupal\file\Tests\Views;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\views\Views;
  *
  * @group file
  */
-class FileViewsDataTest extends ViewUnitTestBase {
+class FileViewsDataTest extends ViewKernelTestBase {
 
   /**
    * Modules to install.

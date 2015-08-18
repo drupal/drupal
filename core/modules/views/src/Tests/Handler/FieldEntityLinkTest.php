@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\UserCreationTrait;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class FieldEntityLinkTest extends ViewUnitTestBase {
+class FieldEntityLinkTest extends ViewKernelTestBase {
 
   use UserCreationTrait;
 

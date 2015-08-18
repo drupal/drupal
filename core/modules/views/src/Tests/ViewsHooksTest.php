@@ -16,7 +16,7 @@ use Drupal\views\Views;
  * @see views_hook_info().
  * @see field_hook_info().
  */
-class ViewsHooksTest extends ViewUnitTestBase {
+class ViewsHooksTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

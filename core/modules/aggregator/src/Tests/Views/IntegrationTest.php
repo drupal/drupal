@@ -11,14 +11,14 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
  * Tests basic integration of views data from the aggregator module.
  *
  * @group aggregator
  */
-class IntegrationTest extends ViewUnitTestBase {
+class IntegrationTest extends ViewKernelTestBase {
 
   /**
    * Modules to install.

@@ -8,14 +8,14 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
  * Tests views block config dependencies functionality.
  *
  * @group views
  */
-class BlockDependenciesTest extends ViewUnitTestBase {
+class BlockDependenciesTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

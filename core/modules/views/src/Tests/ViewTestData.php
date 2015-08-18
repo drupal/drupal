@@ -14,7 +14,7 @@ use Drupal\Core\Config\FileStorage;
  *
  * The methods will be used by both views test base classes.
  *
- * @see \Drupal\views\Tests\ViewUnitTestBase.
+ * @see \Drupal\views\Tests\ViewKernelTestBase.
  * @see \Drupal\views\Tests\ViewTestBase.
  */
 class ViewTestData {

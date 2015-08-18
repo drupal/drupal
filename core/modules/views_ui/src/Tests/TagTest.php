@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views_ui\Controller\ViewsUIController;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\views_ui\Controller\ViewsUIController;
  *
  * @group views_ui
  */
-class TagTest extends ViewUnitTestBase {
+class TagTest extends ViewKernelTestBase {
 
   /**
    * Modules to enable.

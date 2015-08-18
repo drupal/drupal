@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\argument\Date
  */
-class ArgumentDateTest extends ViewUnitTestBase {
+class ArgumentDateTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.
@@ -35,7 +35,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
   );
 
   /**
-   * Overrides \Drupal\views\Tests\ViewUnitTestBase::viewsData().
+   * Overrides \Drupal\views\Tests\ViewKernelTestBase::viewsData().
    */
   public function viewsData() {
     $data = parent::viewsData();

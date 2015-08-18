@@ -8,8 +8,6 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
  * Tests the permission field handler.
@@ -17,7 +15,7 @@ use Drupal\views\Tests\ViewUnitTestBase;
  * @group user
  * @see \Drupal\user\Plugin\views\field\Permissions
  */
-class HandlerFieldPermissionTest extends UserUnitTestBase {
+class HandlerFieldPermissionTest extends UserKernelTestBase {
 
   /**
    * Views used by this test.

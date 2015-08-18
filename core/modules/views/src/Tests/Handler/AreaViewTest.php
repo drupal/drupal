@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\area\View
  */
-class AreaViewTest extends ViewUnitTestBase {
+class AreaViewTest extends ViewKernelTestBase {
 
   /**
    * Modules to enable.

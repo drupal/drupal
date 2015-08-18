@@ -18,7 +18,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class QueryGroupByTest extends ViewUnitTestBase {
+class QueryGroupByTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

@@ -14,7 +14,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class BasicTest extends ViewUnitTestBase {
+class BasicTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

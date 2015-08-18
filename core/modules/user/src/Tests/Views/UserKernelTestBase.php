@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Views\UserUnitTestBase.
+ * Contains \Drupal\user\Tests\Views\UserKernelTestBase.
  */
 
 namespace Drupal\user\Tests\Views;
 
 use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
  * Provides a common test base for user views tests.
  */
-abstract class UserUnitTestBase extends ViewUnitTestBase {
+abstract class UserKernelTestBase extends ViewKernelTestBase {
 
   /**
    * Modules to enable.

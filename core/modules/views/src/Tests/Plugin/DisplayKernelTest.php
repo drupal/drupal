@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * Contains \Drupal\views\Tests\Plugin\DisplayUnitTest.
+ * Contains \Drupal\views\Tests\Plugin\DisplayKernelTest.
  */
 
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase;
@@ -21,7 +21,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *
  * @group views
  */
-class DisplayUnitTest extends ViewUnitTestBase {
+class DisplayKernelTest extends ViewKernelTestBase {
 
   /**
    * Modules to enable.

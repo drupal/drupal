@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\Wizard\WizardPluginBaseUnitTest.
+ * Contains \Drupal\views\Tests\Wizard\WizardPluginBaseKernelTest.
  */
 
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Core\Form\FormState;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views_ui\ViewUI;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\views_ui\ViewUI;
  * @group views
  * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
  */
-class WizardPluginBaseUnitTest extends ViewUnitTestBase {
+class WizardPluginBaseKernelTest extends ViewKernelTestBase {
 
   /**
    * Modules to enable.

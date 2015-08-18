@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @group views
  * @see \Drupal\views\Plugin\views\style\Table
  */
-class StyleTableUnitTest extends PluginUnitTestBase {
+class StyleTableUnitTest extends PluginKernelTestBase {
 
   /**
    * Views used by this test.

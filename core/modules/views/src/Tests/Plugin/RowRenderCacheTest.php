@@ -12,7 +12,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\UserCreationTrait;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class RowRenderCacheTest extends ViewUnitTestBase {
+class RowRenderCacheTest extends ViewKernelTestBase {
 
   use UserCreationTrait;
 

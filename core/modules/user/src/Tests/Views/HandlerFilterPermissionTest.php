@@ -8,7 +8,6 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\user\Tests\Views\UserUnitTestBase;
 use Drupal\views\Views;
 
 /**
@@ -17,7 +16,7 @@ use Drupal\views\Views;
  * @group user
  * @see \Drupal\user\Plugin\views\filter\Permissions
  */
-class HandlerFilterPermissionTest extends UserUnitTestBase {
+class HandlerFilterPermissionTest extends UserKernelTestBase {
 
   /**
    * Views used by this test.

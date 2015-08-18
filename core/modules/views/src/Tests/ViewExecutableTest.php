@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @group views
  * @see \Drupal\views\ViewExecutable
  */
-class ViewExecutableTest extends ViewUnitTestBase {
+class ViewExecutableTest extends ViewKernelTestBase {
 
   use CommentTestTrait;
 

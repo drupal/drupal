@@ -15,7 +15,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class TokenReplaceTest extends ViewUnitTestBase {
+class TokenReplaceTest extends ViewKernelTestBase {
 
   public static $modules = array('system');
 

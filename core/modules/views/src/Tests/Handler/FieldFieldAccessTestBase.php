@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
  * Provides a base class for base field access in views.
  */
-abstract class FieldFieldAccessTestBase extends ViewUnitTestBase {
+abstract class FieldFieldAccessTestBase extends ViewKernelTestBase {
 
   /**
    * Stores an user entity with access to fields.

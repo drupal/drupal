@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * @group views
  * @see \Drupal\views\Plugin\display\Page
  */
-class DisplayPageTest extends ViewUnitTestBase {
+class DisplayPageTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.

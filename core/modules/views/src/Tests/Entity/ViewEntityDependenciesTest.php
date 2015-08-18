@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views\Views;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class ViewEntityDependenciesTest extends ViewUnitTestBase {
+class ViewEntityDependenciesTest extends ViewKernelTestBase {
 
   /**
    * Views used by this test.
