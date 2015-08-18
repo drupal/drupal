@@ -96,10 +96,9 @@
 
       // Render form container.
       var $formContainer = this.$formContainer = $(Drupal.theme('quickeditFormContainer', {
-          id: id,
-          loadingMsg: Drupal.t('Loading…')
-        }
-      ));
+        id: id,
+        loadingMsg: Drupal.t('Loading…')
+      }));
       $formContainer
         .find('.quickedit-form')
         .addClass('quickedit-editable quickedit-highlighted quickedit-editing')
