@@ -1294,7 +1294,7 @@ function template_preprocess_html(&$variables) {
       '@token' => $token,
     ]);
     $variables[$type]['#markup'] = $placeholder;
-    $variables[$type]['#attached']['html_response_placeholders'][$type] = $placeholder;
+    $variables[$type]['#attached']['html_response_attachment_placeholders'][$type] = $placeholder;
   }
 }
 

@@ -8,9 +8,11 @@
 namespace Drupal\Core\Render\MainContent;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Render\RenderCacheInterface;
@@ -75,6 +77,15 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $renderCache;
 
   /**
+   * The renderer configuration array.
+   *
+   * @see sites/default/default.services.yml
+   *
+   * @var array
+   */
+  protected $rendererConfig;
+
+  /**
    * Constructs a new HtmlRenderer.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
@@ -89,14 +100,17 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The renderer service.
    * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
    *   The render cache service.
+   * @param array $renderer_config
+   *   The renderer configuration array.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache, array $renderer_config) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
     $this->renderCache = $render_cache;
+    $this->rendererConfig = $renderer_config;
   }
 
   /**
@@ -125,10 +139,28 @@ class HtmlRenderer implements MainContentRendererInterface {
     // page.html.twig, hence add them here, just before rendering html.html.twig.
     $this->buildPageTopAndBottom($html);
 
-    // @todo https://www.drupal.org/node/2495001 Make renderRoot return a
-    //       cacheable render array directly.
-    $this->renderer->renderRoot($html);
+    // Render, but don't replace placeholders yet, because that happens later in
+    // the render pipeline. To not replace placeholders yet, we use
+    // RendererInterface::render() instead of RendererInterface::renderRoot().
+    // @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor.
+    $render_context = new RenderContext();
+    $this->renderer->executeInRenderContext($render_context, function() use (&$html) {
+      // RendererInterface::render() renders the $html render array and updates
+      // it in place. We don't care about the return value (which is just
+      // $html['#markup']), but about the resulting render array.
+      // @todo Simplify this when https://www.drupal.org/node/2495001 lands.
+      $this->renderer->render($html);
+    });
+    // RendererInterface::render() always causes bubbleable metadata to be
+    // stored in the render context, no need to check it conditionally.
+    $bubbleable_metadata = $render_context->pop();
+    $bubbleable_metadata->applyTo($html);
     $content = $this->renderCache->getCacheableRenderArray($html);
+
+    // Also associate the required cache contexts.
+    // (Because we use ::render() above and not ::renderRoot(), we manually must
+    // ensure the HTML response varies by the required cache contexts.)
+    $content['#cache']['contexts'] = Cache::mergeContexts($content['#cache']['contexts'], $this->rendererConfig['required_cache_contexts']);
 
     // Also associate the "rendered" cache tag. This allows us to invalidate the
     // entire render cache, regardless of the cache bin.
