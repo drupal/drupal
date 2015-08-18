@@ -8,6 +8,7 @@
 namespace Drupal\simpletest;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\RenderContext;
@@ -479,7 +480,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = SafeMarkup::format('Escaped "@raw" found', array('@raw' => $raw));
     }
-    return $this->assert(strpos($this->getRawContent(), SafeMarkup::checkPlain($raw)) !== FALSE, $message, $group);
+    return $this->assert(strpos($this->getRawContent(), Html::escape($raw)) !== FALSE, $message, $group);
   }
 
   /**
@@ -507,7 +508,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = SafeMarkup::format('Escaped "@raw" not found', array('@raw' => $raw));
     }
-    return $this->assert(strpos($this->getRawContent(), SafeMarkup::checkPlain($raw)) === FALSE, $message, $group);
+    return $this->assert(strpos($this->getRawContent(), Html::escape($raw)) === FALSE, $message, $group);
   }
 
   /**
