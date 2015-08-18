@@ -232,7 +232,7 @@ class Table extends StylePluginBase implements CacheablePluginInterface {
     $form['caption'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Caption for the table'),
-      '#description' => $this->t('A title which is semantically associated to your table for increased accessibility.'),
+      '#description' => $this->t('A title semantically associated with your table for increased accessibility.'),
       '#default_value' => $this->options['caption'],
       '#maxlength' => 255,
     );

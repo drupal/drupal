@@ -1274,7 +1274,7 @@ function template_preprocess_file_link(&$variables) {
  *   A MIME type.
  *
  * @return string
- *   A class associated to the file.
+ *   A class associated with the file.
  */
 function file_icon_class($mime_type) {
   // Search for a group with the files MIME type.

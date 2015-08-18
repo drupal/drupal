@@ -600,7 +600,7 @@ function entity_test_field_default_value(FieldableEntityInterface $entity, Field
  * @param string $hook
  *   The hook name.
  * @param mixed $data
- *   Arbitrary data associated to the hook invocation.
+ *   Arbitrary data associated with the hook invocation.
  */
 function _entity_test_record_hooks($hook, $data) {
   $state = \Drupal::state();

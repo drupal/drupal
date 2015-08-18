@@ -39,7 +39,7 @@ function rdf_help($route_name, RouteMatchInterface $route_match) {
  * themes are coded to be RDFa compatible.
  */
 /**
- * Returns the RDF mapping object associated to a bundle.
+ * Returns the RDF mapping object associated with a bundle.
  *
  * The function reads the rdf_mapping object from the current configuration,
  * or returns a ready-to-use empty one if no configuration entry exists yet for

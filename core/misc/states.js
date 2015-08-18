@@ -442,8 +442,8 @@
     empty: {
       // 'keyup' is the (native DOM) event that we watch for.
       keyup: function () {
-        // The function associated to that trigger returns the new value for the
-        // state.
+        // The function associated with that trigger returns the new value for
+        // the state.
         return this.val() === '';
       }
     },

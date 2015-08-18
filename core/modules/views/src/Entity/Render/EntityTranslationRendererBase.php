@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
 abstract class EntityTranslationRendererBase extends RendererBase {
 
   /**
-   * Returns the language code associated to the given row.
+   * Returns the language code associated with the given row.
    *
    * @param \Drupal\views\ResultRow $row
    *   The result row.

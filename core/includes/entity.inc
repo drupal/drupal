@@ -403,7 +403,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
 }
 
 /**
- * Returns the entity view display associated to a bundle and view mode.
+ * Returns the entity view display associated with a bundle and view mode.
  *
  * Use this function when assigning suggested display options for a component
  * in a given view mode. Note that they will only be actually used at render
@@ -439,7 +439,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  *   this bundle.
  *
  * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
- *   The entity view display associated to the view mode.
+ *   The entity view display associated with the view mode.
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
  *   If the display is available in configuration use:
@@ -483,7 +483,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
 }
 
 /**
- * Returns the entity form display associated to a bundle and form mode.
+ * Returns the entity form display associated with a bundle and form mode.
  *
  * The function reads the entity form display object from the current
  * configuration, or returns a ready-to-use empty one if no configuration entry
@@ -515,7 +515,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  *   The form mode.
  *
  * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
- *   The entity form display associated to the given form mode.
+ *   The entity form display associated with the given form mode.
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
  *   If the entity form display is available in configuration use:

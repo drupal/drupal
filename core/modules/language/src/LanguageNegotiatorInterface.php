@@ -66,7 +66,7 @@ use Drupal\Core\Session\AccountInterface;
  * particular logic to return a language code. For instance, the URL method
  * searches for a valid path prefix or domain name in the current request URL.
  * If a language negotiation method does not return a valid language code, the
- * next method associated to the language type (based on method weight) is
+ * next method associated with the language type (based on method weight) is
  * invoked.
  *
  * Modules can define additional language negotiation methods by simply provide

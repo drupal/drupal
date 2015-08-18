@@ -18,8 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ShortcutController extends ControllerBase {
 
   /**
-   * Returns a rendered edit form to create a new shortcut associated to the
-   * given shortcut set.
+   * Returns a form to add a new shortcut to a given set.
    *
    * @param \Drupal\shortcut\ShortcutSetInterface $shortcut_set
    *   The shortcut set this shortcut will be added to.

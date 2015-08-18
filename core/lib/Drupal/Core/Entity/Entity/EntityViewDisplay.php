@@ -46,8 +46,8 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    * Returns the display objects used to render a set of entities.
    *
    * Depending on the configuration of the view mode for each bundle, this can
-   * be either the display object associated to the view mode, or the 'default'
-   * display.
+   * be either the display object associated with the view mode, or the
+   * 'default' display.
    *
    * This method should only be used internally when rendering an entity. When
    * assigning suggested display options for a component in a given view mode,

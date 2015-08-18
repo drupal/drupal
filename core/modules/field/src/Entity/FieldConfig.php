@@ -78,7 +78,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    *
    * @param array $values
    *   An array of field properties, keyed by property name. The
-   *   storage associated to the field can be specified either with:
+   *   storage associated with the field can be specified either with:
    *   - field_storage: the FieldStorageConfigInterface object,
    *   or by referring to an existing field storage in the current configuration
    *   with:

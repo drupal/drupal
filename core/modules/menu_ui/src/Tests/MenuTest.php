@@ -243,9 +243,10 @@ class MenuTest extends MenuWebTestBase {
     $this->assertResponse(200);
     $this->assertRaw(t('The menu %title has been deleted.', array('%title' => $label)), 'Custom menu was deleted');
     $this->assertNull(Menu::load($menu_name), 'Custom menu was deleted');
-    // Test if all menu links associated to the menu were removed from database.
+    // Test if all menu links associated with the menu were removed from
+    // database.
     $result = entity_load_multiple_by_properties('menu_link_content', array('menu_name' => $menu_name));
-    $this->assertFalse($result, 'All menu links associated to the custom menu were deleted.');
+    $this->assertFalse($result, 'All menu links associated with the custom menu were deleted.');
 
     // Make sure there's no delete button on system menus.
     $this->drupalGet('admin/structure/menu/manage/main');

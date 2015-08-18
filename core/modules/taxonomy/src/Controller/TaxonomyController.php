@@ -32,7 +32,7 @@ class TaxonomyController extends ControllerBase {
   }
 
   /**
-   * Returns a rendered edit form to create a new term associated to the given vocabulary.
+   * Returns a form to add a new term to a vocabulary.
    *
    * @param \Drupal\taxonomy\VocabularyInterface $taxonomy_vocabulary
    *   The vocabulary this term will be added to.

@@ -49,7 +49,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * Returns the entity_form_display object used to build an entity form.
    *
    * Depending on the configuration of the form mode for the entity bundle, this
-   * can be either the display object associated to the form mode, or the
+   * can be either the display object associated with the form mode, or the
    * 'default' display.
    *
    * This method should only be used internally when rendering an entity form.
