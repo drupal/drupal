@@ -139,6 +139,13 @@ abstract class Connection {
   protected $prefixReplace = array();
 
   /**
+   * List of un-prefixed table names, keyed by prefixed table names.
+   *
+   * @var array
+   */
+  protected $unprefixedTablesMap = [];
+
+  /**
    * Constructs a Connection object.
    *
    * @param \PDO $connection
@@ -185,7 +192,9 @@ abstract class Connection {
     // Destroy all references to this connection by setting them to NULL.
     // The Statement class attribute only accepts a new value that presents a
     // proper callable, so we reset it to PDOStatement.
-    $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
+    if (!empty($this->statementClass)) {
+      $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
+    }
     $this->schema = NULL;
   }
 
@@ -289,6 +298,13 @@ abstract class Connection {
     $this->prefixReplace[] = $this->prefixes['default'];
     $this->prefixSearch[] = '}';
     $this->prefixReplace[] = '';
+
+    // Set up a map of prefixed => un-prefixed tables.
+    foreach ($this->prefixes as $table_name => $prefix) {
+      if ($table_name !== 'default') {
+        $this->unprefixedTablesMap[$prefix . $table_name] = $table_name;
+      }
+    }
   }
 
   /**
@@ -325,6 +341,17 @@ abstract class Connection {
     else {
       return $this->prefixes['default'];
     }
+  }
+
+  /**
+   * Gets a list of individually prefixed table names.
+   *
+   * @return array
+   *   An array of un-prefixed table names, keyed by their fully qualified table
+   *   names (i.e. prefix + table_name).
+   */
+  public function getUnprefixedTablesMap() {
+    return $this->unprefixedTablesMap;
   }
 
   /**

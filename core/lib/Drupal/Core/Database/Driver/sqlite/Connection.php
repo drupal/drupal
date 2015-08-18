@@ -154,9 +154,9 @@ class Connection extends DatabaseConnection {
 
           // We can prune the database file if it doesn't have any tables.
           if ($count == 0) {
-            // Detach the database.
-            $this->query('DETACH DATABASE :schema', array(':schema' => $prefix));
-            // Destroy the database file.
+            // Detaching the database fails at this point, but no other queries
+            // are executed after the connection is destructed so we can simply
+            // remove the database file.
             unlink($this->connectionOptions['database'] . '-' . $prefix);
           }
         }
@@ -166,6 +166,18 @@ class Connection extends DatabaseConnection {
         }
       }
     }
+  }
+
+  /**
+   * Gets all the attached databases.
+   *
+   * @return array
+   *   An array of attached database names.
+   *
+   * @see \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
+   */
+  public function getAttachedDatabases() {
+    return $this->attachedDatabases;
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -322,6 +323,41 @@ EOS;
    */
   public function testDrupalGetProfile() {
     $this->assertNull(drupal_get_profile());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function run(array $methods = array()) {
+    parent::run($methods);
+
+    // Check that all tables of the test instance have been deleted. At this
+    // point the original database connection is restored so we need to prefix
+    // the tables.
+    $connection = Database::getConnection();
+    if ($connection->databaseType() != 'sqlite') {
+      $tables = $connection->schema()->findTables($this->databasePrefix . '%');
+      $this->assertTrue(empty($tables), 'All test tables have been removed.');
+    }
+    else {
+      // We don't have the test instance connection anymore so we have to
+      // re-attach its database and then use the same query as
+      // \Drupal\Core\Database\Driver\sqlite\Schema::findTables().
+      // @see \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
+      $info = Database::getConnectionInfo();
+      $connection->query('ATTACH DATABASE :database AS :prefix', [
+        ':database' => $info['default']['database'] . '-' . $this->databasePrefix,
+        ':prefix' => $this->databasePrefix
+      ]);
+
+      $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", array(
+        ':type' => 'table',
+        ':table_name' => '%',
+        ':pattern' => 'sqlite_%',
+      ))->fetchAllKeyed(0, 0);
+
+      $this->assertTrue(empty($result), 'All test tables have been removed.');
+    }
   }
 
 }

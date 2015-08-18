@@ -129,12 +129,9 @@ class DbDumpCommand extends Command {
    *   An array of table names.
    */
   protected function getTables() {
-    $pattern = $this->connection->tablePrefix() . '%';
-    $tables = array_values($this->connection->schema()->findTables($pattern));
-    foreach ($tables as $key => $table) {
-      // The prefix is removed for the resultant script.
-      $table = $tables[$key] = str_replace($this->connection->tablePrefix(), '', $table);
+    $tables = array_values($this->connection->schema()->findTables('%'));
 
+    foreach ($tables as $key => $table) {
       // Remove any explicitly excluded tables.
       foreach ($this->excludeTables as $pattern) {
         if (preg_match('/^' . $pattern . '$/', $table)) {
@@ -142,6 +139,7 @@ class DbDumpCommand extends Command {
         }
       }
     }
+
     return $tables;
   }
 

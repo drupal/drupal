@@ -666,7 +666,6 @@ function db_field_exists($table, $field) {
  *
  * @param string $table_expression
  *   An SQL expression, for example "simpletest%" (without the quotes).
- *   BEWARE: this is not prefixed, the caller should take care of that.
  *
  * @return array
  *   Array, both the keys and the values are the matching tables.
