@@ -189,7 +189,9 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
         'type' => 'string_textfield',
         'weight' => -5,
       ))
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->addConstraint('BlockContentInfo', []);
+
 
     $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Block type'))
