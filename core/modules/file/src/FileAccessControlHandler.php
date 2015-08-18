@@ -22,10 +22,13 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-
+    /** @var \Drupal\file\FileInterface $entity */
     if ($operation == 'download' || $operation == 'view') {
-      $references = $this->getFileReferences($entity);
-      if ($references) {
+      if (\Drupal::service('file_system')->uriScheme($entity->getFileUri()) === 'public') {
+        // Always allow access to file in public file system.
+        return AccessResult::allowed();
+      }
+      elseif ($references = $this->getFileReferences($entity)) {
         foreach ($references as $field_name => $entity_map) {
           foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
             /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
