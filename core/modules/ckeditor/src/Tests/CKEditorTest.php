@@ -477,7 +477,7 @@ class CKEditorTest extends KernelTestBase {
   protected function getDefaultContentsCssConfig() {
     return array(
       file_create_url('core/modules/ckeditor/css/ckeditor-iframe.css'),
-      file_create_url('core/modules/system/css/system.module.css'),
+      file_create_url('core/modules/system/css/components/align.module.css'),
     );
   }
 
