@@ -36,6 +36,9 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     foreach (['user', 'node', 'system', 'update_test_schema'] as $module) {
       $this->assertEqual(drupal_get_installed_schema_version($module), 8000, SafeMarkup::format('Module @module schema is 8000', ['@module' => $module]));
     }
+    // Before accessing the site we need to run updates first or the site might
+    // be broken.
+    $this->runUpdates();
     $this->assertEqual(\Drupal::config('system.site')->get('name'), 'Site-Install');
     $this->drupalGet('<front>');
     $this->assertText('Site-Install');
