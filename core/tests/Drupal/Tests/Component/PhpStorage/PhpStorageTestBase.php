@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Component\PhpStorage;
 
+use Drupal\Component\PhpStorage\PhpStorageInterface;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 
@@ -49,6 +50,9 @@ abstract class PhpStorageTestBase extends UnitTestCase {
     $php->load($name);
     $this->assertTrue($GLOBALS[$random], 'File saved correctly with correct value');
 
+    // Run additional asserts.
+    $this->additionalAssertCRUD($php, $name);
+
     // If the file was successfully loaded, it must also exist, but ensure the
     // exists() method returns that correctly.
     $this->assertTrue($php->exists($name), 'Exists works correctly');
@@ -61,6 +65,19 @@ abstract class PhpStorageTestBase extends UnitTestCase {
     // FALSE, but not trigger errors.
     $this->assertFalse($php->delete($name), 'Delete fails on missing file');
     unset($GLOBALS[$random]);
+  }
+
+  /**
+   * Additional asserts to be run.
+   *
+   * @param \Drupal\Component\PhpStorage\PhpStorageInterface $php
+   *   The PHP storage object.
+   * @param string $name
+   *   The name of an object. It should exist in the storage.
+   */
+  protected function additionalAssertCRUD(PhpStorageInterface $php, $name) {
+    // By default do not do any additional asserts. This is a way of extending
+    // tests in contrib.
   }
 
 }
