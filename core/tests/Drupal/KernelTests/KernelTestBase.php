@@ -739,7 +739,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected function enableModules(array $modules) {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
     if ($trace[1]['function'] === 'setUp') {
-      trigger_error('KernelTestBase::enableModules() should not be called from setUp(). Use the $modules property instead.', E_DEPRECATED);
+      trigger_error('KernelTestBase::enableModules() should not be called from setUp(). Use the $modules property instead.', E_USER_DEPRECATED);
     }
     unset($trace);
 
@@ -1017,7 +1017,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     }
 
     if ($name === 'configDirectories') {
-      trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use config_get_config_directory() directly instead.", $name), E_DEPRECATED);
+      trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use config_get_config_directory() directly instead.", $name), E_USER_DEPRECATED);
       return array(
         CONFIG_ACTIVE_DIRECTORY => config_get_config_directory(CONFIG_ACTIVE_DIRECTORY),
         CONFIG_STAGING_DIRECTORY => config_get_config_directory(CONFIG_STAGING_DIRECTORY),
