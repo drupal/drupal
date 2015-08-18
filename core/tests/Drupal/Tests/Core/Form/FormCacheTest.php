@@ -427,9 +427,9 @@ class FormCacheTest extends UnitTestCase {
    * @covers ::setCache
    */
   public function testSetCacheWithSafeStrings() {
-    // A call to SafeMarkup::set() is appropriate in this test as a way to add a
-    // string to the safe list in the simplest way possible. Normally, avoid it.
-    SafeMarkup::set('a_safe_string');
+    // A call to SafeMarkup::format() is appropriate in this test as a way to
+    // add a string to the safe list in the simplest way possible.
+    SafeMarkup::format('@value', ['@value' => 'a_safe_string']);
     $form_build_id = 'the_form_build_id';
     $form = [
       '#form_id' => 'the_form_id'

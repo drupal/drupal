@@ -930,13 +930,10 @@ class TestEntityType extends EntityType {
 
 }
 
-
 namespace {
-  use Drupal\Component\Utility\SafeMarkup;
-
   if (!function_exists('t')) {
     function t($string, array $args = []) {
-      return SafeMarkup::format($string, $args);
+      return strtr($string, $args);
     }
   }
 }

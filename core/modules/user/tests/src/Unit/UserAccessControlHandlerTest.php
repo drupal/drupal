@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\user\Unit;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
@@ -133,13 +132,8 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->will($this->returnValue($this->{$target}));
 
     foreach (array('view' => $view, 'edit' => $edit) as $operation => $result) {
-      $message = SafeMarkup::format("User @field field access returns @result with operation '@op' for @account accessing @target", array(
-        '@field' => $field,
-        '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
-        '@op' => $operation,
-        '@account' => $viewer,
-        '@target' => $target,
-      ));
+      $result_text = !isset($result) ? 'null' : ($result ? 'true' : 'false');
+      $message = "User '$field' field access returns '$result_text' with operation '$operation' for '$viewer' accessing '$target'";
       $this->assertSame($result, $this->accessControlHandler->fieldAccess($operation, $field_definition, $this->{$viewer}, $this->items), $message);
     }
   }

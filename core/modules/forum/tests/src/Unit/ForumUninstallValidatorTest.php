@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\forum\Unit;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -127,10 +126,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
     $module = 'forum';
     $expected = [
       'To uninstall Forum, first delete all <em>Forum</em> content',
-      SafeMarkup::format('To uninstall Forum, first delete all <a href="@url">%vocabulary</a> terms', [
-        '@url' => '/path/to/vocabulary/overview',
-        '%vocabulary' => 'Vocabulary label',
-      ]),
+      'To uninstall Forum, first delete all <a href="/path/to/vocabulary/overview"><em class="placeholder">Vocabulary label</em></a> terms',
     ];
     $reasons = $this->forumUninstallValidator->validate($module);
     $this->assertSame($expected, $reasons);
@@ -164,9 +160,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
     $module = 'forum';
     $expected = [
       'To uninstall Forum, first delete all <em>Forum</em> content',
-      SafeMarkup::format('To uninstall Forum, first delete all %vocabulary terms', [
-        '%vocabulary' => 'Vocabulary label',
-      ]),
+      'To uninstall Forum, first delete all <em class="placeholder">Vocabulary label</em> terms',
     ];
     $reasons = $this->forumUninstallValidator->validate($module);
     $this->assertSame($expected, $reasons);
@@ -200,10 +194,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
 
     $module = 'forum';
     $expected = [
-      SafeMarkup::format('To uninstall Forum, first delete all <a href="@url">%vocabulary</a> terms', [
-        '@url' => '/path/to/vocabulary/overview',
-        '%vocabulary' => 'Vocabulary label',
-      ]),
+      'To uninstall Forum, first delete all <a href="/path/to/vocabulary/overview"><em class="placeholder">Vocabulary label</em></a> terms',
     ];
     $reasons = $this->forumUninstallValidator->validate($module);
     $this->assertSame($expected, $reasons);
@@ -236,9 +227,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
 
     $module = 'forum';
     $expected = [
-      SafeMarkup::format('To uninstall Forum, first delete all %vocabulary terms', [
-        '%vocabulary' => 'Vocabulary label',
-      ]),
+      'To uninstall Forum, first delete all <em class="placeholder">Vocabulary label</em> terms',
     ];
     $reasons = $this->forumUninstallValidator->validate($module);
     $this->assertSame($expected, $reasons);

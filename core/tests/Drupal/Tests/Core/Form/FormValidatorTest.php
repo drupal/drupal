@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -468,7 +467,7 @@ class FormValidatorTest extends UnitTestCase {
           '#maxlength' => 7,
           '#value' => $this->randomMachineName(8),
         ),
-        SafeMarkup::format('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => 'Test', '%max' => '7', '%length' => 8)),
+        'Test cannot be longer than <em class="placeholder">7</em> characters but is currently <em class="placeholder">8</em> characters long.',
         FALSE,
       ),
     );

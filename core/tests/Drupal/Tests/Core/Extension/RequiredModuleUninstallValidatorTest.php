@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Extension;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -72,7 +71,7 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
       ->method('getModuleInfoByModule')
       ->willReturn(['required' => TRUE, 'name' => $module]);
 
-    $expected = [SafeMarkup::format('The @module module is required', ['@module' => $module])];
+    $expected = ["The $module module is required"];
     $reasons = $this->uninstallValidator->validate($module);
     $this->assertSame($expected, $reasons);
   }

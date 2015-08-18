@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Transliteration;
 
 use Drupal\Component\Utility\Random;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Transliteration\PhpTransliteration;
 use Drupal\Tests\UnitTestCase;
 
@@ -59,12 +58,7 @@ class PhpTransliterationTest extends UnitTestCase {
     $transliteration = new PhpTransliteration(NULL, $module_handler);
 
     $actual = $transliteration->transliterate($original, $langcode);
-    $this->assertSame($expected, $actual, SafeMarkup::format('@original transliteration to @actual is identical to @expected for language @langcode in service instance.', array(
-      '@original' => $printable,
-      '@langcode' => $langcode,
-      '@expected' => $expected,
-      '@actual' => $actual,
-    )));
+    $this->assertSame($expected, $actual, "'$printable' transliteration to '$actual' is identical to '$expected' for language '$langcode' in service instance.");
   }
 
   /**

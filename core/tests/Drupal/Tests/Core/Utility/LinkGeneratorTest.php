@@ -7,10 +7,10 @@
 
 namespace Drupal\Tests\Core\Utility {
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
@@ -376,7 +376,7 @@ class LinkGeneratorTest extends UnitTestCase {
     // between SafeMarkup and the LinkGenerator.
     $url = new Url('test_route_5', array());
     $url->setUrlGenerator($this->urlGenerator);
-    $result = $this->linkGenerator->generate(SafeMarkup::set('<em>HTML output</em>'), $url);
+    $result = $this->linkGenerator->generate(SafeString::create('<em>HTML output</em>'), $url);
     $this->assertLink(array(
       'attributes' => array('href' => '/test-route-5'),
       'child' => array(

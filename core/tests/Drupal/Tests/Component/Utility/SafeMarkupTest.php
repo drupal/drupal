@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
 
@@ -183,11 +184,11 @@ class SafeMarkupTest extends UnitTestCase {
   function providerFormat() {
     $tests[] = array('Simple text', array(), 'Simple text', 'SafeMarkup::format leaves simple text alone.', TRUE);
     $tests[] = array('Escaped text: @value', array('@value' => '<script>'), 'Escaped text: &lt;script&gt;', 'SafeMarkup::format replaces and escapes string.', TRUE);
-    $tests[] = array('Escaped text: @value', array('@value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE);
+    $tests[] = array('Escaped text: @value', array('@value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE);
     $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'SafeMarkup::format replaces, escapes and themes string.', TRUE);
-    $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE);
+    $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE);
     $tests[] = array('Verbatim text: !value', array('!value' => '<script>'), 'Verbatim text: <script>', 'SafeMarkup::format replaces verbatim string as-is.', FALSE);
-    $tests[] = array('Verbatim text: !value', array('!value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Verbatim text: <span>Safe HTML</span>', 'SafeMarkup::format replaces verbatim string as-is.', TRUE);
+    $tests[] = array('Verbatim text: !value', array('!value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Verbatim text: <span>Safe HTML</span>', 'SafeMarkup::format replaces verbatim string as-is.', TRUE);
 
     return $tests;
   }
@@ -259,7 +260,7 @@ class SafeMarkupTest extends UnitTestCase {
     // Subject unsafe.
     $tests[] = [
       '<placeholder>',
-      SafeMarkup::set('foo'),
+      SafeMarkupTestSafeString::create('foo'),
       '<placeholder>bazqux',
       'foobazqux',
       FALSE,
@@ -268,8 +269,8 @@ class SafeMarkupTest extends UnitTestCase {
     // All safe.
     $tests[] = [
       '<placeholder>',
-      SafeMarkup::set('foo'),
-      SafeMarkup::set('<placeholder>barbaz'),
+      SafeMarkupTestSafeString::create('foo'),
+      SafeMarkupTestSafeString::create('<placeholder>barbaz'),
       'foobarbaz',
       TRUE,
     ];
@@ -279,7 +280,7 @@ class SafeMarkupTest extends UnitTestCase {
     $tests[] = [
       '<placeholder>',
       'fubar',
-      SafeMarkup::set('<placeholder>barbaz'),
+      SafeMarkupTestSafeString::create('<placeholder>barbaz'),
       'fubarbarbaz',
       FALSE,
     ];
@@ -287,8 +288,8 @@ class SafeMarkupTest extends UnitTestCase {
     // Array with all safe.
     $tests[] = [
       ['<placeholder1>', '<placeholder2>', '<placeholder3>'],
-      [SafeMarkup::set('foo'), SafeMarkup::set('bar'), SafeMarkup::set('baz')],
-      SafeMarkup::set('<placeholder1><placeholder2><placeholder3>'),
+      [SafeMarkupTestSafeString::create('foo'), SafeMarkupTestSafeString::create('bar'), SafeMarkupTestSafeString::create('baz')],
+      SafeMarkupTestSafeString::create('<placeholder1><placeholder2><placeholder3>'),
       'foobarbaz',
       TRUE,
     ];
@@ -296,8 +297,8 @@ class SafeMarkupTest extends UnitTestCase {
     // Array with unsafe replacement.
     $tests[] = [
       ['<placeholder1>', '<placeholder2>', '<placeholder3>',],
-      [SafeMarkup::set('bar'), SafeMarkup::set('baz'), 'qux'],
-      SafeMarkup::set('<placeholder1><placeholder2><placeholder3>'),
+      [SafeMarkupTestSafeString::create('bar'), SafeMarkupTestSafeString::create('baz'), 'qux'],
+      SafeMarkupTestSafeString::create('<placeholder1><placeholder2><placeholder3>'),
       'barbazqux',
       FALSE,
     ];
@@ -319,4 +320,28 @@ class SafeMarkupTestString {
     return $this->string;
   }
 
+}
+
+/**
+ * Marks text as safe.
+ *
+ * SafeMarkupTestSafeString is used to mark text as safe because
+ * SafeMarkup::set() is a global static that affects all tests.
+ */
+class SafeMarkupTestSafeString implements SafeStringInterface {
+
+  protected $string;
+
+  public function __construct($string) {
+    $this->string = $string;
+  }
+
+  public function __toString() {
+    return $this->string;
+  }
+
+  public static function create($string) {
+    $safe_string = new static($string);
+    return $safe_string;
+  }
 }
