@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\migrate\builder\d6;
 
 use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
 
 /**
@@ -21,7 +22,17 @@ class ProfileValues extends BuilderBase {
   public function buildMigrations(array $template) {
     $migration = Migration::create($template);
 
-    foreach ($this->getSourcePlugin('d6_profile_field') as $field) {
+    // @TODO The source plugin should accept a database connection.
+    // @see https://www.drupal.org/node/2552791
+    $source_plugin = $this->getSourcePlugin('d6_profile_field', $template['source']);
+    try {
+      $source_plugin->checkRequirements();
+    }
+    catch (RequirementsException $e) {
+      return [];
+    }
+
+    foreach ($source_plugin as $field) {
       $migration->setProcessOfProperty($field->getSourceProperty('name'), $field->getSourceProperty('name'));
     }
 
