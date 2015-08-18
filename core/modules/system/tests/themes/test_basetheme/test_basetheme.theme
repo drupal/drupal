@@ -4,6 +4,7 @@
  * @file
  * Add hooks for tests to use.
  */
+use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -17,7 +18,7 @@ function test_basetheme_views_pre_render(ViewExecutable $view) {
 /**
  * Implements hook_views_post_render().
  */
-function test_basetheme_views_post_render(ViewExecutable $view) {
+function test_basetheme_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   // We append the function name to the title for test to check for.
   $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
 }

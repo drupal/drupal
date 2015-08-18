@@ -74,11 +74,13 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     // Make sure a views rendered page is touched.
     $this->drupalGet('test_page_display_200');
 
-    $this->assertRaw("test_subtheme_views_pre_render", "Views title changed by test_usetheme.test_subtheme_views_pre_render");
-    $this->assertRaw("test_subtheme_views_post_render", "Views title changed by test_usetheme.test_subtheme_views_post_render");
+    $this->assertRaw("test_subtheme_views_pre_render", "Views title changed by test_subtheme.test_subtheme_views_pre_render");
+    $this->assertRaw("test_subtheme_views_post_render", "Views title changed by test_subtheme.test_subtheme_views_post_render");
 
     $this->assertRaw("test_basetheme_views_pre_render", "Views title changed by test_basetheme.test_basetheme_views_pre_render");
     $this->assertRaw("test_basetheme_views_post_render", "Views title changed by test_basetheme.test_basetheme_views_post_render");
+
+    $this->assertRaw('<em class="placeholder">' . count($this->dataSet()) . '</em> items found.', 'Views group title added by test_subtheme.test_subtheme_views_post_render');
   }
 
 }

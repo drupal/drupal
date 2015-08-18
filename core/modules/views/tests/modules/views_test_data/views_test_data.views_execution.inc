@@ -6,6 +6,7 @@
  */
 
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -66,7 +67,7 @@ function views_test_data_placeholders() {
 /**
  * Implements hook_views_post_render().
  */
-function views_test_data_views_post_render(ViewExecutable $view) {
+function views_test_data_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   \Drupal::state()->set('views_hook_test_views_post_render', TRUE);
 }
 
