@@ -7,7 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
@@ -312,7 +312,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['body[0][format]'] = $plain;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
-    $this->assertText(SafeMarkup::checkPlain($text), 'The "Plain text" text format escapes all HTML tags.');
+    $this->assertEscaped($text, 'The "Plain text" text format escapes all HTML tags.');
     $this->config('filter.settings')
       ->set('always_show_fallback_choice', FALSE)
       ->save();
@@ -368,12 +368,15 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
     global $base_url;
 
+    $site_name_with_markup = 'Filter test <script>alert(\'here\');</script> site name';
+    $this->config('system.site')->set('name', $site_name_with_markup)->save();
+
     // It is not possible to test the whole filter tip page.
     // Therefore we test only some parts.
-    $link = '<a href="' . $base_url . '">' . SafeMarkup::checkPlain(\Drupal::config('system.site')->get('name')) . '</a>';
+    $link = '<a href="' . $base_url . '">' . Html::escape($site_name_with_markup) . '</a>';
     $ampersand = '&amp;';
-    $link_as_code = '<code>' . $link . '</code>';
-    $ampersand_as_code = '<code>' . $ampersand . '</code>';
+    $link_as_code = '<code>' . Html::escape($link) . '</code>';
+    $ampersand_as_code = '<code>' . Html::escape($ampersand) . '</code>';
 
     $this->drupalGet('filter/tips');
 
