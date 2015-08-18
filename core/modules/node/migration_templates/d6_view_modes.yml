@@ -7,7 +7,6 @@ source:
   constants:
     targetEntityType: node
     status: true
-
 process:
   mode:
     plugin: static_map

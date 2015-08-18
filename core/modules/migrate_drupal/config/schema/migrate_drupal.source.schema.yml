@@ -144,6 +144,9 @@ migrate_entity_constant:
     auto_create:
       type: boolean
       label: 'Entity reference selection setting: Auto-create new entities'
+    status:
+      type: boolean
+      label: 'Status'
 
 migrate.source.md_empty:
   type: migrate.source.empty

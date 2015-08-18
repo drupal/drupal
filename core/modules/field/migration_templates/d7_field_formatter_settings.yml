@@ -1,0 +1,72 @@
+id: d7_field_formatter_settings
+label: Drupal 7 field formatter configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_field_instance_per_view_mode
+  constants:
+    third_party_settings: { }
+process:
+  # We skip field types that don't exist because they weren't migrated by the
+  # field migration.
+  field_type_exists:
+    -
+      plugin: migration
+      migration: d7_field
+      source:
+        - field_name
+        - entity_type
+    -
+      plugin: extract
+      index:
+        - 0
+    -
+      plugin: skip_on_empty
+      method: row
+  entity_type: entity_type
+  bundle: bundle
+  view_mode:
+    -
+      plugin: migration
+      migration: d7_view_modes
+      source:
+        - entity_type
+        - view_mode
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: static_map
+      bypass: true
+      map:
+        full: default
+  field_name: field_name
+  "options/label": label
+  "options/weight": weight
+  # The formatter to use.
+  "options/type":
+    -
+      plugin: static_map
+      bypass: true
+      source: type
+      map:
+        date_default: datetime_default
+        email_default: email_mailto
+        # 0 should cause the row to be skipped by the next plugin in the
+        # pipeline.
+        hidden: 0
+        link_default: link
+        phone: basic_string
+        taxonomy_term_reference_link: entity_reference_label
+    -
+      plugin: skip_on_empty
+      method: row
+  "options/settings": settings
+  "options/third_party_settings": 'constants/third_party_settings'
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - d7_field_instance
+    - d7_view_modes

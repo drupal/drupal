@@ -1,0 +1,31 @@
+id: d7_field_instance
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_field_instance
+  constants:
+    status: true
+process:
+  entity_type: entity_type
+  field_name: field_name
+  bundle: bundle
+  label: label
+  description: description
+  required: required
+  status: 'constants/status'
+  settings:
+    plugin: d7_field_instance_settings
+    source:
+      - instance_settings
+      - widget_settings
+  default_value_function: ''
+  default_value:
+    plugin: d7_field_instance_defaults
+    source:
+      - default_value
+      - widget_settings
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d7_field
