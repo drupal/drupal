@@ -73,3 +73,5 @@ drupal.ckeditor.stylescombo.admin:
     - core/jquery.once
     - core/drupal.vertical-tabs
     - core/drupalSettings
+    # Ensure to run after ckeditor/drupal.ckeditor.admin.
+    - ckeditor/drupal.ckeditor.admin

@@ -48,6 +48,11 @@
       hiddenEditorConfig: null,
 
       /**
+       * A hash that maps buttons to features.
+       */
+      buttonsToFeatures: null,
+
+      /**
        * A hash, keyed by a feature name, that details CKEditor plugin features.
        */
       featuresMetadata: null,

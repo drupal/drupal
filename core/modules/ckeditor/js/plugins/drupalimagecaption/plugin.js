@@ -52,7 +52,7 @@
 
         // Override requiredContent & allowedContent.
         widgetDefinition.requiredContent = 'img[alt,src,width,height,data-entity-type,data-entity-uuid,data-align,data-caption]';
-        widgetDefinition.allowedContent.img.attributes += ',data-align,data-caption';
+        widgetDefinition.allowedContent.img.attributes += ',!data-align,!data-caption';
 
         // Override allowedContent setting for the 'caption' nested editable.
         // This must match what caption_filter enforces.
