@@ -288,6 +288,7 @@ class HtmlTest extends UnitTestCase {
       array('→', '→'),
       array('➼', '➼'),
       array('€', '€'),
+      array('Drup�al', "Drup\x80al"),
     );
   }
 

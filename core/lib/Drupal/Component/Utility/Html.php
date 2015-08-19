@@ -366,7 +366,8 @@ EOD;
    * - < (less than) becomes &lt;
    * - > (greater than) becomes &gt;
    * Special characters that have already been escaped will be double-escaped
-   * (for example, "&lt;" becomes "&amp;lt;").
+   * (for example, "&lt;" becomes "&amp;lt;"), and invalid UTF-8 encoding
+   * will be converted to the Unicode replacement character ("�").
    *
    * This method is not the opposite of Html::decodeEntities(). For example,
    * this method will not encode "é" to "&eacute;", whereas
@@ -385,7 +386,7 @@ EOD;
    * @ingroup sanitization
    */
   public static function escape($text) {
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
   }
 
 }

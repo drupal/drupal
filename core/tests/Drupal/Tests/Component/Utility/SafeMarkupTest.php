@@ -46,11 +46,11 @@ class SafeMarkupTest extends UnitTestCase {
    * @see testSet()
    */
   public function providerSet() {
-    // Checks that invalid multi-byte sequences are rejected.
-    $tests[] = array("Foo\xC0barbaz", '', 'SafeMarkup::checkPlain() rejects invalid sequence "Foo\xC0barbaz"', TRUE);
-    $tests[] = array("Fooÿñ", 'SafeMarkup::set() accepts valid sequence "Fooÿñ"');
-    $tests[] = array(new TextWrapper("Fooÿñ"), 'SafeMarkup::set() accepts valid sequence "Fooÿñ" in an object implementing __toString()');
-    $tests[] = array("<div>", 'SafeMarkup::set() accepts HTML');
+    // Checks that invalid multi-byte sequences are escaped.
+    $tests[] = array("Foo\xC0barbaz", 'Foo�barbaz', 'Invalid sequence "Foo\xC0barbaz" is escaped', TRUE);
+    $tests[] = array("Fooÿñ", 'SafeMarkup::set() does not escape valid sequence "Fooÿñ"');
+    $tests[] = array(new TextWrapper("Fooÿñ"), 'SafeMarkup::set() does not escape valid sequence "Fooÿñ" in an object implementing __toString()');
+    $tests[] = array("<div>", 'SafeMarkup::set() does not escape HTML');
 
     return $tests;
   }
@@ -141,10 +141,10 @@ class SafeMarkupTest extends UnitTestCase {
    * @see testCheckPlain()
    */
   function providerCheckPlain() {
-    // Checks that invalid multi-byte sequences are rejected.
-    $tests[] = array("Foo\xC0barbaz", '', 'SafeMarkup::checkPlain() rejects invalid sequence "Foo\xC0barbaz"', TRUE);
-    $tests[] = array("\xc2\"", '', 'SafeMarkup::checkPlain() rejects invalid sequence "\xc2\""', TRUE);
-    $tests[] = array("Fooÿñ", "Fooÿñ", 'SafeMarkup::checkPlain() accepts valid sequence "Fooÿñ"');
+    // Checks that invalid multi-byte sequences are escaped.
+    $tests[] = array("Foo\xC0barbaz", 'Foo�barbaz', 'SafeMarkup::checkPlain() escapes invalid sequence "Foo\xC0barbaz"', TRUE);
+    $tests[] = array("\xc2\"", '�&quot;', 'SafeMarkup::checkPlain() escapes invalid sequence "\xc2\""', TRUE);
+    $tests[] = array("Fooÿñ", "Fooÿñ", 'SafeMarkup::checkPlain() does not escape valid sequence "Fooÿñ"');
 
     // Checks that special characters are escaped.
     $tests[] = array("<script>", '&lt;script&gt;', 'SafeMarkup::checkPlain() escapes &lt;script&gt;');

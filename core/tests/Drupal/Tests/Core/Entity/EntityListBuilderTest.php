@@ -182,10 +182,10 @@ class EntityListBuilderTest extends UnitTestCase {
    */
   public function providerTestBuildRow() {
     $tests = array();
-    // Checks that invalid multi-byte sequences are rejected.
-    $tests[] = array("Foo\xC0barbaz", '', 'EntityTestListBuilder::buildRow() rejects invalid sequence "Foo\xC0barbaz"', TRUE);
-    $tests[] = array("\xc2\"", '', 'EntityTestListBuilder::buildRow() rejects invalid sequence "\xc2\""', TRUE);
-    $tests[] = array("Fooÿñ", "Fooÿñ", 'EntityTestListBuilder::buildRow() accepts valid sequence "Fooÿñ"');
+    // Checks that invalid multi-byte sequences are escaped.
+    $tests[] = array("Foo\xC0barbaz", 'Foo�barbaz', 'EntityTestListBuilder::buildRow() escapes invalid sequence "Foo\xC0barbaz"', TRUE);
+    $tests[] = array("\xc2\"", '�&quot;', 'EntityTestListBuilder::buildRow escapes invalid sequence "\xc2\""', TRUE);
+    $tests[] = array("Fooÿñ", "Fooÿñ", 'EntityTestListBuilder::buildR does not escape valid sequence "Fooÿñ"');
 
     // Checks that special characters are escaped.
     $tests[] = array("<script>", '&lt;script&gt;', 'EntityTestListBuilder::buildRow() escapes &lt;script&gt;');
