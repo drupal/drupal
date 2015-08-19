@@ -74,6 +74,8 @@ function template_preprocess_update_report(&$variables) {
     // Add project status class attribute to the table row.
     switch ($project['status']) {
       case UPDATE_CURRENT:
+        $rows[$project['project_type']][$row_key]['#attributes'] = array('class' => array('color-success'));
+        break;
       case UPDATE_UNKNOWN:
       case UPDATE_FETCH_PENDING:
       case UPDATE_NOT_FETCHED:
