@@ -164,8 +164,8 @@ function twig_without($element) {
  *   This value is expected to be safe for output and user provided data should
  *   never be used as a glue.
  *
- * @return \Drupal\Component\Utility\SafeMarkup|string
- *   The imploded string, which is now also marked as safe.
+ * @return \Twig_Markup
+ *   The imploded string, which is wrapped in \Twig_Markup because it is safe.
  */
 function twig_drupal_join_filter($value, $glue = '') {
   $separator = '';
@@ -175,5 +175,5 @@ function twig_drupal_join_filter($value, $glue = '') {
     $separator = $glue;
   }
 
-  return SafeMarkup::set($output);
+  return new \Twig_Markup($output, 'UTF-8');
 }
