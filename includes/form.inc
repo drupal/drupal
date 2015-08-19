@@ -626,7 +626,7 @@ function drupal_validate_form($form_id, $form, &$form_state) {
   // If the session token was set by drupal_prepare_form(), ensure that it
   // matches the current user's session.
   if (isset($form['#token'])) {
-    if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
+    if (!drupal_valid_token($form_state['values']['form_token'], $form['#token']) || !empty($form_state['invalid_token'])) {
       // Setting this error will cause the form to fail validation.
       form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
 
@@ -926,11 +926,27 @@ function form_builder($form_id, $form, &$form_state) {
     $form += $info;
   }
 
+  // Special handling if we're on the top level form element.
   if (isset($form['#type']) && $form['#type'] == 'form') {
     $cache = NULL;
     $complete_form = $form;
     if (!empty($form['#programmed'])) {
       $form_state['submitted'] = TRUE;
+    }
+    else {
+      // If the session token was set by drupal_prepare_form(), ensure that it
+      // matches the current user's session before processing input.
+      if (isset($form['#token']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id)) {
+        $form_state['invalid_token'] = FALSE;
+        if (empty($form['#post']['form_token']) || !drupal_valid_token($form['#post']['form_token'], $form['#token'])) {
+          // Setting this error will cause the form to fail validation.
+          form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+          // This value is checked in _form_builder_handle_input_element().
+          $form_state['invalid_token'] = TRUE;
+          // Make sure file uploads do not get processed.
+          $_FILES = array();
+        }
+      }
     }
   }
 
@@ -1019,6 +1035,15 @@ function form_builder($form_id, $form, &$form_state) {
  * attached to a specific element.
  */
 function _form_builder_handle_input_element($form_id, &$form, &$form_state, $complete_form) {
+  static $safe_core_value_callbacks = array(
+    'form_type_token_value',
+    'form_type_textfield_value',
+    'form_type_checkbox_value',
+    'form_type_checkboxes_value',
+    'form_type_password_confirm_value',
+    'form_type_select_value'
+  );
+
   if (!isset($form['#name'])) {
     $name = array_shift($form['#parents']);
     $form['#name'] = $name;
@@ -1051,7 +1076,14 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
       if (!$form['#programmed'] || isset($edit)) {
         // Call #type_value to set the form value;
         if (function_exists($function)) {
-          $form['#value'] = $function($form, $edit);
+          // Skip all value callbacks except safe ones like text if the CSRF
+          // token was invalid.
+          if (empty($form_state['invalid_token']) || in_array($function, $safe_core_value_callbacks)) {
+            $form['#value'] = $function($form, $edit);
+          }
+          else {
+            $edit = NULL;
+          }
         }
         if (!isset($form['#value']) && isset($edit)) {
           $form['#value'] = $edit;
@@ -2079,6 +2111,29 @@ function theme_token($element) {
 }
 
 /**
+ * Process function to prepare autocomplete data.
+ *
+ * @param $element
+ *   A textfield or other element with a #autocomplete_path.
+ *
+ * @return array
+ *   The processed form element.
+ */
+function form_process_autocomplete($element) {
+  $element['#autocomplete_input'] = array();
+  if ($element['#autocomplete_path'] && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
+    $element['#autocomplete_input']['#id'] = $element['#id'] .'-autocomplete';
+    // Force autocomplete to use non-clean URLs since this protects against the
+    // browser interpreting the path plus search string as an actual file.
+    $current_clean_url = isset($GLOBALS['conf']['clean_url']) ? $GLOBALS['conf']['clean_url'] : NULL;
+    $GLOBALS['conf']['clean_url'] = 0;
+    $element['#autocomplete_input']['#url_value'] = check_url(url($element['#autocomplete_path'], array('absolute' => TRUE)));
+    $GLOBALS['conf']['clean_url'] = $current_clean_url;
+  }
+  return $element;
+}
+
+/**
  * Format a textfield.
  *
  * @param $element
@@ -2096,10 +2151,10 @@ function theme_textfield($element) {
   $extra = '';
   $output = '';
 
-  if ($element['#autocomplete_path'] && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
+  if ($element['#autocomplete_path'] && !empty($element['#autocomplete_input'])) {
     drupal_add_js('misc/autocomplete.js');
     $class[] = 'form-autocomplete';
-    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) .'" disabled="disabled" />';
+    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#autocomplete_input']['#id'] .'" value="'. $element['#autocomplete_input']['#url_value'] .'" disabled="disabled" />';
   }
   _form_set_class($element, $class);
 

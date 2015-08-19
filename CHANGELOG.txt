@@ -1,6 +1,10 @@
 
-Drupal 6.37-dev, xxxx-xx-xx (development release)
+Drupal 6.38-dev, xxxx-xx-xx (development release)
 ----------------------
+
+Drupal 6.37, 2015-08-19
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2015-003.
 
 Drupal 6.36, 2015-06-17
 -----------------------
