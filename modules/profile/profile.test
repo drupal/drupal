@@ -339,12 +339,22 @@ class ProfileTestAutocomplete extends ProfileTestCase {
     $this->setProfileField($field, $field['value']);
 
     // Set some html for what we want to see in the page output later.
-    $autocomplete_html = '<input type="hidden" id="' . drupal_html_id('edit-' . $field['form_name'] . '-autocomplete') . '" value="' . url('profile/autocomplete/' . $field['fid'], array('absolute' => TRUE)) . '" disabled="disabled" class="autocomplete" />';
-    $field_html = '<input type="text" maxlength="255" name="' . $field['form_name'] . '" id="' . drupal_html_id('edit-' . $field['form_name']) . '" size="60" value="' . $field['value'] . '" class="form-text form-autocomplete required" />';
+    // Autocomplete always uses non-clean URLs.
+    $current_clean_url = isset($GLOBALS['conf']['clean_url']) ? $GLOBALS['conf']['clean_url'] : NULL;
+    $GLOBALS['conf']['clean_url'] = 0;
+    $autocomplete_url = url('profile/autocomplete/' . $field['fid'], array('absolute' => TRUE));
+    $GLOBALS['conf']['clean_url'] = $current_clean_url;
+    $autocomplete_id = drupal_html_id('edit-' . $field['form_name'] . '-autocomplete');
+    $autocomplete_html = '<input type="hidden" id="' . $autocomplete_id . '" value="' . $autocomplete_url . '" disabled="disabled" class="autocomplete" />';
 
     // Check that autocompletion html is found on the user's profile edit page.
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' . $category);
     $this->assertRaw($autocomplete_html, 'Autocomplete found.');
+    $this->assertFieldByXPath(
+      '//input[@type="text" and @name="' . $field['form_name'] . '" and contains(@class, "form-autocomplete")]',
+      '',
+      'Text input field found'
+    );
     $this->assertRaw('misc/autocomplete.js', 'Autocomplete JavaScript found.');
     $this->assertRaw('class="form-text form-autocomplete"', 'Autocomplete form element class found.');
 

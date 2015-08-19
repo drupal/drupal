@@ -14,6 +14,8 @@
 
 Drupal.ajax = Drupal.ajax || {};
 
+Drupal.settings.urlIsAjaxTrusted = Drupal.settings.urlIsAjaxTrusted || {};
+
 /**
  * Attaches the Ajax behavior to each Ajax form element.
  */
@@ -130,6 +132,11 @@ Drupal.ajax = function (base, element, element_settings) {
   // 5. /nojs# - Followed by a fragment.
   //      E.g.: path/nojs#myfragment
   this.url = element_settings.url.replace(/\/nojs(\/|$|\?|&|#)/g, '/ajax$1');
+  // If the 'nojs' version of the URL is trusted, also trust the 'ajax' version.
+  if (Drupal.settings.urlIsAjaxTrusted[element_settings.url]) {
+    Drupal.settings.urlIsAjaxTrusted[this.url] = true;
+  }
+
   this.wrapper = '#' + element_settings.wrapper;
 
   // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
@@ -155,18 +162,36 @@ Drupal.ajax = function (base, element, element_settings) {
       ajax.ajaxing = true;
       return ajax.beforeSend(xmlhttprequest, options);
     },
-    success: function (response, status) {
+    success: function (response, status, xmlhttprequest) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
       if (typeof response == 'string') {
         response = $.parseJSON(response);
       }
+
+      // Prior to invoking the response's commands, verify that they can be
+      // trusted by checking for a response header. See
+      // ajax_set_verification_header() for details.
+      // - Empty responses are harmless so can bypass verification. This avoids
+      //   an alert message for server-generated no-op responses that skip Ajax
+      //   rendering.
+      // - Ajax objects with trusted URLs (e.g., ones defined server-side via
+      //   #ajax) can bypass header verification. This is especially useful for
+      //   Ajax with multipart forms. Because IFRAME transport is used, the
+      //   response headers cannot be accessed for verification.
+      if (response !== null && !Drupal.settings.urlIsAjaxTrusted[ajax.url]) {
+        if (xmlhttprequest.getResponseHeader('X-Drupal-Ajax-Token') !== '1') {
+          var customMessage = Drupal.t("The response failed verification so will not be processed.");
+          return ajax.error(xmlhttprequest, ajax.url, customMessage);
+        }
+      }
+
       return ajax.success(response, status);
     },
-    complete: function (response, status) {
+    complete: function (xmlhttprequest, status) {
       ajax.ajaxing = false;
       if (status == 'error' || status == 'parsererror') {
-        return ajax.error(response, ajax.url);
+        return ajax.error(xmlhttprequest, ajax.url);
       }
     },
     dataType: 'json',
@@ -175,6 +200,9 @@ Drupal.ajax = function (base, element, element_settings) {
 
   // Bind the ajaxSubmit function to the element event.
   $(ajax.element).bind(element_settings.event, function (event) {
+    if (!Drupal.settings.urlIsAjaxTrusted[ajax.url] && !Drupal.urlIsLocal(ajax.url)) {
+      throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {'!url': ajax.url}));
+    }
     return ajax.eventResponse(this, event);
   });
 
@@ -447,8 +475,8 @@ Drupal.ajax.prototype.getEffect = function (response) {
 /**
  * Handler for the form redirection error.
  */
-Drupal.ajax.prototype.error = function (response, uri) {
-  alert(Drupal.ajaxError(response, uri));
+Drupal.ajax.prototype.error = function (xmlhttprequest, uri, customMessage) {
+  alert(Drupal.ajaxError(xmlhttprequest, uri, customMessage));
   // Remove the progress element.
   if (this.progress.element) {
     $(this.progress.element).remove();
@@ -462,7 +490,7 @@ Drupal.ajax.prototype.error = function (response, uri) {
   $(this.element).removeClass('progress-disabled').removeAttr('disabled');
   // Reattach behaviors, if they were detached in beforeSerialize().
   if (this.form) {
-    var settings = response.settings || this.settings || Drupal.settings;
+    var settings = this.settings || Drupal.settings;
     Drupal.attachBehaviors(this.form, settings);
   }
 };
