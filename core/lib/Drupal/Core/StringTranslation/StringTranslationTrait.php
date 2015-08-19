@@ -37,6 +37,10 @@ trait StringTranslationTrait {
    * Translates a string to the current language or to a given language.
    *
    * See the t() documentation for details.
+   *
+   * Never call $this->t($user_text) where $user_text is text that a user
+   * entered; doing so can lead to cross-site scripting and other security
+   * problems.
    */
   protected function t($string, array $args = array(), array $options = array()) {
     return $this->getStringTranslation()->translate($string, $args, $options);

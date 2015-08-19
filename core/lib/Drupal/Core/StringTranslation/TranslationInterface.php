@@ -17,6 +17,10 @@ interface TranslationInterface {
   /**
    * Translates a string to the current language or to a given language.
    *
+   * Never call translate($user_text) where $user_text is text that a user
+   * entered; doing so can lead to cross-site scripting and other security
+   * problems.
+   *
    * @param string $string
    *   A string containing the English string to translate.
    * @param array $args

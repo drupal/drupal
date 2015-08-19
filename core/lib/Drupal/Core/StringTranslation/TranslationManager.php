@@ -142,6 +142,9 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
   public function translate($string, array $args = array(), array $options = array()) {
     $string = $this->doTranslate($string, $options);
     if (empty($args)) {
+      // This is assumed to be safe because translate should only be called
+      // with strings defined in code.
+      // @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
       return SafeMarkup::set($string);
     }
     else {
