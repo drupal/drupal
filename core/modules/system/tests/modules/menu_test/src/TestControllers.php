@@ -57,7 +57,7 @@ class TestControllers {
       return ['#markup' => SafeMarkup::format("Sometimes there is a placeholder: '@placeholder'.", array('@placeholder' => $placeholder))];
     }
     else {
-      return ['#markup' => SafeMarkup::format('Sometimes there is no placeholder.')];
+      return ['#markup' => 'Sometimes there is no placeholder.'];
     }
   }
 

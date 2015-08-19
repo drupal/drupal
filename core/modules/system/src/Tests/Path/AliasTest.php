@@ -52,7 +52,7 @@ class AliasTest extends PathUnitTestBase {
 
     // Load alias by source path.
     $loadedAlias = $aliasStorage->load(array('source' => '/node/1'));
-    $this->assertEqual($loadedAlias['alias'], '/alias_for_node_1_und', format_string('The last created alias loaded by default.'));
+    $this->assertEqual($loadedAlias['alias'], '/alias_for_node_1_und', 'The last created alias loaded by default.');
 
     //Update a few aliases
     foreach ($aliases as $alias) {

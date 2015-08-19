@@ -218,7 +218,7 @@ class SafeMarkup {
    *
    * @see t()
    */
-  public static function format($string, array $args = array()) {
+  public static function format($string, array $args) {
     $safe = TRUE;
 
     // Transform arguments before inserting them.

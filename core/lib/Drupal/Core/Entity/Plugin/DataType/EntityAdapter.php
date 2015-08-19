@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity\Plugin\DataType;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
@@ -114,7 +113,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
    */
   public function getProperties($include_computed = FALSE) {
     if (!isset($this->entity)) {
-      throw new MissingDataException(SafeMarkup::format('Unable to get properties as no entity has been provided.'));
+      throw new MissingDataException('Unable to get properties as no entity has been provided.');
     }
     if (!$this->entity instanceof FieldableEntityInterface) {
       // @todo: Add support for config entities in

@@ -165,7 +165,7 @@ class FrameworkTest extends AjaxTestBase {
     // the first AJAX command.
     $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], format_string('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
     $expected_command = new SettingsCommand(array($expected['setting_name'] => $expected['setting_value']), TRUE);
-    $this->assertCommand(array_slice($commands, 0, 1), $expected_command->render(), format_string('The settings command was first.'));
+    $this->assertCommand(array_slice($commands, 0, 1), $expected_command->render(), 'The settings command was first.');
 
     // Verify the expected CSS file was added, both to drupalSettings, and as
     // the second AJAX command for inclusion into the HTML.

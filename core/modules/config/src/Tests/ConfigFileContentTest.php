@@ -121,16 +121,16 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertNull($config->get('i.dont.exist'), 'Non-existent nested value returned NULL.');
 
     // Read false value.
-    $this->assertEqual($config->get($false_key), '0', format_string("Boolean FALSE value returned the string '0'."));
+    $this->assertEqual($config->get($false_key), '0', "Boolean FALSE value returned the string '0'.");
 
     // Read true value.
-    $this->assertEqual($config->get($true_key), '1', format_string("Boolean TRUE value returned the string '1'."));
+    $this->assertEqual($config->get($true_key), '1', "Boolean TRUE value returned the string '1'.");
 
     // Read null value.
     $this->assertIdentical($config->get('null'), NULL);
 
     // Read false that had been nested in an array value.
-    $this->assertEqual($config->get($casting_array_false_value_key), '0', format_string("Nested boolean FALSE value returned the string '0'."));
+    $this->assertEqual($config->get($casting_array_false_value_key), '0', "Nested boolean FALSE value returned the string '0'.");
 
     // Unset a top level value.
     $config->clear($key);

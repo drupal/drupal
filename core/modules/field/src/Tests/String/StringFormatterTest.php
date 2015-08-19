@@ -123,7 +123,7 @@ class StringFormatterTest extends KernelTestBase {
 
     // Verify the cache tags.
     $build = $entity->{$this->fieldName}->view();
-    $this->assertTrue(!isset($build[0]['#cache']), format_string('The string formatter has no cache tags.'));
+    $this->assertTrue(!isset($build[0]['#cache']), 'The string formatter has no cache tags.');
 
     $value = $this->randomMachineName();
     $entity->{$this->fieldName}->value = $value;

@@ -344,7 +344,7 @@ function t($string, array $args = array(), array $options = array()) {
  * @see t()
  * @ingroup sanitization
  */
-function format_string($string, array $args = array()) {
+function format_string($string, array $args) {
   return SafeMarkup::format($string, $args);
 }
 

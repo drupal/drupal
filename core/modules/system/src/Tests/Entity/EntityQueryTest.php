@@ -554,7 +554,7 @@ class EntityQueryTest extends EntityUnitTestBase {
           }
         }
       }
-      $this->assertTrue($ok, format_string("$i is after all entities in bundle2"));
+      $this->assertTrue($ok, "$i is after all entities in bundle2");
     }
   }
 
