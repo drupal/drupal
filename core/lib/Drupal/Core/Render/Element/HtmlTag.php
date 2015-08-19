@@ -48,9 +48,6 @@ class HtmlTag extends RenderElement {
   /**
    * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
    *
-   * Note: It is the caller's responsibility to sanitize #value_prefix and
-   * #value_suffix. They are not filtered by this function.
-   *
    * @param array $element
    *   An associative array containing:
    *   - #tag: The tag name to output. Typical tags added to the HTML HEAD:
@@ -62,12 +59,6 @@ class HtmlTag extends RenderElement {
    *     tag. The attributes are escaped, see \Drupal\Core\Template\Attribute.
    *   - #value: (optional) A string containing tag content, such as inline
    *     CSS. The value of #value will be XSS admin filtered if it is not safe.
-   *   - #value_prefix: (optional) A string to prepend to #value, e.g. a CDATA
-   *     wrapper prefix. The value of #value_prefix cannot be filtered and is
-   *     assumed to be safe.
-   *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
-   *     wrapper suffix. The value of #value_suffix cannot be filtered and is
-   *     assumed to be safe.
    *   - #noscript: (optional) If TRUE, the markup (including any prefix or
    *     suffix) will be wrapped in a <noscript> element. (Note that passing
    *     any non-empty value here will add the <noscript> tag.)
@@ -88,13 +79,7 @@ class HtmlTag extends RenderElement {
     // Construct all other elements.
     else {
       $markup .= '>';
-      if (isset($element['#value_prefix'])) {
-        $markup .= $element['#value_prefix'];
-      }
       $markup .= SafeMarkup::isSafe($element['#value']) ? $element['#value'] : Xss::filterAdmin($element['#value']);
-      if (isset($element['#value_suffix'])) {
-        $markup .= $element['#value_suffix'];
-      }
       $markup .= '</' . $escaped_tag . ">\n";
     }
     if (!empty($element['#noscript'])) {

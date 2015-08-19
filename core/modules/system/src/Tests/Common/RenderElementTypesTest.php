@@ -91,8 +91,6 @@ class RenderElementTypesTest extends KernelTestBase {
       '#type' => 'html_tag',
       '#tag' => 'meta',
       '#value' => 'ignored',
-      '#value_prefix' => 'ignored',
-      '#value_suffix' => 'ignored',
       '#attributes' => array(
         'name' => 'description',
         'content' => 'Drupal test',
@@ -104,12 +102,10 @@ class RenderElementTypesTest extends KernelTestBase {
       '#type' => 'html_tag',
       '#tag' => 'section',
       '#value' => 'value',
-      '#value_prefix' => 'value_prefix|',
-      '#value_suffix' => '|value_suffix',
       '#attributes' => array(
         'class' => array('unicorns'),
       ),
-    ), '<section class="unicorns">value_prefix|value|value_suffix</section>' . "\n", "#type 'html_tag', non-void element renders properly");
+    ), '<section class="unicorns">value</section>' . "\n", "#type 'html_tag', non-void element renders properly");
 
     // Test empty void element tag.
     $this->assertElements(array(

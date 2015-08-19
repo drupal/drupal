@@ -46,12 +46,10 @@ class HtmlTagTest extends UnitTestCase {
 
     // Value prefix/suffix.
     $element = array(
-      '#value_prefix' => 'value_prefix|',
-      '#value_suffix' => '|value_suffix',
       '#value' => 'value',
       '#tag' => 'p',
     );
-    $tags[] = array($element, '<p>value_prefix|value|value_suffix</p>' . "\n");
+    $tags[] = array($element, '<p>value</p>' . "\n");
 
     // Normal element without a value should not result in a void element.
     $element = array(
@@ -98,15 +96,6 @@ class HtmlTagTest extends UnitTestCase {
       '#value' => '<script>value</script>',
     );
     $tags[] = array($element, "<p>value</p>\n");
-
-    // Ensure that #value_prefix and #value_suffix are not filtered.
-    $element = array(
-      '#tag' => 'p',
-      '#value' => 'value',
-      '#value_prefix' => '<script>value</script>',
-      '#value_suffix' => '<script>value</script>',
-    );
-    $tags[] = array($element, "<p><script>value</script>value<script>value</script></p>\n");
 
     return $tags;
   }

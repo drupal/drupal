@@ -121,7 +121,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
         '#browsers' => $browsers,
       );
     };
-    $create_style_element = function($value, $media, $browsers = array(), $wrap_in_cdata = FALSE) {
+    $create_style_element = function($value, $media, $browsers = array()) {
       $style_element = array(
         '#type' => 'html_tag',
         '#tag' => 'style',
@@ -131,10 +131,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
         ),
         '#browsers' => $browsers,
       );
-      if ($wrap_in_cdata) {
-        $style_element['#value_prefix'] = "\n/* <![CDATA[ */\n";
-        $style_element['#value_suffix'] = "\n/* ]]> */\n";
-      }
       return $style_element;
     };
 
