@@ -301,6 +301,12 @@ class Renderer implements RendererInterface {
     $pre_bubbling_elements = [];
     $pre_bubbling_elements['#cache'] = isset($elements['#cache']) ? $elements['#cache'] : [];
 
+    // If #markup is set, ensure #type is set. This allows to specify just
+    // #markup on an element without setting #type.
+    if (isset($elements['#markup']) && !isset($elements['#type'])) {
+      $elements['#type'] = 'markup';
+    }
+
     // If the default values for this element have not been loaded yet, populate
     // them.
     if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
@@ -410,12 +416,6 @@ class Renderer implements RendererInterface {
     // already preset #children.
     if (!isset($elements['#children'])) {
       $elements['#children'] = '';
-    }
-
-    if (!empty($elements['#markup'])) {
-      // @todo Decide how to support non-HTML in the render API in
-      //   https://www.drupal.org/node/2501313.
-      $elements['#markup'] = $this->xssFilterAdminIfUnsafe($elements['#markup']);
     }
 
     // Assume that if #theme is set it represents an implemented hook.

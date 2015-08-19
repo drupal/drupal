@@ -12,6 +12,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Render\RenderCache;
 use Drupal\Core\Render\Renderer;
 use Drupal\Tests\UnitTestCase;
@@ -112,6 +113,25 @@ class RendererTestBase extends UnitTestCase {
     $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
     $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->elementInfo = $this->getMock('Drupal\Core\Render\ElementInfoManagerInterface');
+    $this->elementInfo->expects($this->any())
+      ->method('getInfo')
+      ->willReturnCallback(function ($type) {
+        switch ($type) {
+          case 'details':
+            $info = ['#theme_wrappers' => ['details']];
+            break;
+          case 'link':
+            $info = ['#theme' => 'link'];
+            break;
+          case 'markup':
+            $info = ['#pre_render' => [[Markup::class, 'ensureMarkupIsSafe']]];
+            break;
+          default:
+            $info = [];
+        }
+        $info['#defaults_loaded'] = TRUE;
+        return $info;
+      });
     $this->requestStack = new RequestStack();
     $request = new Request();
     $request->server->set('REQUEST_TIME', $_SERVER['REQUEST_TIME']);

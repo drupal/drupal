@@ -9,7 +9,6 @@ namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SafeStringInterface;
-use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -217,36 +216,20 @@ class SafeMarkupTest extends UnitTestCase {
   /**
    * Tests the interaction between the safe list and XSS filtering.
    *
-   * @covers ::xssFilter
    * @covers ::escape
    */
   public function testAdminXss() {
-    // Use the predefined XSS admin tag list. This strips the <marquee> tags.
-    $this->assertEquals('text', SafeMarkup::xssFilter('<marquee>text</marquee>', Xss::getAdminTagList()));
-    $this->assertTrue(SafeMarkup::isSafe('text'), 'The string \'text\' is marked as safe.');
-
-    // This won't strip the <marquee> tags and the string with HTML will be
-    // marked as safe.
-    $filtered = SafeMarkup::xssFilter('<marquee>text</marquee>', array('marquee'));
-    $this->assertEquals('<marquee>text</marquee>', $filtered);
-    $this->assertTrue(SafeMarkup::isSafe('<marquee>text</marquee>'), 'The string \'<marquee>text</marquee>\' is marked as safe.');
-
-    // SafeMarkup::xssFilter() with the default tag list will strip the
-    // <marquee> tag even though the string was marked safe above.
-    $this->assertEquals('text', SafeMarkup::xssFilter('<marquee>text</marquee>'));
+    // Mark the string as safe. This is for test purposes only.
+    $text = '<marquee>text</marquee>';
+    SafeMarkup::set($text);
 
     // SafeMarkup::escape() will not escape the markup tag since the string was
     // marked safe above.
-    $this->assertEquals('<marquee>text</marquee>', SafeMarkup::escape($filtered));
+    $this->assertEquals('<marquee>text</marquee>', SafeMarkup::escape($text));
 
     // SafeMarkup::checkPlain() will escape the markup tag even though the
     // string was marked safe above.
-    $this->assertEquals('&lt;marquee&gt;text&lt;/marquee&gt;', SafeMarkup::checkPlain($filtered));
-
-    // Ensure that SafeMarkup::xssFilter strips all tags when passed an empty
-    // array and uses the default tag list when not passed a tag list.
-    $this->assertEquals('text', SafeMarkup::xssFilter('<em>text</em>', []));
-    $this->assertEquals('<em>text</em>', SafeMarkup::xssFilter('<em>text</em>'));
+    $this->assertEquals('&lt;marquee&gt;text&lt;/marquee&gt;', SafeMarkup::checkPlain($text));
   }
 
   /**

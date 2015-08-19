@@ -46,7 +46,7 @@ class FilterCaption extends FilterBase {
         // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only
         // allow inline tags that are allowed by default, plus <br>.
         $caption = Html::decodeEntities($caption);
-        $caption = SafeMarkup::xssFilter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br'));
+        $caption = FilteredString::create(Xss::filter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br')));
 
         // The caption must be non-empty.
         if (Unicode::strlen($caption) === 0) {

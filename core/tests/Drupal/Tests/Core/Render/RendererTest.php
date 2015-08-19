@@ -13,6 +13,7 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Render\SafeString;
 use Drupal\Core\Template\Attribute;
 
@@ -108,6 +109,22 @@ class RendererTest extends RendererTestBase {
     $data[] = [[
       'child' => ['#markup' => "This is <script>alert('XSS')</script> test"],
     ], "This is alert('XSS') test"];
+    // XSS filtering test.
+    $data[] = [[
+      'child' => ['#markup' => "This is <script>alert('XSS')</script> test", '#allowed_tags' => ['script']],
+    ], "This is <script>alert('XSS')</script> test"];
+    // XSS filtering test.
+    $data[] = [[
+      'child' => ['#markup' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>", '#allowed_tags' => ['em', 'strong']],
+    ], "This is <em>alert('XSS')</em> <strong>test</strong>"];
+    // Html escaping test.
+    $data[] = [[
+      'child' => ['#markup' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>", '#safe_strategy' => Markup::SAFE_STRATEGY_ESCAPE],
+    ], "This is &lt;script&gt;&lt;em&gt;alert(&#039;XSS&#039;)&lt;/em&gt;&lt;/script&gt; &lt;strong&gt;test&lt;/strong&gt;"];
+    // XSS filtering by default test.
+    $data[] = [[
+      'child' => ['#markup' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>", '#safe_strategy' => 'nonsense'],
+    ], "This is <em>alert('XSS')</em> <strong>test</strong>"];
     // Ensure non-XSS tags are not filtered out.
     $data[] = [[
       'child' => ['#markup' => "This is <strong><script>alert('not a giraffe')</script></strong> test"],
@@ -170,10 +187,6 @@ class RendererTest extends RendererTestBase {
           $attributes = new Attribute(['href' => $vars['#url']] + (isset($vars['#attributes']) ? $vars['#attributes'] : []));
           return '<a' . (string) $attributes . '>' . $vars['#title'] . '</a>';
         });
-      $this->elementInfo->expects($this->atLeastOnce())
-        ->method('getInfo')
-        ->with('link')
-        ->willReturn(['#theme' => 'link']);
     };
     $data[] = [$build, '<div class="baz"><a href="https://www.drupal.org" id="foo">bar</a></div>' . "\n", $setup_code_type_link];
 

@@ -206,7 +206,7 @@ class DbLogController extends ControllerBase {
           $this->dateFormatter->format($dblog->timestamp, 'short'),
           $message,
           array('data' => $username),
-          SafeMarkup::xssFilter($dblog->link),
+          array('data' => array('#markup' => $dblog->link)),
         ),
         // Attributes for table row.
         'class' => array(Html::getClass('dblog-' . $dblog->type), $classes[$dblog->severity]),

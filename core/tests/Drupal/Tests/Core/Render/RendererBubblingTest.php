@@ -38,9 +38,6 @@ class RendererBubblingTest extends RendererTestBase {
     $this->setUpRequest();
     $this->setupMemoryCache();
 
-    $this->elementInfo->expects($this->any())
-      ->method('getInfo')
-      ->willReturn([]);
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);

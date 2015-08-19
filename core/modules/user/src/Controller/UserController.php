@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
@@ -158,11 +157,12 @@ class UserController extends ControllerBase {
    * @param \Drupal\user\UserInterface $user
    *   The user account.
    *
-   * @return string
-   *   The user account name.
+   * @return string|array
+   *   The user account name as a render array or an empty string if $user is
+   *   NULL.
    */
   public function userTitle(UserInterface $user = NULL) {
-    return $user ? SafeMarkup::xssFilter($user->getUsername()) : '';
+    return $user ? ['#markup' => $user->getUsername(), '#allowed_tags' => Xss::getHtmlTagList()] : '';
   }
 
   /**

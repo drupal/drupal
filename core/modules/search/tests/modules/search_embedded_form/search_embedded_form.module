@@ -9,12 +9,10 @@
  * individual product (node) listed in the search results.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * Adds the test form to search results.
  */
 function search_embedded_form_preprocess_search_result(&$variables) {
   $form = \Drupal::formBuilder()->getForm('Drupal\search_embedded_form\Form\SearchEmbeddedForm');
-  $variables['snippet'] = ['#markup' => SafeMarkup::escape($variables['snippet']), $form];
+  $variables['snippet'] = array_merge($variables['snippet'], $form);
 }

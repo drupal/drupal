@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Tests\Views;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\views\Views;
@@ -121,13 +122,13 @@ class IntegrationTest extends ViewKernelTestBase {
       });
       $this->assertEqual($output, $expected_link, 'Ensure the right link is generated');
 
-      $expected_author = aggregator_filter_xss($items[$iid]->getAuthor());
+      $expected_author = Xss::filter($items[$iid]->getAuthor(), _aggregator_allowed_tags());
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $row) {
         return $view->field['author']->advancedRender($row);
       });
       $this->assertEqual($output, $expected_author, 'Ensure the author got filtered');
 
-      $expected_description = aggregator_filter_xss($items[$iid]->getDescription());
+      $expected_description = Xss::filter($items[$iid]->getDescription(), _aggregator_allowed_tags());
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $row) {
         return $view->field['description']->advancedRender($row);
       });

@@ -26,7 +26,8 @@ class ItemViewBuilder extends EntityViewBuilder {
 
       if ($display->getComponent('description')) {
         $build[$id]['description'] = array(
-          '#markup' => aggregator_filter_xss($entity->getDescription()),
+          '#markup' => $entity->getDescription(),
+          '#allowed_tags' => _aggregator_allowed_tags(),
           '#prefix' => '<div class="item-description">',
           '#suffix' => '</div>',
         );

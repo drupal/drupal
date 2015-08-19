@@ -7,7 +7,7 @@
 
 namespace Drupal\menu_ui\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\system\MenuInterface;
@@ -73,11 +73,11 @@ class MenuController extends ControllerBase {
    * @param \Drupal\system\MenuInterface $menu
    *   The menu entity.
    *
-   * @return string
-   *   The menu label.
+   * @return array
+   *   The menu label as a render array.
    */
   public function menuTitle(MenuInterface $menu) {
-    return SafeMarkup::xssFilter($menu->label());
+    return ['#markup' => $menu->label(), '#allowed_tags' => Xss::getHtmlTagList()];
   }
 
 }

@@ -688,10 +688,6 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
-    $this->elementInfo->expects($this->any())
-      ->method('getInfo')
-      ->with('details')
-      ->willReturn(['#theme_wrappers' => ['details']]);
     $this->controllerResolver->expects($this->any())
       ->method('getControllerFromDefinition')
       ->willReturnArgument(0);

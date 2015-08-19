@@ -265,16 +265,11 @@
  * - #markup: Specifies that the array provides HTML markup directly. Unless
  *   the markup is very simple, such as an explanation in a paragraph tag, it
  *   is normally preferable to use #theme or #type instead, so that the theme
- *   can customize the markup. Note that the value is passed through
- *   \Drupal\Component\Utility\Xss::filterAdmin(), which strips known XSS
- *   vectors while allowing a permissive list of HTML tags that are not XSS
- *   vectors. (I.e, <script> and <style> are not allowed.) See
- *   \Drupal\Component\Utility\Xss::$adminTags for the list of tags that will
- *   be allowed. If your markup needs any of the tags that are not in this
- *   whitelist, then you should implement a theme hook and template file and/or
- *   an asset library.
+ *   can customize the markup. For additional options related to #markup see
+ *   \Drupal\Core\Render\Element\Markup.
  *   @see core.libraries.yml
  *   @see hook_theme()
+ *   @see \Drupal\Core\Render\Element\Markup
  *
  * JavaScript and CSS assets are specified in the render array using the
  * #attached property (see @ref sec_attached).

@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -628,8 +629,8 @@ function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
  * @param string|null $langcode
  *   Language code for the language of $text, if known.
  *
- * @return string
- *   A string containing HTML for the excerpt.
+ * @return array
+ *   A render array containing HTML for the excerpt.
  */
 function search_excerpt($keys, $text, $langcode = NULL) {
   // We highlight around non-indexable or CJK characters.
@@ -722,7 +723,10 @@ function search_excerpt($keys, $text, $langcode = NULL) {
     // We didn't find any keyword matches, so just return the first part of the
     // text. We also need to re-encode any HTML special characters that we
     // entity-decoded above.
-    return SafeMarkup::checkPlain(Unicode::truncate($text, 256, TRUE, TRUE));
+    return [
+      '#markup' => Unicode::truncate($text, 256, TRUE, TRUE),
+      '#safe_strategy' => Markup::SAFE_STRATEGY_ESCAPE,
+    ];
   }
 
   // Sort the text ranges by starting position.
@@ -768,7 +772,10 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').
   $text = trim(preg_replace('/' . $boundary . '(?:' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
-  return SafeMarkup::xssFilter($text, ['strong']);
+  return [
+    '#markup' => $text,
+    '#allowed_tags' => ['strong']
+  ];
 }
 
 /**

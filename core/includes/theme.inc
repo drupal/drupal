@@ -1254,6 +1254,10 @@ function template_preprocess_html(&$variables) {
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
+  if (isset($variables['page']['#title']) && is_array($variables['page']['#title'])) {
+    // Do an early render if the title is a render array.
+    $variables['page']['#title'] = (string) \Drupal::service('renderer')->render($variables['page']['#title']);
+  }
   if (!empty($variables['page']['#title'])) {
     $head_title = array(
       'title' => trim(strip_tags($variables['page']['#title'])),
