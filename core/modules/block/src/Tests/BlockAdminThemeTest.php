@@ -24,7 +24,7 @@ class BlockAdminThemeTest extends WebTestBase {
   public static $modules = array('block');
 
   /**
-   * Check for the accessibility of the admin theme on the  block admin page.
+   * Check for the accessibility of the admin theme on the block admin page.
    */
   function testAdminTheme() {
     // Create administrative user.
