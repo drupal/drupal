@@ -136,9 +136,8 @@ function system_requirements($phase) {
   // Test PHP version and show link to phpinfo() if it's available
   $phpversion = $phpversion_label = phpversion();
   if (function_exists('phpinfo')) {
-    // $phpversion is safe and output of l() is safe, so this value is safe.
     if ($phase === 'runtime') {
-      $phpversion_label = SafeMarkup::set($phpversion . ' (' . \Drupal::l(t('more information'), new Url('system.php')) . ')');
+      $phpversion_label = t('@phpversion (<a href="@url">more information</a>)', ['@phpversion' => $phpversion, '@url' => (new Url('system.php'))->toString()]);
     }
     $requirements['php'] = array(
       'title' => t('PHP'),
