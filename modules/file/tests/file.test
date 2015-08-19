@@ -377,6 +377,18 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
         $this->drupalPost($path, array(), t('Save'));
         $this->assertRaw(t('The file id is %fid.', array('%fid' => 0)), 'Submitted without a file.');
 
+        // Submit with a file, but with an invalid form token. Ensure the file
+        // was not saved.
+        $last_fid_prior = $this->getLastFileId();
+        $edit = array(
+          'files[' . $input_base_name . ']' => drupal_realpath($test_file->uri),
+          'form_token' => 'invalid token',
+        );
+        $this->drupalPost($path, $edit, t('Save'));
+        $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
+        $last_fid = $this->getLastFileId();
+        $this->assertEqual($last_fid_prior, $last_fid, 'File was not saved when uploaded with an invalid form token.');
+
         // Submit a new file, without using the Upload button.
         $last_fid_prior = $this->getLastFileId();
         $edit = array('files[' . $input_base_name . ']' => drupal_realpath($test_file->uri));
