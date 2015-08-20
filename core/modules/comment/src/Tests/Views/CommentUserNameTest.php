@@ -50,6 +50,7 @@ class CommentUserNameTest extends ViewKernelTestBase {
     $storage
       ->create(array(
         'uid' => 0,
+        'name' => '',
         'status' => 0,
       ))
       ->save();
@@ -75,6 +76,7 @@ class CommentUserNameTest extends ViewKernelTestBase {
     $comment = Comment::create([
       'subject' => 'My comment title',
       'uid' => $this->adminUser->id(),
+      'name' => $this->adminUser->label(),
       'entity_type' => 'entity_test',
       'comment_type' => 'entity_test',
       'status' => 1,

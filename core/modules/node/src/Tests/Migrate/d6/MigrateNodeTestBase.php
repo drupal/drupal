@@ -82,6 +82,7 @@ abstract class MigrateNodeTestBase extends MigrateDrupal6TestBase {
       'nid' => 1,
       'vid' => 1,
       'revision_log' => '',
+      'title' => $this->randomString(),
     ));
     $node->enforceIsNew();
     $node->save();
@@ -91,6 +92,7 @@ abstract class MigrateNodeTestBase extends MigrateDrupal6TestBase {
       'nid' => 3,
       'vid' => 4,
       'revision_log' => '',
+      'title' => $this->randomString(),
     ));
     $node->enforceIsNew();
     $node->save();

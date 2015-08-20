@@ -61,7 +61,7 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
 
     // Create a new test entity with original values in the default language.
     $default_langcode = $this->langcodes[0];
-    $entity_id = $this->createEntity([], $default_langcode);
+    $entity_id = $this->createEntity(['title' => $this->randomString()], $default_langcode);
     $storage = $entity_manager->getStorage($this->entityTypeId);
     $storage->resetCache();
     $entity = $storage->load($entity_id);
@@ -118,7 +118,7 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
 
     // Create a new test entity with original values in the default language.
     $default_langcode = $this->langcodes[0];
-    $entity_id = $this->createEntity(['status' => FALSE], $default_langcode);
+    $entity_id = $this->createEntity(['title' => $this->randomString(), 'status' => FALSE], $default_langcode);
     $storage = $entity_manager->getStorage($this->entityTypeId);
     $storage->resetCache();
     $entity = $storage->load($entity_id);

@@ -132,7 +132,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setDescription(t('The name of the shortcut.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
-      ->setDefaultValue('')
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',

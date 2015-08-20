@@ -44,6 +44,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $node = entity_create('node', array(
       'type' => 'story',
       'nid' => 1,
+      'title' => $this->randomString(),
     ));
     $node->enforceIsNew();
     $node->save();

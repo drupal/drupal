@@ -47,9 +47,10 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
    */
   public function testDelete() {
     $feed = $this->createFeed();
+    $description = $feed->description->value ?: '';
     $this->updateAndDelete($feed, NULL);
     // Make sure the feed title is changed.
-    $entities = entity_load_multiple_by_properties('aggregator_feed', array('description' => $feed->description->value));
+    $entities = entity_load_multiple_by_properties('aggregator_feed', array('description' => $description));
     $this->assertTrue(empty($entities));
   }
 

@@ -51,7 +51,7 @@ class UninstallTest extends WebTestBase {
     $node_type->setThirdPartySetting('module_test', 'key', 'value');
     $node_type->save();
     // Add a node to prevent node from being uninstalled.
-    $node = entity_create('node', array('type' => 'uninstall_blocker'));
+    $node = entity_create('node', array('type' => 'uninstall_blocker', 'title' => $this->randomString()));
     $node->save();
 
     $this->drupalGet('admin/modules/uninstall');

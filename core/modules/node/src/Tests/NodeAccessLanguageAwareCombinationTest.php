@@ -111,6 +111,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
@@ -121,6 +122,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => TRUE,
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
@@ -131,6 +133,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
@@ -141,6 +144,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 
@@ -151,6 +155,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 
@@ -161,6 +166,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => TRUE,
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 

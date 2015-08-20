@@ -33,6 +33,35 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
 
     $this->installEntitySchema('file');
 
+    $node = entity_create('node', array(
+      'type' => 'story',
+      'nid' => 2,
+      'vid' => 12,
+      'revision_log' => '',
+      'title' => $this->randomString(),
+    ));
+    $node->enforceIsNew();
+    $node->save();
+
+    $planet_nodes = [
+      4 => 6,
+      5 => 8,
+      6 => 9,
+      7 => 10,
+      8 => 11,
+    ];
+    foreach ($planet_nodes as $nid => $vid) {
+      $node = entity_create('node', array(
+        'type' => 'test_planet',
+        'nid' => $nid,
+        'vid' => $vid,
+        'revision_log' => '',
+        'title' => $this->randomString(),
+      ));
+      $node->enforceIsNew();
+      $node->save();
+    }
+
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'field_name' => 'field_test',

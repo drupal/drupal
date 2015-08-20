@@ -57,7 +57,7 @@ class FieldEntityTest extends ViewTestBase {
     $account = entity_create('user', array('name' => $this->randomMachineName(), 'bundle' => 'user'));
     $account->save();
 
-    $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page'));
+    $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page', 'title' => $this->randomString()));
     $node->save();
     $comment = entity_create('comment', array(
       'uid' => $account->id(),

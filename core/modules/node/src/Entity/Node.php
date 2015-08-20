@@ -387,7 +387,6 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
-      ->setDefaultValue('')
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',

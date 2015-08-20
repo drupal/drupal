@@ -56,6 +56,7 @@ abstract class OptionsTestBase extends ViewKernelTestBase {
 
     $settings = [];
     $settings['type'] = 'article';
+    $settings['title'] = $this->randomString();
     $settings['field_test_list_string'][]['value'] = $this->fieldValues[0];
     $settings['field_test_list_integer'][]['value'] = 0;
 

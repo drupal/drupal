@@ -463,13 +463,14 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))
-      ->setDefaultValue('')
+      ->setRequired(TRUE)
       ->setConstraints(array(
         // No Length constraint here because the UserName constraint also covers
         // that.
         'UserName' => array(),
         'UserNameUnique' => array(),
       ));
+    $fields['name']->getItemDefinition()->setClass('\Drupal\user\UserNameItem');
 
     $fields['pass'] = BaseFieldDefinition::create('password')
       ->setLabel(t('Password'))

@@ -74,7 +74,7 @@ abstract class UserKernelTestBase extends ViewKernelTestBase {
     user_role_grant_permissions('multiple_permissions', array('administer permissions', 'administer users', 'access user profiles'));
 
     // Setup a user without an extra role.
-    $this->users[] = $account = $this->userStorage->create(array());
+    $this->users[] = $account = $this->userStorage->create(['name' => $this->randomString()]);
     $account->save();
     // Setup a user with just the first role (so no permission beside the
     // ones from the authenticated role).

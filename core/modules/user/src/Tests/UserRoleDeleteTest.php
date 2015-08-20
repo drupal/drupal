@@ -42,8 +42,9 @@ class UserRoleDeleteTest extends KernelTestBase {
 
     // Create user and assign both test roles.
     $values = array(
-        'uid' => 1,
-        'roles' => array('test_role_one', 'test_role_two'),
+      'uid' => 1,
+      'name' => $this->randomString(),
+      'roles' => array('test_role_one', 'test_role_two'),
     );
     $user = User::create($values);
     $user->save();

@@ -134,7 +134,7 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertResponse(403);
 
     // Verify that link language is properly handled.
-    $node3->addTranslation('it')->save();
+    $node3->addTranslation('it')->set('title', $this->randomString())->save();
     $id = 'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=it';
     $this->drupalGet('node', ['language' => ConfigurableLanguage::createFromLangcode('it')]);
     $this->assertContextualLinkPlaceHolder($id);

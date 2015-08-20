@@ -104,6 +104,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'field_private' => array(array('value' => 0)),
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
@@ -113,6 +114,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'field_private' => array(array('value' => 0)),
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 
@@ -122,6 +124,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'field_private' => array(array('value' => 1)),
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
@@ -131,6 +134,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'field_private' => array(array('value' => 1)),
     ));
     $translation = $node->getTranslation('ca');
+    $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 

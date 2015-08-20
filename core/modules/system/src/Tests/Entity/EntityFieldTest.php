@@ -677,6 +677,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $node = entity_create('node', array(
       'type' => 'page',
       'uid' => $user->id(),
+      'title' => $this->randomString(),
     ));
     $reference->setValue($node);
     $violations = $reference->validate();
@@ -699,6 +700,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $node = entity_create('node', array(
       'type' => 'article',
       'uid' => $user->id(),
+      'title' => $this->randomString(),
     ));
     $node->save();
     $reference->setValue($node);

@@ -63,4 +63,16 @@ class PasswordItem extends StringItem {
       }
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    // We cannot use the parent implementation from StringItem as it does not
+    // consider the additional 'existing' property that PasswordItem contains.
+    $value = $this->get('value')->getValue();
+    $existing = $this->get('existing')->getValue();
+    return $value === NULL && $existing === NULL;
+  }
+
 }

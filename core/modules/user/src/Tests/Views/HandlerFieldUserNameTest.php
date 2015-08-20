@@ -41,6 +41,8 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $this->executeView($view);
 
     $anon_name = $this->config('user.settings')->get('anonymous');
+    $view->result[0]->_entity->setUsername('');
+    $view->result[0]->_entity->uid->value = 0;
     $render = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['name']->advancedRender($view->result[0]);
     });

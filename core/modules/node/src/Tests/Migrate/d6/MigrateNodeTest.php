@@ -55,7 +55,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('Test title', $node_revision->getTitle());
     $this->assertIdentical('1', $node_revision->getRevisionAuthor()->id(), 'Node revision has the correct user');
     // This is empty on the first revision.
-    $this->assertIdentical('', $node_revision->revision_log->value);
+    $this->assertIdentical(NULL, $node_revision->revision_log->value);
 
     // It is pointless to run the second half from MigrateDrupal6Test.
     if (empty($this->standalone)) {

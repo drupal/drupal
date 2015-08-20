@@ -71,6 +71,7 @@ abstract class MigrateTermNodeTestBase extends MigrateDrupal6TestBase {
         'type' => 'story',
         'nid' => $i,
         'vid' => array_shift($vids),
+        'title' => $this->randomString(),
       ));
       $node->enforceIsNew();
       $node->save();

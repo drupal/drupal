@@ -55,6 +55,11 @@ class NodeValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violations[0]->getPropertyPath(), 'title');
     $this->assertEqual($violations[0]->getMessage(), 'This value should not be null.');
 
+    $node->set('title', '');
+    $violations = $node->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found when title is set to an empty string.');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'title');
+
     // Make the title valid again.
     $node->set('title', $this->randomString());
     // Save the node so that it gets an ID and a changed date.
