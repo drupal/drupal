@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\InvalidQueryException;
+use Drupal\Core\Database\Database;
 
 /**
  * Tests the Select query builder.
@@ -57,10 +58,47 @@ class SelectTest extends DatabaseTestBase {
     $records = $result->fetchAll();
 
     $query = (string) $query;
-    $expected = "/* Testing query comments SELECT nid FROM {node}; -- */";
+    $expected = "/* Testing query comments  * / SELECT nid FROM {node}; -- */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
 
     $this->assertEqual(count($records), 4, 'Returned the correct number of rows.');
     $this->assertNotIdentical(FALSE, strpos($query, $expected), 'The flattened query contains the sanitised comment string.');
+
+    $connection = Database::getConnection();
+    foreach ($this->makeCommentsProvider() as $test_set) {
+      list($expected, $comments) = $test_set;
+      $this->assertEqual($expected, $connection->makeComment($comments));
+    }
+  }
+
+  /**
+   * Provides expected and input values for testVulnerableComment().
+   */
+  function makeCommentsProvider() {
+    return [
+      [
+        '/*  */ ',
+        [''],
+      ],
+      // Try and close the comment early.
+      [
+        '/* Exploit  * / DROP TABLE node; -- */ ',
+        ['Exploit */ DROP TABLE node; --'],
+      ],
+      // Variations on comment closing.
+      [
+        '/* Exploit  * / * / DROP TABLE node; -- */ ',
+        ['Exploit */*/ DROP TABLE node; --'],
+      ],
+      [
+        '/* Exploit  *  * // DROP TABLE node; -- */ ',
+        ['Exploit **// DROP TABLE node; --'],
+      ],
+      // Try closing the comment in the second string which is appended.
+      [
+        '/* Exploit  * / DROP TABLE node; --; Another try  * / DROP TABLE node; -- */ ',
+        ['Exploit */ DROP TABLE node; --', 'Another try */ DROP TABLE node; --'],
+      ],
+    ];
   }
 
   /**

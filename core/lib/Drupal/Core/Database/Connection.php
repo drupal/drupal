@@ -529,7 +529,7 @@ abstract class Connection {
    *   A sanitized version of the query comment string.
    */
   protected function filterComment($comment = '') {
-    return preg_replace('/(\/\*\s*)|(\s*\*\/)/', '', $comment);
+    return strtr($comment, ['*' => ' * ']);
   }
 
   /**
