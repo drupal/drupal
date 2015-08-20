@@ -68,7 +68,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
   public function onError(GetResponseForExceptionEvent $event) {
     $exception = $event->getException();
     $error = Error::decodeException($exception);
-    $this->logger->get('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+    $this->logger->get('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
 
     $is_critical = !$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500;
     if ($is_critical) {

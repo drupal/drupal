@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,7 +69,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages
       // are HTML. We mimick this behavior here.
-      '!message' => Xss::filterAdmin($message),
+      '@message' => SafeString::create(Xss::filterAdmin($message)),
       '%function' => $caller['function'],
       '%file' => $caller['file'],
       '%line' => $caller['line'],
@@ -109,9 +110,9 @@ function error_displayable($error = NULL) {
  * Logs a PHP error or exception and displays an error page in fatal cases.
  *
  * @param $error
- *   An array with the following keys: %type, !message, %function, %file,
+ *   An array with the following keys: %type, @message, %function, %file,
  *   %line, severity_level, and backtrace. All the parameters are plain-text,
- *   with the exception of !message, which needs to be a safe HTML string, and
+ *   with the exception of @message, which needs to be an HTML string, and
  *   backtrace, which is a standard PHP backtrace.
  * @param $fatal
  *   TRUE if the error is fatal.
@@ -130,7 +131,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     // as it uniquely identifies each PHP error.
     static $number = 0;
     $assertion = array(
-      $error['!message'],
+      $error['@message'],
       $error['%type'],
       array(
         'function' => $error['%function'],
@@ -154,12 +155,12 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // installer.
   if (\Drupal::hasService('logger.factory')) {
     try {
-      \Drupal::logger('php')->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
+      \Drupal::logger('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
     }
     catch (\Exception $e) {
       // We can't log, for example because the database connection is not
       // available. At least try to log to PHP error log.
-      error_log(strtr('Failed to log error: %type: !message in %function (line %line of %file).', $error));
+      error_log(strtr('Failed to log error: %type: @message in %function (line %line of %file).', $error));
     }
   }
 
@@ -167,7 +168,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
       // Should not translate the string to avoid errors producing more errors.
-      $response->setContent(html_entity_decode(strip_tags(format_string('%type: !message in %function (line %line of %file).', $error))). "\n");
+      $response->setContent(html_entity_decode(strip_tags(SafeMarkup::format('%type: @message in %function (line %line of %file).', $error))). "\n");
       $response->send();
       exit;
     }
@@ -178,7 +179,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
         // Should not translate the string to avoid errors producing more errors.
-        $response->setContent(format_string('%type: !message in %function (line %line of %file).', $error));
+        $response->setContent(SafeMarkup::format('%type: @message in %function (line %line of %file).', $error));
         $response->send();
       }
       exit;
@@ -208,20 +209,29 @@ function _drupal_log_error($error, $fatal = FALSE) {
           $error['%file'] = substr($error['%file'], $root_length + 1);
         }
       }
-      // Should not translate the string to avoid errors producing more errors.
-      $message = format_string('%type: !message in %function (line %line of %file).', $error);
 
       // Check if verbose error reporting is on.
       $error_level = _drupal_get_error_level();
 
-      if ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE) {
+      if ($error_level != ERROR_REPORTING_DISPLAY_VERBOSE) {
+        // Without verbose logging, use a simple message.
+
+        // We call SafeMarkup::format() directly here, rather than use t() since
+        // we are in the middle of error handling, and we don't want t() to
+        // cause further errors.
+        $message = SafeMarkup::format('%type: @message in %function (line %line of %file).', $error);
+      }
+      else {
+        // With verbose logging, we will also include a backtrace.
+
         // First trace is the error itself, already contained in the message.
         // While the second trace is the error source and also contained in the
         // message, the message doesn't contain argument values, so we output it
         // once more in the backtrace.
         array_shift($backtrace);
         // Generate a backtrace containing only scalar argument values.
-        $message .= '<pre class="backtrace">' . Error::formatBacktrace($backtrace) . '</pre>';
+        $error['@backtrace'] = Error::formatBacktrace($backtrace);
+        $message = SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $error);
       }
     }
 
@@ -252,7 +262,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($message) {
       if (\Drupal::hasService('session')) {
         // Message display is dependent on sessions being available.
-        drupal_set_message(SafeMarkup::set($message), $class, TRUE);
+        drupal_set_message($message, $class, TRUE);
       }
       else {
         print $message;

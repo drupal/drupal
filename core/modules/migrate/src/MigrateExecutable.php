@@ -405,7 +405,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   protected function handleException(\Exception $exception, $save = TRUE) {
     $result = Error::decodeException($exception);
-    $message = $result['!message'] . ' (' . $result['%file'] . ':' . $result['%line'] . ')';
+    $message = $result['@message'] . ' (' . $result['%file'] . ':' . $result['%line'] . ')';
     if ($save) {
       $this->saveMessage($message);
     }

@@ -1384,12 +1384,10 @@ abstract class TestBase {
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
     ));
-    // \Drupal\Core\Utility\Error::decodeException() runs the exception
-    // message through \Drupal\Component\Utility\SafeMarkup::checkPlain().
     $decoded_exception = Error::decodeException($exception);
     unset($decoded_exception['backtrace']);
-    $message = SafeMarkup::format('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', $decoded_exception + array(
-      '!backtrace' => Error::formatBacktrace($verbose_backtrace),
+    $message = SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decoded_exception + array(
+      '@backtrace' => Error::formatBacktrace($verbose_backtrace),
     ));
     $this->error($message, 'Uncaught exception', Error::getLastCaller($backtrace));
   }

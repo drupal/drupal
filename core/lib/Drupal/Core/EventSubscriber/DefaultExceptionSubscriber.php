@@ -91,12 +91,20 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
       if (substr($error['%file'], 0, $root_length) == DRUPAL_ROOT) {
         $error['%file'] = substr($error['%file'], $root_length + 1);
       }
-      // Do not translate the string to avoid errors producing more errors.
-      unset($error['backtrace']);
-      $message = SafeMarkup::format('%type: !message in %function (line %line of %file).', $error);
 
-      // Check if verbose error reporting is on.
-      if ($this->getErrorLevel() == ERROR_REPORTING_DISPLAY_VERBOSE) {
+      unset($error['backtrace']);
+
+      if ($this->getErrorLevel() != ERROR_REPORTING_DISPLAY_VERBOSE) {
+        // Without verbose logging, use a simple message.
+
+        // We call SafeMarkup::format directly here, rather than use t() since
+        // we are in the middle of error handling, and we don't want t() to
+        // cause further errors.
+        $message = SafeMarkup::format('%type: @message in %function (line %line of %file).', $error);
+      }
+      else {
+        // With verbose logging, we will also include a backtrace.
+
         $backtrace_exception = $exception;
         while ($backtrace_exception->getPrevious()) {
           $backtrace_exception = $backtrace_exception->getPrevious();
@@ -108,9 +116,9 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
         // once more in the backtrace.
         array_shift($backtrace);
 
-        // Generate a backtrace containing only scalar argument values. Make
-        // sure the backtrace is escaped as it can contain user submitted data.
-        $message .= '<pre class="backtrace">' . SafeMarkup::escape(Error::formatBacktrace($backtrace)) . '</pre>';
+        // Generate a backtrace containing only scalar argument values.
+        $error['@backtrace'] = Error::formatBacktrace($backtrace);
+        $message = SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $error);
       }
     }
 

@@ -51,7 +51,7 @@ class ExceptionTestSiteSubscriber extends HttpExceptionSubscriberBase {
       // as it uniquely identifies each PHP error.
       static $number = 0;
       $assertion = array(
-        $error['!message'],
+        $error['@message'],
         $error['%type'],
         array(
           'function' => $error['%function'],

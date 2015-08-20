@@ -405,10 +405,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
 
   // Use a default value if $message is not set.
   if (empty($message)) {
-    // The exception message is run through
-    // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
-    // \Drupal\Core\Utility\Error:decodeException().
-    $message = '%type: !message in %function (line %line of %file).';
+    $message = '%type: @message in %function (line %line of %file).';
   }
 
   if ($link) {

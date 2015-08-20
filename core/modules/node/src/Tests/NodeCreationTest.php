@@ -203,7 +203,7 @@ class NodeCreationTest extends NodeTestBase {
     $query = db_query("SELECT wid, variables FROM {watchdog}");
     foreach ($query as $row) {
       $variables = (array) unserialize($row->variables);
-      if (isset($variables['!message']) && $variables['!message'] === 'Test exception for rollback.') {
+      if (isset($variables['@message']) && $variables['@message'] === 'Test exception for rollback.') {
         $matches[] = $row->wid;
       }
     }

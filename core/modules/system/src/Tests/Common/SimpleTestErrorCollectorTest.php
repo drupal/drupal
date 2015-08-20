@@ -44,7 +44,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
     if (count($this->collectedErrors) == 3) {
       $this->assertError($this->collectedErrors[0], 'Notice', 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()', 'ErrorTestController.php', 'Undefined variable: bananas');
       $this->assertError($this->collectedErrors[1], 'Warning', 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()', 'ErrorTestController.php', 'Division by zero');
-      $this->assertError($this->collectedErrors[2], 'User warning', 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()', 'ErrorTestController.php', 'Drupal is awesome');
+      $this->assertError($this->collectedErrors[2], 'User warning', 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()', 'ErrorTestController.php', 'Drupal &amp; awesome');
     }
     else {
       // Give back the errors to the log report.

@@ -24,7 +24,7 @@ class TestLog implements LoggerInterface {
   public function log($level, $message, array $context = array()) {
     $trigger = [
       '%type' => 'Exception',
-      '!message' => 'Deforestation',
+      '@message' => 'Deforestation',
       '%function' => 'Drupal\error_service_test\MonkeysInTheControlRoom->handle()',
       'severity_level' => 3,
       'channel' => 'php',

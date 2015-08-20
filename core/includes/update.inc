@@ -188,10 +188,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
       $variables = Error::decodeException($e);
       unset($variables['backtrace']);
-      // The exception message is run through
-      // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
-      // \Drupal\Core\Utility\Error::decodeException().
-      $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
+      $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables));
     }
   }
 
@@ -235,10 +232,7 @@ function update_entity_definitions(&$context) {
     watchdog_exception('update', $e);
     $variables = Error::decodeException($e);
     unset($variables['backtrace']);
-    // The exception message is run through
-    // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
-    // \Drupal\Core\Utility\Error::decodeException().
-    $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
+    $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables));
     $context['results']['core']['update_entity_definitions'] = $ret;
     $context['results']['#abort'][] = 'update_entity_definitions';
   }
