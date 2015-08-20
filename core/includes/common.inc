@@ -367,6 +367,9 @@ function format_size($size, $langcode = NULL) {
  *   A translated date string in the requested format.
  *
  * @see \Drupal\Core\Datetime\DateFormatter::format()
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('date.formatter')->format().
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
   return \Drupal::service('date.formatter')->format($timestamp, $type, $format, $timezone, $langcode);

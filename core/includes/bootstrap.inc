@@ -343,6 +343,9 @@ function t($string, array $args = array(), array $options = array()) {
  * @see \Drupal\Component\Utility\SafeMarkup::format()
  * @see t()
  * @ingroup sanitization
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Component\Utility\SafeMarkup::format().
  */
 function format_string($string, array $args) {
   return SafeMarkup::format($string, $args);
@@ -373,6 +376,9 @@ function format_string($string, array $args) {
  *   TRUE if the text is valid UTF-8, FALSE if not.
  *
  * @see \Drupal\Component\Utility\Unicode::validateUtf8()
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Component\Utility\Unicode::validateUtf8().
  */
 function drupal_validate_utf8($text) {
   return Unicode::validateUtf8($text);
