@@ -29,6 +29,10 @@ use Symfony\Component\HttpFoundation\Request;
  *   method in this class.
  * - In your test method, call $this->runUpdates() to run the necessary updates,
  *   and then use test assertions to verify that the result is what you expect.
+ * - In order to test both with a "bare" database dump as well as with a
+ *   database dump filled with content, extend your update path test class with
+ *   a new test class that overrides the bare database dump. Refer to
+ *   UpdatePathTestBaseFilledTest for an example.
  *
  * @ingroup update_api
  *
@@ -49,6 +53,10 @@ abstract class UpdatePathTestBase extends WebTestBase {
    * The file system/tests/fixtures/update/drupal-8.bare.standard.php.gz is
    * normally included first -- this sets up the base database from a bare
    * standard Drupal installation.
+   *
+   * The file system/tests/fixtures/update/drupal-8.filled.standard.php.gz
+   * can also be used in case we want to test with a database filled with
+   * content, and with all core modules enabled.
    *
    * @var array
    */
