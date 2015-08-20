@@ -39,6 +39,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     'languages:language_interface',
     'theme',
     'timezone',
+    'url.query_args:_wrapper_format',
     'url.query_args.pagers:0',
     'user'
   ];

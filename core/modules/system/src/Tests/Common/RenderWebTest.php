@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -23,6 +25,24 @@ class RenderWebTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('common_test');
+
+  /**
+   * Asserts the cache context for the wrapper format is always present.
+   */
+  function testWrapperFormatCacheContext() {
+    $this->drupalGet('');
+    $this->assertIdentical(0, strpos($this->getRawContent(), "<!DOCTYPE html>\n<html"));
+    $this->assertIdentical('text/html; charset=UTF-8', $this->drupalGetHeader('Content-Type'));
+    $this->assertTitle('Log in | Drupal');
+    $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
+
+    $this->drupalGet('', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT =>  'json']]);
+    $this->assertIdentical('application/json', $this->drupalGetHeader('Content-Type'));
+    $json = Json::decode($this->getRawContent());
+    $this->assertEqual(['content', 'title'], array_keys($json));
+    $this->assertIdentical('Log in', $json['title']);
+    $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
+  }
 
   /**
    * Tests rendering form elements without passing through

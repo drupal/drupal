@@ -10,6 +10,7 @@ namespace Drupal\tracker\Tests;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
@@ -83,8 +84,7 @@ class TrackerTest extends WebTestBase {
     $this->assertLink(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
 
     // Assert cache contexts, specifically the pager and node access contexts.
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions']);
-    // Assert cache tags for the visible node and node list cache tag.
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions']);
     $expected_tags = Cache::mergeTags($published->getCacheTags(), $published->getOwner()->getCacheTags());
     $expected_tags = Cache::mergeTags($expected_tags, ['node_list', 'rendered']);
     $this->assertCacheTags($expected_tags);
@@ -149,7 +149,7 @@ class TrackerTest extends WebTestBase {
     $this->assertText($other_published_my_comment->label(), "Nodes that the user has commented on appear in the user's tracker listing.");
 
     // Assert cache contexts.
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
     // Assert cache tags for the visible nodes (including owners) and node list
     // cache tag.
     $expected_tags = Cache::mergeTags($my_published->getCacheTags(), $my_published->getOwner()->getCacheTags());
@@ -158,7 +158,7 @@ class TrackerTest extends WebTestBase {
     $expected_tags = Cache::mergeTags($expected_tags, ['node_list', 'rendered']);
 
     $this->assertCacheTags($expected_tags);
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
 
     $this->assertLink($my_published->label());
     $this->assertNoLink($unpublished->label());

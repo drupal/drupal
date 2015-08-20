@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -90,7 +92,14 @@ class MainContentViewSubscriber implements EventSubscriberInterface {
       $wrapper = isset($this->mainContentRenderers[$wrapper]) ? $wrapper : 'html';
 
       $renderer = $this->classResolver->getInstanceFromDefinition($this->mainContentRenderers[$wrapper]);
-      $event->setResponse($renderer->renderResponse($result, $request, $this->routeMatch));
+      $response = $renderer->renderResponse($result, $request, $this->routeMatch);
+      // The main content render array is rendered into a different Response
+      // object, depending on the specified wrapper format.
+      if ($response instanceof CacheableResponseInterface) {
+        $main_content_view_subscriber_cacheability = (new CacheableMetadata())->setCacheContexts(['url.query_args:' . static::WRAPPER_FORMAT]);
+        $response->addCacheableDependency($main_content_view_subscriber_cacheability);
+      }
+      $event->setResponse($response);
     }
   }
 

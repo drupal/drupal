@@ -20,7 +20,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {inheritdoc}
    */
-  protected $defaultCacheContexts = ['languages:language_interface', 'theme', 'user.permissions', 'user.roles:authenticated'];
+  protected $defaultCacheContexts = ['languages:language_interface', 'theme', 'url.query_args:_wrapper_format', 'user.permissions', 'user.roles:authenticated'];
 
   /**
    * Modules to enable.

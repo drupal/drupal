@@ -8,6 +8,7 @@
 namespace Drupal\toolbar\Tests;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\simpletest\WebTestBase;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
@@ -109,6 +110,7 @@ class ToolbarCacheContextsTest extends WebTestBase {
     $default_cache_contexts = [
       'languages:language_interface',
       'theme',
+      'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
     ];
     $cache_contexts = Cache::mergeContexts($default_cache_contexts, $cache_contexts);
 

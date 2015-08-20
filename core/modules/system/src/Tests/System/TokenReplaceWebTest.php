@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\simpletest\WebTestBase;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
@@ -35,12 +36,12 @@ class TokenReplaceWebTest extends WebTestBase {
     $this->drupalGet('token-test/' . $node->id());
     $this->assertText("Tokens: {$node->id()} {$account->id()}");
     $this->assertCacheTags(['node:1', 'rendered', 'user:2']);
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'user']);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
 
     $this->drupalGet('token-test-without-bubleable-metadata/' . $node->id());
     $this->assertText("Tokens: {$node->id()} {$account->id()}");
     $this->assertCacheTags(['node:1', 'rendered', 'user:2']);
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'user']);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
   }
 
 }
