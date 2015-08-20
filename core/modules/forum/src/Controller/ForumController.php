@@ -190,6 +190,7 @@ class ForumController extends ControllerBase {
     else {
       // Set the page title to forum's vocabulary name.
       $build['#title'] = $vocabulary->label();
+      $this->renderer->addCacheableDependency($build, $vocabulary);
     }
     return $build;
   }

@@ -235,6 +235,7 @@ class ForumTest extends WebTestBase {
 
     // Test the root forum page title change.
     $this->drupalGet('forum');
+    $this->assertCacheTag('config:taxonomy.vocabulary.' . $this->forum['vid']);
     $this->assertTitle(t('Forums | Drupal'));
     $vocabulary = Vocabulary::load($this->forum['vid']);
     $vocabulary->set('name', 'Discussions');
