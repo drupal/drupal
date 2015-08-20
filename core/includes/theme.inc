@@ -1157,9 +1157,6 @@ function template_preprocess_maintenance_task_list(&$variables) {
  * details.
  */
 function template_preprocess(&$variables, $hook, $info) {
-  // Tell all templates where they are located.
-  $variables['directory'] = \Drupal::theme()->getActiveTheme()->getPath();
-
   // Merge in variables that don't depend on hook and don't change during a
   // single page request.
   // Use the advanced drupal_static() pattern, since this is called very often.
@@ -1201,6 +1198,9 @@ function _template_preprocess_default_variables() {
 
   // Give modules a chance to alter the default template variables.
   \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
+
+  // Tell all templates where they are located.
+  $variables['directory'] = \Drupal::theme()->getActiveTheme()->getPath();
 
   return $variables;
 }
