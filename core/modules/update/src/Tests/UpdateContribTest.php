@@ -66,6 +66,7 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests the basic functionality of a contrib module on the status report.
    */
   function testUpdateContribBasic() {
+    $project_link = \Drupal::l(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'));
     $system_info = array(
       '#all' => array(
         'version' => '8.0.0',
@@ -87,7 +88,30 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertText(t('Up to date'));
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText(t('Update available'));
-    $this->assertRaw(\Drupal::l(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test')), 'Link to aaa_update_test project appears.');
+    $this->assertRaw($project_link, 'Link to aaa_update_test project appears.');
+
+    // Since aaa_update_test is installed the fact it is hidden and in the
+    // Testing package means it should not appear.
+    $system_info['aaa_update_test']['hidden'] = TRUE;
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->refreshUpdateStatus(
+      array(
+        'drupal' => '0.0',
+        'aaa_update_test' => '1_0',
+      )
+    );
+    $this->assertNoRaw($project_link, 'Link to aaa_update_test project does not appear.');
+
+    // A hidden and installed project not in the Testing package should appear.
+    $system_info['aaa_update_test']['package'] = 'aaa_update_test';
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->refreshUpdateStatus(
+      array(
+        'drupal' => '0.0',
+        'aaa_update_test' => '1_0',
+      )
+    );
+    $this->assertRaw($project_link, 'Link to aaa_update_test project appears.');
   }
 
   /**

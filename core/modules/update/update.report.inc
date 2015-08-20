@@ -39,24 +39,12 @@ function template_preprocess_update_report(&$variables) {
     $variables['no_updates_message'] = _update_no_data();
   }
 
-  $status = array();
-
-  // Create an array of status values keyed by module or theme name, since
-  // we'll need this while generating the report if we have to cross reference
-  // anything (e.g. subthemes which have base themes missing an update).
-  foreach ($data as $project) {
-    foreach ($project['includes'] as $key => $name) {
-      $status[$key] = $project['status'];
-    }
-  }
-
   $rows = array();
 
   foreach ($data as $project) {
     $project_status = array(
       '#theme' =>  'update_project_status',
       '#project' => $project,
-      '#includes_status' => $status,
     );
 
     // Build project rows.
@@ -120,14 +108,10 @@ function template_preprocess_update_report(&$variables) {
  * @param array $variables
  *   An associative array containing:
  *   - project: An array of information about the project.
- *   - includes_status: An array of sub-project statuses where the keys are the
- *     shortnames of each project and the values are UPDATE_* integer constants
- *     as defined in update.module.
  */
 function template_preprocess_update_project_status(&$variables) {
   // Storing by reference because we are sorting the project values.
   $project = &$variables['project'];
-  $includes_status = $variables['includes_status'];
 
   // Set the project title and URL.
   $variables['title'] = (isset($project['title'])) ? $project['title'] : $project['name'];
@@ -247,42 +231,6 @@ function template_preprocess_update_project_status(&$variables) {
       $extra_item['data'] = drupal_placeholder($value['data']);
       $variables['extras'][] = $extra_item;
     }
-  }
-
-  if (!empty($project['base_themes'])) {
-    asort($project['base_themes']);
-    $base_themes = array();
-    foreach ($project['base_themes'] as $base_key => $base_theme) {
-      switch ($includes_status[$base_key]) {
-        case UPDATE_NOT_SECURE:
-          $base_status_label = t('Security update required!');
-          break;
-        case UPDATE_REVOKED:
-          $base_status_label = t('Revoked!');
-          break;
-        case UPDATE_NOT_SUPPORTED:
-          $base_status_label = t('Not supported!');
-          break;
-        default:
-          $base_status_label = '';
-      }
-
-      if ($base_status_label) {
-        $base_themes[] = t('%base_theme (!base_label)', array(
-          '%base_theme' => $base_theme,
-          '!base_label' => $base_status_label,
-        ));
-      }
-      else {
-        $base_themes[] = drupal_placeholder($base_theme);
-      }
-    }
-    $variables['base_themes'] = $base_themes;
-  }
-
-  if (!empty($project['sub_themes'])) {
-    sort($project['sub_themes']);
-    $variables['sub_themes'] = $project['sub_themes'];
   }
 
   // Set the project status details.

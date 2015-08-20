@@ -51,10 +51,6 @@ interface UpdateManagerInterface {
    *     'theme'.
    *   - project_status: This indicates if the project is enabled and will
    *     always be TRUE, as the function only returns enabled projects.
-   *   - sub_themes: If the project is a theme it contains an associative array
-   *     of all sub-themes.
-   *   - base_themes: If the project is a theme it contains an associative array
-   *     of all base-themes.
    *
    * @see update_process_project_info()
    * @see update_calculate_project_data()

@@ -183,7 +183,7 @@ function update_theme() {
       'file' => 'update.report.inc',
     ),
     'update_project_status' => array(
-      'variables' => array('project' => array(), 'includes_status' => array()),
+      'variables' => array('project' => array()),
       'file' => 'update.report.inc',
     ),
     // We are using template instead of '#type' => 'table' here to keep markup

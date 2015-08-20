@@ -21,8 +21,6 @@
  *   - data: The data about an extra item.
  * - includes: The projects within the project.
  * - disabled: The currently disabled projects in the project.
- * - base_themes: The base themes supplied by the project.
- * - sub_themes: The subthemes supplied by the project.
  *
  * @see template_preprocess_update_project_status()
  *
@@ -103,20 +101,6 @@
   {% else %}
     {% trans %}
       Includes: {{ includes|placeholder }}
-    {% endtrans %}
-  {% endif %}
-
-  {% if base_themes %}
-    {% set basethemes = base_themes|join(', ') %}
-    {% trans %}
-      Depends on: {{ basethemes }}
-    {% endtrans %}
-  {% endif %}
-
-  {% if sub_themes %}
-    {% set subthemes = sub_themes|join(', ') %}
-    {% trans %}
-      Required by: {{ subthemes|placeholder }}
     {% endtrans %}
   {% endif %}
 </div>
