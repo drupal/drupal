@@ -170,7 +170,7 @@ function _batch_progress_page() {
   $build = array(
     '#theme' => 'progress_bar',
     '#percent' => $percentage,
-    '#message' => $message,
+    '#message' => array('#markup' => $message),
     '#label' => $label,
     '#attached' => array(
       'html_head' => array(

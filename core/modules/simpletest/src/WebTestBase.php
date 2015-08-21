@@ -166,6 +166,21 @@ abstract class WebTestBase extends TestBase {
    */
   protected $redirectCount;
 
+
+  /**
+   * The number of meta refresh redirects to follow, or NULL if unlimited.
+   *
+   * @var null|int
+   */
+  protected $maximumMetaRefreshCount = NULL;
+
+  /**
+   * The number of meta refresh redirects followed during ::drupalGet().
+   *
+   * @var int
+   */
+  protected $metaRefreshCount = 0;
+
   /**
    * The kernel used in this test.
    *
@@ -1216,6 +1231,9 @@ abstract class WebTestBase extends TestBase {
     }
     parent::tearDown();
 
+    // Ensure that the maximum meta refresh count is reset.
+    $this->maximumMetaRefreshCount = NULL;
+
     // Ensure that internal logged in variable and cURL options are reset.
     $this->loggedInUser = FALSE;
     $this->additionalCurlOptions = array();
@@ -1505,6 +1523,8 @@ abstract class WebTestBase extends TestBase {
     // Replace original page output with new output from redirected page(s).
     if ($new = $this->checkForMetaRefresh()) {
       $out = $new;
+      // We are finished with all meta refresh redirects, so reset the counter.
+      $this->metaRefreshCount = 0;
     }
 
     if ($path instanceof Url) {
@@ -2163,12 +2183,13 @@ abstract class WebTestBase extends TestBase {
    *   Either the new page content or FALSE.
    */
   protected function checkForMetaRefresh() {
-    if (strpos($this->getRawContent(), '<meta ') && $this->parse()) {
+    if (strpos($this->getRawContent(), '<meta ') && $this->parse() && (!isset($this->maximumMetaRefreshCount) || $this->metaRefreshCount < $this->maximumMetaRefreshCount)) {
       $refresh = $this->xpath('//meta[@http-equiv="Refresh"]');
       if (!empty($refresh)) {
         // Parse the content attribute of the meta tag for the format:
         // "[delay]: URL=[page_to_redirect_to]".
         if (preg_match('/\d+;\s*URL=(?<url>.*)/i', $refresh[0]['content'], $match)) {
+          $this->metaRefreshCount++;
           return $this->drupalGet($this->getAbsoluteUrl(Html::decodeEntities($match['url'])));
         }
       }
