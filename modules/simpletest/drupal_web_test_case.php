@@ -2221,6 +2221,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Submit the POST request.
     $return = drupal_json_decode($this->drupalPost(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Ajax-Token'), '1', 'Ajax response header found.');
 
     // Change the page content by applying the returned commands.
     if (!empty($ajax_settings) && !empty($return)) {

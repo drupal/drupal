@@ -1128,6 +1128,17 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   drupal_alter($hooks, $form, $form_state, $form_id);
 }
 
+/**
+ * Helper function to call form_set_error() if there is a token error.
+ */
+function _drupal_invalid_token_set_form_error() {
+  $path = current_path();
+  $query = drupal_get_query_parameters();
+  $url = url($path, array('query' => $query));
+
+  // Setting this error will cause the form to fail validation.
+  form_set_error('form_token', t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+}
 
 /**
  * Validates user-submitted form data in the $form_state array.
@@ -1162,16 +1173,11 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   }
 
   // If the session token was set by drupal_prepare_form(), ensure that it
-  // matches the current user's session.
+  // matches the current user's session. This is duplicate to code in
+  // form_builder() but left to protect any custom form handling code.
   if (isset($form['#token'])) {
-    if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
-      $path = current_path();
-      $query = drupal_get_query_parameters();
-      $url = url($path, array('query' => $query));
-
-      // Setting this error will cause the form to fail validation.
-      form_set_error('form_token', t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
-
+    if (!drupal_valid_token($form_state['values']['form_token'], $form['#token']) || !empty($form_state['invalid_token'])) {
+      _drupal_invalid_token_set_form_error();
       // Stop here and don't run any further validation handlers, because they
       // could invoke non-safe operations which opens the door for CSRF
       // vulnerabilities.
@@ -1827,6 +1833,20 @@ function form_builder($form_id, &$element, &$form_state) {
     // from the POST data is set and matches the current form_id.
     if ($form_state['programmed'] || (!empty($form_state['input']) && (isset($form_state['input']['form_id']) && ($form_state['input']['form_id'] == $form_id)))) {
       $form_state['process_input'] = TRUE;
+      // If the session token was set by drupal_prepare_form(), ensure that it
+      // matches the current user's session.
+      $form_state['invalid_token'] = FALSE;
+      if (isset($element['#token'])) {
+        if (empty($form_state['input']['form_token']) || !drupal_valid_token($form_state['input']['form_token'], $element['#token'])) {
+          // Set an early form error to block certain input processing since that
+          // opens the door for CSRF vulnerabilities.
+          _drupal_invalid_token_set_form_error();
+          // This value is checked in _form_builder_handle_input_element().
+          $form_state['invalid_token'] = TRUE;
+          // Make sure file uploads do not get processed.
+          $_FILES = array();
+        }
+      }
     }
     else {
       $form_state['process_input'] = FALSE;
@@ -1930,6 +1950,18 @@ function form_builder($form_id, &$element, &$form_state) {
       $element['#attributes']['enctype'] = 'multipart/form-data';
     }
 
+    // Allow Ajax submissions to the form action to bypass verification. This is
+    // especially useful for multipart forms, which cannot be verified via a
+    // response header.
+    $element['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array(
+        'urlIsAjaxTrusted' => array(
+          $element['#action'] => TRUE,
+        ),
+      ),
+    );
+
     // If a form contains a single textfield, and the ENTER key is pressed
     // within it, Internet Explorer submits the form with no POST data
     // identifying any submit button. Other browsers submit POST data as though
@@ -1978,6 +2010,19 @@ function form_builder($form_id, &$element, &$form_state) {
  * Adds the #name and #value properties of an input element before rendering.
  */
 function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
+  static $safe_core_value_callbacks = array(
+    'form_type_token_value',
+    'form_type_textarea_value',
+    'form_type_textfield_value',
+    'form_type_checkbox_value',
+    'form_type_checkboxes_value',
+    'form_type_radios_value',
+    'form_type_password_confirm_value',
+    'form_type_select_value',
+    'form_type_tableselect_value',
+    'list_boolean_allowed_values_callback',
+  );
+
   if (!isset($element['#name'])) {
     $name = array_shift($element['#parents']);
     $element['#name'] = $name;
@@ -2056,7 +2101,14 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // property, optionally filtered through $value_callback.
       if ($input_exists) {
         if (function_exists($value_callback)) {
-          $element['#value'] = $value_callback($element, $input, $form_state);
+          // Skip all value callbacks except safe ones like text if the CSRF
+          // token was invalid.
+          if (empty($form_state['invalid_token']) || in_array($value_callback, $safe_core_value_callbacks)) {
+            $element['#value'] = $value_callback($element, $input, $form_state);
+          }
+          else {
+            $input = NULL;
+          }
         }
         if (!isset($element['#value']) && isset($input)) {
           $element['#value'] = $input;
@@ -3911,6 +3963,29 @@ function theme_hidden($variables) {
 }
 
 /**
+ * Process function to prepare autocomplete data.
+ *
+ * @param $element
+ *   A textfield or other element with a #autocomplete_path.
+ *
+ * @return array
+ *   The processed form element.
+ */
+function form_process_autocomplete($element) {
+  $element['#autocomplete_input'] = array();
+  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+    $element['#autocomplete_input']['#id'] = $element['#id'] .'-autocomplete';
+    // Force autocomplete to use non-clean URLs since this protects against the
+    // browser interpreting the path plus search string as an actual file.
+    $current_clean_url = isset($GLOBALS['conf']['clean_url']) ? $GLOBALS['conf']['clean_url'] : NULL;
+    $GLOBALS['conf']['clean_url'] = 0;
+    $element['#autocomplete_input']['#url_value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $GLOBALS['conf']['clean_url'] = $current_clean_url;
+  }
+  return $element;
+}
+
+/**
  * Returns HTML for a textfield form element.
  *
  * @param $variables
@@ -3928,14 +4003,14 @@ function theme_textfield($variables) {
   _form_set_class($element, array('form-text'));
 
   $extra = '';
-  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+  if ($element['#autocomplete_path'] && !empty($element['#autocomplete_input'])) {
     drupal_add_library('system', 'drupal.autocomplete');
     $element['#attributes']['class'][] = 'form-autocomplete';
 
     $attributes = array();
     $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['id'] = $element['#autocomplete_input']['#id'];
+    $attributes['value'] = $element['#autocomplete_input']['#url_value'];
     $attributes['disabled'] = 'disabled';
     $attributes['class'][] = 'autocomplete';
     $extra = '<input' . drupal_attributes($attributes) . ' />';

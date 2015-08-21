@@ -271,8 +271,11 @@ Drupal.ACDB.prototype.search = function (searchString) {
   var db = this;
   this.searchString = searchString;
 
-  // See if this string needs to be searched for anyway.
-  searchString = searchString.replace(/^\s+|\s+$/, '');
+  // See if this string needs to be searched for anyway. The pattern ../ is
+  // stripped since it may be misinterpreted by the browser.
+  searchString = searchString.replace(/^\s+|\.{2,}\/|\s+$/g, '');
+  // Skip empty search strings, or search strings ending with a comma, since
+  // that is the separator between search terms.
   if (searchString.length <= 0 ||
     searchString.charAt(searchString.length - 1) == ',') {
     return;
