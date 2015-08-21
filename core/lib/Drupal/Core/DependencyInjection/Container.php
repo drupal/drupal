@@ -7,17 +7,18 @@
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
+use Drupal\Component\DependencyInjection\Container as DrupalContainer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Extends the symfony container to set the service ID on the created object.
+ * Extends the Drupal container to set the service ID on the created object.
  */
-class Container extends SymfonyContainer {
+class Container extends DrupalContainer {
 
   /**
    * {@inheritdoc}
    */
-  public function set($id, $service, $scope = SymfonyContainer::SCOPE_CONTAINER) {
+  public function set($id, $service, $scope = ContainerInterface::SCOPE_CONTAINER) {
      parent::set($id, $service, $scope);
 
     // Ensure that the _serviceId property is set on synthetic services as well.

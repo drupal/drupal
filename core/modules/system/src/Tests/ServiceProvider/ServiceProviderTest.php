@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Tests\ServiceProvider;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests service provider registration to the DIC.
  *
  * @group ServiceProvider
  */
-class ServiceProviderTest extends WebTestBase {
+class ServiceProviderTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -27,13 +27,9 @@ class ServiceProviderTest extends WebTestBase {
    * Tests that services provided by module service providers get registered to the DIC.
    */
   function testServiceProviderRegistration() {
-    $this->assertTrue(\Drupal::getContainer()->getDefinition('file.usage')->getClass() == 'Drupal\\service_provider_test\\TestFileUsage', 'Class has been changed');
+    $definition = $this->container->getDefinition('file.usage');
+    $this->assertTrue($definition->getClass() == 'Drupal\\service_provider_test\\TestFileUsage', 'Class has been changed');
     $this->assertTrue(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service has been registered to the DIC');
-    // The event subscriber method in the test class calls drupal_set_message with
-    // a message saying it has fired. This will fire on every page request so it
-    // should show up on the front page.
-    $this->drupalGet('');
-    $this->assertText(t('The service_provider_test event subscriber fired!'), 'The service_provider_test event subscriber fired');
   }
 
   /**

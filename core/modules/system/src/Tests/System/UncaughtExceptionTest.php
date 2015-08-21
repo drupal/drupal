@@ -170,14 +170,7 @@ class UncaughtExceptionTest extends WebTestBase {
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
-
-    // Need to rebuild the container, so the dumped container can be tested
-    // and not the container builder.
-    \Drupal::service('kernel')->rebuildContainer();
-
-    // Ensure that we don't use the now broken generated container on the test
-    // process.
-    \Drupal::setContainer($this->container);
+    \Drupal::service('kernel')->invalidateContainer();
 
     $this->expectedExceptionMessage = 'Argument 1 passed to Drupal\system\Tests\Bootstrap\ErrorContainer::Drupal\system\Tests\Bootstrap\{closur';
     $this->drupalGet('');
@@ -196,14 +189,7 @@ class UncaughtExceptionTest extends WebTestBase {
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
-
-    // Need to rebuild the container, so the dumped container can be tested
-    // and not the container builder.
-    \Drupal::service('kernel')->rebuildContainer();
-
-    // Ensure that we don't use the now broken generated container on the test
-    // process.
-    \Drupal::setContainer($this->container);
+    \Drupal::service('kernel')->invalidateContainer();
 
     $this->expectedExceptionMessage = 'Thrown exception during Container::get';
     $this->drupalGet('');

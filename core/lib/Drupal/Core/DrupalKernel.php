@@ -23,12 +23,10 @@ use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\PageCache\RequestPolicyInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Site\Settings;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -52,6 +50,55 @@ use Symfony\Component\Routing\Route;
  * container, or modify existing services.
  */
 class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
+
+  /**
+   * Holds the class used for dumping the container to a PHP array.
+   *
+   * In combination with swapping the container class this is useful to e.g.
+   * dump to the human-readable PHP array format to debug the container
+   * definition in an easier way.
+   *
+   * @var string
+   */
+  protected $phpArrayDumperClass = '\Drupal\Component\DependencyInjection\Dumper\OptimizedPhpArrayDumper';
+
+  /**
+   * Holds the default bootstrap container definition.
+   *
+   * @var array
+   */
+  protected $defaultBootstrapContainerDefinition = [
+    'parameters' => [],
+    'services' => [
+      'database' => [
+        'class' => 'Drupal\Core\Database\Connection',
+        'factory' => 'Drupal\Core\Database\Database::getConnection',
+        'arguments' => ['default'],
+      ],
+      'cache.container' => [
+        'class' => 'Drupal\Core\Cache\DatabaseBackend',
+        'arguments' => ['@database', '@cache_tags_provider.container', 'container'],
+      ],
+      'cache_tags_provider.container' => [
+        'class' => 'Drupal\Core\Cache\DatabaseCacheTagsChecksum',
+        'arguments' => ['@database'],
+      ],
+    ],
+  ];
+
+  /**
+   * Holds the class used for instantiating the bootstrap container.
+   *
+   * @var string
+   */
+  protected $bootstrapContainerClass = '\Drupal\Component\DependencyInjection\PhpArrayContainer';
+
+  /**
+   * Holds the bootstrap container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $bootstrapContainer;
 
   /**
    * Holds the container instance.
@@ -96,13 +143,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @var \Drupal\Core\Extension\Extension[]
    */
   protected $moduleData = array();
-
-  /**
-   * PHP code storage object to use for the compiled container.
-   *
-   * @var \Drupal\Component\PhpStorage\PhpStorageInterface
-   */
-  protected $storage;
 
   /**
    * The class loader object.
@@ -397,6 +437,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     FileCacheFactory::setConfiguration($configuration);
     FileCacheFactory::setPrefix(Settings::getApcuPrefix('file_cache', $this->root));
 
+    $this->bootstrapContainer = new $this->bootstrapContainerClass(Settings::get('bootstrap_container_definition', $this->defaultBootstrapContainerDefinition));
+
     // Initialize the container.
     $this->initializeContainer();
 
@@ -444,6 +486,19 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     $this->container = $container;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCachedContainerDefinition() {
+    $cache = $this->bootstrapContainer->get('cache.container')->get($this->getContainerCacheKey());
+
+    if ($cache) {
+      return $cache->data;
+    }
+
+    return NULL;
   }
 
   /**
@@ -706,24 +761,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Returns the classname based on environment.
+   * Returns the container cache key based on the environment.
    *
    * @return string
-   *   The class name.
+   *   The cache key used for the service container.
    */
-  protected function getClassName() {
-    $parts = array('service_container', $this->environment, hash('crc32b', \Drupal::VERSION . Settings::get('deployment_identifier')));
-    return implode('_', $parts);
-  }
-
-  /**
-   * Returns the container class namespace based on the environment.
-   *
-   * @return string
-   *   The class name.
-   */
-  protected function getClassNamespace() {
-    return 'Drupal\\Core\\DependencyInjection\\Container\\' . $this->environment;
+  protected function getContainerCacheKey() {
+    $parts = array('service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'));
+    return implode(':', $parts);
   }
 
   /**
@@ -766,31 +811,37 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // boot the container injected via setContainer().
     // @see \Drupal\KernelTests\KernelTestBase::setUp()
     if (isset($this->container) && !$this->booted) {
-     $container = $this->container;
+      $container = $this->container;
     }
 
     // If the module list hasn't already been set in updateModules and we are
-    // not forcing a rebuild, then try and load the container from the disk.
+    // not forcing a rebuild, then try and load the container from the cache.
     if (empty($this->moduleList) && !$this->containerNeedsRebuild) {
-      $fully_qualified_class_name = '\\' . $this->getClassNamespace() . '\\' . $this->getClassName();
-
-      // First, try to load from storage.
-      if (!class_exists($fully_qualified_class_name, FALSE)) {
-        $this->storage()->load($this->getClassName() . '.php');
-      }
-      // If the load succeeded or the class already existed, use it.
-      if (class_exists($fully_qualified_class_name, FALSE)) {
-        $container = new $fully_qualified_class_name;
-      }
+      $container_definition = $this->getCachedContainerDefinition();
     }
 
-    // If there is still no container, build a new one from scratch.
-    if (!isset($container)) {
+    // If there is no container and no cached container definition, build a new
+    // one from scratch.
+    if (!isset($container) && !isset($container_definition)) {
       $container = $this->compileContainer();
+
+      // Only dump the container if dumping is allowed. This is useful for
+      // KernelTestBase, which never wants to use the real container, but always
+      // the container builder.
+      if ($this->allowDumping) {
+        $dumper = new $this->phpArrayDumperClass($container);
+        $container_definition = $dumper->getArray();
+      }
     }
 
     // The container was rebuilt successfully.
     $this->containerNeedsRebuild = FALSE;
+
+    // Only create a new class if we have a container definition.
+    if (isset($container_definition)) {
+      $class = Settings::get('container_base_class', '\Drupal\Core\DependencyInjection\Container');
+      $container = new $class($container_definition);
+    }
 
     $this->attachSynthetic($container);
 
@@ -816,9 +867,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     \Drupal::setContainer($this->container);
 
     // If needs dumping flag was set, dump the container.
-    $base_class = Settings::get('container_base_class', '\Drupal\Core\DependencyInjection\Container');
-    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, $base_class)) {
-      $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be written to disk');
+    if ($this->containerNeedsDumping && !$this->cacheDrupalContainer($container_definition)) {
+      $this->container->get('logger.factory')->get('DrupalKernel')->notice('Container cannot be saved to cache.');
     }
 
     return $this->container;
@@ -1034,9 +1084,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       return;
     }
 
-    // Also wipe the PHP Storage caches, so that the container is rebuilt
-    // for the next request.
-    $this->storage()->deleteAll();
+    // Also remove the container definition from the cache backend.
+    $this->bootstrapContainer->get('cache.container')->deleteAll();
   }
 
   /**
@@ -1194,35 +1243,28 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Dumps the service container to PHP code in the config directory.
+   * Stores the container definition in a cache.
    *
-   * This method is based on the dumpContainer method in the parent class, but
-   * that method is reliant on the Config component which we do not use here.
-   *
-   * @param ContainerBuilder $container
-   *   The service container.
-   * @param string $baseClass
-   *   The name of the container's base class
+   * @param array $container_definition
+   *   The container definition to cache.
    *
    * @return bool
-   *   TRUE if the container was successfully dumped to disk.
+   *   TRUE if the container was successfully cached.
    */
-  protected function dumpDrupalContainer(ContainerBuilder $container, $baseClass) {
-    if (!$this->storage()->writeable()) {
-      return FALSE;
+  protected function cacheDrupalContainer(array $container_definition) {
+    $saved = TRUE;
+    try {
+      $this->bootstrapContainer->get('cache.container')->set($this->getContainerCacheKey(), $container_definition);
     }
-    // Cache the container.
-    $dumper = new PhpDumper($container);
-    $class = $this->getClassName();
-    $namespace = $this->getClassNamespace();
-    $content = $dumper->dump([
-      'class' => $class,
-      'base_class' => $baseClass,
-      'namespace' => $namespace,
-    ]);
-    return $this->storage()->save($class . '.php', $content);
-  }
+    catch (\Exception $e) {
+      // There is no way to get from the Cache API if the cache set was
+      // successful or not, hence an Exception is caught and the caller informed
+      // about the error condition.
+      $saved = FALSE;
+    }
 
+    return $saved;
+  }
 
   /**
    * Gets a http kernel from the container
@@ -1231,18 +1273,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getHttpKernel() {
     return $this->container->get('http_kernel');
-  }
-
-  /**
-   * Gets the PHP code storage object to use for the compiled container.
-   *
-   * @return \Drupal\Component\PhpStorage\PhpStorageInterface
-   */
-  protected function storage() {
-    if (!isset($this->storage)) {
-      $this->storage = PhpStorageFactory::get('service_container');
-    }
-    return $this->storage;
   }
 
   /**
