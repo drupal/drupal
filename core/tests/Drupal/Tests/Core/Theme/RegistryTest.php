@@ -105,6 +105,9 @@ class RegistryTest extends UnitTestCase {
       ->method('getImplementations')
       ->with('theme')
       ->will($this->returnValue(array('theme_test')));
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('getModuleList')
+      ->willReturn([]);
 
     $registry = $this->registry->get();
 

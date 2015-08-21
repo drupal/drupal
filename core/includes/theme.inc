@@ -115,7 +115,7 @@ function drupal_theme_rebuild() {
  */
 function drupal_find_theme_functions($cache, $prefixes) {
   $implementations = [];
-  $grouped_functions = drupal_group_functions_by_prefix();
+  $grouped_functions = \Drupal::service('theme.registry')->getPrefixGroupedUserFunctions();
 
   foreach ($cache as $hook => $info) {
     foreach ($prefixes as $prefix) {
@@ -159,25 +159,6 @@ function drupal_find_theme_functions($cache, $prefixes) {
   }
 
   return $implementations;
-}
-
-/**
- * Group all user functions by word before first underscore.
- *
- * @return array
- *   Functions grouped by the first prefix.
- */
-function drupal_group_functions_by_prefix() {
-  $functions = get_defined_functions();
-
-  $grouped_functions = [];
-  // Splitting user defined functions into groups by the first prefix.
-  foreach ($functions['user'] as $function) {
-    list($first_prefix,) = explode('_', $function, 2);
-    $grouped_functions[$first_prefix][] = $function;
-  }
-
-  return $grouped_functions;
 }
 
 /**

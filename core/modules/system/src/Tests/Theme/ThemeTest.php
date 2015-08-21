@@ -285,7 +285,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Tests that region attributes can be manipulated via preprocess functions.
    */
-  function testRegionClass() {
+  public function testRegionClass() {
     \Drupal::service('module_installer')->install(array('block', 'theme_region_test'));
 
     // Place a block.
@@ -293,6 +293,33 @@ class ThemeTest extends WebTestBase {
     $this->drupalGet('');
     $elements = $this->cssSelect(".region-sidebar-first.new_class");
     $this->assertEqual(count($elements), 1, 'New class found.');
+  }
+
+  /**
+   * Ensures suggestion preprocess functions run for default implementations.
+   *
+   * The theme hook used by this test has its base preprocess function in a
+   * separate file, so this test also ensures that that file is correctly loaded
+   * when needed.
+   */
+  public function testSuggestionPreprocessForDefaults() {
+    \Drupal::service('theme_handler')->setDefault('test_theme');
+    // Test with both an unprimed and primed theme registry.
+    drupal_theme_rebuild();
+    for ($i = 0; $i < 2; $i++) {
+      $this->drupalGet('theme-test/preprocess-suggestions');
+      $items = $this->cssSelect('.suggestion');
+      $expected_values = [
+        'Suggestion',
+        'Kitten',
+        'Monkey',
+        'Kitten',
+        'Flamingo',
+      ];
+      foreach ($expected_values as $key => $value) {
+        $this->assertEqual((string) $value, $items[$key]);
+      }
+    }
   }
 
 }

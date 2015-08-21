@@ -99,6 +99,46 @@ class RegistryTest extends KernelTestBase {
       'template_preprocess',
       'test_basetheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
+
+  }
+
+  /**
+   * Tests the theme registry with suggestions.
+   */
+  public function testSuggestionPreprocessFunctions() {
+    $theme_handler = \Drupal::service('theme_handler');
+    $theme_handler->install(['test_theme']);
+
+    $registry_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
+    $registry_theme->setThemeManager(\Drupal::theme());
+
+    $suggestions = ['__kitten', '__flamingo'];
+    $expected_preprocess_functions = [
+      'template_preprocess',
+      'theme_test_preprocess_theme_test_preprocess_suggestions',
+    ];
+    $suggestion = '';
+    $hook = 'theme_test_preprocess_suggestions';
+    do {
+      $hook .= "$suggestion";
+      $expected_preprocess_functions[] = "test_theme_preprocess_$hook";
+      $preprocess_functions = $registry_theme->get()[$hook]['preprocess functions'];
+      $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, "$hook has correct preprocess functions.");
+    } while ($suggestion = array_shift($suggestions));
+
+    $expected_preprocess_functions = [
+      'template_preprocess',
+      'theme_test_preprocess_theme_test_preprocess_suggestions',
+      'test_theme_preprocess_theme_test_preprocess_suggestions',
+      'test_theme_preprocess_theme_test_preprocess_suggestions__kitten',
+    ];
+
+    $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat']['preprocess functions'];
+    $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a function correctly inherits preprocess functions.');
+
+    $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__bearcat']['preprocess functions'];
+    $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');
+
   }
 
   /**

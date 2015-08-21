@@ -280,12 +280,10 @@ class ThemeManager implements ThemeManagerInterface {
           include_once $this->root . '/' . $include_file;
         }
       }
-      // Replace the preprocess functions with those from the base hook.
       if (isset($base_hook_info['preprocess functions'])) {
         // Set a variable for the 'theme_hook_suggestion'. This is used to
         // maintain backwards compatibility with template engines.
         $theme_hook_suggestion = $hook;
-        $info['preprocess functions'] = $base_hook_info['preprocess functions'];
       }
     }
     if (isset($info['preprocess functions'])) {

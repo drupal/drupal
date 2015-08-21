@@ -99,10 +99,12 @@
  * before the template file is invoked to modify the variables that are passed
  * to the template. These make up the "preprocessing" phase, and are executed
  * (if they exist), in the following order (note that in the following list,
- * HOOK indicates the theme hook name, MODULE indicates a module name, THEME
- * indicates a theme name, and ENGINE indicates a theme engine name). Modules,
- * themes, and theme engines can provide these functions to modify how the
- * data is preprocessed, before it is passed to the theme template:
+ * HOOK indicates the hook being called or a less specific hook. For example, if
+ * '#theme' => 'node__article' is called, hook is node__article and node. MODULE
+ * indicates a module name, THEME indicates a theme name, and ENGINE indicates a
+ * theme engine name). Modules, themes, and theme engines can provide these
+ * functions to modify how the data is preprocessed, before it is passed to the
+ * theme template:
  * - template_preprocess(&$variables, $hook): Creates a default set of variables
  *   for all theme hooks with template implementations. Provided by Drupal Core.
  * - template_preprocess_HOOK(&$variables): Should be implemented by the module

@@ -105,3 +105,40 @@ function test_theme_theme_test_function_suggestions__module_override($variables)
 function test_theme_theme_registry_alter(&$registry) {
   $registry['theme_test_template_test']['variables']['additional'] = 'value';
 }
+
+/**
+ * Tests a theme overriding a suggestion of a base theme hook.
+ */
+function test_theme_theme_test_preprocess_suggestions__kitten__meerkat($variables) {
+  return 'Theme hook implementor=test_theme_theme_test__suggestion(). Foo=' . $variables['foo'];
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ *
+ * Implements hook_preprocess_HOOK().
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions(&$variables) {
+  $variables['foo'] = 'Theme hook implementor=test_theme_preprocess_theme_test_preprocess_suggestions().';
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__suggestion(&$variables) {
+  $variables['foo'] = 'Suggestion';
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten(&$variables) {
+  $variables['foo'] = 'Kitten';
+}
+
+/**
+ * Tests a theme overriding a default hook with a suggestion.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__flamingo(&$variables) {
+  $variables['bar'] = 'Flamingo';
+}

@@ -55,6 +55,12 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $info['test_theme_not_existing_function'] = array(
     'function' => 'test_theme_not_existing_function',
   );
+  $items['theme_test_preprocess_suggestions'] = [
+    'variables' => [
+      'foo' => '',
+      'bar' => '',
+    ],
+  ];
   return $items;
 }
 
@@ -87,6 +93,27 @@ function theme_theme_test_foo($variables) {
  */
 function theme_theme_test_function_template_override($variables) {
   return 'theme_test_function_template_override test failed.';
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variables) {
+  return ['theme_test_preprocess_suggestions__' . $variables['foo']];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables) {
+  $variables['foo'] = 'Theme hook implementor=theme_theme_test_preprocess_suggestions().';
+}
+
+/**
+ * Tests a module overriding a default hook with a suggestion.
+ */
+function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$variables) {
+  $variables['foo'] = 'Monkey';
 }
 
 /**

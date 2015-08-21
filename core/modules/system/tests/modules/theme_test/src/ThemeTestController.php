@@ -143,4 +143,25 @@ class ThemeTestController extends ControllerBase {
     return new JsonResponse(['theme_initialized' => $theme_initialized]);
   }
 
+  /**
+   * Controller for testing preprocess functions with theme suggestions.
+   */
+  public function preprocessSuggestions() {
+    return [
+      [
+        '#theme' => 'theme_test_preprocess_suggestions',
+        '#foo' => 'suggestion',
+      ],
+      [
+        '#theme' => 'theme_test_preprocess_suggestions',
+        '#foo' => 'kitten',
+      ],
+      [
+        '#theme' => 'theme_test_preprocess_suggestions',
+        '#foo' => 'monkey',
+      ],
+      ['#theme' => 'theme_test_preprocess_suggestions__kitten__flamingo'],
+    ];
+  }
+
 }

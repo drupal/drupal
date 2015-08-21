@@ -103,3 +103,10 @@ theme_test.non_html:
     _controller: '\Drupal\theme_test\ThemeTestController::nonHtml'
   requirements:
     _access: 'TRUE'
+
+theme_test.preprocess_suggestions:
+  path: '/theme-test/preprocess-suggestions'
+  defaults:
+    _controller: '\Drupal\theme_test\ThemeTestController::preprocessSuggestions'
+  requirements:
+    _access: 'TRUE'
