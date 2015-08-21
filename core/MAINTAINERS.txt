@@ -190,11 +190,10 @@ Routing system
 
 Theme system
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
-- John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
-- Jen Lampton 'jenlampton' https://www.drupal.org/u/jenlampton
 - Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
 - Joël Pittet 'joelpittet' https://www.drupal.org/u/joelpittet
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 
 Token system
 - Dave Reid 'davereid' https://www.drupal.org/u/davereid
