@@ -625,7 +625,8 @@ function hook_views_query_substitutions(ViewExecutable $view) {
  *
  * @return array
  *   An associative array where each key is a string to be replaced, and the
- *   corresponding value is its replacement.
+ *   corresponding value is its replacement. The value will be escaped unless it
+ *   is already marked safe.
  */
 function hook_views_form_substitutions() {
   return array(

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Render\Element\Markup;
+use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
 
 /**
@@ -95,6 +97,28 @@ class ViewsHooksTest extends ViewKernelTestBase {
       // .views.inc file is loaded actively.
       $this->moduleHandler->resetImplementations();
     }
+  }
+
+  /**
+   * Tests how hook_views_form_substitutions() makes substitutions.
+   *
+   * @see views_test_data_views_form_substitutions()
+   * @see views_pre_render_views_form_views_form()
+   */
+  public function testViewsPreRenderViewsFormViewsForm() {
+    $element = [
+      'output' => [
+        '#markup' => '<!--will-be-escaped--><!--will-be-not-escaped-->',
+        '#safe_strategy' => Markup::SAFE_STRATEGY_ESCAPE,
+      ],
+      '#substitutions' => ['#value' => []],
+    ];
+    $element = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function() use ($element) {
+      return views_pre_render_views_form_views_form($element);
+    });
+    $this->setRawContent((string) $element['output']['#markup']);
+    $this->assertEscaped('<em>escaped</em>');
+    $this->assertRaw('<em>unescaped</em>');
   }
 
 }

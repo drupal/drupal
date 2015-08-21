@@ -202,18 +202,6 @@ class SafeMarkupTest extends UnitTestCase {
   }
 
   /**
-   * Tests SafeMarkup::replace().
-   *
-   * @dataProvider providerReplace
-   * @covers ::replace
-   */
-  public function testReplace($search, $replace, $subject, $expected, $is_safe) {
-    $result = SafeMarkup::replace($search, $replace, $subject);
-    $this->assertEquals($expected, $result);
-    $this->assertEquals($is_safe, SafeMarkup::isSafe($result));
-  }
-
-  /**
    * Tests the interaction between the safe list and XSS filtering.
    *
    * @covers ::escape
@@ -230,63 +218,6 @@ class SafeMarkupTest extends UnitTestCase {
     // SafeMarkup::checkPlain() will escape the markup tag even though the
     // string was marked safe above.
     $this->assertEquals('&lt;marquee&gt;text&lt;/marquee&gt;', SafeMarkup::checkPlain($text));
-  }
-
-  /**
-   * Data provider for testReplace().
-   *
-   * @see testReplace()
-   */
-  public function providerReplace() {
-    $tests = [];
-
-    // Subject unsafe.
-    $tests[] = [
-      '<placeholder>',
-      SafeMarkupTestSafeString::create('foo'),
-      '<placeholder>bazqux',
-      'foobazqux',
-      FALSE,
-    ];
-
-    // All safe.
-    $tests[] = [
-      '<placeholder>',
-      SafeMarkupTestSafeString::create('foo'),
-      SafeMarkupTestSafeString::create('<placeholder>barbaz'),
-      'foobarbaz',
-      TRUE,
-    ];
-
-    // Safe subject, but should result in unsafe string because replacement is
-    // unsafe.
-    $tests[] = [
-      '<placeholder>',
-      'fubar',
-      SafeMarkupTestSafeString::create('<placeholder>barbaz'),
-      'fubarbarbaz',
-      FALSE,
-    ];
-
-    // Array with all safe.
-    $tests[] = [
-      ['<placeholder1>', '<placeholder2>', '<placeholder3>'],
-      [SafeMarkupTestSafeString::create('foo'), SafeMarkupTestSafeString::create('bar'), SafeMarkupTestSafeString::create('baz')],
-      SafeMarkupTestSafeString::create('<placeholder1><placeholder2><placeholder3>'),
-      'foobarbaz',
-      TRUE,
-    ];
-
-    // Array with unsafe replacement.
-    $tests[] = [
-      ['<placeholder1>', '<placeholder2>', '<placeholder3>',],
-      [SafeMarkupTestSafeString::create('bar'), SafeMarkupTestSafeString::create('baz'), 'qux'],
-      SafeMarkupTestSafeString::create('<placeholder1><placeholder2><placeholder3>'),
-      'barbazqux',
-      FALSE,
-    ];
-
-    return $tests;
   }
 
 }

@@ -23,6 +23,7 @@ use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
+use Drupal\views\Render\ViewsRenderPipelineSafeString;
 use Drupal\views\Views;
 use Drupal\field\FieldConfigInterface;
 
@@ -663,12 +664,17 @@ function views_pre_render_views_form_views_form($element) {
   // Add in substitutions from hook_views_form_substitutions().
   $substitutions = \Drupal::moduleHandler()->invokeAll('views_form_substitutions');
   foreach ($substitutions as $placeholder => $substitution) {
-    $search[] = $placeholder;
+    $search[] = Html::escape($placeholder);
+    // Ensure that any replacements made are safe to make.
+    if (!SafeMarkup::isSafe($substitution)) {
+      $substitution = Html::escape($substitution);
+    }
     $replace[] = $substitution;
   }
 
   // Apply substitutions to the rendered output.
-  $element['output'] = ['#markup' => SafeMarkup::replace($search, $replace, drupal_render($element['output']))];
+  $output = str_replace($search, $replace, drupal_render($element['output']));
+  $element['output'] = ['#markup' => ViewsRenderPipelineSafeString::create($output)];
 
   // Sort, render and add remaining form fields.
   $children = Element::children($element, TRUE);

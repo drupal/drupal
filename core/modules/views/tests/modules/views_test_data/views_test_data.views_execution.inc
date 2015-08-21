@@ -19,8 +19,13 @@ function views_test_data_views_query_substitutions(ViewExecutable $view) {
 /**
  * Implements hook_views_form_substitutions().
  */
-function views_test_data_views_form_substitutions(ViewExecutable $view) {
+function views_test_data_views_form_substitutions() {
   \Drupal::state()->set('views_hook_test_views_form_substitutions', TRUE);
+  $render = ['#markup' => '<em>unescaped</em>'];
+  return array(
+    '<!--will-be-escaped-->' => '<em>escaped</em>',
+    '<!--will-be-not-escaped-->' => \Drupal::service('renderer')->renderPlain($render),
+  );
 }
 
 /**
