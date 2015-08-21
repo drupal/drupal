@@ -10,3 +10,10 @@
 [dir="rtl"] .item-list ul li {
   padding: 0.2em 0 0 0.5em;
 }
+.item-list .item-list__comma-list,
+.item-list .item-list__comma-list li,
+[dir="rtl"] .item-list .item-list__comma-list,
+[dir="rtl"] .item-list .item-list__comma-list li {
+  margin: 0;
+  padding: 0;
+}

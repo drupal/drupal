@@ -38,3 +38,6 @@ ul.inline li {
 ul.inline li {
   display: inline;
 }
+[dir="rtl"] ul.item-list__comma-list {
+  margin: 0;
+}

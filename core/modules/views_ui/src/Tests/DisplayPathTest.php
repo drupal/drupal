@@ -35,6 +35,7 @@ class DisplayPathTest extends UITestBase {
   public function testPathUI() {
     $this->doBasicPathUITest();
     $this->doAdvancedPathsValidationTest();
+    $this->doPathXssFilterTest();
   }
 
   /**
@@ -57,6 +58,28 @@ class DisplayPathTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
     $this->assertLink(t('View @display', array('@display' => 'Page')), 0, 'view page link found on the page.');
+  }
+
+  /**
+   * Tests that View paths are properly filtered for XSS.
+   */
+  public function doPathXssFilterTest() {
+    $this->drupalGet('admin/structure/views/view/test_view');
+    $this->drupalPostForm(NULL, array(), 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_2/path', array('path' => '<object>malformed_path</object>'), t('Apply'));
+    $this->drupalPostForm(NULL, array(), 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_3/path', array('path' => '<script>alert("hello");</script>'), t('Apply'));
+    $this->drupalPostForm(NULL, array(), 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_4/path', array('path' => '<script>alert("hello I have placeholders %");</script>'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/test_view', array(), t('Save'));
+    $this->drupalGet('admin/structure/views');
+    // The anchor text should be escaped.
+    $this->assertEscaped('/<object>malformed_path</object>');
+    $this->assertEscaped('/<script>alert("hello");</script>');
+    $this->assertEscaped('/<script>alert("hello I have placeholders %");</script>');
+    // Links should be url-encoded.
+    $this->assertRaw('/%3Cobject%3Emalformed_path%3C/object%3E');
+    $this->assertRaw('/%3Cscript%3Ealert%28%22hello%22%29%3B%3C/script%3E');
   }
 
   /**
