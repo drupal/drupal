@@ -521,7 +521,6 @@ function drupal_js_defaults($data = NULL) {
   return array(
     'type' => 'file',
     'group' => JS_DEFAULT,
-    'every_page' => FALSE,
     'weight' => 0,
     'scope' => 'header',
     'cache' => TRUE,

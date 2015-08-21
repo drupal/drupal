@@ -74,7 +74,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.012,
           'media' => 'all',
@@ -95,7 +94,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -111,7 +109,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -129,7 +126,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -146,7 +142,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -160,7 +155,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -174,7 +168,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -188,7 +181,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -202,7 +194,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -216,7 +207,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       array(
         array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -247,7 +237,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
 
     $css_asset = array(
       'group' => -100,
-      'every_page' => TRUE,
       'type' => 'file',
       'weight' => 0.012,
       'media' => 'all',
@@ -268,7 +257,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
 
     $css_asset = array(
       'group' => -100,
-      'every_page' => TRUE,
       // Type external.
       'type' => 'external',
       'weight' => 0.012,

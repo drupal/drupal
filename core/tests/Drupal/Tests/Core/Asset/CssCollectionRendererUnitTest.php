@@ -71,7 +71,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     $this->renderer = new CssCollectionRenderer($this->state);
     $this->fileCssGroup = array(
       'group' => -100,
-      'every_page' => TRUE,
       'type' => 'file',
       'media' => 'all',
       'preprocess' => TRUE,
@@ -79,7 +78,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       'items' => array(
         0 => array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.012,
           'media' => 'all',
@@ -90,7 +88,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
         ),
         1 => array(
           'group' => -100,
-          'every_page' => TRUE,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
@@ -135,7 +132,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     };
 
     $create_file_css_asset = function($data, $media = 'all', $preprocess = TRUE) {
-      return array('group' => 0, 'every_page' => FALSE, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data, 'browsers' => array());
+      return array('group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data, 'browsers' => array());
     };
 
     return array(
@@ -143,7 +140,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       0 => array(
         // CSS assets.
         array(
-          0 => array('group' => 0, 'every_page' => TRUE, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'http://example.com/popular.js', 'browsers' => array()),
+          0 => array('group' => 0, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'http://example.com/popular.js', 'browsers' => array()),
         ),
         // Render elements.
         array(
@@ -153,10 +150,10 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       // Single file CSS asset.
       2 => array(
         array(
-          0 => array('group' => 0, 'every_page' => TRUE, 'type' => 'file', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'public://css/file-every_page-all', 'browsers' => array()),
+          0 => array('group' => 0, 'type' => 'file', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'public://css/file-all', 'browsers' => array()),
         ),
         array(
-          0 => $create_link_element(file_create_url('public://css/file-every_page-all') . '?0', 'all'),
+          0 => $create_link_element(file_create_url('public://css/file-all') . '?0', 'all'),
         ),
       ),
       // 31 file CSS assets: expect 31 link elements.
@@ -490,7 +487,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
 
     $css_group = array(
       'group' => 0,
-      'every_page' => TRUE,
       'type' => 'internal',
       'media' => 'all',
       'preprocess' => TRUE,

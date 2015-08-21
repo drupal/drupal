@@ -332,7 +332,7 @@ html5shiv:
     url: http://www.gnu.org/licenses/gpl-2.0.html
     gpl-compatible: true
   js:
-    assets/vendor/html5shiv/html5shiv.min.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
+    assets/vendor/html5shiv/html5shiv.min.js: { weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -826,7 +826,7 @@ modernizr:
     gpl-compatible: true
   version: "v2.8.3"
   js:
-    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, weight: -21, minified: true }
+    assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
 
 normalize:
   remote: https://github.com/necolas/normalize.css
@@ -837,7 +837,7 @@ normalize:
     gpl-compatible: true
   css:
     base:
-      assets/vendor/normalize-css/normalize.css: { every_page: true, weight: -20 }
+      assets/vendor/normalize-css/normalize.css: { weight: -20 }
 
 picturefill:
   remote: https://github.com/scottjehl/picturefill
