@@ -46,14 +46,20 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
 
   /**
    * Tests the exception when container_yamls is not set.
-   *
-   * @covers ::discoverServiceProviders
-   * @expectedException \Exception
    */
   public function testDiscoverServiceNoContainerYamls() {
     new Settings([]);
     $kernel = new DrupalKernel('prod', new \Composer\Autoload\ClassLoader());
     $kernel->discoverServiceProviders();
+
+    $expect = [
+      'app' => [
+        'core' => 'core/core.services.yml',
+      ],
+      'site' => [
+      ],
+    ];
+    $this->assertAttributeSame($expect, 'serviceYamls', $kernel);
   }
 
 }

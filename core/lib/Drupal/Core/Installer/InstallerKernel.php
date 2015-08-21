@@ -38,11 +38,4 @@ class InstallerKernel extends DrupalKernel {
     $this->configStorage = NULL;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function addServiceFiles($service_yamls) {
-    // In the beginning there is no settings.php and no service YAMLs.
-    return parent::addServiceFiles($service_yamls ?: []);
-  }
 }

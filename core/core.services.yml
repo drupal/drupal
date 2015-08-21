@@ -1,6 +1,13 @@
 parameters:
-  session.storage.options: {}
-  twig.config: {}
+  session.storage.options:
+    gc_probability: 1
+    gc_divisor: 100
+    gc_maxlifetime: 200000
+    cookie_lifetime: 2000000
+  twig.config:
+    debug: false
+    auto_reload: null
+    cache: true
   renderer.config:
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
     auto_placeholder_conditions:

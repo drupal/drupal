@@ -2092,13 +2092,6 @@ function install_check_requirements($install_state) {
     'description_default' => t('The default settings file does not exist.'),
     'title' => t('Settings file'),
   );
-  $default_files['services.yml'] = array(
-    'file' => 'services.yml',
-    'file_default' => 'default.services.yml',
-    'title_default' => t('Default services file'),
-    'description_default' => t('The default services file does not exist.'),
-    'title' => t('Services file'),
-  );
 
   foreach ($default_files as $default_file_info) {
     $readable = FALSE;

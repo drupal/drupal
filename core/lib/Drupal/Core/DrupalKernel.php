@@ -538,9 +538,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         }
       }
     }
-    if (!$this->addServiceFiles(Settings::get('container_yamls'))) {
-      throw new \Exception('The container_yamls setting is missing from settings.php');
-    }
+    $this->addServiceFiles(Settings::get('container_yamls', []));
   }
 
   /**
@@ -1445,17 +1443,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Add service files.
    *
-   * @param $service_yamls
+   * @param string[] $service_yamls
    *   A list of service files.
-   *
-   * @return bool
-   *   TRUE if the list was an array, FALSE otherwise.
    */
-  protected function addServiceFiles($service_yamls) {
-    if (is_array($service_yamls)) {
-      $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
-      return TRUE;
-    }
-    return FALSE;
+  protected function addServiceFiles(array $service_yamls) {
+    $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
   }
 }

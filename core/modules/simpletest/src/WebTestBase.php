@@ -711,7 +711,6 @@ abstract class WebTestBase extends TestBase {
     // Not using File API; a potential error must trigger a PHP warning.
     $directory = DRUPAL_ROOT . '/' . $this->siteDirectory;
     copy(DRUPAL_ROOT . '/sites/default/default.settings.php', $directory . '/settings.php');
-    copy(DRUPAL_ROOT . '/sites/default/default.services.yml', $directory . '/services.yml');
 
     // All file system paths are created by System module during installation.
     // @see system_requirements()
@@ -753,10 +752,12 @@ abstract class WebTestBase extends TestBase {
       file_put_contents($directory . '/settings.php', "\n\$test_class = '" . get_class($this) ."';\n" . 'include DRUPAL_ROOT . \'/\' . $site_path . \'/settings.testing.php\';' ."\n", FILE_APPEND);
     }
     $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSite . '/testing.services.yml';
-    if (file_exists($settings_services_file)) {
-      // Copy the testing-specific service overrides in place.
-      copy($settings_services_file, $directory . '/services.yml');
+    if (!file_exists($settings_services_file)) {
+      // Otherwise, use the default services as a starting point for overrides.
+      $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
     }
+    // Copy the testing-specific service overrides in place.
+    copy($settings_services_file, $directory . '/services.yml');
     if ($this->strictConfigSchema) {
       // Add a listener to validate configuration schema on save.
       $yaml = new \Symfony\Component\Yaml\Yaml();
