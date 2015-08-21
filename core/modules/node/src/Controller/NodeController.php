@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
@@ -206,7 +205,11 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       if ($vid == $node->getRevisionId()) {
         $row[0]['class'] = ['revision-current'];
         $row[] = [
-          'data' => SafeMarkup::placeholder($this->t('current revision')),
+          'data' => [
+            '#prefix' => '<em>',
+            '#markup' => $this->t('current revision'),
+            '#suffix' => '</em>',
+          ],
           'class' => ['revision-current'],
         ];
       }

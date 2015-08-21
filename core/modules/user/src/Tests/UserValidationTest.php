@@ -136,7 +136,7 @@ class UserValidationTest extends KernelTestBase {
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'E-mail addresses may not be removed');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail');
-    $this->assertEqual($violations[0]->getMessage(), t('!name field is required.', array('!name' => SafeMarkup::placeholder($user->getFieldDefinition('mail')->getLabel()))));
+    $this->assertEqual($violations[0]->getMessage(), t('!name field is required.', array('!name' => $user->getFieldDefinition('mail')->getLabel())));
     $user->set('mail', 'someone@example.com');
 
     $user->set('timezone', $this->randomString(33));

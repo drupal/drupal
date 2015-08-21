@@ -7,6 +7,7 @@
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
@@ -953,10 +954,16 @@ function drupal_static_reset($name = NULL) {
 /**
  * Formats text for emphasized display in a placeholder inside a sentence.
  *
- * @see \Drupal\Component\Utility\SafeMarkup::placeholder()
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Component\Utility\SafeMarkup::format() or Twig's "placeholder"
+ *   filter instead. Note this method should not be used to simply emphasize a
+ *   string and therefore has few valid use-cases. Note also, that this method
+ *   does not mark the string as safe.
+ *
+ * @see \Drupal\Component\Utility\SafeMarkup::format()
  */
 function drupal_placeholder($text) {
-  return SafeMarkup::placeholder($text);
+  return '<em class="placeholder">' . Html::escape($text) . '</em>';
 }
 
 /**

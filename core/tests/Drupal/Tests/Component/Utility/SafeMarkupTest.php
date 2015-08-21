@@ -193,15 +193,6 @@ class SafeMarkupTest extends UnitTestCase {
   }
 
   /**
-   * Tests SafeMarkup::placeholder().
-   *
-   * @covers ::placeholder
-   */
-  function testPlaceholder() {
-    $this->assertEquals('<em class="placeholder">Some text</em>', SafeMarkup::placeholder('Some text'));
-  }
-
-  /**
    * Tests the interaction between the safe list and XSS filtering.
    *
    * @covers ::escape

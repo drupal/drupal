@@ -197,8 +197,8 @@ class SafeMarkup {
    *   formatting depends on the first character of the key:
    *   - @variable: Escaped to HTML using self::escape(). Use this as the
    *     default choice for anything displayed on a page on the site.
-   *   - %variable: Escaped to HTML and formatted using self::placeholder(),
-   *     which makes the following HTML code:
+   *   - %variable: Escaped to HTML wrapped in <em> tags, which makes the
+   *     following HTML code:
    *     @code
    *       <em class="placeholder">text output here.</em>
    *     @endcode
@@ -232,7 +232,7 @@ class SafeMarkup {
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = static::placeholder($value);
+          $args[$key] = '<em class="placeholder">' . static::escape($value) . '</em>';
           break;
 
         case '!':
@@ -249,23 +249,6 @@ class SafeMarkup {
     }
 
     return $output;
-  }
-
-  /**
-   * Formats text for emphasized display in a placeholder inside a sentence.
-   *
-   * Used automatically by self::format().
-   *
-   * @param string $text
-   *   The text to format (plain-text).
-   *
-   * @return string
-   *   The formatted text (html).
-   */
-  public static function placeholder($text) {
-    $string = '<em class="placeholder">' . static::escape($text) . '</em>';
-    static::$safeStrings[$string]['html'] = TRUE;
-    return $string;
   }
 
 }

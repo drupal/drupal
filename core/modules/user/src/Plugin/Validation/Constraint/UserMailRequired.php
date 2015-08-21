@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\Validation\Constraint;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -28,6 +28,9 @@ class UserMailRequired extends Constraint implements ConstraintValidatorInterfac
 
   /**
    * Violation message. Use the same message as FormValidator.
+   *
+   * Note that the name argument is not sanitized so that translators only have
+   * one string to translate. The name is sanitized in self::validate().
    *
    * @var string
    */
@@ -70,7 +73,7 @@ class UserMailRequired extends Constraint implements ConstraintValidatorInterfac
     $required = !(!$existing_value && \Drupal::currentUser()->hasPermission('administer users'));
 
     if ($required && (!isset($items) || $items->isEmpty())) {
-      $this->context->addViolation($this->message, array('!name' => SafeMarkup::placeholder($account->getFieldDefinition('mail')->getLabel())));
+      $this->context->addViolation($this->message, ['!name' => Html::escape($account->getFieldDefinition('mail')->getLabel())]);
     }
   }
 

@@ -78,7 +78,7 @@ function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $for
   $editors = \Drupal::service('plugin.manager.editor')->getDefinitions();
   foreach (Element::children($form['formats']) as $format_id) {
     $editor = editor_load($format_id);
-    $editor_name = ($editor && isset($editors[$editor->getEditor()])) ? $editors[$editor->getEditor()]['label'] : drupal_placeholder('—');
+    $editor_name = ($editor && isset($editors[$editor->getEditor()])) ? $editors[$editor->getEditor()]['label'] : '—';
     $editor_column['editor'] = array('#markup' => $editor_name);
     $position = array_search('name', array_keys($form['formats'][$format_id])) + 1;
     $start = array_splice($form['formats'][$format_id], 0, $position, $editor_column);

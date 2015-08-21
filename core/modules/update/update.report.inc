@@ -228,7 +228,11 @@ function template_preprocess_update_project_status(&$variables) {
       $extra_item = array();
       $extra_item['attributes'] = new Attribute();
       $extra_item['label'] = $value['label'];
-      $extra_item['data'] = drupal_placeholder($value['data']);
+      $extra_item['data'] = [
+        '#prefix' => '<em>',
+        '#markup' => $value['data'],
+        '#suffix' => '</em>'
+      ];
       $variables['extras'][] = $extra_item;
     }
   }
