@@ -18,19 +18,6 @@ use Drupal\taxonomy\VocabularyInterface;
 class TaxonomyController extends ControllerBase {
 
   /**
-   * Title callback for term pages.
-   *
-   * @param \Drupal\taxonomy\TermInterface $term
-   *   A taxonomy term entity.
-   *
-   * @return
-   *   The term name to be used as the page title.
-   */
-  public function getTitle(TermInterface $term) {
-    return $term->label();
-  }
-
-  /**
    * Returns a form to add a new term to a vocabulary.
    *
    * @param \Drupal\taxonomy\VocabularyInterface $taxonomy_vocabulary
