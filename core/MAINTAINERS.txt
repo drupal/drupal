@@ -208,6 +208,9 @@ Transliteration system
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 - Jennifer Hodgdon 'jhodgdon' https://www.drupal.org/u/jhodgdon
 
+Typed data system
+- Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
+
 Topic maintainers
 -----------------
 
