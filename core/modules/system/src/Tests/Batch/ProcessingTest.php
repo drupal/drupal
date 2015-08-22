@@ -257,28 +257,28 @@ class ProcessingTest extends WebTestBase {
 
     switch ($id) {
       case 'batch_0':
-        $messages[] = 'results for batch 0<br>none';
+        $messages[] = 'results for batch 0<div class="item-list"><ul><li>none</li></ul></div>';
         break;
 
       case 'batch_1':
-        $messages[] = 'results for batch 1<br>op 1: processed 10 elements';
+        $messages[] = 'results for batch 1<div class="item-list"><ul><li>op 1: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_2':
-        $messages[] = 'results for batch 2<br>op 2: processed 10 elements';
+        $messages[] = 'results for batch 2<div class="item-list"><ul><li>op 2: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_3':
-        $messages[] = 'results for batch 3<br>op 1: processed 10 elements<br>op 2: processed 10 elements';
+        $messages[] = 'results for batch 3<div class="item-list"><ul><li>op 1: processed 10 elements</li><li>op 2: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_4':
-        $messages[] = 'results for batch 4<br>op 1: processed 10 elements';
+        $messages[] = 'results for batch 4<div class="item-list"><ul><li>op 1: processed 10 elements</li></ul></div>';
         $messages = array_merge($messages, $this->_resultMessages('batch_2'));
         break;
 
       case 'batch_5':
-        $messages[] = 'results for batch 5<br>op 5: processed 10 elements';
+        $messages[] = 'results for batch 5<div class="item-list"><ul><li>op 5: processed 10 elements</li></ul></div>';
         break;
 
       case 'chained':
