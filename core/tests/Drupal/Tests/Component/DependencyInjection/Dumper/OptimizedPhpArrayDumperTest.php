@@ -51,7 +51,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     /**
      * The dumper instance.
      *
-     * @var \Symfony\Component\DependencyInjection\DumperDumperInterface
+     * @var \Symfony\Component\DependencyInjection\Dumper\DumperInterface
      */
     protected $dumper;
 
