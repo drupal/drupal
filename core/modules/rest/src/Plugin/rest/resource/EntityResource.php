@@ -163,7 +163,7 @@ class EntityResource extends ResourceBase {
     $this->validate($original_entity);
     try {
       $original_entity->save();
-      $this->logger->notice('Updated entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+      $this->logger->notice('Updated entity %type with ID %id.', array('%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()));
 
       // Update responses have an empty body.
       return new ResourceResponse(NULL, 204);
