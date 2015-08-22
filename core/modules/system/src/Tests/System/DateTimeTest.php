@@ -117,6 +117,21 @@ class DateTimeTest extends WebTestBase {
     // Make sure the date does not exist in config.
     $date_format = entity_load('date_format', $date_format_id);
     $this->assertFalse($date_format);
+
+    // Add a new date format with an existing format.
+    $date_format_id = strtolower($this->randomMachineName(8));
+    $name = ucwords($date_format_id);
+    $date_format = 'Y';
+    $edit = array(
+      'id' => $date_format_id,
+      'label' => $name,
+      'date_format_pattern' => $date_format,
+    );
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->assertUrl(\Drupal::url('entity.date_format.collection', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
+    $this->assertText(t('Custom date format added.'), 'Date format added confirmation message appears.');
+    $this->assertText($name, 'Custom date format appears in the date format list.');
+    $this->assertText(t('Delete'), 'Delete link for custom date format appears.');
   }
 
   /**

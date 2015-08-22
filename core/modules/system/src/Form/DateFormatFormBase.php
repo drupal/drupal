@@ -130,12 +130,11 @@ abstract class DateFormatFormBase extends EntityForm {
     parent::validateForm($form, $form_state);
 
     // The machine name field should already check to see if the requested
-    // machine name is available. Regardless of machine_name or human readable
-    // name, check to see if the provided pattern exists.
+    // machine name is available.
     $pattern = trim($form_state->getValue('date_format_pattern'));
     foreach ($this->dateFormatStorage->loadMultiple() as $format) {
-      if ($format->getPattern() == $pattern && ($this->entity->isNew() || $format->id() != $this->entity->id())) {
-        $form_state->setErrorByName('date_format_pattern', $this->t('This format already exists. Enter a unique format string.'));
+      if ($format->getPattern() == $pattern && ($format->id() == $this->entity->id())) {
+        drupal_set_message(t('The existing format/name combination has not been altered.'));
         continue;
       }
     }
