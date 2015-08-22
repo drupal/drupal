@@ -584,7 +584,7 @@ function template_preprocess_views_view_table(&$variables) {
         }
 
         // Only bother with separators and stuff if the field shows up.
-        if (!empty($field_output)) {
+        if (trim($field_output) != '') {
           // Place the field into the column, along with an optional separator.
           if (!empty($column_reference['content'])) {
             if (!empty($options['info'][$column]['separator'])) {

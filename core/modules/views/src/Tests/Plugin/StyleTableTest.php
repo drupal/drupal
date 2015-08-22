@@ -109,4 +109,31 @@ class StyleTableTest extends PluginTestBase {
     $this->assertTrue(count($result), 'Ensure the job column values are joined into a single column');
   }
 
+  /**
+   * Test that a number with the value of "0" is displayed in the table.
+   */
+  public function testNumericFieldVisible() {
+    // Adds a new datapoint in the views_test_data table to have a person with
+    // an age of zero.
+    $data_set = $this->dataSet();
+    $query = db_insert('views_test_data')
+      ->fields(array_keys($data_set[0]));
+    $query->values(array(
+      'name' => 'James McCartney',
+      'age' => 0,
+      'job' => 'Baby',
+      'created' => gmmktime(6, 30, 10, 1, 1, 2000),
+      'status' => 1,
+    ));
+    $query->execute();
+
+    $this->drupalGet('test-table');
+
+    $result = $this->xpath('//tbody/tr/td[contains(., "Baby")]');
+    $this->assertTrue(count($result), 'Ensure that the baby is found.');
+
+    $result = $this->xpath('//tbody/tr/td[text()=0]');
+    $this->assertTrue(count($result), 'Ensure that the baby\'s age is shown');
+  }
+
 }
