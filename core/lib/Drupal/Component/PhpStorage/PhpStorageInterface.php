@@ -99,4 +99,11 @@ interface PhpStorageInterface {
    */
   public function listAll();
 
+  /**
+   * Performs garbage collection on the storage.
+   *
+   * The storage may choose to delete expired or invalidated items.
+   */
+  public function garbageCollection();
+
 }

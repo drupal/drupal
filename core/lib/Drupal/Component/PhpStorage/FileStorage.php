@@ -266,4 +266,10 @@ EOF;
     return $names;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection() {
+  }
+
 }

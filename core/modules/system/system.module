@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\PageCache\RequestPolicyInterface;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
@@ -1283,6 +1284,10 @@ function system_cron() {
     ->condition('expire', 0, '<>')
     ->condition('expire', REQUEST_TIME, '<')
     ->execute();
+
+  // Clean up PHP storage.
+  PhpStorageFactory::get('container')->garbageCollection();
+  PhpStorageFactory::get('service_container')->garbageCollection();
 }
 
 /**

@@ -102,4 +102,10 @@ class FileReadOnlyStorage implements PhpStorageInterface {
     return $names;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection() {
+  }
+
 }

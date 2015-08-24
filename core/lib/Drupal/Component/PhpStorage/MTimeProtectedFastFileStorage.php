@@ -63,7 +63,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::save().
+   * {@inheritdoc}
    */
   public function save($name, $data) {
     $this->ensureDirectory($this->directory);
@@ -78,44 +78,32 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     // permission.
     chmod($temporary_path, 0444);
 
-    // Prepare a directory dedicated for just this file. Ensure it has a current
-    // mtime so that when the file (hashed on that mtime) is moved into it, the
-    // mtime remains the same (unless the clock ticks to the next second during
-    // the rename, in which case we'll try again).
-    $directory = $this->getContainingDirectoryFullPath($name);
-    if (file_exists($directory)) {
-      $this->unlink($directory);
-    }
-    $this->ensureDirectory($directory);
+    // Determine the exact modification time of the file.
+    $mtime = $this->getUncachedMTime($temporary_path);
 
-    // Move the file to its final place. The mtime of a directory is the time of
-    // the last file create or delete in the directory. So the moving will
-    // update the directory mtime. However, this update will very likely not
-    // show up, because it has a coarse, one second granularity and typical
-    // moves takes significantly less than that. In the unlucky case the clock
-    // ticks during the move, we need to keep trying until the mtime we hashed
-    // on and the updated mtime match.
-    $previous_mtime = 0;
-    $i = 0;
-    while (($mtime = $this->getUncachedMTime($directory)) && ($mtime != $previous_mtime)) {
-      $previous_mtime = $mtime;
-      // Reset the file back in the temporary location if this is not the first
-      // iteration.
-      if ($i > 0) {
-        $this->unlink($temporary_path);
-        $temporary_path = $this->tempnam($this->directory, '.');
-        rename($full_path, $temporary_path);
-        // Make sure to not loop infinitely on a hopelessly slow filesystem.
-        if ($i > 10) {
-          $this->unlink($temporary_path);
-          return FALSE;
-        }
-      }
-      $full_path = $this->getFullPath($name, $directory, $mtime);
-      rename($temporary_path, $full_path);
-      $i++;
+    // Move the temporary file into the proper directory. Note that POSIX
+    // compliant systems as well as modern Windows perform the rename operation
+    // atomically, i.e. there is no point at which another process attempting to
+    // access the new path will find it missing.
+    $directory = $this->getContainingDirectoryFullPath($name);
+    $this->ensureDirectory($directory);
+    $full_path = $this->getFullPath($name, $directory, $mtime);
+    $result = rename($temporary_path, $full_path);
+
+    // Finally reset the modification time of the directory to match the one of
+    // the newly created file. In order to prevent the creation of a file if the
+    // directory does not exist, ensure that the path terminates with a
+    // directory separator.
+    //
+    // Recall that when subsequently loading the file, the hash is calculated
+    // based on the file name, the containing mtime, and a the secret string.
+    // Hence updating the mtime here is comparable to pointing a symbolic link
+    // at a new target, i.e., the newly created file.
+    if ($result) {
+      $result &= touch($directory . '/', $mtime);
     }
-    return TRUE;
+
+    return (bool) $result;
   }
 
   /**
@@ -159,6 +147,44 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       return $this->unlink($path);
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection() {
+    $flags = \FilesystemIterator::CURRENT_AS_FILEINFO;
+    $flags += \FilesystemIterator::SKIP_DOTS;
+
+    foreach ($this->listAll() as $name) {
+      $directory = $this->getContainingDirectoryFullPath($name);
+      try {
+        $dir_iterator = new \FilesystemIterator($directory, $flags);
+      }
+      catch (\UnexpectedValueException $e) {
+        // FilesystemIterator throws an UnexpectedValueException if the
+        // specified path is not a directory, or if it is not accessible.
+        continue;
+      }
+
+      $directory_unlink = TRUE;
+      $directory_mtime = filemtime($directory);
+      foreach ($dir_iterator as $fileinfo) {
+        if ($directory_mtime > $fileinfo->getMTime()) {
+          // Ensure the folder is writable.
+          @chmod($directory, 0777);
+          @unlink($fileinfo->getPathName());
+        }
+        else {
+          // The directory still contains valid files.
+          $directory_unlink = FALSE;
+        }
+      }
+
+      if ($directory_unlink) {
+        $this->unlink($name);
+      }
+    }
   }
 
   /**
@@ -208,4 +234,5 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     } while (file_exists($path));
     return $path;
   }
+
 }
