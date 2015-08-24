@@ -1,5 +1,5 @@
 
-CONTENTS OF THIS FILE - NOW WITH MORE CONTENTS AGAIN
+CONTENTS OF THIS FILE - NOW WITH
 ---------------------
 
  * About Drupal
