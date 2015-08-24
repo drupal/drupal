@@ -126,7 +126,11 @@ class ViewsUIController extends ControllerBase {
       foreach ($row['views'] as $row_name => $view) {
         $row['views'][$row_name] = $this->l($view, new Url('entity.view.edit_form', array('view' => $view)));
       }
-      $row['views'] = SafeMarkup::set(implode(', ', $row['views']));
+      $row['views']['data'] = [
+        '#theme' => 'item_list',
+        '#items' => $row['views'],
+        '#context' => ['list_style' => 'comma-list'],
+      ];
     }
 
     // Sort rows by field name.
