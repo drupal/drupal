@@ -35,6 +35,14 @@ image.effect.image_crop:
       label: 'Anchor'
       type: string
 
+image.effect.image_convert:
+  type: mapping
+  label: 'Convert'
+  mapping:
+    extension:
+      label: 'Extension'
+      type: string
+
 image.effect.image_resize:
   type: image_size
   label: 'Image resize'
