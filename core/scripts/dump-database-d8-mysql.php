@@ -19,5 +19,5 @@ Settings::initialize(dirname(dirname(__DIR__)), DrupalKernel::findSitePath($requ
 $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
 
 // Run the database dump command.
-$application = new DbDumpApplication(Database::getConnection(), \Drupal::moduleHandler());
+$application = new DbDumpApplication(Database::getConnection());
 $application->run();
