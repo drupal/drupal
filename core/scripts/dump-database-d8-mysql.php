@@ -2,7 +2,6 @@
 <?php
 
 use Drupal\Core\Command\DbDumpApplication;
-use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,5 +18,5 @@ Settings::initialize(dirname(dirname(__DIR__)), DrupalKernel::findSitePath($requ
 $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
 
 // Run the database dump command.
-$application = new DbDumpApplication(Database::getConnection());
+$application = new DbDumpApplication();
 $application->run();

@@ -143,7 +143,7 @@ class DbDumpTest extends KernelTestBase {
       return;
     }
 
-    $application = new DbDumpApplication(Database::getConnection());
+    $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
     $command_tester->execute([]);
@@ -171,7 +171,7 @@ class DbDumpTest extends KernelTestBase {
     }
 
     // Generate the script.
-    $application = new DbDumpApplication(Database::getConnection());
+    $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
     $command_tester->execute([]);
