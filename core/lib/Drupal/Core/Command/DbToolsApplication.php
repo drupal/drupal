@@ -26,6 +26,7 @@ class DbToolsApplication extends Application {
    */
   protected function getDefaultCommands() {
     $default_commands = parent::getDefaultCommands();
+    $default_commands[] = new DbDumpCommand();
     return $default_commands;
   }
 
