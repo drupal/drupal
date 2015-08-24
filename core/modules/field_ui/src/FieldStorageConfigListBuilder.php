@@ -7,7 +7,6 @@
 
 namespace Drupal\field_ui;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -119,13 +118,11 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
         $usage[] = $this->bundles[$entity_type_id][$bundle]['label'];
       }
     }
-    $usage_escaped = '';
-    $separator = '';
-    foreach ($usage as $usage_item) {
-      $usage_escaped .=  $separator . SafeMarkup::escape($usage_item);
-      $separator = ', ';
-    }
-    $row['data']['usage'] = SafeMarkup::set($usage_escaped);
+    $row['data']['usage']['data'] = [
+      '#theme' => 'item_list',
+      '#items' => $usage,
+      '#context' => ['list_style' => 'comma-list'],
+    ];
     return $row;
   }
 
