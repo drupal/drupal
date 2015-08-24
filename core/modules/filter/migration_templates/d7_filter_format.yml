@@ -5,15 +5,7 @@ migration_tags:
 source:
   plugin: d7_filter_format
 process:
-  format:
-    -
-      plugin: machine_name
-      source: name
-    -
-      plugin: dedupe_entity
-      entity_type: filter_format
-      field: format
-      length: 32
+  format: format
   name: name
   cache: cache
   filters: filters

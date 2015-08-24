@@ -28,6 +28,7 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->installConfig(static::$modules);
     $this->executeMigration('d7_filter_format');
   }
 
@@ -57,7 +58,11 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     $this->assertEntity('custom_text_format', 'Custom Text format', ['filter_autop', 'filter_html']);
     $this->assertEntity('filtered_html', 'Filtered HTML', ['filter_autop', 'filter_html', 'filter_htmlcorrector', 'filter_url']);
     $this->assertEntity('full_html', 'Full HTML', ['filter_autop', 'filter_htmlcorrector', 'filter_url']);
-    $this->assertEntity('plain_text', 'Plain text', ['filter_autop', 'filter_html_escape', 'filter_url']);
+    $this->assertEntity('plain_text', 'Plain text', ['filter_html_escape', 'filter_url', 'filter_autop']);
+    // This assertion covers issue #2555089. Drupal 7 formats are identified
+    // by machine names, so migrated formats should be merged into existing
+    // ones.
+    $this->assertNull(FilterFormat::load('plain_text1'));
 
     // Ensure that filter-specific settings were migrated.
     /** @var \Drupal\filter\FilterFormatInterface $format */
