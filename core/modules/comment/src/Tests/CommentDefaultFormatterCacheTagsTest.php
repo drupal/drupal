@@ -73,7 +73,6 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $expected_cache_tags = [
       'entity_test_view',
       'entity_test:'  . $commented_entity->id(),
-      'comment_list',
       'config:core.entity_form_display.comment.comment.default',
       'config:field.field.comment.comment.comment_body',
       'config:field.field.entity_test.entity_test.comment',
@@ -115,7 +114,6 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $expected_cache_tags = [
       'entity_test_view',
       'entity_test:' . $commented_entity->id(),
-      'comment_list',
       'comment_view',
       'comment:' . $comment->id(),
       'config:filter.format.plain_text',

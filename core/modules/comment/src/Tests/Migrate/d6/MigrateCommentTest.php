@@ -29,6 +29,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
+    $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['node', 'comment']);
 
     entity_create('node_type', array('type' => 'page'))->save();

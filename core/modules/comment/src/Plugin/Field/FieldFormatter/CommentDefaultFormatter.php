@@ -159,9 +159,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // should display if the user is an administrator.
       $elements['#cache']['contexts'][] = 'user.permissions';
       if ($this->currentUser->hasPermission('access comments') || $this->currentUser->hasPermission('administer comments')) {
-        // This is a listing of Comment entities, so associate its list cache
-        // tag for correct invalidation.
-        $output['comments']['#cache']['tags'] = $this->entityManager->getDefinition('comment')->getListCacheTags();
+        $output['comments'] = [];
 
         if ($entity->get($field_name)->comment_count || $this->currentUser->hasPermission('administer comments')) {
           $mode = $comment_settings['default_mode'];
