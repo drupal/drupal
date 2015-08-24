@@ -32,9 +32,11 @@ class UriItem extends StringItem {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
-      'max_length' => 2048,
-    ) + parent::defaultStorageSettings();
+    $storage_settings = parent::defaultStorageSettings();
+    // is_ascii doesn't make sense for URIs.
+    unset($storage_settings['is_ascii']);
+    $storage_settings['max_length'] = 2048;
+    return $storage_settings;
   }
 
   /**

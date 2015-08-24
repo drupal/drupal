@@ -160,6 +160,17 @@ field.widget.settings.string_textarea:
       type: label
       label: 'Placeholder'
 
+field.widget.settings.uri:
+  type: mapping
+  label: 'URI field'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of URI field'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
 field.widget.settings.email_default:
   type: mapping
   label: 'Email field display format settings'

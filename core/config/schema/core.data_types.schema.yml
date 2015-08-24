@@ -491,7 +491,7 @@ field.value.string_long:
 # Schema for the configuration of the URI field type.
 
 field.storage_settings.uri:
-  type: mapping
+  type: field.storage_settings.string
   label: 'URI settings'
   mapping:
     max_length:
