@@ -27,4 +27,13 @@ class DbToolsApplicationTest extends KernelTestBase {
     $this->assertInstanceOf('\Drupal\Core\Command\DbDumpCommand', $command);
   }
 
+  /**
+   * Test that the dump command is correctly registered.
+   */
+  public function testImportCommandRegistration() {
+    $application = new DbToolsApplication();
+    $command = $application->find('import');
+    $this->assertInstanceOf('\Drupal\Core\Command\DbImportCommand', $command);
+  }
+
 }
