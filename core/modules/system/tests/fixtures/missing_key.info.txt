@@ -1,8 +1,0 @@
-# info.yml for testing missing type key.
-name: File
-description: 'Defines a file field type.'
-package: Core
-version: VERSION
-core: 8.x
-dependencies:
-  - field

@@ -1,5 +1,0 @@
-# info.yml for testing missing name, description, and type keys.
-package: Core
-version: VERSION
-dependencies:
-  - field
