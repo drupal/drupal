@@ -289,7 +289,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     if (!$this->fieldStorage) {
       $fields = $this->entityManager()->getFieldStorageDefinitions($this->entity_type);
       if (!isset($fields[$this->field_name])) {
-        throw new FieldException('Attempt to create a field {$this->field_name} that does not exist on entity type {$this->entity_type}.');
+        throw new FieldException("Attempt to create a field {$this->field_name} that does not exist on entity type {$this->entity_type}.");
       }
       if (!$fields[$this->field_name] instanceof FieldStorageConfigInterface) {
         throw new FieldException("Attempt to create a configurable field of non-configurable field storage {$this->field_name}.");
