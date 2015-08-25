@@ -7,6 +7,7 @@
 
 namespace Drupal\KernelTests;
 
+use Drupal\Core\Database\Database;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
@@ -52,24 +53,8 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::getDatabaseConnectionInfo
    */
   public function testGetDatabaseConnectionInfoWithOutManualSetDbUrl() {
-    $this->setUp();
-
     $options = $this->container->get('database')->getConnectionOptions();
     $this->assertSame($this->databasePrefix, $options['prefix']['default']);
-  }
-
-  /**
-   * @covers ::getDatabaseConnectionInfo
-   */
-  public function testGetDatabaseConnectionInfoWithManualSetDbUrl() {
-    if (!file_exists('/tmp')) {
-      $this->markTestSkipped();
-    }
-    putenv('SIMPLETEST_DB=sqlite://localhost//tmp/test2.sqlite');
-    $this->setUp();
-
-    $options = $this->container->get('database')->getConnectionOptions();
-    $this->assertNotEqual('', $options['prefix']['default']);
   }
 
   /**
@@ -214,6 +199,31 @@ class KernelTestBaseTest extends KernelTestBase {
 
     $this->assertRegExp($expected, (string) $build['#children']);
     $this->assertRegExp($expected, (string) $output);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    parent::tearDown();
+
+    // Check that all tables of the test instance have been deleted. At this
+    // point the original database connection is restored so we need to prefix
+    // the tables.
+    $connection = Database::getConnection();
+    if ($connection->databaseType() != 'sqlite') {
+      $tables = $connection->schema()->findTables($this->databasePrefix . '%');
+      $this->assertTrue(empty($tables), 'All test tables have been removed.');
+    }
+    else {
+      $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", array(
+        ':type' => 'table',
+        ':table_name' => '%',
+        ':pattern' => 'sqlite_%',
+      ))->fetchAllKeyed(0, 0);
+
+     $this->assertTrue(empty($result), 'All test tables have been removed.');
+    }
   }
 
 }
