@@ -72,7 +72,21 @@
             %}
           {% endif %}
           <th{{ column.attributes.addClass(column_classes).setAttribute('scope', 'col') }}>
-            {{ column.content }}
+            {%- if column.wrapper_element -%}
+              <{{ column.wrapper_element }}>
+                {%- if column.url -%}
+                  <a href="{{ column.url }}" title="{{ column.title }}">{{ column.content }}{{ column.sort_indicator }}</a>
+                {%- else -%}
+                  {{ column.content }}{{ column.sort_indicator }}
+                {%- endif -%}
+              </{{ column.wrapper_element }}>
+            {%- else -%}
+              {%- if column.url -%}
+                <a href="{{ column.url }}" title="{{ column.title }}">{{ column.content }}{{ column.sort_indicator }}</a>
+              {%- else -%}
+                {{- column.content }}{{ column.sort_indicator }}
+              {%- endif -%}
+            {%- endif -%}
           </th>
         {% endfor %}
       </tr>
@@ -93,7 +107,17 @@
             {% endfor %}
           {% endif %}
           <td{{ column.attributes.addClass(column_classes) }}>
-            {{ column.content }}
+            {%- if column.wrapper_element -%}
+              <{{ column.wrapper_element }}>
+              {% for content in column.content %}
+                {{ content.separator }}{{ content.field_output }}
+              {% endfor %}
+              </{{ column.wrapper_element }}>
+            {%- else -%}
+              {% for content in column.content %}
+                {{- content.separator }}{{ content.field_output -}}
+              {% endfor %}
+            {%- endif %}
           </td>
         {% endfor %}
       </tr>

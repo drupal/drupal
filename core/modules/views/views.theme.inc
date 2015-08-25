@@ -469,7 +469,7 @@ function template_preprocess_views_view_table(&$variables) {
 
     // Render the header labels.
     if ($field == $column && empty($fields[$field]->options['exclude'])) {
-      $label = SafeMarkup::checkPlain(!empty($fields[$field]) ? $fields[$field]->label() : '');
+      $label = !empty($fields[$field]) ? $fields[$field]->label() : '';
       if (empty($options['info'][$field]['sortable']) || !$fields[$field]->clickSortable()) {
         $variables['header'][$field]['content'] = $label;
       }
@@ -482,23 +482,23 @@ function template_preprocess_views_view_table(&$variables) {
 
         $title = t('sort by @s', array('@s' => $label));
         if ($active == $field) {
-          $tablesort_indicator = array(
+          $variables['header'][$field]['sort_indicator'] = array(
             '#theme' => 'tablesort_indicator',
             '#style' => $initial,
           );
-          $markup = drupal_render($tablesort_indicator);
-          $label = SafeMarkup::set($label . $markup);
         }
 
         $query['order'] = $field;
         $query['sort'] = $initial;
         $link_options = array(
-          'attributes' => array('title' => $title),
           'query' => $query,
         );
         // It is ok to specify no URL path here as we will always reload the
         // current page.
-        $variables['header'][$field]['content'] = \Drupal::l($label, new Url('<none>', [], $link_options));
+        $url = new Url('<none>', [], $link_options);
+        $variables['header'][$field]['url'] = $url->toString();
+        $variables['header'][$field]['content'] = $label;
+        $variables['header'][$field]['title'] = $title;
       }
 
       $variables['header'][$field]['default_classes'] = $fields[$field]->options['element_default_classes'];
@@ -521,7 +521,7 @@ function template_preprocess_views_view_table(&$variables) {
       if ($variables['header'][$field]['content']) {
         $element_label_type = $fields[$field]->elementLabelType(TRUE, TRUE);
         if ($element_label_type) {
-          $variables['header'][$field]['content'] = '<' . $element_label_type . '>' . $variables['header'][$field]['content'] . '</' . $element_label_type . '>';
+          $variables['header'][$field]['wrapper_element'] = $element_label_type;
         }
         // Improves accessibility of complex tables.
         $variables['header'][$field]['attributes']['id'] = Html::getUniqueId('view-' . $field . '-table-column');
@@ -578,27 +578,25 @@ function template_preprocess_views_view_table(&$variables) {
 
       if (!empty($fields[$field])) {
         $field_output = $handler->getField($num, $field);
-        $element_type = $fields[$field]->elementType(TRUE, TRUE);
-        if ($element_type) {
-          $field_output = SafeMarkup::set('<' . $element_type . '>' .  SafeMarkup::escape($field_output) . '</' . $element_type . '>');
+        $column_reference['wrapper_element'] = $fields[$field]->elementType(TRUE, TRUE);
+        if (!isset($column_reference['content'])) {
+          $column_reference['content'] = [];
         }
 
         // Only bother with separators and stuff if the field shows up.
+        // Place the field into the column, along with an optional separator.
         if (trim($field_output) != '') {
-          // Place the field into the column, along with an optional separator.
-          if (!empty($column_reference['content'])) {
-            if (!empty($options['info'][$column]['separator'])) {
-              $safe_content = SafeMarkup::escape($column_reference['content']);
-              $safe_separator = Xss::filterAdmin($options['info'][$column]['separator']);
-              $column_reference['content'] = SafeMarkup::set($safe_content . $safe_separator);
-            }
+          if (!empty($column_reference['content']) && !empty($options['info'][$column]['separator'])) {
+            $column_reference['content'][] = [
+              'separator' => ['#markup' => $options['info'][$column]['separator']],
+              'field_output' => ['#markup' => $field_output]
+            ];
           }
           else {
-            $column_reference['content'] = '';
+            $column_reference['content'][] = [
+              'field_output' => ['#markup' => $field_output]
+            ];
           }
-          $safe_content = SafeMarkup::escape($column_reference['content']);
-          $safe_field_output = SafeMarkup::escape($field_output);
-          $column_reference['content'] = SafeMarkup::set($safe_content . $safe_field_output);
         }
       }
       $column_reference['attributes'] = new Attribute($column_reference['attributes']);
@@ -635,7 +633,7 @@ function template_preprocess_views_view_table(&$variables) {
 
   if (empty($variables['rows']) && !empty($options['empty_table'])) {
     $build = $view->display_handler->renderArea('empty');
-    $variables['rows'][0]['columns'][0]['content'] = drupal_render($build);
+    $variables['rows'][0]['columns'][0]['content'][0]['field_output'] = $build;
     $variables['rows'][0]['attributes'] = new Attribute(array('class' => 'odd'));
     // Calculate the amounts of rows with output.
     $variables['rows'][0]['columns'][0]['attributes'] = new Attribute(array(
@@ -652,7 +650,7 @@ function template_preprocess_views_view_table(&$variables) {
 
   // Add the caption to the list if set.
   if (!empty($handler->options['caption'])) {
-    $variables['caption'] = Xss::filterAdmin($handler->options['caption']);
+    $variables['caption'] = ['#markup' => $handler->options['caption']];
     $variables['caption_needed'] = TRUE;
   }
   else {
