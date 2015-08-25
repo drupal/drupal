@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to simpletest.settings.yml.
  *
- * @group simpletest
+ * @group migrate_drupal_6
  */
 class MigrateSimpletestConfigsTest extends MigrateDrupal6TestBase {
 

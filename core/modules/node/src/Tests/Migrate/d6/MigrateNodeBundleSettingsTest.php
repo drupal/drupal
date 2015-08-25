@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Test migrating node settings into the base_field_bundle_override config entity.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
 

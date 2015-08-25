@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to dblog.settings.yml.
  *
- * @group dblog
+ * @group migrate_drupal_6
  */
 class MigrateDblogConfigsTest extends MigrateDrupal6TestBase {
 

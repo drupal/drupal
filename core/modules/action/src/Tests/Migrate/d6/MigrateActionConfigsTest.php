@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to action.settings.yml.
  *
- * @group action
+ * @group migrate_drupal_6
  */
 class MigrateActionConfigsTest extends MigrateDrupal6TestBase {
 

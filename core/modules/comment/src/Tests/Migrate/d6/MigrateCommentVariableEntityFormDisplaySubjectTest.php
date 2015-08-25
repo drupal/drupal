@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade comment subject variable to core.entity_form_display.comment.*.default.yml
  *
- * @group comment
+ * @group migrate_drupal_6
  */
 class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupal6TestBase {
 

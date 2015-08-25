@@ -12,7 +12,7 @@ use Drupal\node\Entity\Node;
 /**
  * Migrate association data between nodes and files.
  *
- * @group file
+ * @group migrate_drupal_6
  */
 class MigrateUploadTest extends MigrateUploadBase {
 

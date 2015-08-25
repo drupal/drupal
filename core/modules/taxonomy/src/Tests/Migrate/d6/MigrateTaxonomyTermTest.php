@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade taxonomy terms.
  *
- * @group taxonomy
+ * @group migrate_drupal_6
  */
 class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
 

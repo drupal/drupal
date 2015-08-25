@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Tests the user profile field instance migration.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
 

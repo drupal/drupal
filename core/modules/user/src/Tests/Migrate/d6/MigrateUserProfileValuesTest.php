@@ -14,7 +14,7 @@ use Drupal\user\Entity\User;
 /**
  * User profile values migration.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
 

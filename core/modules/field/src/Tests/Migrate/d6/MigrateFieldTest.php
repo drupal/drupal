@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Migrate fields.
  *
- * @group field
+ * @group migrate_drupal_6
  */
 class MigrateFieldTest extends MigrateDrupal6TestBase {
 

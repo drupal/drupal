@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade site variables to system.*.yml.
  *
- * @group system
+ * @group migrate_drupal_6
  */
 class MigrateSystemSiteTest extends MigrateDrupal6TestBase {
 

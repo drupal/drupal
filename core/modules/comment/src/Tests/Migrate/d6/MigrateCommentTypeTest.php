@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade comment type.
  *
- * @group comment
+ * @group migrate_drupal_6
  */
 class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
 

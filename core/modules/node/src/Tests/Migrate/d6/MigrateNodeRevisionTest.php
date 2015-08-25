@@ -12,7 +12,7 @@ use Drupal\Core\Database\Database;
 /**
  * Node content revisions migration.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeRevisionTest extends MigrateNodeTestBase {
 

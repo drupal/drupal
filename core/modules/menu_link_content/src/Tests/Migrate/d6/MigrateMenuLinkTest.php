@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Menu link migration.
  *
- * @group menu_link_content
+ * @group migrate_drupal_6
  */
 class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
 

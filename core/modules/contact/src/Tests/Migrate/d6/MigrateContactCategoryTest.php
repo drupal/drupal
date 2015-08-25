@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Migrate contact categories to contact.form.*.yml.
  *
- * @group contact
+ * @group migrate_drupal_6
  */
 class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
 

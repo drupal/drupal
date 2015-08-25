@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to user.*.yml.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
 

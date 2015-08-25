@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to forum.settings.yml.
  *
- * @group forum
+ * @group migrate_drupal_6
  */
 class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
 

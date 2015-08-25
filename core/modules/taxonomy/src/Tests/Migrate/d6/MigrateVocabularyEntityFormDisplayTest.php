@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Vocabulary entity form display migration.
  *
- * @group taxonomy
+ * @group migrate_drupal_6
  */
 class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupal6TestBase {
 

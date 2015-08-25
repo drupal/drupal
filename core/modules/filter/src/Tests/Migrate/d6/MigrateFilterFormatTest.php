@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to filter.formats.*.yml.
  *
- * @group filter
+ * @group migrate_drupal_6
  */
 class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
 

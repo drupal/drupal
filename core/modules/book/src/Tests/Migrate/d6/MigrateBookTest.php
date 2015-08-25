@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
 /**
  * Upgrade book structure.
  *
- * @group book
+ * @group migrate_drupal_6
  */
 class MigrateBookTest extends MigrateDrupal6TestBase {
 

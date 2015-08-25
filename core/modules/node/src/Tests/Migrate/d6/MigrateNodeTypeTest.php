@@ -14,7 +14,7 @@ use Drupal\node\Entity\NodeType;
 /**
  * Upgrade node types to node.type.*.yml.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 

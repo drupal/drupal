@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to contact.settings.yml.
  *
- * @group contact
+ * @group migrate_drupal_6
  */
 class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
 

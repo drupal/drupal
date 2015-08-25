@@ -14,7 +14,7 @@ use Drupal\node\Tests\Migrate\d6\MigrateNodeTestBase;
 /**
  * CCK field content migration.
  *
- * @group migrate_drupal
+ * @group migrate_drupal_6
  */
 class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
 

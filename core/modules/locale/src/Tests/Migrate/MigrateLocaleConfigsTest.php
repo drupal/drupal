@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to locale.settings.yml.
  *
- * @group locale
+ * @group migrate_drupal_6
  */
 class MigrateLocaleConfigsTest extends MigrateDrupal6TestBase {
 

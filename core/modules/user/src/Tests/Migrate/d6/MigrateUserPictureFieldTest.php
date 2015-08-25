@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * User picture field migration.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserPictureFieldTest extends MigrateDrupal6TestBase {
 

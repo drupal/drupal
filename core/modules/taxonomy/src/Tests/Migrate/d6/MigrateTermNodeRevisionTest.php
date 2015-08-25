@@ -12,7 +12,7 @@ use Drupal\migrate\MigrateExecutable;
 /**
  * Upgrade taxonomy term node associations.
  *
- * @group taxonomy
+ * @group migrate_drupal_6
  */
 class MigrateTermNodeRevisionTest extends MigrateTermNodeTestBase {
 

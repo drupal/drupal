@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade image variables to system.*.yml.
  *
- * @group system
+ * @group migrate_drupal_6
  */
 class MigrateSystemImageTest extends MigrateDrupal6TestBase {
 

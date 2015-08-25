@@ -10,7 +10,7 @@ namespace Drupal\comment\Tests\Migrate\d6;
 /**
  * Upgrade comment variables to entity.display.node.*.default.yml.
  *
- * @group comment
+ * @group migrate_drupal_6
  */
 class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisplayBase {
 

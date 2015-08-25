@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upload entity display.
  *
- * @group file
+ * @group migrate_drupal_6
  */
 class MigrateUploadEntityDisplayTest extends MigrateDrupal6TestBase {
 

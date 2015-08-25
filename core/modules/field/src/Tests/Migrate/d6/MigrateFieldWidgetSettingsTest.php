@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Migrate field widget settings.
  *
- * @group field
+ * @group migrate_drupal_6
  */
 class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
 

@@ -16,7 +16,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Users migration.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserTest extends MigrateDrupal6TestBase {
 

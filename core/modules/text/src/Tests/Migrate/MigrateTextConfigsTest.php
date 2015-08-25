@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to text.settings.yml.
  *
- * @group text
+ * @group migrate_drupal_6
  */
 class MigrateTextConfigsTest extends MigrateDrupal6TestBase {
 

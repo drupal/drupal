@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade user roles to user.role.*.yml.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserRoleTest extends MigrateDrupal6TestBase {
 

@@ -15,7 +15,7 @@ use Drupal\system\Entity\Menu;
 /**
  * Upgrade menus to system.menu.*.yml.
  *
- * @group system
+ * @group migrate_drupal_6
  */
 class MigrateMenuTest extends MigrateDrupal6TestBase {
 

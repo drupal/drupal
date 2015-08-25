@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade aggregator items.
  *
- * @group aggregator
+ * @group migrate_drupal_6
  */
 class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
 

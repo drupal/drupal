@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to aggregator.settings.yml.
  *
- * @group aggregator
+ * @group migrate_drupal_6
  */
 class MigrateAggregatorConfigsTest extends MigrateDrupal6TestBase {
 

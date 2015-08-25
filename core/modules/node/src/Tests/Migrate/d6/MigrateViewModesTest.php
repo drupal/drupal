@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Migrate view modes.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateViewModesTest extends MigrateDrupal6TestBase {
 

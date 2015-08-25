@@ -17,11 +17,7 @@ use Drupal\user\Entity\User;
  */
 class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
 
-  const BASE_TEST_CLASS = 'Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase';
-
-  protected static $blacklist = array(
-    'Drupal\migrate_drupal\Tests\dependencies\MigrateDependenciesTest',
-  );
+  const TEST_GROUP = 'migrate_drupal_6';
 
   /**
    * Modules to enable.
@@ -52,6 +48,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'migrate_drupal',
     'node',
     'options',
+    'path',
     'search',
     'system',
     'simpletest',

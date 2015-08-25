@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
 /**
  * Node content migration.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
 

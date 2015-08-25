@@ -14,7 +14,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade date formats to core.date_format.*.yml.
  *
- * @group system
+ * @group migrate_drupal_6
  */
 class MigrateDateFormatTest extends MigrateDrupal6TestBase {
 

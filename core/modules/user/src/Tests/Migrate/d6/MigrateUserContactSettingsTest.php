@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Users contact settings migration.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
 

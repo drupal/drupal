@@ -14,7 +14,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Vocabulary field instance migration.
  *
- * @group taxonomy
+ * @group migrate_drupal_6
  */
 class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
 

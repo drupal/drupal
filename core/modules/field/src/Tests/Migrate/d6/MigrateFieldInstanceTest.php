@@ -14,7 +14,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Migrate field instances.
  *
- * @group field
+ * @group migrate_drupal_6
  */
 class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
 

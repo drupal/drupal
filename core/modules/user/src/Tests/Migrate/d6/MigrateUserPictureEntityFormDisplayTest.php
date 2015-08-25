@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * User picture entity form display.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupal6TestBase {
 

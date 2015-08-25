@@ -15,7 +15,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Url alias migration.
  *
- * @group path
+ * @group migrate_drupal_6
  */
 class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
 

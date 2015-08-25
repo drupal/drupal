@@ -17,7 +17,7 @@ use Drupal\file\Entity\File;
 /**
  * file migration.
  *
- * @group file
+ * @group migrate_drupal_6
  */
 class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlterInterface {
 

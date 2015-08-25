@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Migrate taxonomy vocabularies to taxonomy.vocabulary.*.yml.
  *
- * @group taxonomy
+ * @group migrate_drupal_6
  */
 class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
 

@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade field formatter settings to entity.display.*.*.yml.
  *
- * @group field
+ * @group migrate_drupal_6
  */
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 

@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade block settings to block.block.*.yml.
  *
- * @group block
+ * @group migrate_drupal_6
  */
 class MigrateBlockTest extends MigrateDrupal6TestBase {
 

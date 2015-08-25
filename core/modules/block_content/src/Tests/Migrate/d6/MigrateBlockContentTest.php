@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade custom blocks.
  *
- * @group block_content
+ * @group migrate_drupal_6
  */
 class MigrateBlockContentTest extends MigrateDrupal6TestBase {
 

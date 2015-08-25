@@ -13,7 +13,7 @@ use Drupal\node\Tests\Migrate\d6\MigrateNodeTestBase;
 /**
  * CCK field revision migration.
  *
- * @group migrate_drupal
+ * @group migrate_drupal_6
  */
 class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
 

@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Tests the user profile entity form display migration.
  *
- * @group user
+ * @group migrate_drupal_6
  */
 class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 

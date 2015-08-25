@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to search.settings.yml.
  *
- * @group search
+ * @group migrate_drupal_6
  */
 class MigrateSearchSettingsTest extends MigrateDrupal6TestBase {
 

@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade comment variables to field.storage.node.comment.yml.
  *
- * @group comment
+ * @group migrate_drupal_6
  */
 class MigrateCommentVariableFieldTest extends MigrateDrupal6TestBase {
 

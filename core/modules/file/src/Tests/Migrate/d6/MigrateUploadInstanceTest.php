@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upload field instance migration.
  *
- * @group file
+ * @group migrate_drupal_6
  */
 class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
 

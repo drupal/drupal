@@ -10,7 +10,7 @@ namespace Drupal\node\Tests\Migrate\d6;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
 
