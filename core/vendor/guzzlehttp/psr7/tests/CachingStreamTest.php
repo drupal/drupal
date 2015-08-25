@@ -32,22 +32,43 @@ class CachingStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $caching->getSize());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Cannot seek to byte 10
-     */
-    public function testCannotSeekPastWhatHasBeenRead()
+    public function testReadsUntilCachedToByte()
     {
-        $this->body->seek(10);
+        $this->body->seek(5);
+        $this->assertEquals('n', $this->body->read(1));
+        $this->body->seek(0);
+        $this->assertEquals('t', $this->body->read(1));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage CachingStream::seek() supports SEEK_SET and SEEK_CUR
-     */
-    public function testCannotUseSeekEnd()
+    public function testCanSeekNearEndWithSeekEnd()
     {
-        $this->body->seek(2, SEEK_END);
+        $baseStream = Psr7\stream_for(implode('', range('a', 'z')));
+        $cached = new CachingStream($baseStream);
+        $cached->seek(1, SEEK_END);
+        $this->assertEquals(24, $baseStream->tell());
+        $this->assertEquals('y', $cached->read(1));
+        $this->assertEquals(26, $cached->getSize());
+    }
+
+    public function testCanSeekToEndWithSeekEnd()
+    {
+        $baseStream = Psr7\stream_for(implode('', range('a', 'z')));
+        $cached = new CachingStream($baseStream);
+        $cached->seek(0, SEEK_END);
+        $this->assertEquals(25, $baseStream->tell());
+        $this->assertEquals('z', $cached->read(1));
+        $this->assertEquals(26, $cached->getSize());
+    }
+
+    public function testCanUseSeekEndWithUnknownSize()
+    {
+        $baseStream = Psr7\stream_for('testing');
+        $decorated = Psr7\FnStream::decorate($baseStream, [
+            'getSize' => function () { return null; }
+        ]);
+        $cached = new CachingStream($decorated);
+        $cached->seek(1, SEEK_END);
+        $this->assertEquals('ng', $cached->read(2));
     }
 
     public function testRewindUsesSeek()
@@ -133,5 +154,13 @@ class CachingStreamTest extends \PHPUnit_Framework_TestCase
         $d = new CachingStream($a);
         $d->close();
         $this->assertFalse(is_resource($s));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testEnsuresValidWhence()
+    {
+        $this->body->seek(10, -123456);
     }
 }

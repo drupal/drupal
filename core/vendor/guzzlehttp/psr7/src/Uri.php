@@ -123,44 +123,33 @@ class Uri implements UriInterface
             return $base;
         }
 
-        if ($rel instanceof UriInterface) {
-            $relParts = [
-                'scheme'   => $rel->getScheme(),
-                'host'     => $rel->getHost(),
-                'port'     => $rel->getPort(),
-                'path'     => $rel->getPath(),
-                'query'    => $rel->getQuery(),
-                'fragment' => $rel->getFragment()
-            ];
-        } else {
-            $relParts = parse_url($rel) + [
-                'scheme'   => '',
-                'host'     => '',
-                'port'     => '',
-                'path'     => '',
-                'query'    => '',
-                'fragment' => ''
-            ];
+        if (!($rel instanceof UriInterface)) {
+            $rel = new self($rel);
         }
 
-        if (!empty($relParts['scheme']) && !empty($relParts['host'])) {
-            return $rel instanceof UriInterface
-                ? $rel
-                : self::fromParts($relParts);
+        // Return the relative uri as-is if it has a scheme.
+        if ($rel->getScheme()) {
+            return $rel->withPath(static::removeDotSegments($rel->getPath()));
         }
 
-        $parts = [
-            'scheme'   => $base->getScheme(),
-            'host'     => $base->getHost(),
-            'port'     => $base->getPort(),
-            'path'     => $base->getPath(),
-            'query'    => $base->getQuery(),
-            'fragment' => $base->getFragment()
+        $relParts = [
+            'scheme'    => $rel->getScheme(),
+            'authority' => $rel->getAuthority(),
+            'path'      => $rel->getPath(),
+            'query'     => $rel->getQuery(),
+            'fragment'  => $rel->getFragment()
         ];
 
-        if (!empty($relParts['host'])) {
-            $parts['host'] = $relParts['host'];
-            $parts['port'] = $relParts['port'];
+        $parts = [
+            'scheme'    => $base->getScheme(),
+            'authority' => $base->getAuthority(),
+            'path'      => $base->getPath(),
+            'query'     => $base->getQuery(),
+            'fragment'  => $base->getFragment()
+        ];
+
+        if (!empty($relParts['authority'])) {
+            $parts['authority'] = $relParts['authority'];
             $parts['path'] = self::removeDotSegments($relParts['path']);
             $parts['query'] = $relParts['query'];
             $parts['fragment'] = $relParts['fragment'];
@@ -170,7 +159,7 @@ class Uri implements UriInterface
                 $parts['query'] = $relParts['query'];
                 $parts['fragment'] = $relParts['fragment'];
             } else {
-                if (!empty($parts['host']) && empty($parts['path'])) {
+                if (!empty($parts['authority']) && empty($parts['path'])) {
                     $mergedPath = '/';
                 } else {
                     $mergedPath = substr($parts['path'], 0, strrpos($parts['path'], '/') + 1);
@@ -185,7 +174,13 @@ class Uri implements UriInterface
             $parts['fragment'] = $relParts['fragment'];
         }
 
-        return static::fromParts($parts);
+        return new self(static::createUriString(
+            $parts['scheme'],
+            $parts['authority'],
+            $parts['path'],
+            $parts['query'],
+            $parts['fragment']
+        ));
     }
 
     /**

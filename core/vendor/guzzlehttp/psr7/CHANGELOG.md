@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.2.0 - 2015-08-15
+
+* Body as `"0"` is now properly added to a response.
+* Now allowing forward seeking in CachingStream.
+* Now properly parsing HTTP requests that contain proxy targets in
+  `parse_request`.
+* functions.php is now conditionally required.
+* user-info is no longer dropped when resolving URIs.
+
 ## 1.1.0 - 2015-06-24
 
 * URIs can now be relative.

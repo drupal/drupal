@@ -136,4 +136,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($r, $r2);
         $this->assertEquals('Bam', $r2->getHeaderLine('Foo'));
     }
+
+    public function testBodyConsistent()
+    {
+        $r = new Response(200, [], '0');
+        $this->assertEquals('0', (string)$r->getBody());
+    }
+    
 }
