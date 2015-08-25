@@ -33,6 +33,13 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
   protected $filterDefaultFormat;
 
   /**
+   * Cached field and field instance definitions.
+   *
+   * @var array
+   */
+  protected $fieldInfo;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {
@@ -115,7 +122,128 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
     if ($row->getSourceProperty('format') === '0') {
       $row->setSourceProperty('format', $this->filterDefaultFormat);
     }
+
+    if ($this->moduleExists('content') && $this->getModuleSchemaVersion('content') >= 6001) {
+      foreach ($this->getFieldValues($row) as $field => $values) {
+        foreach ($values as $delta => $item) {
+          foreach ($item as $column => $value) {
+            if (strpos($column, $field) === 0) {
+              $key = substr($column, strlen($field) + 1);
+              $values[$delta][$key] = $value;
+              unset($values[$delta][$column]);
+            }
+          }
+        }
+        $row->setSourceProperty($field, $values);
+      }
+    }
+
     return parent::prepareRow($row);
+  }
+
+  /**
+   * Gets CCK field values for a node.
+   *
+   * @param \Drupal\migrate\Row $node
+   *   The node.
+   *
+   * @return array
+   *   CCK field values, keyed by field name.
+   */
+  protected function getFieldValues(Row $node) {
+    $values = [];
+    foreach ($this->getFieldInfo($node->getSourceProperty('type')) as $field => $info) {
+      $values[$field] = $this->getCckData($info, $node);
+    }
+    return $values;
+  }
+
+  /**
+   * Gets CCK field and instance definitions from the database.
+   *
+   * @param string $node_type
+   *   The node type for which to get field info.
+   *
+   * @return array
+   *   Field and instance information for the node type, keyed by field name.
+   */
+  protected function getFieldInfo($node_type) {
+    if (!isset($this->fieldInfo)) {
+      $this->fieldInfo = [];
+
+      // Query the database directly for all CCK field info.
+      $query = $this->select('content_node_field_instance', 'cnfi');
+      $query->join('content_node_field', 'cnf', 'cnf.field_name = cnfi.field_name');
+      $query->fields('cnfi');
+      $query->fields('cnf');
+
+      foreach ($query->execute() as $field) {
+        $this->fieldInfo[ $field['type_name'] ][ $field['field_name'] ] = $field;
+      }
+
+      foreach ($this->fieldInfo as $type => $fields) {
+        foreach ($fields as $field => $info) {
+          foreach ($info as $property => $value) {
+            if ($property == 'db_columns' || preg_match('/_settings$/', $property)) {
+              $this->fieldInfo[$type][$field][$property] = unserialize($value);
+            }
+          }
+        }
+      }
+    }
+
+    return isset($this->fieldInfo[$node_type]) ? $this->fieldInfo[$node_type] : [];
+  }
+
+  /**
+   * Retrieves raw CCK field data for a node.
+   *
+   * @param array $field
+   *   A field and instance definition from getFieldInfo().
+   * @param \Drupal\migrate\Row $node
+   *   The node.
+   *
+   * @return array
+   *   The field values, keyed by delta.
+   */
+  protected function getCckData(array $field, Row $node) {
+    $field_table = 'content_' . $field['field_name'];
+    $node_table = 'content_type_' . $node->getSourceProperty('type');
+
+    /** @var \Drupal\Core\Database\Schema $db */
+    $db = $this->getDatabase()->schema();
+
+    if ($db->tableExists($field_table)) {
+      $query = $this->select($field_table, 't')->fields('t');
+
+      // If the delta column does not exist, add it as an expression to
+      // normalize the query results.
+      if (!$db->fieldExists($field_table, 'delta')) {
+        $query->addExpression(0, 'delta');
+      }
+    }
+    elseif ($db->tableExists($node_table)) {
+      $query = $this->select($node_table, 't');
+
+      // Add every DB column CCK knows about.
+      foreach (array_keys($field['db_columns']) as $column) {
+        $query->addField('t', $field['field_name'] . '_' . $column);
+      }
+
+      // Every row should have a delta of 0.
+      $query->addExpression(0, 'delta');
+    }
+
+    if (isset($query)) {
+      return $query
+        ->condition('nid', $node->getSourceProperty('nid'))
+        ->condition('vid', $node->getSourceProperty('vid'))
+        ->execute()
+        ->fetchAllAssoc('delta');
+    }
+    else {
+      return [];
+    }
   }
 
   /**

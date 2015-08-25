@@ -77,8 +77,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_block_content_type',
     'd6_book',
     'd6_book_settings',
-    'd6_cck_field_values:*',
-    'd6_cck_field_revision:*',
     'd6_comment_type',
     'd6_comment',
     'd6_comment_entity_display',

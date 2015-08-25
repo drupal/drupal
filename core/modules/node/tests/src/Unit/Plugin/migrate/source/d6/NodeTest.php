@@ -18,12 +18,8 @@ class NodeTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\node\Plugin\migrate\source\d6\Node';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
     'id' => 'test',
-    // Leave it empty for now.
-    'idlist' => array(),
-    // The fake configuration for the source.
     'source' => array(
       'plugin' => 'd6_node',
     ),
@@ -79,10 +75,9 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'format' => 1,
     ),
     array(
-      // Node fields.
       'nid' => 5,
       'vid' => 5,
-      'type' => 'article',
+      'type' => 'story',
       'language' => 'en',
       'title' => 'node title 5',
       'uid' => 1,
@@ -101,6 +96,9 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'log' => '',
       'timestamp' => 1279308993,
       'format' => 1,
+      'field_test_four' => array(
+        array('value' => '3.14159'),
+      ),
     ),
   );
 
@@ -108,6 +106,50 @@ class NodeTest extends MigrateSqlSourceTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    $this->databaseContents['content_node_field'] = array(
+      array(
+        'field_name' => 'field_test_four',
+        'type' => 'number_float',
+        'global_settings' => 'a:0:{}',
+        'required' => '0',
+        'multiple' => '0',
+        'db_storage' => '1',
+        'module' => 'number',
+        'db_columns' => 'a:1:{s:5:"value";a:3:{s:4:"type";s:5:"float";s:8:"not null";b:0;s:8:"sortable";b:1;}}',
+        'active' => '1',
+        'locked' => '0',
+      ),
+    );
+    $this->databaseContents['content_node_field_instance'] = array(
+      array(
+        'field_name' => 'field_test_four',
+        'type_name' => 'story',
+        'weight' => '3',
+        'label' => 'Float Field',
+        'widget_type' => 'number',
+        'widget_settings' => 'a:0:{}',
+        'display_settings' => 'a:0:{}',
+        'description' => 'An example float field.',
+        'widget_module' => 'number',
+        'widget_active' => '1',
+      ),
+    );
+    $this->databaseContents['content_type_story'] = array(
+      array(
+        'nid' => 5,
+        'vid' => 5,
+        'uid' => 5,
+        'field_test_four_value' => '3.14159',
+      ),
+    );
+    $this->databaseContents['system'] = array(
+      array(
+        'type' => 'module',
+        'name' => 'content',
+        'schema_version' => 6001,
+        'status' => TRUE,
+      ),
+    );
     foreach ($this->expectedResults as $k => $row) {
       foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format', 'timestamp', 'log') as $field) {
         $this->databaseContents['node_revisions'][$k][$field] = $row[$field];
