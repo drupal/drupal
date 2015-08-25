@@ -207,6 +207,15 @@ interface MigrationInterface extends ConfigEntityInterface {
   public function getMigrationResult();
 
   /**
+   * Signal that the migration should be interrupted with the specified result
+   * code.
+   *
+   * @param int $result
+   *   One of the MigrationInterface::RESULT_* constants.
+   */
+  public function interruptMigration($result);
+
+  /**
    * Get the normalized process pipeline configuration describing the process
    * plugins.
    *

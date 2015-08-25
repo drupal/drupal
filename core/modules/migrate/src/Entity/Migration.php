@@ -461,6 +461,14 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
+  public function interruptMigration($result) {
+    $this->setStatus(MigrationInterface::STATUS_STOPPING);
+    $this->setMigrationResult($result);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isComplete() {
     return $this->getMigrationResult() === static::RESULT_COMPLETED;
   }

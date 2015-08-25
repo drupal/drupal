@@ -31,11 +31,15 @@ class DataSource extends SourcePluginBase {
    * {@inheritdoc}
    */
   public function initializeIterator() {
-    return new \ArrayIterator(array(array('data' => 'dummy value')));
+    return new \ArrayIterator([
+      ['data' => 'dummy value'],
+      ['data' => 'dummy value2'],
+    ]);
+
   }
 
   public function __toString() {
-    return '';
+    return 'Sample data for testing';
   }
 
   /**
@@ -50,7 +54,7 @@ class DataSource extends SourcePluginBase {
    * {@inheritdoc}
    */
   public function count() {
-    return 1;
+    return 2;
   }
 
 }

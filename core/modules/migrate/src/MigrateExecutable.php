@@ -298,7 +298,14 @@ class MigrateExecutable implements MigrateExecutableInterface {
       unset($sourceValues, $destinationValues);
       $this->sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
+      // Check for memory exhaustion.
       if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
+        break;
+      }
+
+      // If anyone has requested we stop, return the requested result.
+      if ($this->migration->getStatus() == MigrationInterface::STATUS_STOPPING) {
+        $return = $this->migration->getMigrationResult();
         break;
       }
 
