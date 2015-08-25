@@ -17,7 +17,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *
  * @FieldWidget(
  *   id = "number",
- *   label = @Translation("Text field"),
+ *   label = @Translation("Number field"),
  *   field_types = {
  *     "integer",
  *     "decimal",
