@@ -117,6 +117,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_statistics_settings',
     'd6_syslog_settings',
     'd6_system_cron',
+    'd6_system_date',
     'd6_system_file',
     'd6_system_image',
     'd6_system_image_gd',

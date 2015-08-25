@@ -251,12 +251,12 @@ class Users extends DrupalDumpBase {
       'access' => '1391259674',
       'login' => '1391152255',
       'status' => '1',
-      'timezone' => '3600',
+      'timezone' => '-28800',
       'language' => 'en',
       'picture' => '',
       'init' => 'bloggs@example.com',
       'data' => 'a:0:{}',
-      'timezone_name' => NULL,
+      'timezone_name' => 'America/Anchorage',
       'pass_plain' => 'joe.bloggs_pass',
       'expected_timezone' => NULL,
       'timezone_id' => '0',
@@ -275,12 +275,12 @@ class Users extends DrupalDumpBase {
       'access' => '1391259574',
       'login' => '1391162255',
       'status' => '1',
-      'timezone' => '3600',
+      'timezone' => '0',
       'language' => 'en',
       'picture' => '',
       'init' => 'sal.saraniti@example.com',
       'data' => 'a:0:{}',
-      'timezone_name' => NULL,
+      'timezone_name' => 'UTC',
       'pass_plain' => 'sal.saraniti',
       'expected_timezone' => NULL,
       'timezone_id' => '0',
@@ -299,7 +299,7 @@ class Users extends DrupalDumpBase {
       'access' => '1390259574',
       'login' => '1390162255',
       'status' => '1',
-      'timezone' => '3600',
+      'timezone' => NULL,
       'language' => 'en',
       'picture' => '',
       'init' => 'terry.saraniti@example.com',
@@ -312,4 +312,4 @@ class Users extends DrupalDumpBase {
   }
 
 }
-#ce6d7264b7ef5ed1ffe854326893e1e0
+#4a42570fa3c819b0b84e9552d689e2e7

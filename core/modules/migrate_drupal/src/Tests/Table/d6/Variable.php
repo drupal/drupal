@@ -173,6 +173,9 @@ class Variable extends DrupalDumpBase {
       'name' => 'comment_subject_field_story',
       'value' => 's:1:"0";',
     ))->values(array(
+      'name' => 'configurable_timezones',
+      'value' => 's:1:"0";',
+    ))->values(array(
       'name' => 'contact_default_status',
       'value' => 'i:1;',
     ))->values(array(
@@ -379,6 +382,12 @@ class Variable extends DrupalDumpBase {
     ))->values(array(
       'name' => 'date_api_version',
       'value' => 's:3:"5.2";',
+    ))->values(array(
+      'name' => 'date_default_timezone',
+      'value' => 's:4:"3600";',
+    ))->values(array(
+      'name' => 'date_first_day',
+      'value' => 's:1:"4";',
     ))->values(array(
       'name' => 'date_format_long',
       'value' => 's:24:"\L\O\N\G l, F j, Y - H:i";',
@@ -725,4 +734,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#32b72a0543c243804368c7bc10b05be5
+#dd0717c35d3b181c80e5ad74ea2ed2f7
