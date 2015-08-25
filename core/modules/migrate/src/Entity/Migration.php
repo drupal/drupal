@@ -247,6 +247,19 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   protected $entityManager;
 
   /**
+   * Labels corresponding to each defined status.
+   *
+   * @var array
+   */
+  protected $statusLabels = [
+    self::STATUS_IDLE => 'Idle',
+    self::STATUS_IMPORTING => 'Importing',
+    self::STATUS_ROLLING_BACK => 'Rolling back',
+    self::STATUS_STOPPING => 'Stopping',
+    self::STATUS_DISABLED => 'Disabled',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function getSourcePlugin() {
@@ -407,17 +420,42 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
+  public function setStatus($status) {
+    \Drupal::keyValue('migrate_status')->set($this->id(), $status);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus() {
+    return \Drupal::keyValue('migrate_status')->get($this->id(), static::STATUS_IDLE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusLabel() {
+    $status = $this->getStatus();
+    if (isset($this->statusLabels[$status])) {
+      return $this->statusLabels[$status];
+    }
+    else {
+      return '';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setMigrationResult($result) {
-    $migrate_result_store = \Drupal::keyValue('migrate_result');
-    $migrate_result_store->set($this->id(), $result);
+    \Drupal::keyValue('migrate_result')->set($this->id(), $result);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getMigrationResult() {
-    $migrate_result_store = \Drupal::keyValue('migrate_result');
-    return $migrate_result_store->get($this->id(), static::RESULT_INCOMPLETE);
+    return \Drupal::keyValue('migrate_result')->get($this->id(), static::RESULT_INCOMPLETE);
   }
 
   /**

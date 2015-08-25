@@ -202,6 +202,15 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * {@inheritdoc}
    */
   public function import() {
+    // Only begin the import operation if the migration is currently idle.
+    if ($this->migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
+      $this->message->display($this->t('Migration @id is busy with another operation: @status',
+        array(
+          '@id' => $this->migration->id(),
+          '@status' => $this->t($this->migration->getStatusLabel()),
+        )), 'error');
+      return MigrationInterface::RESULT_FAILED;
+    }
     $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_IMPORT, new MigrateImportEvent($this->migration));
 
     // Knock off migration if the requirements haven't been met.
@@ -218,6 +227,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       return MigrationInterface::RESULT_FAILED;
     }
 
+    $this->migration->setStatus(MigrationInterface::STATUS_IMPORTING);
     $return = MigrationInterface::RESULT_COMPLETED;
     $source = $this->getSource();
     $id_map = $this->migration->getIdMap();
@@ -228,6 +238,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     catch (\Exception $e) {
       $this->message->display(
         $this->t('Migration failed with source plugin exception: !e', array('!e' => $e->getMessage())), 'error');
+      $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
       return MigrationInterface::RESULT_FAILED;
     }
 
@@ -298,12 +309,14 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->message->display(
           $this->t('Migration failed with source plugin exception: !e',
             array('!e' => $e->getMessage())), 'error');
+        $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
         return MigrationInterface::RESULT_FAILED;
       }
     }
 
     $this->migration->setMigrationResult($return);
     $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration));
+    $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
     return $return;
   }
 

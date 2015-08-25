@@ -9,6 +9,7 @@ namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -17,6 +18,13 @@ use Drupal\Tests\UnitTestCase;
 abstract class MigrateTestCase extends UnitTestCase {
 
   protected $migrationConfiguration = [];
+
+  /**
+   * Local store for mocking setStatus()/getStatus().
+   *
+   * @var \Drupal\migrate\Entity\MigrationInterface::STATUS_*
+   */
+  protected $migrationStatus = MigrationInterface::STATUS_IDLE;
 
   /**
    * Retrieve a mocked migration.
@@ -41,6 +49,19 @@ abstract class MigrateTestCase extends UnitTestCase {
 
     $migration->method('getIdMap')
       ->willReturn($this->idMap);
+
+    // We need the state to be toggled throughout the test so we store the value
+    // on the test class and use a return callback.
+    $migration->expects($this->any())
+      ->method('getStatus')
+      ->willReturnCallback(function() {
+        return $this->migrationStatus;
+      });
+    $migration->expects($this->any())
+      ->method('setStatus')
+      ->willReturnCallback(function($status) {
+        $this->migrationStatus = $status;
+      });
 
     $migration->method('getMigrationDependencies')
       ->willReturn([
