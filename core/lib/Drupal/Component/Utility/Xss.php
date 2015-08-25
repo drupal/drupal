@@ -88,10 +88,7 @@ class Xss {
     $splitter = function ($matches) use ($html_tags, $class) {
       return $class::split($matches[1], $html_tags, $class);
     };
-    // Strip any tags that are not in the whitelist, then mark the text as safe
-    // for output. All other known XSS vectors have been filtered out by this
-    // point and any HTML tags remaining will have been deliberately allowed, so
-    // it is acceptable to call SafeMarkup::set() on the resultant string.
+    // Strip any tags that are not in the whitelist.
     return preg_replace_callback('%
       (
       <(?=[^a-zA-Z!/])  # a lone <
