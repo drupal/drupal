@@ -27,7 +27,8 @@
  *
  * @see https://wiki.php.net/rfc/expectations
  */
-assert_options(ASSERT_ACTIVE, 1);
+assert_options(ASSERT_ACTIVE, TRUE);
+\Drupal\Component\Assertion\Handle::register();
 
 /**
  * Enable local development services.

@@ -1004,7 +1004,7 @@
  * verified with standard control structures at all times, not just checked in
  * development environments with assert() statements on.
  *
- * When runtime assertions fail in PHP 7 an \AssertionException is thrown.
+ * When runtime assertions fail in PHP 7 an \AssertionError is thrown.
  * Drupal uses an assertion callback to do the same in PHP 5.x so that unit
  * tests involving runtime assertions will work uniformly across both versions.
  *

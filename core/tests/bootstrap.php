@@ -108,3 +108,10 @@ setlocale(LC_ALL, 'C');
 // and DST). This choice is made to prevent timezone related regressions and
 // reduce the fragility of the testing system in general.
 date_default_timezone_set('Australia/Sydney');
+
+// Runtime assertions. PHPUnit follows the php.ini assert.active setting for
+// runtime assertions. By default this setting is on. Here we make a call to
+// make PHP 5 and 7 handle assertion failures the same way, but this call does
+// not turn runtime assertions on if they weren't on already.
+\Drupal\Component\Assertion\Handle::register();
+

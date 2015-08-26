@@ -923,6 +923,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // Simpletest's internal browser.
         define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
+        // Web tests are to be conducted with runtime assertions active.
+        assert_options(ASSERT_ACTIVE, TRUE);
+        // Now synchronize PHP 5 and 7's handling of assertions as much as
+        // possible.
+        \Drupal\Component\Assertion\Handle::register();
+
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
         ini_set('error_log', DRUPAL_ROOT . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
