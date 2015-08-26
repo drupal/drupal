@@ -695,6 +695,12 @@ class Variable extends DrupalDumpBase {
       'name' => 'user_mail_register_no_approval_required_subject',
       'value' => 's:38:"Account details for !username at !site";',
     ))->values(array(
+      'name' => 'user_mail_register_pending_approval_body',
+      'value' => "s:267:\"!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another email containing information about how to log in, set your password, and other details.\n\n\n--  !site team\";",
+    ))->values(array(
+      'name' => 'user_mail_register_pending_approval_subject',
+      'value' => 's:63:"Account details for !username at !site (pending admin approval)";',
+    ))->values(array(
       'name' => 'user_mail_status_activated_body',
       'value' => "s:419:\"!username,\n\nYour account at !site has been activated.\n\nYou may now log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\nOnce you have set your own password, you will be able to log in to !login_uri in the future using:\n\nusername: !username\n\";",
     ))->values(array(
@@ -719,12 +725,6 @@ class Variable extends DrupalDumpBase {
       'name' => 'user_mail_status_deleted_subject',
       'value' => 's:48:"Account details for !username at !site (deleted)";',
     ))->values(array(
-      'name' => 'user_mail_user_mail_register_pending_approval_body',
-      'value' => "s:267:\"!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another email containing information about how to log in, set your password, and other details.\n\n\n--  !site team\";",
-    ))->values(array(
-      'name' => 'user_mail_user_mail_register_pending_approval_subject',
-      'value' => 's:63:"Account details for !username at !site (pending admin approval)";',
-    ))->values(array(
       'name' => 'user_register',
       'value' => 'i:0;',
     ))->values(array(
@@ -734,4 +734,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#dd0717c35d3b181c80e5ad74ea2ed2f7
+#f34f009027a42145859ceca526d4c297
