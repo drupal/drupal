@@ -95,8 +95,10 @@
    *   XMLHttpRequest object used for the failed request.
    * @param {string} uri
    *   The URI where the error occurred.
+   * @param {string} customMessage
+   *   The custom message.
    */
-  Drupal.AjaxError = function (xmlhttp, uri) {
+  Drupal.AjaxError = function (xmlhttp, uri, customMessage) {
 
     var statusCode;
     var statusText;
@@ -140,12 +142,14 @@
     // We don't need readyState except for status == 0.
     readyStateText = xmlhttp.status === 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
 
+    customMessage = customMessage ? ("\n" + Drupal.t("CustomMessage: !customMessage", {'!customMessage': customMessage})) : "";
+
     /**
      * Formatted and translated error message.
      *
      * @type {string}
      */
-    this.message = statusCode + pathText + statusText + responseText + readyStateText;
+    this.message = statusCode + pathText + statusText + customMessage + responseText + readyStateText;
 
     /**
      * Used by some browsers to display a more accurate stack trace.
@@ -338,7 +342,13 @@
     // 2. /nojs$ - The end of a URL string.
     // 3. /nojs? - Followed by a query (e.g. path/nojs?destination=foobar).
     // 4. /nojs# - Followed by a fragment (e.g.: path/nojs#myfragment).
+    var originalUrl = this.url;
     this.url = this.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
+    // If the 'nojs' version of the URL is trusted, also trust the 'ajax'
+    // version.
+    if (drupalSettings.ajaxTrustedUrl[originalUrl]) {
+      drupalSettings.ajaxTrustedUrl[this.url] = true;
+    }
 
     // Set the options for the ajaxSubmit function.
     // The 'this' variable will not persist inside of the options object.
@@ -377,18 +387,36 @@
         ajax.ajaxing = true;
         return ajax.beforeSend(xmlhttprequest, options);
       },
-      success: function (response, status) {
+      success: function (response, status, xmlhttprequest) {
         // Sanity check for browser support (object expected).
         // When using iFrame uploads, responses must be returned as a string.
         if (typeof response === 'string') {
           response = $.parseJSON(response);
         }
+
+        // Prior to invoking the response's commands, verify that they can be
+        // trusted by checking for a response header. See
+        // \Drupal\Core\EventSubscriber\AjaxResponseSubscriber for details.
+        // - Empty responses are harmless so can bypass verification. This
+        //   avoids an alert message for server-generated no-op responses that
+        //   skip Ajax rendering.
+        // - Ajax objects with trusted URLs (e.g., ones defined server-side via
+        //   #ajax) can bypass header verification. This is especially useful
+        //   for Ajax with multipart forms. Because IFRAME transport is used,
+        //   the response headers cannot be accessed for verification.
+        if (response !== null && !drupalSettings.ajaxTrustedUrl[ajax.url]) {
+          if (xmlhttprequest.getResponseHeader('X-Drupal-Ajax-Token') !== '1') {
+            var customMessage = Drupal.t("The response failed verification so will not be processed.");
+            return ajax.error(xmlhttprequest, ajax.url, customMessage);
+          }
+        }
+
         return ajax.success(response, status);
       },
-      complete: function (response, status) {
+      complete: function (xmlhttprequest, status) {
         ajax.ajaxing = false;
         if (status === 'error' || status === 'parsererror') {
-          return ajax.error(response, ajax.url);
+          return ajax.error(xmlhttprequest, ajax.url);
         }
       },
       dataType: 'json',
@@ -411,6 +439,9 @@
 
     // Bind the ajaxSubmit function to the element event.
     $(ajax.element).on(element_settings.event, function (event) {
+      if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {
+        throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {'!url': ajax.url}));
+      }
       return ajax.eventResponse(this, event);
     });
 
@@ -760,10 +791,11 @@
   /**
    * Handler for the form redirection error.
    *
-   * @param {object} response
+   * @param {object} xmlhttprequest
    * @param {string} uri
+   * @param {string} customMessage
    */
-  Drupal.Ajax.prototype.error = function (response, uri) {
+  Drupal.Ajax.prototype.error = function (xmlhttprequest, uri, customMessage) {
     // Remove the progress element.
     if (this.progress.element) {
       $(this.progress.element).remove();
@@ -777,10 +809,10 @@
     $(this.element).prop('disabled', false);
     // Reattach behaviors, if they were detached in beforeSerialize().
     if (this.$form) {
-      var settings = response.settings || this.settings || drupalSettings;
+      var settings = this.settings || drupalSettings;
       Drupal.attachBehaviors(this.$form.get(0), settings);
     }
-    throw new Drupal.AjaxError(response, uri);
+    throw new Drupal.AjaxError(xmlhttprequest, uri, customMessage);
   };
 
   /**

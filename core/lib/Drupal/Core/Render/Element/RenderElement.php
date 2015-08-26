@@ -304,6 +304,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       }
 
       $element['#attached']['drupalSettings']['ajax'][$element['#id']] = $settings;
+      $element['#attached']['drupalSettings']['ajaxTrustedUrl'][$settings['url']] = TRUE;
 
       // Indicate that Ajax processing was successful.
       $element['#ajax_processed'] = TRUE;

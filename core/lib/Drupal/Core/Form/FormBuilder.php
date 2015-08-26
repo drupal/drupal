@@ -943,6 +943,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         $element['#attributes']['enctype'] = 'multipart/form-data';
       }
 
+      // Allow Ajax submissions to the form action to bypass verification. This
+      // is especially useful for multipart forms, which cannot be verified via
+      // a response header.
+      $element['#attached']['drupalSettings']['ajaxTrustedUrl'][$element['#action']] = TRUE;
+
       // If a form contains a single textfield, and the ENTER key is pressed
       // within it, Internet Explorer submits the form with no POST data
       // identifying any submit button. Other browsers submit POST data as
