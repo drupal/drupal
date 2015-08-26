@@ -668,12 +668,10 @@ class ViewEditForm extends ViewFormBase {
 
     // Regenerate the main display area.
     $build = $this->getDisplayTab($view);
-    static::addMicroweights($build);
     $response->addCommand(new HtmlCommand('#views-tab-' . $display_id, $build));
 
     // Regenerate the top area so changes to display names and order will appear.
     $build = $this->renderDisplayTop($view);
-    static::addMicroweights($build);
     $response->addCommand(new ReplaceCommand('#views-display-top', $build));
   }
 
@@ -1146,24 +1144,6 @@ class ViewEditForm extends ViewFormBase {
     }
 
     return $build;
-  }
-
-  /**
-   * Recursively adds microweights to a render array, similar to what
-   * \Drupal::formBuilder()->doBuildForm() does for forms.
-   *
-   * @todo Submit a core patch to fix drupal_render() to do this, so that all
-   *   render arrays automatically preserve array insertion order, as forms do.
-   */
-  public static function addMicroweights(&$build) {
-    $count = 0;
-    foreach (Element::children($build) as $key) {
-      if (!isset($build[$key]['#weight'])) {
-        $build[$key]['#weight'] = $count/1000;
-      }
-      static::addMicroweights($build[$key]);
-      $count++;
-    }
   }
 
 }
