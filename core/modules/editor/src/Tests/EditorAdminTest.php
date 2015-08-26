@@ -7,6 +7,10 @@
 
 namespace Drupal\editor\Tests;
 
+use Drupal\Component\Utility\Unicode;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -96,24 +100,88 @@ class EditorAdminTest extends WebTestBase {
    * Tests adding a text editor to a new text format.
    */
   public function testAddEditorToNewFormat() {
+    $this->addEditorToNewFormat('monocerus', 'Monocerus');
+    $this->verifyUnicornEditorConfiguration('monocerus');
+  }
+
+  /**
+   * Tests format deletion.
+   */
+  public function testDisableFormatWithEditor() {
+    $formats = ['monocerus' => 'Monocerus', 'tattoo' =>  'Tattoo'];
+
+    // Install the node module.
+    $this->container->get('module_installer')->install(['node']);
+    $this->resetAll();
+    // Create a new node type and attach the 'body' field to it.
+    $node_type = NodeType::create(['type' => Unicode::strtolower($this->randomMachineName())]);
+    $node_type->save();
+    node_add_body_field($node_type, $this->randomString());
+
+    $permissions = ['administer filters', "edit any {$node_type->id()} content"];
+    foreach ($formats as $format => $name) {
+      // Create a format and add an editor to this format.
+      $this->addEditorToNewFormat($format, $name);
+      // Add permission for this format.
+      $permissions[] = "use text format $format";
+    }
+
+    // Create a node having the body format value 'moncerus'.
+    $node = Node::create([
+      'type' => $node_type->id(),
+      'title' => $this->randomString(),
+    ]);
+    $node->body->value = $this->randomString(100);
+    $node->body->format = 'monocerus';
+    $node->save();
+
+    // Login as an user able to use both formats and edit nodes of created type.
+    $account = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($account);
+
+    // The node edit page header.
+    $text = t('<em>Edit @type</em> @title', array('@type' => $node_type->label(), '@title' => $node->label()));
+
+    // Go to node edit form.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertRaw($text);
+
+    // Disable the format assigned to the 'body' field of the node.
+    FilterFormat::load('monocerus')->disable()->save();
+
+    // Edit again the node.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertRaw($text);
+  }
+
+  /**
+   * Adds an editor to a new format using the UI.
+   *
+   * @param string $format_id
+   *   The format id.
+   * @param string $format_name
+   *   The format name.
+   */
+  protected function addEditorToNewFormat($format_id, $format_name) {
     $this->enableUnicornEditor();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/add');
     // Configure the text format name.
     $edit = array(
-      'name' => 'Monocerus',
-      'format' => 'monocerus',
+      'name' => $format_name,
+      'format' => $format_id,
     );
     $edit += $this->selectUnicornEditor();
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->verifyUnicornEditorConfiguration($edit['format']);
   }
 
   /**
    * Enables the unicorn editor.
    */
   protected function enableUnicornEditor() {
-    \Drupal::service('module_installer')->install(array('editor_test'));
+    if (!$this->container->get('module_handler')->moduleExists('editor_test')) {
+      $this->container->get('module_installer')->install(array('editor_test'));
+    }
   }
 
   /**

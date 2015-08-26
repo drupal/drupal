@@ -254,8 +254,9 @@ function editor_load($format_id) {
  *
  * @param string $html
  *   The HTML string that will be passed to the text editor.
- * @param \Drupal\filter\FilterFormatInterface $format
- *   The text format whose text editor will be used.
+ * @param \Drupal\filter\FilterFormatInterface|null $format
+ *   The text format whose text editor will be used or NULL if the previously
+ *   defined text format is now disabled.
  * @param \Drupal\filter\FilterFormatInterface $original_format|null
  *   (optional) The original text format (i.e. when switching text formats,
  *   $format is the text format that is going to be used, $original_format is
@@ -263,18 +264,21 @@ function editor_load($format_id) {
  *   database when editing).
  *
  * @return string|false
- *   FALSE when no XSS filtering needs to be applied (either because no text
- *   editor is associated with the text format, or because the text editor is
- *   safe from XSS attacks, or because the text format does not use any XSS
- *   protection filters), otherwise the XSS filtered string.
+ *   The XSS filtered string or FALSE when no XSS filtering needs to be applied,
+ *   because one of the next conditions might occur:
+ *   - No text editor is associated with the text format,
+ *   - The previously defined text format is now disabled,
+ *   - The text editor is safe from XSS,
+ *   - The text format does not use any XSS protection filters.
  *
  * @see https://www.drupal.org/node/2099741
  */
-function editor_filter_xss($html, FilterFormatInterface $format, FilterFormatInterface $original_format = NULL) {
-  $editor = editor_load($format->id());
+function editor_filter_xss($html, FilterFormatInterface $format = NULL, FilterFormatInterface $original_format = NULL) {
+  $editor = $format ? editor_load($format->id()) : NULL;
 
-  // If no text editor is associated with this text format, then we don't need
-  // text editor XSS filtering either.
+  // If no text editor is associated with this text format or the previously
+  // defined text format is now disabled, then we don't need text editor XSS
+  // filtering either.
   if (!isset($editor)) {
     return FALSE;
   }
