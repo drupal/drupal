@@ -105,7 +105,7 @@ class EditorAdminTest extends WebTestBase {
   }
 
   /**
-   * Tests format deletion.
+   * Tests format disabling.
    */
   public function testDisableFormatWithEditor() {
     $formats = ['monocerus' => 'Monocerus', 'tattoo' =>  'Tattoo'];
