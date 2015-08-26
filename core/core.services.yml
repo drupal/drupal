@@ -630,12 +630,8 @@ services:
   http_kernel.basic:
     class: Symfony\Component\HttpKernel\HttpKernel
     arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack']
-  http_negotiation.format_negotiator:
-    class: Drupal\Core\ContentNegotiation
-    private: true
   http_middleware.negotiation:
     class: Drupal\Core\StackMiddleware\NegotiationMiddleware
-    arguments: ['@http_negotiation.format_negotiator']
     tags:
       - { name: http_middleware, priority: 400 }
   http_middleware.reverse_proxy:

@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\StackMiddleware;
 
-use Drupal\Core\ContentNegotiation;
-use Drupal\Core\ContentNegotiationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -27,13 +25,6 @@ class NegotiationMiddleware implements HttpKernelInterface {
   protected $app;
 
   /**
-   * The content negotiator.
-   *
-   * @var \Drupal\Core\ContentNegotiation
-   */
-  protected $negotiator;
-
-  /**
    * Contains a hashmap of format as key and mimetype as value.
    *
    * @var array
@@ -45,12 +36,9 @@ class NegotiationMiddleware implements HttpKernelInterface {
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
    *   The wrapper HTTP kernel
-   * @param \Drupal\Core\ContentNegotiation $negotiator
-   *   The content negotiator.
    */
-  public function __construct(HttpKernelInterface $app, ContentNegotiation $negotiator) {
+  public function __construct(HttpKernelInterface $app) {
     $this->app = $app;
-    $this->negotiator = $negotiator;
   }
 
   /**
@@ -63,7 +51,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
     }
 
     // Determine the request format using the negotiator.
-    $request->setRequestFormat($this->negotiator->getContentType($request));
+    $request->setRequestFormat($this->getContentType($request));
     return $this->app->handle($request, $type, $catch);
   }
 
@@ -80,6 +68,33 @@ class NegotiationMiddleware implements HttpKernelInterface {
   public function registerFormat($format, $mime_type) {
     $this->formats[$format] = $mime_type;
     return $this;
+  }
+
+  /**
+   * Gets the normalized type of a request.
+   *
+   * The normalized type is a short, lowercase version of the format, such as
+   * 'html', 'json' or 'atom'.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object from which to extract the content type.
+   *
+   * @return string
+   *   The normalized type of a given request.
+   */
+  protected function getContentType(Request $request) {
+    // AJAX iframe uploads need special handling, because they contain a JSON
+    // response wrapped in <textarea>.
+    if ($request->get('ajax_iframe_upload', FALSE)) {
+      return 'iframeupload';
+    }
+
+    if ($request->query->has('_format')) {
+      return $request->query->get('_format');
+    }
+
+    // Do HTML last so that it always wins.
+    return 'html';
   }
 
 }
