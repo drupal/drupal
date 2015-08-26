@@ -128,9 +128,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       '#parents' => array_merge($parents, array($field_name . '_wrapper')),
       '#attributes' => array(
         'class' => array(
-          'field-type-' . Html::getClass($this->fieldDefinition->getType()),
-          'field-name-' . Html::getClass($field_name),
-          'field-widget-' . Html::getClass($this->getPluginId()),
+          'field--type-' . Html::getClass($this->fieldDefinition->getType()),
+          'field--name-' . Html::getClass($field_name),
+          'field--widget-' . Html::getClass($this->getPluginId()),
         ),
       ),
       'widget' => $elements,

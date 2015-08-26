@@ -60,7 +60,7 @@ class MultiFormTest extends AjaxTestBase {
     $field_name = 'field_ajax_test';
 
     $form_xpath = '//form[starts-with(@id, "node-page-form")]';
-    $field_xpath = '//div[contains(@class, "field-name-field-ajax-test")]';
+    $field_xpath = '//div[contains(@class, "field--name-field-ajax-test")]';
     $button_name = $field_name . '_add_more';
     $button_value = t('Add another item');
     $button_xpath_suffix = '//input[@name="' . $button_name . '"]';

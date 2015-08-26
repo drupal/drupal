@@ -41,7 +41,7 @@ class NodeViewTest extends NodeTestBase {
     $this->assertTrue(mb_strlen($title, 'utf-8') < strlen($title), 'Title has multi-byte characters.');
     $node = $this->drupalCreateNode(array('title' => $title));
     $this->drupalGet($node->urlInfo());
-    $result = $this->xpath('//span[contains(@class, "field-name-title")]');
+    $result = $this->xpath('//span[contains(@class, "field--name-title")]');
     $this->assertEqual((string) $result[0], $title, 'The passed title was returned.');
   }
 

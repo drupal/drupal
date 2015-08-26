@@ -3,93 +3,93 @@
  * Visual styles for Bartik's field components.
  */
 
-.field-type-taxonomy-term-reference {
+.field--type-entity-reference {
   margin: 0 0 1.2em;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.field-type-taxonomy-term-reference .field-label {
+.field--type-entity-reference .field__label {
   font-weight: normal;
   margin: 0;
   padding-right: 5px; /* LTR */
 }
-[dir="rtl"] .field-type-taxonomy-term-reference .field-label {
+[dir="rtl"] .field--type-entity-reference .field__label {
   padding-left: 5px;
   padding-right: 0;
 }
-.field-type-taxonomy-term-reference .field-label,
-.field-type-taxonomy-term-reference ul.links {
+.field--type-entity-reference .field__label,
+.field--type-entity-reference ul.links {
   font-size: 0.8em;
 }
-.node--view-mode-teaser .field-type-taxonomy-term-reference .field-label,
-.node--view-mode-teaser .field-type-taxonomy-term-reference ul.links {
+.node--view-mode-teaser .field--type-entity-reference .field__label,
+.node--view-mode-teaser .field--type-entity-reference ul.links {
   font-size: 0.821em;
 }
-.field-type-taxonomy-term-reference ul.links {
+.field--type-entity-reference ul.links {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-.field-type-taxonomy-term-reference ul.links li {
+.field--type-entity-reference ul.links li {
   float: left; /* LTR */
   padding: 0 1em 0 0; /* LTR */
   white-space: nowrap;
 }
-[dir="rtl"] .field-type-taxonomy-term-reference ul.links li {
+[dir="rtl"] .field--type-entity-reference ul.links li {
   padding: 0 0 0 1em;
   float: right;
 }
 @media all and (min-width: 560px) {
-  .node .field-type-image {
+  .node .field--type-image {
     float: left; /* LTR */
     margin: 0 1em 0 0; /* LTR */
   }
-  [dir="rtl"] .node .field-type-image {
+  [dir="rtl"] .node .field--type-image {
     float: right;
     margin: 0 0 0 1em;
   }
-  .node .field-type-image + .field-type-image {
+  .node .field--type-image + .field--type-image {
     clear: both;
   }
 }
-.field-type-image img,
-.field-name-field-user-picture img {
+.field--type-image img,
+.field--name-field-user-picture img {
   margin: 0 0 1em;
 }
-.field-type-image a {
+.field--type-image a {
   border-bottom: none;
 }
-.field-name-field-tags {
+.field--name-field-tags {
   margin: 0 0 1.2em;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.field-name-field-tags .field-label {
+.field--name-field-tags .field__label {
   font-weight: normal;
   margin: 0;
   padding-right: 5px; /* LTR */
 }
-[dir="rtl"] .field-name-field-tags .field-label {
+[dir="rtl"] .field--name-field-tags .field__label {
   padding-left: 5px;
   padding-right: 0;
 }
-.field-name-field-tags .field-label,
-.field-name-field-tags ul.links {
+.field--name-field-tags .field__label,
+.field--name-field-tags ul.links {
   font-size: 0.8em;
 }
-.node--view-mode-teaser .field-name-field-tags .field-label,
-.node--view-mode-teaser .field-name-field-tags ul.links {
+.node--view-mode-teaser .field--name-field-tags .field__label,
+.node--view-mode-teaser .field--name-field-tags ul.links {
   font-size: 0.821em;
 }
-.field-name-field-tags ul.links {
+.field--name-field-tags ul.links {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-.field-name-field-tags ul.links li {
+.field--name-field-tags ul.links li {
   float: left; /* LTR */
   padding: 0 1em 0 0; /* LTR */
   white-space: nowrap;
 }
-[dir="rtl"] .field-name-field-tags ul.links li {
+[dir="rtl"] .field--name-field-tags ul.links li {
   padding: 0 0 0 1em;
   float: right;
 }

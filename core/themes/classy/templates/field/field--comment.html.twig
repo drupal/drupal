@@ -13,7 +13,6 @@
  * - title_suffix: Additional title output populated by modules, intended to
  *   be displayed after the main title tag that appears in the template.
  * - comments: List of comments rendered through comment.html.twig.
- * - content_attributes: HTML attributes for the form title.
  * - comment_form: The 'Add new comment' form.
  * - comment_display_mode: Is the comments are threaded.
  * - comment_type: The comment type bundle ID for the comment field.
@@ -26,15 +25,12 @@
  * @see comment_preprocess_field()
  */
 #}
-{% set field_name_class = field_name|clean_class %}
 {%
   set classes = [
     'field',
-    'field-' ~ entity_type|clean_class ~ '--' ~ field_name_class,
-    'field-name-' ~ field_name_class,
-    'field-type-' ~ field_type|clean_class,
-    'field-label-' ~ label_display,
-    label_display == 'inline' ? 'clearfix',
+    'field--name-' ~ field_name|clean_class,
+    'field--type-' ~ field_type|clean_class,
+    'field--label-' ~ label_display,
     'comment-wrapper',
   ]
 %}
@@ -54,7 +50,7 @@
   {{ comments }}
 
   {% if comment_form %}
-    <h2{{ content_attributes.addClass('title', 'comment-form__title') }}>{{ 'Add new comment'|t }}</h2>
+    <h2 class='title comment-form__title'>{{ 'Add new comment'|t }}</h2>
     {{ comment_form }}
   {% endif %}
 

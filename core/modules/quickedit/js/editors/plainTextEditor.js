@@ -30,7 +30,7 @@
       // Store the original value of this field. Necessary for reverting
       // changes.
       var $textElement;
-      var $fieldItems = this.$el.find('.field-item');
+      var $fieldItems = this.$el.find('.field__item');
       if ($fieldItems.length) {
         $textElement = this.$textElement = $fieldItems.eq(0);
       }

@@ -29,8 +29,8 @@
 .comment__attribution img {
   border: 1px solid #d3d7d9;
 }
-/* This is required to win over specificity of .field-type-image img */
-.comment .field-name-user-picture img {
+/* This is required to win over specificity of .field--type-image img */
+.comment .field--name-user-picture img {
   margin: 0;
 }
 .comment__author .username {

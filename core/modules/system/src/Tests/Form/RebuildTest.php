@@ -97,7 +97,7 @@ class RebuildTest extends WebTestBase {
     // field items in the field for which we just added an item.
     $this->drupalGet('node/add/page');
     $this->drupalPostAjaxForm(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), NULL, array(), array(), 'node-page-form');
-    $this->assert(count($this->xpath('//div[contains(@class, "field-name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
+    $this->assert(count($this->xpath('//div[contains(@class, "field--name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
 
     // Submit the form with the non-Ajax "Save" button, leaving the title field
     // blank to trigger a validation error, and ensure that a validation error

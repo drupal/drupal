@@ -1474,8 +1474,6 @@ function template_preprocess_region(&$variables) {
  *   - element: A render element representing the field.
  *   - attributes: A string containing the attributes for the wrapping div.
  *   - title_attributes: A string containing the attributes for the title.
- *   - content_attributes: A string containing the attributes for the content's
- *     div.
  */
 function template_preprocess_field(&$variables, $hook) {
   $element = $variables['element'];
@@ -1492,9 +1490,20 @@ function template_preprocess_field(&$variables, $hook) {
   // readers.
   $variables['label'] = $element['#title'];
 
+
+  // @todo Check for is_object() required due to pseudo field used in
+  // quickedit_test_entity_view_alter(). Remove this check after this is fixed
+  // in https://www.drupal.org/node/2550225.
+  $variables['multiple'] = is_object($element['#items']) ? $element['#items']->getFieldDefinition()->getFieldStorageDefinition()->isMultiple() : FALSE;
+
   static $default_attributes;
   if (!isset($default_attributes)) {
     $default_attributes = new Attribute;
+  }
+
+  // Merge attributes when a single-value field has a hidden label.
+  if ($element['#label_display'] == 'hidden' && !$variables['multiple'] && is_object($element['#items'][0])) {
+    $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], (array) $element['#items'][0]->_attributes);
   }
 
   // We want other preprocess functions and the theme implementation to have

@@ -400,7 +400,7 @@ class FieldWebTest extends HandlerTestBase {
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
     $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field-content')));
-    $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field-label')));
+    $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field__label')));
 
     $id_field->options['element_default_classes'] = TRUE;
     $output = $view->preview();

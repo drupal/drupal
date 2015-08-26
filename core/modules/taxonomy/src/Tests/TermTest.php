@@ -339,12 +339,12 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText($edit['description[0][value]'], 'The randomly generated term description is present.');
 
     // Did this page request display a 'term-listing-heading'?
-    $this->assertTrue($this->xpath('//div[contains(@class, "field-taxonomy-term--description")]'), 'Term page displayed the term description element.');
+    $this->assertTrue($this->xpath('//div[contains(@class, "field--name-description")]'), 'Term page displayed the term description element.');
     // Check that it does NOT show a description when description is blank.
     $term->setDescription(NULL);
     $term->save();
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertFalse($this->xpath('//div[contains(@class, "field-taxonomy-term--description")]'), 'Term page did not display the term description when description was blank.');
+    $this->assertFalse($this->xpath('//div[contains(@class, "field--entity-taxonomy-term--description")]'), 'Term page did not display the term description when description was blank.');
 
     // Check that the description value is processed.
     $value = $this->randomMachineName();

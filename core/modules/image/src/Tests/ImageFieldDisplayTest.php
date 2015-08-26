@@ -337,7 +337,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $node->id());
     // Verify that no image is displayed on the page by checking for the class
     // that would be used on the image field.
-    $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', 'No image displayed when no image is attached and no default image specified.');
+    $this->assertNoPattern('<div class="(.*?)field--name-' . strtr($field_name, '_', '-') . '(.*?)">', 'No image displayed when no image is attached and no default image specified.');
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
 

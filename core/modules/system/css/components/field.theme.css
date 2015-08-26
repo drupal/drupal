@@ -3,20 +3,23 @@
  * Visual styles for fields.
  */
 
-.field .field-label {
+.field__label {
   font-weight: bold;
 }
-.field-label-inline .field-label,
-.field-label-inline .field-items {
-  float:left; /*LTR*/
-  margin-right: 0.5em; /*LTR*/
+.field--label-inline .field__label,
+.field--label-inline .field__items {
+  float: left; /*LTR*/
 }
-[dir="rtl"] .field-label-inline .field-label,
-[dir="rtl"] .field-label-inline .field-items {
-  float: right;
-  margin-left: 0.5em;
-  margin-right: 0;
+.field--label-inline .field__label,
+.field--label-inline > .field__item,
+.field--label-inline .field__items {
+  padding-right: 0.5em;
 }
-.field-label-inline .field-label::after {
+[dir="rtl"] .field--label-inline .field__label,
+[dir="rtl"] .field--label-inline .field__items {
+  padding-left: 0.5em;
+  padding-right: 0;
+}
+.field--label-inline .field__label::after {
   content: ':';
 }

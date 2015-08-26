@@ -115,7 +115,7 @@ class BooleanFieldTest extends WebTestBase {
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($content));
-    $this->assertRaw('<div class="field-item">' . $on . '</div>');
+    $this->assertRaw('<div class="field__item">' . $on . '</div>');
 
     // Test if we can change the on label.
     $on = $this->randomMachineName();

@@ -46,12 +46,9 @@ class EntityViewControllerTest extends WebTestBase {
    */
   function testEntityViewController() {
     $get_label_markup = function($label) {
-      return '<h1><div class="field field-entity-test--name field-name-name field-type-string field-label-hidden">
-    <div class="field-items">
-          <div class="field-item">' . $label . '</div>
-      </div>
-</div>
-</h1>';
+      return '<h1>
+            <div class="field field--name-name field--type-string field--label-hidden field__item">' . $label . '</div>
+      </h1>';
     };
 
     foreach ($this->entities as $entity) {

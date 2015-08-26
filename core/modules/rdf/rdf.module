@@ -271,6 +271,36 @@ function rdf_preprocess_html(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ *
+ * @todo remove after https://www.drupal.org/node/2556785 is fixed.
+ */
+function rdf_preprocess_field__node(&$variables) {
+  // Just an empty hook to avoid https://www.drupal.org/node/2556785.
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for UID field templates.
+ */
+function rdf_preprocess_field__node__uid(&$variables) {
+  _rdf_set_field_rel_attribute($variables);
+}
+
+/**
+ * Transforms the field property attribute into a rel attribute.
+ */
+function _rdf_set_field_rel_attribute(&$variables) {
+  // Swap the regular field property attribute and use the rel attribute
+  // instead so that it plays well with the RDFa markup when only a link is
+  // present in the field output, for example in the case of the uid field.
+  if (!empty($variables['attributes']['property'])) {
+    $variables['attributes']['rel'] = $variables['attributes']['property'];
+    unset($variables['attributes']['property']);
+  }
+}
+
+
+/**
  * Implements hook_preprocess_HOOK() for node templates.
  */
 function rdf_preprocess_node(&$variables) {
@@ -295,12 +325,6 @@ function rdf_preprocess_node(&$variables) {
       '#theme' => 'rdf_metadata',
       '#metadata' => array($title_attributes),
     );
-  }
-
-  // Adds RDFa markup for the relation between the node and its author.
-  $author_mapping = $mapping->getPreparedFieldMapping('uid');
-  if (!empty($author_mapping['properties']) && $variables['display_submitted']) {
-    $variables['author_attributes']['rel'] = $author_mapping['properties'];
   }
 
   // Adds RDFa markup for the date.

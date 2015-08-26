@@ -72,6 +72,10 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Use Classy theme for testing markup output.
+    \Drupal::service('theme_handler')->install(['classy']);
+    $this->config('system.theme')->set('default', 'classy')->save();
+
     // Grant the 'view test entity' permission.
     $this->installConfig(array('user'));
     Role::load(RoleInterface::ANONYMOUS_ID)
@@ -185,18 +189,14 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter);
 
     // Test the first field item.
-    $expected_rendered_name_field_1 = '<div class="field field-entity-test--name field-name-name field-type-string field-label-hidden">
-    <div class="field-items">
-          <div class="field-item">' . $this->referencedEntity->label() . '</div>
-      </div>
-</div>
-';
-    $expected_rendered_body_field_1 = '<div class="field field-entity-test--body field-name-body field-type-text field-label-above">
-      <div class="field-label">Body</div>
-    <div class="field-items">
-          <div class="field-item"><p>Hello, world!</p></div>
-      </div>
-</div>
+    $expected_rendered_name_field_1 = '
+            <div class="field field--name-name field--type-string field--label-hidden field__item">' . $this->referencedEntity->label() . '</div>
+      ';
+    $expected_rendered_body_field_1 = '
+  <div class="clearfix text-formatted field field--name-body field--type-text field--label-above">
+    <div class="field__label">Body</div>
+              <div class="field__item"><p>Hello, world!</p></div>
+          </div>
 ';
     $renderer->renderRoot($build[0]);
     $this->assertEqual($build[0]['#markup'], 'default | ' . $this->referencedEntity->label() .  $expected_rendered_name_field_1 . $expected_rendered_body_field_1, sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));

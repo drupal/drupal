@@ -119,6 +119,9 @@ class DisplayApiTest extends FieldUnitTestBase {
   function testFieldItemListView() {
     $items = $this->entity->get($this->fieldName);
 
+    \Drupal::service('theme_handler')->install(['classy']);
+    $this->config('system.theme')->set('default', 'classy')->save();
+
     // No display settings: check that default display settings are used.
     $build = $items->view();
     $this->render($build);

@@ -40,11 +40,11 @@
   color: #68696b;
   margin-bottom: -5px;
 }
-.node__meta .field-name-field-user-picture img {
+.node__meta .field--name-field-user-picture img {
   float: left; /* LTR */
   margin: 1px 20px 0 0; /* LTR */
 }
-[dir="rtl"] .node__meta .field-name-field-user-picture img {
+[dir="rtl"] .node__meta .field--name-field-user-picture img {
   float: right;
   margin-left: 20px;
   margin-right: 0;

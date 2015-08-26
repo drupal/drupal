@@ -24,7 +24,7 @@
  * - label_hidden: Whether to show the field label or not.
  * - title_attributes: HTML attributes for the title.
  * - label: The label for the field.
- * - content_attributes: HTML attributes for the content.
+ * - multiple: TRUE if a field can contain multiple items.
  * - items: List of all the field items. Each item contains:
  *   - attributes: List of HTML attributes for each item.
  *   - content: The field item's content.
@@ -33,33 +33,48 @@
  * - field_type: The type of the field.
  * - label_display: The display settings for the label.
  *
+ *
  * @see template_preprocess_field()
  */
 #}
-{% set field_name_class = field_name|clean_class %}
 {%
   set classes = [
     'field',
-    'field-' ~ entity_type|clean_class ~ '--' ~ field_name_class,
-    'field-name-' ~ field_name_class,
-    'field-type-' ~ field_type|clean_class,
-    'field-label-' ~ label_display,
-    label_display == 'inline' ? 'clearfix',
+    'field--name-' ~ field_name|clean_class,
+    'field--type-' ~ field_type|clean_class,
+    'field--label-' ~ label_display,
   ]
 %}
 {%
   set title_classes = [
-    'field-label',
+    'field__label',
     label_display == 'visually_hidden' ? 'visually-hidden',
   ]
 %}
-<div{{ attributes.addClass(classes) }}>
-  {% if not label_hidden %}
-    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
-  {% endif %}
-  <div{{ content_attributes.addClass('field-items') }}>
+
+{% if label_hidden %}
+  {% if multiple %}
+    <div{{ attributes.addClass(classes).addClass('field__items') }}>
+      {% for item in items %}
+        <div{{ item.attributes.addClass(classes).addClass('field__item') }}>{{ item.content }}</div>
+      {% endfor %}
+    </div>
+  {% else %}
     {% for item in items %}
-      <div{{ item.attributes.addClass('field-item') }}>{{ item.content }}</div>
+      <div{{ attributes.addClass(classes).addClass('field__item') }}>{{ item.content }}</div>
     {% endfor %}
+  {% endif %}
+{% else %}
+  <div{{ attributes.addClass(classes) }}>
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
+    {% if multiple %}
+      <div class='field__items'>
+    {% endif %}
+    {% for item in items %}
+      <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
+    {% endfor %}
+    {% if multiple %}
+      </div>
+    {% endif %}
   </div>
-</div>
+{% endif %}
