@@ -41,7 +41,11 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
     }
     else {
       $row['form'] = $entity->link(NULL, 'canonical');
-      $row['recipients'] = SafeMarkup::checkPlain(implode(', ', $entity->getRecipients()));
+      $row['recipients']['data'] = [
+        '#theme' => 'item_list',
+        '#items' => $entity->getRecipients(),
+        '#context' => ['list_style' => 'comma-list'],
+      ];
       $default_form = \Drupal::config('contact.settings')->get('default_form');
       $row['selected'] = ($default_form == $entity->id() ? t('Yes') : t('No'));
     }
