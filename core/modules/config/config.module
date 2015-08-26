@@ -65,8 +65,14 @@ function config_file_download($uri) {
   $scheme = file_uri_scheme($uri);
   $target = file_uri_target($uri);
   if ($scheme == 'temporary' && $target == 'config.tar.gz') {
+    $request = \Drupal::request();
+    $date = DateTime::createFromFormat('U', $request->server->get('REQUEST_TIME'));
+    $date_string = $date->format('Y-m-d-H-i');
+    $hostname = str_replace('.', '-', $request->getHttpHost());
+    $filename = 'config' . '-' . $hostname . '-' . $date_string. '.tar.gz';
+    $disposition = 'attachment; filename="' . $filename . '"';
     return array(
-      'Content-disposition' => 'attachment; filename="config.tar.gz"',
+      'Content-disposition' => $disposition,
     );
   }
 }

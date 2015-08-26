@@ -46,6 +46,13 @@ class ConfigExportUITest extends WebTestBase {
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), t('Export'));
     $this->assertResponse(200, 'User can access the download callback.');
 
+    // Test if header contains file name with hostname and timestamp.
+    $request = \Drupal::request();
+    $hostname = str_replace('.', '-', $request->getHttpHost());
+    $header_content_disposition = $this->drupalGetHeader('content-disposition');
+    $header_match = (boolean) preg_match('/attachment; filename="config-' . preg_quote($hostname) . '-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}\.tar\.gz"/', $header_content_disposition);
+    $this->assertTrue($header_match, "Header with filename matches the expected format.");
+
     // Get the archived binary file provided to user for download.
     $archive_data = $this->getRawContent();
 
