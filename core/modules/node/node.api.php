@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\node\NodeInterface;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 
@@ -403,7 +403,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
   $text = '';
   $ratings = db_query('SELECT title, description FROM {my_ratings} WHERE nid = :nid', array(':nid' => $node->id()));
   foreach ($ratings as $rating) {
-    $text .= '<h2>' . SafeMarkup::checkPlain($rating->title) . '</h2>' . Xss::filter($rating->description);
+    $text .= '<h2>' . Html::escape($rating->title) . '</h2>' . Xss::filter($rating->description);
   }
   return $text;
 }

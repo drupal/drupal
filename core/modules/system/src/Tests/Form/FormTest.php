@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
@@ -616,7 +617,7 @@ class FormTest extends WebTestBase {
       $path = strtr($path, array('!type' => $type));
       // Verify that the element exists.
       $element = $this->xpath($path, array(
-        ':name' => SafeMarkup::checkPlain($name),
+        ':name' => Html::escape($name),
         ':div-class' => $class,
         ':value' => isset($item['#value']) ? $item['#value'] : '',
       ));

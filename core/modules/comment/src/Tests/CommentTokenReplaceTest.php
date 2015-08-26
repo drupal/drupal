@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -52,26 +52,26 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
-    $tests['[comment:hostname]'] = SafeMarkup::checkPlain($comment->getHostname());
+    $tests['[comment:hostname]'] = Html::escape($comment->getHostname());
     $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
-    $tests['[comment:mail]'] = SafeMarkup::checkPlain($this->adminUser->getEmail());
+    $tests['[comment:mail]'] = Html::escape($this->adminUser->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
-    $tests['[comment:langcode]'] = SafeMarkup::checkPlain($comment->language()->getId());
+    $tests['[comment:langcode]'] = Html::escape($comment->language()->getId());
     $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
     $tests['[comment:created]'] = \Drupal::service('date.formatter')->format($comment->getCreatedTime(), 'medium', array('langcode' => $language_interface->getId()));
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), array('langcode' => $language_interface->getId()));
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), array('langcode' => $language_interface->getId()));
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
-    $tests['[comment:parent:title]'] = SafeMarkup::checkPlain($parent_comment->getSubject());
-    $tests['[comment:entity]'] = SafeMarkup::checkPlain($node->getTitle());
+    $tests['[comment:parent:title]'] = Html::escape($parent_comment->getSubject());
+    $tests['[comment:entity]'] = Html::escape($node->getTitle());
     // Test node specific tokens.
     $tests['[comment:entity:nid]'] = $comment->getCommentedEntityId();
-    $tests['[comment:entity:title]'] = SafeMarkup::checkPlain($node->getTitle());
+    $tests['[comment:entity:title]'] = Html::escape($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
-    $tests['[comment:author:name]'] = SafeMarkup::checkPlain($this->adminUser->getUsername());
+    $tests['[comment:author:name]'] = Html::escape($this->adminUser->getUsername());
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($comment);
     $metadata_tests = [];

@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for user-related data.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\user\Entity\User;
@@ -97,11 +97,11 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           if ($account->isAnonymous()) {
             $bubbleable_metadata->addCacheableDependency(\Drupal::config('user.settings'));
           }
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($name) : $name;
+          $replacements[$original] = $sanitize ? Html::escape($name) : $name;
           break;
 
         case 'mail':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->getEmail()) : $account->getEmail();
+          $replacements[$original] = $sanitize ? Html::escape($account->getEmail()) : $account->getEmail();
           break;
 
         case 'url':

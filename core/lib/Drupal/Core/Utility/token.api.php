@@ -5,7 +5,7 @@
  * Hooks related to the Token system.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\user\Entity\User;
 
 /**
@@ -97,7 +97,7 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->getTitle()) : $node->getTitle();
+          $replacements[$original] = $sanitize ? Html::escape($node->getTitle()) : $node->getTitle();
           break;
 
         case 'edit-url':
@@ -107,7 +107,7 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
         // Default values for the chained tokens handled below.
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : User::load(0);
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->label()) : $account->label();
+          $replacements[$original] = $sanitize ? Html::escape($account->label()) : $account->label();
           $bubbleable_metadata->addCacheableDependency($account);
           break;
 

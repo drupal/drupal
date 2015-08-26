@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for taxonomy terms and vocabularies.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -109,7 +109,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'name':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($term->getName()) : $term->getName();
+          $replacements[$original] = $sanitize ? Html::escape($term->getName()) : $term->getName();
           break;
 
         case 'description':
@@ -131,14 +131,14 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
         case 'vocabulary':
           $vocabulary = Vocabulary::load($term->bundle());
           $bubbleable_metadata->addCacheableDependency($vocabulary);
-          $replacements[$original] = SafeMarkup::checkPlain($vocabulary->label());
+          $replacements[$original] = Html::escape($vocabulary->label());
           break;
 
         case 'parent':
           if ($parents = $taxonomy_storage->loadParents($term->id())) {
             $parent = array_pop($parents);
             $bubbleable_metadata->addCacheableDependency($parent);
-            $replacements[$original] = SafeMarkup::checkPlain($parent->getName());
+            $replacements[$original] = Html::escape($parent->getName());
           }
           break;
       }
@@ -165,7 +165,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'name':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($vocabulary->label()) : $vocabulary->label();
+          $replacements[$original] = $sanitize ? Html::escape($vocabulary->label()) : $vocabulary->label();
           break;
 
         case 'description':

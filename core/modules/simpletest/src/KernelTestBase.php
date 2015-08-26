@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Database\Database;
@@ -574,7 +575,7 @@ EOD;
     $content = $this->container->get('renderer')->renderRoot($elements);
     drupal_process_attached($elements);
     $this->setRawContent($content);
-    $this->verbose('<pre style="white-space: pre-wrap">' . SafeMarkup::checkPlain($content));
+    $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
   }
 

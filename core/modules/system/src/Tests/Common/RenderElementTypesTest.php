@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\simpletest\KernelTestBase;
 
@@ -46,12 +46,12 @@ class RenderElementTypesTest extends KernelTestBase {
     $actual_html = (string) \Drupal::service('renderer')->renderRoot($elements);
 
     $out = '<table><tr>';
-    $out .= '<td valign="top"><pre>' . SafeMarkup::checkPlain($expected_html) . '</pre></td>';
-    $out .= '<td valign="top"><pre>' . SafeMarkup::checkPlain($actual_html) . '</pre></td>';
+    $out .= '<td valign="top"><pre>' . Html::escape($expected_html) . '</pre></td>';
+    $out .= '<td valign="top"><pre>' . Html::escape($actual_html) . '</pre></td>';
     $out .= '</tr></table>';
     $this->verbose($out);
 
-    $this->assertIdentical($actual_html, $expected_html, SafeMarkup::checkPlain($message));
+    $this->assertIdentical($actual_html, $expected_html, Html::escape($message));
   }
 
   /**

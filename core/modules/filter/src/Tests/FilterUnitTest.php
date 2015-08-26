@@ -849,10 +849,10 @@ www.example.com with a newline in comments -->
           )));
         }
         if (!$success) {
-          $this->verbose('Source:<pre>' . SafeMarkup::checkPlain(var_export($source, TRUE)) . '</pre>'
-            . '<hr />' . 'Result:<pre>' . SafeMarkup::checkPlain(var_export($result, TRUE)) . '</pre>'
+          $this->verbose('Source:<pre>' . Html::escape(var_export($source, TRUE)) . '</pre>'
+            . '<hr />' . 'Result:<pre>' . Html::escape(var_export($result, TRUE)) . '</pre>'
             . '<hr />' . ($is_expected ? 'Expected:' : 'Not expected:')
-            . '<pre>' . SafeMarkup::checkPlain(var_export($value, TRUE)) . '</pre>'
+            . '<pre>' . Html::escape(var_export($value, TRUE)) . '</pre>'
           );
         }
       }

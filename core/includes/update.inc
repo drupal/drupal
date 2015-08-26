@@ -9,7 +9,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Utility\Error;
 
@@ -215,7 +215,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = 'Updating ' . SafeMarkup::checkPlain($module) . ' module';
+  $context['message'] = 'Updating ' . Html::escape($module) . ' module';
 }
 
 /**

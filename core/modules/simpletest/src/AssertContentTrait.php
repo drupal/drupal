@@ -847,8 +847,8 @@ trait AssertContentTrait {
       return \Drupal::theme()->render($callback, $variables);
     });
     $this->verbose(
-      '<hr />' . 'Result:' . '<pre>' . SafeMarkup::checkPlain(var_export($output, TRUE)) . '</pre>'
-      . '<hr />' . 'Expected:' . '<pre>' . SafeMarkup::checkPlain(var_export($expected, TRUE)) . '</pre>'
+      '<hr />' . 'Result:' . '<pre>' . Html::escape(var_export($output, TRUE)) . '</pre>'
+      . '<hr />' . 'Expected:' . '<pre>' . Html::escape(var_export($expected, TRUE)) . '</pre>'
       . '<hr />' . $output
     );
     if (!$message) {

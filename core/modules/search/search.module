@@ -5,7 +5,6 @@
  * Enables site-wide keyword searching.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
@@ -767,7 +766,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // translated. Let translators have the … separator text as one chunk.
   $ellipses = explode('!excerpt', t('… !excerpt … !excerpt …'));
   $text = (isset($new_ranges[0]) ? '' : $ellipses[0]) . implode($ellipses[1], $out) . (($max_end < strlen($text) - 1) ? $ellipses[2] : '');
-  $text = SafeMarkup::checkPlain($text);
+  $text = Html::escape($text);
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').

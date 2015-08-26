@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\simpletest\WebTestBase;
 
@@ -55,9 +55,9 @@ class PageTitleTest extends WebTestBase {
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node, 'Node created and found in database');
-    $this->assertText(SafeMarkup::checkPlain($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
+    $this->assertText(Html::escape($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
     $this->drupalGet("node/" . $node->id());
-    $this->assertText(SafeMarkup::checkPlain($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
+    $this->assertText(Html::escape($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
   }
 
   /**
@@ -66,7 +66,7 @@ class PageTitleTest extends WebTestBase {
   function testTitleXSS() {
     // Set some title with JavaScript and HTML chars to escape.
     $title = '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ';
-    $title_filtered = SafeMarkup::checkPlain($title);
+    $title_filtered = Html::escape($title);
 
     $slogan = '<script type="text/javascript">alert("Slogan XSS!");</script>';
     $slogan_filtered = Xss::filterAdmin($slogan);
@@ -143,19 +143,19 @@ class PageTitleTest extends WebTestBase {
     // controller does not escape them.
     $this->drupalGet('test-page-cached-controller');
     $this->assertTitle('Cached title | Drupal');
-    $this->assertRaw(SafeMarkup::checkPlain('<span>Cached title</span>') . '</h1>');
+    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
     $this->drupalGet('test-page-cached-controller');
     $this->assertTitle('Cached title | Drupal');
-    $this->assertRaw(SafeMarkup::checkPlain('<span>Cached title</span>') . '</h1>');
+    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
 
     // Ensure that titles are cacheable and are escaped normally if the
-    // controller escapes them use SafeMarkup::checkPlain().
+    // controller escapes them use Html::escape().
     $this->drupalGet('test-page-cached-controller-safe');
     $this->assertTitle('<span>Cached title</span> | Drupal');
-    $this->assertRaw(SafeMarkup::checkPlain('<span>Cached title</span>') . '</h1>');
+    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
     $this->drupalGet('test-page-cached-controller-safe');
     $this->assertTitle('<span>Cached title</span> | Drupal');
-    $this->assertRaw(SafeMarkup::checkPlain('<span>Cached title</span>') . '</h1>');
+    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
   }
 
 }

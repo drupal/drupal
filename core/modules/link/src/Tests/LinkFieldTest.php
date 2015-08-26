@@ -7,7 +7,7 @@
 
 namespace Drupal\link\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
@@ -420,39 +420,39 @@ class LinkFieldTest extends WebTestBase {
           case 'trim_length':
             $url = $url1;
             $title = isset($new_value) ? Unicode::truncate($title1, $new_value, FALSE, TRUE) : $title1;
-            $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url) . '">' . SafeMarkup::checkPlain($title) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>');
 
             $url = $url2;
             $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
-            $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url) . '">' . SafeMarkup::checkPlain($title) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>');
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
-            $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url1) . '"' . $rel . '>' . SafeMarkup::checkPlain($title1) . '</a>');
-            $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url2) . '"' . $rel . '>' . SafeMarkup::checkPlain($title2) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($title1) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($title2) . '</a>');
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
-            $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url1) . '"' . $target . '>' . SafeMarkup::checkPlain($title1) . '</a>');
-            $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url2) . '"' . $target . '>' . SafeMarkup::checkPlain($title2) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($title1) . '</a>');
+            $this->assertRaw('<a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($title2) . '</a>');
             break;
 
           case 'url_only':
             // In this case, $new_value is an array.
             if (!$new_value['url_only']) {
-              $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url1) . '">' . SafeMarkup::checkPlain($title1) . '</a>');
-              $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url2) . '">' . SafeMarkup::checkPlain($title2) . '</a>');
+              $this->assertRaw('<a href="' . Html::escape($url1) . '">' . Html::escape($title1) . '</a>');
+              $this->assertRaw('<a href="' . Html::escape($url2) . '">' . Html::escape($title2) . '</a>');
             }
             else {
               if (empty($new_value['url_plain'])) {
-                $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url1) . '">' . SafeMarkup::checkPlain($url1) . '</a>');
-                $this->assertRaw('<a href="' . SafeMarkup::checkPlain($url2) . '">' . SafeMarkup::checkPlain($url2) . '</a>');
+                $this->assertRaw('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>');
+                $this->assertRaw('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>');
               }
               else {
-                $this->assertNoRaw('<a href="' . SafeMarkup::checkPlain($url1) . '">' . SafeMarkup::checkPlain($url1) . '</a>');
-                $this->assertNoRaw('<a href="' . SafeMarkup::checkPlain($url2) . '">' . SafeMarkup::checkPlain($url2) . '</a>');
+                $this->assertNoRaw('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>');
+                $this->assertNoRaw('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>');
                 $this->assertEscaped($url1);
                 $this->assertEscaped($url2);
               }
@@ -540,7 +540,7 @@ class LinkFieldTest extends WebTestBase {
             $url = $url1;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $expected = '<div class="link-item">';
-            $expected .= '<div class="link-url"><a href="' . SafeMarkup::checkPlain($url) . '">' . SafeMarkup::checkPlain($url_title) . '</a></div>';
+            $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
             $this->assertRaw($expected);
 
@@ -548,22 +548,22 @@ class LinkFieldTest extends WebTestBase {
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
             $expected = '<div class="link-item">';
-            $expected .= '<div class="link-title">' . SafeMarkup::checkPlain($title) . '</div>';
-            $expected .= '<div class="link-url"><a href="' . SafeMarkup::checkPlain($url) . '">' . SafeMarkup::checkPlain($url_title) . '</a></div>';
+            $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
+            $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
             $this->assertRaw($expected);
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
-            $this->assertRaw('<div class="link-url"><a href="' . SafeMarkup::checkPlain($url1) . '"' . $rel . '>' . SafeMarkup::checkPlain($url1) . '</a></div>');
-            $this->assertRaw('<div class="link-url"><a href="' . SafeMarkup::checkPlain($url2) . '"' . $rel . '>' . SafeMarkup::checkPlain($url2) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($url1) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($url2) . '</a></div>');
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
-            $this->assertRaw('<div class="link-url"><a href="' . SafeMarkup::checkPlain($url1) . '"' . $target . '>' . SafeMarkup::checkPlain($url1) . '</a></div>');
-            $this->assertRaw('<div class="link-url"><a href="' . SafeMarkup::checkPlain($url2) . '"' . $target . '>' . SafeMarkup::checkPlain($url2) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($url1) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($url2) . '</a></div>');
             break;
         }
       }

@@ -7,9 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Generates text using placeholders for dummy content to check node token
@@ -65,15 +65,15 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     $tests['[node:vid]'] = $node->getRevisionId();
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
-    $tests['[node:title]'] = SafeMarkup::checkPlain($node->getTitle());
+    $tests['[node:title]'] = Html::escape($node->getTitle());
     $tests['[node:body]'] = $node->body->processed;
     $tests['[node:summary]'] = $node->body->summary_processed;
-    $tests['[node:langcode]'] = SafeMarkup::checkPlain($node->language()->getId());
+    $tests['[node:langcode]'] = Html::escape($node->language()->getId());
     $tests['[node:url]'] = $node->url('canonical', $url_options);
     $tests['[node:edit-url]'] = $node->url('edit-form', $url_options);
-    $tests['[node:author]'] = SafeMarkup::checkPlain($account->getUsername());
+    $tests['[node:author]'] = Html::escape($account->getUsername());
     $tests['[node:author:uid]'] = $node->getOwnerId();
-    $tests['[node:author:name]'] = SafeMarkup::checkPlain($account->getUsername());
+    $tests['[node:author:name]'] = Html::escape($account->getUsername());
     $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), array('langcode' => $this->interfaceLanguage->getId()));
     $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), array('langcode' => $this->interfaceLanguage->getId()));
 

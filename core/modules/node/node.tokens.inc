@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for node-related data.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -116,16 +116,16 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'type':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->getType()) : $node->getType();
+          $replacements[$original] = $sanitize ? Html::escape($node->getType()) : $node->getType();
           break;
 
         case 'type-name':
           $type_name = node_get_type_label($node);
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($type_name) : $type_name;
+          $replacements[$original] = $sanitize ? Html::escape($type_name) : $type_name;
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->getTitle()) : $node->getTitle();
+          $replacements[$original] = $sanitize ? Html::escape($node->getTitle()) : $node->getTitle();
           break;
 
         case 'body':
@@ -164,7 +164,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->language()->getId()) : $node->language()->getId();
+          $replacements[$original] = $sanitize ? Html::escape($node->language()->getId()) : $node->language()->getId();
           break;
 
         case 'url':
@@ -179,7 +179,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : User::load(0);
           $bubbleable_metadata->addCacheableDependency($account);
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->label()) : $account->label();
+          $replacements[$original] = $sanitize ? Html::escape($account->label()) : $account->label();
           break;
 
         case 'created':

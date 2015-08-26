@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -86,13 +86,13 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Generate and test sanitized tokens for term1.
     $tests = array();
     $tests['[term:tid]'] = $term1->id();
-    $tests['[term:name]'] = SafeMarkup::checkPlain($term1->getName());
+    $tests['[term:name]'] = Html::escape($term1->getName());
     $tests['[term:description]'] = $term1->description->processed;
     $tests['[term:url]'] = $term1->url('canonical', array('absolute' => TRUE));
     $tests['[term:node-count]'] = 0;
     $tests['[term:parent:name]'] = '[term:parent:name]';
-    $tests['[term:vocabulary:name]'] = SafeMarkup::checkPlain($this->vocabulary->label());
-    $tests['[term:vocabulary]'] = SafeMarkup::checkPlain($this->vocabulary->label());
+    $tests['[term:vocabulary:name]'] = Html::escape($this->vocabulary->label());
+    $tests['[term:vocabulary]'] = Html::escape($this->vocabulary->label());
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($term1);
 
@@ -117,14 +117,14 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Generate and test sanitized tokens for term2.
     $tests = array();
     $tests['[term:tid]'] = $term2->id();
-    $tests['[term:name]'] = SafeMarkup::checkPlain($term2->getName());
+    $tests['[term:name]'] = Html::escape($term2->getName());
     $tests['[term:description]'] = $term2->description->processed;
     $tests['[term:url]'] = $term2->url('canonical', array('absolute' => TRUE));
     $tests['[term:node-count]'] = 1;
-    $tests['[term:parent:name]'] = SafeMarkup::checkPlain($term1->getName());
+    $tests['[term:parent:name]'] = Html::escape($term1->getName());
     $tests['[term:parent:url]'] = $term1->url('canonical', array('absolute' => TRUE));
     $tests['[term:parent:parent:name]'] = '[term:parent:parent:name]';
-    $tests['[term:vocabulary:name]'] = SafeMarkup::checkPlain($this->vocabulary->label());
+    $tests['[term:vocabulary:name]'] = Html::escape($this->vocabulary->label());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
@@ -148,7 +148,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[vocabulary:vid]'] = $this->vocabulary->id();
-    $tests['[vocabulary:name]'] = SafeMarkup::checkPlain($this->vocabulary->label());
+    $tests['[vocabulary:name]'] = Html::escape($this->vocabulary->label());
     $tests['[vocabulary:description]'] = Xss::filter($this->vocabulary->getDescription());
     $tests['[vocabulary:node-count]'] = 1;
     $tests['[vocabulary:term-count]'] = 2;

@@ -491,7 +491,7 @@ function _drupal_add_html_head_link($attributes, $header = FALSE) {
 
   if ($header) {
     // Also add a HTTP header "Link:".
-    $href = '<' . SafeMarkup::checkPlain($attributes['href']) . '>;';
+    $href = '<' . Html::escape($attributes['href']) . '>;';
     unset($attributes['href']);
     $element['#attached']['http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
@@ -1380,7 +1380,7 @@ function _drupal_flush_css_js() {
  */
 function debug($data, $label = NULL, $print_r = TRUE) {
   // Print $data contents to string.
-  $string = SafeMarkup::checkPlain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
+  $string = Html::escape($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
 
   // Display values with pre-formatting to increase readability.
   $string = '<pre>' . $string . '</pre>';

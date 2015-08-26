@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
@@ -57,15 +57,15 @@ class UserTokenReplaceTest extends WebTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[user:uid]'] = $account->id();
-    $tests['[user:name]'] = SafeMarkup::checkPlain(user_format_name($account));
-    $tests['[user:mail]'] = SafeMarkup::checkPlain($account->getEmail());
+    $tests['[user:name]'] = Html::escape(user_format_name($account));
+    $tests['[user:mail]'] = Html::escape($account->getEmail());
     $tests['[user:url]'] = $account->url('canonical', $url_options);
     $tests['[user:edit-url]'] = $account->url('edit-form', $url_options);
     $tests['[user:last-login]'] = format_date($account->getLastLoginTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[user:last-login:short]'] = format_date($account->getLastLoginTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[user:created]'] = format_date($account->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[user:created:short]'] = format_date($account->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
-    $tests['[current-user:name]'] = SafeMarkup::checkPlain(user_format_name($global_account));
+    $tests['[current-user:name]'] = Html::escape(user_format_name($global_account));
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($account);
     $metadata_tests = [];
@@ -101,7 +101,7 @@ class UserTokenReplaceTest extends WebTestBase {
     $anonymous_user = User::load(0);
     $tests = [];
     $tests['[user:uid]'] = t('not yet assigned');
-    $tests['[user:name]'] = SafeMarkup::checkPlain(user_format_name($anonymous_user));
+    $tests['[user:name]'] = Html::escape(user_format_name($anonymous_user));
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($anonymous_user);
     $metadata_tests = [];

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Routing;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,7 +116,7 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     // Test both that the backtrace is properly escaped, and that the unescaped
     // string is not output at all.
-    $this->assertTrue(strpos($response->getContent(), SafeMarkup::checkPlain('<script>alert(\'xss\')</script>')) !== FALSE);
+    $this->assertTrue(strpos($response->getContent(), Html::escape('<script>alert(\'xss\')</script>')) !== FALSE);
     $this->assertTrue(strpos($response->getContent(), '<script>alert(\'xss\')</script>') === FALSE);
   }
 
@@ -140,7 +140,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     // Test message is properly escaped, and that the unescaped string is not
     // output at all.
     $this->setRawContent($response->getContent());
-    $this->assertRaw(SafeMarkup::checkPlain('Escaped content: <p> <br> <h3>'));
+    $this->assertRaw(Html::escape('Escaped content: <p> <br> <h3>'));
     $this->assertNoRaw('<p> <br> <h3>');
   }
 

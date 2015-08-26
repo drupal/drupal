@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity\EntityReferenceSelection;
 
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
@@ -110,7 +110,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       $node = entity_create('node', $values);
       $node->save();
       $nodes[$key] = $node;
-      $node_labels[$key] = SafeMarkup::checkPlain($node->label());
+      $node_labels[$key] = Html::escape($node->label());
     }
 
     // Test as a non-admin.
@@ -241,7 +241,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         $account = $values;
       }
       $users[$key] = $account;
-      $user_labels[$key] = SafeMarkup::checkPlain($account->getUsername());
+      $user_labels[$key] = Html::escape($account->getUsername());
     }
 
     // Test as a non-admin.
@@ -416,7 +416,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       $comment = entity_create('comment', $values);
       $comment->save();
       $comments[$key] = $comment;
-      $comment_labels[$key] = SafeMarkup::checkPlain($comment->label());
+      $comment_labels[$key] = Html::escape($comment->label());
     }
 
     // Test as a non-admin.

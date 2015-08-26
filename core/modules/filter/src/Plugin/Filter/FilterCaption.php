@@ -8,7 +8,6 @@
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\filter\FilterProcessResult;
@@ -40,7 +39,7 @@ class FilterCaption extends FilterBase {
       $xpath = new \DOMXPath($dom);
       foreach ($xpath->query('//*[@data-caption]') as $node) {
         // Read the data-caption attribute's value, then delete it.
-        $caption = SafeMarkup::checkPlain($node->getAttribute('data-caption'));
+        $caption = Html::escape($node->getAttribute('data-caption'));
         $node->removeAttribute('data-caption');
 
         // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only

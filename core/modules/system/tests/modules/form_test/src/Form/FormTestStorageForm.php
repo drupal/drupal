@@ -7,7 +7,7 @@
 
 namespace Drupal\form_test\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -139,7 +139,7 @@ class FormTestStorageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message("Title: " . SafeMarkup::checkPlain($form_state->getValue('title')));
+    drupal_set_message("Title: " . Html::escape($form_state->getValue('title')));
     drupal_set_message("Form constructions: " . $_SESSION['constructions']);
     if ($form_state->has(['thing', 'changed'])) {
       drupal_set_message("The thing has been changed.");

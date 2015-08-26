@@ -12,6 +12,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -433,7 +434,7 @@ class TwigExtension extends \Twig_Extension {
       // Drupal only supports the HTML escaping strategy, so provide a
       // fallback for other strategies.
       if ($strategy == 'html') {
-        return SafeMarkup::checkPlain($return);
+        return Html::escape($return);
       }
       return twig_escape_filter($env, $return, $strategy, $charset, $autoescape);
     }

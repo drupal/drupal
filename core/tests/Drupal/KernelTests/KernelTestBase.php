@@ -7,6 +7,7 @@
 
 namespace Drupal\KernelTests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
@@ -865,7 +866,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $content = $this->container->get('renderer')->render($elements);
     drupal_process_attached($elements);
     $this->setRawContent($content);
-    $this->verbose('<pre style="white-space: pre-wrap">' . SafeMarkup::checkPlain($content));
+    $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
   }
 

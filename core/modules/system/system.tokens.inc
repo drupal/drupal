@@ -7,7 +7,7 @@
  * This file handles tokens for the global 'site' and 'date' tokens.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -111,7 +111,7 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
           $config = \Drupal::config('system.site');
           $bubbleable_metadata->addCacheableDependency($config);
           $site_name = $config->get('name');
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($site_name) : $site_name;
+          $replacements[$original] = $sanitize ? Html::escape($site_name) : $site_name;
           break;
 
         case 'slogan':
@@ -188,7 +188,7 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
           break;
 
         case 'raw':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($date) : $date;
+          $replacements[$original] = $sanitize ? Html::escape($date) : $date;
           break;
       }
     }

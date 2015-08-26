@@ -7,7 +7,7 @@
 
 namespace Drupal\tour_test\Plugin\tour\tip;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\tour\TipPluginBase;
 
 /**
@@ -40,7 +40,7 @@ class TipPluginImage extends TipPluginBase {
    * {@inheritdoc}
    */
   public function getOutput() {
-    $prefix = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . SafeMarkup::checkPlain($this->get('label')) . '</h2>';
+    $prefix = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . Html::escape($this->get('label')) . '</h2>';
     $prefix .= '<p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">';
     return [
       '#prefix' => $prefix,

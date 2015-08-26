@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\Tests\Views;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
@@ -480,7 +480,7 @@ class StyleSerializerTest extends PluginTestBase {
       $entities[] = $row->_entity;
     }
 
-    $expected = SafeMarkup::checkPlain($serializer->serialize($entities, 'json'));
+    $expected = Html::escape($serializer->serialize($entities, 'json'));
 
     $view->live_preview = TRUE;
 
@@ -489,7 +489,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->assertEqual($rendered_json, $expected, 'Ensure the previewed json is escaped.');
     $view->destroy();
 
-    $expected = SafeMarkup::checkPlain($serializer->serialize($entities, 'xml'));
+    $expected = Html::escape($serializer->serialize($entities, 'xml'));
 
     // Change the request format to xml.
     $view->setDisplay('rest_export_1');
