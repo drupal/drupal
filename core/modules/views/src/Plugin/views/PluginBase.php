@@ -580,7 +580,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
 
     // Add real languages.
     foreach ($languages as $id => $language) {
-      $list[$id] = $this->t($language->getName());
+      $list[$id] = $language->getName();
     }
 
     return $list;

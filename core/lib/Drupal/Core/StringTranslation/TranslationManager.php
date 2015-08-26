@@ -142,10 +142,15 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
   public function translate($string, array $args = array(), array $options = array()) {
     $string = $this->doTranslate($string, $options);
     if (empty($args)) {
-      // This is assumed to be safe because translate should only be called
-      // with strings defined in code.
+      // We add the string to the safe list as opposed to making it an object
+      // implementing SafeStringInterface as we may need to call __toString()
+      // on the object before render time, at which point the string ceases to
+      // be safe, and working around this would require significant rework.
+      // Adding this string to the safe list is assumed to be safe because
+      // translate() should only be called with strings defined in code.
       // @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
-      return SafeMarkup::set($string);
+      SafeMarkup::setMultiple([$string => ['html' => TRUE]]);
+      return $string;
     }
     else {
       return SafeMarkup::format($string, $args);
