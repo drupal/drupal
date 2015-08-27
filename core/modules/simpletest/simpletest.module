@@ -287,15 +287,21 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
  *   The command that can be run through exec().
  */
 function simpletest_phpunit_command() {
+  // Load the actual autoloader being used and determine its filename using
+  // reflection. We can determine the vendor directory based on that filename.
+  $autoloader = require \Drupal::root() . '/autoload.php';
+  $reflector = new ReflectionClass($autoloader);
+  $vendor_dir = dirname(dirname($reflector->getFileName()));
+
   // Don't use the committed version in composer's bin dir if running on
   // windows.
   if (substr(PHP_OS, 0, 3) == 'WIN') {
     $php_executable_finder = new PhpExecutableFinder();
     $php = $php_executable_finder->find();
-    $phpunit_bin = escapeshellarg($php) . " -f " . escapeshellarg(\Drupal::root() . "/core/vendor/phpunit/phpunit/composer/bin/phpunit") . " --";
+    $phpunit_bin = escapeshellarg($php) . ' -f ' . escapeshellarg($vendor_dir . '/phpunit/phpunit/composer/bin/phpunit') . ' --';
   }
   else {
-    $phpunit_bin = \Drupal::root() . "/core/vendor/bin/phpunit";
+    $phpunit_bin = $vendor_dir . '/phpunit/phpunit/phpunit';
   }
   return $phpunit_bin;
 }
