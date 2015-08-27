@@ -292,7 +292,10 @@ class ValidationTest extends WebTestBase {
       $error_links[] = \Drupal::l($message['title'], Url::fromRoute('<none>', [], ['fragment' => 'edit-' . str_replace('_', '-', $message['key']), 'external' => TRUE]));
     }
     $top_message = \Drupal::translation()->formatPlural(count($error_links), '1 error has been found:', '@count errors have been found:');
-    $this->assertRaw($top_message . ' ' . implode(', ', $error_links));
+    $this->assertRaw($top_message);
+    foreach ($error_links as $error_link) {
+      $this->assertRaw($error_link);
+    }
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 

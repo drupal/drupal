@@ -338,7 +338,7 @@ services:
     arguments: ['@request_stack', '@url_generator']
   form_error_handler:
     class: Drupal\Core\Form\FormErrorHandler
-    arguments: ['@string_translation', '@link_generator']
+    arguments: ['@string_translation', '@link_generator', '@renderer']
   form_cache:
     class: Drupal\Core\Form\FormCache
     arguments: ['@app.root', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@request_stack', '@page_cache_request_policy']

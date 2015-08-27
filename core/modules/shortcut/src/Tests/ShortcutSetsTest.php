@@ -132,7 +132,8 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetSwitchNoSetName() {
     $edit = array('set' => 'new');
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, t('Change set'));
-    $this->assertRaw('1 error has been found: <a href="#edit-label">Label</a>');
+    $this->assertRaw('1 error has been found:');
+    $this->assertRaw('<a href="#edit-label">Label</a>');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
     $this->assertFieldByXPath("//input[@name='label' and contains(concat(' ', normalize-space(@class), ' '), ' error ')]", NULL, 'The new set label field has the error class');

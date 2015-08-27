@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
@@ -24,16 +24,26 @@ class FormErrorHandler implements FormErrorHandlerInterface {
   use LinkGeneratorTrait;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new FormErrorHandler.
    *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The link generation service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(TranslationInterface $string_translation, LinkGeneratorInterface $link_generator) {
+  public function __construct(TranslationInterface $string_translation, LinkGeneratorInterface $link_generator, RendererInterface $renderer) {
     $this->stringTranslation = $string_translation;
     $this->linkGenerator = $link_generator;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -82,9 +92,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
         unset($errors[$name]);
       }
       elseif ($is_visible_element && $has_title && $has_id) {
-        // We need to pass this through SafeMarkup::escape() so
-        // drupal_set_message() does not encode the links.
-        $error_links[] = SafeMarkup::escape($this->l($title, Url::fromRoute('<none>', [], ['fragment' => $form_element['#id'], 'external' => TRUE])));
+        $error_links[] = $this->l($title, Url::fromRoute('<none>', [], ['fragment' => $form_element['#id'], 'external' => TRUE]));
         unset($errors[$name]);
       }
     }
@@ -95,9 +103,17 @@ class FormErrorHandler implements FormErrorHandlerInterface {
     }
 
     if (!empty($error_links)) {
-      $message = $this->formatPlural(count($error_links), '1 error has been found: !errors', '@count errors have been found: !errors', [
-        '!errors' => SafeMarkup::set(implode(', ', $error_links)),
-      ]);
+      $render_array = [
+        [
+         '#markup' => $this->formatPlural(count($error_links), '1 error has been found: ', '@count errors have been found: '),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#items' => $error_links,
+          '#context' => ['list_style' => 'comma-list'],
+        ],
+      ];
+      $message = $this->renderer->renderPlain($render_array);
       $this->drupalSetMessage($message, 'error');
     }
   }

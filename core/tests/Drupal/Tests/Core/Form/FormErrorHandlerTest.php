@@ -25,8 +25,9 @@ class FormErrorHandlerTest extends UnitTestCase {
     $link_generator->expects($this->any())
       ->method('generate')
       ->willReturnArgument(0);
+    $renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
     $form_error_handler = $this->getMockBuilder('Drupal\Core\Form\FormErrorHandler')
-      ->setConstructorArgs([$this->getStringTranslationStub(), $link_generator])
+      ->setConstructorArgs([$this->getStringTranslationStub(), $link_generator, $renderer])
       ->setMethods(['drupalSetMessage'])
       ->getMock();
 
@@ -41,7 +42,13 @@ class FormErrorHandlerTest extends UnitTestCase {
       ->with('this missing element is invalid', 'error');
     $form_error_handler->expects($this->at(3))
       ->method('drupalSetMessage')
-      ->with('3 errors have been found: Test 1, Test 2 &amp; a half, Test 3', 'error');
+      ->with('3 errors have been found: <ul-comma-list-mock><li-mock>Test 1</li-mock><li-mock>Test 2 &amp; a half</li-mock><li-mock>Test 3</li-mock></ul-comma-list-mock>', 'error');
+
+    $renderer->expects($this->any())
+      ->method('renderPlain')
+      ->will($this->returnCallback(function ($render_array) {
+        return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode(array_map('htmlspecialchars', $render_array[1]['#items']), '</li-mock><li-mock>') . '</li-mock></ul-comma-list-mock>';
+      }));
 
     $form = [
       '#parents' => [],
@@ -103,7 +110,7 @@ class FormErrorHandlerTest extends UnitTestCase {
    */
   public function testSetElementErrorsFromFormState() {
     $form_error_handler = $this->getMockBuilder('Drupal\Core\Form\FormErrorHandler')
-      ->setConstructorArgs([$this->getStringTranslationStub(), $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface')])
+      ->setConstructorArgs([$this->getStringTranslationStub(), $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface'), $this->getMock('\Drupal\Core\Render\RendererInterface')])
       ->setMethods(['drupalSetMessage'])
       ->getMock();
 
