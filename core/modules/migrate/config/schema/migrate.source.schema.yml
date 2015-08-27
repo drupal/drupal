@@ -11,3 +11,24 @@ migrate.source.empty:
     provider:
       type: string
       label: 'Provider'
+
+migrate.source.embedded_data:
+  type: migrate_source
+  label: 'Embedded data source'
+  mapping:
+    data_rows:
+      type: sequence
+      label: 'Data rows'
+      sequence:
+        type: ignore
+        label: 'Data row'
+    ids:
+      type: sequence
+      label: 'Unique key'
+      sequence:
+        type: mapping
+        label: 'Key column'
+        mapping:
+          type:
+            type: string
+            label: 'Column type'

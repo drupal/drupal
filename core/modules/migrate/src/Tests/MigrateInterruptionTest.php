@@ -46,8 +46,17 @@ class MigrateInterruptionTest extends KernelTestBase {
     // other than map_delete.
     $config = [
       'id' => 'sample_data',
-      'migration_tags' => ['Event test'],
-      'source' => ['plugin' => 'data'],
+      'migration_tags' => ['Interruption test'],
+      'source' => [
+        'plugin' => 'embedded_data',
+        'data_rows' => [
+          ['data' => 'dummy value'],
+          ['data' => 'dummy value2'],
+        ],
+        'ids' => [
+          'data' => ['type' => 'string'],
+        ],
+      ],
       'process' => ['value' => 'data'],
       'destination' => ['plugin' => 'dummy'],
       'load' => ['plugin' => 'null'],
