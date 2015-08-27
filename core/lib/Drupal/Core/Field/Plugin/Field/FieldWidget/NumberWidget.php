@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\FieldFilteredString;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -101,11 +102,11 @@ class NumberWidget extends WidgetBase {
     // Add prefix and suffix.
     if ($field_settings['prefix']) {
       $prefixes = explode('|', $field_settings['prefix']);
-      $element['#field_prefix'] = $this->fieldFilterXss(array_pop($prefixes));
+      $element['#field_prefix'] = FieldFilteredString::create(array_pop($prefixes));
     }
     if ($field_settings['suffix']) {
       $suffixes = explode('|', $field_settings['suffix']);
-      $element['#field_suffix'] = $this->fieldFilterXss(array_pop($suffixes));
+      $element['#field_suffix'] = FieldFilteredString::create(array_pop($suffixes));
     }
 
     return array('value' => $element);

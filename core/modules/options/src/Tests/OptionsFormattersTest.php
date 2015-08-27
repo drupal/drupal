@@ -38,7 +38,7 @@ class OptionsFormattersTest extends OptionsFieldUnitTestBase {
 
     $build = $items->view(array('type' => 'list_key'));
     $this->assertEqual($build['#formatter'], 'list_key', 'The chosen formatter is used.');
-    $this->assertEqual($build[0]['#markup'], 1);
+    $this->assertEqual((string) $build[0]['#markup'], 1);
   }
 
 }

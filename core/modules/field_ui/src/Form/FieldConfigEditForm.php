@@ -10,6 +10,7 @@ namespace Drupal\field_ui\Form;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\AllowedTagsXssTrait;
+use Drupal\Core\Field\FieldFilteredString;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
@@ -65,7 +66,7 @@ class FieldConfigEditForm extends EntityForm {
       '#title' => $this->t('Help text'),
       '#default_value' => $this->entity->getDescription(),
       '#rows' => 5,
-      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => $this->displayAllowedTags())) . '<br />' . $this->t('This field supports tokens.'),
+      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => FieldFilteredString::displayAllowedTags())) . '<br />' . $this->t('This field supports tokens.'),
       '#weight' => -10,
     );
 

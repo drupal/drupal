@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\AllowedTagsXssTrait;
+use Drupal\Core\Field\FieldFilteredString;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -70,7 +71,7 @@ class FieldList extends NumericArgument {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
-      return $this->fieldFilterXss($this->allowed_values[$value]);
+      return FieldFilteredString::create($this->allowed_values[$value]);
     }
     // else fallback to the key.
     else {

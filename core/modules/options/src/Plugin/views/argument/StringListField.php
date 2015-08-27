@@ -8,6 +8,7 @@
 namespace Drupal\options\Plugin\views\argument;
 
 use Drupal\Core\Field\AllowedTagsXssTrait;
+use Drupal\Core\Field\FieldFilteredString;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
@@ -80,12 +81,9 @@ class StringListField extends StringArgument {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it.
     if (isset($this->allowedValues[$value]) && !empty($this->options['summary']['human'])) {
-      return $this->caseTransform($this->fieldFilterXss($this->allowedValues[$value]), $this->options['case']);
+      $value = $this->allowedValues[$value];
     }
-    // Else, fallback to the key.
-    else {
-      return $this->caseTransform(SafeMarkup::checkPlain($value), $this->options['case']);
-    }
+    return FieldFilteredString::create($this->caseTransform($value, $this->options['case']));
   }
 
 }
