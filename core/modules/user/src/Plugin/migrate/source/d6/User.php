@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -18,7 +17,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "d6_user"
  * )
  */
-class User extends DrupalSqlBase implements SourceEntityInterface {
+class User extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}
@@ -132,20 +131,6 @@ class User extends DrupalSqlBase implements SourceEntityInterface {
     }
 
     return $fields;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'user';
   }
 
 }

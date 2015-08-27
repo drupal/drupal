@@ -54,61 +54,43 @@ class MigrationStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests expandDependencies() when variants exist.
+   * Tests getVariantIds() when variants exist.
    *
-   * @covers ::expandDependencies
+   * @covers ::getVariantIds
    */
-  public function testExpandDependenciesWithVariants() {
+  public function testGetVariantIdsWithVariants() {
     $this->query->method('execute')
       ->willReturn(['d6_node__page', 'd6_node__article']);
 
-    $dependencies = [
-      'required' => [
-        'd6_node:*',
-        'd6_user',
-      ],
-    ];
-    $dependencies = $this->storage->expandDependencies($dependencies);
-    $this->assertSame(['d6_node__page', 'd6_node__article', 'd6_user'],  $dependencies['required']);
+    $ids = $this->storage->getVariantIds(['d6_node:*', 'd6_user']);
+    $this->assertSame(['d6_node__page', 'd6_node__article', 'd6_user'],  $ids);
   }
 
   /**
-   * Tests expandDependencies() when no variants exist.
+   * Tests getVariantIds() when no variants exist.
    *
-   * @covers ::expandDependencies
+   * @covers ::getVariantIds
    */
-  public function testExpandDependenciesNoVariants() {
+  public function testGetVariantIdsNoVariants() {
     $this->query->method('execute')
       ->willReturn([]);
 
-    $dependencies = [
-      'required' => [
-        'd6_node:*',
-        'd6_user',
-      ],
-    ];
-    $dependencies = $this->storage->expandDependencies($dependencies);
-    $this->assertSame(['d6_user'],  $dependencies['required']);
+    $ids = $this->storage->getVariantIds(['d6_node:*', 'd6_user']);
+    $this->assertSame(['d6_user'],  $ids);
   }
 
   /**
-   * Tests expandDependencies() when no variants exist and there are no static
+   * Tests getVariantIds() when no variants exist and there are no static
    * (non-variant) dependencies.
    *
-   * @covers ::expandDependencies
+   * @covers ::getVariantIds
    */
-  public function testExpandDependenciesNoVariantsOrStaticDependencies() {
+  public function testGetVariantIdsNoVariantsOrStaticDependencies() {
     $this->query->method('execute')
       ->willReturn([]);
 
-    $dependencies = [
-      'required' => [
-        'd6_node:*',
-        'd6_node_revision:*',
-      ],
-    ];
-    $dependencies = $this->storage->expandDependencies($dependencies);
-    $this->assertSame([],  $dependencies['required']);
+    $ids = $this->storage->getVariantIds(['d6_node:*', 'd6_node_revision:*']);
+    $this->assertSame([],  $ids);
   }
 
 }
@@ -123,8 +105,8 @@ class TestMigrationStorage extends MigrationStorage {
   /**
    * {@inheritdoc}
    */
-  public function expandDependencies(array $dependencies) {
-    return parent::expandDependencies($dependencies);
+  public function getVariantIds(array $ids) {
+    return parent::getVariantIds($ids);
   }
 
 }

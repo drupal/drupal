@@ -8,7 +8,6 @@
 namespace Drupal\node\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -18,7 +17,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "d6_node"
  * )
  */
-class Node extends DrupalSqlBase implements SourceEntityInterface {
+class Node extends DrupalSqlBase {
 
   /**
    * The join options between the node and the node_revisions table.
@@ -125,15 +124,6 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
 
     if ($this->moduleExists('content') && $this->getModuleSchemaVersion('content') >= 6001) {
       foreach ($this->getFieldValues($row) as $field => $values) {
-        foreach ($values as $delta => $item) {
-          foreach ($item as $column => $value) {
-            if (strpos($column, $field) === 0) {
-              $key = substr($column, strlen($field) + 1);
-              $values[$delta][$key] = $value;
-              unset($values[$delta][$column]);
-            }
-          }
-        }
         $row->setSourceProperty($field, $values);
       }
     }
@@ -214,28 +204,39 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
     $db = $this->getDatabase()->schema();
 
     if ($db->tableExists($field_table)) {
-      $query = $this->select($field_table, 't')->fields('t');
+      $query = $this->select($field_table, 't');
 
       // If the delta column does not exist, add it as an expression to
       // normalize the query results.
-      if (!$db->fieldExists($field_table, 'delta')) {
+      if ($db->fieldExists($field_table, 'delta')) {
+        $query->addField('t', 'delta');
+      }
+      else {
         $query->addExpression(0, 'delta');
       }
     }
     elseif ($db->tableExists($node_table)) {
       $query = $this->select($node_table, 't');
 
-      // Add every DB column CCK knows about.
-      foreach (array_keys($field['db_columns']) as $column) {
-        $query->addField('t', $field['field_name'] . '_' . $column);
-      }
-
       // Every row should have a delta of 0.
       $query->addExpression(0, 'delta');
     }
 
     if (isset($query)) {
+      $columns = array_keys($field['db_columns']);
+
+      // Add every column in the field's schema.
+      foreach ($columns as $column) {
+        $query->addField('t', $field['field_name'] . '_' . $column, $column);
+      }
+
       return $query
+        // This call to isNotNull() is a kludge which relies on the convention
+        // that CCK field schemas usually define their most important
+        // column first. A better way would be to allow cckfield plugins to
+        // alter the query directly before it's run, but this will do for
+        // the time being.
+        ->isNotNull($field['field_name'] . '_' . $columns[0])
         ->condition('nid', $node->getSourceProperty('nid'))
         ->condition('vid', $node->getSourceProperty('vid'))
         ->execute()
@@ -253,20 +254,6 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
     $ids['nid']['type'] = 'integer';
     $ids['nid']['alias'] = 'n';
     return $ids;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'node';
   }
 
 }

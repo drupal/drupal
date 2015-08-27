@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Entity\Migration;
 use Drupal\simpletest\TestBase;
 
 /**
@@ -59,9 +59,9 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
     }
 
     // Run every migration in the order specified by the storage controller.
-    foreach (entity_load_multiple('migration', static::$migrations) as $migration) {
-      (new MigrateExecutable($migration, $this))->import();
-    }
+    $migrations = Migration::loadMultiple(static::$migrations);
+    array_walk($migrations, [$this, 'executeMigration']);
+
     foreach ($classes as $class) {
       $test_object = new $class($this->testId);
       $test_object->databasePrefix = $this->databasePrefix;

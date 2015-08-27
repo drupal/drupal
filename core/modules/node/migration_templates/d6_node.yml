@@ -55,3 +55,4 @@ migration_dependencies:
   optional:
     - d6_field_instance_widget_settings
     - d6_field_formatter_settings
+    - d6_upload_field_instance

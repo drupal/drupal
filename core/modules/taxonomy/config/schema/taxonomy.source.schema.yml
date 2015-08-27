@@ -23,3 +23,19 @@ migrate.source.d6_taxonomy_vocabulary_per_type:
     constants:
       type: migrate_entity_constant
       label: 'Constants'
+
+migrate.source.d6_term_node:
+  type: migrate_source_sql
+  label: 'Drupal 6 terms per node'
+  mapping:
+    vid:
+      type: integer
+      label: 'Vocabulary ID'
+
+migrate.source.d6_term_node_revision:
+  type: migrate_source_sql
+  label: 'Drupal 6 terms per node revision'
+  mapping:
+    vid:
+      type: integer
+      label: 'Vocabulary ID'

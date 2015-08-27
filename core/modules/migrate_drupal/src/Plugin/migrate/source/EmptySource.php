@@ -10,7 +10,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\migrate_drupal\Entity\MigrationInterface;
+use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\source\EmptySource as BaseEmptySource;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

@@ -130,8 +130,7 @@ class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
       $user->save();
     }
 
-    $migration_format = entity_load('migration', 'd6_profile_values:user');
-    $this->executeMigration($migration_format);
+    $this->executeMigration('d6_profile_values');
   }
 
   /**

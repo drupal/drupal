@@ -29,7 +29,15 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
     $this->installSchema('book', array('book'));
     $this->installSchema('node', array('node_access'));
 
-    $id_mappings = array();
+    // Create a default bogus mapping for all variants of d6_node.
+    $id_mappings = array(
+      'd6_node:*' => array(
+        array(
+          array(0),
+          array(0),
+        ),
+      ),
+    );
     for ($i = 4; $i <= 8; $i++) {
       $entity = entity_create('node', array(
         'type' => 'story',
@@ -39,7 +47,7 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
       ));
       $entity->enforceIsNew();
       $entity->save();
-      $id_mappings['d6_node'][] = array(array($i), array($i));
+      $id_mappings['d6_node__story'][] = array(array($i), array($i));
     }
     $this->prepareMigrations($id_mappings);
     $this->executeMigration('d6_book');

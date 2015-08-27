@@ -51,6 +51,7 @@ class Node extends CckBuilder {
       $node_type = $row->getSourceProperty('type');
       $values = $template;
       $values['id'] = $template['id'] . '__' . $node_type;
+      $values['source']['node_type'] = $node_type;
       $migration = Migration::create($values);
 
       $fields = $this->getSourcePlugin('d6_field_instance', ['node_type' => $node_type] + $template['source']);

@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
 
@@ -23,13 +23,13 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_node');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    // Each node type is imported separately. In this test, we're asserting
+    // on story and test_planet nodes.
+    $this->executeMigration('d6_node__test_planet');
+    $this->executeMigration('d6_node__story');
 
     // This is required for the second import below.
-    db_truncate($migration->getIdMap()->mapTableName())->execute();
+    \Drupal::database()->truncate(Migration::load('d6_node__story')->getIdMap()->mapTableName())->execute();
     $this->standalone = TRUE;
   }
 
@@ -75,10 +75,8 @@ class MigrateNodeTest extends MigrateNodeTestBase {
       ->condition('delta', 1)
       ->execute();
 
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_node');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $migration = Migration::load('d6_node__story');
+    $this->executeMigration($migration);
 
     $node = Node::load(1);
     $this->assertIdentical('New node title', $node->getTitle());

@@ -8,7 +8,6 @@
 namespace Drupal\user\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -19,7 +18,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   source_provider = "profile"
  * )
  */
-class ProfileFieldValues extends DrupalSqlBase implements SourceEntityInterface {
+class ProfileFieldValues extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}
@@ -95,20 +94,6 @@ class ProfileFieldValues extends DrupalSqlBase implements SourceEntityInterface 
         'alias' => 'pv',
       ),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'user';
   }
 
 }

@@ -64,52 +64,54 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
    * {@inheritdoc}
    */
   public function loadMultiple(array $ids = NULL) {
+    if ($ids) {
+      $ids = $this->getVariantIds($ids);
+    }
     /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
     $migrations = parent::loadMultiple($ids);
 
     foreach ($migrations as $migration) {
-      $migration->set('migration_dependencies', $this->expandDependencies($migration->getMigrationDependencies()));
+      $dependencies = array_map([$this, 'getVariantIds'], $migration->getMigrationDependencies());
+      $migration->set('migration_dependencies', $dependencies);
     }
-    return $migrations;
+
+    // Build an array of dependencies and set the order of the migrations.
+    return $this->buildDependencyMigration($migrations, []);
   }
 
   /**
-   * Expands template dependencies.
+   * Splices variant IDs into a list of migration IDs.
    *
-   * Migration dependencies which match the template_id:* pattern are a signal
-   * that the migration depends on every variant of template_id. This method
-   * queries for those variant IDs and splices them into the list of
-   * dependencies.
+   * IDs which match the template_id:* pattern are shorthand for every variant
+   * of template_id. This method queries for those variant IDs and splices them
+   * into the original list.
    *
-   * @param array $dependencies
-   *   The original migration dependencies (with template IDs), organized by
-   *   group (required, optional, etc.)
+   * @param string[] $ids
+   *   A set of migration IDs.
    *
-   * @return array
-   *   The expanded list of dependencies, organized by group.
+   * @return string[]
+   *   The expanded list of IDs.
    */
-  protected function expandDependencies(array $dependencies) {
-    $expanded_dependencies = [];
+  protected function getVariantIds(array $ids) {
+    // Re-index the array numerically, since we need to limit the loop by size.
+    $ids = array_values($ids);
 
-    foreach (array_keys($dependencies) as $group) {
-      $expanded_dependencies[$group] = [];
-
-      foreach ($dependencies[$group] as $dependency_id) {
-        if (substr($dependency_id, -2) == ':*') {
-          $template_id = substr($dependency_id, 0, -2);
-          $variants = $this->queryFactory->get($this->entityType, 'OR')
-            ->condition('id', $template_id)
-            ->condition('template', $template_id)
-            ->execute();
-          $expanded_dependencies[$group] = array_merge($expanded_dependencies[$group], $variants);
-        }
-        else {
-          $expanded_dependencies[$group][] = $dependency_id;
-        }
+    $index = 0;
+    while ($index < count($ids)) {
+      if (substr($ids[$index], -2) == ':*') {
+        $template_id = substr($ids[$index], 0, -2);
+        $variants = $this->queryFactory->get($this->entityType, 'OR')
+          ->condition('id', $template_id)
+          ->condition('template', $template_id)
+          ->execute();
+        array_splice($ids, $index, 1, $variants);
+        $index += count($variants);
+      }
+      else {
+        $index++;
       }
     }
-
-    return $expanded_dependencies;
+    return $ids;
   }
 
   /**

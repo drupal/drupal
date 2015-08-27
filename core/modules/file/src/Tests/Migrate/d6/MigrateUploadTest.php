@@ -21,6 +21,15 @@ class MigrateUploadTest extends MigrateUploadBase {
    */
   protected function setUp() {
     parent::setUp();
+    $id_mappings = array(
+      'd6_node:*' => array(
+        array(
+          array(0),
+          array(0),
+        ),
+      ),
+    );
+    $this->prepareMigrations($id_mappings);
     $this->executeMigration('d6_upload');
   }
 

@@ -16,9 +16,6 @@ migrate.migration.*:
     label:
       type: label
       label: 'Label'
-    load:
-      type: migrate.load.[plugin]
-      label: 'Source'
     source:
       type: migrate.source.[plugin]
       label: 'Source'

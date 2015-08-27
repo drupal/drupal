@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\Node;
 
@@ -22,12 +23,17 @@ class MigrateTermNodeTest extends MigrateTermNodeTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migrations = entity_load_multiple('migration', array('d6_term_node:*'));
-    foreach ($migrations as $migration) {
-      $executable = new MigrateExecutable($migration, $this);
-      $executable->import();
-    }
+    $id_mappings = array(
+      'd6_node:*' => array(
+        array(
+          array(0),
+          array(0),
+        ),
+      ),
+    );
+    $this->prepareMigrations($id_mappings);
+    $migrations = Migration::loadMultiple(['d6_term_node:*']);
+    array_walk($migrations, [$this, 'executeMigration']);
   }
 
   /**

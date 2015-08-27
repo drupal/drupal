@@ -10,7 +10,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\destination;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\migrate_drupal\Entity\MigrationInterface;
+use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityFieldStorageConfig as BaseEntityFieldStorageConfig;
 
 /**

@@ -51,7 +51,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $node->save();
     $id_mappings = array(
       'd6_filter_format' => array(array(array(1), array('filtered_html'))),
-      'd6_node' => array(array(array(1), array(1))),
+      'd6_node:*' => array(array(array(1), array(1))),
       'd6_user' => array(array(array(0), array(0))),
       'd6_comment_type' => array(array(array('comment'), array('comment_no_subject'))),
       'd6_comment_entity_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),

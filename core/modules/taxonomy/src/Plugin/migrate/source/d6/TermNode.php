@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -19,7 +18,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   source_provider = "taxonomy"
  * )
  */
-class TermNode extends DrupalSqlBase implements SourceEntityInterface {
+class TermNode extends DrupalSqlBase {
 
     /**
    * The join options between the node and the term node table.
@@ -74,20 +73,6 @@ class TermNode extends DrupalSqlBase implements SourceEntityInterface {
     $ids['vid']['type'] = 'integer';
     $ids['vid']['alias'] = 'tn';
     return $ids;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'taxonomy_term';
   }
 
 }
