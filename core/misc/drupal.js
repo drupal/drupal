@@ -454,7 +454,7 @@ if (window.jQuery) {
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
-    var baseUrl = protocol + '//' + location.host + drupalSettings.basePath.slice(0, -1);
+    var baseUrl = protocol + '//' + location.host + drupalSettings.path.baseUrl.slice(0, -1);
 
     // Decoding non-UTF-8 strings may throw an exception.
     try {
