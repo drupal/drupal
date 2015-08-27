@@ -140,8 +140,25 @@ class Users extends DrupalDumpBase {
       'init',
       'data',
     ))
-    ->execute();
+    ->values(array(
+      'uid' => '2',
+      'name' => 'Odo',
+      'pass' => '$S$DZ4P7zZOh92vgrgZDBbv8Pu6lQB337OJ1wsOy21602G4A5F7.M9K',
+      'mail' => 'odo@local.host',
+      'theme' => '',
+      'signature' => '',
+      'signature_format' => 'filtered_html',
+      'created' => '1440532218',
+      'access' => '0',
+      'login' => '0',
+      'status' => '1',
+      'timezone' => 'America/Chicago',
+      'language' => '',
+      'picture' => '0',
+      'init' => 'odo@local.host',
+      'data' => 'a:1:{s:7:"contact";i:1;}',
+    ))->execute();
   }
 
 }
-#c4f52bf31f5fe27b4742639dea21039a
+#b33078324746c718e26c067131e97dcd

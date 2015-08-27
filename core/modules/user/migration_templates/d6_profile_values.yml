@@ -15,6 +15,6 @@ destination:
 migration_dependencies:
   required:
     - d6_user
-    - d6_user_profile_field_instance
-    - d6_user_profile_entity_display
-    - d6_user_profile_entity_form_display
+    - user_profile_field_instance
+    - user_profile_entity_display
+    - user_profile_entity_form_display

@@ -1,5 +1,5 @@
 id: d6_user_mail
-label: Drupal 6 user mail configuration
+label: User mail configuration
 migration_tags:
   - Drupal 6
 source:

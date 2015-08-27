@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Migrate\d6\MigrateUserProfileFieldTest.
+ * Contains \Drupal\user\Tests\Migrate\MigrateUserProfileFieldTest.
  */
 
-namespace Drupal\user\Tests\Migrate\d6;
+namespace Drupal\user\Tests\Migrate;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -24,7 +24,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_user_profile_field');
+    $this->executeMigration('user_profile_field');
   }
 
   /**

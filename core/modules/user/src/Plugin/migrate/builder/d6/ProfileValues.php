@@ -24,7 +24,7 @@ class ProfileValues extends BuilderBase {
 
     // @TODO The source plugin should accept a database connection.
     // @see https://www.drupal.org/node/2552791
-    $source_plugin = $this->getSourcePlugin('d6_profile_field', $template['source']);
+    $source_plugin = $this->getSourcePlugin('profile_field', $template['source']);
     try {
       $source_plugin->checkRequirements();
     }

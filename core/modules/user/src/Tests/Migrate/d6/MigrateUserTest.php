@@ -95,10 +95,10 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
         array(array(4), array('migrate test role 2')),
         array(array(5), array('migrate test role 3')),
       ),
-      'd6_user_picture_entity_display' => array(
+      'user_picture_entity_display' => array(
         array(array(1), array('user', 'user', 'default', 'user_picture')),
       ),
-      'd6_user_picture_entity_form_display' => array(
+      'user_picture_entity_form_display' => array(
         array(array(1), array('user', 'user', 'default', 'user_picture')),
       ),
       'd6_user_picture_file' => array(

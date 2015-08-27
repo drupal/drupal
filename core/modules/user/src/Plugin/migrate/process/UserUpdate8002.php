@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\user\Plugin\migrate\process\d6\UserUpdate8002.
+ * Contains \Drupal\user\Plugin\migrate\process\UserUpdate8002.
  */
 
-namespace Drupal\user\Plugin\migrate\process\d6;
+namespace Drupal\user\Plugin\migrate\process;
+
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;

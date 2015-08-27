@@ -2,46 +2,53 @@
 
 /**
  * @file
- * Contains \Drupal\user\Plugin\migrate\source\d6\ProfileField.
+ * Contains \Drupal\user\Plugin\migrate\source\ProfileField.
  */
 
-namespace Drupal\user\Plugin\migrate\source\d6;
+namespace Drupal\user\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
 /**
- * Drupal 6 profile fields source from database.
+ * Profile field source from database.
  *
  * @MigrateSource(
- *   id = "d6_profile_field",
+ *   id = "profile_field",
  *   source_provider = "profile"
  * )
  */
 class ProfileField extends DrupalSqlBase {
 
   /**
+   * The source table containing profile field info.
+   *
+   * @var string
+   */
+  protected $fieldTable;
+
+  /**
+   * The source table containing the profile values.
+   *
+   * @var string
+   */
+  protected $valueTable;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('profile_fields', 'pf')
-      ->fields('pf', array(
-        'fid',
-        'title',
-        'name',
-        'explanation',
-        'category',
-        'page',
-        'type',
-        'weight',
-        'required',
-        'register',
-        'visibility',
-        'autocomplete',
-        'options',
-      ));
-
-    return $query;
+    if (empty($this->fieldTable) || empty($this->valueTable)) {
+      if ($this->getModuleSchemaVersion('system') >= 7000) {
+        $this->fieldTable = 'profile_field';
+        $this->valueTable = 'profile_value';
+      }
+      else {
+        $this->fieldTable = 'profile_fields';
+        $this->valueTable = 'profile_values';
+      }
+    }
+    return $this->select($this->fieldTable, 'pf')->fields('pf');
   }
 
   /**
@@ -53,7 +60,12 @@ class ProfileField extends DrupalSqlBase {
       $current_options = preg_split("/[\r\n]+/", $row->getSourceProperty('options'));
       // Select the list values from the profile_values table to ensure we get
       // them all since they can get out of sync with profile_fields.
-      $options = $this->getDatabase()->query('SELECT DISTINCT value FROM {profile_values} WHERE fid = :fid', array(':fid' => $row->getSourceProperty('fid')))->fetchCol();
+      $options = $this->select($this->valueTable, 'pv')
+        ->distinct()
+        ->fields('pv', ['value'])
+        ->condition('fid', $row->getSourceProperty('fid'))
+        ->execute()
+        ->fetchCol();
       $options = array_merge($current_options, $options);
       // array_combine() takes care of any duplicates options.
       $row->setSourceProperty('options', array_combine($options, $options));

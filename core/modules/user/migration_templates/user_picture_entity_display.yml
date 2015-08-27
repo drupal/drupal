@@ -1,9 +1,10 @@
-id: d6_user_picture_entity_display
-label: Drupal 6 user picture display configuration
+id: user_picture_entity_display
+label: User picture display configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_user_picture_instance
+  plugin: user_picture_instance
   constants:
     entity_type: user
     bundle: user
@@ -27,4 +28,4 @@ destination:
   plugin: component_entity_display
 migration_dependencies:
   required:
-    - d6_user_picture_field_instance
+    - user_picture_field_instance

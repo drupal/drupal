@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Migrate\d6\MigrateUserProfileFieldInstanceTest.
+ * Contains \Drupal\user\Tests\Migrate\MigrateUserProfileFieldInstanceTest.
  */
 
-namespace Drupal\user\Tests\Migrate\d6;
+namespace Drupal\user\Tests\Migrate;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -26,13 +26,13 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     parent::setUp();
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
-      'd6_user_profile_field' => array(
+      'user_profile_field' => array(
         array(array(1), array('user', 'profile_color')),
       ),
     );
     $this->prepareMigrations($id_mappings);
     $this->createFields();
-    $this->executeMigration('d6_user_profile_field_instance');
+    $this->executeMigration('user_profile_field_instance');
   }
 
   /**

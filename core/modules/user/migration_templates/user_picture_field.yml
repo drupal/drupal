@@ -1,7 +1,8 @@
-id: d6_user_picture_field
-label: Drupal 6 user picture field configuration
+id: user_picture_field
+label: User picture field configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   # We do an empty source and a proper destination to have an idmap for
   # dependencies.

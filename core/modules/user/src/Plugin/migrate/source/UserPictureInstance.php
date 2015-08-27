@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\user\Plugin\migrate\source\d6\UserPictureInstance.
+ * Contains \Drupal\user\Plugin\migrate\source\UserPictureInstance.
  */
 
-namespace Drupal\user\Plugin\migrate\source\d6;
+namespace Drupal\user\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
 /**
- * Drupal 6 user picture field instance source.
+ * User picture field instance source.
  *
  * @todo Support default picture?
  *
  * @MigrateSource(
- *   id = "d6_user_picture_instance"
+ *   id = "user_picture_instance"
  * )
  */
 class UserPictureInstance extends DrupalSqlBase {

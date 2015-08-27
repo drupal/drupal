@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Migrate\ProfileValuesBuilderTest.
+ * Contains \Drupal\user\Tests\Migrate\d7\UserMigrationBuilderTest.
  */
 
-namespace Drupal\user\Tests\Migrate;
+namespace Drupal\user\Tests\Migrate\d7;
 
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
  * @group user
  */
-class ProfileValuesBuilderTest extends MigrateDrupal6TestBase {
+class UserMigrationBuilderTest extends MigrateDrupal7TestBase {
 
   public static $modules = ['migrate', 'migrate_drupal', 'user'];
 
@@ -22,15 +22,15 @@ class ProfileValuesBuilderTest extends MigrateDrupal6TestBase {
    */
   public function testBuilder() {
     $template = \Drupal::service('migrate.template_storage')
-      ->getTemplateByName('d6_profile_values');
+      ->getTemplateByName('d7_user');
     /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
     $migrations = \Drupal::service('plugin.manager.migrate.builder')
-      ->createInstance('d6_profile_values')
+      ->createInstance('d7_user')
       ->buildMigrations($template);
 
-    $this->assertIdentical('d6_profile_values', $migrations[0]->id());
+    $this->assertIdentical('d7_user', $migrations[0]->id());
     $process = $migrations[0]->getProcess();
-    $this->assertIdentical('profile_color', $process['profile_color'][0]['source']);
+    $this->assertIdentical('field_file', $process['field_file'][0]['source']);
   }
 
 }

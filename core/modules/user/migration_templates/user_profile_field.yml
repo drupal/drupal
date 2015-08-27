@@ -1,9 +1,10 @@
-id: d6_user_profile_field
-label: Drupal 6 user profile field configuration
+id: user_profile_field
+label: User profile field configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_profile_field
+  plugin: profile_field
   constants:
     entity_type: user
 process:
@@ -21,7 +22,7 @@ process:
       textarea: text_long
       url: link
   settings:
-    plugin: d6_profile_field_settings
+    plugin: profile_field_settings
     source: type
   'settings/allowed_values': options
   cardinality:

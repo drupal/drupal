@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Migrate\d6\MigrateUserProfileEntityFormDisplayTest.
+ * Contains \Drupal\user\Tests\Migrate\MigrateUserProfileEntityFormDisplayTest.
  */
 
-namespace Drupal\user\Tests\Migrate\d6;
+namespace Drupal\user\Tests\Migrate;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -84,7 +84,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
       ))->save();
     }
 
-    $this->executeMigration('d6_user_profile_entity_form_display');
+    $this->executeMigration('user_profile_entity_form_display');
   }
 
   /**

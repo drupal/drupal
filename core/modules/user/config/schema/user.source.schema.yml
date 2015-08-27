@@ -38,9 +38,9 @@ migrate.source.d6_user_picture_instance:
       type: migrate_entity_constant
       label: 'Constants'
 
-migrate.source.d6_profile_field:
+migrate.source.profile_field:
   type: migrate_source_sql
-  label: 'Drupal 6 profile field'
+  label: 'Profile field'
   mapping:
     constants:
       type: migrate_entity_constant

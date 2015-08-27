@@ -123,7 +123,7 @@ class Variable extends DrupalDumpBase {
       'value' => 's:43:"_vWFj-dRR2rNoHDwl7N__J9uZNutDcLz3w4tlPJzRAM";',
     ))->values(array(
       'name' => 'cron_last',
-      'value' => 'i:1432653550;',
+      'value' => 'i:1440523817;',
     ))->values(array(
       'name' => 'css_js_query_string',
       'value' => 's:6:"nihmmw";',
@@ -150,7 +150,7 @@ class Variable extends DrupalDumpBase {
       'value' => 's:43:"9eRJWxrMwQ5CufYJjXBZbPGz_t8vPIYRQr18PamdKmM";',
     ))->values(array(
       'name' => 'email__active_tab',
-      'value' => 's:25:"edit-email-password-reset";',
+      'value' => 's:27:"edit-email-pending-approval";',
     ))->values(array(
       'name' => 'field_bundle_settings_comment__comment_node_test_content_type',
       'value' => 'a:2:{s:10:"view_modes";a:0:{}s:12:"extra_fields";a:2:{s:4:"form";a:2:{s:6:"author";a:1:{s:6:"weight";s:2:"-2";}s:7:"subject";a:1:{s:6:"weight";s:2:"-1";}}s:7:"display";a:0:{}}}',
@@ -393,61 +393,61 @@ class Variable extends DrupalDumpBase {
       'value' => 'i:86400;',
     ))->values(array(
       'name' => 'user_mail_cancel_confirm_body',
-      'value' => "s:381:\"[user:name],\r\n\r\nA request to cancel your account has been made at [site:name].\r\n\r\nYou may now cancel your account on [site:url-brief] by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:cancel-url]\r\n\r\nNOTE: The cancellation of your account is not reversible.\r\n\r\nThis link expires in one day and nothing will happen if it is not used.\r\n\r\n--  [site:name] team\";",
+      'value' => 's:55:"A little birdie said you wanted to cancel your account.";',
     ))->values(array(
       'name' => 'user_mail_cancel_confirm_subject',
-      'value' => 's:59:"Account cancellation request for [user:name] at [site:name]";',
+      'value' => 's:13:"Are you sure?";',
     ))->values(array(
       'name' => 'user_mail_password_reset_body',
-      'value' => "s:407:\"[user:name],\r\n\r\nA request to reset the password for your account has been made at [site:name].\r\n\r\nYou may now log in by clicking this link or copying and pasting it to your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis link can only be used once to log in and will lead you to a page where you can set your password. It expires after one day and nothing will happen if it's not used.\r\n\r\n--  [site:name] team\";",
+      'value' => "s:32:\"Nope! You're locked out forever.\";",
     ))->values(array(
       'name' => 'user_mail_password_reset_subject',
-      'value' => 's:60:"Replacement login information for [user:name] at [site:name]";',
+      'value' => 's:17:"Fix your password";',
     ))->values(array(
       'name' => 'user_mail_register_admin_created_body',
-      'value' => "s:476:\"[user:name],\r\n\r\nA site administrator at [site:name] has created an account for you. You may now log in by clicking this link or copying and pasting it to your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis link can only be used once to log in and will lead you to a page where you can set your password.\r\n\r\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\r\n\r\nusername: [user:name]\r\npassword: Your password\r\n\r\n--  [site:name] team\";",
+      'value' => 's:30:"...and she could take it away.";',
     ))->values(array(
       'name' => 'user_mail_register_admin_created_subject',
-      'value' => 's:58:"An administrator created an account for you at [site:name]";',
+      'value' => 's:24:"Gawd made you an account";',
     ))->values(array(
       'name' => 'user_mail_register_no_approval_required_body',
-      'value' => "s:450:\"[user:name],\r\n\r\nThank you for registering at [site:name]. You may now log in by clicking this link or copying and pasting it to your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis link can only be used once to log in and will lead you to a page where you can set your password.\r\n\r\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\r\n\r\nusername: [user:name]\r\npassword: Your password\r\n\r\n--  [site:name] team\";",
+      'value' => 's:59:"You can now log in if you can figure out how to use Drupal!";',
     ))->values(array(
       'name' => 'user_mail_register_no_approval_required_subject',
-      'value' => 's:46:"Account details for [user:name] at [site:name]";',
+      'value' => 's:8:"Welcome!";',
     ))->values(array(
       'name' => 'user_mail_register_pending_approval_body',
-      'value' => "s:287:\"[user:name],\r\n\r\nThank you for registering at [site:name]. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\r\n\r\n\r\n--  [site:name] team\";",
+      'value' => 's:61:"...you will join our Circle. Let the Drupal flow through you.";',
     ))->values(array(
       'name' => 'user_mail_register_pending_approval_subject',
-      'value' => 's:71:"Account details for [user:name] at [site:name] (pending admin approval)";',
+      'value' => 's:7:"Soon...";',
     ))->values(array(
       'name' => 'user_mail_status_activated_body',
-      'value' => "s:461:\"[user:name],\r\n\r\nYour account at [site:name] has been activated.\r\n\r\nYou may now log in by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis link can only be used once to log in and will lead you to a page where you can set your password.\r\n\r\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\r\n\r\nusername: [user:name]\r\npassword: Your password\r\n\r\n--  [site:name] team\";",
+      'value' => 's:57:"Your account was activated, and there was much rejoicing.";',
     ))->values(array(
       'name' => 'user_mail_status_activated_notify',
       'value' => 'i:1;',
     ))->values(array(
       'name' => 'user_mail_status_activated_subject',
-      'value' => 's:57:"Account details for [user:name] at [site:name] (approved)";',
+      'value' => 's:25:"Your account is approved!";',
     ))->values(array(
       'name' => 'user_mail_status_blocked_body',
-      'value' => "s:85:\"[user:name],\r\n\r\nYour account on [site:name] has been blocked.\r\n\r\n--  [site:name] team\";",
+      'value' => 's:72:"You no longer please the robot overlords. Go to your room and chill out.";',
     ))->values(array(
       'name' => 'user_mail_status_blocked_notify',
-      'value' => 'i:0;',
+      'value' => 'i:1;',
     ))->values(array(
       'name' => 'user_mail_status_blocked_subject',
-      'value' => 's:56:"Account details for [user:name] at [site:name] (blocked)";',
+      'value' => 's:7:"BEGONE!";',
     ))->values(array(
       'name' => 'user_mail_status_canceled_body',
-      'value' => "s:86:\"[user:name],\r\n\r\nYour account on [site:name] has been canceled.\r\n\r\n--  [site:name] team\";",
+      'value' => 's:75:"The gates of Drupal are closed to you. Now you will work in the salt mines.";',
     ))->values(array(
       'name' => 'user_mail_status_canceled_notify',
-      'value' => 'i:0;',
+      'value' => 'i:1;',
     ))->values(array(
       'name' => 'user_mail_status_canceled_subject',
-      'value' => 's:57:"Account details for [user:name] at [site:name] (canceled)";',
+      'value' => 's:12:"So long, bub";',
     ))->values(array(
       'name' => 'user_pictures',
       'value' => 'i:1;',
@@ -479,4 +479,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#dbc0f593050ff48cc18dfa4fed47daaf
+#502534c5e998ee5c14f5a2d510b9dc85

@@ -1,9 +1,10 @@
-id: d6_user_picture_field_instance
-label: Drupal 6 user picture field instance configuration
+id: user_picture_field_instance
+label: User picture field instance configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_user_picture_instance
+  plugin: user_picture_instance
   constants:
     entity_type: user
     bundle: user
@@ -27,4 +28,4 @@ destination:
   plugin: entity:field_config
 migration_dependencies:
   required:
-    - d6_user_picture_field
+    - user_picture_field

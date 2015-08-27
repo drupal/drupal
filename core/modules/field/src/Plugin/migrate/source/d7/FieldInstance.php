@@ -31,6 +31,15 @@ class FieldInstance extends DrupalSqlBase {
       ->condition('fc.storage_active', 1);
     $query->innerJoin('field_config', 'fc', 'fci.field_id = fc.id');
 
+    // Optionally filter by entity type and bundle.
+    if (isset($this->configuration['entity_type'])) {
+      $query->condition('entity_type', $this->configuration['entity_type']);
+
+      if (isset($this->configuration['bundle'])) {
+        $query->condition('bundle', $this->configuration['bundle']);
+      }
+    }
+
     return $query;
   }
 

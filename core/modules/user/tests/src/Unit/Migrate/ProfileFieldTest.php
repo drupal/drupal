@@ -2,30 +2,24 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\user\Unit\Migrate\d6\ProfileFieldTest.
+ * Contains \Drupal\Tests\user\Unit\Migrate\ProfileFieldTest.
  */
 
-namespace Drupal\Tests\user\Unit\Migrate\d6;
+namespace Drupal\Tests\user\Unit\Migrate;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
- * Tests D6 profile field source plugin.
+ * Tests profile_field source plugin.
  *
  * @group user
  */
 class ProfileFieldTest extends MigrateSqlSourceTestCase {
 
-  // The plugin system is not working during unit testing so the source plugin
-  // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\user\Plugin\migrate\source\d6\ProfileField';
+  const PLUGIN_CLASS = 'Drupal\user\Plugin\migrate\source\ProfileField';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = [
-    // The id of the entity, can be any string.
     'id' => 'test_profile_fields',
-    // Leave it empty for now.
-    'idlist' => [],
     'source' => [
       'plugin' => 'd6_profile_field',
     ],
