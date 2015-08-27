@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -119,13 +120,24 @@ function entity_test_entity_base_field_info(EntityTypeInterface $entity_type) {
  * Implements hook_entity_base_field_info_alter().
  */
 function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
-  if ($entity_type->id() == 'entity_test_mulrev' && ($names = \Drupal::state()->get('entity_test.field_definitions.translatable'))) {
+  $state = \Drupal::state();
+  if ($entity_type->id() == 'entity_test_mulrev' && ($names = $state->get('entity_test.field_definitions.translatable'))) {
     foreach ($names as $name => $value) {
       $fields[$name]->setTranslatable($value);
     }
   }
-  if ($entity_type->id() == 'node' && Drupal::state()->get('entity_test.node_remove_status_field')) {
+  if ($entity_type->id() == 'node' && $state->get('entity_test.node_remove_status_field')) {
     unset($fields['status']);
+  }
+  if ($entity_type->id() == 'entity_test' && $state->get('entity_test.remove_name_field')) {
+    unset($fields['name']);
+  }
+  // In 8001 we are assuming that a new definition with multiple cardinality has
+  // been deployed.
+  // @todo Remove this if we end up using state definitions at runtime. See
+  //    https://www.drupal.org/node/2554235.
+  if ($entity_type->id() == 'entity_test' && $state->get('entity_test.db_updates.entity_definition_updates') == 8001) {
+    $fields['user_id']->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
   }
 }
 

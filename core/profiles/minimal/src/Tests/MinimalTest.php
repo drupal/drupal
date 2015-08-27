@@ -39,5 +39,8 @@ class MinimalTest extends WebTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('update.php/selection');
     $this->assertText('No pending updates.');
+
+    // Ensure that there are no pending entity updates after installation.
+    $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
   }
 }

@@ -248,6 +248,9 @@ abstract class UpdatePathTestBase extends WebTestBase {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
     }
+
+    // Ensure that the update hooks updated all entity schema.
+    $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After all updates ran, entity schema is up to date.');
   }
 
   /**

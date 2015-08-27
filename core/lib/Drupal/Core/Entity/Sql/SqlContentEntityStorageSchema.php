@@ -1391,6 +1391,20 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           if ($field_name == $updated_field_name) {
             $schema[$table_name] = $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names);
 
+            // Handle NOT NULL constraints.
+            foreach ($schema[$table_name]['fields'] as $column_name => $specifier) {
+              $not_null = !empty($specifier['not null']);
+              $original_not_null = !empty($original_schema[$table_name]['fields'][$column_name]['not null']);
+              if ($not_null !== $original_not_null) {
+                if ($not_null && $this->hasNullFieldPropertyData($table_name, $column_name)) {
+                  throw new EntityStorageException("The $column_name column cannot have NOT NULL constraints as it holds NULL values.");
+                }
+                $column_schema = $original_schema[$table_name]['fields'][$column_name];
+                $column_schema['not null'] = $not_null;
+                $schema_handler->changeField($table_name, $field_name, $field_name, $column_schema);
+              }
+            }
+
             // Drop original indexes and unique keys.
             if (!empty($original_schema[$table_name]['indexes'])) {
               foreach ($original_schema[$table_name]['indexes'] as $name => $specifier) {
@@ -1420,6 +1434,26 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
       $this->saveFieldSchemaData($storage_definition, $schema);
     }
+  }
+
+  /**
+   * Checks whether a field property has NULL values.
+   *
+   * @param string $table_name
+   *   The name of the table to inspect.
+   * @param string $column_name
+   *   The name of the column holding the field property data.
+   *
+   * @return bool
+   *   TRUE if NULL data is found, FALSE otherwise.
+   */
+  protected function hasNullFieldPropertyData($table_name, $column_name) {
+    $query = $this->database->select($table_name, 't')
+      ->fields('t', [$column_name])
+      ->range(0, 1);
+    $query->isNull('t.' . $column_name);
+    $result = $query->execute()->fetchAssoc();
+    return (bool) $result;
   }
 
   /**
@@ -1803,15 +1837,34 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     if (!$storage_definition->hasCustomStorage()) {
-      $schema = $this->getSchemaFromStorageDefinition($storage_definition);
-      foreach ($this->loadFieldSchemaData($original) as $table => $spec) {
-        if ($spec['fields'] != $schema[$table]['fields']) {
-          return TRUE;
+      $keys = array_flip($this->getColumnSchemaRelevantKeys());
+      $definition_schema = $this->getSchemaFromStorageDefinition($storage_definition);
+      foreach ($this->loadFieldSchemaData($original) as $table => $table_schema) {
+        foreach ($table_schema['fields'] as $name => $spec) {
+          $definition_spec = array_intersect_key($definition_schema[$table]['fields'][$name], $keys);
+          $stored_spec = array_intersect_key($spec, $keys);
+          if ($definition_spec != $stored_spec) {
+            return TRUE;
+          }
         }
       }
     }
 
     return FALSE;
+  }
+
+  /**
+   * Returns a list of column schema keys affecting data storage.
+   *
+   * When comparing schema definitions, only changes in certain properties
+   * actually affect how data is stored and thus, if applied, may imply data
+   * manipulation.
+   *
+   * @return string[]
+   *   An array of key names.
+   */
+  protected function getColumnSchemaRelevantKeys() {
+    return ['type', 'size', 'length', 'unsigned'];
   }
 
 }

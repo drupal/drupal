@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
 
@@ -35,8 +36,8 @@ use Drupal\Core\Utility\UpdateException;
  * - Database schema changes: adding, changing, or removing a database table or
  *   field; moving stored data to different fields or tables; changing the
  *   format of stored data.
- * - Content entity or field changes: these updates are normally handled
- *   automatically by the entity system, but should at least be tested.
+ * - Content entity or field changes: adding, changing, or removing a field
+ *   definition, entity definition, or any of their properties.
  *
  * @section sec_how How to write update code
  * Update code for a module is put into an implementation of hook_update_N(),
@@ -531,6 +532,16 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *   ignored, and make sure that the configuration data you are saving matches
  *   the configuration schema at the time when you write the update function
  *   (later updates may change it again to match new schema changes).
+ * - Never assume your field or entity type definitions are the same when the
+ *   update will run as they are when you wrote the update function. Always
+ *   retrieve the correct version via
+ *   \Drupal::entityDefinitionUpdateManager()::getEntityType() or
+ *   \Drupal::entityDefinitionUpdateManager()::getFieldStorageDefinition(). When
+ *   adding a new definition always replicate it in the update function body as
+ *   you would do with a schema definition.
+ * - Never call \Drupal::entityDefinitionUpdateManager()::applyUpdates() in an
+ *   update function, as it will apply updates for any module not only yours,
+ *   which will lead to unpredictable results.
  * - Be careful about API functions and especially CRUD operations that you use
  *   in your update function. If they invoke hooks or use services, they may
  *   not behave as expected, and it may actually not be appropriate to use the
@@ -548,6 +559,9 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *   long as you make sure that your update data matches the schema, and you
  *   use the $has_trusted_data argument in the save operation.
  * - Marking a container for rebuild.
+ * - Using the API provided by \Drupal::entityDefinitionUpdateManager() to
+ *   update the entity schema based on changes in entity type or field
+ *   definitions provided by your module.
  *
  * See https://www.drupal.org/node/2535316 for more on writing update functions.
  *
@@ -585,6 +599,9 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * @see schemaapi
  * @see hook_update_last_removed()
  * @see update_get_update_list()
+ * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+ * @see node_update_8001
+ * @see system_update_8004
  * @see https://www.drupal.org/node/2535316
  */
 function hook_update_N(&$sandbox) {

@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the entity_test module.
  */
 
+use Drupal\system\Tests\Update\DbUpdatesTrait;
+
 /**
  * Implements hook_install().
  */
@@ -49,3 +51,6 @@ function entity_test_schema() {
   );
   return $schema;
 }
+
+DbUpdatesTrait::includeUpdates('entity_test', 'entity_definition_updates');
+DbUpdatesTrait::includeUpdates('entity_test', 'status_report');

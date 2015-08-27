@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
 /**
  * Defines an interface for managing entity definition updates.
  *
@@ -25,12 +27,22 @@ namespace Drupal\Core\Entity;
  * report the differences or when to apply each update. This interface is for
  * managing that.
  *
+ * This interface also provides methods to retrieve instances of the definitions
+ * to be updated ready to be manipulated. In fact when definitions change in
+ * code the system needs to be notified about that and the definitions stored in
+ * state need to be reconciled with the ones living in code. This typically
+ * happens in Update API functions, which need to take the system from a known
+ * state to another known state. Relying on the definitions living in code might
+ * prevent this, as the system might transition directly to the last available
+ * state, and thus skipping the intermediate steps. Manipulating the definitions
+ * in state allows to avoid this and ensures that the various steps of the
+ * update process are predictable and repeatable.
+ *
  * @see \Drupal\Core\Entity\EntityManagerInterface::getDefinition()
  * @see \Drupal\Core\Entity\EntityManagerInterface::getLastInstalledDefinition()
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldStorageDefinitions()
  * @see \Drupal\Core\Entity\EntityManagerInterface::getLastInstalledFieldStorageDefinitions()
- * @see \Drupal\Core\Entity\EntityTypeListenerInterface
- * @see \Drupal\Core\Field\FieldStorageDefinitionListenerInterface
+ * @see hook_update_N()
  */
 interface EntityDefinitionUpdateManagerInterface {
 
@@ -75,6 +87,9 @@ interface EntityDefinitionUpdateManagerInterface {
   /**
    * Applies all the detected valid changes.
    *
+   * Use this with care, as it will apply updates for any module, which will
+   * lead to unpredictable results.
+   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   This exception is thrown if a change cannot be applied without
    *   unacceptable data loss. In such a case, the site administrator needs to
@@ -84,67 +99,92 @@ interface EntityDefinitionUpdateManagerInterface {
   public function applyUpdates();
 
   /**
-   * Performs a single entity definition update.
+   * Returns an entity type definition ready to be manipulated.
    *
-   * This method should be used from hook_update_N() functions to process
-   * entity definition updates as part of the update function. This is only
-   * necessary if the hook_update_N() implementation relies on the entity
-   * definition update. All remaining entity definition updates will be run
-   * automatically after the hook_update_N() implementations.
+   * When needing to apply updates to existing entity type definitions, this
+   * method should always be used to retrieve a definition ready to be
+   * manipulated.
    *
-   * @param string $op
-   *   The operation to perform, either static::DEFINITION_CREATED or
-   *   static::DEFINITION_UPDATED.
    * @param string $entity_type_id
-   *   The entity type to update.
-   * @param bool $reset_cached_definitions
-   *   (optional). Determines whether to clear the Entity Manager's cached
-   *   definitions before applying the update. Defaults to TRUE. Can be used
-   *   to prevent unnecessary cache invalidation when a hook_update_N() makes
-   *   multiple calls to this method.
+   *   The entity type identifier.
    *
-   * @return bool
-   *   TRUE if the entity update is processed, FALSE if not.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   This exception is thrown if a change cannot be applied without
-   *   unacceptable data loss. In such a case, the site administrator needs to
-   *   apply some other process, such as a custom update function or a
-   *   migration via the Migrate module.
+   * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The entity type definition.
    */
-  public function applyEntityUpdate($op, $entity_type_id, $reset_cached_definitions = TRUE);
+  public function getEntityType($entity_type_id);
 
   /**
-   * Performs a single field storage definition update.
+   * Installs a new entity type definition.
    *
-   * This method should be used from hook_update_N() functions to process field
-   * storage definition updates as part of the update function. This is only
-   * necessary if the hook_update_N() implementation relies on the field storage
-   * definition update. All remaining field storage definition updates will be
-   * run automatically after the hook_update_N() implementations.
-   *
-   * @param string $op
-   *   The operation to perform, possible values are static::DEFINITION_CREATED,
-   *   static::DEFINITION_UPDATED or static::DEFINITION_DELETED.
-   * @param string $entity_type_id
-   *   The entity type to update.
-   * @param string $field_name
-   *   The field name to update.
-   * @param bool $reset_cached_definitions
-   *   (optional). Determines whether to clear the Entity Manager's cached
-   *   definitions before applying the update. Defaults to TRUE. Can be used
-   *   to prevent unnecessary cache invalidation when a hook_update_N() makes
-   *   multiple calls to this method.
-
-   * @return bool
-   *   TRUE if the entity update is processed, FALSE if not.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   This exception is thrown if a change cannot be applied without
-   *   unacceptable data loss. In such a case, the site administrator needs to
-   *   apply some other process, such as a custom update function or a
-   *   migration via the Migrate module.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    */
-  public function applyFieldUpdate($op, $entity_type_id, $field_name, $reset_cached_definitions = TRUE);
+  public function installEntityType(EntityTypeInterface $entity_type);
+
+  /**
+   * Applies any change performed to the passed entity type definition.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   */
+  public function updateEntityType(EntityTypeInterface $entity_type);
+
+  /**
+   * Uninstalls an entity type definition.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   */
+  public function uninstallEntityType(EntityTypeInterface $entity_type);
+
+  /**
+   * Returns a field storage definition ready to be manipulated.
+   *
+   * When needing to apply updates to existing field storage definitions, this
+   * method should always be used to retrieve a storage definition ready to be
+   * manipulated.
+   *
+   * @param string $name
+   *   The field name.
+   * @param string $entity_type_id
+   *   The entity type identifier.
+   *
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
+   *   The field storage definition.
+   *
+   * @todo Make this return a mutable storage definition interface when we have
+   *   one. See https://www.drupal.org/node/2346329.
+   */
+  public function getFieldStorageDefinition($name, $entity_type_id);
+
+  /**
+   * Installs a new field storage definition.
+   *
+   * @param string $name
+   *   The field storage definition name.
+   * @param string $entity_type_id
+   *   The target entity type identifier.
+   * @param string $provider
+   *   The name of the definition provider.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   */
+  public function installFieldStorageDefinition($name, $entity_type_id, $provider, FieldStorageDefinitionInterface $storage_definition);
+
+  /**
+   * Applies any change performed to the passed field storage definition.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   */
+  public function updateFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition);
+
+  /**
+   * Uninstalls a field storage definition.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   */
+  public function uninstallFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition);
 
 }

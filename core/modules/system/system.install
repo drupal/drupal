@@ -594,10 +594,16 @@ function system_requirements($phase) {
         }
       }
     }
-    if (!isset($requirements['update']['severity']) && \Drupal::service('entity.definition_update_manager')->needsUpdates()) {
-      $requirements['update']['severity'] = REQUIREMENT_ERROR;
-      $requirements['update']['value'] = t('Out of date');
-      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => \Drupal::url('system.db_update')));
+
+    // Verify that no entity updates are pending after running every DB update.
+    if (!isset($requirements['update']['severity']) && \Drupal::entityDefinitionUpdateManager()->needsUpdates()) {
+      $requirements['entity_update'] = array(
+        'title' => t('Entity/field definitions'),
+        'value' => t('Mismatch detected'),
+        'severity' => REQUIREMENT_ERROR,
+        // @todo Provide details: https://www.drupal.org/node/2554911
+        'description' => t('Mismatched entity and/or field definitions.'),
+      );
     }
   }
 
@@ -1246,4 +1252,19 @@ function system_update_8003() {
       ],
     ]
   );
+}
+
+/**
+ * Add a (id, default_langcode, langcode) composite index to entities.
+ */
+function system_update_8004() {
+  // \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema was changed in
+  // https://www.drupal.org/node/2261669 to include a (id, default_langcode,
+  // langcode) compound index, but this update function wasn't added until
+  // https://www.drupal.org/node/2542748. Regenerate the related schemas to
+  // ensure they match the currently expected status.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  foreach (array_keys(\Drupal::entityManager()->getDefinitions()) as $entity_type_id) {
+    $manager->updateEntityType($manager->getEntityType($entity_type_id));
+  }
 }

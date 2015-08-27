@@ -687,4 +687,14 @@ class Drupal {
     return static::getContainer()->get('redirect.destination');
   }
 
+  /**
+   * Returns the entity definition update manager.
+   *
+   * @return \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   *   The entity definition update manager.
+   */
+  public static function entityDefinitionUpdateManager() {
+    return static::getContainer()->get('entity.definition_update_manager');
+  }
+
 }

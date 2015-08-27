@@ -10,9 +10,9 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\PreExistingConfigException;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
  * Default implementation of the module installer.
@@ -212,14 +212,34 @@ class ModuleInstaller implements ModuleInstallerInterface {
           $version = max(max($versions), $version);
         }
 
-        // Notify interested components that this module's entity types are new.
-        // For example, a SQL-based storage handler can use this as an
-        // opportunity to create the necessary database tables.
+        // Notify interested components that this module's entity types and
+        // field storage definitions are new. For example, a SQL-based storage
+        // handler can use this as an opportunity to create the necessary
+        // database tables.
         // @todo Clean this up in https://www.drupal.org/node/2350111.
         $entity_manager = \Drupal::entityManager();
+        $update_manager = \Drupal::entityDefinitionUpdateManager();
         foreach ($entity_manager->getDefinitions() as $entity_type) {
           if ($entity_type->getProvider() == $module) {
-            $entity_manager->onEntityTypeCreate($entity_type);
+            $update_manager->installEntityType($entity_type);
+          }
+          elseif ($entity_type->isSubclassOf(FieldableEntityInterface::CLASS)) {
+            // The module being installed may be adding new fields to existing
+            // entity types. Field definitions for any entity type defined by
+            // the module are handled in the if branch.
+            foreach ($entity_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
+              if ($storage_definition->getProvider() == $module) {
+                // If the module being installed is also defining a storage key
+                // for the entity type, the entity schema may not exist yet. It
+                // will be created later in that case.
+                try {
+                  $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
+                }
+                catch (EntityStorageException $e) {
+                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "!message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
+                }
+              }
+            }
           }
         }
 
@@ -362,9 +382,25 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // deleted. For example, a SQL-based storage handler can use this as an
       // opportunity to drop the corresponding database tables.
       // @todo Clean this up in https://www.drupal.org/node/2350111.
+      $update_manager = \Drupal::entityDefinitionUpdateManager();
       foreach ($entity_manager->getDefinitions() as $entity_type) {
         if ($entity_type->getProvider() == $module) {
-          $entity_manager->onEntityTypeDelete($entity_type);
+          $update_manager->uninstallEntityType($entity_type);
+        }
+        elseif ($entity_type->isSubclassOf(FieldableEntityInterface::CLASS)) {
+          // The module being installed may be adding new fields to existing
+          // entity types. Field definitions for any entity type defined by
+          // the module are handled in the if branch.
+          $entity_type_id = $entity_type->id();
+          /** @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
+          $storage = $entity_manager->getStorage($entity_type_id);
+          foreach ($entity_manager->getFieldStorageDefinitions($entity_type_id) as $storage_definition) {
+            // @todo We need to trigger field purging here.
+            //   See https://www.drupal.org/node/2282119.
+            if ($storage_definition->getProvider() == $module && !$storage->countFieldData($storage_definition, TRUE)) {
+              $update_manager->uninstallFieldStorageDefinition($storage_definition);
+            }
+          }
         }
       }
 

@@ -5,9 +5,7 @@
  * Install, update and uninstall functions for the node module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Url;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\user\RoleInterface;
 
 /**
@@ -152,4 +150,74 @@ function node_install() {
 function node_uninstall() {
   // Delete remaining general module variables.
   \Drupal::state()->delete('node.node_access_needs_rebuild');
+}
+
+/**
+ * Add 'revision_translation_affected' field to 'node' entities.
+ */
+function node_update_8001() {
+  // Install the definition that this field had in
+  // \Drupal\node\Entity\Node::baseFieldDefinitions()
+  // at the time that this update function was written. If/when code is
+  // deployed that changes that definition, the corresponding module must
+  // implement an update function that invokes
+  // \Drupal::entityDefinitionUpdateManager()->updateFieldStorageDefinition()
+  // with the new definition.
+  $storage_definition = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Revision translation affected'))
+      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setReadOnly(TRUE)
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_translation_affected', 'node', 'node', $storage_definition);
+}
+
+/**
+ * Remove obsolete indexes from the node schema.
+ */
+function node_update_8002() {
+  // The "node__default_langcode" and "node_field__langcode" indexes were
+  // removed from \Drupal\node\NodeStorageSchema in
+  // https://www.drupal.org/node/2261669, but this update function wasn't
+  // added until https://www.drupal.org/node/2542748. Regenerate the related
+  // schemas to ensure they match the currently expected status.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  // Regenerate entity type indexes, this should drop "node__default_langcode".
+  $manager->updateEntityType($manager->getEntityType('node'));
+  // Regenerate "langcode" indexes, this should drop "node_field__langcode".
+  $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition('langcode', 'node'));
+}
+
+/**
+ * Promote 'status' and 'uid' fields to entity keys.
+ */
+function node_update_8003() {
+  // The 'status' and 'uid' fields were added to the 'entity_keys' annotation
+  // of \Drupal\node\Entity\Node in https://www.drupal.org/node/2498919, but
+  // this update function wasn't added until
+  // https://www.drupal.org/node/2542748. In between, sites could have
+  // performed interim updates, which would have included automated entity
+  // schema updates prior to that being removed (see that issue for details).
+  // Therefore, we check for whether the keys have already been installed.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $manager->getEntityType('node');
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['status'] = 'status';
+  $entity_keys['uid'] = 'uid';
+  $entity_type->set('entity_keys', $entity_keys);
+  $manager->updateEntityType($entity_type);
+
+  // @todo The above should be enough, since that is the only definition that
+  //   changed. But \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema varies
+  //   field schema by whether a field is an entity key, so invoke
+  //   onFieldStorageDefinitionUpdate() with an unmodified
+  //   $field_storage_definition to trigger the necessary changes.
+  //   SqlContentEntityStorageSchema::onEntityTypeUpdate() should be fixed to
+  //   automatically handle this.
+  //   See https://www.drupal.org/node/2554245.
+  foreach (array('status', 'uid') as $field_name) {
+    $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));
+  }
 }

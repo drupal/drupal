@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the block_content module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Add 'revision_translation_affected' field to 'block_content' entities.
+ */
+function block_content_update_8001() {
+  // Install the definition that this field had in
+  // \Drupal\block_content\Entity\BlockContent::baseFieldDefinitions()
+  // at the time that this update function was written. If/when code is
+  // deployed that changes that definition, the corresponding module must
+  // implement an update function that invokes
+  // \Drupal::entityDefinitionUpdateManager()->updateFieldStorageDefinition()
+  // with the new definition.
+  $storage_definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Revision translation affected'))
+    ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+    ->setReadOnly(TRUE)
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_translation_affected', 'block_content', 'block_content', $storage_definition);
+}

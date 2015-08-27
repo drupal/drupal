@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Entity\Schema\EntityStorageSchemaInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -95,13 +96,13 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function applyUpdates() {
-    $change_list = $this->getChangeList();
-    if ($change_list) {
+    $complete_change_list = $this->getChangeList();
+    if ($complete_change_list) {
       // self::getChangeList() only disables the cache and does not invalidate.
       // In case there are changes, explicitly invalidate caches.
       $this->entityManager->clearCachedDefinitions();
     }
-    foreach ($change_list as $entity_type_id => $change_list) {
+    foreach ($complete_change_list as $entity_type_id => $change_list) {
       // Process entity type definition changes before storage definitions ones
       // this is necessary when you change an entity type from non-revisionable
       // to revisionable and at the same time add revisionable fields to the
@@ -127,42 +128,76 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   /**
    * {@inheritdoc}
    */
-  public function applyEntityUpdate($op, $entity_type_id, $reset_cached_definitions = TRUE) {
-    $change_list = $this->getChangeList();
-    if (!isset($change_list[$entity_type_id]) || $change_list[$entity_type_id]['entity_type'] !== $op) {
-      return FALSE;
-    }
-    if ($reset_cached_definitions) {
-      // self::getChangeList() only disables the cache and does not invalidate.
-      // In case there are changes, explicitly invalidate caches.
-      $this->entityManager->clearCachedDefinitions();
-    }
-    $this->doEntityUpdate($op, $entity_type_id);
-    return TRUE;
+  public function getEntityType($entity_type_id) {
+    $entity_type = $this->entityManager->getLastInstalledDefinition($entity_type_id);
+    return $entity_type ? clone $entity_type : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function applyFieldUpdate($op, $entity_type_id, $field_name, $reset_cached_definitions = TRUE) {
-    $change_list = $this->getChangeList();
-    if (!isset($change_list[$entity_type_id]['field_storage_definitions']) || $change_list[$entity_type_id]['field_storage_definitions'][$field_name] !== $op) {
-      return FALSE;
+  public function installEntityType(EntityTypeInterface $entity_type) {
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityManager->onEntityTypeCreate($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateEntityType(EntityTypeInterface $entity_type) {
+    $original = $this->getEntityType($entity_type->id());
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityManager->onEntityTypeUpdate($entity_type, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uninstallEntityType(EntityTypeInterface $entity_type) {
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityManager->onEntityTypeDelete($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function installFieldStorageDefinition($name, $entity_type_id, $provider, FieldStorageDefinitionInterface $storage_definition) {
+    // @todo Pass a mutable field definition interface when we have one. See
+    //   https://www.drupal.org/node/2346329.
+    if ($storage_definition instanceof BaseFieldDefinition) {
+      $storage_definition
+        ->setName($name)
+        ->setTargetEntityTypeId($entity_type_id)
+        ->setProvider($provider)
+        ->setTargetBundle(NULL);
     }
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityManager->onFieldStorageDefinitionCreate($storage_definition);
+  }
 
-    if ($reset_cached_definitions) {
-      // self::getChangeList() only disables the cache and does not invalidate.
-      // In case there are changes, explicitly invalidate caches.
-      $this->entityManager->clearCachedDefinitions();
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldStorageDefinition($name, $entity_type_id) {
+    $storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
+    return isset($storage_definitions[$name]) ? clone $storage_definitions[$name] : NULL;
+  }
 
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
-    $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
-    $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
-    $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
+  /**
+   * {@inheritdoc}
+   */
+  public function updateFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
+    $original = $this->getFieldStorageDefinition($storage_definition->getName(), $storage_definition->getTargetEntityTypeId());
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityManager->onFieldStorageDefinitionUpdate($storage_definition, $original);
+  }
 
-    $this->doFieldUpdate($op, $storage_definition, $original_storage_definition);
-    return TRUE;
+  /**
+   * {@inheritdoc}
+   */
+  public function uninstallFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityManager->onFieldStorageDefinitionDelete($storage_definition);
   }
 
   /**

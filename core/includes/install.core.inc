@@ -1599,6 +1599,10 @@ function install_bootstrap_full() {
  *   The batch definition.
  */
 function install_profile_modules(&$install_state) {
+  // We need to manually trigger the installation of core-provided entity types,
+  // as those will not be handled by the module installer.
+  install_core_entity_type_definitions();
+
   $modules = \Drupal::state()->get('install_profile_modules') ?: array();
   $files = system_rebuild_module_data();
   \Drupal::state()->delete('install_profile_modules');
@@ -1639,6 +1643,18 @@ function install_profile_modules(&$install_state) {
 }
 
 /**
+ * Installs entity type definitions provided by core.
+ */
+function install_core_entity_type_definitions() {
+  $update_manager = \Drupal::entityDefinitionUpdateManager();
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
+    if ($entity_type->getProvider() == 'core') {
+      $update_manager->installEntityType($entity_type);
+    }
+  }
+}
+
+/**
  * Installs themes.
  *
  * This does not use a batch, since installing themes is faster than modules and
@@ -1665,12 +1681,6 @@ function install_profile_themes(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_install_profile(&$install_state) {
-  // Now that all modules are installed, make sure the entity storage and other
-  // handlers are up to date with the current entity and field definitions. For
-  // example, Path module adds a base field to nodes and taxonomy terms after
-  // those modules are already installed.
-  \Drupal::service('entity.definition_update_manager')->applyUpdates();
-
   \Drupal::service('module_installer')->install(array(drupal_get_profile()), FALSE);
   // Install all available optional config. During installation the module order
   // is determined by dependencies. If there are no dependencies between modules

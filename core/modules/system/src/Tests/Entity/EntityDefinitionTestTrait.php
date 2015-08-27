@@ -126,6 +126,17 @@ trait EntityDefinitionTestTrait {
   }
 
   /**
+   * Promotes a field to an entity key.
+   */
+  protected function makeBaseFieldEntityKey() {
+    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $entity_keys = $entity_type->getKeys();
+    $entity_keys['new_base_field'] = 'new_base_field';
+    $entity_type->set('entity_keys', $entity_keys);
+    $this->state->set('entity_test_update.entity_type', $entity_type);
+  }
+
+  /**
    * Removes the new base field from the 'entity_test_update' entity type.
    */
   protected function removeBaseField() {
