@@ -108,6 +108,9 @@ class SafeMarkup {
    *   A list of safe strings as previously retrieved by self::getAll().
    *
    * @throws \UnexpectedValueException
+   *
+   * @internal This is called by FormCache, StringTranslation and the Batch API.
+   *   It should not be used anywhere else.
    */
   public static function setMultiple(array $safe_strings) {
     foreach ($safe_strings as $string => $strategies) {
