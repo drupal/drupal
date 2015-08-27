@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
@@ -437,7 +436,7 @@ function template_preprocess_filter_tips(&$variables) {
 
     $variables['tips'][$name] = array(
       'attributes' => new Attribute(),
-      'name' => SafeMarkup::checkPlain($name),
+      'name' => $name,
       'list' => $tiplist,
     );
   }

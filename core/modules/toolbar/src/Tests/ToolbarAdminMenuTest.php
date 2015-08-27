@@ -388,6 +388,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
       'title[0][value]' => 'External URL',
       'link[0][uri]' => 'http://example.org',
       'menu_parent' => 'admin:system.admin',
+      'description[0][value]' => 'External URL & escaped',
     ];
     $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, 'Save');
 
@@ -398,6 +399,8 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Assert that the new menu link is shown in the toolbar on a regular page.
     $this->drupalGet(Url::fromRoute('<front>'));
     $this->assertText('External URL');
+    // Ensure the description is escaped as expected.
+    $this->assertRaw('title="External URL &amp; escaped"');
   }
 
   /**

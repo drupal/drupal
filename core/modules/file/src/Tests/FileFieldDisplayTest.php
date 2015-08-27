@@ -50,6 +50,12 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     }
 
     $test_file = $this->getTestFile('text');
+    simpletest_generate_file('escaped-&-text', 64, 10, 'text');
+    $test_file = File::create([
+      'uri' => 'public://escaped-&-text.txt',
+      'name' => 'escaped-&-text',
+      'filesize' => filesize('public://escaped-&-text.txt'),
+    ]);
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -80,6 +86,9 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertText($description);
+
+    // Ensure the filename in the link's title attribute is escaped.
+    $this->assertRaw('title="escaped-&amp;-text.txt"');
 
     // Test that fields appear as expected after during the preview.
     // Add a second file.

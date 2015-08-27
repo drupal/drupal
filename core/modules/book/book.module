@@ -7,7 +7,6 @@
 
 use Drupal\book\BookManager;
 use Drupal\book\BookManagerInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -384,7 +383,7 @@ function template_preprocess_book_navigation(&$variables) {
 
   // Provide extra variables for themers. Not needed by default.
   $variables['book_id'] = $book_link['bid'];
-  $variables['book_title'] = SafeMarkup::checkPlain($book_link['link_title']);
+  $variables['book_title'] = $book_link['link_title'];
   $variables['book_url'] = \Drupal::url('entity.node.canonical', array('node' => $book_link['bid']));
   $variables['current_depth'] = $book_link['depth'];
   $variables['tree'] = '';
@@ -404,7 +403,7 @@ function template_preprocess_book_navigation(&$variables) {
         'href' => $prev_href,
       );
       $variables['prev_url'] = $prev_href;
-      $variables['prev_title'] = SafeMarkup::checkPlain($prev['title']);
+      $variables['prev_title'] = $prev['title'];
     }
 
     /** @var \Drupal\book\BookManagerInterface $book_manager */
@@ -416,7 +415,7 @@ function template_preprocess_book_navigation(&$variables) {
         'href' => $parent_href,
       );
       $variables['parent_url'] = $parent_href;
-      $variables['parent_title'] = SafeMarkup::checkPlain($parent['title']);
+      $variables['parent_title'] = $parent['title'];
     }
 
     if ($next = $book_outline->nextLink($book_link)) {
@@ -426,7 +425,7 @@ function template_preprocess_book_navigation(&$variables) {
         'href' => $next_href,
       );
       $variables['next_url'] = $next_href;
-      $variables['next_title'] = SafeMarkup::checkPlain($next['title']);
+      $variables['next_title'] = $next['title'];
     }
   }
 
@@ -464,7 +463,6 @@ function template_preprocess_book_export_html(&$variables) {
   global $base_url;
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-  $variables['title'] = SafeMarkup::checkPlain($variables['title']);
   $variables['base_url'] = $base_url;
   $variables['language'] = $language_interface;
   $variables['language_rtl'] = ($language_interface->getDirection() == LanguageInterface::DIRECTION_RTL);
@@ -490,7 +488,7 @@ function template_preprocess_book_export_html(&$variables) {
  */
 function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
-  $variables['title'] = SafeMarkup::checkPlain($variables['node']->label());
+  $variables['title'] = $variables['node']->label();
 }
 
 /**

@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;
@@ -463,7 +462,7 @@ function template_preprocess_username(&$variables) {
   else {
     $variables['truncated'] = FALSE;
   }
-  $variables['name'] = SafeMarkup::checkPlain($name);
+  $variables['name'] = $name;
   $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
 
   $external = FALSE;

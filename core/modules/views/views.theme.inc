@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
@@ -855,7 +854,7 @@ function template_preprocess_views_view_rss(&$variables) {
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
-  $variables['description'] = SafeMarkup::checkPlain(Html::decodeEntities(strip_tags($style->getDescription())));
+  $variables['description'] = Html::decodeEntities(strip_tags($style->getDescription()));
 
   if ($view->display_handler->getOption('sitename_title')) {
     $title = $config->get('name');
@@ -866,7 +865,7 @@ function template_preprocess_views_view_rss(&$variables) {
   else {
     $title = $view->getTitle();
   }
-  $variables['title'] = SafeMarkup::checkPlain($title);
+  $variables['title'] = $title;
 
   // Figure out which display which has a path we're using for this feed. If
   // there isn't one, use the global $base_url
@@ -892,7 +891,7 @@ function template_preprocess_views_view_rss(&$variables) {
     $variables['link'] = $url_string;
   }
 
-  $variables['langcode'] = SafeMarkup::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->getId());
+  $variables['langcode'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
   $variables['channel_elements'] = \Drupal::service('renderer')->render($style->channel_elements);
@@ -957,7 +956,7 @@ function template_preprocess_views_view_opml(&$variables) {
   else {
     $title = $view->getTitle();
   }
-  $variables['title'] = SafeMarkup::checkPlain($title);
+  $variables['title'] = $title;
   $variables['items'] = $items;
   $variables['updated'] = gmdate(DATE_RFC2822, REQUEST_TIME);
 

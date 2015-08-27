@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -1249,7 +1248,7 @@ function template_preprocess_file_link(&$variables) {
   }
   else {
     $link_text = $variables['description'];
-    $options['attributes']['title'] = SafeMarkup::checkPlain($file_entity->getFilename());
+    $options['attributes']['title'] = $file_entity->getFilename();
   }
 
   // Classes to add to the file field for icons.

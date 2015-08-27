@@ -5,7 +5,6 @@
  * Defines simple link field types.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -62,9 +61,5 @@ function link_theme() {
  *   - url: A \Drupal\Core\Url object.
  */
 function template_preprocess_link_formatter_link_separate(&$variables) {
-  if (!empty($variables['title'])) {
-    $variables['title'] = SafeMarkup::checkPlain($variables['title']);
-  }
-
   $variables['link'] = \Drupal::l($variables['url_title'], $variables['url']);
 }
