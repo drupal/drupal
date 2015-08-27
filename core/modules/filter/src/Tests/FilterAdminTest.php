@@ -9,6 +9,9 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
 
@@ -22,7 +25,7 @@ class FilterAdminTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('filter', 'node');
+  public static $modules = ['filter', 'node', 'filter_test_plugin', 'dblog'];
 
   /**
    * An user with administration permissions.
@@ -99,6 +102,7 @@ class FilterAdminTest extends WebTestBase {
       $basic_html_format->getPermissionName(),
       $restricted_html_format->getPermissionName(),
       $full_html_format->getPermissionName(),
+      'access site reports',
     ));
 
     $this->webUser = $this->drupalCreateUser(array('create page content', 'edit own page content'));
@@ -384,6 +388,71 @@ class FilterAdminTest extends WebTestBase {
     $this->assertRaw('<td class="get">' . $link . '</td>');
     $this->assertRaw('<td class="type">' . $ampersand_as_code . '</td>');
     $this->assertRaw('<td class="get">' . $ampersand . '</td>');
+  }
+
+  /**
+   * Tests whether a field using a disabled format is rendered.
+   */
+  public function testDisabledFormat() {
+    // Create a node type and add a standard body field.
+    $node_type = NodeType::create(['type' => Unicode::strtolower($this->randomMachineName())]);
+    $node_type->save();
+    node_add_body_field($node_type, $this->randomString());
+
+    // Create a text format with a filter that returns a static string.
+    $format = FilterFormat::create([
+      'name' => $this->randomString(),
+      'format' => $format_id = Unicode::strtolower($this->randomMachineName()),
+    ]);
+    $format->setFilterConfig('filter_static_text', ['status' => TRUE]);
+    $format->save();
+
+    // Create a new node of the new node type.
+    $node = Node::create([
+      'type' => $node_type->id(),
+      'title' => $this->randomString(),
+    ]);
+    $body_value = $this->randomString();
+    $node->body->value = $body_value;
+    $node->body->format = $format_id;
+    $node->save();
+
+    // The format is used and we should see the static text instead of the body
+    // value.
+    $this->drupalGet($node->urlInfo());
+    $this->assertText('filtered text');
+
+    // Disable the format.
+    $format->disable()->save();
+
+    $this->drupalGet($node->urlInfo());
+
+    // The format is not used anymore.
+    $this->assertNoText('filtered text');
+    // The text is not displayed unfiltered or escaped.
+    $this->assertNoRaw($body_value);
+    $this->assertNoEscaped($body_value);
+
+    // Visit the dblog report page.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/reports/dblog');
+    // The correct message has been logged.
+    $this->assertRaw(sprintf('Disabled text format: %s.', $format_id));
+
+    // Programmatically change the text format to something random so we trigger
+    // the missing text format message.
+    $format_id = $this->randomMachineName();
+    $node->body->format = $format_id;
+    $node->save();
+    $this->drupalGet($node->urlInfo());
+    // The text is not displayed unfiltered or escaped.
+    $this->assertNoRaw($body_value);
+    $this->assertNoEscaped($body_value);
+
+    // Visit the dblog report page.
+    $this->drupalGet('admin/reports/dblog');
+    // The missing text format message has been logged.
+    $this->assertRaw(sprintf('Missing text format: %s.', $format_id));
   }
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -21,7 +22,7 @@ class FilterCrudTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'filter_test');
+  public static $modules = ['filter', 'filter_test', 'system', 'user'];
 
   /**
    * Tests CRUD operations for text formats and filters.
@@ -71,6 +72,21 @@ class FilterCrudTest extends KernelTestBase {
 
     $formats = filter_formats();
     $this->assertTrue(!isset($formats[$format->id()]), 'filter_formats: Disabled text format no longer exists.');
+  }
+
+  /**
+   * Tests disabling the fallback text format.
+   */
+  public function testDisableFallbackFormat() {
+    $this->installConfig(['filter']);
+    $message = '\LogicException with message "The fallback text format \'plain_text\' cannot be disabled." was thrown.';
+    try {
+      FilterFormat::load('plain_text')->disable();
+      $this->fail($message);
+    }
+    catch (\LogicException $e) {
+      $this->assertIdentical($e->getMessage(), "The fallback text format 'plain_text' cannot be disabled.", $message);
+    }
   }
 
   /**

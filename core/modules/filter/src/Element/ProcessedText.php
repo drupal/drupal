@@ -78,10 +78,13 @@ class ProcessedText extends RenderElement {
     if (!isset($format_id)) {
       $format_id = static::configFactory()->get('filter.settings')->get('fallback_format');
     }
-    // If the requested text format does not exist, the text cannot be filtered.
     /** @var \Drupal\filter\Entity\FilterFormat $format **/
-    if (!$format = FilterFormat::load($format_id)) {
-      static::logger('filter')->alert('Missing text format: %format.', array('%format' => $format_id));
+    $format = FilterFormat::load($format_id);
+    // If the requested text format doesn't exist or its disabled, the text
+    // cannot be filtered.
+    if (!$format || !$format->status()) {
+      $message = !$format ? 'Missing text format: %format.' : 'Disabled text format: %format.';
+      static::logger('filter')->alert($message, array('%format' => $format_id));
       $element['#markup'] = '';
       return $element;
     }
