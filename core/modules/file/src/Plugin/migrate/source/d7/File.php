@@ -71,6 +71,7 @@ class File extends DrupalSqlBase {
     // the source_base_path in order to make them all relative.
     $path = str_replace($this->migration->get('destination.source_base_path'), NULL, $path);
     $row->setSourceProperty('filepath', $path);
+    return parent::prepareRow($row);
   }
 
   /**

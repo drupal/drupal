@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Test module for testing the migration source plugin prepareRow() exception
+ * handling.
+ */
+
+use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
+use Drupal\migrate\Row;
+
+/**
+ * Implements hook_migrate_prepare_row().
+ */
+function migrate_prepare_row_test_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+  // Test both options for save_to_map.
+  $data = $row->getSourceProperty('data');
+  if ($data == 'skip_and_record') {
+    throw new MigrateSkipRowException('', TRUE);
+  }
+  elseif ($data == 'skip_and_dont_record') {
+    throw new MigrateSkipRowException('', FALSE);
+  }
+}

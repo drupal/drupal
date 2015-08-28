@@ -19,7 +19,6 @@ abstract class TermTestBase extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
     'highWaterProperty' => array('field' => 'test'),
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_taxonomy_term',
     ),

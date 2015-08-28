@@ -24,8 +24,6 @@ class RoleTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     // The ID of the entity, can be any string.
     'id' => 'test',
-    // Leave it empty for now.
-    'idlist' => array(),
     // This needs to be the identifier of the actual key: cid for comment, nid
     // for node and so on.
     'source' => array(

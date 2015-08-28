@@ -20,7 +20,6 @@ class ContactCategoryTest extends MigrateSqlSourceTestCase {
 
   protected $migrationConfiguration = array(
     'id' => 'test',
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_contact_category',
     ),

@@ -753,8 +753,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * Implementation of Iterator::rewind().
    *
    * This is called before beginning a foreach loop.
-   *
-   * @todo Support idlist, itemlimit.
    */
   public function rewind() {
     $this->currentRow = NULL;
@@ -765,13 +763,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     foreach ($this->destinationIdFields() as $field) {
       $fields[] = $field;
     }
-
-    // @todo Make this work.
-    /*
-    if (isset($this->options['itemlimit'])) {
-      $query = $query->range(0, $this->options['itemlimit']);
-    }
-    */
     $this->result = $this->getDatabase()->select($this->mapTableName(), 'map')
       ->fields('map', $fields)
       ->execute();
@@ -823,7 +814,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * and FALSE to terminate it.
    */
   public function valid() {
-    // @todo Check numProcessed against itemlimit.
     return $this->currentRow !== FALSE;
   }
 

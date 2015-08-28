@@ -172,16 +172,6 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that the when a source id is in the idList, we don't get a row.
-   */
-  public function testIdInList() {
-    $source = $this->getSource([], ['idlist' => ['test_sourceid1']]);
-    $source->rewind();
-
-    $this->assertNull($source->current(), 'No row is available because id was in idList.');
-  }
-
-  /**
    * Test that $row->needsUpdate() works as expected.
    */
   public function testNextNeedsUpdate() {

@@ -22,8 +22,6 @@ class VocabularyTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = [
     // The ID of the entity, can be any string.
     'id' => 'test',
-    // Leave it empty for now.
-    'idlist' => [],
     'source' => [
       'plugin' => 'd6_vocabulary',
     ],

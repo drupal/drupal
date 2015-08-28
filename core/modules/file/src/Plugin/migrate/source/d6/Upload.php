@@ -47,6 +47,7 @@ class Upload extends DrupalSqlBase {
       ->orderBy('u.weight');
     $query->innerJoin('node', 'n', static::JOIN);
     $row->setSourceProperty('upload', $query->execute()->fetchAll());
+    return parent::prepareRow($row);
   }
 
   /**

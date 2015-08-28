@@ -111,76 +111,69 @@ abstract class SqlBase extends SourcePluginBase {
     $this->prepareQuery();
     $high_water_property = $this->migration->get('highWaterProperty');
 
-    // Get the key values, for potential use in joining to the map table, or
-    // enforcing idlist.
+    // Get the key values, for potential use in joining to the map table.
     $keys = array();
 
     // The rules for determining what conditions to add to the query are as
     // follows (applying first applicable rule)
-    // 1. If idlist is provided, then only process items in that list (AND key
-    //    IN (idlist)). Only applicable with single-value keys.
-    if ($id_list = $this->migration->get('idlist')) {
-      $this->query->condition($keys[0], $id_list, 'IN');
-    }
-    else {
-      // 2. If the map is joinable, join it. We will want to accept all rows
-      //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
-      //    Note that if high water fields are in play, we want to accept all rows
-      //    above the high water mark in addition to those selected by the map
-      //    conditions, so we need to OR them together (but AND with any existing
-      //    conditions in the query). So, ultimately the SQL condition will look
-      //    like (original conditions) AND (map IS NULL OR map needs update
-      //      OR above high water).
-      $conditions = $this->query->orConditionGroup();
-      $condition_added = FALSE;
-      if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
-        // Build the join to the map table. Because the source key could have
-        // multiple fields, we need to build things up.
-        $count = 1;
-        $map_join = '';
-        $delimiter = '';
-        foreach ($this->getIds() as $field_name => $field_schema) {
-          if (isset($field_schema['alias'])) {
-            $field_name = $field_schema['alias'] . '.' . $field_name;
-          }
-          $map_join .= "$delimiter$field_name = map.sourceid" . $count++;
-          $delimiter = ' AND ';
+
+    // 1. If the map is joinable, join it. We will want to accept all rows
+    //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
+    //    Note that if high water fields are in play, we want to accept all rows
+    //    above the high water mark in addition to those selected by the map
+    //    conditions, so we need to OR them together (but AND with any existing
+    //    conditions in the query). So, ultimately the SQL condition will look
+    //    like (original conditions) AND (map IS NULL OR map needs update
+    //      OR above high water).
+    $conditions = $this->query->orConditionGroup();
+    $condition_added = FALSE;
+    if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
+      // Build the join to the map table. Because the source key could have
+      // multiple fields, we need to build things up.
+      $count = 1;
+      $map_join = '';
+      $delimiter = '';
+      foreach ($this->getIds() as $field_name => $field_schema) {
+        if (isset($field_schema['alias'])) {
+          $field_name = $field_schema['alias'] . '.' . $field_name;
         }
+        $map_join .= "$delimiter$field_name = map.sourceid" . $count++;
+        $delimiter = ' AND ';
+      }
 
-        $alias = $this->query->leftJoin($this->migration->getIdMap()->getQualifiedMapTableName(), 'map', $map_join);
-        $conditions->isNull($alias . '.sourceid1');
-        $conditions->condition($alias . '.source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
-        $condition_added = TRUE;
+      $alias = $this->query->leftJoin($this->migration->getIdMap()->getQualifiedMapTableName(), 'map', $map_join);
+      $conditions->isNull($alias . '.sourceid1');
+      $conditions->condition($alias . '.source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
+      $condition_added = TRUE;
 
-        // And as long as we have the map table, add its data to the row.
-        $n = count($this->getIds());
+      // And as long as we have the map table, add its data to the row.
+      $n = count($this->getIds());
+      for ($count = 1; $count <= $n; $count++) {
+        $map_key = 'sourceid' . $count;
+        $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+      }
+      if ($n = count($this->migration->get('destinationIds'))) {
         for ($count = 1; $count <= $n; $count++) {
-          $map_key = 'sourceid' . $count;
+          $map_key = 'destid' . $count++;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
         }
-        if ($n = count($this->migration->get('destinationIds'))) {
-          for ($count = 1; $count <= $n; $count++) {
-            $map_key = 'destid' . $count++;
-            $this->query->addField($alias, $map_key, "migrate_map_$map_key");
-          }
-        }
-        $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
       }
-      // 3. If we are using high water marks, also include rows above the mark.
-      //    But, include all rows if the high water mark is not set.
-      if (isset($high_water_property['name']) && ($high_water = $this->migration->getHighWater()) !== '') {
-        if (isset($high_water_property['alias'])) {
-          $high_water = $high_water_property['alias'] . '.' . $high_water_property['name'];
-        }
-        else {
-          $high_water = $high_water_property['name'];
-        }
-        $conditions->condition($high_water, $high_water, '>');
-        $condition_added = TRUE;
+      $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
+    }
+    // 2. If we are using high water marks, also include rows above the mark.
+    //    But, include all rows if the high water mark is not set.
+    if (isset($high_water_property['name']) && ($high_water = $this->migration->getHighWater()) !== '') {
+      if (isset($high_water_property['alias'])) {
+        $high_water = $high_water_property['alias'] . '.' . $high_water_property['name'];
       }
-      if ($condition_added) {
-        $this->query->condition($conditions);
+      else {
+        $high_water = $high_water_property['name'];
       }
+      $conditions->condition($high_water, $high_water, '>');
+      $condition_added = TRUE;
+    }
+    if ($condition_added) {
+      $this->query->condition($conditions);
     }
 
     return new \IteratorIterator($this->query->execute());

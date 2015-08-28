@@ -24,8 +24,6 @@ class FieldInstanceTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = [
     // The id of the entity, can be any string.
     'id' => 'test_fieldinstance',
-    // Leave it empty for now.
-    'idlist' => [],
     'source' => [
       'plugin' => 'd6_field_instance',
     ],

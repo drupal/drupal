@@ -24,8 +24,6 @@ class NodeTypeTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     // The ID of the entity, can be any string.
     'id' => 'test_nodetypes',
-    // Leave it empty for now.
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_nodetype',
     ),

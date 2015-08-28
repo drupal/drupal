@@ -21,7 +21,6 @@ class BlockedIpsTest extends MigrateSqlSourceTestCase {
 
   protected $migrationConfiguration = [
     'id' => 'test',
-    'idlist' => [],
     'source' => [
       'plugin' => 'd7_blocked_ips',
     ],

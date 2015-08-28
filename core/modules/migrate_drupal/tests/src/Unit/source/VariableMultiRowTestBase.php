@@ -21,7 +21,6 @@ abstract class VariableMultiRowTestBase extends MigrateSqlSourceTestCase {
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
     'id' => 'test',
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_variable_multirow',
       'variables' => array(

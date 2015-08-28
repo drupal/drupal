@@ -24,8 +24,6 @@ class ViewModeTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     // The ID of the entity, can be any string.
     'id' => 'view_mode_test',
-    // Leave it empty for now.
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_field_instance_view_mode',
     ),

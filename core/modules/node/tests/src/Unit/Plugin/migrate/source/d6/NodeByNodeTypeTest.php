@@ -21,8 +21,6 @@ class NodeByNodeTypeTest extends MigrateSqlSourceTestCase {
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
     'id' => 'test',
-    // Leave it empty for now.
-    'idlist' => array(),
     // The fake configuration for the source.
     'source' => array(
       'plugin' => 'd6_node',

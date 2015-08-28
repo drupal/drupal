@@ -21,7 +21,6 @@ class UrlAliasTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
     'highWaterProperty' => array('field' => 'test'),
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_url_alias',
     ),

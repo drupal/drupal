@@ -21,8 +21,6 @@ class NodeRevisionTest extends MigrateSqlSourceTestCase {
   // The fake Migration configuration entity.
   protected $migrationConfiguration = [
     'id' => 'test',
-    // Leave it empty for now.
-    'idlist' => [],
     // The fake configuration for the source.
     'source' => [
       'plugin' => 'd6_node_revision',

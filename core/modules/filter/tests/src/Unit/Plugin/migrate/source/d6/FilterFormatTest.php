@@ -21,7 +21,6 @@ class FilterFormatTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
     'highWaterProperty' => array('field' => 'test'),
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_filter_formats',
     ),

@@ -20,7 +20,6 @@ class UserPictureTest extends MigrateSqlSourceTestCase {
 
   protected $migrationConfiguration = array(
     'id' => 'test_user_picture',
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_user_picture',
     ),

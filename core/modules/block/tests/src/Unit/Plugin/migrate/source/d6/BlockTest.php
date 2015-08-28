@@ -25,7 +25,6 @@ class BlockTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     // The ID of the entity, can be any string.
     'id' => 'test',
-    'idlist' => array(),
     'source' => array(
       'plugin' => 'd6_block',
     ),
