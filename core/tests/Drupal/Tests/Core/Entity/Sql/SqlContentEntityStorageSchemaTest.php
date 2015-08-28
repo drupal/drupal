@@ -1446,7 +1446,24 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('loadEntitySchemaData')
-      ->willReturn([]);
+      ->willReturn([
+        'entity_test' => [
+          'indexes' => [
+            // A changed index definition.
+            'entity_test__b588603cb9' => ['longer_index_name'],
+            // An index that has been removed.
+            'entity_test__removed_field' => ['removed_field'],
+          ],
+        ],
+      ]);
+
+    // The original indexes should be dropped before the new one is added.
+    $this->dbSchemaHandler->expects($this->at(0))
+      ->method('dropIndex')
+      ->with('entity_test', 'entity_test__b588603cb9');
+    $this->dbSchemaHandler->expects($this->at(1))
+      ->method('dropIndex')
+      ->with('entity_test', 'entity_test__removed_field');
 
     $this->dbSchemaHandler->expects($this->atLeastOnce())
       ->method('addIndex')

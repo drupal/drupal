@@ -353,7 +353,9 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
         if (!empty($schema['indexes'])) {
           foreach ($schema['indexes'] as $name => $specifier) {
-            $schema_handler->addIndex($table_name, $name, $specifier, $schema);
+            // Check if the index exists because it might already have been
+            // created as part of the earlier entity type update event.
+            $this->addIndexIfNotExists($table_name, $name, $specifier, $schema);
           }
         }
         if (!empty($schema['unique keys'])) {
@@ -1159,9 +1161,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               foreach ($schema[$table_name]['indexes'] as $name => $specifier) {
                 // Check if the index exists because it might already have been
                 // created as part of the earlier entity type update event.
-                if (!$schema_handler->indexExists($table_name, $name)) {
-                  $schema_handler->addIndex($table_name, $name, $specifier, $schema[$table_name]);
-                }
+                $this->addIndexIfNotExists($table_name, $name, $specifier, $schema[$table_name]);
               }
             }
             if (!empty($schema[$table_name]['unique keys'])) {
@@ -1327,8 +1327,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               $real_columns[] = $table_mapping->getFieldColumnName($storage_definition, $column_name);
             }
           }
-          $this->database->schema()->addIndex($table, $real_name, $real_columns, $actual_schema[$table]);
-          $this->database->schema()->addIndex($revision_table, $real_name, $real_columns, $actual_schema[$revision_table]);
+          // Check if the index exists because it might already have been
+          // created as part of the earlier entity type update event.
+          $this->addIndexIfNotExists($table, $real_name, $real_columns, $actual_schema[$table]);
+          $this->addIndexIfNotExists($revision_table, $real_name, $real_columns, $actual_schema[$revision_table]);
         }
       }
       $this->saveFieldSchemaData($storage_definition, $this->getDedicatedTableSchema($storage_definition));
@@ -1419,7 +1421,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
             // Create new indexes and unique keys.
             if (!empty($schema[$table_name]['indexes'])) {
               foreach ($schema[$table_name]['indexes'] as $name => $specifier) {
-                $schema_handler->addIndex($table_name, $name, $specifier, $schema[$table_name]);
+                // Check if the index exists because it might already have been
+                // created as part of the earlier entity type update event.
+                $this->addIndexIfNotExists($table_name, $name, $specifier, $schema[$table_name]);
+
               }
             }
             if (!empty($schema[$table_name]['unique keys'])) {
@@ -1865,6 +1870,27 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   protected function getColumnSchemaRelevantKeys() {
     return ['type', 'size', 'length', 'unsigned'];
+  }
+
+  /**
+   * Create an index if it doesn't already exist.
+   *
+   * @param string $table
+   *   The table name.
+   * @param string $name
+   *   The index name.
+   * @param array $fields
+   *   The fields to index.
+   * @param array $spec
+   *   The table specification.
+   *
+   * For the full parameter descriptions see
+   * \Drupal\Core\Database\Schema::addIndex().
+   */
+  protected function addIndexIfNotExists($table, $name, array $fields, array $spec) {
+    if (!$this->database->schema()->indexExists($table, $name)) {
+      $this->database->schema()->addIndex($table, $name, $fields, $spec);
+    }
   }
 
 }
