@@ -173,6 +173,9 @@ class Variable extends DrupalDumpBase {
       'name' => 'forum_nav_vocabulary',
       'value' => 's:1:"2";',
     ))->values(array(
+      'name' => 'image_style_preview_image',
+      'value' => 's:33:"core/modules/image/testsample.png";',
+    ))->values(array(
       'name' => 'install_profile',
       'value' => 's:8:"standard";',
     ))->values(array(
@@ -479,4 +482,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#502534c5e998ee5c14f5a2d510b9dc85
+#e9148e9bed6f5b345cc1a281afe38dd0
