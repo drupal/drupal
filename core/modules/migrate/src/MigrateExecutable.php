@@ -513,9 +513,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     drupal_static_reset();
 
     // Entity storage can blow up with caches so clear them out.
-    $container = \Drupal::getContainer();
-    /** @var \Drupal\Core\Entity\EntityManagerInterface $manager */
-    $manager = $container->get('entity.manager');
+    $manager =  \Drupal::entityManager();
     foreach ($manager->getDefinitions() as $id => $definition) {
       $manager->getStorage($id)->resetCache();
     }
