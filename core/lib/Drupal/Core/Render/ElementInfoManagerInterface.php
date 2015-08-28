@@ -44,8 +44,6 @@ interface ElementInfoManagerInterface {
    *   - #title_display: optional string indicating if and how #title should be
    *     displayed (see form-element.html.twig).
    *
-   * @see hook_element_info()
-   * @see hook_element_info_alter()
    * @see \Drupal\Core\Render\Element\ElementInterface
    * @see \Drupal\Core\Render\Element\ElementInterface::getInfo()
    */
@@ -55,7 +53,7 @@ interface ElementInfoManagerInterface {
    * Retrieves a single property for the defined element type.
    *
    * @param string $type
-   *   An element type as defined by hook_element_info().
+   *   An element type as defined by an element plugin.
    * @param string $property_name
    *   The property within the element type that should be returned.
    * @param $default

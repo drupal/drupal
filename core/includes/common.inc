@@ -1200,7 +1200,7 @@ function show(&$element) {
  * Retrieves the default properties for the defined element type.
  *
  * @param $type
- *   An element type as defined by hook_element_info().
+ *   An element type as defined by an element plugin.
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal::service('element_info')->getInfo() instead.
@@ -1213,7 +1213,7 @@ function element_info($type) {
  * Retrieves a single property for the defined element type.
  *
  * @param $type
- *   An element type as defined by hook_element_info().
+ *   An element type as defined by an element plugin.
  * @param $property_name
  *   The property within the element type that should be returned.
  * @param $default

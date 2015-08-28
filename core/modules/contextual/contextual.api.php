@@ -29,7 +29,6 @@
  * @see hook_contextual_links_alter()
  * @see hook_contextual_links_plugins_alter()
  * @see contextual_pre_render_links()
- * @see contextual_element_info()
  */
 function hook_contextual_links_view_alter(&$element, $items) {
   // Add another class to all contextual link lists to facilitate custom

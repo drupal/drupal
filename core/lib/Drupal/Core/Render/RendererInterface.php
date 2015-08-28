@@ -148,7 +148,7 @@ interface RendererInterface {
    *     $pre_bubbling_cid.
    *   - If this element has #type defined and the default attributes for this
    *     element have not already been merged in (#defaults_loaded = TRUE) then
-   *     the defaults for this type of element, defined in hook_element_info(),
+   *     the defaults for this type of element, defined by an element plugin,
    *     are merged into the array. #defaults_loaded is set by functions that
    *     process render arrays and call the element info service before passing
    *     the array to Renderer::render(), such as form_builder() in the Form

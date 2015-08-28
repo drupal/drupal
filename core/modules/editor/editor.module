@@ -58,7 +58,7 @@ function editor_menu_links_discovered_alter(array &$links) {
  * module), so that selecting a text format notifies a client-side text editor
  * when it should be enabled or disabled.
  *
- * @see filter_element_info()
+ * @see \Drupal\filter\Element\TextFormat
  */
 function editor_element_info_alter(&$types) {
   $types['text_format']['#pre_render'][] = 'element.editor:preRenderTextFormat';

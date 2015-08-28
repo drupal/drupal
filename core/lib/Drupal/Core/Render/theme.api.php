@@ -294,10 +294,7 @@
  * on plugins, and look for classes with the RenderElement or FormElement
  * annotation to discover what render elements are available.
  *
- * Modules can also currently define render elements by implementing
- * hook_element_info(), although defining a plugin is preferred.
- * properties. Look through implementations of hook_element_info() to discover
- * elements defined this way.
+ * Modules can define render elements by defining an element plugin.
  *
  * @section sec_caching Caching
  * The Drupal rendering process has the ability to cache rendered output at any
@@ -691,32 +688,6 @@ function hook_render_template($template_file, $variables) {
 }
 
 /**
- * Allows modules to declare their own Form API element types and specify their
- * default values.
- *
- * This hook allows modules to declare their own form element types and to
- * specify their default values. The values returned by this hook will be
- * merged with the elements returned by form constructor implementations and so
- * can return defaults for any Form APIs keys in addition to those explicitly
- * documented by \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
- *
- * @return array
- *   An associative array with structure identical to that of the return value
- *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
- *
- * @deprecated Use an annotated class instead, see
- *   \Drupal\Core\Render\Element\ElementInterface.
- *
- * @see hook_element_info_alter()
- */
-function hook_element_info() {
-  $types['filter_format'] = array(
-    '#input' => TRUE,
-  );
-  return $types;
-}
-
-/**
  * Alter the element type information returned from modules.
  *
  * A module may implement this hook in order to alter the element type defaults
@@ -726,7 +697,8 @@ function hook_element_info() {
  *   An associative array with structure identical to that of the return value
  *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
- * @see hook_element_info()
+ * @see \Drupal\Core\Render\ElementInfoManager
+ * @see \Drupal\Core\Render\Element\ElementInterface
  */
 function hook_element_info_alter(array &$types) {
   // Decrease the default size of textfields.
