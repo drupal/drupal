@@ -84,7 +84,8 @@ class TrackerTest extends WebTestBase {
     $this->assertLink(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
 
     // Assert cache contexts, specifically the pager and node access contexts.
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions']);
+    $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions', 'user.roles:authenticated']);
+    // Assert cache tags for the visible node and node list cache tag.
     $expected_tags = Cache::mergeTags($published->getCacheTags(), $published->getOwner()->getCacheTags());
     $expected_tags = Cache::mergeTags($expected_tags, ['node_list', 'rendered']);
     $this->assertCacheTags($expected_tags);

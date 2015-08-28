@@ -140,8 +140,13 @@ function tracker_page($account = NULL) {
   $page['#cache']['tags'] = $cache_tags;
   $page['#cache']['contexts'][] = 'user.node_grants:view';
 
-  if (Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
-    $page['#attached']['library'][] = 'tracker/history';
+  // Display the reading history if that module is enabled.
+  if (\Drupal::moduleHandler()->moduleExists('history')) {
+    // Reading history is tracked for authenticated users only.
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      $page['#attached']['library'][] = 'tracker/history';
+    }
+    $page['#cache']['contexts'][] = 'user.roles:authenticated';
   }
 
   return $page;
