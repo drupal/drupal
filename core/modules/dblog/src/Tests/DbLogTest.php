@@ -733,11 +733,12 @@ class DbLogTest extends WebTestBase {
    */
   public function testOverviewLinks() {
     $this->drupalLogin($this->adminUser);
-    $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing elit."]);
+    $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing & elit."]);
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);
     // Make sure HTML tags are filtered out.
-    $this->assertRaw('title="&amp;lt;script&amp;gt;alert(&#039;foo&#039;);&amp;lt;/script&amp;gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Entry #0">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;Lorem ipsum dolor sit…</a>');
+    $this->assertRaw('title="alert(&#039;foo&#039;);Lorem ipsum dolor sit amet, consectetur adipiscing &amp; elit. Entry #0">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;Lorem ipsum dolor sit…</a>');
+    $this->assertNoRaw("<script>alert('foo');</script>");
   }
 
 }

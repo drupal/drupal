@@ -184,13 +184,16 @@ class DbLogController extends ControllerBase {
     foreach ($result as $dblog) {
       $message = $this->formatMessage($dblog);
       if ($message && isset($dblog->wid)) {
-        // Truncate link_text to 56 chars of message. The l() call will escape
-        // any unsafe HTML entities in the final text.
-        $log_text = Unicode::truncate(Html::decodeEntities(strip_tags($message)), 56, TRUE, TRUE);
+        $title = Unicode::truncate(Html::decodeEntities(strip_tags($message)), 256, TRUE, TRUE);
+        $log_text = Unicode::truncate($title, 56, TRUE, TRUE);
+        // The link generator will escape any unsafe HTML entities in the final
+        // text.
         $message = $this->l($log_text, new Url('dblog.event', array('event_id' => $dblog->wid), array(
           'attributes' => array(
-            // Provide a title for the link for useful hover hints.
-            'title' => Unicode::truncate(strip_tags($message), 256, TRUE, TRUE),
+            // Provide a title for the link for useful hover hints. The
+            // Attribute object will escape any unsafe HTML entities in the
+            // final text.
+            'title' => $title,
           ),
         )));
       }

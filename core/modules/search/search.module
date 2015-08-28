@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -723,8 +722,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
     // text. We also need to re-encode any HTML special characters that we
     // entity-decoded above.
     return [
-      '#markup' => Unicode::truncate($text, 256, TRUE, TRUE),
-      '#safe_strategy' => Markup::SAFE_STRATEGY_ESCAPE,
+      '#plain_text' => Unicode::truncate($text, 256, TRUE, TRUE),
     ];
   }
 

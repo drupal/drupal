@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -14,6 +15,7 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -301,12 +303,6 @@ class Renderer implements RendererInterface {
     $pre_bubbling_elements = [];
     $pre_bubbling_elements['#cache'] = isset($elements['#cache']) ? $elements['#cache'] : [];
 
-    // If #markup is set, ensure #type is set. This allows to specify just
-    // #markup on an element without setting #type.
-    if (isset($elements['#markup']) && !isset($elements['#type'])) {
-      $elements['#type'] = 'markup';
-    }
-
     // If the default values for this element have not been loaded yet, populate
     // them.
     if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
@@ -377,6 +373,12 @@ class Renderer implements RendererInterface {
       $elements = $new_elements;
       $elements['#lazy_builder_built'] = TRUE;
     }
+
+    // All render elements support #markup and #plain_text.
+    if (!empty($elements['#markup']) || !empty($elements['#plain_text'])) {
+      $elements = $this->ensureMarkupIsSafe($elements);
+    }
+
     // Make any final changes to the element before it is rendered. This means
     // that the $element or the children can be altered or corrected before the
     // element is rendered into the final text.
@@ -754,6 +756,50 @@ class Renderer implements RendererInterface {
       $string = Xss::filterAdmin($string);
     }
     return SafeString::create($string);
+  }
+
+  /**
+   * Escapes #plain_text or filters #markup as required.
+   *
+   * Drupal uses Twig's auto-escape feature to improve security. This feature
+   * automatically escapes any HTML that is not known to be safe. Due to this
+   * the render system needs to ensure that all markup it generates is marked
+   * safe so that Twig does not do any additional escaping.
+   *
+   * By default all #markup is filtered to protect against XSS using the admin
+   * tag list. Render arrays can alter the list of tags allowed by the filter
+   * using the #allowed_tags property. This value should be an array of tags
+   * that Xss::filter() would accept. Render arrays can escape text instead
+   * of XSS filtering by setting the #plain_text property instead of #markup. If
+   * #plain_text is used #allowed_tags is ignored.
+   *
+   * @param array $elements
+   *   A render array with #markup set.
+   *
+   * @return \Drupal\Component\Utility\SafeStringInterface|string
+   *   The escaped markup wrapped in a SafeString object. If
+   *   SafeMarkup::isSafe($elements['#markup']) returns TRUE, it won't be
+   *   escaped or filtered again.
+   *
+   * @see \Drupal\Component\Utility\Html::escape()
+   * @see \Drupal\Component\Utility\Xss::filter()
+   * @see \Drupal\Component\Utility\Xss::adminFilter()
+   */
+  protected function ensureMarkupIsSafe(array $elements) {
+    if (empty($elements['#markup']) && empty($elements['#plain_text'])) {
+      return $elements;
+    }
+
+    if (!empty($elements['#plain_text'])) {
+      $elements['#markup'] = SafeString::create(Html::escape($elements['#plain_text']));
+    }
+    elseif (!SafeMarkup::isSafe($elements['#markup'])) {
+      // The default behaviour is to XSS filter using the admin tag list.
+      $tags = isset($elements['#allowed_tags']) ? $elements['#allowed_tags'] : Xss::getAdminTagList();
+      $elements['#markup'] = SafeString::create(Xss::filter($elements['#markup'], $tags));
+    }
+
+    return $elements;
   }
 
 }

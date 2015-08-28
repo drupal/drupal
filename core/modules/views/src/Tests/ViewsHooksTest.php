@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Render\RenderContext;
 use Drupal\views\Views;
 
@@ -108,8 +107,7 @@ class ViewsHooksTest extends ViewKernelTestBase {
   public function testViewsPreRenderViewsFormViewsForm() {
     $element = [
       'output' => [
-        '#markup' => '<!--will-be-escaped--><!--will-be-not-escaped-->',
-        '#safe_strategy' => Markup::SAFE_STRATEGY_ESCAPE,
+        '#plain_text' => '<!--will-be-escaped--><!--will-be-not-escaped-->',
       ],
       '#substitutions' => ['#value' => []],
     ];

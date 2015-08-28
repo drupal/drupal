@@ -101,6 +101,19 @@ class RendererTest extends RendererTestBase {
     $data[] = [[
       '#markup' => 'foo',
     ], 'foo'];
+    // Basic #plain_text based renderable array.
+    $data[] = [[
+      '#plain_text' => 'foo',
+    ], 'foo'];
+    // Mixing #plain_text and #markup based renderable array.
+    $data[] = [[
+      '#plain_text' => '<em>foo</em>',
+      '#markup' => 'bar',
+    ], '&lt;em&gt;foo&lt;/em&gt;'];
+    // Safe strings in #plain_text are are still escaped.
+    $data[] = [[
+      '#plain_text' => SafeString::create('<em>foo</em>'),
+    ], '&lt;em&gt;foo&lt;/em&gt;'];
     // Renderable child element.
     $data[] = [[
       'child' => ['#markup' => 'bar'],
@@ -119,11 +132,11 @@ class RendererTest extends RendererTestBase {
     ], "This is <em>alert('XSS')</em> <strong>test</strong>"];
     // Html escaping test.
     $data[] = [[
-      'child' => ['#markup' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>", '#safe_strategy' => Markup::SAFE_STRATEGY_ESCAPE],
+      'child' => ['#plain_text' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>"],
     ], "This is &lt;script&gt;&lt;em&gt;alert(&#039;XSS&#039;)&lt;/em&gt;&lt;/script&gt; &lt;strong&gt;test&lt;/strong&gt;"];
     // XSS filtering by default test.
     $data[] = [[
-      'child' => ['#markup' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>", '#safe_strategy' => 'nonsense'],
+      'child' => ['#markup' => "This is <script><em>alert('XSS')</em></script> <strong>test</strong>"],
     ], "This is <em>alert('XSS')</em> <strong>test</strong>"];
     // Ensure non-XSS tags are not filtered out.
     $data[] = [[

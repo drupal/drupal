@@ -63,8 +63,13 @@ class ContactPersonalTest extends WebTestBase {
    * Tests that mails for contact messages are correctly sent.
    */
   function testSendPersonalContactMessage() {
+    // Ensure that the web user's email needs escaping.
+    $mail = $this->webUser->getUsername() . '&escaped@example.com';
+    $this->webUser->setEmail($mail)->save();
     $this->drupalLogin($this->webUser);
 
+    $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
+    $this->assertEscaped($mail);
     $message = $this->submitPersonalContact($this->contactUser);
     $mails = $this->drupalGetMails();
     $this->assertEqual(1, count($mails));
@@ -93,7 +98,9 @@ class ContactPersonalTest extends WebTestBase {
       '@sender_email' => $this->webUser->getEmail(),
       '@recipient_name' => $this->contactUser->getUsername()
     );
-    $this->assertText(SafeMarkup::format('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
+    $this->assertRaw(SafeMarkup::format('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
+    // Ensure an unescaped version of the email does not exist anywhere.
+    $this->assertNoRaw($this->webUser->getEmail());
   }
 
   /**

@@ -130,12 +130,12 @@ class MessageForm extends ContentEntityForm {
       $form['name']['#type'] = 'item';
       $form['name']['#value'] = $user->getUsername();
       $form['name']['#required'] = FALSE;
-      $form['name']['#markup'] = SafeMarkup::checkPlain($user->getUsername());
+      $form['name']['#plain_text'] = $user->getUsername();
 
       $form['mail']['#type'] = 'item';
       $form['mail']['#value'] = $user->getEmail();
       $form['mail']['#required'] = FALSE;
-      $form['mail']['#markup'] = SafeMarkup::checkPlain($user->getEmail());
+      $form['mail']['#plain_text'] = $user->getEmail();
     }
 
     // The user contact form has a preset recipient.

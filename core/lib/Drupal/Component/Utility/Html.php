@@ -374,6 +374,10 @@ EOD;
    * Html::decodeEntities() will convert all HTML entities to UTF-8 bytes,
    * including "&eacute;" and "&lt;" to "é" and "<".
    *
+   * When constructing @link theme_render render arrays @endlink passing the output of Html::escape() to
+   * '#markup' is not recommended. Use the '#plain_text' key instead and the
+   * renderer will autoescape the text.
+   *
    * @param string $text
    *   The input text.
    *
