@@ -35,7 +35,7 @@ abstract class UpdateTestBase extends WebTestBase {
 
     // Change the root path which Update Manager uses to install and update
     // projects to be inside the testing site directory. See
-    // \Drupal\updateUpdateRootFactory::get() for equivalent changes to the
+    // \Drupal\update\UpdateRootFactory::get() for equivalent changes to the
     // test child site.
     $request = \Drupal::request();
     $update_root = $this->container->get('update.root') . '/' . DrupalKernel::findSitePath($request);
