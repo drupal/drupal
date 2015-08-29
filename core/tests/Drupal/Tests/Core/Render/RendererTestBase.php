@@ -12,7 +12,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Render\RenderCache;
 use Drupal\Core\Render\Renderer;
 use Drupal\Tests\UnitTestCase;
@@ -122,9 +121,6 @@ class RendererTestBase extends UnitTestCase {
             break;
           case 'link':
             $info = ['#theme' => 'link'];
-            break;
-          case 'markup':
-            $info = ['#pre_render' => [[Markup::class, 'ensureMarkupIsSafe']]];
             break;
           default:
             $info = [];

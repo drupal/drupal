@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\views\Unit\Controller {
 
-use Drupal\Core\Render\Element\Markup;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
@@ -92,13 +91,6 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination);
 
     $element_info_manager = $this->getMock('\Drupal\Core\Render\ElementInfoManagerInterface');
-    $element_info_manager->expects($this->any())
-      ->method('getInfo')
-      ->with('markup')
-      ->willReturn([
-        '#pre_render' => [[Markup::class, 'ensureMarkupIsSafe']],
-        '#defaults_loaded' => TRUE,
-      ]);
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $args = [
