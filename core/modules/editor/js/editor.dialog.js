@@ -17,9 +17,13 @@
    * interface.
    *
    * @param {Drupal.Ajax} [ajax]
+   *   The Drupal.Ajax object.
    * @param {object} response
+   *   The server response from the ajax request.
    * @param {Array} response.values
+   *   The values that were saved.
    * @param {number} [status]
+   *   The status code from the ajax request.
    *
    * @fires event:editor:dialogsave
    */

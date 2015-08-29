@@ -51,6 +51,7 @@
      * @augments Drupal.quickedit.EditorView
      *
      * @param {object} options
+     *   Options for the editor view.
      */
     initialize: function (options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
@@ -70,6 +71,7 @@
      * @inheritdoc
      *
      * @return {jQuery}
+     *   The text element edited.
      */
     getEditedElement: function () {
       return this.$textElement;
@@ -79,7 +81,9 @@
      * @inheritdoc
      *
      * @param {object} fieldModel
+     *   The field model.
      * @param {string} state
+     *   The current state.
      */
     stateChange: function (fieldModel, state) {
       var editorModel = this.model;
@@ -172,6 +176,7 @@
      * @inheritdoc
      *
      * @return {object}
+     *   The sttings for the quick edit UI.
      */
     getQuickEditUISettings: function () {
       return {padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false};

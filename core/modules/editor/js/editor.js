@@ -59,6 +59,7 @@
    * Handles changes in text format.
    *
    * @param {jQuery.Event} event
+   *   The text format change event.
    */
   function onTextFormatChange(event) {
     var $select = $(event.target);
@@ -99,9 +100,10 @@
             text: Drupal.t('Cancel'),
             class: 'button',
             click: function () {
-              // Restore the active format ID: cancel changing text format. We cannot
-              // simply call event.preventDefault() because jQuery's change event is
-              // only triggered after the change has already been accepted.
+              // Restore the active format ID: cancel changing text format. We
+              // cannot simply call event.preventDefault() because jQuery's
+              // change event is only triggered after the change has already
+              // been accepted.
               $select.val(activeFormatID);
               confirmationDialog.close();
             }
@@ -138,6 +140,11 @@
    * Enables editors on text_format elements.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches an editor to an input element.
+   * @prop {Drupal~behaviorDetach} detach
+   *   Detaches an editor from an input element.
    */
   Drupal.behaviors.editor = {
     attach: function (context, settings) {
@@ -161,13 +168,13 @@
 
         // Directly attach this text editor, if the text format is enabled.
         if (settings.editor.formats[activeFormatID]) {
-          // XSS protection for the current text format/editor is performed on the
-          // server side, so we don't need to do anything special here.
+          // XSS protection for the current text format/editor is performed on
+          // the server side, so we don't need to do anything special here.
           Drupal.editorAttach(field, settings.editor.formats[activeFormatID]);
         }
-        // When there is no text editor for this text format, still track changes,
-        // because the user has the ability to switch to some text editor, other-
-        // wise this code would not be executed.
+        // When there is no text editor for this text format, still track
+        // changes, because the user has the ability to switch to some text
+        // editor, otherwise this code would not be executed.
         $(field).on('change.editor keypress.editor', function () {
           field.setAttribute('data-editor-value-is-changed', 'true');
           // Just knowing that the value was changed is enough, stop tracking.

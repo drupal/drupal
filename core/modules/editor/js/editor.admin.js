@@ -12,6 +12,8 @@
   "use strict";
 
   /**
+   * Editor configuration namespace.
+   *
    * @namespace
    */
   Drupal.editorConfiguration = {
@@ -132,8 +134,10 @@
        * "allowed tag property value" restrictions for this particular tag.
        *
        * @param {object} feature
+       *   The feature in question.
        *
        * @return {object}
+       *   The universe generated.
        *
        * @see findPropertyValueOnTag()
        * @see filterStatusAllowsFeature()
@@ -187,8 +191,10 @@
        * values are defined for all properties: attributes, classes and styles.
        *
        * @param {object} section
+       *   The section to check.
        *
        * @return {bool}
+       *   Returns true if the section has empty properties, false otherwise.
        */
       function emptyProperties(section) {
         return section.attributes.length === 0 && section.classes.length === 0 && section.styles.length === 0;
@@ -200,12 +206,18 @@
        * tag.
        *
        * @param {object} universe
+       *   The universe to check.
        * @param {string} tag
+       *   The tag to look for.
        * @param {string} property
+       *   The property to check.
        * @param {Array} propertyValues
+       *   Values of the property to check.
        * @param {bool} allowing
+       *   Whether to update the universe or not.
        *
        * @return {bool}
+       *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing) {
         // Detect the wildcard case.
@@ -226,11 +238,16 @@
        * Calls findPropertyValuesOnAllTags for all tags in the universe.
        *
        * @param {object} universe
+       *   The universe to check.
        * @param {string} property
+       *   The property to check.
        * @param {Array} propertyValues
+       *   Values of the property to check.
        * @param {bool} allowing
+       *   Whether to update the universe or not.
        *
        * @return {bool}
+       *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
         var atLeastOneFound = false;
@@ -249,12 +266,18 @@
        * value exists. Returns true if found, false otherwise.
        *
        * @param {object} universe
+       *   The universe to check.
        * @param {string} tag
+       *   The tag to look for.
        * @param {string} property
+       *   The property to check.
        * @param {string} propertyValue
+       *   The property value to check.
        * @param {bool} allowing
+       *   Whether to update the universe or not.
        *
        * @return {bool}
+       *   Returns true if found, false otherwise.
        */
       function findPropertyValueOnTag(universe, tag, property, propertyValue, allowing) {
         // If the tag does not exist in the universe, then it definitely can't
@@ -303,9 +326,12 @@
        * properties are marked as allowed.
        *
        * @param {object} universe
+       *   The universe to delete from.
        * @param {string} tag
+       *   The tag to check.
        *
        * @return {bool}
+       *   Whether something was deleted from the universe.
        */
       function deleteFromUniverseIfAllowed(universe, tag) {
         // Detect the wildcard case.
@@ -323,8 +349,10 @@
        * Calls deleteFromUniverseIfAllowed for all tags in the universe.
        *
        * @param {object} universe
+       *   The universe to delete from.
        *
        * @return {bool}
+       *   Whether something was deleted from the universe.
        */
       function deleteAllTagsFromUniverseIfAllowed(universe) {
         var atLeastOneDeleted = false;
@@ -341,9 +369,12 @@
        * that exists in the universe.
        *
        * @param {object} universe
+       *   Universe to check.
        * @param {object} filterStatus
+       *   Filter status to use for check.
        *
        * @return {bool}
+       *   Whether any filter rule forbids something in the universe.
        */
       function anyForbiddenFilterRuleMatches(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
@@ -392,7 +423,9 @@
        * deleted from the universe.
        *
        * @param {object} universe
+       *   Universe to delete from.
        * @param {object} filterStatus
+       *   The filter status in question.
        */
       function markAllowedTagsAndPropertyValues(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
@@ -445,9 +478,12 @@
        * that.
        *
        * @param {object} filterStatus
+       *   The filter status in question.
        * @param {object} feature
+       *   The feature requested.
        *
        * @return {bool}
+       *   Whether the current status of the filter allows specified feature.
        *
        * @see generateUniverseFromFeatureRequirements()
        */
@@ -768,7 +804,10 @@
    *   }
    * }
    *
-   * @return {{
+   * @return {object}
+   *   An object with the following structure:
+   * ```
+   * {
    *   tags: Array,
    *   allow: null,
    *   restrictedTags: {
@@ -776,9 +815,10 @@
    *     allowed: {attributes: Array, styles: Array, classes: Array},
    *     forbidden: {attributes: Array, styles: Array, classes: Array}
    *   }
-   *  }}
+   * }
+   * ```
    *
-   *  @see Drupal.FilterStatus
+   * @see Drupal.FilterStatus
    */
   Drupal.FilterHTMLRule = function () {
     return {
@@ -853,6 +893,9 @@
    * Initializes {@link Drupal.filterConfiguration}.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Gets filter configuration from filter form input.
    */
   Drupal.behaviors.initializeFilterConfiguration = {
     attach: function (context, settings) {
