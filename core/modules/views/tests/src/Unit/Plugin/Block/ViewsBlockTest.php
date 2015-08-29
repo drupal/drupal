@@ -141,7 +141,7 @@ class ViewsBlockTest extends UnitTestCase {
    */
   public function testBuild() {
     $output = $this->randomMachineName(100);
-    $build = array('#markup' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block');
+    $build = array('view_build' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE);
     $this->executable->expects($this->once())
       ->method('buildRenderable')
       ->with('block_1', [])
@@ -155,6 +155,28 @@ class ViewsBlockTest extends UnitTestCase {
     $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
 
     $this->assertEquals($build, $plugin->build());
+  }
+
+  /**
+   * Tests the build method.
+   *
+   * @covers ::build
+   */
+  public function testBuildEmpty() {
+    $build = ['view_build' => [], '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE, '#cache' => ['contexts' => ['user']]];
+    $this->executable->expects($this->once())
+      ->method('buildRenderable')
+      ->with('block_1', [])
+      ->willReturn($build);
+
+    $block_id = 'views_block:test_view-block_1';
+    $config = [];
+    $definition = [];
+
+    $definition['provider'] = 'views';
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
+
+    $this->assertEquals(array_intersect_key($build, ['#cache' => TRUE]), $plugin->build());
   }
 
   /**

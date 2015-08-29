@@ -8,6 +8,8 @@
 namespace Drupal\block\Tests\Views;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -20,6 +22,8 @@ use Drupal\Core\Template\Attribute;
  * @see \Drupal\block\Plugin\views\display\Block
  */
 class DisplayBlockTest extends ViewTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to install.
@@ -259,6 +263,87 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
     $this->assertTrue(empty($result), 'The title is not visible.');
+
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
+  }
+
+  /**
+   * Tests the various testcases of empty block rendering.
+   */
+  public function testBlockEmptyRendering() {
+    // Remove all views_test_data entries.
+    \Drupal::database()->truncate('views_test_data')->execute();
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $view = View::load('test_view_block');
+    $view->invalidateCaches();
+
+    $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array('label' => 'test_view_block-block_1:1', 'views_label' => 'Custom title'));
+    $this->drupalGet('');
+    $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
+
+    $display = &$view->getDisplay('block_1');
+    $display['display_options']['block_hide_empty'] = TRUE;
+    $view->save();
+
+    $this->drupalGet('');
+    $this->assertEqual(0, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
+    // Ensure that the view cachability metadata is propagated even, for an
+    // empty block.
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+
+    // Add a header displayed on empty result.
+    $display = &$view->getDisplay('block_1');
+    $display['display_options']['defaults']['header'] = FALSE;
+    $display['display_options']['header']['example'] = [
+      'field' => 'area_text_custom',
+      'id' => 'area_text_custom',
+      'table' => 'views',
+      'plugin_id' => 'text_custom',
+      'content' => 'test header',
+      'empty' => TRUE,
+    ];
+    $view->save();
+
+    $this->drupalGet('');
+    $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+
+    // Hide the header on empty results.
+    $display = &$view->getDisplay('block_1');
+    $display['display_options']['defaults']['header'] = FALSE;
+    $display['display_options']['header']['example'] = [
+      'field' => 'area_text_custom',
+      'id' => 'area_text_custom',
+      'table' => 'views',
+      'plugin_id' => 'text_custom',
+      'content' => 'test header',
+      'empty' => FALSE,
+    ];
+    $view->save();
+
+    $this->drupalGet('');
+    $this->assertEqual(0, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+
+    // Add an empty text.
+    $display = &$view->getDisplay('block_1');
+    $display['display_options']['defaults']['empty'] = FALSE;
+    $display['display_options']['empty']['example'] = [
+      'field' => 'area_text_custom',
+      'id' => 'area_text_custom',
+      'table' => 'views',
+      'plugin_id' => 'text_custom',
+      'content' => 'test empty',
+    ];
+    $view->save();
+
+    $this->drupalGet('');
+    $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
   }
 
   /**

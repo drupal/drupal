@@ -38,6 +38,12 @@ class View extends RenderElement {
    * View element pre render callback.
    */
   public static function preRenderViewElement($element) {
+    // Allow specific Views displays to explicitly perform pre-rendering, for
+    // those displays that need to be able to know the fully built render array.
+    if (!empty($element['#pre_rendered'])) {
+      return $element;
+    }
+
     if (!isset($element['#view'])) {
       $view = Views::getView($element['#name']);
     }
