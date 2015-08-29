@@ -7,14 +7,14 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the search_excerpt() function.
  *
  * @group search
  */
-class SearchExcerptTest extends WebTestBase {
+class SearchExcerptTest extends KernelTestBase {
 
   /**
    * Modules to enable.
