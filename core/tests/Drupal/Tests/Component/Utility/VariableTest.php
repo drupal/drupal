@@ -78,6 +78,11 @@ class VariableTest extends UnitTestCase {
         '"\'"',
         "'",
       ),
+      array(
+        // Quotes with $ symbols.
+        '"\$settings[\'foo\']"',
+        '$settings[\'foo\']',
+      ),
       // Object.
       array(
         // A stdClass object.

@@ -13,6 +13,7 @@ use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\user\Entity\User;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -98,14 +99,19 @@ class DbDumpTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installEntitySchema('menu_link_content');
+    $this->installSchema('system', 'sequences');
 
     // Place some sample config to test for in the export.
     $this->data = [
       'foo' => $this->randomMachineName(),
-      'bar' => $this->randomMachineName()
+      'bar' => $this->randomMachineName(),
     ];
     $storage = new DatabaseStorage(Database::getConnection(), 'config');
     $storage->write('test_config', $this->data);
+
+    // Create user account with some potential syntax issues.
+    $account = User::create(['mail' => 'q\'uote$dollar@example.com', 'name' => '$dollar']);
+    $account->save();
 
     // Create a cache table (this will create 'cache_discovery').
     \Drupal::cache('discovery')->set('test', $this->data);
@@ -118,13 +124,15 @@ class DbDumpTest extends KernelTestBase {
       'block_content_revision',
       'cachetags',
       'config',
-      'cache_discovery',
       'cache_bootstrap',
+      'cache_discovery',
+      'cache_entity',
       'file_managed',
       'key_value_expire',
       'menu_link_content',
       'menu_link_content_data',
       'semaphore',
+      'sequences',
       'sessions',
       'url_alias',
       'user__roles',
@@ -169,6 +177,12 @@ class DbDumpTest extends KernelTestBase {
     // The test data are in the dump (serialized).
     $pattern = preg_quote(serialize($this->data));
     $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'Generated data is found in the exported script.');
+
+    // Check that the user account name and email address was properly escaped.
+    $pattern = preg_quote('"q\'uote\$dollar@example.com"');
+    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'The user account email address was properly escaped in the exported script.');
+    $pattern = preg_quote('\'$dollar\'');
+    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'The user account name was properly escaped in the exported script.');
   }
 
   /**

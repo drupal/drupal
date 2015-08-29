@@ -46,9 +46,9 @@ class Variable {
     elseif (is_string($var)) {
       if (strpos($var, "\n") !== FALSE || strpos($var, "'") !== FALSE) {
         // If the string contains a line break or a single quote, use the
-        // double quote export mode. Encode backslash and double quotes and
-        // transform some common control characters.
-        $var = str_replace(array('\\', '"', "\n", "\r", "\t"), array('\\\\', '\"', '\n', '\r', '\t'), $var);
+        // double quote export mode. Encode backslash, dollar symbols, and
+        // double quotes and transform some common control characters.
+        $var = str_replace(array('\\', '$', '"', "\n", "\r", "\t"), array('\\\\', '\$', '\"', '\n', '\r', '\t'), $var);
         $output = '"' . $var . '"';
       }
       else {
