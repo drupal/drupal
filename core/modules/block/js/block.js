@@ -11,6 +11,9 @@
    * Provide the summary information for the block settings vertical tabs.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the block settings summaries.
    */
   Drupal.behaviors.blockSettingsSummary = {
     attach: function () {
@@ -21,6 +24,15 @@
         return;
       }
 
+      /**
+       * Create a summary for checkboxes in the provided context.
+       *
+       * @param {HTMLDocument|HTMLElement} context
+       *   A context where one would find checkboxes to summarize.
+       *
+       * @return {string}
+       *   A string with the summary.
+       */
       function checkboxesSummary(context) {
         var vals = [];
         var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
@@ -49,12 +61,15 @@
   };
 
   /**
-   * Move a block in the blocks table from one region to another via select list.
+   * Move a block in the blocks table between regions via select list.
    *
    * This behavior is dependent on the tableDrag behavior, since it uses the
    * objects initialized in that behavior to update the row.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the tableDrag behaviour for blocks in block administration.
    */
   Drupal.behaviors.blockDrag = {
     attach: function (context, settings) {
@@ -71,7 +86,8 @@
         checkEmptyRegions(table, this);
       };
 
-      // Add a handler so when a row is dropped, update fields dropped into new regions.
+      // Add a handler so when a row is dropped, update fields dropped into
+      // new regions.
       tableDrag.onDrop = function () {
         var dragObject = this;
         var $rowElement = $(dragObject.rowObject.element);
@@ -82,10 +98,11 @@
         var regionField = $rowElement.find('select.block-region-select');
         // Check whether the newly picked region is available for this block.
         if (regionField.find('option[value=' + regionName + ']').length === 0) {
-          // If not, alert the user and keep the block in its old region setting.
+          // If not, alert the user and keep the block in its old region
+          // setting.
           window.alert(Drupal.t('The block cannot be placed in this region.'));
-          // Simulate that there was a selected element change, so the row is put
-          // back to from where the user tried to drag it.
+          // Simulate that there was a selected element change, so the row is
+          // put back to from where the user tried to drag it.
           regionField.trigger('change');
         }
 
@@ -108,7 +125,8 @@
           var row = $(this).closest('tr');
           var select = $(this);
 
-          // Find the correct region and insert the row as the last in the region.
+          // Find the correct region and insert the row as the last in the
+          // region.
           table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').eq(-1).before(row);
 
           updateBlockWeights(table, select[0].value);
@@ -140,12 +158,22 @@
           });
       };
 
+      /**
+       * Checks empty regions and toggles classes based on this.
+       *
+       * @param {jQuery} table
+       *   The jQuery object representing the table to inspect.
+       * @param {jQuery} rowObject
+       *   The jQuery object representing the table row.
+       */
       var checkEmptyRegions = function (table, rowObject) {
         table.find('tr.region-message').each(function () {
           var $this = $(this);
-          // If the dragged row is in this region, but above the message row, swap it down one space.
+          // If the dragged row is in this region, but above the message row,
+          // swap it down one space.
           if ($this.prev('tr').get(0) === rowObject.element) {
-            // Prevent a recursion problem when using the keyboard to move rows up.
+            // Prevent a recursion problem when using the keyboard to move rows
+            // up.
             if ((rowObject.method !== 'keyboard' || rowObject.direction === 'down')) {
               rowObject.swap('after', this);
             }

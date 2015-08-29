@@ -10,11 +10,18 @@
   /**
    * Filters the block list by a text input search string.
    *
-   * Text search input: input.block-filter-text
-   * Target element:    input.block-filter-text[data-element]
-   * Source text:       .block-filter-text-source
+   * The text input will have the selector `input.block-filter-text`.
+   *
+   * The target element to do searching in will be in the selector
+   * `input.block-filter-text[data-element]`
+   *
+   * The text source where the text should be found will have the selector
+   * `.block-filter-text-source`
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the block filtering.
    */
   Drupal.behaviors.blockFilterByText = {
     attach: function (context, settings) {
@@ -22,14 +29,22 @@
       var $table = $($input.attr('data-element'));
       var $filter_rows;
 
+      /**
+       * Filters the block list.
+       *
+       * @param {jQuery.Event} e
+       *   The jQuery event for the keyup event that triggered the filter.
+       */
       function filterBlockList(e) {
         var query = $(e.target).val().toLowerCase();
 
         /**
          * Shows or hides the block entry based on the query.
          *
-         * @param {number} index The index of the block.
-         * @param {HTMLElement} label The label of the block.
+         * @param {number} index
+         *   The index in the loop, as provided by `jQuery.each`
+         * @param {HTMLElement} label
+         *   The label of the block.
          */
         function toggleBlockEntry(index, label) {
           var $label = $(label);
@@ -60,6 +75,9 @@
    * Highlights the block that was just placed into the block listing.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior for the block placement highlighting.
    */
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function (context, settings) {
