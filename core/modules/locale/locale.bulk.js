@@ -13,6 +13,9 @@
    * This only works if the file name ends with "LANGCODE.po".
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior for preselecting language code based on filename.
    */
   Drupal.behaviors.importLanguageCodeSelector = {
     attach: function (context, settings) {
