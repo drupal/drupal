@@ -14,12 +14,15 @@
    * Render "X new comments" links wherever necessary.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches new comment links behavior.
    */
   Drupal.behaviors.nodeNewCommentsLink = {
     attach: function (context) {
       // Collect all "X new comments" node link placeholders (and their
-      // corresponding node IDs) newer than 30 days ago that have not already been
-      // read after their last comment timestamp.
+      // corresponding node IDs) newer than 30 days ago that have not already
+      // been read after their last comment timestamp.
       var nodeIDs = [];
       var $placeholders = $(context)
         .find('[data-history-node-last-comment-timestamp]')
@@ -35,7 +38,8 @@
             return true;
           }
           else {
-            // Remove this placeholder link from the DOM because we won't need it.
+            // Remove this placeholder link from the DOM because we won't need
+            // it.
             remove($placeholder);
             return false;
           }
@@ -52,6 +56,15 @@
     }
   };
 
+  /**
+   * Hides a "new comment" element.
+   *
+   * @param {jQuery} $placeholder
+   *   The placeholder element of the new comment link.
+   *
+   * @return {jQuery}
+   *   The placeholder element passed in as a parameter.
+   */
   function hide($placeholder) {
     return $placeholder
       // Find the parent <li>.
@@ -62,10 +75,25 @@
       .end().hide();
   }
 
+  /**
+   * Removes a "new comment" element.
+   *
+   * @param {jQuery} $placeholder
+   *   The placeholder element of the new comment link.
+   */
   function remove($placeholder) {
     hide($placeholder).remove();
   }
 
+  /**
+   * Shows a "new comment" element.
+   *
+   * @param {jQuery} $placeholder
+   *   The placeholder element of the new comment link.
+   *
+   * @return {jQuery}
+   *   The placeholder element passed in as a parameter.
+   */
   function show($placeholder) {
     return $placeholder
       // Find the parent <li>.
@@ -76,6 +104,12 @@
       .end().show();
   }
 
+  /**
+   * Processes new comment links and adds appropriate text in relevant cases.
+   *
+   * @param {jQuery} $placeholders
+   *   The placeholder elements of the current page.
+   */
   function processNodeNewCommentLinks($placeholders) {
     // Figure out which placeholders need the "x new comments" links.
     var $placeholdersToUpdate = {};
@@ -88,8 +122,8 @@
       var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
       var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
-      // Queue this placeholder's "X new comments" link to be downloaded from the
-      // server.
+      // Queue this placeholder's "X new comments" link to be downloaded from
+      // the server.
       if (timestamp > lastViewTimestamp) {
         $placeholdersToUpdate[nodeID] = $placeholder;
       }
@@ -105,8 +139,15 @@
       return;
     }
 
-    // Render the "X new comments" links. Either use the data embedded in the page
-    // or perform an AJAX request to retrieve the same data.
+    /**
+     * Renders the "X new comments" links.
+     *
+     * Either use the data embedded in the page or perform an AJAX request to
+     * retrieve the same data.
+     *
+     * @param {object} results
+     *   Data about new comment links indexed by nodeID.
+     */
     function render(results) {
       for (var nodeID in results) {
         if (results.hasOwnProperty(nodeID) && $placeholdersToUpdate.hasOwnProperty(nodeID)) {
