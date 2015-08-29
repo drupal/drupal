@@ -11,11 +11,16 @@
   var ids = [];
 
   /**
-   * When a field is filled out, apply its value to other fields that will likely
-   * use the same value. In the installer this is used to populate the
+   * Attaches field copy behavior from input fields to other input fields.
+   *
+   * When a field is filled out, apply its value to other fields that will
+   * likely use the same value. In the installer this is used to populate the
    * administrator email address with the same value as the site email address.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the field copy behavior to an input field.
    */
   Drupal.behaviors.copyFieldValue = {
     attach: function (context) {
@@ -60,9 +65,11 @@
     /**
      * Handler for a Blur event on a source field.
      *
-     * This event handler will trigger a 'value:copy' event on all dependent fields.
+     * This event handler will trigger a 'value:copy' event on all dependent
+     * fields.
      *
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     valueSourceBlurHandler: function (e) {
       var value = $(e.target).val();

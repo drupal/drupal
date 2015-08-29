@@ -13,6 +13,9 @@
    * Display the preview for date format entered.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach behavior for previewing date formats on input elements.
    */
   Drupal.behaviors.dateFormat = {
     attach: function (context) {
@@ -30,6 +33,7 @@
        * Event handler that replaces date characters with value.
        *
        * @param {jQuery.Event} e
+       *   The jQuery event triggered.
        */
       function dateFormatHandler(e) {
         var baseValue = $(e.target).val() || '';
