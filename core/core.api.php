@@ -834,42 +834,115 @@
  * @{
  * API for describing data based on a set of available data types.
  *
- * The Typed Data API was created to provide developers with a consistent
- * interface for interacting with data, as well as an API for metadata
- * (information about the data, such as the data type, whether it is
- * translatable, and who can access it). The Typed Data API is used in several
- * Drupal sub-systems, such as the Entity Field API and Configuration API.
+ * PHP has data types, such as int, string, float, array, etc., and it is an
+ * object-oriented language that lets you define classes and interfaces.
+ * However, in some cases, it is useful to be able to define an abstract
+ * type (as in an interface, free of implementation details), that still has
+ * properties (which an interface cannot) as well as meta-data. The Typed Data
+ * API provides this abstraction.
+ *
+ * @section sec_overview Overview
+ * Each data type in the Typed Data API is a plugin class (annotation class
+ * example: \Drupal\Core\TypedData\Annotation\DataType); these plugins are
+ * managed by the typed_data_manager service (by default
+ * \Drupal\Core\TypedData\TypedDataManager). Each data object encapsulates a
+ * single piece of data, provides access to the metadata, and provides
+ * validation capability. Also, the typed data plugins have a shorthand
+ * for easily accessing data values, described in @ref sec_tree.
+ *
+ * The metadata of a data object is defined by an object based on a class called
+ * the definition class (see \Drupal\Core\TypedData\DataDefinitionInterface).
+ * The class used can vary by data type and can be specified in the data type's
+ * plugin definition, while the default is set in the $definition_class property
+ * of the annotation class. The default class is
+ * \Drupal\Core\TypedData\DataDefinition. For data types provided by a plugin
+ * deriver, the plugin deriver can set the definition_class property too.
+ * The metadata object provides information about the data, such as the data
+ * type, whether it is translatable, the names of its properties (for complex
+ * types), and who can access it.
  *
  * See https://www.drupal.org/node/1794140 for more information about the Typed
  * Data API.
  *
- * @section interfaces Interfaces and classes in the Typed Data API
- * There are several basic interfaces in the Typed Data API, representing
- * different types of data:
- * - \Drupal\Core\TypedData\PrimitiveInterface: Used for primitive data, such
- *   as strings, numeric types, etc. Drupal provides primitive types for
- *   integers, strings, etc. based on this interface, and you should
- *   not ever need to create new primitive types.
- * - \Drupal\Core\TypedData\TypedDataInterface: Used for single pieces of data,
- *   with some information about its context. Abstract base class
- *   \Drupal\Core\TypedData\TypedData is a useful starting point, and contains
- *   documentation on how to extend it.
- * - \Drupal\Core\TypedData\ComplexDataInterface: Used for complex data, which
- *   contains named and typed properties; extends TypedDataInterface. Examples
- *   of complex data include content entities and field items. See the
- *   @link entity_api Entity API topic @endlink for more information about
- *   entities; for most complex data, developers should use entities.
- * - \Drupal\Core\TypedData\ListInterface: Used for a sequential list of other
- *   typed data. Class \Drupal\Core\TypedData\Plugin\DataType\ItemList is a
- *   generic implementation of this interface, and it is used by default for
- *   data declared as a list of some other data type. You can also define a
- *   custom list class, in which case ItemList is a useful base class.
+ * @section sec_varieties Varieties of typed data
+ * There are three kinds of typed data: primitive, complex, and list.
  *
- * @section defining Defining data types
+ * @subsection sub_primitive Primitive data types
+ * Primitive data types wrap PHP data types and also serve as building blocks
+ * for complex and list typed data. Each primitive data type has an interface
+ * that extends \Drupal\Core\TypedData\PrimitiveInterface, with getValue()
+ * and setValue() methods for accessing the data value, and a default plugin
+ * implementation. Here's a list:
+ * - \Drupal\Core\TypedData\Type\IntegerInterface: Plugin ID integer,
+ *   corresponds to PHP type int.
+ * - \Drupal\Core\TypedData\Type\StringInterface: Plugin ID string,
+ *   corresponds to PHP type string.
+ * - \Drupal\Core\TypedData\Type\FloatInterface: Plugin ID float,
+ *   corresponds to PHP type float.
+ * - \Drupal\Core\TypedData\Type\BooleanInterface: Plugin ID bool,
+ *   corresponds to PHP type bool.
+ * - \Drupal\Core\TypedData\Type\BinaryInterface: Plugin ID binary,
+ *   corresponds to a PHP file resource.
+ * - \Drupal\Core\TypedData\Type\UriInterface: Plugin ID uri.
+ *
+ * @subsection sec_complex Complex data
+ * Complex data types, with interface
+ * \Drupal\Core\TypedData\ComplexDataInterface, represent data with named
+ * properties; the properties can be accessed with get() and set() methods.
+ * The value of each property is itself a typed data object, which can be
+ * primitive, complex, or list data.
+ *
+ * The base type for most complex data is the
+ * \Drupal\Core\TypedData\Plugin\DataType\Map class, which represents an
+ * associative array. Map provides its own definition class in the annotation,
+ * \Drupal\Core\TypedData\MapDataDefinition, and most complex data classes
+ * extend this class. The getValue() and setValue() methods on the Map class
+ * enforce the data definition and its property structure.
+ *
+ * The Drupal Field API uses complex typed data for its field items, with
+ * definition class \Drupal\Core\Field\TypedData\FieldItemDataDefinition.
+ *
+ * @section sec_list Lists
+ * List data types, with interface \Drupal\Core\TypedData\ListInterface,
+ * represent data that is an ordered list of typed data, all of the same type.
+ * More precisely, the plugins in the list must have the same base plugin ID;
+ * however, some types (for example field items and entities) are provided by
+ * plugin derivatives and the sub IDs can be different.
+ *
+ * @section sec_tree Tree handling
+ * Typed data allows you to use shorthand to get data values nested in the
+ * implicit tree structure of the data. For example, to get the value from
+ * an entity field item, the Entity Field API allows you to call:
+ * @code
+ * $value = $entity->fieldName->propertyName;
+ * @endcode
+ * This is really shorthand for:
+ * @code
+ * $field_item_list = $entity->get('fieldName');
+ * $field_item = $field_item_list->get(0);
+ * $property = $field_item->get('propertyName');
+ * $value = $property->getValue();
+ * @endcode
+ * Some notes:
+ * - $property, $field_item, and $field_item_list are all typed data objects,
+ *   while $value is a raw PHP value.
+ * - You can call $property->getParent() to get $field_item,
+ *   $field_item->getParent() to get $field_item_list, or
+ *   $field_item_list->getParent() to get $typed_entity ($entity wrapped in a
+ *   typed data object). $typed_entity->getParent() is NULL.
+ * - For all of these ->getRoot() returns $typed_entity.
+ * - The langcode property is on $field_item_list, but you can access it
+ *   on $property as well, so that all items will report the same langcode.
+ * - When the value of $property is changed by calling $property->setValue(),
+ *   $property->onChange() will fire, which in turn calls the parent object's
+ *   onChange() method and so on. This allows parent objects to react upon
+ *   changes of contained properties or list items.
+ *
+ * @section sec_defining Defining data types
  * To define a new data type:
  * - Create a class that implements one of the Typed Data interfaces.
  *   Typically, you will want to extend one of the classes listed in the
- *   section above as a starting point.
+ *   sections above as a starting point.
  * - Make your class into a DataType plugin. To do that, put it in namespace
  *   \Drupal\yourmodule\Plugin\DataType (where "yourmodule" is your module's
  *   short name), and add annotation of type
@@ -877,7 +950,7 @@
  *   See the @link plugin_api Plugin API topic @endlink and the
  *   @link annotation Annotations topic @endlink for more information.
  *
- * @section using Using data types
+ * @section sec_using Using data types
  * The data types of the Typed Data API can be used in several ways, once they
  * have been defined:
  * - In the Field API, data types can be used as the class in the property
@@ -886,6 +959,15 @@
  * - In configuration schema files, you can use the unique ID ('id' annotation)
  *   from any DataType plugin class as the 'type' value for an entry. See the
  *   @link config_api Confuration API topic @endlink for more information.
+ * - If you need to create a typed data object in code, first get the
+ *   typed_data_manager service from the container or by calling
+ *   \Drupal::typedDataManager(). Then pass the plugin ID to
+ *   $manager::createDataDefinition() to create an appropriate data definition
+ *   object. Then pass the data definition object and the value of the data to
+ *   $manager::create() to create a typed data object.
+ *
+ * @see plugin_api
+ * @see container
  * @}
  */
 
