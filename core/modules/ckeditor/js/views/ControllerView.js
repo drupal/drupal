@@ -234,6 +234,10 @@
      *
      * @param {object} features
      *   A map of {@link Drupal.EditorFeature} objects.
+     * @param {object} buttonsToFeatures
+     *   Object containing the button-to-feature mapping.
+     *
+     * @see Drupal.ckeditor.ControllerView#getFeatureForButton
      */
     disableFeaturesDisallowedByFilters: function (features, buttonsToFeatures) {
       this.model.set('featuresMetadata', features);

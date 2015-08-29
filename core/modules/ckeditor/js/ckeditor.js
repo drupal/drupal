@@ -16,9 +16,12 @@
      * Editor attach callback.
      *
      * @param {HTMLElement} element
+     *   The element to attach the editor to.
      * @param {string} format
+     *   The text format for the editor.
      *
      * @return {bool}
+     *   Whether the call to `CKEDITOR.replace()` created an editor or not.
      */
     attach: function (element, format) {
       this._loadExternalPlugins(format);
@@ -46,10 +49,15 @@
      * Editor detach callback.
      *
      * @param {HTMLElement} element
+     *   The element to detach the editor from.
      * @param {string} format
+     *   The text format used for the editor.
      * @param {string} trigger
+     *   The event trigger for the detach.
      *
      * @return {bool}
+     *   Whether the call to `CKEDITOR.dom.element.get(element).getEditor()`
+     *   found an editor or not.
      */
     detach: function (element, format, trigger) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
@@ -66,11 +74,16 @@
     },
 
     /**
+     * Reacts on a change in the editor element.
      *
      * @param {HTMLElement} element
+     *   The element where the change occured.
      * @param {function} callback
+     *   Callback called with the value of the editor.
      *
      * @return {bool}
+     *   Whether the call to `CKEDITOR.dom.element.get(element).getEditor()`
+     *   found an editor or not.
      */
     onChange: function (element, callback) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
@@ -83,13 +96,19 @@
     },
 
     /**
+     * Attaches an inline editor to a DOM element.
      *
      * @param {HTMLElement} element
+     *   The element to attach the editor to.
      * @param {object} format
-     * @param {string} mainToolbarId
-     * @param {string} floatedToolbarId
+     *   The text format used in the editor.
+     * @param {string} [mainToolbarId]
+     *   The id attribute for the main editor toolbar, if any.
+     * @param {string} [floatedToolbarId]
+     *   The id attribute for the floated editor toolbar, if any.
      *
      * @return {bool}
+     *   Whether the call to `CKEDITOR.replace()` created an editor or not.
      */
     attachInlineEditor: function (element, format, mainToolbarId, floatedToolbarId) {
       this._loadExternalPlugins(format);
@@ -143,7 +162,10 @@
     },
 
     /**
+     * Loads the required external plugins for the editor.
+     *
      * @param {object} format
+     *   The text format used in the editor.
      */
     _loadExternalPlugins: function (format) {
       var externalPlugins = format.editorSettings.drupalExternalPlugins;

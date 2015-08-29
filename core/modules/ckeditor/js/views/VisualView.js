@@ -34,12 +34,17 @@
     },
 
     /**
+     * Render function for rendering the toolbar configuration.
      *
      * @param {*} model
+     *   Model used for the view.
      * @param {string} [value]
+     *   The value that was changed.
      * @param {object} changedAttributes
+     *   The attributes that was changed.
      *
      * @return {Drupal.ckeditor.VisualView}
+     *   The {@link Drupal.ckeditor.VisualView} object.
      */
     render: function (model, value, changedAttributes) {
       this.insertPlaceholders();
@@ -65,6 +70,7 @@
      * Handles clicks to a button group name.
      *
      * @param {jQuery.Event} event
+     *   The click event on the button group.
      */
     onGroupNameClick: function (event) {
       var $group = $(event.currentTarget).closest('.ckeditor-toolbar-group');
@@ -78,6 +84,7 @@
      * Handles clicks on the button group names toggle button.
      *
      * @param {jQuery.Event} event
+     *   The click event on the toggle button.
      */
     onGroupNamesToggleClick: function (event) {
       this.model.set('groupNamesVisible', !this.model.get('groupNamesVisible'));
@@ -88,6 +95,7 @@
      * Prompts the user to provide a name for a new button group; inserts it.
      *
      * @param {jQuery.Event} event
+     *   The event of the button click.
      */
     onAddGroupButtonClick: function (event) {
 
@@ -120,6 +128,7 @@
      * Handles jQuery Sortable stop sort of a button group.
      *
      * @param {jQuery.Event} event
+     *   The event triggered on the group drag.
      * @param {object} ui
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
@@ -138,6 +147,7 @@
      * Handles jQuery Sortable start sort of a button.
      *
      * @param {jQuery.Event} event
+     *   The event triggered on the group drag.
      * @param {object} ui
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
@@ -153,6 +163,7 @@
      * Handles jQuery Sortable stop sort of a button.
      *
      * @param {jQuery.Event} event
+     *   The event triggered on the button drag.
      * @param {object} ui
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.

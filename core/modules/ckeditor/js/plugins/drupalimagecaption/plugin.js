@@ -213,7 +213,8 @@
             }
           };
         };
-      }, null, null, 20); // Low priority to ensure drupalimage's event handler runs first.
+      // Low priority to ensure drupalimage's event handler runs first.
+      }, null, null, 20);
     }
   });
 
@@ -224,9 +225,12 @@
    * children in DFS order.
    *
    * @param {CKEDITOR.htmlParser.element} element
+   *   The element to search.
    * @param {string} name
+   *   The element name to search for.
    *
-   * @return {CKEDITOR.htmlParser.element}
+   * @return {?CKEDITOR.htmlParser.element}
+   *   The found element, or null.
    */
   function findElementByName(element, name) {
     if (element.name === name) {

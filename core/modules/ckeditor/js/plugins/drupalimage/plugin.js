@@ -131,10 +131,10 @@
             // when shifting state, so might deal with a new instance.
             widget = editor.widgets.getByElement(image);
 
-            // It's first edit, just after widget instance creation, but before it was
-            // inserted into DOM. So we need to retrieve the widget wrapper from
-            // inside the DocumentFragment which we cached above and finalize other
-            // things (like ready event and flag).
+            // It's first edit, just after widget instance creation, but before
+            // it was inserted into DOM. So we need to retrieve the widget
+            // wrapper from inside the DocumentFragment which we cached above
+            // and finalize other things (like ready event and flag).
             if (firstEdit) {
               editor.widgets.finalizeCreation(container);
             }
