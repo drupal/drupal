@@ -12,6 +12,10 @@
    * check that its confirmation is correct.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches password strength indicator and other relevant validation to
+   *   password fields.
    */
   Drupal.behaviors.password = {
     attach: function (context, settings) {
@@ -104,9 +108,12 @@
    * Returns the estimated strength and the relevant output message.
    *
    * @param {string} password
+   *   The password to evaluate.
    * @param {object} translate
+   *   An object containing the text to display for each strength level.
    *
    * @return {object}
+   *   An object containing strength, message, indicatorText and indicatorClass.
    */
   Drupal.evaluatePasswordStrength = function (password, translate) {
     password = password.trim();
