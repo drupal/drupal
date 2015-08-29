@@ -114,6 +114,7 @@
      * @augments Drupal.quickedit.BaseModel
      *
      * @param {object} options
+     *   Options for the field model.
      */
     initialize: function (options) {
       // Store the original full HTML representation of this field.
@@ -130,8 +131,10 @@
     },
 
     /**
+     * Destroys the field model.
      *
      * @param {object} options
+     *   Options for the field model.
      */
     destroy: function (options) {
       if (this.get('state') !== 'inactive') {
@@ -149,6 +152,7 @@
     },
 
     /**
+     * Validate function for the field model.
      *
      * @param {object} attrs
      *   The attributes changes in the save or set call.
@@ -165,6 +169,7 @@
      *   validate and proceed.
      *
      * @return {string}
+     *   A string to say something about the state of the field model.
      */
     validate: function (attrs, options) {
       var current = this.get('state');
@@ -319,6 +324,7 @@
      *   One of {@link Drupal.quickedit.FieldModel.states}.
      *
      * @return {bool}
+     *   Whether the 'from' state comes before the 'to' state.
      */
     followsStateSequence: function (from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);

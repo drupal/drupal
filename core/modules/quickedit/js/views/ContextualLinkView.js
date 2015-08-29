@@ -13,6 +13,7 @@
      * Define all events to listen to.
      *
      * @return {object}
+     *   A map of events.
      */
     events: function () {
       // Prevents delay and simulated mouse events.
@@ -31,6 +32,8 @@
     },
 
     /**
+     * Create a new contextual link view.
+     *
      * @constructs
      *
      * @augments Backbone.View
@@ -54,11 +57,15 @@
     },
 
     /**
+     * Render function for the contextual link view.
      *
      * @param {Drupal.quickedit.EntityModel} entityModel
+     *   The associated `EntityModel`.
      * @param {bool} isActive
+     *   Whether the in-place editor is active or not.
      *
      * @return {Drupal.quickedit.ContextualLinkView}
+     *   The `ContextualLinkView` in question.
      */
     render: function (entityModel, isActive) {
       this.$el.find('a').attr('aria-pressed', isActive);

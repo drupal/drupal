@@ -93,6 +93,7 @@
      * Determines the actions to take given a change of state.
      *
      * @param {Drupal.quickedit.FieldModel} fieldModel
+     *   The quickedit `FieldModel` that holds the state.
      * @param {string} state
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.

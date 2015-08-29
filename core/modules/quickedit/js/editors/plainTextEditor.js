@@ -20,6 +20,7 @@
      * @augments Drupal.quickedit.EditorView
      *
      * @param {object} options
+     *   Options for the plain text editor.
      */
     initialize: function (options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
@@ -55,6 +56,7 @@
      * @inheritdoc
      *
      * @return {jQuery}
+     *   The text element for the plain text editor.
      */
     getEditedElement: function () {
       return this.$textElement;
@@ -64,8 +66,11 @@
      * @inheritdoc
      *
      * @param {object} fieldModel
+     *   The field model that holds the state.
      * @param {string} state
+     *   The state to change to.
      * @param {object} options
+     *   State options, if needed by the state change.
      */
     stateChange: function (fieldModel, state, options) {
       var from = fieldModel.previous('state');
@@ -121,6 +126,7 @@
      * @inheritdoc
      *
      * @return {object}
+     *   A settings object for the quick edit UI.
      */
     getQuickEditUISettings: function () {
       return {padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false};

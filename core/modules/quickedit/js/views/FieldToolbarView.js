@@ -34,15 +34,17 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options object to construct the field toolbar.
      * @param {jQuery} options.$editedElement
+     *   The element being edited.
      * @param {Drupal.quickedit.EditorView} options.editorView
+     *   The EditorView the toolbar belongs to.
      */
     initialize: function (options) {
       this.$editedElement = options.$editedElement;
       this.editorView = options.editorView;
 
       /**
-       *
        * @type {jQuery}
        */
       this.$root = this.$el;
@@ -57,6 +59,7 @@
      * @inheritdoc
      *
      * @return {Drupal.quickedit.FieldToolbarView}
+     *   The current FieldToolbarView.
      */
     render: function () {
       // Render toolbar and set it as the view's element.
@@ -74,6 +77,7 @@
      * Determines the actions to take given a change of state.
      *
      * @param {Drupal.quickedit.FieldModel} model
+     *   The quickedit FieldModel
      * @param {string} state
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
@@ -191,6 +195,7 @@
      *   A toolgroup name.
      *
      * @return {jQuery}
+     *   The toolgroup element.
      */
     _find: function (toolgroup) {
       return this.$el.find('.quickedit-toolgroup.' + toolgroup);
@@ -204,8 +209,8 @@
      */
     show: function (toolgroup) {
       var $group = this._find(toolgroup);
-      // Attach a transitionEnd event handler to the toolbar group so that update
-      // events can be triggered after the animations have ended.
+      // Attach a transitionEnd event handler to the toolbar group so that
+      // update events can be triggered after the animations have ended.
       $group.on(Drupal.quickedit.util.constants.transitionEnd, function (event) {
         $group.off(Drupal.quickedit.util.constants.transitionEnd);
       });

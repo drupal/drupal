@@ -16,6 +16,7 @@
 
     /**
      * @return {object}
+     *   A map of events.
      */
     events: function () {
       var map = {
@@ -32,7 +33,9 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options to construct the view.
      * @param {Drupal.quickedit.AppModel} options.appModel
+     *   A quickedit `AppModel` to use in the view.
      */
     initialize: function (options) {
       var that = this;
@@ -71,6 +74,7 @@
      * @inheritdoc
      *
      * @return {Drupal.quickedit.EntityToolbarView}
+     *   The entity toolbar view.
      */
     render: function () {
       if (this.model.get('isActive')) {
@@ -147,6 +151,7 @@
      * Repositions the entity toolbar on window scroll and resize.
      *
      * @param {jQuery.Event} event
+     *   The scroll or resize event.
      */
     windowChangeHandler: function (event) {
       this.position();
@@ -156,6 +161,7 @@
      * Determines the actions to take given a change of state.
      *
      * @param {Drupal.quickedit.FieldModel} model
+     *   The `FieldModel` model.
      * @param {string} state
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
@@ -254,6 +260,7 @@
        * positionToolbar().
        *
        * @param {*} view
+       *   The view the positions will be calculated from.
        * @param {object} suggested
        *   A hash of top and left values for the position that should be set. It
        *   can be forwarded to .css() or .animate().
@@ -345,6 +352,7 @@
      * Set the model state to 'saving' when the save button is clicked.
      *
      * @param {jQuery.Event} event
+     *   The click event.
      */
     onClickSave: function (event) {
       event.stopPropagation();
@@ -357,6 +365,7 @@
      * Sets the model state to candidate when the cancel button is clicked.
      *
      * @param {jQuery.Event} event
+     *   The click event.
      */
     onClickCancel: function (event) {
       event.preventDefault();
@@ -369,6 +378,7 @@
      * Without this, it may reposition itself, away from the user's cursor!
      *
      * @param {jQuery.Event} event
+     *   The mouse event.
      */
     onMouseenter: function (event) {
       clearTimeout(this.timer);
@@ -378,6 +388,7 @@
      * Builds the entity toolbar HTML; attaches to DOM; sets starting position.
      *
      * @return {jQuery}
+     *   The toolbar element.
      */
     buildToolbarEl: function () {
       var $toolbar = $(Drupal.theme('quickeditEntityToolbar', {

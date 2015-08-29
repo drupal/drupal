@@ -127,6 +127,7 @@
      *   The fieldModel to which this change applies.
      *
      * @return {bool}
+     *   Whether the editor change was accepted or rejected.
      */
     acceptEditorStateChange: function (from, to, context, fieldModel) {
       var accept = true;
@@ -328,6 +329,7 @@
      * Asks the user to confirm whether he wants to stop editing via a modal.
      *
      * @param {Drupal.quickedit.EntityModel} entityModel
+     *   An instance of the EntityModel class.
      *
      * @see Drupal.quickedit.AppView#acceptEditorStateChange
      */
@@ -402,6 +404,7 @@
      * Reacts to field state changes; tracks global state.
      *
      * @param {Drupal.quickedit.FieldModel} fieldModel
+     *   The `fieldModel` holding the state.
      * @param {string} state
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.

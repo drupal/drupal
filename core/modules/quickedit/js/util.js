@@ -38,6 +38,7 @@
    *   The Controller route for field processing.
    *
    * @return {string}
+   *   The formatted URL.
    */
   Drupal.quickedit.util.buildUrl = function (id, urlFormat) {
     var parts = id.split('/');
@@ -146,6 +147,7 @@
      * Creates a {@link Drupal.Ajax} instance that is used to save a form.
      *
      * @param {object} options
+     *   Submit options to the form.
      * @param {bool} options.nocssjs
      *   Boolean indicating whether no CSS and JS should be returned (necessary
      *   when the form is invisible to the user).
@@ -153,6 +155,7 @@
      *   Array containing view mode IDs (of other instances of this field on the
      *   page).
      * @param {jQuery} $submit
+     *   The submit element.
      *
      * @return {Drupal.Ajax}
      *   A {@link Drupal.Ajax} instance.
@@ -176,7 +179,9 @@
          * form.
          *
          * @param {Drupal.AjaxCommands~commandDefinition} response
+         *   The Drupal AJAX response.
          * @param {number} [status]
+         *   The HTTP status code.
          */
         success: function (response, status) {
           for (var i in response) {

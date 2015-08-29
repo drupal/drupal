@@ -32,7 +32,9 @@
      * @inheritdoc
      *
      * @param {object} fieldModel
+     *   The field model that holds the state.
      * @param {string} state
+     *   The state to change to.
      */
     stateChange: function (fieldModel, state) {
       var from = fieldModel.previous('state');
@@ -80,6 +82,7 @@
      * @inheritdoc
      *
      * @return {object}
+     *   A settings object for the quick edit UI.
      */
     getQuickEditUISettings: function () {
       return {padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: true};

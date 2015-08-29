@@ -159,10 +159,12 @@
      * Updates FieldModels' states when an EntityModel change occurs.
      *
      * @param {Drupal.quickedit.EntityModel} entityModel
+     *   The entity model
      * @param {string} state
      *   The state of the associated entity. One of
      *   {@link Drupal.quickedit.EntityModel.states}.
      * @param {object} options
+     *   Options for the entity model.
      */
     stateChange: function (entityModel, state, options) {
       var to = state;
@@ -193,7 +195,8 @@
         case 'committing':
           // The user indicated they want to save the entity.
           var fields = this.get('fields');
-          // For fields that are in an active state, transition them to candidate.
+          // For fields that are in an active state, transition them to
+          // candidate.
           fields.chain()
             .filter(function (fieldModel) {
               return _.intersection([fieldModel.get('state')], ['active']).length;
@@ -218,15 +221,15 @@
               return _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length;
             });
           // If the entity contains unconfirmed or unsaved changes, return the
-          // entity to an opened state and ask the user if they would like to save
-          // the changes or discard the changes.
-          //   1. One of the fields is in a changed state. The changed field might
-          //   just be a change in the client or it might have been saved to
-          //   tempstore.
-          //   2. The saved flag is empty and the confirmed flag is empty. If the
-          //   entity has been saved to the server, the fields changed in the
-          //   client are irrelevant. If the changes are confirmed, then proceed
-          //   to set the fields to candidate state.
+          // entity to an opened state and ask the user if they would like to
+          // save the changes or discard the changes.
+          //   1. One of the fields is in a changed state. The changed field
+          //   might just be a change in the client or it might have been saved
+          //   to tempstore.
+          //   2. The saved flag is empty and the confirmed flag is empty. If
+          //   the entity has been saved to the server, the fields changed in
+          //   the client are irrelevant. If the changes are confirmed, then
+          //   proceed to set the fields to candidate state.
           if ((changedFields.length || this.get('fieldsInTempStore').length) && (!options.saved && !options.confirmed)) {
             // Cancel deactivation until the user confirms save or discard.
             this.set('state', 'opened', {confirming: true});
@@ -243,12 +246,12 @@
             // Indicate if this EntityModel needs to be reloaded in order to
             // restore the original values of its fields.
             entityModel.set('reload', (this.get('fieldsInTempStore').length || invalidFields.length));
-            // Set all fields to the 'candidate' state. A changed field may have to
-            // go through confirmation first.
+            // Set all fields to the 'candidate' state. A changed field may have
+            // to go through confirmation first.
             entityModel.get('fields').each(function (fieldModel) {
-              // If the field is already in the candidate state, trigger a change
-              // event so that the entityModel can move to the next state in
-              // deactivation.
+              // If the field is already in the candidate state, trigger a
+              // change event so that the entityModel can move to the next state
+              // in deactivation.
               if (_.intersection([fieldModel.get('state')], ['candidate', 'highlighted']).length) {
                 fieldModel.trigger('change:state', fieldModel, fieldModel.get('state'), options);
               }
@@ -278,7 +281,8 @@
      * Helper function.
      *
      * @param {Drupal.quickedit.EntityModel} entityModel
-     *   The model of the entity for which a field's state attribute has changed.
+     *   The model of the entity for which a field's state attribute has
+     *   changed.
      * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The model of the field whose state attribute has changed.
      *
@@ -325,12 +329,12 @@
       var entityModel = this;
       var fieldState = state;
       // Switch on the entityModel state.
-      // The EntityModel responds to FieldModel state changes as a function of its
-      // state. For example, a field switching back to 'candidate' state when its
-      // entity is in the 'opened' state has no effect on the entity. But that
-      // same switch back to 'candidate' state of a field when the entity is in
-      // the 'committing' state might allow the entity to proceed with the commit
-      // flow.
+      // The EntityModel responds to FieldModel state changes as a function of
+      // its state. For example, a field switching back to 'candidate' state
+      // when its entity is in the 'opened' state has no effect on the entity.
+      // But that same switch back to 'candidate' state of a field when the
+      // entity is in the 'committing' state might allow the entity to proceed
+      // with the commit flow.
       switch (this.get('state')) {
         case 'closed':
         case 'launching':
@@ -339,13 +343,14 @@
           break;
 
         case 'opening':
-          // We must change the entity to the 'opened' state, but it must first be
-          // confirmed that all of its fieldModels have transitioned to the
+          // We must change the entity to the 'opened' state, but it must first
+          // be confirmed that all of its fieldModels have transitioned to the
           // 'candidate' state.
           // We do this here, because this is called every time a fieldModel
           // changes state, hence each time this is called, we get closer to the
           // goal of having all fieldModels in the 'candidate' state.
-          // A state change in reaction to another state change must be deferred.
+          // A state change in reaction to another state change must be
+          // deferred.
           _.defer(function () {
             entityModel.set('state', 'opened', {
               'accept-field-states': Drupal.quickedit.app.readyFieldStates
@@ -374,7 +379,8 @@
           // If the field save returned a validation error, set the state of the
           // entity back to 'opened'.
           if (fieldState === 'invalid') {
-            // A state change in reaction to another state change must be deferred.
+            // A state change in reaction to another state change must be
+            // deferred.
             _.defer(function () {
               entityModel.set('state', 'opened', {reason: 'invalid'});
             });
@@ -383,8 +389,8 @@
             this._updateInTempStoreAttributes(entityModel, fieldModel);
           }
 
-          // Attempt to save the entity. If the entity's fields are not yet all in
-          // a ready state, the save will not be processed.
+          // Attempt to save the entity. If the entity's fields are not yet all
+          // in a ready state, the save will not be processed.
           var options = {
             'accept-field-states': Drupal.quickedit.app.readyFieldStates
           };
@@ -399,8 +405,8 @@
               error: function () {
                 // Reset the "isCommitting" mutex.
                 entityModel.set('isCommitting', false);
-                // Change the state back to "opened", to allow the user to hit the
-                // "Save" button again.
+                // Change the state back to "opened", to allow the user to hit
+                // the "Save" button again.
                 entityModel.set('state', 'opened', {reason: 'networkerror'});
                 // Show a modal to inform the user of the network error.
                 var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', {'@entity-title': entityModel.get('label')});
@@ -413,7 +419,8 @@
         case 'deactivating':
           // When setting the entity to 'closing', require that all fieldModels
           // are in either the 'candidate' or 'highlighted' state.
-          // A state change in reaction to another state change must be deferred.
+          // A state change in reaction to another state change must be
+          // deferred.
           _.defer(function () {
             entityModel.set('state', 'closing', {
               'accept-field-states': Drupal.quickedit.app.readyFieldStates
@@ -422,9 +429,10 @@
           break;
 
         case 'closing':
-          // When setting the entity to 'closed', require that all fieldModels are
-          // in the 'inactive' state.
-          // A state change in reaction to another state change must be deferred.
+          // When setting the entity to 'closed', require that all fieldModels
+          // are in the 'inactive' state.
+          // A state change in reaction to another state change must be
+          // deferred.
           _.defer(function () {
             entityModel.set('state', 'closed', {
               'accept-field-states': ['inactive']
@@ -449,7 +457,7 @@
       var entitySaverAjax = Drupal.ajax({
         url: Drupal.url('quickedit/entity/' + entityModel.get('entityID')),
         error: function () {
-          // Let the Drupal.quickedit.EntityModel Backbone model's error()=
+          // Let the Drupal.quickedit.EntityModel Backbone model's error()
           // method handle errors.
           options.error.call(entityModel);
         }
@@ -476,6 +484,7 @@
     },
 
     /**
+     * Validate the entity model.
      *
      * @param {object} attrs
      *   The attributes changes in the save or set call.
@@ -492,6 +501,7 @@
      *   validate and proceed.
      *
      * @return {string}
+     *   A string to say something about the state of the entity model.
      */
     validate: function (attrs, options) {
       var acceptedFieldStates = options['accept-field-states'] || [];
@@ -531,14 +541,21 @@
     },
 
     /**
+     * Checks if a state change can be accepted.
      *
      * @param {string} from
+     *   From state.
      * @param {string} to
+     *   To state.
      * @param {object} context
+     *   Context for the check.
      * @param {string} context.reason
+     *   The reason for the state change.
      * @param {bool} context.confirming
+     *   Whether context is confirming or not.
      *
      * @return {bool}
+     *   Whether the state change is accepted or not.
      *
      * @see Drupal.quickedit.AppView#acceptEditorStateChange
      */
@@ -557,8 +574,8 @@
           accept = true;
         }
         // Allow: committing -> opened.
-        // Necessary to be able to correct an invalid field, or to hit the "Save"
-        // button again after a server/network error.
+        // Necessary to be able to correct an invalid field, or to hit the
+        // "Save" button again after a server/network error.
         else if (from === 'committing' && to === 'opened' && context.reason && (context.reason === 'invalid' || context.reason === 'networkerror')) {
           accept = true;
         }
@@ -578,9 +595,13 @@
     },
 
     /**
+     * Checks if fields have acceptable states.
+     *
      * @param {Array} acceptedFieldStates
+     *   An array of acceptable field states to check for.
      *
      * @return {bool}
+     *   Whether the fields have an acceptable state.
      *
      * @see Drupal.quickedit.EntityModel#validate
      */
@@ -603,7 +624,10 @@
     },
 
     /**
+     * Destroys the entity model.
+     *
      * @param {object} options
+     *   Options for the entity model.
      */
     destroy: function (options) {
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
@@ -646,10 +670,11 @@
       'launching',
       // Launching has finished.
       // - Trigger: application.
-      // - Guarantees: in-place editors ready for use, all entity and field views
-      //   have been set up, all fields are in the 'inactive' state.
-      // - Expected behavior: all fields are changed to the 'candidate' state and
-      //   once this is completed, the entity state will be changed to 'opened'.
+      // - Guarantees: in-place editors ready for use, all entity and field
+      //   views have been set up, all fields are in the 'inactive' state.
+      // - Expected behavior: all fields are changed to the 'candidate' state
+      //   and once this is completed, the entity state will be changed to
+      //   'opened'.
       'opening',
       // Opening has finished.
       // - Trigger: EntityModel.
@@ -668,14 +693,15 @@
       //   to 'opened', otherwise: save the entity by committing it from
       //   PrivateTempStore into permanent storage.
       'committing',
-      // User has clicked the 'Close' button, or has clicked the 'Save' button and
-      // that was successfully completed.
+      // User has clicked the 'Close' button, or has clicked the 'Save' button
+      // and that was successfully completed.
       // - Trigger: user or EntityModel.
-      // - Guarantees: when having clicked 'Close' hardly any: fields may be in a
-      //   variety of states; when having clicked 'Save': all fields are in the
-      //   'candidate' state.
+      // - Guarantees: when having clicked 'Close' hardly any: fields may be in
+      //   a variety of states; when having clicked 'Save': all fields are in
+      //   the 'candidate' state.
       // - Expected behavior: transition all fields to the 'candidate' state,
-      //   possibly requiring confirmation in the case of having clicked 'Close'.
+      //   possibly requiring confirmation in the case of having clicked
+      //   'Close'.
       'deactivating',
       // Deactivation has been completed.
       // - Trigger: EntityModel.
@@ -693,6 +719,7 @@
      *   One of {@link Drupal.quickedit.EntityModel.states}.
      *
      * @return {bool}
+     *   Whether the 'from' state comes before the 'to' state.
      */
     followsStateSequence: function (from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);

@@ -11,6 +11,7 @@
    * Theme function for a "backstage" for the Quick Edit module.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {string} settings.id
    *   The id to apply to the backstage.
    *
@@ -27,6 +28,7 @@
    * Theme function for a toolbar container of the Quick Edit module.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {string} settings.id
    *   the id to apply to the backstage.
    *
@@ -50,6 +52,7 @@
    * Theme function for a toolbar container of the Quick Edit module.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {string} settings.entityLabel
    *   The title of the active entity.
    * @param {string} settings.fieldLabel
@@ -77,6 +80,7 @@
    * Theme function for a toolbar container of the Quick Edit module.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {string} settings.id
    *   The id to apply to the toolbar container.
    *
@@ -91,6 +95,7 @@
    * Theme function for a toolbar toolgroup of the Quick Edit module.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {string} [settings.id]
    *   The id of the toolgroup.
    * @param {string} settings.classes
@@ -123,6 +128,7 @@
    * modal.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {Array} settings.buttons
    * - String type: the type of the button (defaults to 'button')
    * - Array classes: the classes of the button.
@@ -157,6 +163,7 @@
    * Theme function for a form container of the Quick Edit module.
    *
    * @param {object} settings
+   *   Settings object used to construct the markup.
    * @param {string} settings.id
    *   The id to apply to the toolbar container.
    * @param {string} settings.loadingMsg

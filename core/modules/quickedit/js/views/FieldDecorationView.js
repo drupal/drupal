@@ -56,6 +56,7 @@
      * Determines the actions to take given a change of state.
      *
      * @param {Drupal.quickedit.FieldModel} model
+     *   The `FieldModel` model.
      * @param {string} state
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
@@ -128,6 +129,7 @@
      * Starts hover; transitions to 'highlight' state.
      *
      * @param {jQuery.Event} event
+     *   The mouse event.
      */
     onMouseEnter: function (event) {
       var that = this;
@@ -139,6 +141,7 @@
      * Stops hover; transitions to 'candidate' state.
      *
      * @param {jQuery.Event} event
+     *   The mouse event.
      */
     onMouseLeave: function (event) {
       var that = this;
@@ -150,6 +153,7 @@
      * Transition to 'activating' stage.
      *
      * @param {jQuery.Event} event
+     *   The click event.
      */
     onClick: function (event) {
       this.model.set('state', 'activating');
@@ -313,8 +317,10 @@
      * subtraction.
      *
      * @param {jQuery} $e
+     *   The element to get position properties from.
      *
      * @return {object}
+     *   An object containing css values for the needed properties.
      */
     _getPositionProperties: function ($e) {
       var p;
@@ -340,6 +346,7 @@
      *   The value for a CSS position declaration.
      *
      * @return {string}
+     *   A CSS value that is valid for `position`.
      */
     _replaceBlankPosition: function (pos) {
       if (pos === 'auto' || !pos) {

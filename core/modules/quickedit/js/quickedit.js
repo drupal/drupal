@@ -160,29 +160,42 @@
     metadata: {
 
       /**
+       * Check if a field exists in storage.
        *
        * @param {string} fieldID
+       *   The field id to check.
        *
        * @return {bool}
+       *   Whether it was found or not.
        */
       has: function (fieldID) {
         return storage.getItem(this._prefixFieldID(fieldID)) !== null;
       },
 
       /**
+       * Add metadata to a field id.
        *
        * @param {string} fieldID
+       *   The field ID to add data to.
        * @param {object} metadata
+       *   Metadata to add.
        */
       add: function (fieldID, metadata) {
         storage.setItem(this._prefixFieldID(fieldID), JSON.stringify(metadata));
       },
 
       /**
+       * Get a key from a field id.
        *
        * @param {string} fieldID
+       *   The field ID to check.
        * @param {string} [key]
+       *   The key to check. If empty, will return all metadata.
+       *
        * @return {object|*}
+       *   The value for the key, if defined. Otherwise will return all metadata
+       *   for the specified field id.
+       *
        */
       get: function (fieldID, key) {
         var metadata = JSON.parse(storage.getItem(this._prefixFieldID(fieldID)));
@@ -190,20 +203,26 @@
       },
 
       /**
+       * Prefix the field id.
        *
        * @param {string} fieldID
+       *   The field id to prefix.
        *
        * @return {string}
+       *   A prefixed field id.
        */
       _prefixFieldID: function (fieldID) {
         return 'Drupal.quickedit.metadata.' + fieldID;
       },
 
       /**
+       * Unprefix the field id.
        *
        * @param {string} fieldID
+       *   The field id to unprefix.
        *
        * @return {string}
+       *   An unprefixed field id.
        */
       _unprefixFieldID: function (fieldID) {
         // Strip "Drupal.quickedit.metadata.", which is 26 characters long.
@@ -211,10 +230,13 @@
       },
 
       /**
+       * Intersection calculation.
        *
-       * @param {string} fieldIDs
+       * @param {Array} fieldIDs
+       *   An array of field ids to compare to prefix field id.
        *
        * @return {Array}
+       *   The intersection found.
        */
       intersection: function (fieldIDs) {
         var prefixedFieldIDs = _.map(fieldIDs, this._prefixFieldID);
@@ -246,7 +268,9 @@
    * Queue contextual links to be processed.
    *
    * @param {jQuery.Event} event
+   *   The `drupalContextualLinkAdded` event.
    * @param {object} data
+   *   An object containing the data relevant to the event.
    *
    * @listens event:drupalContextualLinkAdded
    */
