@@ -8,12 +8,15 @@
   "use strict";
 
   /**
-   * Move a block in the blocks table from one region to another via select list.
+   * Move a block in the blocks table from one region to another.
    *
    * This behavior is dependent on the tableDrag behavior, since it uses the
    * objects initialized in that behavior to update the row.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the drag behavior to a applicable table element.
    */
   Drupal.behaviors.termDrag = {
     attach: function (context, settings) {
