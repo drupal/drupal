@@ -372,8 +372,8 @@ class LinkGeneratorTest extends UnitTestCase {
     ), $result);
 
     // Test that safe HTML is output inside the anchor tag unescaped. The
-    // SafeMarkup::set() call is an intentional unit test for the interaction
-    // between SafeMarkup and the LinkGenerator.
+    // SafeString::create() call is an intentional unit test for the interaction
+    // between SafeStringInterface and the LinkGenerator.
     $url = new Url('test_route_5', array());
     $url->setUrlGenerator($this->urlGenerator);
     $result = $this->linkGenerator->generate(SafeString::create('<em>HTML output</em>'), $url);
