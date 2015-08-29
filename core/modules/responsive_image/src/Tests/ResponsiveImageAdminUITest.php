@@ -42,9 +42,10 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertText('There is no Responsive image style yet.');
 
-    // Add a new responsive image style, our breakpoint set should be selected.
+    // Add a responsive image style.
     $this->drupalGet('admin/config/media/responsive-image-style/add');
-    $this->assertFieldByName('breakpoint_group', 'responsive_image_test_module');
+    // The 'Responsive Image' breakpoint group should be selected by default.
+    $this->assertFieldByName('breakpoint_group', 'responsive_image');
 
     // Create a new group.
     $edit = array(

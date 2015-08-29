@@ -158,6 +158,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    */
   public function installOptionalConfig(StorageInterface $storage = NULL, $dependency = []) {
     $profile = $this->drupalGetProfile();
+    $optional_profile_config = [];
     if (!$storage) {
       // Search the install profile's optional configuration too.
       $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, TRUE);
@@ -168,6 +169,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       // Creates a profile storage to search for overrides.
       $profile_install_path = $this->drupalGetPath('module', $profile) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
       $profile_storage = new FileStorage($profile_install_path, StorageInterface::DEFAULT_COLLECTION);
+      $optional_profile_config = $profile_storage->listAll();
     }
     else {
       // Profile has not been set yet. For example during the first steps of the
@@ -178,7 +180,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $enabled_extensions = $this->getEnabledExtensions();
     $existing_config = $this->getActiveStorages()->listAll();
 
-    $list = array_filter($storage->listAll(), function($config_name) use ($existing_config) {
+    $list = array_unique(array_merge($storage->listAll(), $optional_profile_config));
+    $list = array_filter($list, function($config_name) use ($existing_config) {
       // Only list configuration that:
       // - does not already exist
       // - is a configuration entity (this also excludes config that has an
@@ -188,7 +191,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
     $all_config = array_merge($existing_config, $list);
     $config_to_create = $storage->readMultiple($list);
-    // Check to see if the corresponding override storage has any overrides.
+    // Check to see if the corresponding override storage has any overrides or
+    // new configuration that can be installed.
     if ($profile_storage) {
       $config_to_create = $profile_storage->readMultiple($list) + $config_to_create;
     }

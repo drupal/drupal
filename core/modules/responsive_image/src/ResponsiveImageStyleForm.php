@@ -96,7 +96,7 @@ class ResponsiveImageStyleForm extends EntityForm {
     $form['breakpoint_group'] = array(
       '#type' => 'select',
       '#title' => $this->t('Breakpoint group'),
-      '#default_value' => $responsive_image_style->getBreakpointGroup(),
+      '#default_value' => $responsive_image_style->getBreakpointGroup() ?: 'responsive_image',
       '#options' => $this->breakpointManager->getGroups(),
       '#required' => TRUE,
       '#description' => $description,

@@ -160,6 +160,22 @@ class StandardTest extends WebTestBase {
 
     // Ensure that there are no pending entity updates after installation.
     $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
-  }
 
+    // Make sure the optional image styles are not installed.
+    $this->drupalGet('admin/config/media/image-styles');
+    $this->assertNoText('Max 325x325');
+    $this->assertNoText('Max 650x650');
+    $this->assertNoText('Max 1300x1300');
+    $this->assertNoText('Max 2600x2600');
+
+    // Make sure the optional image styles are installed after enabling
+    // the responsive_image module.
+    \Drupal::service('module_installer')->install(array('responsive_image'));
+    $this->rebuildContainer();
+    $this->drupalGet('admin/config/media/image-styles');
+    $this->assertText('Max 325x325');
+    $this->assertText('Max 650x650');
+    $this->assertText('Max 1300x1300');
+    $this->assertText('Max 2600x2600');
+  }
 }
