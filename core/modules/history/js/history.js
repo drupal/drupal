@@ -75,7 +75,7 @@
     },
 
     /**
-     * Marks a node as read, store the last read timestamp in client-side storage.
+     * Marks a node as read, store the last read timestamp client-side.
      *
      * @param {number|string} nodeID
      *   A node ID.
@@ -86,7 +86,8 @@
         type: 'POST',
         dataType: 'json',
         success: function (timestamp) {
-          // If the data is embedded in the page, don't store on the client side.
+          // If the data is embedded in the page, don't store on the client
+          // side.
           if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
             return;
           }
@@ -99,9 +100,10 @@
     /**
      * Determines whether a server check is necessary.
      *
-     * Any content that is >30 days old never gets a "new" or "updated" indicator.
-     * Any content that was published before the oldest known reading also never
-     * gets a "new" or "updated" indicator, because it must've been read already.
+     * Any content that is >30 days old never gets a "new" or "updated"
+     * indicator. Any content that was published before the oldest known reading
+     * also never gets a "new" or "updated" indicator, because it must've been
+     * read already.
      *
      * @param {number|string} nodeID
      *   A node ID.
@@ -109,10 +111,12 @@
      *   The time at which some content (e.g. a comment) was published.
      *
      * @return {bool}
-     *   Whether a server check is necessary for the given node and its timestamp.
+     *   Whether a server check is necessary for the given node and its
+     *   timestamp.
      */
     needsServerCheck: function (nodeID, contentTimestamp) {
-      // First check if the content is older than 30 days, then we can bail early.
+      // First check if the content is older than 30 days, then we can bail
+      // early.
       if (contentTimestamp < thirtyDaysAgo) {
         return false;
       }
