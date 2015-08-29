@@ -72,6 +72,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
     // Check that submitting the form takes the user to authorize.php.
     $this->assertUrl('core/authorize.php');
+    $this->assertTitle('Update manager | Drupal');
     // Check for a success message on the page, and check that the installed
     // module now exists in the expected place in the filesystem.
     $this->assertRaw(t('Installed %project_name successfully', array('%project_name' => 'update_test_new_module')));

@@ -50,13 +50,17 @@ function update_authorize_run_update($filetransfer, $projects) {
   }
 
   $batch = array(
-    'title' => t('Installing updates'),
     'init_message' => t('Preparing to update your site'),
     'operations' => $operations,
     'finished' => 'update_authorize_update_batch_finished',
     'file' => drupal_get_path('module', 'update') . '/update.authorize.inc',
   );
   batch_set($batch);
+
+  // Since authorize.php has its own method for setting the page title, set it
+  // manually here rather than passing it in to batch_set() as would normally
+  // be done.
+  $_SESSION['authorize_page_title'] = t('Installing updates');
 
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();
@@ -99,7 +103,6 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
 
   // @todo Instantiate our Updater to set the human-readable title?
   $batch = array(
-    'title' => t('Installing %project', array('%project' => $project)),
     'init_message' => t('Preparing to install'),
     'operations' => $operations,
     // @todo Use a different finished callback for different messages?
@@ -107,6 +110,11 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
     'file' => drupal_get_path('module', 'update') . '/update.authorize.inc',
   );
   batch_set($batch);
+
+  // Since authorize.php has its own method for setting the page title, set it
+  // manually here rather than passing it in to batch_set() as would normally
+  // be done.
+  $_SESSION['authorize_page_title'] = t('Installing %project', array('%project' => $project));
 
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();
@@ -262,6 +270,7 @@ function update_authorize_update_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
+  $_SESSION['authorize_page_title'] = t('Update manager');
 }
 
 /**
@@ -322,6 +331,7 @@ function update_authorize_install_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
+  $_SESSION['authorize_page_title'] = t('Update manager');
 }
 
 /**
