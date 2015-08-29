@@ -76,8 +76,8 @@
       $.extend({el: $region, model: model}, options))
     );
 
-    // Add the model to the collection. This must happen after the views have been
-    // associated with it, otherwise collection change event handlers can't
+    // Add the model to the collection. This must happen after the views have
+    // been associated with it, otherwise collection change event handlers can't
     // trigger the model change event handler in its views.
     contextual.collection.add(model);
 
@@ -140,6 +140,9 @@
    *   - drupalContextualLinkAdded: Triggered when a contextual link is added.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *  Attaches the outline behavior to the right context.
    */
   Drupal.behaviors.contextual = {
     attach: function (context) {
@@ -163,8 +166,8 @@
         if (html !== null) {
           // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
-          // possible, but also to ensure that other Drupal behaviors have had the
-          // chance to set up an event listener on the Backbone collection
+          // possible, but also to ensure that other Drupal behaviors have had
+          // the chance to set up an event listener on the Backbone collection
           // Drupal.contextual.collection.
           window.setTimeout(function () {
             initContextual($context.find('[data-contextual-id="' + contextualID + '"]'), html);
@@ -174,8 +177,8 @@
         return true;
       });
 
-      // Perform an AJAX request to let the server render the contextual links for
-      // each of the placeholders.
+      // Perform an AJAX request to let the server render the contextual links
+      // for each of the placeholders.
       if (uncachedIDs.length > 0) {
         $.ajax({
           url: Drupal.url('contextual/render'),
@@ -186,14 +189,15 @@
             _.each(results, function (html, contextualID) {
               // Store the metadata.
               storage.setItem('Drupal.contextual.' + contextualID, html);
-              // If the rendered contextual links are empty, then the current user
-              // does not have permission to access the associated links: don't
-              // render anything.
+              // If the rendered contextual links are empty, then the current
+              // user does not have permission to access the associated links:
+              // don't render anything.
               if (html.length > 0) {
-                // Update the placeholders to contain its rendered contextual links.
-                // Usually there will only be one placeholder, but it's possible for
-                // multiple identical placeholders exist on the page (probably
-                // because the same content appears more than once).
+                // Update the placeholders to contain its rendered contextual
+                // links. Usually there will only be one placeholder, but it's
+                // possible for multiple identical placeholders exist on the
+                // page (probably because the same content appears more than
+                // once).
                 $placeholders = $context.find('[data-contextual-id="' + contextualID + '"]');
 
                 // Initialize the contextual links.
@@ -209,6 +213,8 @@
   };
 
   /**
+   * Namespace for contextual related functionality.
+   *
    * @namespace
    */
   Drupal.contextual = {
@@ -222,8 +228,8 @@
     views: [],
 
     /**
-     * The {@link Drupal.contextual.RegionView} instances associated with each contextual
-     * region element.
+     * The {@link Drupal.contextual.RegionView} instances associated with each
+     * contextual region element.
      *
      * @type {Array}
      */

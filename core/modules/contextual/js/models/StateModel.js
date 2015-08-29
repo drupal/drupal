@@ -70,6 +70,7 @@
      * If it is opened, then also give focus.
      *
      * @return {Drupal.contextual.StateModel}
+     *   The current contextual state model.
      */
     toggleOpen: function () {
       var newIsOpen = !this.get('isOpen');
@@ -87,6 +88,7 @@
      * focus, yet be closed for example when hovering.
      *
      * @return {Drupal.contextual.StateModel}
+     *   The current contextual state model.
      */
     close: function () {
       this.set('isOpen', false);
@@ -99,6 +101,7 @@
      * Also closes + removes focus from every other contextual link.
      *
      * @return {Drupal.contextual.StateModel}
+     *   The current contextual state model.
      */
     focus: function () {
       this.set('hasFocus', true);
@@ -115,6 +118,7 @@
      * Removes focus from this contextual link, unless it is open.
      *
      * @return {Drupal.contextual.StateModel}
+     *   The current contextual state model.
      */
     blur: function () {
       if (!this.get('isOpen')) {

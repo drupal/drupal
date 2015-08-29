@@ -58,6 +58,7 @@
      * @augments Backbone.Model
      *
      * @param {object} attrs
+     *   Attributes for the backbone model.
      * @param {object} options
      *   An object with the following option:
      * @param {Backbone.collection} options.contextualCollection

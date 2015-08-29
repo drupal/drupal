@@ -10,7 +10,10 @@
   Drupal.contextualToolbar.VisualView = Backbone.View.extend(/** @lends Drupal.contextualToolbar.VisualView# */{
 
     /**
+     * Events for the Backbone view.
+     *
      * @return {object}
+     *   A mapping of events to be used in the view.
      */
     events: function () {
       // Prevents delay and simulated mouse events.
@@ -45,6 +48,7 @@
      * @inheritdoc
      *
      * @return {Drupal.contextualToolbar.VisualView}
+     *   The current contextual toolbar visual view.
      */
     render: function () {
       // Render the visibility.

@@ -28,7 +28,7 @@
     var model = contextualToolbar.model = new contextualToolbar.StateModel({
       // Checks whether localStorage indicates we should start in edit mode
       // rather than view mode.
-      // @see Drupal.contextualToolbar.VisualView.persist()
+      // @see Drupal.contextualToolbar.VisualView.persist
       isViewing: localStorage.getItem('Drupal.contextualToolbar.isViewing') !== 'false'
     }, {
       contextualCollection: Drupal.contextual.collection
@@ -47,6 +47,9 @@
    * Attaches contextual's edit toolbar tab behavior.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches contextual toolbar behavior on a contextualToolbar-init event.
    */
   Drupal.behaviors.contextualToolbar = {
     attach: function (context) {
@@ -57,6 +60,8 @@
   };
 
   /**
+   * Namespace for the contextual toolbar.
+   *
    * @namespace
    */
   Drupal.contextualToolbar = {

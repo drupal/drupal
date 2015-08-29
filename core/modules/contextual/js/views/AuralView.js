@@ -17,6 +17,7 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options for the view.
      */
     initialize: function (options) {
       this.options = options;

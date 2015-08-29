@@ -24,6 +24,7 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options for the view.
      */
     initialize: function (options) {
       this.options = options;
@@ -38,6 +39,7 @@
      * @inheritdoc
      *
      * @return {Drupal.contextualToolbar.AuralView}
+     *   The current contextual toolbar aural view.
      */
     render: function () {
       // Render the state.
@@ -80,6 +82,7 @@
      * Responds to esc and tab key press events.
      *
      * @param {jQuery.Event} event
+     *   The keypress event.
      */
     onKeypress: function (event) {
       // The first tab key press is tracked so that an annoucement about tabbing

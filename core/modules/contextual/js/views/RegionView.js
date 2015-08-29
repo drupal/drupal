@@ -10,7 +10,10 @@
   Drupal.contextual.RegionView = Backbone.View.extend(/** @lends Drupal.contextual.RegionView# */{
 
     /**
+     * Events for the Backbone view.
+     *
      * @return {object}
+     *   A mapping of events to be used in the view.
      */
     events: function () {
       var mapping = {
@@ -41,6 +44,7 @@
      * @inheritdoc
      *
      * @return {Drupal.contextual.RegionView}
+     *   The current contextual region view.
      */
     render: function () {
       this.$el.toggleClass('focus', this.model.get('hasFocus'));
