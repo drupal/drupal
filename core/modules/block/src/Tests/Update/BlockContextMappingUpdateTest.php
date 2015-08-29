@@ -28,12 +28,11 @@ class BlockContextMappingUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.block-context-manager-2354889.php',
     ];
-    parent::setUp();
   }
 
   /**

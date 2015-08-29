@@ -130,9 +130,6 @@ abstract class UpdatePathTestBase extends WebTestBase {
   function __construct($test_id = NULL) {
     parent::__construct($test_id);
     $this->zlibInstalled = function_exists('gzopen');
-
-    // Set the update url.
-    $this->updateUrl = Url::fromRoute('system.db_update');
   }
 
   /**
@@ -144,6 +141,10 @@ abstract class UpdatePathTestBase extends WebTestBase {
    * container that would normally be done via the installer.
    */
   protected function setUp() {
+
+    // Allow classes to set database dump files.
+    $this->setDatabaseDumpFiles();
+
     // We are going to set a missing zlib requirement property for usage
     // during the performUpgrade() and tearDown() methods. Also set that the
     // tests failed.
@@ -151,6 +152,11 @@ abstract class UpdatePathTestBase extends WebTestBase {
       parent::setUp();
       return;
     }
+
+    // Set the update url. This must be set here rather than in
+    // self::__construct() or the old URL generator will leak additional test
+    // sites.
+    $this->updateUrl = Url::fromRoute('system.db_update');
 
     // These methods are called from parent::setUp().
     $this->setBatch();
@@ -190,6 +196,11 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $account->setUsername($this->rootUser->getUsername());
     $account->save();
   }
+
+  /**
+   * Set database dump files to be used.
+   */
+  abstract protected function setDatabaseDumpFiles();
 
   /**
    * Add settings that are missed since the installer isn't run.
@@ -237,6 +248,9 @@ abstract class UpdatePathTestBase extends WebTestBase {
 
     // Run the update hooks.
     $this->clickLink(t('Apply pending updates'));
+
+    // Ensure there are no failed updates.
+    $this->assertNoRaw('<strong>' . t('Failed:') . '</strong>');
 
     // The config schema can be incorrect while the update functions are being
     // executed. But once the update has been completed, it needs to be valid

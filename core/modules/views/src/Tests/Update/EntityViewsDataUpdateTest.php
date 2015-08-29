@@ -22,13 +22,11 @@ class EntityViewsDataUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.views-entity-views-data-2455125.php',
     ];
-
-    parent::setUp();
   }
 
   /**

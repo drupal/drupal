@@ -17,9 +17,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles[0] = __DIR__ . '/../../../tests/fixtures/update/drupal-8.filled.standard.php.gz';
-    parent::setUp();
   }
 
 }

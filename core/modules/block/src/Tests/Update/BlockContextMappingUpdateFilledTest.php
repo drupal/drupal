@@ -17,9 +17,9 @@ class BlockContextMappingUpdateFilledTest extends BlockContextMappingUpdateTest 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setDatabaseDumpFiles() {
+    parent::setDatabaseDumpFiles();
     $this->databaseDumpFiles[0] = __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz';
-    parent::setUp();
   }
 
 }

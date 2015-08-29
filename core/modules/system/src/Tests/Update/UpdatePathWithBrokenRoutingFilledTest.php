@@ -17,9 +17,9 @@ class UpdatePathWithBrokenRoutingFilledTest extends UpdatePathWithBrokenRoutingT
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->databaseDumpFiles[0] =  '/../../../tests/fixtures/update/drupal-8.filled.standard.php.gz';
-    parent::setUp();
+  protected function setDatabaseDumpFiles() {
+    parent::setDatabaseDumpFiles();
+    $this->databaseDumpFiles[0] =  __DIR__ . '/../../../tests/fixtures/update/drupal-8.filled.standard.php.gz';
   }
 
 }

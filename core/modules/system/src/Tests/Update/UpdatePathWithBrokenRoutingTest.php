@@ -17,22 +17,17 @@ class UpdatePathWithBrokenRoutingTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../tests/fixtures/update/drupal-8.bare.standard.php.gz',
       __DIR__ . '/../../../tests/fixtures/update/drupal-8.broken_routing.php',
     ];
-    parent::setUp();
   }
 
   /**
    * Tests running update.php with some form of broken routing.
    */
   public function testWithBrokenRouting() {
-    // Make sure we can get to the front page.
-    $this->drupalGet('<front>');
-    $this->assertResponse(200);
-
     // Simulate a broken router, and make sure the front page is
     // inaccessible.
     \Drupal::state()->set('update_script_test_broken_inbound', TRUE);
