@@ -231,11 +231,23 @@
  * Whether or not configuration files are being used for the active
  * configuration storage on a particular site, configuration files are always
  * used for:
- * - Defining the default configuration for a module, which is imported to the
- *   active storage when the module is enabled. Note that changes to this
- *   default configuration after a module is already enabled have no effect;
- *   to make a configuration change after a module is enabled, you would need
- *   to uninstall/reinstall or use a hook_update_N() function.
+ * - Defining the default configuration for an extension (module, theme, or
+ *   profile), which is imported to the active storage when the extension if
+ *   enabled. These configuration items are located in the config/install
+ *   sub-directory of the extension. Note that changes to this configuration
+ *   after a module or theme is already enabled have no effect; to make a
+ *   configuration change after a module or theme is enabled, you would need to
+ *   uninstall/reinstall or use a hook_update_N() function.
+ * - Defining optional configuration for a module or theme. Optional
+ *   configuration items are located in the config/optional sub-directory of the
+ *   extension. These configuration items have dependencies that are not
+ *   explicit dependencies of the extension, so they are only installed if all
+ *   dependencies are met. For example, in the scenario that module A defines a
+ *   dependency which requires module B, but module A is installed first and
+ *   module B some time later, then module A's config/optional directory will be
+ *   scanned at that time for newly met dependencies, and the configuration will
+ *   be installed then. If module B is never installed, the configuration item
+ *   will not be installed either.
  * - Exporting and importing configuration.
  *
  * The file storage format for configuration information in Drupal is
@@ -319,9 +331,8 @@
  *   modulename.schema.yml file, with an entry for 'modulename.config_prefix.*'.
  *   For example, for the Role entity, the file user.schema.yml has an entry
  *   user.role.*; see @ref sec_yaml above for more information.
- * - Your module may also provide a few configuration items to be installed by
- *   default, by adding configuration files to the module's config/install
- *   directory; see @ref sec_yaml above for more information.
+ * - Your module can provide default/optional configuration entities in YAML
+ *   files; see @ref sec_yaml above for more information.
  * - Some configuration entities have dependencies on other configuration
  *   entities, and module developers need to consider this so that configuration
  *   can be imported, uninstalled, and synchronized in the right order. For
