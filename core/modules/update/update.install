@@ -112,7 +112,7 @@ function _update_requirement_check($project, $type) {
     // _update_message_text(), and format the two translated strings together in
     // a single paragraph.
     $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
-    if (update_manager_access()) {
+    if (_update_manager_access()) {
       $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', ['@available_updates' => \Drupal::url('update.report_update')])];
     }
     else {
@@ -145,6 +145,6 @@ function _update_requirement_check($project, $type) {
   if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
     $requirement_label .= ' ' . t('(version @version available)', array('@version' => $project['recommended']));
   }
-  $requirement['value'] = \Drupal::l($requirement_label, new Url(update_manager_access() ? 'update.report_update' : 'update.status'));
+  $requirement['value'] = \Drupal::l($requirement_label, new Url(_update_manager_access() ? 'update.report_update' : 'update.status'));
   return $requirement;
 }

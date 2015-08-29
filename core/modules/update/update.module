@@ -74,7 +74,7 @@ function update_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Update Manager module periodically checks for new versions of your site\'s software (including contributed modules and themes), and alerts administrators to available updates. The Update Manager system is also used by some other modules to manage updates and downloads; for example, the Interface Translation module uses the Update Manager to download translations from the localization server. Note that whenever the Update Manager system is used, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update Manager module from the <a href="!modules">Extend page</a>; if you do so, functionality that depends on the Update Manager system will not work. For more information, see <a href="!update">the online documentation for the Update Manager module</a>.', array('!update' => 'https://www.drupal.org/documentation/modules/update', '!modules' => \Drupal::url('system.modules_list'))) . '</p>';
       // Only explain the Update manager if it has not been disabled.
-      if (update_manager_access()) {
+      if (_update_manager_access()) {
         $output .= '<p>' . t('The Update Manager also allows administrators to update and install modules and themes through the administration interface.') . '</p>';
       }
       $output .= '<h3>' . t('Uses') . '</h3>';
@@ -82,7 +82,7 @@ function update_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Checking for available updates') . '</dt>';
       $output .= '<dd>' . t('The <a href="!update-report">Available updates report</a> displays core, contributed modules, and themes for which there are new releases available for download. On the report page, you can also check manually for updates. You can configure the frequency of update checks, which are performed during cron runs, and whether notifications are sent on the <a href="!update-settings">Update Manager settings page</a>.', array('!update-report' =>  \Drupal::url('update.status'), '!update-settings' => \Drupal::url('update.settings'))) . '</dd>';
       // Only explain the Update manager if it has not been disabled.
-      if (update_manager_access()) {
+      if (_update_manager_access()) {
         $output .= '<dt>' . t('Performing updates through the Update page') . '</dt>';
         $output .= '<dd>' . t('The Update Manager module allows administrators to perform updates directly from the <a href="!update-page">Update page</a>. It lists all available updates, and you can confirm whether you want to download them. If you don\'t have sufficient access rights to your web server, you could be prompted for your FTP/SSH password. Afterwards the files are transferred into your site installation, overwriting your old files. Direct links to the Update page are also displayed on the <a href="!modules_page">Extend page</a> and the <a href="!themes_page">Appearance page</a>.', array('!modules_page' => \Drupal::url('system.modules_list'), '!themes_page' => \Drupal::url('system.themes_page'), '!update-page' => \Drupal::url('update.report_update'))) . '</dd>';
         $output .= '<dt>' . t('Installing new modules and themes through the Install page') . '</dt>';
@@ -93,6 +93,15 @@ function update_help($route_name, RouteMatchInterface $route_match) {
 
     case 'update.status':
       return '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
+
+    case 'system.modules_list':
+      if (_update_manager_access()) {
+        $output = '<p>' . t('Regularly review and install <a href="!updates">available updates</a> to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated.', array('!update-php' => \Drupal::url('system.db_update'), '!updates' => \Drupal::url('update.status'))) . '</p>';
+      }
+      else {
+        $output = '<p>' . t('Regularly review <a href="!updates">available updates</a> to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated.', array('!update-php' => \Drupal::url('system.db_update'), '!updates' => \Drupal::url('update.status'))) . '</p>';
+      }
+      return $output;
   }
 }
 
@@ -155,7 +164,7 @@ function update_page_top() {
 }
 
 /**
- * Access callback: Resolves if the current user can access updater menu items.
+ * Resolves if the current user can access updater menu items.
  *
  * It both enforces the 'administer software updates' permission and the global
  * kill switch for the authorize.php script.
@@ -163,10 +172,8 @@ function update_page_top() {
  * @return
  *   TRUE if the current user can access the updater menu items; FALSE
  *   otherwise.
- *
- * @see update_menu()
  */
-function update_manager_access() {
+function _update_manager_access() {
   return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
 }
 
@@ -439,7 +446,7 @@ function update_mail($key, &$message, $params) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
   }
   $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . \Drupal::url('update.status', [], ['absolute' => TRUE, 'language' => $language]);
-  if (update_manager_access()) {
+  if (_update_manager_access()) {
     $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . \Drupal::url('update.report_update', [], ['absolute' => TRUE, 'language' => $language]);
   }
   $settings_url = \Drupal::url('update.settings', [], ['absolute' => TRUE]);
