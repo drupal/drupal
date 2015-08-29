@@ -11,6 +11,9 @@
    * Auto-hide summary textarea if empty and show hide and unhide links.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches auto-hide behavior on `text-summary` events.
    */
   Drupal.behaviors.textSummary = {
     attach: function (context, settings) {
