@@ -8,10 +8,17 @@
   "use strict";
 
   /**
-   * Disabling all links (except local fragment identifiers such as href="#frag")
-   * in node previews to prevent users from leaving the page.
+   * Disables all non-relevant links in node previews.
+   *
+   * Destroys links (except local fragment identifiers such as href="#frag") in
+   * node previews to prevent users from leaving the page.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches confirmation prompt for clicking links in node preview mode.
+   * @prop {Drupal~behaviorDetach} detach
+   *   Detaches confirmation prompt for clicking links in node preview mode.
    */
   Drupal.behaviors.nodePreviewDestroyLinks = {
     attach: function (context) {
@@ -61,6 +68,9 @@
    * Switch view mode.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches automatic submit on `formUpdated.preview` events.
    */
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach: function (context) {
@@ -74,8 +84,10 @@
   };
 
   /**
+   * Theme function for node preview modal.
    *
    * @return {string}
+   *   Markup for the node preview modal.
    */
   Drupal.theme.nodePreviewModal = function () {
     return '<p>' +

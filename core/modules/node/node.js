@@ -8,8 +8,12 @@
   "use strict";
 
   /**
+   * Behaviors for tabs in the node edit form.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches summary behavior for tabs in the node edit form.
    */
   Drupal.behaviors.nodeDetailsSummaries = {
     attach: function (context) {
@@ -18,10 +22,11 @@
         var $revisionContext = $(context);
         var revisionCheckbox = $revisionContext.find('.form-item-revision input');
 
-        // Return 'New revision' if the 'Create new revision' checkbox is checked,
-        // or if the checkbox doesn't exist, but the revision log does. For users
-        // without the "Administer content" permission the checkbox won't appear,
-        // but the revision log will if the content type is set to auto-revision.
+        // Return 'New revision' if the 'Create new revision' checkbox is
+        // checked, or if the checkbox doesn't exist, but the revision log does.
+        // For users without the "Administer content" permission the checkbox
+        // won't appear, but the revision log will if the content type is set to
+        // auto-revision.
         if (revisionCheckbox.is(':checked') || (!revisionCheckbox.length && $revisionContext.find('.form-item-revision-log textarea').length)) {
           return Drupal.t('New revision');
         }
