@@ -1634,10 +1634,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       foreach ($storage_definition->getColumns() as $column_name => $data) {
         $or->isNotNull($table_mapping->getFieldColumnName($storage_definition, $column_name));
       }
-      $query
-        ->condition($or)
-        ->fields('t', array('entity_id'))
-        ->distinct(TRUE);
+      $query->condition($or);
+      if (!$as_bool) {
+        $query
+          ->fields('t', array('entity_id'))
+          ->distinct(TRUE);
+      }
     }
     elseif ($table_mapping->allowsSharedTableStorage($storage_definition)) {
       // Ascertain the table this field is mapped too.
