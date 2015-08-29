@@ -59,19 +59,16 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     );
   }
 
-
   /**
    * Displays add content links for available content types.
    *
    * Redirects to node/add/[type] if only one content type is available.
    *
-   * @return array
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
    *   A render array for a list of the node types that can be added; however,
    *   if there is only one node type defined for the site, the function
-   *   redirects to the node add page for that one node type and does not return
-   *   at all.
-   *
-   * @see node_menu()
+   *   will return a RedirectResponse to the node add page for that one node
+   *   type.
    */
   public function addPage() {
     $content = array();
