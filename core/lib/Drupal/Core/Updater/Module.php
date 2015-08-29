@@ -18,26 +18,27 @@ class Module extends Updater implements UpdaterInterface {
   /**
    * Returns the directory where a module should be installed.
    *
-   * If the module is already installed, drupal_get_path() will return
-   * a valid path and we should install it there (although we need to use an
-   * absolute path, so we prepend the root path). If we're installing a new
-   * module, we always want it to go into /modules, since that's
-   * where all the documentation recommends users install their modules, and
-   * there's no way that can conflict on a multi-site installation, since
-   * the Update manager won't let you install a new module if it's already
-   * found on your system, and if there was a copy in the top-level we'd see it.
+   * If the module is already installed, drupal_get_path() will return a valid
+   * path and we should install it there. If we're installing a new module, we
+   * always want it to go into /modules, since that's where all the
+   * documentation recommends users install their modules, and there's no way
+   * that can conflict on a multi-site installation, since the Update manager
+   * won't let you install a new module if it's already found on your system,
+   * and if there was a copy in the top-level we'd see it.
    *
    * @return string
-   *   A directory path.
+   *   The absolute path of the directory.
    */
   public function getInstallDirectory() {
     if ($this->isInstalled() && ($relative_path = drupal_get_path('module', $this->name))) {
-      $relative_path = dirname($relative_path);
+      // The return value of drupal_get_path() is always relative to the site,
+      // so prepend DRUPAL_ROOT.
+      return DRUPAL_ROOT . '/' . dirname($relative_path);
     }
     else {
-      $relative_path = $this->getRootDirectoryRelativePath();
+      // When installing a new module, prepend the requested root directory.
+      return $this->root . '/' . $this->getRootDirectoryRelativePath();
     }
-    return $this->root . '/' . $relative_path;
   }
 
   /**

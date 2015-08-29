@@ -206,7 +206,7 @@ function update_manager_archive_verify($project, $archive_file, $directory) {
 function update_manager_file_get($url) {
   $parsed_url = parse_url($url);
   $remote_schemes = array('http', 'https', 'ftp', 'ftps', 'smb', 'nfs');
-  if (!in_array($parsed_url['scheme'], $remote_schemes)) {
+  if (!isset($parsed_url['scheme']) || !in_array($parsed_url['scheme'], $remote_schemes)) {
     // This is a local file, just return the path.
     return drupal_realpath($url);
   }
