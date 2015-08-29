@@ -13,15 +13,18 @@
    * Attaches the tour's toolbar tab behavior.
    *
    * It uses the query string for:
-   * - tour: When ?tour=1 is present, the tour will start automatically
-   *   after the page has loaded.
-   * - tips: Pass ?tips=class in the url to filter the available tips to
-   *   the subset which match the given class.
+   * - tour: When ?tour=1 is present, the tour will start automatically after
+   *   the page has loaded.
+   * - tips: Pass ?tips=class in the url to filter the available tips to the
+   *   subset which match the given class.
    *
    * @example
    * http://example.com/foo?tour=1&tips=bar
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach tour functionality on `tour` events.
    */
   Drupal.behaviors.tour = {
     attach: function (context) {
@@ -125,6 +128,7 @@
      * @inheritdoc
      *
      * @return {Drupal.tour.views.ToggleTourView}
+     *   The `ToggleTourView` view.
      */
     render: function () {
       // Render the visibility.
@@ -168,6 +172,7 @@
      * Toolbar tab click event handler; toggles isActive.
      *
      * @param {jQuery.Event} event
+     *   The click event.
      */
     onClick: function (event) {
       this.model.set('isActive', !this.model.get('isActive'));
