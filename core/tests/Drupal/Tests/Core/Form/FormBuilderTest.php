@@ -12,10 +12,12 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -678,6 +680,90 @@ class FormBuilderTest extends FormTestBase {
 
     $data['access-mixed-parents-object'] = [$clone, $expected_access];
 
+    return $data;
+  }
+
+  /**
+   * @covers ::valueCallableIsSafe
+   *
+   * @dataProvider providerTestValueCallableIsSafe
+   */
+  public function testValueCallableIsSafe($callback, $expected) {
+    $method = new \ReflectionMethod(FormBuilder::class, 'valueCallableIsSafe');
+    $method->setAccessible(true);
+    $is_safe = $method->invoke($this->formBuilder, $callback);
+    $this->assertSame($expected, $is_safe);
+  }
+
+  public function providerTestValueCallableIsSafe() {
+    $data = [];
+    $data['string_no_slash'] = [
+      'Drupal\Core\Render\Element\Token::valueCallback',
+      TRUE,
+    ];
+    $data['string_with_slash'] = [
+      '\Drupal\Core\Render\Element\Token::valueCallback',
+      TRUE,
+    ];
+    $data['array_no_slash'] = [
+      ['Drupal\Core\Render\Element\Token', 'valueCallback'],
+      TRUE,
+    ];
+    $data['array_with_slash'] = [
+      ['\Drupal\Core\Render\Element\Token', 'valueCallback'],
+      TRUE,
+    ];
+    $data['closure'] = [
+      function () {},
+      FALSE,
+    ];
+    return $data;
+  }
+
+  /**
+   * @covers ::doBuildForm
+   *
+   * @dataProvider providerTestInvalidToken
+   */
+  public function testInvalidToken($expected, $valid_token, $user_is_authenticated) {
+    $form_token = 'the_form_token';
+    $form_id = 'test_form_id';
+
+    if (is_bool($valid_token)) {
+      $this->csrfToken->expects($this->any())
+        ->method('get')
+        ->willReturnArgument(0);
+      $this->csrfToken->expects($this->atLeastOnce())
+        ->method('validate')
+        ->will($this->returnValueMap([
+          [$form_token, $form_id, $valid_token],
+          [$form_id, $form_id, $valid_token],
+        ]));
+    }
+
+    $current_user = $this->prophesize(AccountInterface::class);
+    $current_user->isAuthenticated()->willReturn($user_is_authenticated);
+    $property = new \ReflectionProperty(FormBuilder::class, 'currentUser');
+    $property->setAccessible(TRUE);
+    $property->setValue($this->formBuilder, $current_user->reveal());
+
+    $expected_form = $form_id();
+    $form_arg = $this->getMockForm($form_id, $expected_form);
+
+    $form_state = new FormState();
+    $input['form_id'] = $form_id;
+    $input['form_token'] = $form_token;
+    $form_state->setUserInput($input);
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
+    $this->assertSame($expected, $form_state->hasInvalidToken());
+  }
+
+  public function providerTestInvalidToken() {
+    $data = [];
+    $data['authenticated_invalid'] = [TRUE, FALSE, TRUE];
+    $data['authenticated_valid'] = [FALSE, TRUE, TRUE];
+    // If the user is not authenticated, we will not have a token.
+    $data['anonymous'] = [FALSE, NULL, FALSE];
     return $data;
   }
 

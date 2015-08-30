@@ -33,7 +33,10 @@ class FormTestRequiredAttributeForm extends FormBase {
         '#title' => $type,
       );
     }
-
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Submit',
+    );
     return $form;
   }
 

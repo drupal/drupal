@@ -562,6 +562,24 @@ interface FormStateInterface {
   public function isRebuilding();
 
   /**
+   * Flags the form state as having or not an invalid token.
+   *
+   * @param bool $invalid_token
+   *   Whether the form has an invalid token.
+   *
+   * @return $this
+   */
+  public function setInvalidToken($invalid_token);
+
+  /**
+   * Determines if the form has an invalid token.
+   *
+   * @return bool
+   *   TRUE if the form has an invalid token, FALSE otherwise.
+   */
+  public function hasInvalidToken();
+
+  /**
    * Converts support notations for a form callback to a valid callable.
    *
    * Specifically, supports methods on the form/callback object as strings when

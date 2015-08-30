@@ -105,13 +105,12 @@ class FormValidator implements FormValidatorInterface {
     }
 
     // If the session token was set by self::prepareForm(), ensure that it
-    // matches the current user's session.
+    // matches the current user's session. This is duplicate to code in
+    // FormBuilder::doBuildForm() but left to protect any custom form handling
+    // code.
     if (isset($form['#token'])) {
-      if (!$this->csrfToken->validate($form_state->getValue('form_token'), $form['#token'])) {
-        $url = $this->requestStack->getCurrentRequest()->getRequestUri();
-
-        // Setting this error will cause the form to fail validation.
-        $form_state->setErrorByName('form_token', $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+      if (!$this->csrfToken->validate($form_state->getValue('form_token'), $form['#token']) || $form_state->hasInvalidToken()) {
+        $this->setInvalidTokenError($form_state);
 
         // Stop here and don't run any further validation handlers, because they
         // could invoke non-safe operations which opens the door for CSRF
@@ -125,6 +124,16 @@ class FormValidator implements FormValidatorInterface {
     $this->doValidateForm($form, $form_state, $form_id);
     $this->finalizeValidation($form, $form_state, $form_id);
     $this->handleErrorsWithLimitedValidation($form, $form_state, $form_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInvalidTokenError(FormStateInterface $form_state) {
+    $url = $this->requestStack->getCurrentRequest()->getRequestUri();
+
+    // Setting this error will cause the form to fail validation.
+    $form_state->setErrorByName('form_token', $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
   }
 
   /**

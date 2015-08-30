@@ -105,6 +105,19 @@ class FormState implements FormStateInterface {
   protected $rebuild = FALSE;
 
   /**
+   * If set to TRUE the form will skip calling form element value callbacks,
+   * except for a select list of callbacks provided by Drupal core that are
+   * known to be safe.
+   *
+   * This property is uncacheable.
+   *
+   * @see self::setInvalidToken()
+   *
+   * @var bool
+   */
+  protected $invalidToken = FALSE;
+
+  /**
    * Used when a form needs to return some kind of a
    * \Symfony\Component\HttpFoundation\Response object, e.g., a
    * \Symfony\Component\HttpFoundation\BinaryFileResponse when triggering a
@@ -1281,6 +1294,21 @@ class FormState implements FormStateInterface {
       }
     }
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInvalidToken($invalid_token) {
+    $this->invalidToken = (bool) $invalid_token;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasInvalidToken() {
+    return $this->invalidToken;
   }
 
   /**
