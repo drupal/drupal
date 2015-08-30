@@ -46,7 +46,7 @@ class FieldTest extends FieldPluginBase {
    * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::addSelfTokens().
    */
   protected function addSelfTokens(&$tokens, $item) {
-    $tokens['[test-token]'] = $this->getTestValue();
+    $tokens['[test__token]'] = $this->getTestValue();
   }
 
   /**

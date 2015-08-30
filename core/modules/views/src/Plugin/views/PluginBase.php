@@ -365,6 +365,12 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       if (strpos($token, '{{') !== FALSE) {
         // Twig wants a token replacement array stripped of curly-brackets.
         $token = trim(str_replace(array('{', '}'), '', $token));
+
+        // We need to validate tokens are valid Twig variables. Twig uses the
+        // same variable naming rules as PHP.
+        // @see http://php.net/manual/en/language.variables.basics.php
+        assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $token) === 1', 'Tokens need to be valid Twig variables.');
+
         $twig_tokens[$token] = $replacement;
       }
       else {

@@ -1676,10 +1676,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * fields as a list. For example, the field that displays all terms
    * on a node might have tokens for the tid and the term.
    *
-   * By convention, tokens should follow the format of {{ token-subtoken }}
+   * By convention, tokens should follow the format of {{ token
+   * subtoken }}
    * where token is the field ID and subtoken is the field. If the
-   * field ID is terms, then the tokens might be {{ terms-tid }} and
-   * {{ terms-name }}.
+   * field ID is terms, then the tokens might be {{ terms__tid }} and
+   * {{ terms__name }}.
    */
   protected function addSelfTokens(&$tokens, $item) { }
 

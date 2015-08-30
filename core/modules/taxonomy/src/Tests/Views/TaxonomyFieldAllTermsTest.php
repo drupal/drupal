@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\views\Views;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the "All terms" taxonomy term field handler.
@@ -23,7 +24,10 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
    */
   public static $testViews = array('taxonomy_all_terms_test');
 
-  function testViewsHandlerAllTermsField() {
+  /**
+   * Tests the "all terms" field handler.
+   */
+  public function testViewsHandlerAllTermsField() {
     $view = Views::getView('taxonomy_all_terms_test');
     $this->executeView($view);
     $this->drupalGet('taxonomy_all_terms_test');
@@ -37,6 +41,30 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term2 links');
     $this->assertEqual($actual[0]->__toString(), $this->term2->label());
     $this->assertEqual($actual[1]->__toString(), $this->term2->label());
+  }
+
+  /**
+   * Tests token replacement in the "all terms" field handler.
+   */
+  public function testViewsHandlerAllTermsWithTokens() {
+    $view = Views::getView('taxonomy_all_terms_test');
+    $this->drupalGet('taxonomy_all_terms_token_test');
+
+    // Term itself: {{ term_node_tid }}
+    $this->assertText('Term: ' . $this->term1->getName());
+
+    // The taxonomy term ID for the term: {{ term_node_tid__tid }}
+    $this->assertText('The taxonomy term ID for the term: ' . $this->term1->id());
+
+    // The taxonomy term name for the term: {{ term_node_tid__name }}
+    $this->assertText('The taxonomy term name for the term: ' . $this->term1->getName());
+
+    // The machine name for the vocabulary the term belongs to: {{ term_node_tid__vocabulary_vid }}
+    $this->assertText('The machine name for the vocabulary the term belongs to: ' . $this->term1->getVocabularyId());
+
+    // The name for the vocabulary the term belongs to: {{ term_node_tid__vocabulary }}
+    $vocabulary = Vocabulary::load($this->term1->bundle());
+    $this->assertText('The name for the vocabulary the term belongs to: ' .  $vocabulary->label());
   }
 
 }

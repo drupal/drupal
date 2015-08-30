@@ -101,14 +101,14 @@ class Roles extends PrerenderList {
   }
 
   protected function documentSelfTokens(&$tokens) {
-    $tokens['[' . $this->options['id'] . '-role' . ']'] = $this->t('The name of the role.');
-    $tokens['[' . $this->options['id'] . '-rid' . ']'] = $this->t('The role machine-name of the role.');
+    $tokens['{{ ' . $this->options['id'] . '__role' . ' }}'] = $this->t('The name of the role.');
+    $tokens['{{ ' . $this->options['id'] . '__rid' . ' }}'] = $this->t('The role machine-name of the role.');
   }
 
   protected function addSelfTokens(&$tokens, $item) {
     if (!empty($item['role'])) {
-      $tokens['[' . $this->options['id'] . '-role' . ']'] = $item['role'];
-      $tokens['[' . $this->options['id'] . '-rid' . ']'] = $item['rid'];
+      $tokens['{{ ' . $this->options['id'] . '__role' . ' }}'] = $item['role'];
+      $tokens['{{ ' . $this->options['id'] . '__rid' . ' }}'] = $item['rid'];
     }
   }
 
