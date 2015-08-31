@@ -112,7 +112,6 @@ class TwigExtension extends \Twig_Extension {
       // in \Symfony\Bridge\Twig\Extension\RoutingExtension
       new \Twig_SimpleFunction('url', array($this, 'getUrl'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('path', array($this, 'getPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
-      new \Twig_SimpleFunction('url_from_path', array($this, 'getUrlFromPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('link', array($this, 'getLink')),
       new \Twig_SimpleFunction('file_url', 'file_create_url'),
       new \Twig_SimpleFunction('attach_library', [$this, 'attachLibrary']),
@@ -222,31 +221,6 @@ class TwigExtension extends \Twig_Extension {
     // Generate URL.
     $options['absolute'] = TRUE;
     $generated_url = $this->urlGenerator->generateFromRoute($name, $parameters, $options, TRUE);
-
-    // Return as render array, so we can bubble the bubbleable metadata.
-    $build = ['#markup' => $generated_url->getGeneratedUrl()];
-    $generated_url->applyTo($build);
-    return $build;
-  }
-
-  /**
-   * Generates an absolute URL given a path.
-   *
-   * @param string $path
-   *   The path.
-   * @param array $options
-   *   (optional) An associative array of additional options. The 'absolute'
-   *   option is forced to be TRUE.
-   *
-   * @return string
-   *   The generated absolute URL for the given path.
-   *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 8.0.0.
-   */
-  public function getUrlFromPath($path, $options = array()) {
-    // Generate URL.
-    $options['absolute'] = TRUE;
-    $generated_url = $this->urlGenerator->generateFromPath($path, $options, TRUE);
 
     // Return as render array, so we can bubble the bubbleable metadata.
     $build = ['#markup' => $generated_url->getGeneratedUrl()];
