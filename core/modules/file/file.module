@@ -629,7 +629,7 @@ function file_file_download($uri) {
 }
 
 /**
- * Implements file_cron()
+ * Implements hook_cron().
  */
 function file_cron() {
   $age = \Drupal::config('system.file')->get('temporary_maximum_age');
