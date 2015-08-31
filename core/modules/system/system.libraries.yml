@@ -37,7 +37,6 @@ base:
       css/components/menu.theme.css: { weight: -10 }
       css/components/messages.theme.css: { weight: -10 }
       css/components/more-link.theme.css: { weight: -10 }
-      css/components/node.theme.css: { weight: -10 }
       css/components/pager.theme.css: { weight: -10 }
       css/components/progress.theme.css: { weight: -10 }
       css/components/tableselect.theme.css: { weight: -10 }

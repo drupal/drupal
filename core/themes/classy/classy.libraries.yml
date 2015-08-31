@@ -16,6 +16,12 @@ drupal.comment.threaded:
     theme:
       css/comment/comment.theme.css: {}
 
+node:
+  version: VERSION
+  css:
+    component:
+      css/components/node.css: { weight: -10 }
+
 search.results:
   version: VERSION
   css:
