@@ -12,6 +12,7 @@ use Drupal\image\Tests\ImageFieldTestBase;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
 use Drupal\user\RoleInterface;
 
 /**
@@ -190,6 +191,28 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+
+    // Test field not being configured. This should not cause a fatal error.
+    $display_options = array(
+      'type' => 'responsive_image_test',
+      'settings' => ResponsiveImageFormatter::defaultSettings(),
+    );
+    $display = $this->container->get('entity.manager')
+      ->getStorage('entity_view_display')
+      ->load('node.article.default');
+    if (!$display) {
+      $values = [
+        'targetEntityType' => 'node',
+        'bundle' => 'article',
+        'mode' => 'default',
+        'status' => TRUE,
+      ];
+      $display = $this->container->get('entity.manager')->getStorage('entity_view_display')->create($values);
+    }
+    $display->setComponent($field_name, $display_options)->save();
+
+    $this->drupalGet('node/' . $nid);
+
     // Test theme function for responsive image, but using the test formatter.
     $display_options = array(
       'type' => 'responsive_image_test',
