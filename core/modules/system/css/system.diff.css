@@ -1,45 +1,4 @@
 /**
- * Inline diff metadata
- */
-.diff-inline-metadata {
-  padding:4px;
-  border:1px solid #ddd;
-  background:#fff;
-  margin:0 0 10px;
-}
-
-.diff-inline-legend {
-  font-size:11px;
-}
-
-.diff-inline-legend span,
-.diff-inline-legend label {
-  margin-right:5px;
-}
-
-/**
- * Inline diff markup
- */
-span.diff-deleted {
-  color:#ccc;
-}
-span.diff-deleted img {
-  border: solid 2px #ccc;
-}
-span.diff-changed {
-  background:#ffb;
-}
-span.diff-changed img {
-  border:solid 2px #ffb;
-}
-span.diff-added {
-  background:#cfc;
-}
-span.diff-added img {
-  border: solid 2px #cfc;
-}
-
-/**
  * Traditional split diff theming
  */
 table.diff {
@@ -48,25 +7,8 @@ table.diff {
   table-layout: fixed;
   width: 100%;
 }
-table.diff .even, table.diff .odd {
-  background-color: inherit;
-  border: none;
-}
-table.diff .diff-prevlink {
-  text-align: left;
-}
-table.diff .diff-nextlink {
-  text-align: right;
-}
-table.diff .diff-section-title,
-table.diff  .diff-section-title {
-  background-color: #f0f0ff;
-  font-size: 0.83em;
-  font-weight: bold;
-  padding: 0.1em 1em;
-}
 table.diff .diff-context {
-    background-color: #fafafa;
+  background-color: #fafafa;
 }
 table.diff .diff-deletedline {
   background-color: #ffa;
@@ -80,12 +22,8 @@ table.diff .diffchange {
   color: #f00;
   font-weight: bold;
 }
-
 table.diff .diff-marker {
   width: 1.4em;
-}
-table.diff .diff-content {
-  width: 50%;
 }
 table.diff th {
   padding-right: inherit;
