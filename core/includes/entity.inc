@@ -443,20 +443,20 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
  *   If the display is available in configuration use:
- * @code
+ *   @code
  *   \Drupal::entityManager()->getStorage('entity_view_display')->load($entity_type . '.' . $bundle . '.' . $view_mode);
- * @endcode
+ *   @endcode
  *   When the display is not available in configuration, you can create a new
  *   EntityViewDisplay object using:
- * @code
- * $values = ('entity_view_display', array(
- *  'targetEntityType' => $entity_type,
- *  'bundle' => $bundle,
- *  'mode' => $view_mode,
- *  'status' => TRUE,
- * ));
- * \Drupal::entityManager()->getStorage('entity_view_display')->create($values);
- * @endcode
+ *   @code
+ *   $values = array(
+ *     'targetEntityType' => $entity_type,
+ *     'bundle' => $bundle,
+ *     'mode' => $view_mode,
+ *     'status' => TRUE,
+ *   ));
+ *   \Drupal::entityManager()->getStorage('entity_view_display')->create($values);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityStorageInterface::create()
  * @see \Drupal\Core\Entity\EntityStorageInterface::load()
