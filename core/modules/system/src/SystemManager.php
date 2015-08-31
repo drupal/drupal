@@ -119,7 +119,7 @@ class SystemManager {
     usort($requirements, function($a, $b) {
       if (!isset($a['weight'])) {
         if (!isset($b['weight'])) {
-          return strcmp($a['title'], $b['title']);
+          return strcasecmp($a['title'], $b['title']);
         }
         return -$b['weight'];
       }
