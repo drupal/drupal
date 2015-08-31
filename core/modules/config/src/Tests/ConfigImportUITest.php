@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\WebTestBase;
@@ -275,22 +276,40 @@ class ConfigImportUITest extends WebTestBase {
     $change_key = 'foo';
     $remove_key = '404';
     $add_key = 'biff';
-    $add_data = 'bangpow';
-    $change_data = 'foobar';
+    $add_data = '<em>bangpow</em>';
+    $change_data = '<p><em>foobar</em></p>';
     $original_data = array(
-      'foo' => 'bar',
-      '404' => 'herp',
+      'foo' => '<p>foobar</p>',
+      'baz' => '<strong>no change</strong>',
+      '404' => '<em>herp</em>',
     );
+    // Update active storage to have html in config data.
+    $this->config($config_name)->setData($original_data)->save();
 
     // Change a configuration value in staging.
     $staging_data = $original_data;
     $staging_data[$change_key] = $change_data;
     $staging_data[$add_key] = $add_data;
+    unset($staging_data[$remove_key]);
     $staging->write($config_name, $staging_data);
 
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
     $this->assertTitle(format_string('View changes of @config_name | Drupal', array('@config_name' => $config_name)));
+
+    // The following assertions do not use $this::assertEscaped() because
+    // \Drupal\Component\Diff\DiffFormatter adds markup that signifies what has
+    // changed.
+
+    // Changed values are escaped.
+    $this->assertText(Html::escape("foo: '<p><em>foobar</em></p>'"));
+    $this->assertText(Html::escape("foo: '<p>foobar</p>'"));
+    // The no change values are escaped.
+    $this->assertText(Html::escape("baz: '<strong>no change</strong>'"));
+    // Added value is escaped.
+    $this->assertText(Html::escape("biff: '<em>bangpow</em>'"));
+    // Deleted value is escaped.
+    $this->assertText(Html::escape("404: '<em>herp</em>'"));
 
     // Reset data back to original, and remove a key
     $staging_data = $original_data;
@@ -299,6 +318,11 @@ class ConfigImportUITest extends WebTestBase {
 
     // Load the diff UI and verify that the diff reflects a removed key.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
+    // The no change values are escaped.
+    $this->assertText(Html::escape("foo: '<p>foobar</p>'"));
+    $this->assertText(Html::escape("baz: '<strong>no change</strong>'"));
+    // Removed key is escaped.
+    $this->assertText(Html::escape("404: '<em>herp</em>'"));
 
     // Reset data back to original and add a key
     $staging_data = $original_data;
@@ -307,6 +331,11 @@ class ConfigImportUITest extends WebTestBase {
 
     // Load the diff UI and verify that the diff reflects an added key.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
+    // The no change values are escaped.
+    $this->assertText(Html::escape("baz: '<strong>no change</strong>'"));
+    $this->assertText(Html::escape("404: '<em>herp</em>'"));
+    // Added key is escaped.
+    $this->assertText(Html::escape("biff: '<em>bangpow</em>'"));
   }
 
   /**

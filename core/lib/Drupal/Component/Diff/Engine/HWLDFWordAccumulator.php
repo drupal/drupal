@@ -8,7 +8,6 @@
 namespace Drupal\Component\Diff\Engine;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  *  Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
@@ -38,10 +37,10 @@ class HWLDFWordAccumulator {
   protected function _flushGroup($new_tag) {
     if ($this->group !== '') {
       if ($this->tag == 'mark') {
-        $this->line = SafeMarkup::format('@original_line<span class="diffchange">@group</span>', ['@original_line' => $this->line, '@group' => $this->group]);
+        $this->line = $this->line . '<span class="diffchange">' . $this->group . '</span>';
       }
       else {
-        $this->line = SafeMarkup::format('@original_line@group', ['@original_line' => $this->line, '@group' => $this->group]);
+        $this->line = $this->line . $this->group;
       }
     }
     $this->group = '';
