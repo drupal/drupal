@@ -143,6 +143,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
         'group' => $weight_class,
       ),
     ),
+    '#access' => !empty($rows),
   );
 
   $variables['element'] = $element;

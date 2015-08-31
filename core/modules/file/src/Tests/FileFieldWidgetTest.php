@@ -9,7 +9,9 @@ namespace Drupal\file\Tests;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
 use Drupal\file\Entity\File;
@@ -419,4 +421,32 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoRaw($error_message, t('Validation error removed when file with correct extension uploaded (JSMode=%type).', array('%type' => $type)));
     }
   }
+
+  /**
+   * Tests file widget element.
+   */
+  public function testWidgetElement() {
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    $html_name = str_replace('_', '-', $field_name);
+    $this->createFileField($field_name, 'node', 'article', ['cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED]);
+    $file = $this->getTestFile('text');
+    $xpath = "//details[@data-drupal-selector='edit-$html_name']/div[@class='details-wrapper']/table";
+
+    $this->drupalGet('node/add/article');
+
+    $elements = $this->xpath($xpath);
+
+    // If the field has no item, the table should not be visible.
+    $this->assertIdentical(count($elements), 0);
+
+    // Upload a file.
+    $edit['files[' . $field_name . '_0][]'] = $this->container->get('file_system')->realpath($file->getFileUri());
+    $this->drupalPostAjaxForm(NULL, $edit, "{$field_name}_0_upload_button");
+
+    $elements = $this->xpath($xpath);
+
+    // If the field has at least a item, the table should be visible.
+    $this->assertIdentical(count($elements), 1);
+  }
+
 }
