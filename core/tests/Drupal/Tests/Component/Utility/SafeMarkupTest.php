@@ -9,6 +9,7 @@ namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Utility\SafeStringTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -234,19 +235,5 @@ class SafeMarkupTestString {
  * SafeMarkup::set() is a global static that affects all tests.
  */
 class SafeMarkupTestSafeString implements SafeStringInterface {
-
-  protected $string;
-
-  public function __construct($string) {
-    $this->string = $string;
-  }
-
-  public function __toString() {
-    return $this->string;
-  }
-
-  public static function create($string) {
-    $safe_string = new static($string);
-    return $safe_string;
-  }
+  use SafeStringTrait;
 }

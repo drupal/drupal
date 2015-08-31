@@ -164,15 +164,15 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $resource_commands = array();
     if ($css_assets) {
       $css_render_array = $this->cssCollectionRenderer->render($css_assets);
-      $resource_commands[] = new AddCssCommand((string) $this->renderer->renderPlain($css_render_array));
+      $resource_commands[] = new AddCssCommand($this->renderer->renderPlain($css_render_array));
     }
     if ($js_assets_header) {
       $js_header_render_array = $this->jsCollectionRenderer->render($js_assets_header);
-      $resource_commands[] = new PrependCommand('head', (string) $this->renderer->renderPlain($js_header_render_array));
+      $resource_commands[] = new PrependCommand('head', $this->renderer->renderPlain($js_header_render_array));
     }
     if ($js_assets_footer) {
       $js_footer_render_array = $this->jsCollectionRenderer->render($js_assets_footer);
-      $resource_commands[] = new AppendCommand('body', (string) $this->renderer->renderPlain($js_footer_render_array));
+      $resource_commands[] = new AppendCommand('body', $this->renderer->renderPlain($js_footer_render_array));
     }
     foreach (array_reverse($resource_commands) as $resource_command) {
       $response->addCommand($resource_command, TRUE);

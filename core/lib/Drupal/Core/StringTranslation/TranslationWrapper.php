@@ -118,4 +118,14 @@ class TranslationWrapper implements SafeStringInterface {
     return array('string', 'arguments', 'options');
   }
 
+  /**
+   * Returns a representation of the object for use in JSON serialization.
+   *
+   * @return string
+   *   The safe string content.
+   */
+  public function jsonSerialize() {
+    return $this->__toString();
+  }
+
 }

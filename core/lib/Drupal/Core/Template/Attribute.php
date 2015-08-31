@@ -302,4 +302,14 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface
     return $this->storage;
   }
 
+  /**
+   * Returns a representation of the object for use in JSON serialization.
+   *
+   * @return string
+   *   The safe string content.
+   */
+  public function jsonSerialize() {
+    return (string) $this;
+  }
+
 }
