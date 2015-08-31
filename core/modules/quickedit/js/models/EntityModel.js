@@ -635,9 +635,7 @@
       this.stopListening();
 
       // Destroy all fields of this entity.
-      this.get('fields').each(function (fieldModel) {
-        fieldModel.destroy();
-      });
+      this.get('fields').reset();
     },
 
     /**
