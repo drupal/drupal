@@ -142,3 +142,10 @@ function test_theme_preprocess_theme_test_preprocess_suggestions__kitten(&$varia
 function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__flamingo(&$variables) {
   $variables['bar'] = 'Flamingo';
 }
+
+/**
+ * Tests a preprocess function with suggestions.
+ */
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose(&$variables) {
+  $variables['bar'] = 'Moose';
+}

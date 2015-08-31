@@ -139,6 +139,7 @@ class RegistryTest extends KernelTestBase {
     $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__bearcat']['preprocess functions'];
     $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');
 
+    $this->assertTrue(isset($registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose']), 'Preprocess function with an unimplemented lower-level suggestion is added to the registry.');
   }
 
   /**

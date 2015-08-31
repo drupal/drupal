@@ -669,8 +669,9 @@ class Registry implements DestructableInterface {
     // will go missing. This will add the expected function. It also allows
     // modules or themes to have a variable process function based on a pattern
     // even if the hook does not exist.
-    for ($level = 1; $level <= count($suggestion_level); $level++) {
-      foreach ($suggestion_level[$level] as $preprocessor => $hook) {
+    ksort($suggestion_level);
+    foreach ($suggestion_level as $level => $item) {
+      foreach ($item as $preprocessor => $hook) {
         if (isset($cache[$hook]['preprocess functions']) && !in_array($hook, $cache[$hook]['preprocess functions'])) {
           // Add missing preprocessor to existing hook.
           $cache[$hook]['preprocess functions'][] = $preprocessor;

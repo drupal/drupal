@@ -270,15 +270,6 @@ function rdf_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK().
- *
- * @todo remove after https://www.drupal.org/node/2556785 is fixed.
- */
-function rdf_preprocess_field__node(&$variables) {
-  // Just an empty hook to avoid https://www.drupal.org/node/2556785.
-}
-
-/**
  * Implements hook_preprocess_HOOK() for UID field templates.
  */
 function rdf_preprocess_field__node__uid(&$variables) {
