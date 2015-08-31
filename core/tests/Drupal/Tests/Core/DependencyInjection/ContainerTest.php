@@ -20,7 +20,7 @@ class ContainerTest extends UnitTestCase {
   /**
    * Tests serialization.
    *
-   * @expectedException \PHPUnit_Framework_Error
+   * @expectedException \AssertionError
    */
   public function testSerialize() {
     $container = new Container();

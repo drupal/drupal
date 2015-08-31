@@ -31,7 +31,7 @@ class Container extends DrupalContainer {
    * {@inheritdoc}
    */
   public function __sleep() {
-    trigger_error('The container was serialized.', E_USER_ERROR);
+    assert(FALSE, 'The container was serialized.');
     return array_keys(get_object_vars($this));
   }
 

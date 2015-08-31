@@ -70,4 +70,14 @@ class ContainerBuilderTest extends UnitTestCase {
     $container->register('Bar');
   }
 
+  /**
+   * Tests serialization.
+   *
+   * @expectedException \AssertionError
+   */
+  public function testSerialize() {
+    $container = new ContainerBuilder();
+    serialize($container);
+  }
+
 }
