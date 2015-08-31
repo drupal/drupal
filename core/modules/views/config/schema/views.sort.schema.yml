@@ -41,10 +41,6 @@ views.sort_expose.date:
 views.sort_expose.standard:
   type: views_sort_expose
   label: 'Standard sort expose settings'
-  mapping:
-    order:
-      type: string
-      label: 'Order'
 
 views.sort_expose.random:
   type: views.sort_expose.standard

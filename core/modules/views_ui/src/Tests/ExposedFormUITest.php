@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\views\Entity\View;
+
 /**
  * Tests exposed forms UI functionality.
  *
@@ -151,5 +153,25 @@ class ExposedFormUITest extends UITestBase {
     // Check the label of the expose button.
     $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide sort'));
     $this->assertFieldById('edit-options-expose-label', '', 'Make sure a label field is shown');
+
+    // Test adding a new exposed sort criteria.
+    $view_id = $this->randomView()['id'];
+    $this->drupalGet("admin/structure/views/nojs/add-handler/$view_id/default/sort");
+    $this->drupalPostForm(NULL, ['name[node_field_data.created]' => 1], t('Add and configure @handler', ['@handler' => t('sort criteria')]));
+    $this->assertFieldByXPath('//input[@name="options[order]" and @checked="checked"]', 'ASC', 'The default order is set.');
+    // Change the order and expose the sort.
+    $this->drupalPostForm(NULL, ['options[order]' => 'DESC'], t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/handler/$view_id/default/sort/created", [], t('Expose sort'));
+    $this->assertFieldByXPath('//input[@name="options[order]" and @checked="checked"]', 'DESC');
+    $this->assertFieldByName('options[expose][label]', 'Authored on', 'The default label is set.');
+    // Change the label and save the view.
+    $edit = ['options[expose][label]' => $this->randomString()];
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+    // Check that the values were saved.
+    $display = View::load($view_id)->getDisplay('default');
+    $this->assertTrue($display['display_options']['sorts']['created']['exposed']);
+    $this->assertEqual($display['display_options']['sorts']['created']['expose'], ['label' => $edit['options[expose][label]']]);
+    $this->assertEqual($display['display_options']['sorts']['created']['order'], 'DESC');
   }
 }

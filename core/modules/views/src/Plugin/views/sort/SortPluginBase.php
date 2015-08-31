@@ -220,7 +220,6 @@ abstract class SortPluginBase extends HandlerBase implements CacheablePluginInte
    */
   public function defaultExposeOptions() {
     $this->options['expose'] = array(
-      'order' => $this->options['order'],
       'label' => $this->definition['title'],
     );
   }
