@@ -44,7 +44,6 @@ class MigrateEmbeddedDataTest extends KernelTestBase {
       ],
       'process' => [],
       'destination' => ['plugin' => 'null'],
-      'load' => ['plugin' => 'null'],
     ];
 
     $migration = Migration::create($config);

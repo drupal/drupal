@@ -31,7 +31,6 @@ class MigrateStatusTest extends MigrateTestBase {
         'config_name' => 'migrate_test.settings',
       ],
       'process' => ['foo' => 'bar'],
-      'load' => ['plugin' => 'null'],
     ];
     $migration = Migration::create($configuration);
     $migration->save();

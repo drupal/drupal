@@ -59,7 +59,6 @@ class MigrateInterruptionTest extends KernelTestBase {
       ],
       'process' => ['value' => 'data'],
       'destination' => ['plugin' => 'dummy'],
-      'load' => ['plugin' => 'null'],
     ];
 
     $migration = Migration::create($config);
