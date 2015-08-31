@@ -1,0 +1,15 @@
+id: d7_language_negotiation_settings
+label: Drupal 7 language negotiation settings
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - locale_language_negotiation_session_param
+    - locale_language_negotiation_url_part
+process:
+  'session/parameter': locale_language_negotiation_session_param
+  'url/source': locale_language_negotiation_url_part
+destination:
+  plugin: config
+  config_name: language.negotiation

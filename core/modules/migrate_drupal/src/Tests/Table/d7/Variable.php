@@ -200,6 +200,12 @@ class Variable extends DrupalDumpBase {
       'name' => 'language_types',
       'value' => 'a:3:{s:8:"language";b:1;s:16:"language_content";b:0;s:12:"language_url";b:0;}',
     ))->values(array(
+      'name' => 'locale_language_negotiation_session_param',
+      'value' => 's:8:"language";',
+    ))->values(array(
+      'name' => 'locale_language_negotiation_url_part',
+      'value' => 's:6:"domain";',
+    ))->values(array(
       'name' => 'maintenance_mode',
       'value' => 'i:0;',
     ))->values(array(
@@ -482,4 +488,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#e9148e9bed6f5b345cc1a281afe38dd0
+#6c379107303f95fe9118597506168dc2
