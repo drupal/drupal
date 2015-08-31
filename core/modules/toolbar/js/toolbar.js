@@ -35,6 +35,9 @@
    * Modules register tabs with hook_toolbar().
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the toolbar rendering functionality to the toolbar element.
    */
   Drupal.behaviors.toolbar = {
     attach: function (context) {
@@ -181,8 +184,11 @@
      * Respond to configured narrow media query changes.
      *
      * @param {Drupal.toolbar.ToolbarModel} model
+     *   A toolbar model
      * @param {string} label
+     *   Media query label.
      * @param {object} mql
+     *   A MediaQueryList object.
      */
     mediaQueryChangeHandler: function (model, label, mql) {
       switch (label) {
@@ -238,8 +244,11 @@
    * Ajax command to set the toolbar subtrees.
    *
    * @param {Drupal.Ajax} ajax
+   *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
    * @param {object} response
+   *   JSON response from the Ajax request.
    * @param {number} [status]
+   *   XMLHttpRequest status.
    */
   Drupal.AjaxCommands.prototype.setToolbarSubtrees = function (ajax, response, status) {
     Drupal.toolbar.setSubtrees.resolve(response.subtrees);

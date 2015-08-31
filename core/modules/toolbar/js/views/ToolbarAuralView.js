@@ -17,7 +17,9 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options for the view.
      * @param {object} options.strings
+     *   Various strings to use in the view.
      */
     initialize: function (options) {
       this.strings = options.strings;
@@ -30,6 +32,7 @@
      * Announces an orientation change.
      *
      * @param {Drupal.toolbar.ToolbarModel} model
+     *   The toolbar model in question.
      * @param {string} orientation
      *   The new value of the orientation attribute in the model.
      */
@@ -43,6 +46,7 @@
      * Announces a changed active tray.
      *
      * @param {Drupal.toolbar.ToolbarModel} model
+     *   The toolbar model in question.
      * @param {HTMLElement} tray
      *   The new value of the tray attribute in the model.
      */

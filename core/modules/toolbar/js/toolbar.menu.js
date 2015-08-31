@@ -179,9 +179,13 @@
    * A toggle is an interactive element often bound to a click handler.
    *
    * @param {object} options
+   *   Options for the button.
    * @param {string} options.class
+   *   Class to set on the button.
    * @param {string} options.action
+   *   Action for the button.
    * @param {string} options.text
+   *   Used as label for the button.
    *
    * @return {string}
    *   A string representing a DOM fragment.

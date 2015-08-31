@@ -138,9 +138,12 @@
      * @inheritdoc
      *
      * @param {object} attributes
+     *   Attributes for the toolbar.
      * @param {object} options
+     *   Options for the toolbar.
      *
-     * @return {string}
+     * @return {string|undefined}
+     *   Returns an error message if validation failed.
      */
     validate: function (attributes, options) {
       // Prevent the orientation being set to horizontal if it is locked, unless

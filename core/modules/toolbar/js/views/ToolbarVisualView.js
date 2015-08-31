@@ -10,7 +10,10 @@
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend(/** @lends Drupal.toolbar.ToolbarVisualView# */{
 
     /**
+     * Event map for the `ToolbarVisualView`.
+     *
      * @return {object}
+     *   A map of events.
      */
     events: function () {
       // Prevents delay and simulated mouse events.
@@ -35,7 +38,9 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options for the view object.
      * @param {object} options.strings
+     *   Various strings to use in the view.
      */
     initialize: function (options) {
       this.strings = options.strings;
@@ -58,6 +63,7 @@
      * @inheritdoc
      *
      * @return {Drupal.toolbar.ToolbarVisualView}
+     *   The `ToolbarVisualView` instance.
      */
     render: function () {
       this.updateTabs();
@@ -91,6 +97,7 @@
      * Responds to a toolbar tab click.
      *
      * @param {jQuery.Event} event
+     *   The event triggered.
      */
     onTabClick: function (event) {
       // If this tab has a tray associated with it, it is considered an
@@ -111,6 +118,7 @@
      * Toggles the orientation of a toolbar tray.
      *
      * @param {jQuery.Event} event
+     *   The event triggered.
      */
     onOrientationToggleClick: function (event) {
       var orientation = this.model.get('orientation');
