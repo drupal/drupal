@@ -179,16 +179,15 @@ abstract class UpdatePathTestBase extends WebTestBase {
     // Add the config directories to settings.php.
     drupal_install_config_directories();
 
-    // Install any additional modules.
-    $this->installModulesFromClassProperty($container);
-
     // Restore the original Simpletest batch.
     $this->restoreBatch();
 
-    // Rebuild and reset.
-    $this->rebuildAll();
+    // Set the container. parent::rebuildAll() would normally do this, but this
+    // not safe to do here, because the database has not been updated yet.
+    $this->container = \Drupal::getContainer();
 
     // Replace User 1 with the user created here.
+    // @todo: do this without saving the user account.
     /** @var \Drupal\user\UserInterface $account */
     $account = User::load(1);
     $account->setPassword($this->rootUser->pass_raw);
@@ -265,27 +264,6 @@ abstract class UpdatePathTestBase extends WebTestBase {
 
     // Ensure that the update hooks updated all entity schema.
     $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After all updates ran, entity schema is up to date.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function rebuildAll() {
-    // We know the rebuild causes notices, so don't exit on failure.
-    $die_on_fail = $this->dieOnFail;
-    $this->dieOnFail = FALSE;
-    parent::rebuildAll();
-
-    // Remove the notices we get due to the menu link rebuild prior to running
-    // the system updates for the schema change.
-    foreach ($this->assertions as $key => $assertion) {
-      if ($assertion['message_group'] == 'Notice' && basename($assertion['file']) == 'MenuTreeStorage.php' && strpos($assertion['message'], 'unserialize(): Error at offset 0') !== FALSE) {
-        unset($this->assertions[$key]);
-        $this->deleteAssert($assertion['message_id']);
-        $this->results['#exception']--;
-      }
-    }
-    $this->dieOnFail = $die_on_fail;
   }
 
 }

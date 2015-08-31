@@ -32,6 +32,8 @@ class BlockContextMappingUpdateTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.block-context-manager-2354889.php',
+      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.language-enabled.php',
+      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.block-test-enabled.php',
     ];
   }
 

@@ -241,7 +241,7 @@ function system_theme_suggestions_html(array $variables) {
     $path_args = [''];
   }
   else {
-    $path_args = explode('/', Url::fromRoute('<current>')->getInternalPath());
+    $path_args = explode('/', ltrim(\Drupal::service('path.current')->getPath(), '/'));
   }
   return theme_get_suggestions($path_args, 'html');
 }

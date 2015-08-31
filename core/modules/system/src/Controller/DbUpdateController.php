@@ -228,7 +228,8 @@ class DbUpdateController extends ControllerBase {
       '#type' => 'link',
       '#title' => $this->t('Continue'),
       '#attributes' => array('class' => array('button', 'button--primary')),
-      '#url' => Url::fromUri($request->getUriForPath('/selection')),
+      // @todo Revisit once https://www.drupal.org/node/2548095 is in.
+      '#url' => Url::fromUri('base://selection'),
     );
     return $build;
   }
@@ -484,6 +485,9 @@ class DbUpdateController extends ControllerBase {
    */
   public function requirements($severity, array $requirements, Request $request) {
     $options = $severity == REQUIREMENT_WARNING ? array('continue' => 1) : array();
+    // @todo Revisit once https://www.drupal.org/node/2548095 is in. Something
+    // like Url::fromRoute('system.db_update')->setOptions() should then be
+    // possible.
     $try_again_url = Url::fromUri($request->getUriForPath(''))->setOptions(['query' => $options])->toString(TRUE)->getGeneratedUrl();
 
     $build['status_report'] = array(
@@ -580,7 +584,8 @@ class DbUpdateController extends ControllerBase {
     );
     batch_set($batch);
 
-    return batch_process(Url::fromUri($request->getUriForPath('/results')), Url::fromUri($request->getUriForPath('/start')));
+    // @todo Revisit once https://www.drupal.org/node/2548095 is in.
+    return batch_process(Url::fromUri('base://results'), Url::fromUri('base://start'));
   }
 
   /**
