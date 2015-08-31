@@ -55,6 +55,15 @@ class TranslationLinkTest extends ContentTranslationTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getTranslatorPermissions() {
+    $permissions = parent::getTranslatorPermissions();
+    $permissions[] = 'access user profiles';
+    return $permissions;
+  }
+
+  /**
    * Tests the content translation overview link field handler.
    */
   public function testTranslationLink() {

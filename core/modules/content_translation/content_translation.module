@@ -267,7 +267,8 @@ function content_translation_menu_links_discovered_alter(array &$links) {
  */
 function content_translation_translate_access(EntityInterface $entity) {
   $account = \Drupal::currentUser();
-  $condition = $entity instanceof ContentEntityInterface && !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
+  $condition = $entity instanceof ContentEntityInterface && $entity->access('view') &&
+    !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
     ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations'));
   return AccessResult::allowedIf($condition)->cachePerPermissions()->cacheUntilEntityChanges($entity);
 }

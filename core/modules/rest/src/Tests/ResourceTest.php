@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\rest\Tests;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the structure of a REST resource.
@@ -38,6 +40,10 @@ class ResourceTest extends RESTTestBase {
     // Create an entity programmatically.
     $this->entity = $this->entityCreate('entity_test');
     $this->entity->save();
+
+    Role::load(AccountInterface::ANONYMOUS_ROLE)
+      ->grantPermission('view test entity')
+      ->save();
   }
 
   /**
