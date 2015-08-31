@@ -127,6 +127,61 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\B
 }
 
 /**
+ * Alter the result of \Drupal\Core\Block\BlockBase::build().
+ *
+ * Unlike hook_block_view_alter(), this hook is called very early, before the
+ * block is being assembled. Therefore, it is early enough to alter the
+ * cacheability metadata (change #cache), or to explicitly placeholder the block
+ * (set #create_placeholder).
+ *
+ * In addition to hook_block_build_alter(), which is called for all blocks,
+ * there is hook_block_build_BASE_BLOCK_ID_alter(), which can be used to target
+ * a specific block or set of similar blocks.
+ *
+ * @param array &$build
+ *   A renderable array of data, only containing #cache.
+ * @param \Drupal\Core\Block\BlockPluginInterface $block
+ *   The block plugin instance.
+ *
+ * @see hook_block_build_BASE_BLOCK_ID_alter()
+ * @see entity_crud
+ *
+ * @ingroup block_api
+ */
+function hook_block_build_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+  // Add the 'user' cache context to some blocks.
+  if ($some_condition) {
+    $build['#contexts'][] = 'user';
+  }
+}
+
+/**
+ * Provide a block plugin specific block_build alteration.
+ *
+ * In this hook name, BASE_BLOCK_ID refers to the block implementation's plugin
+ * id, regardless of whether the plugin supports derivatives. For example, for
+ * the \Drupal\system\Plugin\Block\SystemPoweredByBlock block, this would be
+ * 'system_powered_by_block' as per that class's annotation. And for the
+ * \Drupal\system\Plugin\Block\SystemMenuBlock block, it would be
+ * 'system_menu_block' as per that class's annotation, regardless of which menu
+ * the derived block is for.
+ *
+ * @param array $build
+ *   A renderable array of data, only containing #cache.
+ * @param \Drupal\Core\Block\BlockPluginInterface $block
+ *   The block plugin instance.
+ *
+ * @see hook_block_build_alter()
+ * @see entity_crud
+ *
+ * @ingroup block_api
+ */
+function hook_block_build_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+  // Explicitly enable placeholdering of the specific block.
+  $build['#create_placeholder'] = TRUE;
+}
+
+/**
  * Control access to a block instance.
  *
  * Modules may implement this hook if they want to have a say in whether or not

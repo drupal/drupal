@@ -10,6 +10,7 @@ use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\EnforcedResponseException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -103,7 +104,18 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // attachments to be added to the response, which the attachment
     // placeholders rendered by renderHtmlResponseAttachmentPlaceholders() will
     // need to include.
-    $response = $this->renderPlaceholders($response);
+    //
+    // @todo Exceptions should not be used for code flow control. However, the
+    //   Form API does not integrate with the HTTP Kernel based architecture of
+    //   Drupal 8. In order to resolve this issue properly it is necessary to
+    //   completely separate form submission from rendering.
+    //   @see https://www.drupal.org/node/2367555
+    try {
+      $response = $this->renderPlaceholders($response);
+    }
+    catch (EnforcedResponseException $e) {
+      return $e->getResponse();
+    }
 
     $attached = $response->getAttachments();
 

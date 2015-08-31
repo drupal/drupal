@@ -186,60 +186,26 @@ class BlockViewBuilderTest extends KernelTestBase {
 
   /**
    * Tests block view altering.
+   *
+   * @see hook_block_view_alter()
+   * @see hook_block_view_BASE_BLOCK_ID_alter()
    */
-  public function testBlockViewBuilderAlter() {
+  public function testBlockViewBuilderViewAlter() {
     // Establish baseline.
     $build = $this->getBlockRenderArray();
-    $this->assertIdentical((string) $this->renderer->renderRoot($build), 'Llamas &gt; unicorns!');
+    $this->setRawContent((string) $this->renderer->renderRoot($build));
+    $this->assertIdentical(trim((string) $this->cssSelect('div')[0]), 'Llamas > unicorns!');
 
-    // Enable the block view alter hook that adds a suffix, for basic testing.
+    // Enable the block view alter hook that adds a foo=bar attribute.
     \Drupal::state()->set('block_test_view_alter_suffix', TRUE);
     Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
     $build = $this->getBlockRenderArray();
-    $this->assertTrue(isset($build['#suffix']) && $build['#suffix'] === '<br>Goodbye!', 'A block with content is altered.');
-    $this->assertIdentical((string) $this->renderer->renderRoot($build), 'Llamas &gt; unicorns!<br>Goodbye!');
+    $this->setRawContent((string) $this->renderer->renderRoot($build));
+    $this->assertIdentical(trim((string) $this->cssSelect('[foo=bar]')[0]), 'Llamas > unicorns!');
     \Drupal::state()->set('block_test_view_alter_suffix', FALSE);
-
-    // Force a request via GET so we can test the render cache.
-    $request = \Drupal::request();
-    $request_method = $request->server->get('REQUEST_METHOD');
-    $request->setMethod('GET');
 
     \Drupal::state()->set('block_test.content', NULL);
     Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
-
-    $default_keys = array('entity_view', 'block', 'test_block');
-    $default_tags = array('block_view', 'config:block.block.test_block');
-
-    // Advanced: cached block, but an alter hook adds an additional cache key.
-    $alter_add_key = $this->randomMachineName();
-    \Drupal::state()->set('block_test_view_alter_cache_key', $alter_add_key);
-    $cid = 'entity_view:block:test_block:' . $alter_add_key . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
-    $expected_keys = array_merge($default_keys, array($alter_add_key));
-    $build = $this->getBlockRenderArray();
-    $this->assertIdentical($expected_keys, $build['#cache']['keys'], 'An altered cacheable block has the expected cache keys.');
-    $this->assertIdentical((string) $this->renderer->renderRoot($build), '');
-    $cache_entry = $this->container->get('cache.render')->get($cid);
-    $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
-    $expected_tags = array_merge($default_tags, ['rendered']);
-    sort($expected_tags);
-    $this->assertIdentical($cache_entry->tags, $expected_tags, 'The block render element has been cached with the expected cache tags.');
-    $this->container->get('cache.render')->delete($cid);
-
-    // Advanced: cached block, but an alter hook adds an additional cache tag.
-    $alter_add_tag = $this->randomMachineName();
-    \Drupal::state()->set('block_test_view_alter_cache_tag', $alter_add_tag);
-    $expected_tags = Cache::mergeTags($default_tags, array($alter_add_tag));
-    $build = $this->getBlockRenderArray();
-    sort($build['#cache']['tags']);
-    $this->assertIdentical($expected_tags, $build['#cache']['tags'], 'An altered cacheable block has the expected cache tags.');
-    $this->assertIdentical((string) $this->renderer->renderRoot($build), '');
-    $cache_entry = $this->container->get('cache.render')->get($cid);
-    $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
-    $expected_tags = array_merge($default_tags, [$alter_add_tag, 'rendered']);
-    sort($expected_tags);
-    $this->assertIdentical($cache_entry->tags, $expected_tags, 'The block render element has been cached with the expected cache tags.');
-    $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds a #pre_render callback to
     // alter the eventual content.
@@ -248,9 +214,112 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before rendering.');
     $this->assertIdentical((string) $this->renderer->renderRoot($build), 'Hiya!<br>');
     $this->assertTrue(isset($build['#prefix']) && $build['#prefix'] === 'Hiya!<br>', 'A cached block without content is altered.');
+  }
+
+  /**
+   * Tests block build altering.
+   *
+   * @see hook_block_build_alter()
+   * @see hook_block_build_BASE_BLOCK_ID_alter()
+   */
+  public function testBlockViewBuilderBuildAlter() {
+    // Force a request via GET so we can test the render cache.
+    $request = \Drupal::request();
+    $request_method = $request->server->get('REQUEST_METHOD');
+    $request->setMethod('GET');
+
+    $default_keys = ['entity_view', 'block', 'test_block'];
+    $default_contexts = [];
+    $default_tags = ['block_view', 'config:block.block.test_block'];
+    $default_max_age = Cache::PERMANENT;
+
+    // hook_block_build_alter() adds an additional cache key.
+    $alter_add_key = $this->randomMachineName();
+    \Drupal::state()->set('block_test_block_alter_cache_key', $alter_add_key);
+    $this->assertBlockRenderedWithExpectedCacheability(array_merge($default_keys, [$alter_add_key]), $default_contexts, $default_tags, $default_max_age);
+    \Drupal::state()->set('block_test_block_alter_cache_key', NULL);
+
+    // hook_block_build_alter() adds an additional cache context.
+    $alter_add_context = 'url.query_args:' . $this->randomMachineName();
+    \Drupal::state()->set('block_test_block_alter_cache_context', $alter_add_context);
+    $this->assertBlockRenderedWithExpectedCacheability($default_keys, Cache::mergeContexts($default_contexts, [$alter_add_context]), $default_tags, $default_max_age);
+    \Drupal::state()->set('block_test_block_alter_cache_context', NULL);
+
+    // hook_block_build_alter() adds an additional cache tag.
+    $alter_add_tag = $this->randomMachineName();
+    \Drupal::state()->set('block_test_block_alter_cache_tag', $alter_add_tag);
+    $this->assertBlockRenderedWithExpectedCacheability($default_keys, $default_contexts, Cache::mergeTags($default_tags, [$alter_add_tag]), $default_max_age);
+    \Drupal::state()->set('block_test_block_alter_cache_tag', NULL);
+
+    // hook_block_build_alter() alters the max-age.
+    $alter_max_age = 300;
+    \Drupal::state()->set('block_test_block_alter_cache_max_age', $alter_max_age);
+    $this->assertBlockRenderedWithExpectedCacheability($default_keys, $default_contexts, $default_tags, $alter_max_age);
+    \Drupal::state()->set('block_test_block_alter_cache_max_age', NULL);
+
+    // hook_block_build_alter() alters cache keys, contexts, tags and max-age.
+    \Drupal::state()->set('block_test_block_alter_cache_key', $alter_add_key);
+    \Drupal::state()->set('block_test_block_alter_cache_context', $alter_add_context);
+    \Drupal::state()->set('block_test_block_alter_cache_tag', $alter_add_tag);
+    \Drupal::state()->set('block_test_block_alter_cache_max_age', $alter_max_age);
+    $this->assertBlockRenderedWithExpectedCacheability(array_merge($default_keys, [$alter_add_key]), Cache::mergeContexts($default_contexts, [$alter_add_context]), Cache::mergeTags($default_tags, [$alter_add_tag]), $alter_max_age);
+    \Drupal::state()->set('block_test_block_alter_cache_key', NULL);
+    \Drupal::state()->set('block_test_block_alter_cache_context', NULL);
+    \Drupal::state()->set('block_test_block_alter_cache_tag', NULL);
+    \Drupal::state()->set('block_test_block_alter_cache_max_age', NULL);
+
+    // hook_block_build_alter() sets #create_placeholder.
+    foreach ([TRUE, FALSE] as $value) {
+      \Drupal::state()->set('block_test_block_alter_create_placeholder', $value);
+      $build = $this->getBlockRenderArray();
+      $this->assertTrue(isset($build['#create_placeholder']));
+      $this->assertIdentical($value, $build['#create_placeholder']);
+    }
+    \Drupal::state()->set('block_test_block_alter_create_placeholder', NULL);
 
     // Restore the previous request method.
     $request->setMethod($request_method);
+  }
+
+  /**
+   * Asserts that a block is built/rendered/cached with expected cacheability.
+   *
+   * @param string[] $expected_keys
+   *   The expected cache keys.
+   * @param string[] $expected_contexts
+   *   The expected cache contexts.
+   * @param string[] $expected_tags
+   *   The expected cache tags.
+   * @param int $expected_max_age
+   *   The expected max-age.
+   */
+  protected function assertBlockRenderedWithExpectedCacheability(array $expected_keys, array $expected_contexts, array $expected_tags, $expected_max_age) {
+    $required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
+
+    // Check that the expected cacheability metadata is present in:
+    // - the built render array;
+    $this->pass('Built render array');
+    $build = $this->getBlockRenderArray();
+    $this->assertIdentical($expected_keys, $build['#cache']['keys']);
+    $this->assertIdentical($expected_contexts, $build['#cache']['contexts']);
+    $this->assertIdentical($expected_tags, $build['#cache']['tags']);
+    $this->assertIdentical($expected_max_age, $build['#cache']['max-age']);
+    $this->assertFalse(isset($build['#create_placeholder']));
+    // - the rendered render array;
+    $this->pass('Rendered render array');
+    $this->renderer->renderRoot($build);
+    // - the render cache item.
+    $this->pass('Render cache item');
+    $final_cache_contexts = Cache::mergeContexts($expected_contexts, $required_cache_contexts);
+    $cid = implode(':', $expected_keys) . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys($final_cache_contexts)->getKeys());
+    $cache_item = $this->container->get('cache.render')->get($cid);
+    $this->assertTrue($cache_item, 'The block render element has been cached with the expected cache ID.');
+    $this->assertIdentical(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
+    $this->assertIdentical($final_cache_contexts, $cache_item->data['#cache']['contexts']);
+    $this->assertIdentical($expected_tags, $cache_item->data['#cache']['tags']);
+    $this->assertIdentical($expected_max_age, $cache_item->data['#cache']['max-age']);
+
+    $this->container->get('cache.render')->delete($cid);
   }
 
   /**
@@ -260,12 +329,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    *   The render array.
    */
   protected function getBlockRenderArray() {
-    $build = $this->container->get('entity.manager')->getViewBuilder('block')->view($this->block, 'block');
-
-    // Mock the build array to not require the theme registry.
-    unset($build['#theme']);
-
-    return $build;
+    return $this->container->get('entity.manager')->getViewBuilder('block')->view($this->block, 'block');
   }
 
 }
