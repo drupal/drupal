@@ -300,10 +300,11 @@ class UrlHelper {
    *
    * This function must be called for all URIs within user-entered input prior
    * to being output to an HTML attribute value. It is often called as part of
-   * check_url() or Drupal\Component\Utility\Xss::filter(), but those functions
-   * return an HTML-encoded string, so this function can be called independently
-   * when the output needs to be a plain-text string for passing to functions
-   * that will call \Drupal\Component\Utility\SafeMarkup::checkPlain() separately.
+   * \Drupal\Component\Utility\UrlHelper::filterBadProtocol() or
+   * \Drupal\Component\Utility\Xss::filter(), but those functions return an
+   * HTML-encoded string, so this function can be called independently when the
+   * output needs to be a plain-text string for passing to functions that will
+   * call \Drupal\Component\Utility\SafeMarkup::checkPlain() separately.
    *
    * @param string $uri
    *   A plain-text URI that might contain dangerous protocols.

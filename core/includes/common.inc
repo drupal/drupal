@@ -271,7 +271,7 @@ function valid_email_address($mail) {
  * @param $uri
  *   A plain-text URI that might contain dangerous protocols.
  *
- * @return
+ * @return string
  *   A URI stripped of dangerous protocols and encoded for output to an HTML
  *   attribute value. Because it is already encoded, it should not be set as a
  *   value within a $attributes array passed to Drupal\Core\Template\Attribute,
@@ -281,10 +281,20 @@ function valid_email_address($mail) {
  *   \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() instead.
  *
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
- * @see \Drupal\Component\Utility\SafeMarkup::checkPlain()
+ * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol()
+ *   instead. UrlHelper::stripDangerousProtocols() can be used in conjunction
+ *   with \Drupal\Component\Utility\SafeMarkup::format() and an @variable
+ *   placeholder which will perform the necessary escaping.
+ *   UrlHelper::filterBadProtocol() is functionality equivalent to check_url()
+ *   apart from the fact it is protected from double escaping bugs. Note that
+ *   this method no longer marks its output as safe.
+ *
  */
 function check_url($uri) {
-  return SafeMarkup::checkPlain(UrlHelper::stripDangerousProtocols($uri));
+  return Html::escape(UrlHelper::stripDangerousProtocols($uri));
 }
 
 /**

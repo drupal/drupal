@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -149,7 +150,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           break;
 
         case 'homepage':
-          $replacements[$original] = $sanitize ? check_url($comment->getHomepage()) : $comment->getHomepage();
+          $replacements[$original] = $sanitize ? UrlHelper::filterBadProtocol($comment->getHomepage()) : $comment->getHomepage();
           break;
 
         case 'title':

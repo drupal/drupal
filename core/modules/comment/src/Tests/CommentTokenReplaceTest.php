@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -55,7 +56,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:hostname]'] = Html::escape($comment->getHostname());
     $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
     $tests['[comment:mail]'] = Html::escape($this->adminUser->getEmail());
-    $tests['[comment:homepage]'] = check_url($comment->getHomepage());
+    $tests['[comment:homepage]'] = UrlHelper::filterBadProtocol($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:langcode]'] = Html::escape($comment->language()->getId());

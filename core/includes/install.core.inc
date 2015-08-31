@@ -2052,7 +2052,7 @@ function install_check_translations($langcode, $server_pattern) {
         'title'       => t('Translation'),
         'value'       => t('The %language translation is not available.', array('%language' => $language)),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => t('The %language translation file is not available at the translation server. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
+        'description' => t('The %language translation file is not available at the translation server. <a href="@url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '@url' => UrlHelper::stripDangerousProtocols($_SERVER['SCRIPT_NAME']))),
       );
     }
     else {
@@ -2071,7 +2071,7 @@ function install_check_translations($langcode, $server_pattern) {
         'title'       => t('Translation'),
         'value'       => t('The %language translation could not be downloaded.', array('%language' => $language)),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => t('The %language translation file could not be downloaded. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
+        'description' => t('The %language translation file could not be downloaded. <a href="@url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '@url' => UrlHelper::stripDangerousProtocols($_SERVER['SCRIPT_NAME']))),
       );
     }
   }
@@ -2281,11 +2281,11 @@ function install_display_requirements($install_state, $requirements) {
       $build['report']['#requirements'] = $requirements;
       if ($severity == REQUIREMENT_WARNING) {
         $build['#title'] = t('Requirements review');
-        $build['#suffix'] = t('Check the messages and <a href="!retry">retry</a>, or you may choose to <a href="!cont">continue anyway</a>.', array('!retry' => check_url(drupal_requirements_url(REQUIREMENT_ERROR)), '!cont' => check_url(drupal_requirements_url($severity))));
+        $build['#suffix'] = t('Check the messages and <a href="@retry">retry</a>, or you may choose to <a href="@cont">continue anyway</a>.', array('@retry' => UrlHelper::stripDangerousProtocols(drupal_requirements_url(REQUIREMENT_ERROR)), '@cont' => UrlHelper::stripDangerousProtocols(drupal_requirements_url($severity))));
       }
       else {
         $build['#title'] = t('Requirements problem');
-        $build['#suffix'] = t('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
+        $build['#suffix'] = t('Check the messages and <a href="@url">try again</a>.', array('@url' => UrlHelper::stripDangerousProtocols(drupal_requirements_url($severity))));
       }
       return $build;
     }

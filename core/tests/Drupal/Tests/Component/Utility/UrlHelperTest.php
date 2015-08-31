@@ -380,8 +380,10 @@ class UrlHelperTest extends UnitTestCase {
    */
   public function testFilterBadProtocol($uri, $expected, $protocols) {
     UrlHelper::setAllowedProtocols($protocols);
-    $filtered = UrlHelper::filterBadProtocol($uri);
-    $this->assertEquals($expected, $filtered);
+    $this->assertEquals($expected, UrlHelper::filterBadProtocol($uri));
+    // Multiple calls to UrlHelper::filterBadProtocol() do not cause double
+    // escaping.
+    $this->assertEquals($expected, UrlHelper::filterBadProtocol(UrlHelper::filterBadProtocol($uri)));
   }
 
   /**

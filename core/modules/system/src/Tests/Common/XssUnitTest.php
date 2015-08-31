@@ -56,6 +56,8 @@ class XssUnitTest extends KernelTestBase {
     $expected_plain = 'http://www.example.com/?x=1&y=2';
     $expected_html = 'http://www.example.com/?x=1&amp;y=2';
     $this->assertIdentical(check_url($url), $expected_html, 'check_url() filters a URL and encodes it for HTML.');
-    $this->assertIdentical(UrlHelper::stripDangerousProtocols($url), $expected_plain, '\Drupal\Component\Utility\Url::stripDangerousProtocols() filters a URL and returns plain text.');
+    $this->assertIdentical(UrlHelper::filterBadProtocol($url), $expected_html, '\Drupal\Component\Utility\UrlHelper::filterBadProtocol() filters a URL and encodes it for HTML.');
+    $this->assertIdentical(UrlHelper::stripDangerousProtocols($url), $expected_plain, '\Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() filters a URL and returns plain text.');
+
   }
 }

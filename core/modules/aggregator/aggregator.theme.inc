@@ -5,6 +5,7 @@
  * Preprocessors and theme functions of Aggregator module.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\Element;
 
 /**
@@ -24,7 +25,7 @@ function template_preprocess_aggregator_item(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  $variables['url'] = check_url($item->getLink());
+  $variables['url'] = UrlHelper::stripDangerousProtocols($item->getLink());
   $variables['title'] = $item->label();
 }
 

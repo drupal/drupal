@@ -5,6 +5,7 @@
  * User page callbacks for the Search module.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -34,7 +35,7 @@ function template_preprocess_search_result(&$variables) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $result = $variables['result'];
-  $variables['url'] = check_url($result['link']);
+  $variables['url'] = UrlHelper::stripDangerousProtocols($result['link']);
   $variables['title'] = $result['title'];
   if (isset($result['language']) && $result['language'] != $language_interface->getId() && $result['language'] != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
     $variables['title_attributes']['lang'] = $result['language'];

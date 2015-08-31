@@ -495,11 +495,12 @@ function _filter_url($text, $filter) {
   $tasks = array();
 
   // Prepare protocols pattern for absolute URLs.
-  // check_url() will replace any bad protocols with HTTP, so we need to support
-  // the identical list. While '//' is technically optional for MAILTO only,
-  // we cannot cleanly differ between protocols here without hard-coding MAILTO,
-  // so '//' is optional for all protocols.
-  // @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
+  // \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() will replace
+  // any bad protocols with HTTP, so we need to support the identical list.
+  // While '//' is technically optional for MAILTO only, we cannot cleanly
+  // differ between protocols here without hard-coding MAILTO, so '//' is
+  // optional for all protocols.
+  // @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
   $protocols = \Drupal::getContainer()->getParameter('filter_protocols');
   $protocols = implode(':(?://)?|', $protocols) . ':(?://)?';
 

@@ -864,9 +864,11 @@ function install_goto($path) {
  * @return
  *   The URL of the current script, with query parameters modified by the
  *   passed-in $query. The URL is not sanitized, so it still needs to be run
- *   through check_url() if it will be used as an HTML attribute value.
+ *   through \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will be
+ *   used as an HTML attribute value.
  *
  * @see drupal_requirements_url()
+ * @see Drupal\Component\Utility\UrlHelper::filterBadProtocol()
  */
 function drupal_current_script_url($query = array()) {
   $uri = $_SERVER['SCRIPT_NAME'];
@@ -890,10 +892,12 @@ function drupal_current_script_url($query = array()) {
  *
  * @return
  *   A URL for attempting to proceed to the next step of the script. The URL is
- *   not sanitized, so it still needs to be run through check_url() if it will
- *   be used as an HTML attribute value.
+ *   not sanitized, so it still needs to be run through
+ *   \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will be used
+ *   as an HTML attribute value.
  *
  * @see drupal_current_script_url()
+ * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
  */
 function drupal_requirements_url($severity) {
   $query = array();
