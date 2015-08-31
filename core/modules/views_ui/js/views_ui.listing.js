@@ -15,6 +15,9 @@
    * Source text:       .views-table-filter-text-source
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the filter functionality to the views admin text search field.
    */
   Drupal.behaviors.viewTableFilterByText = {
     attach: function (context, settings) {

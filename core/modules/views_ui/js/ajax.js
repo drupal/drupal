@@ -8,11 +8,16 @@
   "use strict";
 
   /**
+   * Ajax command for highlighting elements.
    *
    * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
    * @param {object} response
+   *   The Ajax response.
    * @param {string} response.selector
+   *   The selector in question.
    * @param {number} [status]
+   *   The HTTP status code.
    */
   Drupal.AjaxCommands.prototype.viewsHighlight = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
@@ -20,11 +25,16 @@
   };
 
   /**
+   * Ajax command to show certain buttons in the views edit form.
    *
    * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
    * @param {object} response
+   *   The Ajax response.
    * @param {bool} response.changed
+   *   Whether the state changed for the buttons or not.
    * @param {number} [status]
+   *   The HTTP status code.
    */
   Drupal.AjaxCommands.prototype.viewsShowButtons = function (ajax, response, status) {
     $('div.views-edit-view div.form-actions').removeClass('js-hide');
@@ -34,10 +44,14 @@
   };
 
   /**
+   * Ajax command for triggering preview.
    *
    * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
    * @param {object} [response]
+   *   The Ajax response.
    * @param {number} [status]
+   *   The HTTP status code.
    */
   Drupal.AjaxCommands.prototype.viewsTriggerPreview = function (ajax, response, status) {
     if ($('input#edit-displays-live-preview').is(':checked')) {
@@ -46,12 +60,18 @@
   };
 
   /**
+   * Ajax command to replace the title of a page.
    *
    * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
    * @param {object} response
+   *   The Ajax response.
    * @param {string} response.siteName
+   *   The site name.
    * @param {string} response.title
+   *   The new page title.
    * @param {number} [status]
+   *   The HTTP status code.
    */
   Drupal.AjaxCommands.prototype.viewsReplaceTitle = function (ajax, response, status) {
     var doc = document;
@@ -72,6 +92,7 @@
    * Get rid of irritating tabledrag messages.
    *
    * @return {Array}
+   *   An array of messages. Always empty array, to get rid of the messages.
    */
   Drupal.theme.tableDragChangedWarning = function () {
     return [];
@@ -81,6 +102,10 @@
    * Trigger preview when the "live preview" checkbox is checked.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to trigger live preview if the live preview option is
+   *   checked.
    */
   Drupal.behaviors.livePreview = {
     attach: function (context) {
@@ -96,6 +121,9 @@
    * Sync preview display.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to sync the preview display when needed.
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach: function (context) {
@@ -110,8 +138,12 @@
   };
 
   /**
+   * Ajax behaviors for the views_ui module.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches ajax behaviors to the elements with the classes in question.
    */
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,

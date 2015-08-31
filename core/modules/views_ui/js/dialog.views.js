@@ -31,8 +31,14 @@
   }
 
   /**
+   * Functionality for views modals.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches modal functionality for views.
+   * @prop {Drupal~behaviorDetach} detach
+   *   Detaches the modal functionality.
    */
   Drupal.behaviors.viewsModalContent = {
     attach: function (context) {
