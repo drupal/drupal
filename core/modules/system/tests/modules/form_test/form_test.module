@@ -93,3 +93,14 @@ function form_test_user_register_form_rebuild($form, FormStateInterface $form_st
   drupal_set_message('Form rebuilt.');
   $form_state->setRebuild();
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form_test_vertical_tabs_access_form().
+ */
+function form_test_form_form_test_vertical_tabs_access_form_alter(&$form, &$form_state, $form_id) {
+  $form['vertical_tabs1']['#access'] = FALSE;
+  $form['vertical_tabs2']['#access'] = FALSE;
+  $form['tabs3']['#access'] = TRUE;
+  $form['fieldset1']['#access'] = FALSE;
+  $form['container']['#access'] = FALSE;
+}

@@ -172,6 +172,14 @@ form_test.storage:
   requirements:
     _access: 'TRUE'
 
+form_test.vertical_tabs_access:
+  path: '/form_test/vertical-tabs-access'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestVerticalTabsAccessForm'
+    _title: 'Vertical tabs tests'
+  requirements:
+    _access: 'TRUE'
+
 form_test.state_clean:
   path: '/form_test/form-state-values-clean'
   defaults:

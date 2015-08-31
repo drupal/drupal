@@ -71,6 +71,10 @@ class VerticalTabs extends RenderElement {
    *   The processed element.
    */
   public static function processVerticalTabs(&$element, FormStateInterface $form_state, &$complete_form) {
+    if (isset($element['#access']) && !$element['#access']) {
+      return $element;
+    }
+
     // Inject a new details as child, so that form_process_details() processes
     // this details element like any other details.
     $element['group'] = array(
