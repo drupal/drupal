@@ -77,10 +77,14 @@ class Textfield extends FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input !== FALSE && $input !== NULL) {
-      // Equate $input to the form value to ensure it's marked for
-      // validation.
+      // This should be a string, but allow other scalars since they might be
+      // valid input in programmatic form submissions.
+      if (!is_scalar($input)) {
+        $input = '';
+      }
       return str_replace(array("\r", "\n"), '', $input);
     }
+    return NULL;
   }
 
   /**

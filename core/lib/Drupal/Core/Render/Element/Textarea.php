@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -55,4 +56,15 @@ class Textarea extends FormElement {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    if ($input !== FALSE && $input !== NULL) {
+      // This should be a string, but allow other scalars since they might be
+      // valid input in programmatic form submissions.
+      return is_scalar($input) ? (string) $input : '';
+    }
+    return NULL;
+  }
 }

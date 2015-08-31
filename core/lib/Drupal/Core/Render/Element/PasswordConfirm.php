@@ -50,9 +50,20 @@ class PasswordConfirm extends FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
-      $element += array('#default_value' => array());
-      return $element['#default_value'] + array('pass1' => '', 'pass2' => '');
+      $element += ['#default_value' => []];
+      return $element['#default_value'] + ['pass1' => '', 'pass2' => ''];
     }
+    $value = ['pass1' => '', 'pass2' => ''];
+    // Throw out all invalid array keys; we only allow pass1 and pass2.
+    foreach ($value as $allowed_key => $default) {
+      // These should be strings, but allow other scalars since they might be
+      // valid input in programmatic form submissions. Any nested array values
+      // are ignored.
+      if (isset($input[$allowed_key]) && is_scalar($input[$allowed_key])) {
+        $value[$allowed_key] = (string) $input[$allowed_key];
+      }
+    }
+    return $value;
   }
 
   /**
