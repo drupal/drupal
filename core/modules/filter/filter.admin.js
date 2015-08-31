@@ -8,8 +8,12 @@
   "use strict";
 
   /**
+   * Displays and updates the status of filters on the admin page.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behaviors to the filter admin view.
    */
   Drupal.behaviors.filterStatus = {
     attach: function (context, settings) {
@@ -22,8 +26,8 @@
         var $filterSettings = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings'));
         var filterSettingsTab = $filterSettings.data('verticalTab');
 
-        // Bind click handler to this checkbox to conditionally show and hide the
-        // filter's tableDrag row and vertical tab pane.
+        // Bind click handler to this checkbox to conditionally show and hide
+        // the filter's tableDrag row and vertical tab pane.
         $checkbox.on('click.filterUpdate', function () {
           if ($checkbox.is(':checked')) {
             $row.show();

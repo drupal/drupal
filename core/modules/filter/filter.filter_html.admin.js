@@ -19,6 +19,7 @@
 
       /**
        * @return {Array}
+       *   An array of filter rules.
        */
       getRules: function () {
         var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
@@ -45,10 +46,14 @@
   }
 
   /**
+   * Displays and updates what HTML tags are allowed to use in a filter.
    *
    * @type {Drupal~behavior}
    *
    * @todo Remove everything but 'attach' and 'detach' and make a proper object.
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior for updating allowed HTML tags.
    */
   Drupal.behaviors.filterFilterHtmlUpdating = {
 
