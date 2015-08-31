@@ -194,15 +194,6 @@ class Tasks extends InstallTasks {
     // avoid trying to create them again in that case.
 
     try {
-      // Create functions.
-      db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS
-        \'SELECT CASE WHEN (($1 > $2) OR ($2 IS NULL)) THEN $1 ELSE $2 END;\'
-        LANGUAGE \'sql\''
-      );
-      db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric, numeric) RETURNS numeric AS
-        \'SELECT greatest($1, greatest($2, $3));\'
-        LANGUAGE \'sql\''
-      );
       // Don't use {} around pg_proc table.
       if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'")->fetchField()) {
         db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
@@ -215,28 +206,6 @@ class Tasks extends InstallTasks {
         \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
         LANGUAGE \'sql\''
       );
-
-      // Using || to concatenate in Drupal is not recommended because there are
-      // database drivers for Drupal that do not support the syntax, however
-      // they do support CONCAT(item1, item2) which we can replicate in
-      // PostgreSQL. PostgreSQL requires the function to be defined for each
-      // different argument variation the function can handle.
-      db_query('CREATE OR REPLACE FUNCTION "concat"(anynonarray, anynonarray) RETURNS text AS
-        \'SELECT CAST($1 AS text) || CAST($2 AS text);\'
-        LANGUAGE \'sql\'
-      ');
-      db_query('CREATE OR REPLACE FUNCTION "concat"(text, anynonarray) RETURNS text AS
-        \'SELECT $1 || CAST($2 AS text);\'
-        LANGUAGE \'sql\'
-      ');
-      db_query('CREATE OR REPLACE FUNCTION "concat"(anynonarray, text) RETURNS text AS
-        \'SELECT CAST($1 AS text) || $2;\'
-        LANGUAGE \'sql\'
-      ');
-      db_query('CREATE OR REPLACE FUNCTION "concat"(text, text) RETURNS text AS
-        \'SELECT $1 || $2;\'
-        LANGUAGE \'sql\'
-      ');
 
       $this->pass(t('PostgreSQL has initialized itself.'));
     }
