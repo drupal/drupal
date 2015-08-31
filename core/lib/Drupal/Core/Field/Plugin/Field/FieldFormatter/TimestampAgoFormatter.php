@@ -40,10 +40,10 @@ class TimestampAgoFormatter extends FormatterBase implements ContainerFactoryPlu
   protected $dateFormatter;
 
   /**
-    * The current Request object.
-    *
-    * @var \Symfony\Component\HttpFoundation\Request
-    */
+   * The current Request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
   protected $request;
 
   /**
