@@ -128,20 +128,6 @@ class SafeMarkup {
   }
 
   /**
-   * Encodes special characters in a plain-text string for display as HTML.
-   *
-   * @param string $string
-   *   A string.
-   *
-   * @return string
-   *   The escaped string. If $string was already set as safe with
-   *   self::set(), it won't be escaped again.
-   */
-  public static function escape($string) {
-    return static::isSafe($string) ? $string : static::checkPlain($string);
-  }
-
-  /**
   * Gets all strings currently marked as safe.
   *
   * This is useful for the batch and form APIs, where it is important to
@@ -236,13 +222,18 @@ class SafeMarkup {
       switch ($key[0]) {
         case '@':
           // Escaped only.
-          $args[$key] = static::escape($value);
+          if (!SafeMarkup::isSafe($value)) {
+            $args[$key] = Html::escape($value);
+          }
           break;
 
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = '<em class="placeholder">' . static::escape($value) . '</em>';
+          if (!SafeMarkup::isSafe($value)) {
+            $value = Html::escape($value);
+          }
+          $args[$key] = '<em class="placeholder">' . $value . '</em>';
           break;
 
         case '!':

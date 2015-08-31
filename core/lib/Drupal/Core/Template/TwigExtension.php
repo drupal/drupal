@@ -141,7 +141,7 @@ class TwigExtension extends \Twig_Extension {
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
       //   https://github.com/fabpot/Twig/issues/1420
-      new \Twig_SimpleFilter('safe_join', 'twig_drupal_join_filter', array('is_safe' => array('html'))),
+      new \Twig_SimpleFilter('safe_join', [$this, 'safeJoin'], ['needs_environment' => true, 'is_safe' => ['html']]),
 
       // Array filters.
       new \Twig_SimpleFilter('without', 'twig_without'),
@@ -486,6 +486,28 @@ class TwigExtension extends \Twig_Extension {
     }
     $arg['#printed'] = FALSE;
     return $this->renderer->render($arg);
+  }
+
+  /**
+   * Joins several strings together safely.
+   *
+   * @param \Twig_Environment $env
+   *   A Twig_Environment instance.
+   * @param mixed[]|\Traversable $value
+   *   The pieces to join.
+   * @param string $glue
+   *   The delimiter with which to join the string. Defaults to an empty string.
+   *   This value is expected to be safe for output and user provided data
+   *   should never be used as a glue.
+   *
+   * @return string
+   *   The strings joined together.
+   */
+  public function safeJoin(\Twig_Environment $env, $value, $glue = '') {
+    return implode($glue, array_map(function($item) use ($env) {
+      // If $item is not marked safe then it will be escaped.
+      return $this->escapeFilter($env, $item, 'html', NULL, TRUE);
+    }, $value));
   }
 
 }

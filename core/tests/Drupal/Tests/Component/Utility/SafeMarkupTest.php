@@ -161,7 +161,7 @@ class SafeMarkupTest extends UnitTestCase {
    *
    * @param string $string
    *   The string to run through SafeMarkup::format().
-   * @param string $args
+   * @param string[] $args
    *   The arguments to pass into SafeMarkup::format().
    * @param string $expected
    *   The expected result from calling the function.
@@ -170,10 +170,14 @@ class SafeMarkupTest extends UnitTestCase {
    * @param bool $expected_is_safe
    *   Whether the result is expected to be safe for HTML display.
    */
-  function testFormat($string, $args, $expected, $message, $expected_is_safe) {
+  public function testFormat($string, array $args, $expected, $message, $expected_is_safe) {
     $result = SafeMarkup::format($string, $args);
     $this->assertEquals($expected, $result, $message);
     $this->assertEquals($expected_is_safe, SafeMarkup::isSafe($result), 'SafeMarkup::format correctly sets the result as safe or not safe.');
+
+    foreach ($args as $arg) {
+      $this->assertSame($arg instanceof SafeMarkupTestSafeString, SafeMarkup::isSafe($arg));
+    }
   }
 
   /**
@@ -191,25 +195,6 @@ class SafeMarkupTest extends UnitTestCase {
     $tests[] = array('Verbatim text: !value', array('!value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Verbatim text: <span>Safe HTML</span>', 'SafeMarkup::format replaces verbatim string as-is.', TRUE);
 
     return $tests;
-  }
-
-  /**
-   * Tests the interaction between the safe list and XSS filtering.
-   *
-   * @covers ::escape
-   */
-  public function testAdminXss() {
-    // Mark the string as safe. This is for test purposes only.
-    $text = '<marquee>text</marquee>';
-    SafeMarkup::set($text);
-
-    // SafeMarkup::escape() will not escape the markup tag since the string was
-    // marked safe above.
-    $this->assertEquals('<marquee>text</marquee>', SafeMarkup::escape($text));
-
-    // SafeMarkup::checkPlain() will escape the markup tag even though the
-    // string was marked safe above.
-    $this->assertEquals('&lt;marquee&gt;text&lt;/marquee&gt;', SafeMarkup::checkPlain($text));
   }
 
 }

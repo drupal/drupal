@@ -151,29 +151,3 @@ function twig_without($element) {
   }
   return $filtered_element;
 }
-
-/**
- * Overrides twig_join_filter().
- *
- * Safely joins several strings together.
- *
- * @param array|Traversable $value
- *   The pieces to join.
- * @param string $glue
- *   The delimiter with which to join the string. Defaults to an empty string.
- *   This value is expected to be safe for output and user provided data should
- *   never be used as a glue.
- *
- * @return \Twig_Markup
- *   The imploded string, which is wrapped in \Twig_Markup because it is safe.
- */
-function twig_drupal_join_filter($value, $glue = '') {
-  $separator = '';
-  $output = '';
-  foreach ($value as $item) {
-    $output .= $separator . SafeMarkup::escape($item);
-    $separator = $glue;
-  }
-
-  return new \Twig_Markup($output, 'UTF-8');
-}

@@ -7,6 +7,9 @@
 
 namespace Drupal\Tests\Core\Template;
 
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
 use Drupal\Tests\UnitTestCase;
 
@@ -122,6 +125,31 @@ class TwigExtensionTest extends UnitTestCase {
     // Ensure objects that do not implement SafeStringInterface are escaped.
     $string_object = new TwigExtensionTestString("<script>alert('here');</script>");
     $this->assertSame('&lt;script&gt;alert(&#039;here&#039;);&lt;/script&gt;', $twig_extension->escapeFilter($twig, $string_object, 'html', 'UTF-8', TRUE));
+  }
+
+  /**
+   * @covers ::safeJoin
+   */
+  public function testSafeJoin() {
+    $renderer = $this->prophesize(RendererInterface::class);
+    $renderer->render(['#markup' => '<strong>will be rendered</strong>', '#printed' => FALSE])->willReturn('<strong>will be rendered</strong>');
+    $renderer = $renderer->reveal();
+
+    $twig_extension = new TwigExtension($renderer);
+    $twig_environment = $this->prophesize(TwigEnvironment::class)->reveal();
+
+
+    // Simulate t().
+    $string = '<em>will be markup</em>';
+    SafeMarkup::setMultiple([$string => ['html' => TRUE]]);
+
+    $items = [
+      '<em>will be escaped</em>',
+      $string,
+      ['#markup' => '<strong>will be rendered</strong>']
+    ];
+    $result = $twig_extension->safeJoin($twig_environment, $items, '<br/>');
+    $this->assertEquals('&lt;em&gt;will be escaped&lt;/em&gt;<br/><em>will be markup</em><br/><strong>will be rendered</strong>', $result);
   }
 
 }
