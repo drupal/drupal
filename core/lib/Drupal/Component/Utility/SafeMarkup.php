@@ -169,6 +169,13 @@ class SafeMarkup {
    *
    * @ingroup sanitization
    *
+   * @deprecated Will be removed before Drupal 8.0.0. Rely on Twig's
+   *   auto-escaping feature, or use the @link theme_render #plain_text @endlink
+   *   key when constructing a render array that contains plain text in order to
+   *   use the renderer's auto-escaping feature. If neither of these are
+   *   possible, \Drupal\Component\Utility\Html::escape() can be used in places
+   *   where explicit escaping is needed.
+   *
    * @see drupal_validate_utf8()
    */
   public static function checkPlain($text) {
