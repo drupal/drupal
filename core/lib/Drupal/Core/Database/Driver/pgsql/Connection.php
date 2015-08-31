@@ -118,7 +118,16 @@ class Connection extends DatabaseConnection {
       // Convert numeric values to strings when fetching.
       \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );
-    $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+
+    try {
+      $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+    }
+    catch (\Exception $e) {
+      if ($e->getCode() == static::DATABASE_NOT_FOUND) {
+        throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
+      }
+      throw new $e;
+    }
 
     return $pdo;
   }
