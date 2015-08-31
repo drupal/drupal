@@ -7,7 +7,6 @@
 
 namespace Drupal\form_test\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -57,7 +56,7 @@ class FormTestStoragePageCacheForm extends FormBase {
    */
   function form_test_storage_page_cache_old_build_id($form) {
     if (isset($form['#build_id_old'])) {
-      $form['test_build_id_old']['#markup'] = SafeMarkup::checkPlain($form['#build_id_old']);
+      $form['test_build_id_old']['#plain_text'] = $form['#build_id_old'];
     }
     return $form;
   }

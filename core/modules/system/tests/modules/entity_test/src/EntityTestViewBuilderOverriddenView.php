@@ -7,7 +7,6 @@
 
 namespace Drupal\entity_test;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -20,7 +19,7 @@ class EntityTestViewBuilderOverriddenView extends EntityTestViewBuilder {
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $build = [];
-    $build[$entity->id()]['#markup'] = SafeMarkup::checkPlain($entity->label());
+    $build[$entity->id()]['#plain_text'] = $entity->label();
     return $build;
   }
 

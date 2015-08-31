@@ -480,16 +480,16 @@ class StyleSerializerTest extends PluginTestBase {
       $entities[] = $row->_entity;
     }
 
-    $expected = Html::escape($serializer->serialize($entities, 'json'));
+    $expected = $serializer->serialize($entities, 'json');
 
     $view->live_preview = TRUE;
 
     $build = $view->preview();
-    $rendered_json = $build['#markup'];
-    $this->assertEqual($rendered_json, $expected, 'Ensure the previewed json is escaped.');
+    $rendered_json = $build['#plain_text'];
+    $this->assertTrue(!isset($build['#markup']) && $rendered_json == $expected, 'Ensure the previewed json is escaped.');
     $view->destroy();
 
-    $expected = Html::escape($serializer->serialize($entities, 'xml'));
+    $expected = $serializer->serialize($entities, 'xml');
 
     // Change the request format to xml.
     $view->setDisplay('rest_export_1');
@@ -505,7 +505,7 @@ class StyleSerializerTest extends PluginTestBase {
 
     $this->executeView($view);
     $build = $view->preview();
-    $rendered_xml = $build['#markup'];
+    $rendered_xml = $build['#plain_text'];
     $this->assertEqual($rendered_xml, $expected, 'Ensure we preview xml when we change the request format.');
   }
 

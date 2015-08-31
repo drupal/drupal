@@ -8,7 +8,6 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Plugin implementation of the 'entity reference ID' formatter.
@@ -33,7 +32,7 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
     foreach ($this->getEntitiesToView($items) as $delta => $entity) {
       if ($entity->id()) {
         $elements[$delta] = array(
-          '#markup' => SafeMarkup::checkPlain($entity->id()),
+          '#plain_text' => $entity->id(),
           // Create a cache tag entry for the referenced entity. In the case
           // that the referenced entity is deleted, the cache for referring
           // entities must be cleared.

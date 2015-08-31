@@ -5,7 +5,6 @@
  * The content translation administration forms.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -216,10 +215,10 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
               'bundle' => array(
                 '#prefix' => '<span class="visually-hidden">',
                 '#suffix' => '</span> ',
-                '#markup' => SafeMarkup::checkPlain($element[$bundle]['settings']['#label']),
+                '#plain_text' => $element[$bundle]['settings']['#label'],
               ),
               'field' => array(
-                '#markup' => SafeMarkup::checkPlain($field_element['#label']),
+                '#plain_text' => $field_element['#label'],
               ),
             ),
             'class' => array('field'),
@@ -250,15 +249,15 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
                   'bundle' => array(
                     '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
-                    '#markup' => SafeMarkup::checkPlain($element[$bundle]['settings']['#label']),
+                    '#plain_text' => $element[$bundle]['settings']['#label'],
                   ),
                   'field' => array(
                     '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
-                    '#markup' => SafeMarkup::checkPlain($field_element['#label']),
+                    '#plain_text' => $field_element['#label'],
                   ),
                   'columns' => array(
-                    '#markup' => SafeMarkup::checkPlain($column_label),
+                    '#plain_text' => $column_label,
                   ),
                 ),
                 'class' => array('column'),

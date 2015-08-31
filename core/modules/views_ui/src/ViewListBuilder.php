@@ -102,7 +102,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
         ),
         'description' => array(
           'data' => array(
-            '#markup' => SafeMarkup::checkPlain($view->get('description')),
+            '#plain_text' => $view->get('description'),
           ),
           'class' => array('views-table-filter-text-source'),
         ),

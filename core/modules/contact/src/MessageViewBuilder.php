@@ -9,7 +9,6 @@ namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Render\Element;
 
@@ -42,7 +41,7 @@ class MessageViewBuilder extends EntityViewBuilder {
         $build[$id]['message'] = array(
           '#type' => 'item',
           '#title' => t('Message'),
-          '#markup' => SafeMarkup::checkPlain($entity->getMessage()),
+          '#plain_text' => $entity->getMessage(),
         );
       }
     }

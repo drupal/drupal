@@ -8,7 +8,6 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\block\BlockInterface;
@@ -73,7 +72,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'admin_label' => array(
         '#type' => 'item',
         '#title' => t('Block description'),
-        '#markup' => SafeMarkup::checkPlain($definition['admin_label']),
+        '#plain_text' => $definition['admin_label'],
       ),
       'label' => array(
         '#type' => 'textfield',

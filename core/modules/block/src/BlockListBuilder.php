@@ -9,7 +9,6 @@ namespace Drupal\block;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -261,7 +260,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
             $form[$entity_id]['#attributes']['class'][] = 'js-block-placed';
           }
           $form[$entity_id]['info'] = array(
-            '#markup' => SafeMarkup::checkPlain($info['label']),
+            '#plain_text' => $info['label'],
             '#wrapper_attributes' => array(
               'class' => array('block'),
             ),

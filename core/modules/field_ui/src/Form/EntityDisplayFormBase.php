@@ -10,7 +10,6 @@ namespace Drupal\field_ui\Form;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -290,7 +289,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         'defaultPlugin' => $this->getDefaultPlugin($field_definition->getType()),
       ),
       'human_name' => array(
-        '#markup' => SafeMarkup::checkPlain($label),
+        '#plain_text' => $label,
       ),
       'weight' => array(
         '#type' => 'textfield',

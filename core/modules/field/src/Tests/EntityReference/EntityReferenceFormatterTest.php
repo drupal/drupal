@@ -174,7 +174,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $formatter = 'entity_reference_entity_id';
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter);
 
-    $this->assertEqual($build[0]['#markup'], $this->referencedEntity->id(), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
+    $this->assertEqual($build[0]['#plain_text'], $this->referencedEntity->id(), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $this->assertEqual($build[0]['#cache']['tags'], $this->referencedEntity->getCacheTags(), sprintf('The %s formatter has the expected cache tags.', $formatter));
     $this->assertTrue(!isset($build[1]), sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
   }
@@ -244,7 +244,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     // The second referenced entity is "autocreated", therefore not saved and
     // lacking any URL info.
     $expected_item_2 = array(
-      '#markup' => $this->unsavedReferencedEntity->label(),
+      '#plain_text' => $this->unsavedReferencedEntity->label(),
       '#cache' => array(
         'contexts' => [
           'user.permissions',
@@ -257,8 +257,8 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
     // Test with the 'link' setting set to FALSE.
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter, array('link' => FALSE));
-    $this->assertEqual($build[0]['#markup'], $this->referencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
-    $this->assertEqual($build[1]['#markup'], $this->unsavedReferencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
+    $this->assertEqual($build[0]['#plain_text'], $this->referencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
+    $this->assertEqual($build[1]['#plain_text'], $this->unsavedReferencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
 
     // Test an entity type that doesn't have any link templates, which means
     // \Drupal\Core\Entity\EntityInterface::urlInfo() will throw an exception
@@ -273,7 +273,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $referenced_entity_with_no_link_template->save();
 
     $build = $this->buildRenderArray([$referenced_entity_with_no_link_template], $formatter, array('link' => TRUE));
-    $this->assertEqual($build[0]['#markup'], $referenced_entity_with_no_link_template->label(), sprintf('The markup returned by the %s formatter is correct for an entity type with no valid link template.', $formatter));
+    $this->assertEqual($build[0]['#plain_text'], $referenced_entity_with_no_link_template->label(), sprintf('The markup returned by the %s formatter is correct for an entity type with no valid link template.', $formatter));
   }
 
   /**

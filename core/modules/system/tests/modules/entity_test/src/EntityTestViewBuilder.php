@@ -7,7 +7,6 @@
 
 namespace Drupal\entity_test;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 
@@ -36,7 +35,7 @@ class EntityTestViewBuilder extends EntityViewBuilder {
     foreach ($entities as $id => $entity) {
       $build[$id]['label'] = array(
         '#weight' => -100,
-        '#markup' => SafeMarkup::checkPlain($entity->label()),
+        '#plain_text' => $entity->label(),
       );
       $build[$id]['separator'] = array(
         '#weight' => -150,
@@ -44,7 +43,7 @@ class EntityTestViewBuilder extends EntityViewBuilder {
       );
       $build[$id]['view_mode'] = array(
         '#weight' => -200,
-        '#markup' => SafeMarkup::checkPlain($view_mode),
+        '#plain_text' => $view_mode,
       );
     }
   }
