@@ -63,7 +63,13 @@
 
       // Store the actual value of this field. We'll need this to restore the
       // original value when the user discards his modifications.
-      this.$textElement = this.$el.find('.field__item').eq(0);
+      var $fieldItems = this.$el.find('.field__item');
+      if ($fieldItems.length) {
+        this.$textElement = $fieldItems.eq(0);
+      }
+      else {
+        this.$textElement = this.$el;
+      }
       this.model.set('originalValue', this.$textElement.html());
     },
 
