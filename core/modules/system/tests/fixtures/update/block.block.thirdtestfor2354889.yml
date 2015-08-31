@@ -27,4 +27,4 @@ visibility:
       page: page
     negate: false
     context_mapping:
-      baloney: baloney.spam
+      baloney: baloney_spam

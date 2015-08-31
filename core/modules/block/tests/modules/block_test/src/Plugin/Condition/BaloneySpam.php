@@ -10,10 +10,10 @@ namespace Drupal\block_test\Plugin\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 
 /**
- * Provides a 'baloney.spam' condition.
+ * Provides a 'baloney_spam' condition.
  *
  * @Condition(
- *   id = "baloney.spam",
+ *   id = "baloney_spam",
  *   label = @Translation("Baloney spam"),
  * )
  *

@@ -96,7 +96,7 @@ class BlockContextMappingUpdateTest extends UpdatePathTestBase {
     $disabled_block = Block::load('thirdtestfor2354889');
     $this->assertFalse($disabled_block->status(), 'Block with invalid context is disabled');
 
-    $this->assertEqual(['thirdtestfor2354889' => ['missing_context_ids' => ['baloney.spam' => ['node_type']], 'status' => TRUE]], \Drupal::keyValue('update_backup')->get('block_update_8001'));
+    $this->assertEqual(['thirdtestfor2354889' => ['missing_context_ids' => ['baloney_spam' => ['node_type']], 'status' => TRUE]], \Drupal::keyValue('update_backup')->get('block_update_8001'));
 
     $disabled_block_visibility = $disabled_block->get('visibility');
     $this->assertTrue(!isset($disabled_block_visibility['node_type']), 'The problematic visibility condition has been removed.');
