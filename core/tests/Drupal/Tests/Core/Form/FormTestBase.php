@@ -209,8 +209,7 @@ abstract class FormTestBase extends UnitTestCase {
    * Provides a mocked form object.
    *
    * @param string $form_id
-   *   (optional) The form ID to be used. If none is provided, the form will be
-   *   set with no expectation about getFormId().
+   *   The form ID to be used.
    * @param mixed $expected_form
    *   (optional) If provided, the expected form response for buildForm() to
    *   return. Defaults to NULL.
