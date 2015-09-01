@@ -238,6 +238,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $this->drupalGet($this->updateUrl);
     $this->clickLink(t('Continue'));
 
+    $this->doSelectionTest();
     // Run the update hooks.
     $this->clickLink(t('Apply pending updates'));
 
@@ -271,6 +272,15 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $account->setEmail($this->rootUser->getEmail());
     $account->setUsername($this->rootUser->getUsername());
     $account->save();
+  }
+
+  /**
+   * Tests the selection page.
+   */
+  protected function doSelectionTest() {
+    // No-op. Tests wishing to do test the selection page or the general
+    // update.php environment before running update.php can override this method
+    // and implement their required tests.
   }
 
 }
