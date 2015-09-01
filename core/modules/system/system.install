@@ -1183,6 +1183,26 @@ function system_update_8001(&$sandbox = NULL) {
   if ($schema->tableExists('menu_tree')) {
 
     if (!isset($sandbox['current'])) {
+      // Converting directly to blob can cause problems with reading out and
+      // serializing the string data later on postgres, so rename the existing
+      // columns and create replacement ones to hold the serialized objects.
+      $old_fields = array(
+        'title' => array(
+          'description' => 'The text displayed for the link.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'description' => array(
+          'description' => 'The description of this link - used for admin pages and title attribute.',
+          'type' => 'text',
+          'not null' => FALSE,
+        ),
+      );
+      foreach ($old_fields as $name => $spec) {
+        $schema->changeField('menu_tree', $name, 'system_update_8001_' . $name, $spec);
+      }
       $spec = array(
         'description' => 'The title for the link. May be a serialized TranslationWrapper.',
         'type' => 'blob',
@@ -1190,7 +1210,7 @@ function system_update_8001(&$sandbox = NULL) {
         'not null' => FALSE,
         'serialize' => TRUE,
       );
-      $schema->changeField('menu_tree', 'title', 'title', $spec);
+      $schema->addField('menu_tree', 'title', $spec);
       $spec = array(
         'description' => 'The description of this link - used for admin pages and title attribute.',
         'type' => 'blob',
@@ -1198,14 +1218,14 @@ function system_update_8001(&$sandbox = NULL) {
         'not null' => FALSE,
         'serialize' => TRUE,
       );
-      $schema->changeField('menu_tree', 'description', 'description', $spec);
+      $schema->addField('menu_tree', 'description', $spec);
 
       $sandbox['current'] = 0;
       $sandbox['max'] = $database->query('SELECT COUNT(mlid) FROM {menu_tree}')
         ->fetchField();
     }
 
-    $menu_links = $database->queryRange('SELECT mlid, title, description FROM {menu_tree} ORDER BY mlid ASC', $sandbox['current'], $sandbox['current'] + 50)
+    $menu_links = $database->queryRange('SELECT mlid, system_update_8001_title AS title, system_update_8001_description AS description FROM {menu_tree} ORDER BY mlid ASC', $sandbox['current'], $sandbox['current'] + 50)
       ->fetchAllAssoc('mlid');
 
     foreach ($menu_links as $menu_link) {
@@ -1226,8 +1246,10 @@ function system_update_8001(&$sandbox = NULL) {
 
     if ($sandbox['#finished'] >= 1) {
       // Drop unnecessary fields from {menu_tree}.
+      $schema->dropField('menu_tree', 'system_update_8001_title');
       $schema->dropField('menu_tree', 'title_arguments');
       $schema->dropField('menu_tree', 'title_context');
+      $schema->dropField('menu_tree', 'system_update_8001_description');
     }
     return t('Menu links converted');
   }
