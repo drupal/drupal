@@ -721,7 +721,7 @@ class Schema extends DatabaseSchema {
         // Convert to a bytea type by using the SQL replace() function to
         // convert any single backslashes in the field content to double
         // backslashes ('\' to '\\').
-        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING convert_to("' . $field . '", ' . "'UTF8')");
+        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING decode(replace("' . $field . '"' . ", '\\', '\\\\'), 'escape');");
       }
     }
 
