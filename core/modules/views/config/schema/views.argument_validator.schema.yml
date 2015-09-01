@@ -36,3 +36,6 @@ views.argument_validator_entity:
     multiple:
       type: integer
       label: 'Multiple arguments'
+
+views.argument_validator.entity:*:
+  type: views.argument_validator_entity
