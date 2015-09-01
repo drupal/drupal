@@ -122,9 +122,11 @@ class Serializer extends StylePluginBase implements CacheablePluginInterface {
     // which will transform it to arrays/scalars. If the Data field row plugin
     // is used, $rows will not contain objects and will pass directly to the
     // Encoder.
-    foreach ($this->view->result as $row) {
+    foreach ($this->view->result as $row_index => $row) {
+      $this->view->row_index = $row_index;
       $rows[] = $this->view->rowPlugin->render($row);
     }
+    unset($this->view->row_index);
 
     // Get the content type configured in the display or fallback to the
     // default.
