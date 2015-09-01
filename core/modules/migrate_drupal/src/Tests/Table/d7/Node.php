@@ -135,10 +135,10 @@ class Node extends DrupalDumpBase {
       'type' => 'test_content_type',
       'language' => 'en',
       'title' => 'A Node',
-      'uid' => '1',
+      'uid' => '2',
       'status' => '1',
       'created' => '1421727515',
-      'changed' => '1421727515',
+      'changed' => '1441032132',
       'comment' => '2',
       'promote' => '1',
       'sticky' => '0',
@@ -148,4 +148,4 @@ class Node extends DrupalDumpBase {
   }
 
 }
-#ad72334d15f155644075803c26757ee5
+#06cbcf4df265ff717f83f472c22fdbcf

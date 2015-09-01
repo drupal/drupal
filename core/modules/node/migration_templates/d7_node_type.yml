@@ -1,0 +1,21 @@
+id: d7_node_type
+label: Drupal 7 node type configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_node_type
+  constants:
+    preview: 1 # DRUPAL_OPTIONAL
+process:
+  type: type
+  name: name
+  description: description
+  help: help
+  title_label: title_label
+  preview_mode: 'constants/preview'
+  display_submitted: display_submitted
+  new_revision: 'options/revision'
+  create_body: create_body
+  create_body_label: body_label
+destination:
+  plugin: entity:node_type

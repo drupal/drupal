@@ -1,0 +1,31 @@
+id: d7_node_revision
+label: Drupal 7 node revisions
+migration_tags:
+  - Drupal 7
+builder:
+  plugin: d7_node
+source:
+  plugin: d7_node_revision
+process:
+  nid: nid
+  vid: vid
+  type: type
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: "und"
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+destination:
+  plugin: entity_revision:node
+migration_dependencies:
+  required:
+    - d7_node:*
