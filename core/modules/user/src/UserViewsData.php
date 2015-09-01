@@ -245,7 +245,7 @@ class UserViewsData extends EntityViewsData {
         'allow empty' => TRUE,
       ),
       'argument' => array(
-        'id' => 'user__roles_target_id',
+        'id' => 'user__roles_rid',
         'name table' => 'role',
         'name field' => 'name',
         'empty field name' => t('No role'),

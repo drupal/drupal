@@ -72,15 +72,15 @@ class RolesRidTest extends UnitTestCase {
     $roles_rid_argument = new RolesRid(array(), 'user__roles_rid', array(), $entity_manager);
 
     $roles_rid_argument->value = array();
-    $titles = $roles_rid_argument->title_query();
+    $titles = $roles_rid_argument->titleQuery();
     $this->assertEquals(array(), $titles);
 
     $roles_rid_argument->value = array('test_rid_1');
-    $titles = $roles_rid_argument->title_query();
+    $titles = $roles_rid_argument->titleQuery();
     $this->assertEquals(array('test rid 1'), $titles);
 
     $roles_rid_argument->value = array('test_rid_1', 'test_rid_2');
-    $titles = $roles_rid_argument->title_query();
+    $titles = $roles_rid_argument->titleQuery();
     $this->assertEquals(array('test rid 1', Html::escape('test <strong>rid 2</strong>')), $titles);
   }
 

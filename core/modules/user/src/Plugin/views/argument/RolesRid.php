@@ -56,7 +56,7 @@ class RolesRid extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function title_query() {
+  public function titleQuery() {
     $entities = $this->roleStorage->loadMultiple($this->value);
     $titles = array();
     foreach ($entities as $entity) {
