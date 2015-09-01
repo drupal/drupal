@@ -515,8 +515,8 @@ function _filter_url($text, $filter) {
   // 1. Allow =&# for empty URL parameters and other URL-join artifacts
   $valid_url_ending_characters = '[\p{L}\p{M}\p{N}:_+~#=/]|(?:' . $valid_url_balanced_parens . ')';
 
-  $valid_url_query_chars = '[a-z0-9!?\*\'@\(\);:&=\+\$\/%#\[\]\-_\.,~|]';
-  $valid_url_query_ending_chars = '[a-z0-9_&=#\/]';
+  $valid_url_query_chars = '[a-zA-Z0-9!?\*\'@\(\);:&=\+\$\/%#\[\]\-_\.,~|]';
+  $valid_url_query_ending_chars = '[a-zA-Z0-9_&=#\/]';
 
   //full path
   //and allow @ in a url, but only in the middle. Catch things like http://example.com/@user/
