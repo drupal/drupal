@@ -21,12 +21,12 @@ process:
       source:
         - field_name
     -
+      plugin: skip_on_empty
+      method: row
+    -
       plugin: extract
       index:
         - 1
-    -
-      plugin: skip_on_empty
-      method: row
   entity_type: 'constants/entity_type'
   bundle: type_name
   view_mode:
@@ -35,6 +35,9 @@ process:
       migration: d6_view_modes
       source:
         - view_mode
+    -
+      plugin: skip_on_empty
+      method: row
     -
       plugin: extract
       index:

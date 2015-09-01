@@ -11,7 +11,6 @@ namespace Drupal\migrate\Plugin\migrate\process;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateSkipProcessException;
-use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Entity\MigrationInterface;
@@ -145,7 +144,6 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
         return $destination_ids;
       }
     }
-    throw new MigrateSkipRowException();
   }
 
   /**
