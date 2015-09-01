@@ -186,14 +186,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
     // not safe to do here, because the database has not been updated yet.
     $this->container = \Drupal::getContainer();
 
-    // Replace User 1 with the user created here.
-    // @todo: do this without saving the user account.
-    /** @var \Drupal\user\UserInterface $account */
-    $account = User::load(1);
-    $account->setPassword($this->rootUser->pass_raw);
-    $account->setEmail($this->rootUser->getEmail());
-    $account->setUsername($this->rootUser->getUsername());
-    $account->save();
+    $this->replaceUser1();
   }
 
   /**
@@ -264,6 +257,20 @@ abstract class UpdatePathTestBase extends WebTestBase {
 
     // Ensure that the update hooks updated all entity schema.
     $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After all updates ran, entity schema is up to date.');
+  }
+
+  /**
+   * Replace User 1 with the user created here.
+   */
+  protected function replaceUser1() {
+    /** @var \Drupal\user\UserInterface $account */
+    // @todo: Saving the account before the update is problematic.
+    //   https://www.drupal.org/node/2560237
+    $account = User::load(1);
+    $account->setPassword($this->rootUser->pass_raw);
+    $account->setEmail($this->rootUser->getEmail());
+    $account->setUsername($this->rootUser->getUsername());
+    $account->save();
   }
 
 }
