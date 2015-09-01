@@ -70,10 +70,21 @@ class Connection extends DatabaseConnection {
     // Force PostgreSQL to use the UTF-8 character set by default.
     $this->connection->exec("SET NAMES 'UTF8'");
 
+    // Set PostgreSQL init_commands if not already defined.
+    $connection_options += array(
+      'init_commands' => array(),
+    );
+
+    $connection_options['init_commands'] += array(
+      // Set standard_conforming_strings to off so as to treat backslashes as
+      // escape characters, complying with historical PostgreSQL behavior. In
+      // PostgreSQL 9.1 and up this is on by default, however Drupal still
+      // assumes this to be off.
+      'standard_conforming_strings' => 'SET standard_conforming_strings = off',
+    );
+
     // Execute PostgreSQL init_commands.
-    if (isset($connection_options['init_commands'])) {
-      $this->connection->exec(implode('; ', $connection_options['init_commands']));
-    }
+    $this->connection->exec(implode('; ', $connection_options['init_commands']));
   }
 
   /**
