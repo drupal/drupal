@@ -51,6 +51,8 @@ class Node extends CckBuilder {
       $node_type = $row->getSourceProperty('type');
       $values = $template;
       $values['id'] = $template['id'] . '__' . $node_type;
+      $label = $template['label'];
+      $values['label'] = $this->t("@label (@type)", ['@label' => $label, '@type' => $node_type]);
       $values['source']['node_type'] = $node_type;
       $migration = Migration::create($values);
 

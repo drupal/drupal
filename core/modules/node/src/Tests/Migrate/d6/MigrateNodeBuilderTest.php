@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\migrate\Entity\Migration;
 
 /**
  * @group migrate_drupal_6
@@ -17,12 +18,28 @@ class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
   public static $modules = ['migrate', 'migrate_drupal', 'node'];
 
   /**
+   * Asserts various aspects of a migration entity.
+   *
+   * @param string $id
+   *   The migration ID.
+   * @param string $label
+   *   The label.
+   */
+  protected function assertEntity($id, $label) {
+    $migration = Migration::load($id);
+    $this->assertTrue($migration instanceof Migration);
+    $this->assertIdentical($id, $migration->Id());
+    $this->assertIdentical($label, $migration->label());
+  }
+
+  /**
    * Tests creating migrations from a template, using a builder plugin.
    */
   public function testCreateMigrations() {
     $templates = [
       'd6_node' => [
         'id' => 'd6_node',
+        'label' => 'Drupal 6 nodes',
         'builder' => [
           'plugin' => 'd6_node',
         ],
@@ -42,17 +59,17 @@ class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
 
     $migrations = \Drupal::service('migrate.migration_builder')->createMigrations($templates);
     $this->assertIdentical(11, count($migrations));
-    $this->assertIdentical('d6_node__article', $migrations[0]->id());
-    $this->assertIdentical('d6_node__company', $migrations[1]->id());
-    $this->assertIdentical('d6_node__employee', $migrations[2]->id());
-    $this->assertIdentical('d6_node__event', $migrations[3]->id());
-    $this->assertIdentical('d6_node__page', $migrations[4]->id());
-    $this->assertIdentical('d6_node__sponsor', $migrations[5]->id());
-    $this->assertIdentical('d6_node__story', $migrations[6]->id());
-    $this->assertIdentical('d6_node__test_event', $migrations[7]->id());
-    $this->assertIdentical('d6_node__test_page', $migrations[8]->id());
-    $this->assertIdentical('d6_node__test_planet', $migrations[9]->id());
-    $this->assertIdentical('d6_node__test_story', $migrations[10]->id());
+    $this->assertEntity('d6_node__article', 'Drupal 6 nodes (article)');
+    $this->assertEntity('d6_node__company', 'Drupal 6 nodes (company)');
+    $this->assertEntity('d6_node__employee', 'Drupal 6 nodes (employee)');
+    $this->assertEntity('d6_node__event', 'Drupal 6 nodes (event)');
+    $this->assertEntity('d6_node__page', 'Drupal 6 nodes (page)');
+    $this->assertEntity('d6_node__sponsor', 'Drupal 6 nodes (sponsor)');
+    $this->assertEntity('d6_node__story', 'Drupal 6 nodes (story)');
+    $this->assertEntity('d6_node__test_event', 'Drupal 6 nodes (test_event)');
+    $this->assertEntity('d6_node__test_page', 'Drupal 6 nodes (test_page)');
+    $this->assertEntity('d6_node__test_planet', 'Drupal 6 nodes (test_planet)');
+    $this->assertEntity('d6_node__test_story', 'Drupal 6 nodes (test_story)');
   }
 
 }
