@@ -562,6 +562,22 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
+  public function getMessageIterator(array $source_id_values = [], $level = NULL) {
+    $query = $this->getDatabase()->select($this->messageTableName(), 'msg')
+      ->fields('msg');
+    $count = 1;
+    foreach ($source_id_values as $id_value) {
+      $query->condition('sourceid' . $count++, $id_value);
+    }
+    if ($level) {
+      $query->condition('level', $level);
+    }
+    return $query->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function prepareUpdate() {
     $this->getDatabase()->update($this->mapTableName())
     ->fields(array('source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE))

@@ -287,25 +287,34 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
 
     foreach ($expected_results as $key => $expected_result) {
       $id_map->saveMessage([$key], $message, $expected_result['level']);
-      $message_row = $this->database->select($id_map->messageTableName(), 'message')
-                       ->fields('message')
-                       ->condition('level', $expected_result['level'])
-                       ->condition('message', $expected_result['message'])
-                       ->execute()
-                       ->fetchAssoc();
-      $this->assertEquals($expected_result['message'], $message_row['message'], 'Message from database was read.');
+    }
+
+    foreach ($id_map->getMessageIterator() as $message_row) {
+      $key = $message_row->sourceid1;
+      $this->assertEquals($expected_results[$key]['message'], $message_row->message);
+      $this->assertEquals($expected_results[$key]['level'], $message_row->level);
     }
 
     // Insert with default level.
     $message_default = 'Hello world default.';
     $id_map->saveMessage([5], $message_default);
-    $message_row = $this->database->select($id_map->messageTableName(), 'message')
-                     ->fields('message')
-                     ->condition('level', MigrationInterface::MESSAGE_ERROR)
-                     ->condition('message', $message_default)
-                     ->execute()
-                     ->fetchAssoc();
-    $this->assertEquals($message_default, $message_row['message'], 'Message from database was read.');
+    $messages = $id_map->getMessageIterator([5]);
+    $count = 0;
+    foreach ($messages as $key => $message_row) {
+      $count = 1;
+      $this->assertEquals($message_default, $message_row->message);
+      $this->assertEquals(MigrationInterface::MESSAGE_ERROR, $message_row->level);
+    }
+    $this->assertEquals($count, 1);
+
+    // Retrieve messages with a specific level.
+    $messages = $id_map->getMessageIterator([], MigrationInterface::MESSAGE_WARNING);
+    $count = 0;
+    foreach ($messages as $key => $message_row) {
+      $count = 1;
+      $this->assertEquals(MigrationInterface::MESSAGE_WARNING, $message_row->level);
+    }
+    $this->assertEquals($count, 1);
   }
 
   /**

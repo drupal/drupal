@@ -66,6 +66,20 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
   public function saveMessage(array $source_id_values, $message, $level = MigrationInterface::MESSAGE_ERROR);
 
   /**
+   * Retrieves an iterator over messages relate to source records.
+   *
+   * @param array $source_id_values
+   *   (optional) The source identifier values of a specific record to retrieve.
+   *   If empty, all messages are retrieved.
+   * @param int $level
+   *   (optional) Message severity. If NULL, retrieve messages of all severities.
+   *
+   * @return \Iterator
+   *   Retrieves an iterator over the message rows.
+   */
+  public function getMessageIterator(array $source_id_values = [], $level = NULL);
+
+  /**
    * Prepares to run a full update.
    *
    * Prepares this migration to run as an update - that is, in addition to
