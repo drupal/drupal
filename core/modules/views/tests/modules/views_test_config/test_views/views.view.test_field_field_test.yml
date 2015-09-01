@@ -32,6 +32,15 @@ display:
           entity_field: field_test
       style:
         type: html_list
+      sorts:
+        id:
+          id: vid
+          table: entity_test
+          field: id
+          order: ASC
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: id
     display_plugin: default
     display_title: Master
     id: default

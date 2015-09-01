@@ -531,7 +531,7 @@ class FieldFieldTest extends ViewKernelTestBase {
     $executable = Views::getView('test_field_field_test');
     $executable->execute();
 
-    $this->assertEqual('', $executable->getStyle()->getField(1, 'field_test'));
+    $this->assertEqual('', $executable->getStyle()->getField(6, 'field_test'));
   }
 
 }
