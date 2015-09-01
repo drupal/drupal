@@ -96,7 +96,7 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
     if ($persist) {
       // Always save the menu name as an override to avoid defaulting to tools.
       $overrides['menu_name'] = $this->pluginDefinition['menu_name'];
-      $this->staticOverride->saveOverride($this->getPluginId(), $overrides);
+      $this->staticOverride->saveOverride($this->getPluginId(), $this->pluginDefinition);
     }
     return $this->pluginDefinition;
   }
