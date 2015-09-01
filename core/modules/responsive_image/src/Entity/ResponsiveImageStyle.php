@@ -26,7 +26,6 @@ use Drupal\responsive_image\ResponsiveImageStyleInterface;
  *       "duplicate" = "Drupal\responsive_image\ResponsiveImageStyleForm"
  *     }
  *   },
- *   list_path = "admin/config/media/responsive-image-style",
  *   admin_permission = "administer responsive images",
  *   config_prefix = "styles",
  *   entity_keys = {

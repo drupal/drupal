@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldException;
  * @ConfigEntityType(
  *   id = "base_field_override",
  *   label = @Translation("Base field override"),
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\Core\Field\BaseFieldOverrideStorage"
  *   },
  *   config_prefix = "base_field_override",

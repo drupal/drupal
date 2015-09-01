@@ -233,6 +233,13 @@ class EntityType implements EntityTypeInterface {
   protected $constraints = array();
 
   /**
+   * Any additional properties and values.
+   *
+   * @var array
+   */
+  protected $additional = [];
+
+  /**
    * Constructs a new EntityType.
    *
    * @param array $definition
@@ -248,7 +255,7 @@ class EntityType implements EntityTypeInterface {
     }
 
     foreach ($definition as $property => $value) {
-      $this->{$property} = $value;
+      $this->set($property, $value);
     }
 
     // Ensure defaults.
@@ -279,14 +286,25 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function get($property) {
-    return isset($this->{$property}) ? $this->{$property} : NULL;
+    if (property_exists($this, $property)) {
+      $value = isset($this->{$property}) ? $this->{$property} : NULL;
+    }
+    else {
+      $value = isset($this->additional[$property]) ? $this->additional[$property] : NULL;
+    }
+    return $value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function set($property, $value) {
-    $this->{$property} = $value;
+    if (property_exists($this, $property)) {
+      $this->{$property} = $value;
+    }
+    else {
+      $this->additional[$property] = $value;
+    }
     return $this;
   }
 

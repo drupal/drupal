@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -29,6 +30,29 @@ class EntityTypeTest extends UnitTestCase {
       'id' => 'example_entity_type',
     );
     return new EntityType($definition);
+  }
+
+  /**
+   * @covers ::get
+   *
+   * @dataProvider providerTestGet
+   */
+  public function testGet(array $defintion, $key, $expected) {
+    $entity_type = $this->setUpEntityType($defintion);
+    $this->assertSame($expected, $entity_type->get($key));
+  }
+
+  /**
+   * @covers ::set
+   * @covers ::get
+   *
+   * @dataProvider providerTestSet
+   */
+  public function testSet($key, $value) {
+    $entity_type = $this->setUpEntityType([]);
+    $this->assertInstanceOf('Drupal\Core\Entity\EntityTypeInterface', $entity_type->set($key, $value));
+    $this->assertSame($value, $entity_type->get($key));
+    $this->assertNoPublicProperties($entity_type);
   }
 
   /**
@@ -62,6 +86,34 @@ class EntityTypeTest extends UnitTestCase {
     $this->assertSame(!empty($expected['bundle']), $entity_type->hasKey('bundle'));
     $this->assertSame(!empty($expected['id']), $entity_type->hasKey('id'));
     $this->assertSame(FALSE, $entity_type->hasKey('bananas'));
+  }
+
+  /**
+   * Provides test data for testGet.
+   */
+  public function providerTestGet() {
+    return [
+      [[], 'provider', NULL],
+      [['provider' => ''], 'provider', ''],
+      [['provider' => 'test'], 'provider', 'test'],
+      [[], 'something_additional', NULL],
+      [['something_additional' => ''], 'something_additional', ''],
+      [['something_additional' => 'additional'], 'something_additional', 'additional'],
+    ];
+  }
+
+  /**
+   * Provides test data for testSet.
+   */
+  public function providerTestSet() {
+    return [
+      ['provider', NULL],
+      ['provider', ''],
+      ['provider', 'test'],
+      ['something_additional', NULL],
+      ['something_additional', ''],
+      ['something_additional', 'additional'],
+    ];
   }
 
   /**
@@ -270,6 +322,16 @@ class EntityTypeTest extends UnitTestCase {
     $this->assertEquals($definition['constraints'] + ['Test' => NULL], $entity_type->getConstraints());
     $entity_type->setConstraints([]);
     $this->assertEquals([], $entity_type->getConstraints());
+  }
+
+  /**
+   * Asserts there on no public properties on the object instance.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   */
+  protected function assertNoPublicProperties(EntityTypeInterface $entity_type) {
+    $reflection = new \ReflectionObject($entity_type);
+    $this->assertEmpty($reflection->getProperties(\ReflectionProperty::IS_PUBLIC));
   }
 
 }

@@ -24,7 +24,6 @@ use Drupal\Component\Utility\NestedArray;
  * @ConfigEntityType(
  *   id = "migration",
  *   label = @Translation("Migration"),
- *   module = "migrate",
  *   handlers = {
  *     "storage" = "Drupal\migrate\MigrationStorage"
  *   },
