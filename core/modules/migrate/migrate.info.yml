@@ -1,7 +1,7 @@
 name: Migrate
 type: module
 description: 'Handles migrations'
-package: Core
+package: Core (Experimental)
 version: VERSION
 core: 8.x
 ;configure: admin/structure/migrate

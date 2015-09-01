@@ -50,6 +50,22 @@ function system_requirements($phase) {
         'weight' => -9
       );
     }
+
+    // Warn if any experimental modules are installed.
+    $experimental = array();
+    $enabled_modules = system_rebuild_module_data();
+    foreach ($enabled_modules as $module => $data) {
+      if ($data->info['package'] === 'Core (Experimental)') {
+        $experimental[$module] = $data->info['name'];
+      }
+    }
+    if (!empty($experimental)) {
+      $requirements['experimental'] = array(
+        'title' => t('Experimental modules enabled'),
+        'value' => t('Experimental modules found: %module_list. Experimental modules are provided for testing purposes only. Use at your own risk.', array('%module_list' => implode(', ', $experimental))),
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
   }
 
   // Web server information.
