@@ -2,45 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source\d6\MenuLinkSourceTest.
+ * Contains \Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source\MenuLinkSourceTest.
  */
-
-namespace Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source\d6;
+namespace Drupal\Tests\menu_link_content\Unit\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
- * Tests D6 menu link source plugin.
+ * Tests menu link source plugin.
  *
  * @group menu_link_content
  */
 class MenuLinkSourceTest extends MigrateSqlSourceTestCase {
 
-  // The plugin system is not working during unit testing so the source plugin
-  // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\menu_link_content\Plugin\migrate\source\d6\MenuLink';
+  const PLUGIN_CLASS = 'Drupal\menu_link_content\Plugin\migrate\source\MenuLink';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
-    // The ID of the entity, can be any string.
     'id' => 'mlid',
-    // This needs to be the identifier of the actual key: cid for comment, nid
-    // for node and so on.
     'source' => array(
-      'plugin' => 'drupal6_menu_link',
-    ),
-    'sourceIds' => array(
-      'mlid' => array(
-        // This is where the field schema would go but for now we need to
-        // specify the table alias for the key. Most likely this will be the
-        // same as BASE_ALIAS.
-        'alias' => 'ml',
-      ),
-    ),
-    'destinationIds' => array(
-      'mlid' => array(
-        // This is where the field schema would go.
-      ),
+      'plugin' => 'menu_link',
     ),
   );
 
@@ -105,10 +85,9 @@ class MenuLinkSourceTest extends MigrateSqlSourceTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    // This array stores the database.
     foreach ($this->expectedResults as $k => $row) {
+      $row['options'] = serialize($row['options']);
       $this->databaseContents['menu_links'][$k] = $row;
-      $this->databaseContents['menu_links'][$k]['options'] = serialize($this->databaseContents['menu_links'][$k]['options']);
     }
     parent::setUp();
   }

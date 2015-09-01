@@ -89,6 +89,6 @@ destination:
   plugin: entity:block
 migration_dependencies:
   required:
-    - d6_menu
+    - menu
     - d6_custom_block
     - d6_user_role

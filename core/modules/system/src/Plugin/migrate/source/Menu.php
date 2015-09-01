@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\system\Plugin\migrate\source\d6\Menu.
+ * Contains \Drupal\system\Plugin\migrate\source\Menu.
  */
 
-namespace Drupal\system\Plugin\migrate\source\d6;
+namespace Drupal\system\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal 6 menu source from database.
+ * Menu source from database.
  *
  * @MigrateSource(
- *   id = "d6_menu",
+ *   id = "menu",
  *   source_provider = "menu"
  * )
  */
@@ -23,9 +23,7 @@ class Menu extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('menu_custom', 'm')
-      ->fields('m', array('menu_name', 'title', 'description'));
-    return $query;
+    return $this->select('menu_custom', 'm')->fields('m');
   }
 
   /**

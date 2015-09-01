@@ -1,7 +1,7 @@
-id: d6_menu_links
-label: Drupal 6 menu links
+id: d7_menu_links
+label: Drupal 7 menu links
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
   plugin: menu_link
   constants:
@@ -18,7 +18,6 @@ process:
       - 0
       - attributes
       - title
-    default: ''
   menu_name:
     plugin: migration
     migration: menu
@@ -28,6 +27,15 @@ process:
     source:
       - link_path
   'link/options': options
+  route:
+    plugin: route
+    source:
+      - link_path
+      - options
+  route_name: @route/route_name
+  route_parameters: @route/route_parameters
+  url: @route/url
+  options: @route/options
   external: external
   weight: weight
   expanded: expanded
@@ -39,7 +47,7 @@ process:
       source: plid
     -
       plugin: migration
-      migration: d6_menu_links
+      migration: d7_menu_links
   changed: updated
 destination:
   plugin: entity:menu_link_content

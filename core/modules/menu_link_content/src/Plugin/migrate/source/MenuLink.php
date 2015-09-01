@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\menu_link_content\Plugin\migrate\source\d6\MenuLink.
+ * Contains \Drupal\menu_link_content\Plugin\migrate\source\MenuLink.
  */
 
-namespace Drupal\menu_link_content\Plugin\migrate\source\d6;
+namespace Drupal\menu_link_content\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
 /**
- * Drupal 6 menu link source from database.
+ * Drupal menu link source from database.
  *
  * @MigrateSource(
- *   id = "d6_menu_link",
+ *   id = "menu_link",
  * )
  */
 class MenuLink extends DrupalSqlBase {
@@ -23,37 +23,10 @@ class MenuLink extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('menu_links', 'ml')
-      ->fields('ml', array(
-        'menu_name',
-        'mlid',
-        'plid',
-        'link_path',
-        'router_path',
-        'link_title',
-        'options',
-        'module',
-        'hidden',
-        'external',
-        'has_children',
-        'expanded',
-        'weight',
-        'depth',
-        'customized',
-        'p1',
-        'p2',
-        'p3',
-        'p4',
-        'p5',
-        'p6',
-        'p7',
-        'p8',
-        'p9',
-        'updated'
-      ))
+    return $this->select('menu_links', 'ml')
+      ->fields('ml')
       ->condition('module', 'menu')
       ->condition('customized', 1);
-    return $query;
   }
 
   /**

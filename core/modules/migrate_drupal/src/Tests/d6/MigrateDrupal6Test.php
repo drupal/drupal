@@ -99,7 +99,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_forum_settings',
     'locale_settings',
     'd6_menu_settings',
-    'd6_menu',
+    'menu',
     'd6_menu_links',
     'd6_node_revision:*',
     'd6_node_setting_promote',

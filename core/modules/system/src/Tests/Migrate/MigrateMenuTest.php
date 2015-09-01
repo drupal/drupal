@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Migrate\d6\MigrateMenuTest.
+ * Contains \Drupal\system\Tests\Migrate\MigrateMenuTest.
  */
 
-namespace Drupal\system\Tests\Migrate\d6;
+namespace Drupal\system\Tests\Migrate;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\system\Entity\Menu;
@@ -24,7 +24,7 @@ class MigrateMenuTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_menu');
+    $this->executeMigration('menu');
   }
 
   /**
@@ -46,12 +46,11 @@ EOT;
       ->condition('menu_name', 'navigation')
       ->execute();
 
-    db_truncate(entity_load('migration', 'd6_menu')->getIdMap()->mapTableName())->execute();
-    $migration = entity_load_unchanged('migration', 'd6_menu');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $migration = Migration::load('menu');
+    db_truncate($migration->getIdMap()->mapTableName())->execute();
+    $this->executeMigration($migration);
 
-    $navigation_menu = entity_load_unchanged('menu', 'navigation');
+    $navigation_menu = Menu::load('navigation');
     $this->assertIdentical('Home Navigation', $navigation_menu->label());
   }
 

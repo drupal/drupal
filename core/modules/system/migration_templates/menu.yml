@@ -1,9 +1,10 @@
-id: d6_menu
-label: Drupal 6 menus
+id: menu
+label: Menus
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_menu
+  plugin: menu
 process:
   id: menu_name
   label: title

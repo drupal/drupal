@@ -53,7 +53,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
         array(array(1), array(1)),
         array(array(2), array(2)),
       ),
-      'd6_menu' => array(
+      'menu' => array(
         array(array('menu1'), array('menu')),
       ),
       'd6_user_role' => array(
