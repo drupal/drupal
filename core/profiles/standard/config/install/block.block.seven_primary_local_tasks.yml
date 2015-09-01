@@ -1,0 +1,17 @@
+id: seven_primary_local_tasks
+theme: seven
+weight: 0
+status: true
+langcode: en
+region: header
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Primary tabs
+  label_display: '0'
+  primary: true
+  secondary: false
+dependencies:
+  theme:
+    - seven
+visibility: {  }

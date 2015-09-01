@@ -191,10 +191,11 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
           'url' => Url::fromRoute($route_name, $route_parameters),
           'localized_options' => $plugin->getOptions($this->routeMatch),
         ),
-        '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account),
+        '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE),
         '#weight' => $plugin->getWeight(),
       );
     }
+
     return $links;
   }
 

@@ -18,7 +18,28 @@ use Drupal\simpletest\WebTestBase;
  */
 class LocalTasksTest extends WebTestBase {
 
-  public static $modules = array('menu_test', 'entity_test');
+  /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block', 'menu_test', 'entity_test'];
+
+  /**
+   * The local tasks block under testing.
+   *
+   * @var \Drupal\block\Entity\Block
+   */
+  protected $sut;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->sut = $this->drupalPlaceBlock('local_tasks_block', ['id' => 'tabs_block']);
+  }
 
   /**
    * Asserts local tasks in the page output.
@@ -63,6 +84,20 @@ class LocalTasksTest extends WebTestBase {
     // This behaviour is a bug in libxml, see
     // https://bugs.php.net/bug.php?id=49437.
     return $this->assertPattern('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
+  }
+
+  /**
+   * Asserts that the local tasks on the specified level are not being printed.
+   *
+   * @param int $level
+   *   (optional) The local tasks level to assert; 0 for primary, 1 for
+   *   secondary. Defaults to 0.
+   */
+  protected function assertNoLocalTasks($level = 0) {
+    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(
+      ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
+    ));
+    $this->assertFalse(count($elements), 'Local tasks not found.');
   }
 
   /**
@@ -170,6 +205,54 @@ class LocalTasksTest extends WebTestBase {
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
     $this->assertEqual(1, count($result), 'There is one active tab.');
     $this->assertEqual('upcasting sub2', (string) $result[0]->a, 'The "upcasting sub2" tab is active.');
+  }
+
+  /**
+   * Tests that local task blocks are configurable to show a specific level.
+   */
+  public function testLocalTaskBlock() {
+    // Remove the default block and create a new one.
+    $this->sut->delete();
+
+    $this->sut = $this->drupalPlaceBlock('local_tasks_block', [
+      'id' => 'tabs_block',
+      'primary' => TRUE,
+      'secondary' => FALSE,
+    ]);
+
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
+
+    // Verify that local tasks in the first level appear.
+    $this->assertLocalTasks([
+      ['menu_test.local_task_test_tasks_view', []],
+      ['menu_test.local_task_test_tasks_edit', []],
+      ['menu_test.local_task_test_tasks_settings', []],
+    ]);
+
+    // Verify that local tasks in the second level doesn't appear.
+    $this->assertNoLocalTasks(1);
+
+    $this->sut->delete();
+    $this->sut = $this->drupalPlaceBlock('local_tasks_block', [
+      'id' => 'tabs_block',
+      'primary' => FALSE,
+      'secondary' => TRUE,
+    ]);
+
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
+
+    // Verify that local tasks in the first level doesn't appear.
+    $this->assertNoLocalTasks(0);
+
+    // Verify that local tasks in the second level appear.
+    $sub_tasks = [
+      ['menu_test.local_task_test_tasks_settings_sub1', []],
+      ['menu_test.local_task_test_tasks_settings_sub2', []],
+      ['menu_test.local_task_test_tasks_settings_sub3', []],
+      ['menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive1']],
+      ['menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive2']],
+    ];
+    $this->assertLocalTasks($sub_tasks, 1);
   }
 
 }

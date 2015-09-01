@@ -30,7 +30,7 @@ class ThemeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block', 'file');
+  public static $modules = ['node', 'block', 'file'];
 
   protected function setUp() {
     parent::setUp();
@@ -40,6 +40,7 @@ class ThemeTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks'));
     $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

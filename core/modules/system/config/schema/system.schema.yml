@@ -342,6 +342,17 @@ block.settings.system_menu_block:*:
       type: integer
       label: 'Maximum number of levels'
 
+block.settings.local_tasks_block:
+  type: block_settings
+  label: 'Tabs block'
+  mapping:
+    primary:
+      type: boolean
+      label: 'Whether primary tabs are shown'
+    secondary:
+      type: boolean
+      label: 'Whether secondary tabs are shown'
+
 condition.plugin.request_path:
   type: condition.plugin
   mapping:

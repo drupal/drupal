@@ -22,6 +22,14 @@ class SettingsTest extends UITestBase {
   protected $adminUser;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('local_tasks_block');
+  }
+
+  /**
    * Tests the settings for the edit ui.
    */
   function testEditUI() {

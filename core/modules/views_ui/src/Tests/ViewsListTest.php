@@ -23,19 +23,35 @@ class ViewsListTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui');
+  public static $modules = array('block', 'views_ui');
+
+  /**
+   * A user with permission to administer views.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->adminUser = $this->drupalCreateUser(['administer views']);
+    $this->drupalLogin($this->adminUser);
+  }
 
   /**
    * Tests that the views list does not use a pager.
    */
   public function testViewsListLimit() {
-    // Login.
-    $user = $this->createUser(['administer views']);
-    $this->drupalLogin($user);
-
     // Check if we can access the main views admin page.
     $this->drupalGet('admin/structure/views');
-    $this->assertText(t('Add new view'));
+    $this->assertResponse(200);
+    $this->assertLink(t('Add new view'));
 
     // Count default views to be subtracted from the limit.
     $views = count(Views::getEnabledViews());

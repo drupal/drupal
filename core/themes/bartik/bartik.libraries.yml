@@ -19,7 +19,7 @@ global-styling:
       css/components/form.css: {}
       css/components/forum.css: {}
       css/components/header.css: {}
-      css/components/region-help.css: {}
+      css/components/help.css: {}
       css/components/item-list.css: {}
       css/components/list-group.css: {}
       css/components/list.css: {}

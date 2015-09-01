@@ -23,7 +23,16 @@ class MenuTranslateTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_test');
+  public static $modules = ['block', 'menu_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('local_tasks_block');
+  }
 
   /**
    * Tests _menu_translate().

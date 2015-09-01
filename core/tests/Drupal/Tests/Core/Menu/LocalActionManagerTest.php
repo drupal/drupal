@@ -10,6 +10,8 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Factory\FactoryInterface;
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
@@ -109,10 +111,11 @@ class LocalActionManagerTest extends UnitTestCase {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
 
+    $access_result = new AccessResultForbidden();
     $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
-      ->will($this->returnValue(FALSE));
+      ->willReturn($access_result);
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
@@ -202,7 +205,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
           ),
-          '#access' => FALSE,
+          '#access' => AccessResult::forbidden(),
           '#weight' => 0,
         ),
       ),
@@ -236,7 +239,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
           ),
-          '#access' => FALSE,
+          '#access' => AccessResult::forbidden(),
           '#weight' => 0,
         ),
       ),
@@ -271,7 +274,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
           ),
-          '#access' => FALSE,
+          '#access' => AccessResult::forbidden(),
           '#weight' => 1,
         ),
         'plugin_id_2' => array(
@@ -281,7 +284,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'url' => Url::fromRoute('test_route_3'),
             'localized_options' => '',
           ),
-          '#access' => FALSE,
+          '#access' => AccessResult::forbidden(),
           '#weight' => 0,
         ),
       ),
@@ -318,7 +321,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'url' => Url::fromRoute('test_route_2', ['test1']),
             'localized_options' => '',
           ),
-          '#access' => FALSE,
+          '#access' => AccessResult::forbidden(),
           '#weight' => 1,
         ),
         'plugin_id_2' => array(
@@ -328,7 +331,7 @@ class LocalActionManagerTest extends UnitTestCase {
             'url' => Url::fromRoute('test_route_2', ['test2']),
             'localized_options' => '',
           ),
-          '#access' => FALSE,
+          '#access' => AccessResult::forbidden(),
           '#weight' => 0,
         ),
       ),

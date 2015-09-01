@@ -115,6 +115,7 @@ class ForumTest extends WebTestBase {
       'access comments',
     ));
     $this->drupalPlaceBlock('help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**

@@ -17,6 +17,22 @@ use Drupal\shortcut\Entity\ShortcutSet;
 class ShortcutSetsTest extends ShortcutTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('local_actions_block');
+  }
+
+  /**
    * Tests creating a shortcut set.
    */
   function testShortcutSetAdd() {

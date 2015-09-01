@@ -14,12 +14,14 @@ stylesheets-remove:
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:
-  content: Content
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
   highlighted: Highlighted
   help: Help
+  content: Content
   page_top: 'Page top'
   page_bottom: 'Page bottom'
   sidebar_first: 'First sidebar'
-  breadcrumb: Breadcrumb
 regions_hidden:
   - sidebar_first

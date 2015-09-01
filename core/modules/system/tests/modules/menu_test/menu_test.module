@@ -27,9 +27,9 @@ function menu_test_menu_links_discovered_alter(&$links) {
 }
 
 /**
- * Implements hook_menu_local_tasks().
+ * Implements hook_menu_local_tasks_alter().
  */
-function menu_test_menu_local_tasks(&$data, $route_name) {
+function menu_test_menu_local_tasks_alter(&$data, $route_name) {
   if (in_array($route_name, array('menu_test.tasks_default'))) {
     $data['tabs'][0]['foo'] = array(
       '#theme' => 'menu_local_task',
@@ -47,32 +47,6 @@ function menu_test_menu_local_tasks(&$data, $route_name) {
       ),
       '#weight' => 20,
     );
-  }
-}
-
-/**
- * Implements hook_menu_local_tasks_alter().
- *
- * If the menu_test.settings configuration 'tasks.alter' has been set, adds
- * several local tasks to menu-test/tasks.
- */
-function menu_test_menu_local_tasks_alter(&$data, $route_name) {
-  if (!\Drupal::config('menu_test.settings')->get('tasks.alter')) {
-    return;
-  }
-  if (in_array($route_name, array('menu_test.tasks_default', 'menu_test.tasks_empty', 'menu_test.tasks_tasks'))) {
-    // Rename the default local task from 'View' to 'Show'.
-    // $data['tabs'] is expected to be keyed by link hrefs.
-    // The default local task always links to its parent path, which means that
-    // if the tab root path appears as key in $data['tabs'], then that key is
-    // the default local task.
-    $key = $route_name . '_tab';
-    if (isset($data['tabs'][0][$key])) {
-      $data['tabs'][0][$key]['#link']['title'] = 'Show it';
-    }
-    // Rename the 'foo' task to "Advanced settings" and put it last.
-    $data['tabs'][0]['foo']['#link']['title'] = 'Advanced settings';
-    $data['tabs'][0]['foo']['#weight'] = 110;
   }
 }
 

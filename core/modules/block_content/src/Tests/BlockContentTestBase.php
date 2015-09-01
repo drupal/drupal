@@ -60,6 +60,7 @@ abstract class BlockContentTestBase extends WebTestBase {
     }
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**

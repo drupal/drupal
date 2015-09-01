@@ -32,24 +32,18 @@
  * - title: The page title, for use in the actual content.
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
- * - tabs: Tabs linking to any sub-pages beneath the current page (e.g., the
- *   view and edit tabs when displaying a node).
- * - action_links: Actions local to the page, such as "Add menu" on the menu
- *   administration interface.
  * - node: Fully loaded node, if there is an automatically-loaded node
  *   associated with the page and the node ID is the second argument in the
  *   page's path (e.g. node/12345 and node/12345/revisions, but not
  *   comment/reply/12345).
  *
  * Regions:
- * - page.page_top: Items for the header region.
+ * - page.header: Items for the header region.
+ * - page.pre_content: Items for the pre-content region.
+ * - page.breadcrumb: Items for the breadcrumb region.
  * - page.highlighted: Items for the highlighted region.
  * - page.help: Dynamic help text, mostly for admin pages.
  * - page.content: The main content of the current page.
- * - page.sidebar_first: Items for the first sidebar.
- * - page.sidebar_second: Items for the second sidebar.
- * - page.page_bottom: Items for the footer region.
- * - page.breadcrumb: Items for the breadcrumb region.
  *
  * @see template_preprocess_page()
  * @see seven_preprocess_page()
@@ -63,19 +57,13 @@
         <h1 class="page-title">{{ title }}</h1>
       {% endif %}
       {{ title_suffix }}
-      {% if primary_local_tasks %}
-        {{ primary_local_tasks }}
-      {% endif %}
+      {{ page.header }}
     </div>
   </header>
 
   <div class="layout-container">
-    {% if secondary_local_tasks %}
-      <div class="tabs-secondary clearfix" role="navigation">{{ secondary_local_tasks }}</div>
-    {% endif %}
-
+    {{ page.pre_content }}
     {{ page.breadcrumb }}
-
     <main class="page-content clearfix" role="main">
       <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
       {{ page.highlighted }}
@@ -83,11 +71,6 @@
         <div class="help">
           {{ page.help }}
         </div>
-      {% endif %}
-      {% if action_links %}
-        <ul class="action-links">
-          {{ action_links }}
-        </ul>
       {% endif %}
       {{ page.content }}
     </main>

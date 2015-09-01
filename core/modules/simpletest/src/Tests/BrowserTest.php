@@ -24,6 +24,22 @@ class BrowserTest extends WebTestBase {
   protected static $cookieSet = FALSE;
 
   /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('local_tasks_block');
+  }
+
+  /**
    * Test \Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */
   function testGetAbsoluteUrl() {

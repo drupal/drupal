@@ -25,7 +25,7 @@ class FilterAdminTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter', 'node', 'filter_test_plugin', 'dblog'];
+  public static $modules = ['block', 'filter', 'node', 'filter_test_plugin', 'dblog'];
 
   /**
    * An user with administration permissions.
@@ -109,6 +109,7 @@ class FilterAdminTest extends WebTestBase {
     user_role_grant_permissions('authenticated', array($basic_html_format->getPermissionName()));
     user_role_grant_permissions('anonymous', array($restricted_html_format->getPermissionName()));
     $this->drupalLogin($this->adminUser);
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**

@@ -24,7 +24,7 @@ class FilterFormatAccessTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'node');
+  public static $modules = ['block', 'filter', 'node'];
 
   /**
    * A user with administrative permissions.
@@ -114,6 +114,7 @@ class FilterFormatAccessTest extends WebTestBase {
       $this->secondAllowedFormat->getPermissionName(),
       $this->disallowedFormat->getPermissionName(),
     ));
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

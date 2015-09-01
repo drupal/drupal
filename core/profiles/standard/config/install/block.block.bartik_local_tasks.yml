@@ -1,0 +1,15 @@
+id: bartik_local_tasks
+theme: bartik
+weight: -40
+status: true
+langcode: en
+region: content
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  label_display: '0'
+dependencies:
+  theme:
+    - bartik
+visibility: {  }

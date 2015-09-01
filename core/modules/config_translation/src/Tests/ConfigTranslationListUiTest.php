@@ -80,6 +80,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
       ->save();
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

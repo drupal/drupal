@@ -16,11 +16,19 @@ class PageEditTest extends NodeTestBase {
   protected $webUser;
   protected $adminUser;
 
+  /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block', 'node', 'datetime'];
+
   protected function setUp() {
     parent::setUp();
 
     $this->webUser = $this->drupalCreateUser(array('edit own page content', 'create page content'));
     $this->adminUser = $this->drupalCreateUser(array('bypass node access', 'administer nodes'));
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

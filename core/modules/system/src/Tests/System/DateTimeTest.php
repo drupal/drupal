@@ -22,13 +22,14 @@ class DateTimeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'language');
+  public static $modules = ['block', 'node', 'language'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create admin user and log in admin user.
     $this->drupalLogin ($this->drupalCreateUser(array('administer site configuration')));
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**

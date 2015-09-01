@@ -1154,6 +1154,11 @@ function system_schema() {
 }
 
 /**
+ * @addtogroup updates-8.0.0-beta
+ * @{
+ */
+
+/*
  * Change two fields on the default menu link storage to be serialized data.
  */
 function system_update_8001(&$sandbox = NULL) {
@@ -1268,3 +1273,179 @@ function system_update_8004() {
     $manager->updateEntityType($manager->getEntityType($entity_type_id));
   }
 }
+
+/**
+ * Place local actions and tasks blocks in every theme.
+ */
+function system_update_8005() {
+  // When block module is not installed, there is nothing that could be done
+  // except showing a warning.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return t('Block module is not enabled so local actions and tasks which have been converted to blocks, are not visible anymore.');
+  }
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $custom_themes_installed = FALSE;
+  $message = NULL;
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+
+  $local_actions_default_settings = [
+    'plugin' => 'local_actions_block',
+    'region' => 'content',
+    'settings.label' => 'Primary admin actions',
+    'settings.label_display' => 0,
+    'settings.cache.max_age' => 0,
+    'visibility' => [],
+    'weight' => 0,
+    'langcode' => $langcode,
+  ];
+  $tabs_default_settings = [
+    'plugin' => 'local_tasks_block',
+    'region' => 'content',
+    'settings.label' => 'Tabs',
+    'settings.label_display' => 0,
+    'settings.cache.max_age' => 0,
+    'visibility' => [],
+    'weight' => 0,
+    'langcode' => $langcode,
+  ];
+  foreach ($theme_handler->listInfo() as $theme) {
+    $theme_name = $theme->getName();
+    switch ($theme_name) {
+      case 'bartik':
+        $name = 'block.block.bartik_local_actions';
+        $values = [
+          'id' => 'bartik_local_actions',
+          'weight' => -1,
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.bartik_local_tasks';
+        $values = [
+          'id' => 'bartik_local_tasks',
+          'weight' => -7,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        // Help region has been removed so all the blocks inside has to be moved
+        // to content region.
+        $weight = -6;
+        $blocks = [];
+        foreach ($config_factory->listAll('block.block.') as $block_config) {
+          $block = $config_factory->getEditable($block_config);
+          if ($block->get('theme') == 'bartik' && $block->get('region') == 'help') {
+            $blocks[] = $block;
+          }
+        }
+        // Sort blocks by block weight.
+        uasort($blocks, function ($a, $b) {
+          return $a->get('weight') - $b->get('weight');
+        });
+        // Move blocks to content region and set them in right order by their
+        // weight.
+        foreach ($blocks as $block) {
+          $block->set('region', 'content');
+          $block->set('weight', $weight++);
+          $block->save();
+        }
+        break;
+
+      case 'seven':
+        $name = 'block.block.seven_local_actions';
+          $values = [
+            'id' => 'seven_local_actions',
+            'weight' => -10,
+          ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.seven_primary_local_tasks';
+        $values = [
+          'region' => 'header',
+          'id' => 'seven_primary_local_tasks',
+          'settings.label' => 'Primary tabs',
+          'settings.primary' => TRUE,
+          'settings.secondary' => FALSE,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $values = [
+          'region' => 'pre_content',
+          'id' => 'seven_secondary_local_tasks',
+          'settings.label' => 'Secondary tabs',
+          'settings.primary' => FALSE,
+          'settings.secondary' => TRUE,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'stark':
+        $name = 'block.block.stark_local_actions';
+        $values = [
+          'id' => 'stark_local_actions',
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.stark_local_tasks';
+        $values = [
+          'id' => 'stark_local_tasks',
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'classy':
+        // Don't place any blocks or trigger custom themes installed warning.
+        break;
+
+      default:
+        $custom_themes_installed = TRUE;
+        $name = sprintf('block.block.%s_local_actions', $theme_name);
+        $values = [
+          'id' => sprintf('%s_local_actions', $theme_name),
+          'weight' => -10,
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = sprintf('block.block.%s_local_tasks', $theme_name);
+        $values = [
+          'id' => sprintf('%s_local_tasks', $theme_name),
+          'weight' => -20,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+    }
+  }
+
+  if ($custom_themes_installed) {
+    $message = t('Because your site has custom theme(s) installed, we had to set local actions and tasks blocks into the content region. Please manually review the block configurations and remove the removed variables from your templates.');
+  }
+
+  return $message;
+}
+
+/**
+ * Helper function to create block configuration objects for the update.
+ *
+ * @param string $name
+ *   The name of the config object.
+ * @param string $theme_name
+ *   The name of the theme the block is associated with.
+ * @param array $values
+ *   The block config values.
+ */
+function _system_update_create_block($name, $theme_name, array $values) {
+  if (!\Drupal::service('config.storage')->exists($name)) {
+    $block = \Drupal::configFactory()->getEditable($name);
+    $values['uuid'] = \Drupal::service('uuid')->generate();
+    $values['theme'] = $theme_name;
+    $values['dependencies.theme'] = [$theme_name];
+    foreach ($values as $key => $value) {
+      $block->set($key, $value);
+    }
+    $block->save();
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-beta".
+ */

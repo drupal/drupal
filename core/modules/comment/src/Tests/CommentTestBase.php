@@ -27,7 +27,7 @@ abstract class CommentTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'node', 'history', 'field_ui', 'datetime');
+  public static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime'];
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -86,6 +86,7 @@ abstract class CommentTestBase extends WebTestBase {
 
     // Create a test node authored by the web user.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()));
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

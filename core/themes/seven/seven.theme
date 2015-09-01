@@ -24,18 +24,6 @@ function seven_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page templates.
- */
-function seven_preprocess_page(&$variables) {
-  $variables['primary_local_tasks'] = $variables['tabs'];
-  unset($variables['primary_local_tasks']['#secondary']);
-  $variables['secondary_local_tasks'] = array(
-    '#theme' => 'menu_local_tasks',
-    '#secondary' => isset($variables['tabs']['#secondary']) ? $variables['tabs']['#secondary'] : '',
-  );
-}
-
-/**
  * Implements hook_pre_render_HOOK() for menu-local-tasks templates.
  *
  * Use preprocess hook to set #attached to child elements

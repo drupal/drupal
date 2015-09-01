@@ -35,8 +35,22 @@ class TermTest extends TaxonomyTestBase {
    */
   protected $field;
 
+  /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->drupalPlaceBlock('local_tasks_block');
+
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
     $this->vocabulary = $this->createVocabulary();
 
@@ -308,10 +322,7 @@ class TermTest extends TaxonomyTestBase {
     // Submitting a term takes us to the add page; we need the List page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
-    // Test edit link as accessed from Taxonomy administration pages.
-    // Because Simpletest creates its own database when running tests, we know
-    // the first edit link found on the listing page is to our term.
-    $this->clickLink(t('Edit'), 1);
+    $this->clickLink(t('Edit'));
 
     $this->assertRaw($edit['name[0][value]'], 'The randomly generated term name is present.');
     $this->assertText($edit['description[0][value]'], 'The randomly generated term description is present.');

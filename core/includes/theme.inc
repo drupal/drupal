@@ -1322,14 +1322,6 @@ function template_preprocess_page(&$variables) {
     $variables['is_front'] = FALSE;
     $variables['db_is_active'] = FALSE;
   }
-  if (!defined('MAINTENANCE_MODE')) {
-    $variables['action_links']   = menu_get_local_actions();
-    $variables['tabs']           = menu_local_tabs();
-  }
-  else {
-    $variables['action_links']   = array();
-    $variables['tabs']           = array();
-  }
 
   if ($node = \Drupal::routeMatch()->getParameter('node')) {
     $variables['node'] = $node;

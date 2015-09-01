@@ -28,7 +28,7 @@ class LanguageTourTest extends TourTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'tour');
+  public static $modules = ['block', 'language', 'tour'];
 
   /**
    * {@inheritdoc}
@@ -37,6 +37,7 @@ class LanguageTourTest extends TourTestBase {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(array('administer languages', 'access tour'));
     $this->drupalLogin($this->adminUser);
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**

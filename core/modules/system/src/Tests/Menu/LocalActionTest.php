@@ -19,9 +19,20 @@ use Drupal\simpletest\WebTestBase;
 class LocalActionTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block', 'menu_test'];
+
+  /**
    * {@inheritdoc}
    */
-  public static $modules = array('menu_test');
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('local_actions_block');
+  }
 
   /**
    * Tests appearance of local actions.

@@ -1,9 +1,9 @@
 id: bartik_help
 theme: bartik
-weight: 0
+weight: -30
 status: true
 langcode: en
-region: help
+region: content
 plugin: help_block
 settings:
   id: help_block

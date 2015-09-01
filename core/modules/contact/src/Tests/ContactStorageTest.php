@@ -28,13 +28,14 @@ class ContactStorageTest extends ContactSitewideTest {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
+    'block',
     'text',
     'contact',
     'field_ui',
     'contact_storage_test',
     'contact_test',
-  );
+  ];
 
   /**
    * Tests configuration options and the site-wide contact form.

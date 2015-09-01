@@ -393,48 +393,35 @@ function hook_menu_links_discovered_alter(&$links) {
 }
 
 /**
- * Alter tabs and actions displayed on the page before they are rendered.
+ * Alter local tasks displayed on the page before they are rendered.
  *
  * This hook is invoked by menu_local_tasks(). The system-determined tabs and
- * actions are passed in by reference. Additional tabs or actions may be added.
+ * actions are passed in by reference. Additional tabs may be added.
  *
- * Each tab or action is an associative array containing:
+ * The local tasks are under the 'tabs' element and keyed by plugin ID.
+ *
+ * Each local task is an associative array containing:
  * - #theme: The theme function to use to render.
  * - #link: An associative array containing:
  *   - title: The localized title of the link.
- *   - href: The system path to link to.
+ *   - url: a Url object.
  *   - localized_options: An array of options to pass to _l().
  * - #weight: The link's weight compared to other links.
  * - #active: Whether the link should be marked as 'active'.
  *
  * @param array $data
- *   An associative array containing:
- *   - actions: A list of of actions keyed by their href, each one being an
- *     associative array as described above.
- *   - tabs: A list of (up to 2) tab levels that contain a list of of tabs keyed
- *     by their href, each one being an associative array as described above.
+ *   An associative array containing list of (up to 2) tab levels that contain a
+ *   list of of tabs keyed by their href, each one being an associative array
+ *   as described above.
  * @param string $route_name
  *   The route name of the page.
  *
  * @ingroup menu
  */
-function hook_menu_local_tasks(&$data, $route_name) {
-  // Add an action linking to node/add to all pages.
-  $data['actions']['node/add'] = array(
-      '#theme' => 'menu_local_action',
-      '#link' => array(
-          'title' => t('Add content'),
-          'url' => Url::fromRoute('node.add_page'),
-          'localized_options' => array(
-              'attributes' => array(
-                  'title' => t('Add content'),
-              ),
-          ),
-      ),
-  );
+function hook_menu_local_tasks_alter(&$data, $route_name) {
 
   // Add a tab linking to node/add to all pages.
-  $data['tabs'][0]['node/add'] = array(
+  $data['tabs'][0]['node.add_page'] = array(
       '#theme' => 'menu_local_task',
       '#link' => array(
           'title' => t('Example tab'),
@@ -446,25 +433,6 @@ function hook_menu_local_tasks(&$data, $route_name) {
           ),
       ),
   );
-}
-
-/**
- * Alter tabs and actions displayed on the page before they are rendered.
- *
- * This hook is invoked by menu_local_tasks(). The system-determined tabs and
- * actions are passed in by reference. Existing tabs or actions may be altered.
- *
- * @param array $data
- *   An associative array containing tabs and actions. See
- *   hook_menu_local_tasks() for details.
- * @param string $route_name
- *   The route name of the page.
- *
- * @see hook_menu_local_tasks()
- *
- * @ingroup menu
- */
-function hook_menu_local_tasks_alter(&$data, $route_name) {
 }
 
 /**

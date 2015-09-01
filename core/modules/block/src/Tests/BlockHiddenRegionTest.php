@@ -42,6 +42,7 @@ class BlockHiddenRegionTest extends WebTestBase {
 
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('search_form_block');
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

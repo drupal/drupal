@@ -93,7 +93,7 @@ function menu_list_system_menus() {
 }
 
 /**
- * Collects the local tasks (tabs), action links, and the root path.
+ * Collects the local tasks (tabs) for the current route.
  *
  * @param int $level
  *   The level of tasks you ask for. Primary tasks are 0, secondary are 1.
@@ -101,93 +101,43 @@ function menu_list_system_menus() {
  * @return array
  *   An array containing
  *   - tabs: Local tasks for the requested level.
- *   - actions: Action links for the requested level.
- *   - root_path: The router path for the current page. If the current page is
- *     a default local task, then this corresponds to the parent tab.
+ *   - route_name: The route name for the current page used to collect the local
+ *     tasks.
  *
- * @see hook_menu_local_tasks()
  * @see hook_menu_local_tasks_alter()
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  */
 function menu_local_tasks($level = 0) {
-  $data = &drupal_static(__FUNCTION__);
-  $root_path = &drupal_static(__FUNCTION__ . ':root_path', '');
-  $empty = array(
-    'tabs' => array(),
-    'actions' => array(),
-    'root_path' => &$root_path,
-  );
-
-  if (!isset($data)) {
-    // Look for route-based tabs.
-    $data['tabs'] = array();
-    $data['actions'] = array();
-
-    $route_name = \Drupal::routeMatch()->getRouteName();
-    if (!\Drupal::request()->attributes->has('exception') && !empty($route_name)) {
-      $manager = \Drupal::service('plugin.manager.menu.local_task');
-      $local_tasks = $manager->getTasksBuild($route_name);
-      foreach ($local_tasks as $level => $items) {
-        $data['tabs'][$level] = empty($data['tabs'][$level]) ? $items : array_merge($data['tabs'][$level], $items);
-      }
-    }
-
-    // Allow modules to dynamically add further tasks.
-    $module_handler = \Drupal::moduleHandler();
-    foreach ($module_handler->getImplementations('menu_local_tasks') as $module) {
-      $function = $module . '_menu_local_tasks';
-      $function($data, $route_name);
-    }
-    // Allow modules to alter local tasks.
-    $module_handler->alter('menu_local_tasks', $data, $route_name);
-  }
-
-  if (isset($data['tabs'][$level])) {
-    return array(
-      'tabs' => $data['tabs'][$level],
-      'actions' => $data['actions'],
-      'root_path' => $root_path,
-    );
-  }
-  elseif (!empty($data['actions'])) {
-    return array('actions' => $data['actions']) + $empty;
-  }
-  return $empty;
+  /** @var \Drupal\Core\Menu\LocalTaskManagerInterface $manager */
+  $manager = \Drupal::service('plugin.manager.menu.local_task');
+  return $manager->getLocalTasks(\Drupal::routeMatch()->getRouteName(), $level);
 }
 
 /**
  * Returns the rendered local tasks at the top level.
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  */
 function menu_primary_local_tasks() {
-  $links = menu_local_tasks(0);
+  /** @var \Drupal\Core\Menu\LocalTaskManagerInterface $manager */
+  $manager = \Drupal::service('plugin.manager.menu.local_task');
+  $links = $manager->getLocalTasks(\Drupal::routeMatch()->getRouteName(), 0);
   // Do not display single tabs.
   return count(Element::getVisibleChildren($links['tabs'])) > 1 ? $links['tabs'] : '';
 }
 
 /**
  * Returns the rendered local tasks at the second level.
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  */
 function menu_secondary_local_tasks() {
-  $links = menu_local_tasks(1);
+  /** @var \Drupal\Core\Menu\LocalTaskManagerInterface $manager */
+  $manager = \Drupal::service('plugin.manager.menu.local_task');
+  $links = $manager->getLocalTasks(\Drupal::routeMatch()->getRouteName(), 1);
   // Do not display single tabs.
   return count(Element::getVisibleChildren($links['tabs'])) > 1 ? $links['tabs'] : '';
-}
-
-/**
- * Returns the rendered local actions at the current level.
- */
-function menu_get_local_actions() {
-  $links = menu_local_tasks();
-  $route_name = Drupal::routeMatch()->getRouteName();
-  $manager = \Drupal::service('plugin.manager.menu.local_action');
-  return $manager->getActionsForRoute($route_name) + $links['actions'];
-}
-
-/**
- * Returns the router path, or the path for a default local task's parent.
- */
-function menu_tab_root_path() {
-  $links = menu_local_tasks();
-  return $links['root_path'];
 }
 
 /**

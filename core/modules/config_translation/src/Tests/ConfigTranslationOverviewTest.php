@@ -24,6 +24,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
    * @var array
    */
   public static $modules = [
+    'block',
     'config_test',
     'config_translation',
     'config_translation_test',
@@ -67,6 +68,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
     $this->localeStorage = $this->container->get('locale.storage');
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

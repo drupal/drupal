@@ -23,7 +23,7 @@ class FieldUIRouteTest extends WebTestBase {
    *
    * @var string[]
    */
-  public static $modules = array('entity_test', 'field_ui');
+  public static $modules = ['block', 'entity_test', 'field_ui'];
 
   /**
    * {@inheritdoc}
@@ -32,6 +32,7 @@ class FieldUIRouteTest extends WebTestBase {
     parent::setUp();
 
     $this->drupalLogin($this->rootUser);
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

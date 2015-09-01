@@ -29,7 +29,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'aggregator', 'aggregator_test', 'views');
+  public static $modules = ['block', 'node', 'aggregator', 'aggregator_test', 'views'];
 
   /**
    * {@inheritdoc}
@@ -44,6 +44,7 @@ abstract class AggregatorTestBase extends WebTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($this->adminUser);
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

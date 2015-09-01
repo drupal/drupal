@@ -53,4 +53,22 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
    */
   public function getTasksBuild($current_route_name);
 
+  /**
+   * Collects the local tasks (tabs) for the current route.
+   *
+   * @param string $route_name
+   *   The route for which to make renderable local tasks.
+   * @param int $level
+   *   The level of tasks you ask for. Primary tasks are 0, secondary are 1.
+   *
+   * @return array
+   *   An array containing
+   *   - tabs: Local tasks render array for the requested level.
+   *   - route_name: The route name for the current page used to collect the
+   *     local tasks.
+   *
+   * @see hook_menu_local_tasks_alter()
+   */
+  public function getLocalTasks($route_name, $level = 0);
+
 }

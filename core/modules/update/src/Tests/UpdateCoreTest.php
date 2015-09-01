@@ -22,12 +22,13 @@ class UpdateCoreTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = array('update_test', 'update', 'language');
+  public static $modules = ['update_test', 'update', 'language', 'block'];
 
   protected function setUp() {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules', 'administer themes'));
     $this->drupalLogin($admin_user);
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**

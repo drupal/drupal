@@ -82,6 +82,13 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $instances = array();
 
   /**
+   * The local task render arrays for the current route.
+   *
+   * @var array
+   */
+  protected $taskData;
+
+  /**
    * The route provider to load routes by name.
    *
    * @var \Drupal\Core\Routing\RouteProviderInterface
@@ -296,38 +303,73 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     // of SQL queries that would otherwise be triggered by the access manager.
     $routes = $route_names ? $this->routeProvider->getRoutesByNames($route_names) : array();
 
+    // @todo add cacheability data in https://www.drupal.org/node/2511516 so
+    // that we are not re-building inaccessible links on every page request.
     foreach ($tree as $level => $instances) {
       /** @var $instances \Drupal\Core\Menu\LocalTaskInterface[] */
       foreach ($instances as $plugin_id => $child) {
         $route_name = $child->getRouteName();
         $route_parameters = $child->getRouteParameters($this->routeMatch);
 
-        // Find out whether the user has access to the task.
-        $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account);
-        if ($access) {
-          $active = $this->isRouteActive($current_route_name, $route_name, $route_parameters);
+        $active = $this->isRouteActive($current_route_name, $route_name, $route_parameters);
 
-          // The plugin may have been set active in getLocalTasksForRoute() if
-          // one of its child tabs is the active tab.
-          $active = $active || $child->getActive();
-          // @todo It might make sense to use link render elements instead.
+        // The plugin may have been set active in getLocalTasksForRoute() if
+        // one of its child tabs is the active tab.
+        $active = $active || $child->getActive();
+        // @todo It might make sense to use link render elements instead.
 
-          $link = array(
-            'title' => $this->getTitle($child),
-            'url' => Url::fromRoute($route_name, $route_parameters),
-            'localized_options' => $child->getOptions($this->routeMatch),
-          );
-          $build[$level][$plugin_id] = array(
-            '#theme' => 'menu_local_task',
-            '#link' => $link,
-            '#active' => $active,
-            '#weight' => $child->getWeight(),
-            '#access' => $access,
-          );
-        }
+        $link = [
+          'title' => $this->getTitle($child),
+          'url' => Url::fromRoute($route_name, $route_parameters),
+          'localized_options' => $child->getOptions($this->routeMatch),
+        ];
+        $build[$level][$plugin_id] = [
+          '#theme' => 'menu_local_task',
+          '#link' => $link,
+          '#active' => $active,
+          '#weight' => $child->getWeight(),
+          '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE),
+        ];
       }
     }
+
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLocalTasks($route_name, $level = 0) {
+    if (!isset($this->taskData[$route_name])) {
+      // Look for route-based tabs.
+      $this->taskData[$route_name] = [
+        'tabs' => [],
+      ];
+
+      if (!$this->requestStack->getCurrentRequest()->attributes->has('exception')) {
+        // Safe to build tasks only when no exceptions raised.
+        $data = [];
+        $local_tasks = $this->getTasksBuild($route_name);
+        foreach ($local_tasks as $tab_level => $items) {
+          $data[$tab_level] = empty($data[$tab_level]) ? $items : array_merge($data[$tab_level], $items);
+        }
+        $this->taskData[$route_name]['tabs'] = $data;
+        // Allow modules to alter local tasks.
+        $this->moduleHandler->alter('menu_local_tasks', $this->taskData[$route_name], $route_name);
+      }
+    }
+
+    if (isset($this->taskData[$route_name]['tabs'][$level])) {
+      return [
+        'tabs' => $this->taskData[$route_name]['tabs'][$level],
+        'route_name' => $route_name,
+      ];
+    }
+
+    return [
+      'tabs' => [],
+      'route_name' => $route_name,
+    ];
   }
 
   /**

@@ -23,11 +23,22 @@ class SearchPageTextTest extends SearchTestBase {
    */
   protected $searchingUser;
 
+  /**
+   * Modules to enable.
+   *
+   * @var string[]
+   */
+  public static $modules = ['block'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
     // Create user.
     $this->searchingUser = $this->drupalCreateUser(array('search content', 'access user profiles', 'use advanced search'));
+    $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**

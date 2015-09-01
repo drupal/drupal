@@ -66,7 +66,10 @@ class ManageFieldsTest extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->drupalPlaceBlock('local_tasks_block');
 
     // Create a test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer account settings', 'administer user display', 'bypass node access'));

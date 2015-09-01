@@ -31,10 +31,6 @@
  * - title: The page title, for use in the actual content.
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
- * - tabs: Tabs linking to any sub-pages beneath the current page (e.g., the
- *   view and edit tabs when displaying a node).
- * - action_links: Actions local to the page, such as "Add menu" on the menu
- *   administration interface.
  * - node: Fully loaded node, if there is an automatically-loaded node
  *   associated with the page and the node ID is the second argument in the
  *   page's path (e.g. node/12345 and node/12345/revisions, but not
@@ -109,13 +105,6 @@
         <h1>{{ title }}</h1>
       {% endif %}
       {{ title_suffix }}
-
-      {{ tabs }}
-
-      {% if action_links %}
-        <nav class="action-links">{{ action_links }}</nav>
-      {% endif %}
-
       {{ page.content }}
     </div>{# /.layout-content #}
 

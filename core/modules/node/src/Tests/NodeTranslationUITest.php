@@ -27,6 +27,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultCacheContexts = [
     'languages:language_interface',
     'theme',
+    'route.name',
     'route.menu_active_trails:account',
     'route.menu_active_trails:footer',
     'route.menu_active_trails:main',
