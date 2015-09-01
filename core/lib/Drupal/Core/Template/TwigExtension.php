@@ -455,11 +455,7 @@ class TwigExtension extends \Twig_Extension {
       return NULL;
     }
 
-    // Optimize for strings as it is likely they come from the escape filter.
-    if (is_string($arg)) {
-      return $arg;
-    }
-
+    // Optimize for scalars as it is likely they come from the escape filter.
     if (is_scalar($arg)) {
       return $arg;
     }
