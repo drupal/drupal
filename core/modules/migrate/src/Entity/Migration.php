@@ -480,6 +480,10 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
       // Invalidate the source plugin.
       unset($this->sourcePlugin);
     }
+    elseif ($property_name === 'destination') {
+      // Invalidate the destination plugin.
+      unset($this->destinationPlugin);
+    }
     return parent::set($property_name, $value);
   }
 
