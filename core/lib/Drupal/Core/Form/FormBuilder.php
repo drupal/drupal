@@ -688,18 +688,24 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if ($form_state->isProgrammed() || (isset($form['#token']) && $form['#token'] === FALSE)) {
       unset($form['#token']);
     }
-    elseif ($user && $user->isAuthenticated()) {
-      // Generate a public token based on the form id.
-      $form['#token'] = $form_id;
-      $form['form_token'] = array(
-        '#id' => Html::getUniqueId('edit-' . $form_id . '-form-token'),
-        '#type' => 'token',
-        '#default_value' => $this->csrfToken->get($form['#token']),
-        // Form processing and validation requires this value, so ensure the
-        // submitted form value appears literally, regardless of custom #tree
-        // and #parents being set elsewhere.
-        '#parents' => array('form_token'),
-      );
+    else {
+      $form['#cache']['contexts'][] = 'user.roles:authenticated';
+      if ($user && $user->isAuthenticated()) {
+        // Generate a public token based on the form id.
+        $form['#token'] = $form_id;
+        $form['form_token'] = array(
+          '#id' => Html::getUniqueId('edit-' . $form_id . '-form-token'),
+          '#type' => 'token',
+          '#default_value' => $this->csrfToken->get($form['#token']),
+          // Form processing and validation requires this value, so ensure the
+          // submitted form value appears literally, regardless of custom #tree
+          // and #parents being set elsewhere.
+          '#parents' => array('form_token'),
+          '#cache' => [
+            'max-age' => 0,
+          ],
+        );
+      }
     }
 
     if (isset($form_id)) {

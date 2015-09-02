@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -765,6 +766,65 @@ class FormBuilderTest extends FormTestBase {
     // If the user is not authenticated, we will not have a token.
     $data['anonymous'] = [FALSE, NULL, FALSE];
     return $data;
+  }
+
+  /**
+   * @covers ::prepareForm
+   *
+   * @dataProvider providerTestFormTokenCacheability
+   */
+  function testFormTokenCacheability($token, $is_authenticated, $expected_form_cacheability, $expected_token_cacheability) {
+    $user = $this->prophesize(AccountProxyInterface::class);
+    $user->isAuthenticated()
+      ->willReturn($is_authenticated);
+    $this->container->set('current_user', $user->reveal());
+    \Drupal::setContainer($this->container);
+
+    $form_id = 'test_form_id';
+    $form = $form_id();
+
+    if (isset($token)) {
+      $form['#token'] = $token;
+    }
+
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->once())
+      ->method('getFormId')
+      ->will($this->returnValue($form_id));
+    $form_arg->expects($this->once())
+      ->method('buildForm')
+      ->will($this->returnValue($form));
+
+    $form_state = new FormState();
+    $built_form = $this->formBuilder->buildForm($form_arg, $form_state);
+    if (!isset($expected_form_cacheability)) {
+      $this->assertFalse(isset($built_form['#cache']));
+    }
+    else {
+      $this->assertTrue(isset($built_form['#cache']));
+      $this->assertEquals($expected_form_cacheability, $built_form['#cache']);
+    }
+    if (!isset($expected_token_cacheability)) {
+      $this->assertFalse(isset($built_form['form_token']));
+    }
+    else {
+      $this->assertTrue(isset($built_form['form_token']));
+      $this->assertEquals($expected_token_cacheability, $built_form['form_token']['#cache']);
+    }
+  }
+
+  /**
+   * Data provider for testFormTokenCacheability.
+   *
+   * @return array
+   */
+  function providerTestFormTokenCacheability() {
+    return [
+      'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0]],
+      'token:false,authenticated:true' => [FALSE, TRUE, NULL, NULL],
+      'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL],
+      'token:false,authenticated:false' => [FALSE, FALSE, NULL, NULL],
+    ];
   }
 
 }
