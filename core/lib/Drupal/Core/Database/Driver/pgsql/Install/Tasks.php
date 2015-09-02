@@ -192,7 +192,8 @@ class Tasks extends InstallTasks {
     // like we do with table names. This is so that we don't double up if more
     // than one instance of Drupal is running on a single database. We therefore
     // avoid trying to create them again in that case.
-
+    // At the same time checking for the existence of the function fixes
+    // concurrency issues, when both try to update at the same time.
     try {
       // Don't use {} around pg_proc table.
       if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'")->fetchField()) {
@@ -202,15 +203,17 @@ class Tasks extends InstallTasks {
         );
       }
 
-      db_query('CREATE OR REPLACE FUNCTION "substring_index"(text, text, integer) RETURNS text AS
-        \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
-        LANGUAGE \'sql\''
-      );
+      if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'substring_index'")->fetchField()) {
+        db_query('CREATE OR REPLACE FUNCTION "substring_index"(text, text, integer) RETURNS text AS
+          \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
+          LANGUAGE \'sql\''
+        );
+      }
 
       $this->pass(t('PostgreSQL has initialized itself.'));
     }
     catch (\Exception $e) {
-      $this->fail(t('Drupal could not be correctly setup with the existing database. Revise any errors.'));
+      $this->fail(t('Drupal could not be correctly setup with the existing database due to the following error: @error.', ['@error' => $e->getMessage()]));
     }
   }
 
