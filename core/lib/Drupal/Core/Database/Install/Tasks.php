@@ -79,7 +79,10 @@ abstract class Tasks {
    *
    * @var array
    */
-  protected $results = array();
+  protected $results = array(
+    'fail' => array(),
+    'pass' => array(),
+  );
 
   /**
    * Ensure the PDO driver is supported by the version of PHP in use.
@@ -92,14 +95,14 @@ abstract class Tasks {
    * Assert test as failed.
    */
   protected function fail($message) {
-    $this->results[$message] = FALSE;
+    $this->results['fail'][] = $message;
   }
 
   /**
    * Assert test as a pass.
    */
   protected function pass($message) {
-    $this->results[$message] = TRUE;
+    $this->results['pass'][] = $message;
   }
 
   /**
@@ -149,11 +152,7 @@ abstract class Tasks {
         }
       }
     }
-    // Filter out the success messages from results.
-    $errors = array_filter($this->results, function ($value) {
-      return !$value;
-    });
-    return array_keys($errors);
+    return $this->results['fail'];
   }
 
   /**
