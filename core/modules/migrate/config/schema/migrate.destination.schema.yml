@@ -16,11 +16,3 @@ migrate.destination.config:
     config_name:
       type: string
       label: 'Configuration name'
-
-migrate.destination.entity:file:
-  type: migrate_destination
-  label: 'Picture'
-  mapping:
-    source_path_property:
-      type: string
-      label: 'Source path'
