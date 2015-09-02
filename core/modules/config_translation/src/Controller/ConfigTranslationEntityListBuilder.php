@@ -68,7 +68,7 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['label']['data'] = $this->getLabel($entity);
+    $row['label']['data'] = $entity->label();
     $row['label']['class'][] = 'table-filter-text-source';
     return $row + parent::buildRow($entity);
   }

@@ -68,7 +68,7 @@ class DateFormatListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
     $row['pattern'] = $this->dateFormatter->format(REQUEST_TIME, $entity->id());
     return $row + parent::buildRow($entity);
   }

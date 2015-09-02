@@ -28,7 +28,7 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
     $row['id'] = $entity->id();
     return $row + parent::buildRow($entity);
   }

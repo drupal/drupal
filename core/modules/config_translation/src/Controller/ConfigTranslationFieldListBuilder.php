@@ -116,7 +116,7 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = array(
-      'data' => $this->getLabel($entity),
+      'data' => $entity->label(),
       'class' => 'table-filter-text-source',
     );
 

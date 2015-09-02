@@ -93,7 +93,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     // Check whether this is the fallback text format. This format is available
     // to all roles and cannot be disabled via the admin interface.
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
     $row['roles'] = [];
     if ($entity->isFallbackFormat()) {
       $fallback_choice = $this->configFactory->get('filter.settings')->get('always_show_fallback_choice');

@@ -80,7 +80,7 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['type'] = $entity->getType();
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
     if ($this->hasConfigurableActions) {
       $row += parent::buildRow($entity);
     }

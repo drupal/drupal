@@ -46,7 +46,7 @@ class ShortcutSetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['name'] = $this->getLabel($entity);
+    $row['name'] = $entity->label();
     return $row + parent::buildRow($entity);
   }
 

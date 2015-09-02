@@ -65,7 +65,7 @@ class ConfigTranslationBlockListBuilder extends ConfigTranslationEntityListBuild
     $plugin_definition = $entity->getPlugin()->getPluginDefinition();
 
     $row['label'] = array(
-      'data' => $this->getLabel($entity),
+      'data' => $entity->label(),
       'class' => 'table-filter-text-source',
     );
 

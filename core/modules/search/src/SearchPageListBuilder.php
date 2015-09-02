@@ -121,7 +121,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    */
   public function buildRow(EntityInterface $entity) {
     /** @var $entity \Drupal\search\SearchPageInterface */
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
     $row['url']['#markup'] = 'search/' . $entity->getPath();
     // If the search page is active, link to it.
     if ($entity->status()) {

@@ -67,7 +67,7 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
     return $row + parent::buildRow($entity);
   }
 

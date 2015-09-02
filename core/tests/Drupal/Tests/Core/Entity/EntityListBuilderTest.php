@@ -137,64 +137,6 @@ class EntityListBuilderTest extends UnitTestCase {
     $this->assertArrayHasKey('title', $operations[$operation_name]);
   }
 
-  /**
-   * Tests that buildRow() returns a string which has been run through
-   * SafeMarkup::checkPlain().
-   *
-   * @dataProvider providerTestBuildRow
-   *
-   * @param string $input
-   *  The entity label being passed into buildRow.
-   * @param string $expected
-   *  The expected output of the label from buildRow.
-   * @param string $message
-   *   The message to provide as output for the test.
-   * @param bool $ignorewarnings
-   *   Whether or not to ignore PHP 5.3+ invalid multibyte sequence warnings.
-   *
-   * @see \Drupal\Core\Entity\EntityListBuilder::buildRow()
-   */
-  public function testBuildRow($input, $expected, $message, $ignorewarnings = FALSE) {
-    $this->role->expects($this->any())
-      ->method('label')
-      ->will($this->returnValue($input));
-
-    if ($ignorewarnings) {
-      $built_row = @$this->entityListBuilder->buildRow($this->role);
-    }
-    else {
-      $built_row = $this->entityListBuilder->buildRow($this->role);
-    }
-
-    $this->assertEquals($built_row['label'], $expected, $message);
-  }
-
-  /**
-   * Data provider for testBuildRow().
-   *
-   * @see self::testBuildRow()
-   * @see \Drupal\Tests\Component\Utility\SafeMarkupTest::providerCheckPlain()
-   *
-   * @return array
-   *   An array containing a string, the expected return from
-   *   SafeMarkup::checkPlain, a message to be output for failures, and whether the
-   *   test should be processed as multibyte.
-   */
-  public function providerTestBuildRow() {
-    $tests = array();
-    // Checks that invalid multi-byte sequences are escaped.
-    $tests[] = array("Foo\xC0barbaz", 'Foo�barbaz', 'EntityTestListBuilder::buildRow() escapes invalid sequence "Foo\xC0barbaz"', TRUE);
-    $tests[] = array("\xc2\"", '�&quot;', 'EntityTestListBuilder::buildRow escapes invalid sequence "\xc2\""', TRUE);
-    $tests[] = array("Fooÿñ", "Fooÿñ", 'EntityTestListBuilder::buildR does not escape valid sequence "Fooÿñ"');
-
-    // Checks that special characters are escaped.
-    $tests[] = array("<script>", '&lt;script&gt;', 'EntityTestListBuilder::buildRow() escapes &lt;script&gt;');
-    $tests[] = array('<>&"\'', '&lt;&gt;&amp;&quot;&#039;', 'EntityTestListBuilder::buildRow() escapes reserved HTML characters.');
-
-    return $tests;
-
-  }
-
 }
 
 class TestEntityListBuilder extends EntityTestListBuilder {

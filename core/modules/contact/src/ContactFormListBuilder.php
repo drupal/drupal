@@ -35,7 +35,7 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     // Special case the personal form.
     if ($entity->id() == 'personal') {
-      $row['form'] = $this->getLabel($entity);
+      $row['form'] = $entity->label();
       $row['recipients'] = t('Selected user');
       $row['selected'] = t('No');
     }

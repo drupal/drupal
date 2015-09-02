@@ -36,7 +36,7 @@ class MenuListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['title'] = array(
-      'data' => $this->getLabel($entity),
+      'data' => $entity->label(),
       'class' => array('menu-label'),
     );
     $row['description']['data'] = ['#markup' => $entity->getDescription()];
