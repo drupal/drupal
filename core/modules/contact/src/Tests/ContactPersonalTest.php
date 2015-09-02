@@ -84,7 +84,7 @@ class ContactPersonalTest extends WebTestBase {
       '!recipient-name' => $this->contactUser->getUsername(),
     );
     $this->assertEqual($mail['subject'], t('[!site-name] !subject', $variables), 'Subject is in sent message.');
-    $this->assertTrue(strpos($mail['body'], t('Hello !recipient-name,', $variables)) !== FALSE, 'Recipient name is in sent message.');
+    $this->assertTrue(strpos($mail['body'], 'Hello ' . $variables['!recipient-name']) !== FALSE, 'Recipient name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $this->webUser->getUsername()) !== FALSE, 'Sender name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $message['message[0][value]']) !== FALSE, 'Message body is in sent message.');
 

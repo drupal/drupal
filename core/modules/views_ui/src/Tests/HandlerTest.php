@@ -150,7 +150,7 @@ class HandlerTest extends UITestBase {
       $result = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
       $this->assertEqual(count($result), 1, SafeMarkup::format('Handler (%type) edit link found.', array('%type' => $type)));
 
-      $text = t('Broken/missing handler');
+      $text = 'Broken/missing handler';
 
       $this->assertIdentical((string) $result[0], $text, 'Ensure the broken handler text was found.');
 

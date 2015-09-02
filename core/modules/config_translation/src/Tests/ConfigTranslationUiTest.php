@@ -587,7 +587,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->assertTrue(strpos($json[$ids[0]], t('Translate view')), 'Translate view contextual link added.');
+    $this->assertTrue(strpos($json[$ids[0]], 'Translate view'), 'Translate view contextual link added.');
 
     $description = 'All content promoted to the front page.';
     $human_readable_name = 'Frontpage';

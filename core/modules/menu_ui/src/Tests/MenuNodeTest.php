@@ -139,7 +139,7 @@ class MenuNodeTest extends WebTestBase {
       'edit any page content',
     ]);
     $this->drupalLogin($admin_user);
-    foreach ([t('Save and unpublish') => FALSE, t('Save and keep unpublished') => FALSE, t('Save and publish') => TRUE, t('Save and keep published') => TRUE] as $submit => $visible) {
+    foreach (['Save and unpublish' => FALSE, 'Save and keep unpublished' => FALSE, 'Save and publish' => TRUE, 'Save and keep published' => TRUE] as $submit => $visible) {
       $edit = [
         'menu[enabled]' => 1,
         'menu[title]' => $node_title,
