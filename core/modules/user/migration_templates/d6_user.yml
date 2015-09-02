@@ -23,7 +23,8 @@ process:
     migration: d6_user_role
     source: roles
   user_picture:
-    plugin: d6_user_picture
+    plugin: migration
+    migration: d6_user_picture_file
     source: uid
 destination:
   plugin: entity:user
@@ -33,5 +34,5 @@ migration_dependencies:
     - d6_user_role
   optional:
     - d6_user_picture_file
-    - d6_user_picture_entity_display
-    - d6_user_picture_entity_form_display
+    - user_picture_entity_display
+    - user_picture_entity_form_display
