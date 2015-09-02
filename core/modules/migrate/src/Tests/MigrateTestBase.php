@@ -59,7 +59,28 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected function setUp() {
     parent::setUp();
+    $this->createMigrationConnection();
+  }
 
+  /**
+   * Changes the database connection to the prefixed one.
+   *
+   * @todo Remove when we don't use global. https://www.drupal.org/node/2552791
+   */
+  private function createMigrationConnection() {
+    // If the backup already exists, something went terribly wrong.
+    // This case is possible, because database connection info is a static
+    // global state construct on the Database class, which at least persists
+    // for all test methods executed in one PHP process.
+    if (Database::getConnectionInfo('simpletest_original_migrate')) {
+      throw new \RuntimeException("Bad Database connection state: 'simpletest_original_migrate' connection key already exists. Broken test?");
+    }
+
+    // Clone the current connection and replace the current prefix.
+    $connection_info = Database::getConnectionInfo('migrate');
+    if ($connection_info) {
+      Database::renameConnection('migrate', 'simpletest_original_migrate');
+    }
     $connection_info = Database::getConnectionInfo('default');
     foreach ($connection_info as $target => $value) {
       $prefix = is_array($value['prefix']) ? $value['prefix']['default'] : $value['prefix'];
@@ -78,11 +99,24 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    * {@inheritdoc}
    */
   protected function tearDown() {
-    Database::removeConnection('migrate');
+    $this->cleanupMigrateConnection();
     parent::tearDown();
     $this->databaseDumpFiles = [];
     $this->collectMessages = FALSE;
     unset($this->migration, $this->migrateMessages);
+  }
+
+  /**
+   * Cleans up the test migrate connection.
+   *
+   * @todo Remove when we don't use global. https://www.drupal.org/node/2552791
+   */
+  private function cleanupMigrateConnection() {
+    Database::removeConnection('migrate');
+    $original_connection_info = Database::getConnectionInfo('simpletest_original_migrate');
+    if ($original_connection_info) {
+      Database::renameConnection('simpletest_original_migrate', 'migrate');
+    }
   }
 
   /**
