@@ -208,7 +208,7 @@ small .admin-link:after {
   display: block;
 }
 .system-status-report__status-icon--error:before {
-  background-image: url(../../../misc/icons/ea2800/error.svg);
+  background-image: url(../../../misc/icons/e32700/error.svg);
 }
 .system-status-report__status-icon--warning:before {
   background-image: url(../../../misc/icons/e29700/warning.svg);

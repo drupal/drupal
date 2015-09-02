@@ -33,5 +33,5 @@
 .admin-dblog .dblog-critical .icon,
 .admin-dblog .dblog-alert .icon,
 .admin-dblog .dblog-emergency .icon {
-  background-image: url(../../../misc/icons/ea2800/error.svg);
+  background-image: url(../../../misc/icons/e32700/error.svg);
 }

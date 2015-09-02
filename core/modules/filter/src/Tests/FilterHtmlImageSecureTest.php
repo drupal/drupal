@@ -89,7 +89,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     $csrf_path = $public_files_path . '/' . implode('/', array_fill(0, substr_count($public_files_path, '/') + 1, '..'));
 
     $druplicon = 'core/misc/druplicon.png';
-    $red_x_image = base_path() . 'core/misc/icons/ea2800/error.svg';
+    $red_x_image = base_path() . 'core/misc/icons/e32700/error.svg';
     $alt_text = t('Image removed.');
     $title_text = t('This image has been removed. For security reasons, only images from the local domain are allowed.');
 

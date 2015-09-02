@@ -59,7 +59,7 @@
 .messages--error {
   background-color: #fcf4f2;
   color: #a51b00;
-  background-image: url(../../../../misc/icons/ea2800/error.svg);
+  background-image: url(../../../../misc/icons/e32700/error.svg);
   border-color: #f9c9bf #f9c9bf #f9c9bf transparent;  /* LTR */
   box-shadow: -8px 0 0 #e62600; /* LTR */
 }
