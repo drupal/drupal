@@ -175,6 +175,8 @@ All arguments are long options.
               Specify the path and the extension
               (i.e. 'core/modules/user/user.test').
 
+  --directory Run all tests found within the specified file directory.
+
   --xml       <path>
 
               If provided, test results will be written as xml files to this path.
@@ -253,6 +255,7 @@ function simpletest_script_parse_args() {
     'module' => NULL,
     'class' => FALSE,
     'file' => FALSE,
+    'directory' => NULL,
     'color' => FALSE,
     'verbose' => FALSE,
     'keep-results' => FALSE,
@@ -814,6 +817,60 @@ function simpletest_script_get_test_list() {
           simpletest_script_print_error('File not found: ' . $file);
           exit;
         }
+        $content = file_get_contents($file);
+        // Extract a potential namespace.
+        $namespace = FALSE;
+        if (preg_match('@^namespace ([^ ;]+)@m', $content, $matches)) {
+          $namespace = $matches[1];
+        }
+        // Extract all class names.
+        // Abstract classes are excluded on purpose.
+        preg_match_all('@^class ([^ ]+)@m', $content, $matches);
+        if (!$namespace) {
+          $test_list = array_merge($test_list, $matches[1]);
+        }
+        else {
+          foreach ($matches[1] as $class_name) {
+            $namespace_class = $namespace . '\\' . $class_name;
+            if (is_subclass_of($namespace_class, '\Drupal\simpletest\TestBase') || is_subclass_of($namespace_class, '\PHPUnit_Framework_TestCase')) {
+              $test_list[] = $namespace_class;
+            }
+          }
+        }
+      }
+    }
+    elseif ($args['directory']) {
+      // Extract test case class names from specified directory.
+      // Find all tests in the PSR-X structure; Drupal\$extension\Tests\*.php
+      // Since we do not want to hard-code too many structural file/directory
+      // assumptions about PSR-0/4 files and directories, we check for the
+      // minimal conditions only; i.e., a '*.php' file that has '/Tests/' in
+      // its path.
+      // Ignore anything from third party vendors.
+      $ignore = array('.', '..', 'vendor');
+      $files = [];
+      if ($args['directory'][0] === '/') {
+        $directory = $args['directory'];
+      }
+      else {
+        $directory = DRUPAL_ROOT . "/" . $args['directory'];
+      }
+      foreach (file_scan_directory($directory, '/\.php$/', $ignore) as $file) {
+        // '/Tests/' can be contained anywhere in the file's path (there can be
+        // sub-directories below /Tests), but must be contained literally.
+        // Case-insensitive to match all Simpletest and PHPUnit tests:
+        //   ./lib/Drupal/foo/Tests/Bar/Baz.php
+        //   ./foo/src/Tests/Bar/Baz.php
+        //   ./foo/tests/Drupal/foo/Tests/FooTest.php
+        //   ./foo/tests/src/FooTest.php
+        // $file->filename doesn't give us a directory, so we use $file->uri
+        // Strip the drupal root directory and trailing slash off the URI
+        $filename = substr($file->uri, strlen(DRUPAL_ROOT)+1);
+        if (stripos($filename, '/Tests/')) {
+          $files[$filename] = $filename;
+        }
+      }
+      foreach ($files as $file) {
         $content = file_get_contents($file);
         // Extract a potential namespace.
         $namespace = FALSE;
