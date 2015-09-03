@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\views\argument;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -60,7 +59,7 @@ class RolesRid extends ManyToOne {
     $entities = $this->roleStorage->loadMultiple($this->value);
     $titles = array();
     foreach ($entities as $entity) {
-      $titles[] = SafeMarkup::checkPlain($entity->label());
+      $titles[] = $entity->label();
     }
     return $titles;
   }

@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\node\NodeStorageInterface;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -62,7 +61,7 @@ class Nid extends NumericArgument {
 
     $nodes = $this->nodeStorage->loadMultiple($this->value);
     foreach ($nodes as $node) {
-      $titles[] = SafeMarkup::checkPlain($node->label());
+      $titles[] = $node->label();
     }
     return $titles;
   }

@@ -317,7 +317,7 @@ class StringArgument extends ArgumentPluginBase {
    * Override for specific title lookups.
    */
   public function titleQuery() {
-    return array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', array_combine($this->value, $this->value));
+    return $this->value;
   }
 
   public function summaryName($data) {
