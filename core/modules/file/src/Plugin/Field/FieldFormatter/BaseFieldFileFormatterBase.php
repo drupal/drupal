@@ -56,17 +56,17 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
     }
 
     foreach ($items as $delta => $item) {
-      $string = $this->viewValue($item);
+      $view_value = $this->viewValue($item);
 
       if ($url) {
         $elements[$delta] = [
           '#type' => 'link',
-          '#title' => $string,
+          '#title' => $view_value,
           '#url' => Url::fromUri($url),
         ];
       }
       else {
-        $elements[$delta] = is_array($string) ? $string : ['#markup' => $string];
+        $elements[$delta] = is_array($view_value) ? $view_value : ['#markup' => $view_value];
       }
     }
 

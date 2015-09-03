@@ -7,7 +7,6 @@
 
 namespace Drupal\locale\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -82,7 +81,7 @@ class TranslationStatusForm extends FormBase {
 
       // Build data options for the select table.
       foreach ($updates as $langcode => $update) {
-        $title = SafeMarkup::checkPlain($languages[$langcode]->getName());
+        $title = $languages[$langcode]->getName();
         $locale_translation_update_info = array('#theme' => 'locale_translation_update_info');
         foreach (array('updates', 'not_found') as $update_status) {
           if (isset($update[$update_status])) {
@@ -94,7 +93,7 @@ class TranslationStatusForm extends FormBase {
             'class' => array('label'),
             'data' => array(
               '#title' => $title,
-              '#markup' => $title,
+              '#plain_text' => $title,
             ),
           ),
           'status' => array(

@@ -149,7 +149,7 @@ class FilterHtml extends FilterBase {
           array('data' =>
             array(
               '#prefix' => '<code>',
-              '#markup' => Html::escape($tips[$tag][1]),
+              '#plain_text' => $tips[$tag][1],
               '#suffix' => '</code>'
             ),
             'class' => array('type')),
@@ -193,7 +193,7 @@ class FilterHtml extends FilterBase {
         array(
           'data' => array(
             '#prefix' => '<code>',
-            '#markup' => Html::escape($entity[1]),
+            '#plain_text' => $entity[1],
             '#suffix' => '</code>',
           ),
           'class' => array('type'),

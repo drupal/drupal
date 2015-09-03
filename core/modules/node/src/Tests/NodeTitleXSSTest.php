@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Component\Utility\Html;
+
 /**
  * Create a node with dangerous tags in its title and test that they are
  * escaped.
@@ -34,8 +36,8 @@ class NodeTitleXSSTest extends NodeTestBase {
     $node = $this->drupalCreateNode($settings);
 
     $this->drupalGet('node/' . $node->id());
-    // assertTitle() decodes HTML-entities inside the <title> element.
-    $this->assertTitle($title . ' | Drupal', 'Title is displayed when viewing a node.');
+    // Titles should be escaped.
+    $this->assertTitle(Html::escape($title) . ' | Drupal', 'Title is displayed when viewing a node.');
     $this->assertNoRaw($xss, 'Harmful tags are escaped when viewing a node.');
 
     $this->drupalGet('node/' . $node->id() . '/edit');

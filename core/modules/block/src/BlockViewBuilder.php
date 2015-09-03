@@ -7,7 +7,6 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -163,8 +162,6 @@ class BlockViewBuilder extends EntityViewBuilder {
       // Add the entity so that it can be used in the #pre_render method.
       '#block' => $entity,
     ];
-
-    $build['#configuration']['label'] = SafeMarkup::checkPlain($configuration['label']);
 
     // If an alter hook wants to modify the block contents, it can append
     // another #pre_render hook.

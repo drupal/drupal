@@ -8,7 +8,6 @@
 namespace Drupal\block\Controller;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -109,7 +108,7 @@ class BlockLibraryController extends ControllerBase {
         '#prefix' => '<div class="block-filter-text-source">',
         '#suffix' => '</div>',
       ];
-      $row['category']['data'] = SafeMarkup::checkPlain($plugin_definition['category']);
+      $row['category']['data'] = $plugin_definition['category'];
       $links['add'] = [
         'title' => $this->t('Place block'),
         'url' => Url::fromRoute('block.admin_add', ['plugin_id' => $plugin_id, 'theme' => $theme]),

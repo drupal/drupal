@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -251,7 +250,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
     if (isset($names[$name])) {
       $form['palette'][$name] = array(
         '#type' => 'textfield',
-        '#title' => SafeMarkup::checkPlain($names[$name]),
+        '#title' => $names[$name],
         '#value_callback' => 'color_palette_color_value',
         '#default_value' => $value,
         '#size' => 8,

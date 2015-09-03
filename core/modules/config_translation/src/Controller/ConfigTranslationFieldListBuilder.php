@@ -7,7 +7,6 @@
 
 namespace Drupal\config_translation\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -123,7 +122,7 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
     if ($this->displayBundle()) {
       $bundle = $entity->get('bundle');
       $row['bundle'] = array(
-        'data' => SafeMarkup::checkPlain($this->baseEntityBundles[$bundle]['label']),
+        'data' => $this->baseEntityBundles[$bundle]['label'],
         'class' => 'table-filter-text-source',
       );
     }

@@ -1062,7 +1062,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       }
        // Use strip tags as there should never be HTML in the path.
        // However, we need to preserve special characters like " that
-       // were removed by SafeMarkup::checkPlain().
+       // were encoded by \Drupal\Component\Utility\Html::escape().
       $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(Html::decodeEntities($this->view->args[$count - 1])) : '';
     }
 
@@ -1394,7 +1394,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     if ($this->defaultableSections($section)) {
       views_ui_standard_display_dropdown($form, $form_state, $section);
     }
-    $form['#title'] = SafeMarkup::checkPlain($this->display['display_title']) . ': ';
+    $form['#title'] = $this->display['display_title'] . ': ';
 
     // Set the 'section' to highlight on the form.
     // If it's the item we're looking at is pulling from the default display,

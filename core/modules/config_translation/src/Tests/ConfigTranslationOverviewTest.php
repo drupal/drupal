@@ -7,7 +7,6 @@
 
 namespace Drupal\config_translation\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
@@ -103,7 +102,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
       $base_url = 'admin/structure/config_test/manage/' . $test_entity->id();
       $this->drupalGet('admin/config/regional/config-translation/config_test');
       $this->assertLinkByHref($base_url . '/translate');
-      $this->assertText(SafeMarkup::checkPlain($test_entity->label()));
+      $this->assertEscaped($test_entity->label());
 
       // Make sure there is only a single 'Translate' operation for each
       // dropbutton.

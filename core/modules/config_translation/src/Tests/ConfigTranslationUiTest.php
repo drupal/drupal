@@ -753,9 +753,9 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->clickLink('Add');
 
     $this->assertText('Translatable field setting');
-    $this->assertRaw(SafeMarkup::checkPlain($translatable_field_setting));
+    $this->assertEscaped($translatable_field_setting);
     $this->assertText('Translatable storage setting');
-    $this->assertRaw(SafeMarkup::checkPlain($translatable_storage_setting));
+    $this->assertEscaped($translatable_storage_setting);
   }
 
   /**

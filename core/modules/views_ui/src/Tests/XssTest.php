@@ -23,10 +23,10 @@ class XssTest extends UITestBase {
 
   public function testViewsUi() {
     $this->drupalGet('admin/structure/views');
-    $this->assertRaw('&lt;script&gt;alert(&quot;foo&quot;);&lt;/script&gt;, &lt;marquee&gt;test&lt;/marquee&gt;', 'The view tag is properly escaped.');
+    $this->assertEscaped('<script>alert("foo");</script>, <marquee>test</marquee>', 'The view tag is properly escaped.');
 
     $this->drupalGet('admin/structure/views/view/sa_contrib_2013_035');
-    $this->assertRaw('&amp;lt;marquee&amp;gt;test&amp;lt;/marquee&amp;gt;', 'Field admin label is properly escaped.');
+    $this->assertEscaped('<marquee>test</marquee>', 'Field admin label is properly escaped.');
 
     $this->drupalGet('admin/structure/views/nojs/handler/sa_contrib_2013_035/page_1/header/area');
     $this->assertRaw('[title] == &amp;lt;marquee&amp;gt;test&amp;lt;/marquee&amp;gt;', 'Token label is properly escaped.');

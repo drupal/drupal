@@ -7,7 +7,6 @@
 
 namespace Drupal\config_translation\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -70,12 +69,12 @@ class ConfigTranslationBlockListBuilder extends ConfigTranslationEntityListBuild
     );
 
     $row['theme'] = array(
-      'data' => SafeMarkup::checkPlain($this->themes[$theme]->info['name']),
+      'data' => $this->themes[$theme]->info['name'],
       'class' => 'table-filter-text-source',
     );
 
     $row['category'] = array(
-      'data' => SafeMarkup::checkPlain($plugin_definition['category']),
+      'data' => $plugin_definition['category'],
       'class' => 'table-filter-text-source',
     );
 

@@ -51,7 +51,7 @@ class UuidFormatterTest extends KernelTestBase {
 
     $render_array = $uuid_field->view(['settings' => ['link_to_entity' => TRUE]]);
     $this->assertIdentical($render_array[0]['#type'], 'link');
-    $this->assertIdentical($render_array[0]['#title'], $entity->uuid());
+    $this->assertIdentical($render_array[0]['#title']['#markup'], $entity->uuid());
     $this->assertIdentical($render_array[0]['#url']->toString(), $entity->url());
   }
 
