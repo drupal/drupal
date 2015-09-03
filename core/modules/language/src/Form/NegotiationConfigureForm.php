@@ -8,7 +8,6 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Block\BlockManagerInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -277,22 +276,22 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
       if (isset($types[$type])) {
         $table_form['#language_negotiation_info'][$method_id] = $method;
-        $method_name = SafeMarkup::checkPlain($method['name']);
+        $method_name = $method['name'];
 
         $table_form['weight'][$method_id] = array(
           '#type' => 'weight',
-          '#title' => $this->t('Weight for !title language detection method', array('!title' => Unicode::strtolower($method_name))),
+          '#title' => $this->t('Weight for @title language detection method', array('@title' => Unicode::strtolower($method_name))),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
           '#attributes' => array('class' => array("language-method-weight-$type")),
           '#delta' => 20,
         );
 
-        $table_form['title'][$method_id] = array('#markup' => $method_name);
+        $table_form['title'][$method_id] = array('#plain_text' => $method_name);
 
         $table_form['enabled'][$method_id] = array(
           '#type' => 'checkbox',
-          '#title' => $this->t('Enable !title language detection method', array('!title' => Unicode::strtolower($method_name))),
+          '#title' => $this->t('Enable @title language detection method', array('@title' => Unicode::strtolower($method_name))),
           '#title_display' => 'invisible',
           '#default_value' => $enabled,
         );

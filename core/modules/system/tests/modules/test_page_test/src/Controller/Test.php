@@ -7,7 +7,7 @@
 
 namespace Drupal\test_page_test\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 
 /**
  * Defines a test controller for page titles.
@@ -54,19 +54,13 @@ class Test {
   /**
    * Defines a controller with a cached render array.
    *
-   * @param bool $mark_safe
-   *   Whether or not to mark the title as safe use SafeMarkup::checkPlain.
-   *
    * @return array
    *   A render array
    */
-  public function controllerWithCache($mark_safe = FALSE) {
+  public function controllerWithCache() {
     $build = [];
     $build['#title'] = '<span>Cached title</span>';
-    if ($mark_safe) {
-      $build['#title'] = SafeMarkup::checkPlain($build['#title']);
-    }
-    $build['#cache']['keys'] = ['test_controller', 'with_title', $mark_safe];
+    $build['#cache']['keys'] = ['test_controller', 'with_title'];
 
     return $build;
   }

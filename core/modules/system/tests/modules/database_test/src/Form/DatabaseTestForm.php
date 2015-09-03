@@ -7,7 +7,6 @@
 
 namespace Drupal\database_test\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
@@ -56,8 +55,8 @@ class DatabaseTestForm extends FormBase {
 
     foreach (User::loadMultiple($uids) as $account) {
       $options[$account->id()] = array(
-        'title' => array('data' => array('#title' => SafeMarkup::checkPlain($account->getUsername()))),
-        'username' => SafeMarkup::checkPlain($account->getUsername()),
+        'title' => array('data' => array('#title' => $account->getUsername())),
+        'username' => $account->getUsername(),
         'status' =>  $account->isActive() ? t('active') : t('blocked'),
       );
     }

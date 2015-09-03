@@ -20,6 +20,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\SafeString;
 
 /**
  * @defgroup content_flags Content markers
@@ -1241,7 +1242,8 @@ function template_preprocess_html(&$variables) {
   }
   if (!empty($variables['page']['#title'])) {
     $head_title = array(
-      'title' => trim(strip_tags($variables['page']['#title'])),
+      // Marking the title as safe since it has had the tags stripped.
+      'title' => SafeString::create(trim(strip_tags($variables['page']['#title']))),
       'name' => $site_config->get('name'),
     );
   }

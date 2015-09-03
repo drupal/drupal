@@ -108,15 +108,16 @@ class SearchIntegrationTest extends ViewTestBase {
       'type' => $type->id(),
     ];
     $this->drupalCreateNode($node);
-    $node['title'] = "Drupal's search rocks really rocks!";
+    $node['title'] = "Drupal's search rocks <em>really</em> rocks!";
     $this->drupalCreateNode($node);
     $this->cronRun();
     $this->drupalGet('test-arg/rocks');
     $xpath = '//div[@class="views-row"]//a';
     /** @var \SimpleXMLElement[] $results */
     $results = $this->xpath($xpath);
-    $this->assertEqual((string) $results[0], "Drupal's search rocks really rocks!");
+    $this->assertEqual((string) $results[0], "Drupal's search rocks <em>really</em> rocks!");
     $this->assertEqual((string) $results[1], "Drupal's search rocks.");
+    $this->assertEscaped("Drupal's search rocks <em>really</em> rocks!");
 
     // Test sorting with another set of titles.
     $node = [
