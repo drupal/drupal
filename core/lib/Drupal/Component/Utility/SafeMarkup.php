@@ -35,49 +35,14 @@ class SafeMarkup {
   /**
    * The list of safe strings.
    *
+   * Strings in this list are marked as secure for the entire page render, not
+   * just the code or element that set it. Therefore, only valid HTML should be
+   * marked as safe (never partial markup). For example, you should never mark
+   * string such as '<' or '<script>' safe.
+   *
    * @var array
    */
   protected static $safeStrings = array();
-
-  /**
-   * Adds a string to a list of strings marked as secure.
-   *
-   * This method is for internal use. Do not use it to prevent escaping of
-   * markup; instead, use the appropriate
-   * @link sanitization sanitization functions @endlink or the
-   * @link theme_render theme and render systems @endlink so that the output
-   * can be themed, escaped, and altered properly.
-   *
-   * This marks strings as secure for the entire page render, not just the code
-   * or element that set it. Therefore, only valid HTML should be
-   * marked as safe (never partial markup). For example, you should never do:
-   * @code
-   *   SafeMarkup::set('<');
-   * @endcode
-   * or:
-   * @code
-   *   SafeMarkup::set('<script>');
-   * @endcode
-   *
-   * @param string $string
-   *   The content to be marked as secure.
-   * @param string $strategy
-   *   The escaping strategy used for this string. Two values are supported
-   *   by default:
-   *   - 'html': (default) The string is safe for use in HTML code.
-   *   - 'all': The string is safe for all use cases.
-   *   See the
-   *   @link http://twig.sensiolabs.org/doc/filters/escape.html Twig escape documentation @endlink
-   *   for more information on escaping strategies in Twig.
-   *
-   * @return string
-   *   The input string that was marked as safe.
-   */
-  public static function set($string, $strategy = 'html') {
-    $string = (string) $string;
-    static::$safeStrings[$string][$strategy] = TRUE;
-    return $string;
-  }
 
   /**
    * Checks if a string is safe to output.
@@ -85,7 +50,13 @@ class SafeMarkup {
    * @param string|\Drupal\Component\Utility\SafeStringInterface $string
    *   The content to be checked.
    * @param string $strategy
-   *   The escaping strategy. See self::set(). Defaults to 'html'.
+   *   The escaping strategy. Defaults to 'html'. Two escaping strategies are
+   *   supported by default:
+   *   - 'html': (default) The string is safe for use in HTML code.
+   *   - 'all': The string is safe for all use cases.
+   *   See the
+   *   @link http://twig.sensiolabs.org/doc/filters/escape.html Twig escape documentation @endlink
+   *   for more information on escaping strategies in Twig.
    *
    * @return bool
    *   TRUE if the string has been marked secure, FALSE otherwise.
@@ -100,12 +71,29 @@ class SafeMarkup {
   /**
    * Adds previously retrieved known safe strings to the safe string list.
    *
-   * This is useful for the batch and form APIs, where it is important to
-   * preserve the safe markup state across page requests. The strings will be
-   * added to any safe strings already marked for the current request.
+   * This method is for internal use. Do not use it to prevent escaping of
+   * markup; instead, use the appropriate
+   * @link sanitization sanitization functions @endlink or the
+   * @link theme_render theme and render systems @endlink so that the output
+   * can be themed, escaped, and altered properly.
    *
+   * This marks strings as secure for the entire page render, not just the code
+   * or element that set it. Therefore, only valid HTML should be
+   * marked as safe (never partial markup). For example, you should never do:
+   * @code
+   *   SafeMarkup::setMultiple(['<' => ['html' => TRUE]]);
+   * @endcode
+   * or:
+   * @code
+   *   SafeMarkup::setMultiple(['<script>' => ['all' => TRUE]]);
+   * @endcode
+
    * @param array $safe_strings
    *   A list of safe strings as previously retrieved by self::getAll().
+   *   Every string in this list will be represented by a multidimensional
+   *   array in which the keys are the string and the escaping strategy used for
+   *   this string, and in which the value is the boolean TRUE.
+   *   See self::isSafe() for the list of supported escaping strategies.
    *
    * @throws \UnexpectedValueException
    *

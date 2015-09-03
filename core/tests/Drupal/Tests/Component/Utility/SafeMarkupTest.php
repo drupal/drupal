@@ -21,54 +21,81 @@ use Drupal\Tests\UnitTestCase;
 class SafeMarkupTest extends UnitTestCase {
 
   /**
-   * Tests SafeMarkup::set() and SafeMarkup::isSafe().
+   * Helper function to add a string to the safe list for testing.
    *
-   * @dataProvider providerSet
+   * @param string $string
+   *   The content to be marked as secure.
+   * @param string $strategy
+   *   The escaping strategy used for this string. Two values are supported
+   *   by default:
+   *   - 'html': (default) The string is safe for use in HTML code.
+   *   - 'all': The string is safe for all use cases.
+   *   See the
+   *   @link http://twig.sensiolabs.org/doc/filters/escape.html Twig escape documentation @endlink
+   *   for more information on escaping strategies in Twig.
    *
-   * @param string $text
-   *   The text or object to provide to SafeMarkup::set().
-   * @param string $message
-   *   The message to provide as output for the test.
-   *
-   * @covers ::set
+   * @return string
+   *   The input string that was marked as safe.
    */
-  public function testSet($text, $message) {
-    $returned = SafeMarkup::set($text);
-    $this->assertTrue(is_string($returned), 'The return value of SafeMarkup::set() is really a string');
-    $this->assertEquals($returned, $text, 'The passed in value should be equal to the string value according to PHP');
-    $this->assertTrue(SafeMarkup::isSafe($text), $message);
-    $this->assertTrue(SafeMarkup::isSafe($returned), 'The return value has been marked as safe');
+  protected function safeMarkupSet($string, $strategy = 'html') {
+    $reflected_class = new \ReflectionClass('\Drupal\Component\Utility\SafeMarkup');
+    $reflected_property = $reflected_class->getProperty('safeStrings');
+    $reflected_property->setAccessible(true);
+    $current_value = $reflected_property->getValue();
+    $current_value[$string][$strategy] = TRUE;
+    $reflected_property->setValue($current_value);
+    return $string;
+  }
+
+  /**
+   * Tests SafeMarkup::isSafe() with different providers.
+   *
+   * @covers ::isSafe
+   */
+  public function testStrategy() {
+    $returned = $this->safeMarkupSet('string0', 'html');
+    $this->assertTrue(SafeMarkup::isSafe($returned), 'String set with "html" provider is safe for default (html)');
+    $returned = $this->safeMarkupSet('string1', 'all');
+    $this->assertTrue(SafeMarkup::isSafe($returned), 'String set with "all" provider is safe for default (html)');
+    $returned = $this->safeMarkupSet('string2', 'css');
+    $this->assertFalse(SafeMarkup::isSafe($returned), 'String set with "css" provider is not safe for default (html)');
+    $returned = $this->safeMarkupSet('string3');
+    $this->assertFalse(SafeMarkup::isSafe($returned, 'all'), 'String set with "html" provider is not safe for "all"');
   }
 
   /**
    * Data provider for testSet().
-   *
-   * @see testSet()
    */
   public function providerSet() {
     // Checks that invalid multi-byte sequences are escaped.
-    $tests[] = array("Foo\xC0barbaz", 'Foo�barbaz', 'Invalid sequence "Foo\xC0barbaz" is escaped', TRUE);
-    $tests[] = array("Fooÿñ", 'SafeMarkup::set() does not escape valid sequence "Fooÿñ"');
-    $tests[] = array(new TextWrapper("Fooÿñ"), 'SafeMarkup::set() does not escape valid sequence "Fooÿñ" in an object implementing __toString()');
-    $tests[] = array("<div>", 'SafeMarkup::set() does not escape HTML');
+    $tests[] = array(
+      'Foo�barbaz',
+      'SafeMarkup::setMarkup() functions with valid sequence "Foo�barbaz"',
+      TRUE
+    );
+    $tests[] = array(
+      "Fooÿñ",
+      'SafeMarkup::setMarkup() functions with valid sequence "Fooÿñ"'
+    );
+    $tests[] = array("<div>", 'SafeMarkup::setMultiple() does not escape HTML');
 
     return $tests;
   }
 
   /**
-   * Tests SafeMarkup::set() and SafeMarkup::isSafe() with different providers.
+   * Tests SafeMarkup::setMultiple().
+   * @dataProvider providerSet
    *
-   * @covers ::isSafe
+   * @param string $text
+   *   The text or object to provide to SafeMarkup::setMultiple().
+   * @param string $message
+   *   The message to provide as output for the test.
+   *
+   * @covers ::setMultiple
    */
-  public function testStrategy() {
-    $returned = SafeMarkup::set('string0', 'html');
-    $this->assertTrue(SafeMarkup::isSafe($returned), 'String set with "html" provider is safe for default (html)');
-    $returned = SafeMarkup::set('string1', 'all');
-    $this->assertTrue(SafeMarkup::isSafe($returned), 'String set with "all" provider is safe for default (html)');
-    $returned = SafeMarkup::set('string2', 'css');
-    $this->assertFalse(SafeMarkup::isSafe($returned), 'String set with "css" provider is not safe for default (html)');
-    $returned = SafeMarkup::set('string3');
-    $this->assertFalse(SafeMarkup::isSafe($returned, 'all'), 'String set with "html" provider is not safe for "all"');
+  public function testSet($text, $message) {
+    SafeMarkup::setMultiple([$text => ['html' => TRUE]]);
+    $this->assertTrue(SafeMarkup::isSafe($text), $message);
   }
 
   /**
@@ -217,7 +244,7 @@ class SafeMarkupTestString {
  * Marks text as safe.
  *
  * SafeMarkupTestSafeString is used to mark text as safe because
- * SafeMarkup::set() is a global static that affects all tests.
+ * SafeMarkup::$safeStrings is a global static that affects all tests.
  */
 class SafeMarkupTestSafeString implements SafeStringInterface {
   use SafeStringTrait;
