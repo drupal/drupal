@@ -1,0 +1,7 @@
+block_test.test_multipleforms:
+  path: '/test-multiple-forms'
+  defaults:
+    _controller: '\Drupal\block_test\Controller\TestMultipleFormController::testMultipleForms'
+    _title: 'Multiple forms'
+  requirements:
+    _access: 'TRUE'

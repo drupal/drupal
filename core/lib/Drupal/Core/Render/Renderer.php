@@ -179,7 +179,7 @@ class Renderer implements RendererInterface {
 
     // Replace the placeholder with its rendered markup, and merge its
     // bubbleable metadata with the main elements'.
-    $elements['#markup'] = str_replace($placeholder, $markup, $elements['#markup']);
+    $elements['#markup'] = SafeString::create(str_replace($placeholder, $markup, $elements['#markup']));
     $elements = $this->mergeBubbleableMetadata($elements, $placeholder_elements);
 
     // Remove the placeholder that we've just rendered.

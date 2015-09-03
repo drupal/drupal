@@ -290,7 +290,7 @@ class DisplayBlockTest extends ViewTestBase {
     // Ensure that the view cachability metadata is propagated even, for an
     // empty block.
     $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
 
     // Add a header displayed on empty result.
     $display = &$view->getDisplay('block_1');
@@ -308,7 +308,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
     $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
     $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
 
     // Hide the header on empty results.
     $display = &$view->getDisplay('block_1');
@@ -326,7 +326,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
     $this->assertEqual(0, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
     $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
 
     // Add an empty text.
     $display = &$view->getDisplay('block_1');
@@ -343,7 +343,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
     $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
     $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.query_args:_wrapper_format', 'user.roles:authenticated']);
+    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
   }
 
   /**
