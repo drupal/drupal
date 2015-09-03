@@ -41,9 +41,7 @@ class UserTest extends MigrateSqlSourceTestCase {
       'language' => '',
       'picture' => '0',
       'init' => 'odo@local.host',
-      'roles' => [
-        2 => 'authenticated user',
-      ],
+      'roles' => [2],
       'data' => [
         'contact' => 1,
       ],

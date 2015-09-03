@@ -66,11 +66,12 @@ class User extends FieldableEntity {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $roles = $this->select('role', 'r')
-      ->fields('r', ['rid', 'name']);
-    $roles->join('users_roles', 'ur', 'ur.rid = r.rid');
-    $roles->condition('ur.uid', $row->getSourceProperty('uid'));
-    $row->setSourceProperty('roles', $roles->execute()->fetchAllKeyed());
+    $roles = $this->select('users_roles', 'ur')
+      ->fields('ur', ['rid'])
+      ->condition('ur.uid', $row->getSourceProperty('uid'))
+      ->execute()
+      ->fetchCol();
+    $row->setSourceProperty('roles', $roles);
 
     $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
 
