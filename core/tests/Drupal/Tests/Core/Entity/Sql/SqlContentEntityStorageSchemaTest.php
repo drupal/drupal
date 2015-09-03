@@ -1395,7 +1395,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * ::onEntityTypeUpdate
    */
   public function testonEntityTypeUpdateWithNewIndex() {
-    $entity_type_id = 'entity_test';
     $this->entityType = $original_entity_type = new ContentEntityType(array(
       'id' => 'entity_test',
       'entity_keys' => array('id' => 'id'),
@@ -1465,6 +1464,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('dropIndex')
       ->with('entity_test', 'entity_test__removed_field');
 
+    $this->dbSchemaHandler->expects($this->atLeastOnce())
+      ->method('fieldExists')
+      ->willReturn(TRUE);
     $this->dbSchemaHandler->expects($this->atLeastOnce())
       ->method('addIndex')
       ->with('entity_test', 'entity_test__b588603cb9', [['long_index_name', 10]], $this->callback(function($actual_value) use ($expected)  {

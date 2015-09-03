@@ -509,6 +509,18 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     // Run the update and ensure the index is deleted.
     $this->entityDefinitionUpdateManager->applyUpdates();
     $this->assertFalse($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__new_index'), 'Index deleted.');
+
+    // Test that composite indexes are handled correctly when dropping and
+    // re-creating one of their columns.
+    $this->addEntityIndex();
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $storage_definition = $this->entityDefinitionUpdateManager->getFieldStorageDefinition('name', 'entity_test_update');
+    $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($storage_definition);
+    $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__new_index'), 'Index created.');
+    $this->entityDefinitionUpdateManager->uninstallFieldStorageDefinition($storage_definition);
+    $this->assertFalse($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__new_index'), 'Index deleted.');
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('name', 'entity_test_update', 'entity_test', $storage_definition);
+    $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__new_index'), 'Index created again.');
   }
 
   /**

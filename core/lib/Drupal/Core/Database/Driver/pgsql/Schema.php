@@ -588,13 +588,28 @@ class Schema extends DatabaseSchema {
   /**
    * Helper function: check if a constraint (PK, FK, UK) exists.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table.
-   * @param $name
-   *   The name of the constraint (typically 'pkey' or '[constraint]_key').
+   * @param string $name
+   *   The name of the constraint (typically 'pkey' or '[constraint]__key').
+   *
+   * @return bool
+   *   TRUE if the constraint exists, FALSE otherwise.
    */
   public function constraintExists($table, $name) {
-    $constraint_name = $this->ensureIdentifiersLength($table, $name);
+    // ::ensureIdentifiersLength() expects three parameters, although not
+    // explicitly stated in its signature, thus we split our constraint name in
+    // a proper name and a suffix.
+    if ($name == 'pkey') {
+      $suffix = $name;
+      $name = '';
+    }
+    else {
+      $pos = strrpos($name, '__');
+      $suffix = substr($name, $pos + 2);
+      $name = substr($name, 0, $pos);
+    }
+    $constraint_name = $this->ensureIdentifiersLength($table, $name, $suffix);
     // Remove leading and trailing quotes because the index name is in a WHERE
     // clause and not used as an identifier.
     $constraint_name = str_replace('"', '', $constraint_name);
