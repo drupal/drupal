@@ -18,6 +18,7 @@ process:
       - 0
       - attributes
       - title
+    default: ''
   menu_name:
     plugin: migration
     migration: menu

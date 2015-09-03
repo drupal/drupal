@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link_content\Tests\Migrate\d7;
 
+use Drupal\Core\Database\Database;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
@@ -33,7 +34,6 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     $this->installSchema('system', ['router']);
     $this->installEntitySchema('menu_link_content');
     $this->executeMigration('menu');
-    $this->executeMigration('d7_menu_links');
   }
 
   /**
@@ -78,9 +78,26 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
    * Tests migration of menu links.
    */
   public function testMenuLinks() {
+    $this->executeMigration('d7_menu_links');
     $this->assertEntity(467, 'Google', 'menu-test-menu', 'Google', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'http://google.com', 0);
     $this->assertEntity(468, 'Yahoo', 'menu-test-menu', 'Yahoo', TRUE, FALSE, ['attributes' => ['title' => 'Yahoo']], 'http://yahoo.com', 0);
     $this->assertEntity(469, 'Bing', 'menu-test-menu', 'Bing', TRUE, FALSE, ['attributes' => ['title' => 'Bing']], 'http://bing.com', 0);
+  }
+
+  /**
+   * Tests migrating a link with an undefined title attribute.
+   */
+  public function testUndefinedLinkTitle() {
+    Database::getConnection('default', 'migrate')
+      ->update('menu_links')
+      ->fields(array(
+        'options' => 'a:0:{}',
+      ))
+      ->condition('mlid', 467)
+      ->execute();
+
+    $this->executeMigration('d7_menu_links');
+    $this->assertEntity(467, 'Google', 'menu-test-menu', NULL, TRUE, FALSE, [], 'http://google.com', 0);
   }
 
 }
