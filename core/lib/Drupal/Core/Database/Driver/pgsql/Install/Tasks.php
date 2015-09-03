@@ -180,8 +180,8 @@ class Tasks extends InstallTasks {
    * Verify that a binary data roundtrip returns the original string.
    */
   protected function checkBinaryOutputSuccess() {
-    $bytea_output = db_query("SELECT 'encoding'::bytea AS output")->fetchField();
-    return ($bytea_output == 'encoding');
+    $bytea_output = db_query("SHOW bytea_output")->fetchField();
+    return ($bytea_output == 'escape');
   }
 
   /**

@@ -10,9 +10,12 @@ namespace Drupal\system\Tests\Update;
 use Drupal\Component\Utility\Crypt;
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Database\Database;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -141,7 +144,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
    * container that would normally be done via the installer.
    */
   protected function setUp() {
-
+    $this->runDbTasks();
     // Allow classes to set database dump files.
     $this->setDatabaseDumpFiles();
 
@@ -258,6 +261,33 @@ abstract class UpdatePathTestBase extends WebTestBase {
 
     // Ensure that the update hooks updated all entity schema.
     $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After all updates ran, entity schema is up to date.');
+  }
+
+  /**
+   * Runs the install database tasks for the driver used by the test runner.
+   */
+  protected function runDbTasks() {
+    // Create a minimal container so that t() works.
+    // @see install_begin_request()
+    $container = new ContainerBuilder();
+    $container->setParameter('language.default_values', Language::$defaultValues);
+    $container
+      ->register('language.default', 'Drupal\Core\Language\LanguageDefault')
+      ->addArgument('%language.default_values%');
+    $container
+      ->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+      ->addArgument(new Reference('language.default'));
+    $container
+      ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
+      ->addArgument(new Reference('language_manager'));
+    \Drupal::setContainer($container);
+
+    require_once __DIR__ . '/../../../../../includes/install.inc';
+    $connection = Database::getConnection();
+    $errors = db_installer_object($connection->driver())->runTasks();
+    if (!empty($errors)) {
+      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
+    }
   }
 
   /**
