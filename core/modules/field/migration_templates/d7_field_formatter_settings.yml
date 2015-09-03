@@ -62,7 +62,10 @@ process:
     -
       plugin: skip_on_empty
       method: row
-  "options/settings": settings
+  "options/settings":
+    plugin: default_value
+    source: settings
+    default_value: []
   "options/third_party_settings": 'constants/third_party_settings'
 destination:
   plugin: component_entity_display

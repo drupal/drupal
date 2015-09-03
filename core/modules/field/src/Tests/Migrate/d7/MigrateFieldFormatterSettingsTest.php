@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\Migrate\d7;
 
 use Drupal\comment\Entity\CommentType;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
@@ -88,6 +89,63 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
       'type' => 'test_content_type',
       'label' => $this->randomMachineName(),
     ])->save();
+
+    // Give one unfortunate field instance invalid display settings to ensure
+    // that the migration provides an empty array as a default (thus avoiding
+    // an "unsupported operand types" fatal).
+    Database::getConnection('default', 'migrate')
+      ->update('field_config_instance')
+      ->fields(array(
+        'data' => serialize(array (
+          'label' => 'Body',
+          'widget' =>
+            array (
+              'type' => 'text_textarea_with_summary',
+              'settings' =>
+                array (
+                  'rows' => 20,
+                  'summary_rows' => 5,
+                ),
+              'weight' => -4,
+              'module' => 'text',
+            ),
+          'settings' =>
+            array (
+              'display_summary' => true,
+              'text_processing' => 1,
+              'user_register_form' => false,
+            ),
+          'display' =>
+            array (
+              'default' =>
+                array (
+                  'label' => 'hidden',
+                  'type' => 'text_default',
+                  'settings' =>
+                    array (
+                    ),
+                  'module' => 'text',
+                  'weight' => 0,
+                ),
+              'teaser' =>
+                array (
+                  'label' => 'hidden',
+                  'type' => 'text_summary_or_trimmed',
+                  // settings is always expected to be an array. Making it NULL
+                  // causes a fatal.
+                  'settings' => NULL,
+                  'module' => 'text',
+                  'weight' => 0,
+                ),
+            ),
+          'required' => false,
+          'description' => '',
+        )),
+      ))
+      ->condition('entity_type', 'node')
+      ->condition('bundle', 'article')
+      ->condition('field_name', 'body')
+      ->execute();
 
     $this->executeMigration('d7_field');
     $this->executeMigration('d7_field_instance');
