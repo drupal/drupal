@@ -29,3 +29,6 @@ destination:
 migration_dependencies:
   required:
     - d7_field
+  optional:
+    - d7_node_type
+    - d7_comment_type

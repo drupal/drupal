@@ -1,0 +1,24 @@
+id: d7_comment_entity_display
+label: Drupal 7 comment display configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_comment_type
+  constants:
+    entity_type: node
+    view_mode: default
+    options:
+      label: hidden
+      type: comment_default
+      weight: 20
+process:
+  entity_type: 'constants/entity_type'
+  field_name: bundle
+  view_mode: 'constants/view_mode'
+  options: 'constants/options'
+  bundle: node_type
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - d7_comment_field_instance

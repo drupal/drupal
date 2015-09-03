@@ -39,7 +39,7 @@ migration_dependencies:
   required:
     - d6_node:*
     - d6_comment_type
-    - d6_user
     - d6_comment_entity_display
     - d6_comment_entity_form_display
+    - d6_user
     - d6_filter_format

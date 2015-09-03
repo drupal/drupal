@@ -1,0 +1,27 @@
+id: d7_comment_field_instance
+label: Drupal 7 comment field instance configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_comment_type
+  constants:
+    entity_type: node
+    label: Comments
+    required: true
+process:
+  entity_type: 'constants/entity_type'
+  label: 'constants/label'
+  required: 'constants/required'
+  field_name: bundle
+  bundle: node_type
+  'default_value/0/status': 'constants/required'
+  'settings/default_mode': default_mode
+  'settings/per_page': per_page
+  'settings/anonymous': anonymous
+  'settings/form_location': form_location
+  'settings/preview': preview
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d7_comment_field

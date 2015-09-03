@@ -1,0 +1,19 @@
+id: d7_comment_field
+label: Drupal 7 comment field configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_comment_type
+  constants:
+    entity_type: node
+    type: comment
+process:
+  entity_type: 'constants/entity_type'
+  field_name: bundle
+  type: 'constants/type'
+  'settings/comment_type': bundle
+destination:
+  plugin: entity:field_storage_config
+migration_dependencies:
+  required:
+    - d7_comment_type
