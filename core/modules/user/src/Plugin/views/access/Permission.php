@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\access;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -120,7 +121,7 @@ class Permission extends AccessPluginBase implements CacheablePluginInterface {
     foreach ($permissions as $perm => $perm_item) {
       $provider = $perm_item['provider'];
       $display_name = $this->moduleHandler->getName($provider);
-      $perms[$display_name][$perm] = strip_tags($perm_item['title']);
+      $perms[$display_name][$perm] = SafeMarkup::checkPlain(strip_tags($perm_item['title']));
     }
 
     $form['perm'] = array(

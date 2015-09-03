@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\Search;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
@@ -345,7 +346,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       $result = array(
         'link' => $node->url('canonical', array('absolute' => TRUE, 'language' => $language)),
-        'type' => $type->label(),
+        'type' => SafeMarkup::checkPlain($type->label()),
         'title' => $node->label(),
         'node' => $node,
         'extra' => $extra,
@@ -445,15 +446,9 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $build = $node_render->view($node, 'search_index', $language->getId());
 
       unset($build['#theme']);
+      $rendered = $this->renderer->renderPlain($build);
 
-      // Add the title to text so it is searchable.
-      $build['search_title'] = [
-        '#prefix' => '<h1>',
-        '#plain_text' => $node->label($language->getId()),
-        '#suffix' => '</h1>',
-        '#weight' => -1000
-      ];
-      $text = $this->renderer->renderPlain($build);
+      $text = '<h1>' . SafeMarkup::checkPlain($node->label($language->getId())) . '</h1>' . $rendered;
 
       // Fetch extra data normally not visible.
       $extra = $this->moduleHandler->invokeAll('node_update_index', array($node, $language->getId()));

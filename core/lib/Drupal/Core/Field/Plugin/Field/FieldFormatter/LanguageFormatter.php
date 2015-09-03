@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -122,9 +123,7 @@ class LanguageFormatter extends StringFormatter {
     // storage by LanguageManager::getLanguages()) or in its native language
     // name. That only depends on formatter settings and no language condition.
     $languages = $this->getSetting('native_language') ? $this->languageManager->getNativeLanguages(LanguageInterface::STATE_ALL) : $this->languageManager->getLanguages(LanguageInterface::STATE_ALL);
-    return [
-      '#plain_text' => $item->language && isset($languages[$item->language->getId()]) ? $languages[$item->language->getId()]->getName() : ''
-    ];
+    return $item->language && isset($languages[$item->language->getId()]) ? SafeMarkup::checkPlain($languages[$item->language->getId()]->getName()) : '';
   }
 
 }

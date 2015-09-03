@@ -766,7 +766,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       $value = $this->options['group_info']['identifier'];
 
       $form[$value] = array(
-        '#title' => $this->options['group_info']['label'],
+        '#title' => SafeMarkup::checkPlain($this->options['group_info']['label']),
         '#type' => $this->options['group_info']['widget'],
         '#default_value' => $this->group_info,
         '#options' => $groups,

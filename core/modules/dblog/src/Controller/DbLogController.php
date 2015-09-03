@@ -8,7 +8,9 @@
 namespace Drupal\dblog\Controller;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatter;
@@ -281,7 +283,7 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Hostname'), 'header' => TRUE),
-          $dblog->hostname,
+          SafeMarkup::checkPlain($dblog->hostname),
         ),
         array(
           array('data' => $this->t('Operations'), 'header' => TRUE),

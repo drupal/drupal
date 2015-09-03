@@ -10,6 +10,7 @@ namespace Drupal\Core\Field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -84,7 +85,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     if ($this->handlesMultipleValues() || isset($get_delta)) {
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = array(
-        '#title' => $this->fieldDefinition->getLabel(),
+        '#title' => SafeMarkup::checkPlain($this->fieldDefinition->getLabel()),
         '#description' => FieldFilteredString::create(\Drupal::token()->replace($this->fieldDefinition->getDescription())),
       );
       $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
@@ -163,7 +164,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         break;
     }
 
-    $title = $this->fieldDefinition->getLabel();
+    $title = SafeMarkup::checkPlain($this->fieldDefinition->getLabel());
     $description = FieldFilteredString::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
 
     $elements = array();
@@ -178,7 +179,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // table.
       if ($is_multiple) {
         $element = [
-          '#title' => $this->t('@title (value @number)', ['@title' => $title, '@number' => $delta + 1]),
+          '#title' => $title . ' ' . $this->t('(value @number)', ['@number' => $delta + 1]),
           '#title_display' => 'invisible',
           '#description' => '',
         ];

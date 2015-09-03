@@ -28,6 +28,14 @@ test_page_test.cached_controller:
   requirements:
     _access: 'TRUE'
 
+test_page_test.cached_controller.safe:
+  path: '/test-page-cached-controller-safe'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::controllerWithCache'
+    mark_safe: true
+  requirements:
+    _access: 'TRUE'
+
 test_page_test.dynamic_title:
   path: '/test-page-dynamic-title'
   defaults:

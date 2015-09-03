@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Form;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\locale\SourceString;
@@ -72,9 +73,7 @@ class TranslateEditForm extends TranslateFormBase {
             '#type' => 'item',
             '#title' => $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))),
             '#title_display' => 'invisible',
-            '#plain_text' => $source_array[0],
-            '#preffix' => '<span lang="en">',
-            '#suffix' => '</span>',
+            '#markup' => '<span lang="en">' . Html::escape($source_array[0]) . '</span>',
           );
         }
         else {
@@ -83,16 +82,13 @@ class TranslateEditForm extends TranslateFormBase {
           $original_singular = [
             '#type' => 'item',
             '#title' => $this->t('Singular form'),
-            '#plain_text' => $source_array[0],
-            '#prefix' => '<span class="visually-hidden">' . $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))) . '</span><span lang="en">',
-            '#suffix' => '</span>',
+            '#markup' => '<span lang="en">' . Html::escape($source_array[0]) . '</span>',
+            '#prefix' => '<span class="visually-hidden">' . $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))) . '</span>',
           ];
           $original_plural = [
             '#type' => 'item',
             '#title' => $this->t('Plural form'),
-            '#plain_text' => $source_array[1],
-            '#preffix' => '<span lang="en">',
-            '#suffix' => '</span>',
+            '#markup' => '<span lang="en">' . Html::escape($source_array[1]) . '</span>',
           ];
           $form['strings'][$string->lid]['original'] = [
             $original_singular,

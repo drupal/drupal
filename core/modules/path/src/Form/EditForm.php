@@ -7,6 +7,7 @@
 
 namespace Drupal\path\Form;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -35,7 +36,7 @@ class EditForm extends PathFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $pid = NULL) {
     $form = parent::buildForm($form, $form_state, $pid);
 
-    $form['#title'] = $this->path['alias'];
+    $form['#title'] = SafeMarkup::checkPlain($this->path['alias']);
     $form['pid'] = array(
       '#type' => 'hidden',
       '#value' => $this->path['pid'],

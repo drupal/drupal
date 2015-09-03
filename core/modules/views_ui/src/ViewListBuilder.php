@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
@@ -277,7 +278,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
           $all_paths[] = \Drupal::l('/' . $path, Url::fromUserInput('/' . $path));
         }
         else {
-          $all_paths[] = '/' . $path;
+          $all_paths[] = SafeMarkup::checkPlain('/' . $path);
         }
       }
     }

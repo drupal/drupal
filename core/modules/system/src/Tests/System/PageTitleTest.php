@@ -147,6 +147,15 @@ class PageTitleTest extends WebTestBase {
     $this->drupalGet('test-page-cached-controller');
     $this->assertTitle('Cached title | Drupal');
     $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
+
+    // Ensure that titles are cacheable and are escaped normally if the
+    // controller escapes them use Html::escape().
+    $this->drupalGet('test-page-cached-controller-safe');
+    $this->assertTitle('<span>Cached title</span> | Drupal');
+    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
+    $this->drupalGet('test-page-cached-controller-safe');
+    $this->assertTitle('<span>Cached title</span> | Drupal');
+    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
   }
 
 }

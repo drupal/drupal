@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -128,16 +128,16 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     }
 
     foreach ($items as $delta => $item) {
-      $view_value = $this->viewValue($item);
+      $string = $this->viewValue($item);
       if ($url) {
         $elements[$delta] = [
           '#type' => 'link',
-          '#title' => $view_value,
+          '#title' => $string,
           '#url' => $url,
         ];
       }
       else {
-        $elements[$delta] = is_array($view_value) ? $view_value : ['#markup' => $view_value];
+        $elements[$delta] = ['#markup' => $string];
       }
     }
     return $elements;
@@ -149,15 +149,13 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
    * @param \Drupal\Core\Field\FieldItemInterface $item
    *   One field item.
    *
-   * @return array
-   *   The textual output generated as a render array.
+   * @return string
+   *   The textual output generated.
    */
   protected function viewValue(FieldItemInterface $item) {
     // The text value has no text format assigned to it, so the user input
     // should equal the output, including newlines.
-    return [
-      '#markup' => nl2br(Html::escape($item->value))
-    ];
+    return nl2br(SafeMarkup::checkPlain($item->value));
   }
 
 }

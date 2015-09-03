@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\user\UserInterface;
+use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -86,7 +87,7 @@ class ContactController extends ControllerBase {
       ));
 
     $form = $this->entityFormBuilder()->getForm($message);
-    $form['#title'] = $contact_form->label();
+    $form['#title'] = SafeMarkup::checkPlain($contact_form->label());
     $form['#cache']['contexts'][] = 'user.permissions';
     $this->renderer->addCacheableDependency($form, $config);
     return $form;

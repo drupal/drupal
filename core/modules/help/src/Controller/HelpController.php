@@ -12,6 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Controller routines for help routes.
@@ -114,7 +115,7 @@ class HelpController extends ControllerBase {
     $build = array();
     if ($this->moduleHandler()->implementsHook($name, 'help')) {
       $module_name =  $this->moduleHandler()->getName($name);
-      $build['#title'] = $module_name;
+      $build['#title'] = SafeMarkup::checkPlain($module_name);
 
       $temp = $this->moduleHandler()->invoke($name, 'help', array("help.page.$name", $this->routeMatch));
       if (empty($temp)) {

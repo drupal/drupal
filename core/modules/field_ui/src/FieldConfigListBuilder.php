@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -130,7 +131,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $row = array(
       'id' => Html::getClass($field_config->getName()),
       'data' => array(
-        'label' => $field_config->getLabel(),
+        'label' => SafeMarkup::checkPlain($field_config->getLabel()),
         'field_name' => $field_config->getName(),
         'field_type' => array(
           'data' => array(

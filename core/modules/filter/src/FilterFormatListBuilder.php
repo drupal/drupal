@@ -98,10 +98,10 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     if ($entity->isFallbackFormat()) {
       $fallback_choice = $this->configFactory->get('filter.settings')->get('always_show_fallback_choice');
       if ($fallback_choice) {
-        $row['roles']['#markup'] = $this->t('All roles may use this format');
+        $roles_markup = $this->t('All roles may use this format');
       }
       else {
-        $row['roles']['#markup'] = $this->t('This format is shown when no other formats are available');
+        $roles_markup = $this->t('This format is shown when no other formats are available');
       }
       // Emphasize the fallback role text since it is important to understand
       // how it works which configuring filter formats. Additionally, it is not
@@ -110,13 +110,11 @@ class FilterFormatListBuilder extends DraggableListBuilder {
       $row['roles']['#suffix'] = '</em>';
     }
     else {
-      $row['roles'] = [
-        '#theme' => 'item_list',
-        '#items' => filter_get_roles_by_format($entity),
-        '#empty' => $this->t('No roles may use this format'),
-        '#context' => ['list_style' => 'comma-list'],
-      ];
+      $roles = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', filter_get_roles_by_format($entity));
+      $roles_markup = $roles ? implode(', ', $roles) : $this->t('No roles may use this format');
     }
+
+    $row['roles']['#markup'] = $roles_markup;
 
     return $row + parent::buildRow($entity);
   }

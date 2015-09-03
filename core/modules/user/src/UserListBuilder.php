@@ -138,7 +138,7 @@ class UserListBuilder extends EntityListBuilder {
     );
     $row['status'] = $entity->isActive() ? $this->t('active') : $this->t('blocked');
 
-    $roles = user_role_names(TRUE);
+    $roles = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names(TRUE));
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
     $users_roles = array();
     foreach ($entity->getRoles() as $role) {
