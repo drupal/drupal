@@ -25,9 +25,13 @@ process:
     migration: d7_user_role
     source: roles
   user_picture:
-    plugin: migration
-    migration: d7_file
-    source: picture
+    -
+      plugin: default_value
+      source: picture
+      default_value: null
+    -
+      plugin: migration
+      migration: d7_file
 destination:
   plugin: entity:user
 migration_dependencies:

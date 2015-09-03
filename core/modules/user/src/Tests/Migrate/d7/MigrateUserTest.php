@@ -24,13 +24,19 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  static $modules = array('user');
+  static $modules = array('file', 'image', 'user');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    // Prepare to migrate user pictures as well.
+    $this->installEntitySchema('file');
+    $this->executeMigration('user_picture_field');
+    $this->executeMigration('user_picture_field_instance');
+
     $this->executeMigration('d7_user_role');
     $this->executeMigration('d7_user');
   }
@@ -56,8 +62,10 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    *   The user's initial e-mail address.
    * @param string[] $roles
    *   Role IDs the user account is expected to have.
+   * @param bool $has_picture
+   *   Whether the user is expected to have a picture attached.
    */
-  protected function assertEntity($id, $label, $mail, $access, $login, $blocked, $langcode, $init, array $roles = [RoleInterface::AUTHENTICATED_ID]) {
+  protected function assertEntity($id, $label, $mail, $access, $login, $blocked, $langcode, $init, array $roles = [RoleInterface::AUTHENTICATED_ID], $has_picture = FALSE) {
     /** @var \Drupal\user\UserInterface $user */
     $user = User::load($id);
     $this->assertTrue($user instanceof UserInterface);
@@ -74,6 +82,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
     $this->assertIdentical($langcode, $user->preferred_admin_langcode->value);
     $this->assertIdentical($init, $user->getInitialEmail());
     $this->assertIdentical($roles, $user->getRoles());
+    $this->assertIdentical($has_picture, !$user->user_picture->isEmpty());
   }
 
   /**
