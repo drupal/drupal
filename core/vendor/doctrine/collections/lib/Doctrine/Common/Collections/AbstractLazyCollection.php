@@ -37,9 +37,9 @@ abstract class AbstractLazyCollection implements Collection
     protected $collection;
 
     /**
-     * @var bool
+     * @var boolean
      */
-    private $initialized = false;
+    protected $initialized = false;
 
     /**
      * {@inheritDoc}
@@ -328,7 +328,7 @@ abstract class AbstractLazyCollection implements Collection
      */
     protected function initialize()
     {
-        if (!$this->initialized) {
+        if ( ! $this->initialized) {
             $this->doInitialize();
             $this->initialized = true;
         }

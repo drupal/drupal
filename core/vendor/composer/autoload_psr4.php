@@ -37,6 +37,7 @@ return array(
     'Drupal\\Driver\\' => array($baseDir . '/../drivers/lib/Drupal/Driver'),
     'Drupal\\Core\\' => array($baseDir . '/lib/Drupal/Core'),
     'Drupal\\Component\\' => array($baseDir . '/lib/Drupal/Component'),
+    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Behat\\Mink\\Driver\\' => array($vendorDir . '/behat/mink-goutte-driver/src'),
     'Behat\\Mink\\' => array($vendorDir . '/behat/mink/src'),
 );

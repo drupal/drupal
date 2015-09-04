@@ -69,6 +69,14 @@ class RedisCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
+    protected function doFetchMultiple(array $keys)
+    {
+        return array_filter(array_combine($keys, $this->redis->mget($keys)));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doContains($id)
     {
         return $this->redis->exists($id);
@@ -109,8 +117,8 @@ class RedisCache extends CacheProvider
     {
         $info = $this->redis->info();
         return array(
-            Cache::STATS_HITS   => false,
-            Cache::STATS_MISSES => false,
+            Cache::STATS_HITS   => $info['keyspace_hits'],
+            Cache::STATS_MISSES => $info['keyspace_misses'],
             Cache::STATS_UPTIME => $info['uptime_in_seconds'],
             Cache::STATS_MEMORY_USAGE      => $info['used_memory'],
             Cache::STATS_MEMORY_AVAILABLE  => false
@@ -126,6 +134,9 @@ class RedisCache extends CacheProvider
      */
     protected function getSerializerValue()
     {
+        if (defined('HHVM_VERSION')) {
+            return Redis::SERIALIZER_PHP;
+        }
         return defined('Redis::SERIALIZER_IGBINARY') ? Redis::SERIALIZER_IGBINARY : Redis::SERIALIZER_PHP;
     }
 }

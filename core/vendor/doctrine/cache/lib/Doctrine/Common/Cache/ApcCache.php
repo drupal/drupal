@@ -75,9 +75,17 @@ class ApcCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
+    protected function doFetchMultiple(array $keys)
+    {
+        return apc_fetch($keys);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doGetStats()
     {
-        $info = apc_cache_info();
+        $info = apc_cache_info('', true);
         $sma  = apc_sma_info();
 
         // @TODO - Temporary fix @see https://github.com/krakjoe/apcu/pull/42

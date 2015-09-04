@@ -29,23 +29,24 @@ class PhpFileCache extends FileCache
 {
     const EXTENSION = '.doctrinecache.php';
 
-     /**
+    /**
      * {@inheritdoc}
      */
-    protected $extension = self::EXTENSION;
+    public function __construct($directory, $extension = self::EXTENSION, $umask = 0002)
+    {
+        parent::__construct($directory, $extension, $umask);
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
-        $filename = $this->getFilename($id);
+        $value = $this->includeFileForId($id);
 
-        if ( ! is_file($filename)) {
+        if (! $value) {
             return false;
         }
-
-        $value = include $filename;
 
         if ($value['lifetime'] !== 0 && $value['lifetime'] < time()) {
             return false;
@@ -59,13 +60,11 @@ class PhpFileCache extends FileCache
      */
     protected function doContains($id)
     {
-        $filename = $this->getFilename($id);
+        $value = $this->includeFileForId($id);
 
-        if ( ! is_file($filename)) {
+        if (! $value) {
             return false;
         }
-
-        $value = include $filename;
 
         return $value['lifetime'] === 0 || $value['lifetime'] > time();
     }
@@ -87,12 +86,7 @@ class PhpFileCache extends FileCache
             );
         }
 
-        $filename   = $this->getFilename($id);
-        $filepath   = pathinfo($filename, PATHINFO_DIRNAME);
-
-        if ( ! is_dir($filepath)) {
-            mkdir($filepath, 0777, true);
-        }
+        $filename  = $this->getFilename($id);
 
         $value = array(
             'lifetime'  => $lifeTime,
@@ -102,6 +96,25 @@ class PhpFileCache extends FileCache
         $value  = var_export($value, true);
         $code   = sprintf('<?php return %s;', $value);
 
-        return file_put_contents($filename, $code) !== false;
+        return $this->writeFile($filename, $code);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return array|false
+     */
+    private function includeFileForId($id)
+    {
+        $fileName = $this->getFilename($id);
+
+        // note: error suppression is still faster than `file_exists`, `is_file` and `is_readable`
+        $value = @include $fileName;
+
+        if (! isset($value['lifetime'])) {
+            return false;
+        }
+
+        return $value;
     }
 }

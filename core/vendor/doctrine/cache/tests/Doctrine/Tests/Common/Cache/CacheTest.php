@@ -29,6 +29,59 @@ abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertFalse($cache->contains('key'));
     }
 
+    public function testFetchMulti()
+    {
+        $cache = $this->_getCacheDriver();
+
+        $cache->deleteAll();
+
+        // Test saving some values, checking if it exists, and fetching it back with multiGet
+        $this->assertTrue($cache->save('key1', 'value1'));
+        $this->assertTrue($cache->save('key2', 'value2'));
+
+        $this->assertEquals(
+            array('key1' => 'value1', 'key2' => 'value2'),
+            $cache->fetchMultiple(array('key1', 'key2'))
+        );
+        $this->assertEquals(
+            array('key1' => 'value1', 'key2' => 'value2'),
+            $cache->fetchMultiple(array('key1', 'key3', 'key2'))
+        );
+        $this->assertEquals(
+            array('key1' => 'value1', 'key2' => 'value2'),
+            $cache->fetchMultiple(array('key1', 'key2', 'key3'))
+        );
+    }
+
+    public function testFetchMultiWillFilterNonRequestedKeys()
+    {
+        /* @var $cache \Doctrine\Common\Cache\CacheProvider|\PHPUnit_Framework_MockObject_MockObject */
+        $cache = $this->getMockForAbstractClass(
+            'Doctrine\Common\Cache\CacheProvider',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('doFetchMultiple')
+        );
+
+        $cache
+            ->expects($this->once())
+            ->method('doFetchMultiple')
+            ->will($this->returnValue(array(
+                '[foo][]' => 'bar',
+                '[bar][]' => 'baz',
+                '[baz][]' => 'tab',
+            )));
+
+        $this->assertEquals(
+            array('foo' => 'bar', 'bar' => 'baz'),
+            $cache->fetchMultiple(array('foo', 'bar'))
+        );
+    }
+
+
     public function provideCrudValues()
     {
         return array(
@@ -223,6 +276,84 @@ abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertNotNull($result);
     }
 
+    /**
+     * Check to see that, even if the user saves a value that can be interpreted as false,
+     * the cache adapter will still recognize its existence there.
+     *
+     * @dataProvider falseCastedValuesProvider
+     */
+    public function testFalseCastedValues($value)
+    {
+        $cache = $this->_getCacheDriver();
+
+        $this->assertTrue($cache->save('key', $value));
+        $this->assertTrue($cache->contains('key'));
+        $this->assertEquals($value, $cache->fetch('key'));
+    }
+
+    /**
+     * The following values get converted to FALSE if you cast them to a boolean.
+     * @see http://php.net/manual/en/types.comparisons.php
+     */
+    public function falseCastedValuesProvider()
+    {
+        return array(
+            array(false),
+            array(null),
+            array(array()),
+            array('0'),
+            array(0),
+            array(0.0),
+            array('')
+        );
+    }
+
+    /**
+     * Check to see that objects are correctly serialized and unserialized by the cache
+     * provider.
+     */
+    public function testCachedObject()
+    {
+        $cache = $this->_getCacheDriver();
+        $cache->deleteAll();
+        $obj = new \stdClass();
+        $obj->foo = "bar";
+        $obj2 = new \stdClass();
+        $obj2->bar = "foo";
+        $obj2->obj = $obj;
+        $obj->obj2 = $obj2;
+        $cache->save("obj", $obj);
+
+        $fetched = $cache->fetch("obj");
+
+        $this->assertInstanceOf("stdClass", $obj);
+        $this->assertInstanceOf("stdClass", $obj->obj2);
+        $this->assertInstanceOf("stdClass", $obj->obj2->obj);
+        $this->assertEquals("bar", $fetched->foo);
+        $this->assertEquals("foo", $fetched->obj2->bar);
+    }
+
+    /**
+     * Check to see that objects fetched via fetchMultiple are properly unserialized
+     */
+    public function testFetchMultipleObjects()
+    {
+        $cache = $this->_getCacheDriver();
+        $cache->deleteAll();
+        $obj1 = new \stdClass();
+        $obj1->foo = "bar";
+        $cache->save("obj1", $obj1);
+        $obj2 = new \stdClass();
+        $obj2->bar = "baz";
+        $cache->save("obj2", $obj2);
+
+        $fetched = $cache->fetchMultiple(array("obj1", "obj2"));
+        $this->assertInstanceOf("stdClass", $fetched["obj1"]);
+        $this->assertInstanceOf("stdClass", $fetched["obj2"]);
+        $this->assertEquals("bar", $fetched["obj1"]->foo);
+        $this->assertEquals("baz", $fetched["obj2"]->bar);
+    }
+    
     /**
      * Return whether multiple cache providers share the same storage.
      *

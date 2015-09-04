@@ -65,11 +65,22 @@ final class Instantiator implements InstantiatorInterface
             return $factory();
         }
 
-        $factory    = self::$cachedInstantiators[$className] = $this->buildFactory($className);
-        $instance   = $factory();
-        $reflection = new ReflectionClass($instance);
+        return $this->buildAndCacheFromFactory($className);
+    }
 
-        if ($this->isSafeToClone($reflection)) {
+    /**
+     * Builds the requested object and caches it in static properties for performance
+     *
+     * @param string $className
+     *
+     * @return object
+     */
+    private function buildAndCacheFromFactory($className)
+    {
+        $factory  = self::$cachedInstantiators[$className] = $this->buildFactory($className);
+        $instance = $factory();
+
+        if ($this->isSafeToClone(new ReflectionClass($instance))) {
             self::$cachedCloneables[$className] = clone $instance;
         }
 
@@ -77,19 +88,14 @@ final class Instantiator implements InstantiatorInterface
     }
 
     /**
-     * @internal
-     * @private
-     *
      * Builds a {@see \Closure} capable of instantiating the given $className without
      * invoking its constructor.
-     * This method is only exposed as public because of PHP 5.3 compatibility. Do not
-     * use this method in your own code
      *
      * @param string $className
      *
      * @return Closure
      */
-    public function buildFactory($className)
+    private function buildFactory($className)
     {
         $reflectionClass = $this->getReflectionClass($className);
 
@@ -106,7 +112,7 @@ final class Instantiator implements InstantiatorInterface
             $className
         );
 
-        $this->attemptInstantiationViaUnSerialization($reflectionClass, $serializedString);
+        $this->checkIfUnSerializationIsSupported($reflectionClass, $serializedString);
 
         return function () use ($serializedString) {
             return unserialize($serializedString);
@@ -143,7 +149,7 @@ final class Instantiator implements InstantiatorInterface
      *
      * @return void
      */
-    private function attemptInstantiationViaUnSerialization(ReflectionClass $reflectionClass, $serializedString)
+    private function checkIfUnSerializationIsSupported(ReflectionClass $reflectionClass, $serializedString)
     {
         set_error_handler(function ($code, $message, $file, $line) use ($reflectionClass, & $error) {
             $error = UnexpectedValueException::fromUncleanUnSerialization(
@@ -155,18 +161,31 @@ final class Instantiator implements InstantiatorInterface
             );
         });
 
+        $this->attemptInstantiationViaUnSerialization($reflectionClass, $serializedString);
+
+        restore_error_handler();
+
+        if ($error) {
+            throw $error;
+        }
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     * @param string          $serializedString
+     *
+     * @throws UnexpectedValueException
+     *
+     * @return void
+     */
+    private function attemptInstantiationViaUnSerialization(ReflectionClass $reflectionClass, $serializedString)
+    {
         try {
             unserialize($serializedString);
         } catch (Exception $exception) {
             restore_error_handler();
 
             throw UnexpectedValueException::fromSerializationTriggeredException($reflectionClass, $exception);
-        }
-
-        restore_error_handler();
-
-        if ($error) {
-            throw $error;
         }
     }
 
@@ -178,7 +197,7 @@ final class Instantiator implements InstantiatorInterface
     private function isInstantiableViaReflection(ReflectionClass $reflectionClass)
     {
         if (\PHP_VERSION_ID >= 50600) {
-            return ! ($reflectionClass->isInternal() && $reflectionClass->isFinal());
+            return ! ($this->hasInternalAncestors($reflectionClass) && $reflectionClass->isFinal());
         }
 
         return \PHP_VERSION_ID >= 50400 && ! $this->hasInternalAncestors($reflectionClass);
