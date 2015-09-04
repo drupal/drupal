@@ -82,7 +82,7 @@ trait RequestTrait
 
         $this->method = $method ?: '';
         $this->uri    = $uri ?: new Uri();
-        $this->stream = ($body instanceof StreamInterface) ? $body : new Stream($body, 'r');
+        $this->stream = ($body instanceof StreamInterface) ? $body : new Stream($body, 'wb+');
 
         list($this->headerNames, $headers) = $this->filterHeaders($headers);
         $this->assertHeaders($headers);

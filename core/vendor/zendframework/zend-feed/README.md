@@ -1,15 +1,13 @@
-Feed Component from ZF2
-=======================
+# zend-feed
 
-This is the Feed component for ZF2.
+[![Build Status](https://secure.travis-ci.org/zendframework/zend-feed.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-feed)
+[![Coverage Status](https://coveralls.io/repos/zendframework/zend-feed/badge.svg?branch=master)](https://coveralls.io/r/zendframework/zend-feed?branch=master)
 
-- File issues at https://github.com/zendframework/zf2/issues
-- Create pull requests against https://github.com/zendframework/zf2
-- Documentation is at http://framework.zend.com/docs
+`Zend\Feed` provides functionality for consuming RSS and Atom feeds. It provides
+a natural syntax for accessing elements of feeds, feed attributes, and entry
+attributes. `Zend\Feed` also has extensive support for modifying feed and entry
+structure with the same natural syntax, and turning the result back into XML.
 
-LICENSE
--------
 
-The files in this archive are released under the [Zend Framework
-license](http://framework.zend.com/license), which is a 3-clause BSD license.
-
+- File issues at https://github.com/zendframework/zend-feed/issues
+- Documentation is at http://framework.zend.com/manual/current/en/index.html#zend-feed

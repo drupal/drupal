@@ -2,6 +2,77 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.1.3 - 2015-08-10
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#71](https://github.com/zendframework/zend-diactoros/pull/71) fixes the
+  docblock of the `JsonResponse` constructor to typehint the `$data` argument
+  as `mixed`.
+- [#73](https://github.com/zendframework/zend-diactoros/pull/73) changes the
+  behavior in `Request` such that if it marshals a stream during instantiation,
+  the stream is marked as writeable (specifically, mode `wb+`).
+- [#85](https://github.com/zendframework/zend-diactoros/pull/85) updates the
+  behavior of `Zend\Diactoros\Uri`'s various `with*()` methods that are
+  documented as accepting strings to raise exceptions on non-string input.
+  Previously, several simply passed non-string input on verbatim, others
+  normalized the input, and a few correctly raised the exceptions. Behavior is
+  now consistent across each.
+- [#87](https://github.com/zendframework/zend-diactoros/pull/87) fixes
+  `UploadedFile` to ensure that `moveTo()` works correctly in non-SAPI
+  environments when the file provided to the constructor is a path.
+
+## 1.1.2 - 2015-07-12
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#67](https://github.com/zendframework/zend-diactoros/pull/67) ensures that
+  the `Stream` class only accepts `stream` resources, not any resource.
+
+## 1.1.1 - 2015-06-25
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#64](https://github.com/zendframework/zend-diactoros/pull/64) fixes the
+  behavior of `JsonResponse` with regards to serialization of `null` and scalar
+  values; the new behavior is to serialize them verbatim, without any casting.
+
 ## 1.1.0 - 2015-06-24
 
 ### Added

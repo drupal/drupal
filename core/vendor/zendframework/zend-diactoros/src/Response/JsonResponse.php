@@ -9,27 +9,23 @@
 
 namespace Zend\Diactoros\Response;
 
-use ArrayObject;
 use InvalidArgumentException;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Stream;
 
 /**
- * HTML response.
+ * JSON response.
  *
- * Allows creating a response by passing an HTML string to the constructor;
- * by default, sets a status code of 200 and sets the Content-Type header to
- * text/html.
+ * Allows creating a response by passing data to the constructor; by default,
+ * serializes the data to JSON, sets a status code of 200 and sets the
+ * Content-Type header to application/json.
  */
 class JsonResponse extends Response
 {
     use InjectContentTypeTrait;
 
     /**
-     * Create a JSON response with the given array of data.
-     *
-     * If the data provided is null, an empty ArrayObject is used; if the data
-     * is scalar, it is cast to an array prior to serialization.
+     * Create a JSON response with the given data.
      *
      * Default JSON encoding is performed with the following options, which
      * produces RFC4627-compliant JSON, capable of embedding into HTML.
@@ -39,7 +35,7 @@ class JsonResponse extends Response
      * - JSON_HEX_AMP
      * - JSON_HEX_QUOT
      *
-     * @param string $data Data to convert to JSON.
+     * @param mixed $data Data to convert to JSON.
      * @param int $status Integer status code for the response; 200 by default.
      * @param array $headers Array of headers to use at initialization.
      * @param int $encodingOptions JSON encoding options to use.
@@ -67,15 +63,6 @@ class JsonResponse extends Response
     {
         if (is_resource($data)) {
             throw new InvalidArgumentException('Cannot JSON encode resources');
-        }
-
-        if ($data === null) {
-            // Use an ArrayObject to force an empty JSON object.
-            $data = new ArrayObject();
-        }
-
-        if (is_scalar($data)) {
-            $data = (array) $data;
         }
 
         // Clear json_last_error()
