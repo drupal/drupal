@@ -2,10 +2,10 @@
 
 backbone:
   remote: https://github.com/jashkenas/backbone
-  version: "1.2.1"
+  version: "1.2.3"
   license:
     name: MIT
-    url: https://github.com/jashkenas/backbone/blob/1.2.1/LICENSE
+    url: https://github.com/jashkenas/backbone/blob/1.2.3/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
