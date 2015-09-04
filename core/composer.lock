@@ -622,16 +622,16 @@
         },
         {
             "name": "easyrdf/easyrdf",
-            "version": "0.9.0",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/njh/easyrdf.git",
-                "reference": "bb9fd99768d23af0c5b7b55cec5baddc201272b8"
+                "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/njh/easyrdf/zipball/bb9fd99768d23af0c5b7b55cec5baddc201272b8",
-                "reference": "bb9fd99768d23af0c5b7b55cec5baddc201272b8",
+                "url": "https://api.github.com/repos/njh/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
+                "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566",
                 "shasum": ""
             },
             "require": {
@@ -680,7 +680,7 @@
                 "rdfa",
                 "sparql"
             ],
-            "time": "2014-11-07 18:02:16"
+            "time": "2015-02-27 09:45:49"
         },
         {
             "name": "egulias/email-validator",
