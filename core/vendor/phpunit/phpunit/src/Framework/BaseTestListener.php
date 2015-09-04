@@ -13,13 +13,7 @@
  * with just a few lines of code.
  * @see PHPUnit_Framework_TestListener for documentation on the API methods.
  *
- * @package    PHPUnit
- * @subpackage Framework
- * @author     Giorgio Sironi<info@giorgiosironi.com>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      Class available since Release 4.0.0
+ * @since Class available since Release 4.0.0
  */
 abstract class PHPUnit_Framework_BaseTestListener implements PHPUnit_Framework_TestListener
 {

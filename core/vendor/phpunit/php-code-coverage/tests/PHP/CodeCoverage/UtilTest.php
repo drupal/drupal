@@ -11,14 +11,7 @@
 /**
  * Tests for the PHP_CodeCoverage_Util class.
  *
- * @category   PHP
- * @package    CodeCoverage
- * @subpackage Tests
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://github.com/sebastianbergmann/php-code-coverage
- * @since      Class available since Release 1.0.0
+ * @since Class available since Release 1.0.0
  */
 class PHP_CodeCoverage_UtilTest extends PHPUnit_Framework_TestCase
 {
@@ -30,7 +23,8 @@ class PHP_CodeCoverage_UtilTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(100, PHP_CodeCoverage_Util::percent(100, 0));
         $this->assertEquals(100, PHP_CodeCoverage_Util::percent(100, 100));
         $this->assertEquals(
-          '100.00%', PHP_CodeCoverage_Util::percent(100, 100, true)
+            '100.00%',
+            PHP_CodeCoverage_Util::percent(100, 100, true)
         );
     }
 }

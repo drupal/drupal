@@ -13,13 +13,7 @@ use SebastianBergmann\Environment\Runtime;
 /**
  * Base class for PHP_CodeCoverage_Report_Node renderers.
  *
- * @category   PHP
- * @package    CodeCoverage
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://github.com/sebastianbergmann/php-code-coverage
- * @since      Class available since Release 1.1.0
+ * @since Class available since Release 1.1.0
  */
 abstract class PHP_CodeCoverage_Report_HTML_Renderer
 {
@@ -39,12 +33,12 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
     protected $date;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $lowUpperBound;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $highLowerBound;
 
@@ -56,15 +50,15 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
     /**
      * Constructor.
      *
-     * @param string  $templatePath
-     * @param string  $generator
-     * @param string  $date
-     * @param integer $lowUpperBound
-     * @param integer $highLowerBound
+     * @param string $templatePath
+     * @param string $generator
+     * @param string $date
+     * @param int    $lowUpperBound
+     * @param int    $highLowerBound
      */
     public function __construct($templatePath, $generator, $date, $lowUpperBound, $highLowerBound)
     {
-        $version = new SebastianBergmann\Version('2.0.16', dirname(dirname(dirname(dirname(__DIR__)))));
+        $version = new SebastianBergmann\Version('2.2.2', dirname(dirname(dirname(dirname(__DIR__)))));
 
         $this->templatePath   = $templatePath;
         $this->generator      = $generator;
@@ -81,7 +75,7 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
      */
     protected function renderItemTemplate(Text_Template $template, array $data)
     {
-        $numSeperator = '&nbsp;/&nbsp;';
+        $numSeparator  = '&nbsp;/&nbsp;';
         $classesBar    = '&nbsp;';
         $classesLevel  = 'None';
         $classesNumber = '&nbsp;';
@@ -89,7 +83,7 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
         if (isset($data['numClasses']) && $data['numClasses'] > 0) {
             $classesLevel = $this->getColorLevel($data['testedClassesPercent']);
 
-            $classesNumber = $data['numTestedClasses'] . $numSeperator .
+            $classesNumber = $data['numTestedClasses'] . $numSeparator .
                 $data['numClasses'];
 
             $classesBar = $this->getCoverageBar(
@@ -104,7 +98,7 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
         if ($data['numMethods'] > 0) {
             $methodsLevel = $this->getColorLevel($data['testedMethodsPercent']);
 
-            $methodsNumber = $data['numTestedMethods'] . $numSeperator .
+            $methodsNumber = $data['numTestedMethods'] . $numSeparator .
                 $data['numMethods'];
 
             $methodsBar = $this->getCoverageBar(
@@ -119,7 +113,7 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
         if ($data['numExecutableLines'] > 0) {
             $linesLevel = $this->getColorLevel($data['linesExecutedPercent']);
 
-            $linesNumber = $data['numExecutedLines'] . $numSeperator .
+            $linesNumber = $data['numExecutedLines'] . $numSeparator .
                 $data['numExecutableLines'];
 
             $linesBar = $this->getCoverageBar(
@@ -129,21 +123,21 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
 
         $template->setVar(
             array(
-                'icon' => isset($data['icon']) ? $data['icon'] : '',
-                'crap' => isset($data['crap']) ? $data['crap'] : '',
-                'name' => $data['name'],
-                'lines_bar' => $linesBar,
+                'icon'                   => isset($data['icon']) ? $data['icon'] : '',
+                'crap'                   => isset($data['crap']) ? $data['crap'] : '',
+                'name'                   => $data['name'],
+                'lines_bar'              => $linesBar,
                 'lines_executed_percent' => $data['linesExecutedPercentAsString'],
-                'lines_level' => $linesLevel,
-                'lines_number' => $linesNumber,
-                'methods_bar' => $methodsBar,
+                'lines_level'            => $linesLevel,
+                'lines_number'           => $linesNumber,
+                'methods_bar'            => $methodsBar,
                 'methods_tested_percent' => $data['testedMethodsPercentAsString'],
-                'methods_level' => $methodsLevel,
-                'methods_number' => $methodsNumber,
-                'classes_bar' => $classesBar,
+                'methods_level'          => $methodsLevel,
+                'methods_number'         => $methodsNumber,
+                'classes_bar'            => $classesBar,
                 'classes_tested_percent' => isset($data['testedClassesPercentAsString']) ? $data['testedClassesPercentAsString'] : '',
-                'classes_level' => $classesLevel,
-                'classes_number' => $classesNumber
+                'classes_level'          => $classesLevel,
+                'classes_number'         => $classesNumber
             )
         );
 
@@ -251,20 +245,20 @@ abstract class PHP_CodeCoverage_Report_HTML_Renderer
             '}}'
         );
 
-        $template->setVar(array('level' => $level, 'percent' => sprintf("%.2F", $percent)));
+        $template->setVar(array('level' => $level, 'percent' => sprintf('%.2F', $percent)));
 
         return $template->render();
     }
 
     /**
-     * @param  integer $percent
+     * @param  int    $percent
      * @return string
      */
     protected function getColorLevel($percent)
     {
-        if ($percent < $this->lowUpperBound) {
+        if ($percent <= $this->lowUpperBound) {
             return 'danger';
-        } elseif ($percent >= $this->lowUpperBound &&
+        } elseif ($percent > $this->lowUpperBound &&
             $percent <  $this->highLowerBound) {
             return 'warning';
         } else {

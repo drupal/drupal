@@ -11,18 +11,12 @@
 /**
  * Factory for PHP_CodeCoverage_Report_Node_* object graphs.
  *
- * @category   PHP
- * @package    CodeCoverage
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://github.com/sebastianbergmann/php-code-coverage
- * @since      Class available since Release 1.1.0
+ * @since Class available since Release 1.1.0
  */
 class PHP_CodeCoverage_Report_Factory
 {
     /**
-     * @param  PHP_CodeCoverage $coverage
+     * @param  PHP_CodeCoverage                       $coverage
      * @return PHP_CodeCoverage_Report_Node_Directory
      */
     public function create(PHP_CodeCoverage $coverage)
@@ -48,7 +42,7 @@ class PHP_CodeCoverage_Report_Factory
      * @param PHP_CodeCoverage_Report_Node_Directory $root
      * @param array                                  $items
      * @param array                                  $tests
-     * @param boolean                                $cacheTokens
+     * @param bool                                   $cacheTokens
      */
     private function addItems(PHP_CodeCoverage_Report_Node_Directory $root, array $items, array $tests, $cacheTokens)
     {
@@ -237,7 +231,7 @@ class PHP_CodeCoverage_Report_Factory
         $max      = count($original);
 
         for ($i = 0; $i < $max; $i++) {
-            $files[join('/', $paths[$i])] = $files[$original[$i]];
+            $files[implode('/', $paths[$i])] = $files[$original[$i]];
             unset($files[$original[$i]]);
         }
 

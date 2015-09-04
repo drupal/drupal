@@ -11,13 +11,7 @@
 /**
  * Renders the dashboard for a PHP_CodeCoverage_Report_Node_Directory node.
  *
- * @category   PHP
- * @package    CodeCoverage
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://github.com/sebastianbergmann/php-code-coverage
- * @since      Class available since Release 1.1.0
+ * @since Class available since Release 1.1.0
  */
 class PHP_CodeCoverage_Report_HTML_Renderer_Dashboard extends PHP_CodeCoverage_Report_HTML_Renderer
 {
@@ -98,7 +92,7 @@ class PHP_CodeCoverage_Report_HTML_Renderer_Dashboard extends PHP_CodeCoverage_R
         }
 
         return array(
-            'class' => json_encode($result['class']),
+            'class'  => json_encode($result['class']),
             'method' => json_encode($result['method'])
         );
     }
@@ -167,7 +161,7 @@ class PHP_CodeCoverage_Report_HTML_Renderer_Dashboard extends PHP_CodeCoverage_R
         }
 
         return array(
-            'class' => json_encode(array_values($result['class'])),
+            'class'  => json_encode(array_values($result['class'])),
             'method' => json_encode(array_values($result['method']))
         );
     }

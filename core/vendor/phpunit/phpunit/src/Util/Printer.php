@@ -11,35 +11,29 @@
 /**
  * Utility class that can print to STDOUT or write to a file.
  *
- * @package    PHPUnit
- * @subpackage Util
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      Class available since Release 2.0.0
+ * @since Class available since Release 2.0.0
  */
 class PHPUnit_Util_Printer
 {
     /**
      * If true, flush output after every write.
      *
-     * @var boolean
+     * @var bool
      */
     protected $autoFlush = false;
 
     /**
-     * @var    resource
+     * @var resource
      */
     protected $out;
 
     /**
-     * @var    string
+     * @var string
      */
     protected $outTarget;
 
     /**
-     * @var    boolean
+     * @var bool
      */
     protected $printsHTML = false;
 
@@ -147,7 +141,7 @@ class PHPUnit_Util_Printer
     /**
      * Check auto-flush mode.
      *
-     * @return boolean
+     * @return bool
      * @since  Method available since Release 3.3.0
      */
     public function getAutoFlush()
@@ -161,7 +155,7 @@ class PHPUnit_Util_Printer
      * If set, *incremental* flushes will be done after each write. This should
      * not be confused with the different effects of this class' flush() method.
      *
-     * @param boolean $autoFlush
+     * @param bool $autoFlush
      * @since  Method available since Release 3.3.0
      */
     public function setAutoFlush($autoFlush)

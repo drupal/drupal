@@ -11,14 +11,7 @@
 /**
  * Logical XOR.
  *
- * @package    PHPUnit
- * @subpackage Framework_Constraint
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      Class available since Release 3.0.0
+ * @since Class available since Release 3.0.0
  */
 class PHPUnit_Framework_Constraint_Xor extends PHPUnit_Framework_Constraint
 {
@@ -63,7 +56,7 @@ class PHPUnit_Framework_Constraint_Xor extends PHPUnit_Framework_Constraint
      */
     public function evaluate($other, $description = '', $returnResult = false)
     {
-        $success = true;
+        $success    = true;
         $lastResult = null;
         $constraint = null;
 
@@ -110,7 +103,7 @@ class PHPUnit_Framework_Constraint_Xor extends PHPUnit_Framework_Constraint
     /**
      * Counts the number of constraint elements.
      *
-     * @return integer
+     * @return int
      * @since  Method available since Release 3.4.0
      */
     public function count()

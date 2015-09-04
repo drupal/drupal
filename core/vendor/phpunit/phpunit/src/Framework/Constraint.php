@@ -13,13 +13,6 @@ use SebastianBergmann\Exporter\Exporter;
 /**
  * Abstract base class for constraints. which are placed upon any value.
  *
- * @package    PHPUnit
- * @subpackage Framework
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
  * @since      Interface available since Release 3.0.0
  */
 abstract class PHPUnit_Framework_Constraint implements Countable, PHPUnit_Framework_SelfDescribing
@@ -81,7 +74,7 @@ abstract class PHPUnit_Framework_Constraint implements Countable, PHPUnit_Framew
     /**
      * Counts the number of constraint elements.
      *
-     * @return integer
+     * @return int
      * @since  Method available since Release 3.4.0
      */
     public function count()
@@ -92,8 +85,8 @@ abstract class PHPUnit_Framework_Constraint implements Countable, PHPUnit_Framew
     /**
      * Throws an exception for the given compared value and test description
      *
-     * @param  mixed $other Evaluated value or object.
-     * @param  string $description Additional information about the test
+     * @param  mixed                                          $other             Evaluated value or object.
+     * @param  string                                         $description       Additional information about the test
      * @param  SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
