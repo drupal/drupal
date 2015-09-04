@@ -327,7 +327,7 @@ html5shiv:
   # Block the page from being loaded until html5shiv is initialized.
   header: true
   remote: https://github.com/aFarkas/html5shiv
-  version: "3.7.2"
+  version: "3.7.3"
   license:
     name: GNU-GPL-2.0-or-later
     url: http://www.gnu.org/licenses/gpl-2.0.html
