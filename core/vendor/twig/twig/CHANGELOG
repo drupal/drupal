@@ -1,3 +1,12 @@
+* 1.21.1 (2015-08-26)
+
+ * fixed regression when using the deprecated Twig_Test_* classes
+
+* 1.21.0 (2015-08-24)
+
+ * added deprecation notices for deprecated features
+ * added a deprecation "framework" for filters/functions/tests and test fixtures
+
 * 1.20.0 (2015-08-12)
 
  * forbid access to the Twig environment from templates and internal parts of Twig_Template
