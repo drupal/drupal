@@ -13,8 +13,11 @@ Goutte depends on PHP 5.5+ and Guzzle 6+.
 
 .. tip::
 
-    If you need support for PHP 5.4 or Guzzle 4-5, use Goutte 2.x.
-    If you need support for PHP 5.3 or Guzzle 3, use Goutte 1.x.
+    If you need support for PHP 5.4 or Guzzle 4-5, use Goutte 2.x (latest `phar
+    <https://github.com/FriendsOfPHP/Goutte/releases/download/v2.0.4/goutte-v2.0.4.phar>`_).
+
+    If you need support for PHP 5.3 or Guzzle 3, use Goutte 1.x (latest `phar
+    <https://github.com/FriendsOfPHP/Goutte/releases/download/v1.0.7/goutte-v1.0.7.phar>`_).
 
 Installation
 ------------
@@ -24,17 +27,6 @@ Add ``fabpot/goutte`` as a require dependency in your ``composer.json`` file:
 .. code-block:: bash
 
     composer require fabpot/goutte
-
-.. tip::
-
-    You can also download the `Goutte.phar`_ file:
-
-    .. code-block:: php
-
-        require_once '/path/to/goutte.phar';
-
-    The phars for Goutte 1.x are also available for `download
-    <http://get.sensiolabs.org/goutte-v1.0.7.phar>`.
 
 Usage
 -----
@@ -119,6 +111,5 @@ License
 
 Goutte is licensed under the MIT license.
 
-.. _`Composer`:    http://getcomposer.org
-.. _`Goutte.phar`: http://get.sensiolabs.org/goutte.phar
-.. _`Guzzle`:      http://docs.guzzlephp.org
+.. _`Composer`: http://getcomposer.org
+.. _`Guzzle`:   http://docs.guzzlephp.org

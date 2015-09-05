@@ -737,16 +737,16 @@
         },
         {
             "name": "fabpot/goutte",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/Goutte.git",
-                "reference": "d9a5a28782d30e9f4e20176caea58a1d459f2c71"
+                "reference": "751a3dc5c4d86ec3e97c9f27133ef9694d9243cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/d9a5a28782d30e9f4e20176caea58a1d459f2c71",
-                "reference": "d9a5a28782d30e9f4e20176caea58a1d459f2c71",
+                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/751a3dc5c4d86ec3e97c9f27133ef9694d9243cc",
+                "reference": "751a3dc5c4d86ec3e97c9f27133ef9694d9243cc",
                 "shasum": ""
             },
             "require": {
@@ -782,7 +782,7 @@
             "keywords": [
                 "scraper"
             ],
-            "time": "2015-06-24 16:11:31"
+            "time": "2015-08-29 16:16:56"
         },
         {
             "name": "guzzlehttp/guzzle",
