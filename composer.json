@@ -4,7 +4,7 @@
   "type": "project",
   "license": "GPL-2.0+",
   "require": {
-    "composer/installers": "^1.0.20",
+    "composer/installers": "^1.0.21",
     "drupal/core": "~8.0"
   },
   "minimum-stability": "dev",
