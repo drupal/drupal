@@ -105,6 +105,21 @@ class ShortcutLinksTest extends ShortcutTestBase {
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
     $this->assertLink($title, 0, 'Shortcut link found on the page.');
+
+    // Create a new shortcut set and add a link to it.
+    $this->drupalLogin($this->adminUser);
+    $edit = array(
+      'label' => $this->randomMachineName(),
+      'id' => strtolower($this->randomMachineName()),
+    );
+    $this->drupalPostForm('admin/config/user-interface/shortcut/add-set', $edit, t('Save'));
+    $title = $this->randomMachineName();
+    $form_data = [
+      'title[0][value]' => $title,
+      'link[0][uri]' => '/admin',
+    ];
+    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $edit['id'] . '/add-link', $form_data, t('Save'));
+    $this->assertResponse(200);
   }
 
   /**

@@ -7,7 +7,7 @@
 
 namespace Drupal\shortcut\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\shortcut\ShortcutSetInterface;
 
@@ -47,7 +47,7 @@ use Drupal\shortcut\ShortcutSetInterface;
  *   }
  * )
  */
-class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
+class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface {
 
   /**
    * The machine name for the configuration entity.
