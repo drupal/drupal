@@ -376,6 +376,9 @@ class Html5Test extends TestCase
 
         $res = $this->cycleFragment('<a>Apples &amp; bananas.</a>');
         $this->assertRegExp('|Apples &amp; bananas.|', $res);
+
+        $res = $this->cycleFragment('<p>R&D</p>');
+        $this->assertRegExp('|R&amp;D|', $res);
     }
 
     public function testComment()

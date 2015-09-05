@@ -1065,8 +1065,14 @@ class Tokenizer
             // [a-zA-Z0-9]+;
             $cname = $this->scanner->getAsciiAlpha();
             $entity = CharacterReference::lookupName($cname);
+
+            // When no entity is found provide the name of the unmatched string
+            // and continue on as the & is not part of an entity. The & will
+            // be converted to &amp; elsewhere.
             if ($entity == null) {
-                $this->parseError("No match in entity table for '%s'", $entity);
+                $this->parseError("No match in entity table for '%s'", $cname);
+                $this->scanner->unconsume($this->scanner->position() - $start);
+                return '&';
             }
         }
 

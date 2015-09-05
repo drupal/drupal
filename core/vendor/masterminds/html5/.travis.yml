@@ -12,13 +12,14 @@ php:
   - 5.5
   - 5.6
   - hhvm
+  - nightly
 
 notifications:
   irc: "irc.freenode.net#masterminds"
 
 before_script:
   - composer self-update
-  - composer install --dev
+  - composer install
 
 script:
   - mkdir -p build/logs

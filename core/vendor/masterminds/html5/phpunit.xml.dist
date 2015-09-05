@@ -11,7 +11,7 @@
             <file>src/HTML5/Parser/InputStream.php</file>
             <file>src/HTML5/Serializer/RulesInterface.php</file>
             <file>src/HTML5/Entities.php</file>
-            <file>src/HTML5/Serializer/HTML5Entities.php</file>
+            <file>src/HTML5/Serializer/HTML5Entities.php</file> 
         </blacklist>
     </filter>
     <logging>

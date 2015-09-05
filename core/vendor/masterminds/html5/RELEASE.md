@@ -1,4 +1,10 @@
 # Release Notes
+2.1.2 (2015-06-07)
+- #82: Support for PHP7
+- #84: Improved boolean attribute handling 
+
+2.1.1 (2015-03-23)
+- #78: Fixes bug where unmatched entity like string drops everything after &.
 
 2.1.0 (2015-02-01)
 - #74: Added `disable_html_ns` and `target_doc` dom parsing options

@@ -460,8 +460,10 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
             array('<input type="radio" readonly>'),
             array('<input type="radio" checked disabled>'),
             array('<input type="checkbox" checked disabled>'),
+            array('<input type="radio" value="" checked disabled>'),
+            array('<div data-value=""></div>'),
             array('<select disabled></select>'),
-            array('<div ng-app>foo</div>'),
+            array('<div ng-app></div>'),
             array('<script defer></script>'),
         );
     }
@@ -482,7 +484,11 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $m->invoke($r, $node);
 
         $content = stream_get_contents($stream, - 1, 0);
-        $this->assertContains($content, $html);
+
+        $html = preg_replace('~<[a-z]+(.*)></[a-z]+>~', '\1', $html);
+        $html = preg_replace('~<[a-z]+(.*)/?>~', '\1', $html);
+
+        $this->assertEquals($content, $html);
 
     }
 

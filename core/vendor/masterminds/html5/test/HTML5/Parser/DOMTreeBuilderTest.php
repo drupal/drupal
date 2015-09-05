@@ -100,7 +100,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertSame($doc, $targetDom);
         $this->assertEquals('html', $doc->documentElement->tagName);
     }
-
+    
     public function testDocumentFakeAttrAbsence()
     {
         $html = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><body>foo</body></html>";
