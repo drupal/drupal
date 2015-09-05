@@ -36,6 +36,27 @@ trait RefinableCacheableDependencyTrait {
   /**
    * {@inheritdoc}
    */
+  public function getCacheTags() {
+    return $this->cacheTags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return $this->cacheContexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return $this->cacheMaxAge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addCacheableDependency($other_object) {
     if ($other_object instanceof CacheableDependencyInterface) {
       $this->addCacheContexts($other_object->getCacheContexts());

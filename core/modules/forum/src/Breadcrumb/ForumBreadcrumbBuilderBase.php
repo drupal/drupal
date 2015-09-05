@@ -67,7 +67,7 @@ abstract class ForumBreadcrumbBuilderBase  implements BreadcrumbBuilderInterface
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
-    $breadcrumb->setCacheContexts(['route']);
+    $breadcrumb->addCacheContexts(['route']);
 
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
 
