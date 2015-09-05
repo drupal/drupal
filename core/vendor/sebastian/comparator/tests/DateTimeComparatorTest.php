@@ -11,16 +11,12 @@
 namespace SebastianBergmann\Comparator;
 
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 
 /**
  * @coversDefaultClass SebastianBergmann\Comparator\DateTimeComparator
  *
- * @package    Comparator
- * @author     Jeff Welch <whatthejeff@gmail.com>
- * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.github.com/sebastianbergmann/comparator
  */
 class DateTimeComparatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -195,5 +191,26 @@ class DateTimeComparatorTest extends \PHPUnit_Framework_TestCase
           'Failed asserting that two DateTime objects are equal.'
         );
         $this->comparator->assertEquals($expected, $actual, $delta);
+    }
+
+    /**
+     * @requires PHP 5.5
+     * @covers   ::accepts
+     */
+    public function testAcceptsDateTimeInterface()
+    {
+        $this->assertTrue($this->comparator->accepts(new DateTime, new DateTimeImmutable));
+    }
+
+    /**
+     * @requires PHP 5.5
+     * @covers   ::assertEquals
+     */
+    public function testSupportsDateTimeInterface()
+    {
+        $this->comparator->assertEquals(
+          new DateTime('2013-03-29 04:13:35', new DateTimeZone('America/New_York')),
+          new DateTimeImmutable('2013-03-29 04:13:35', new DateTimeZone('America/New_York'))
+        );
     }
 }
