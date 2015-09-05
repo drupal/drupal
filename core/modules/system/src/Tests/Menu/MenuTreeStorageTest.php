@@ -320,6 +320,37 @@ class MenuTreeStorageTest extends KernelTestBase {
   }
 
   /**
+   * Ensure hierarchy persists after a menu rebuild.
+   */
+  public function testMenuRebuild() {
+    // root
+    // - child1
+    // -- child2
+    // --- child3
+    // ---- child4
+    $this->addMenuLink('root');
+    $this->addMenuLink('child1', 'root');
+    $this->addMenuLink('child2', 'child1');
+    $this->addMenuLink('child3', 'child2');
+    $this->addMenuLink('child4', 'child3');
+
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('root'), 5);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child1'), 4);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child2'), 3);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child3'), 2);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child4'), 1);
+
+    // Intentionally leave child3 out to mimic static or external links.
+    $definitions = $this->treeStorage->loadMultiple(['root', 'child1', 'child2', 'child4']);
+    $this->treeStorage->rebuild($definitions);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('root'), 5);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child1'), 4);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child2'), 3);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child3'), 2);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child4'), 1);
+  }
+
+  /**
    * Tests MenuTreeStorage::loadByProperties().
    */
   public function testLoadByProperties() {
