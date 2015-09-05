@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_menu_link
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  page_1:
+    display_plugin: page
+    display_title: 'Test page view'
+    id: page_1
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: test-menu-link
+
