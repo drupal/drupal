@@ -60,8 +60,8 @@ class ConfigCacheTag implements EventSubscriberInterface {
       $this->cacheTagsInvalidator->invalidateTags(['route_match', 'rendered']);
     }
 
-    // Global theme settings.
-    if ($event->getConfig()->getName() === 'system.theme.global') {
+    // Theme configuration and global theme settings.
+    if (in_array($event->getConfig()->getName(), ['system.theme', 'system.theme.global'])) {
       $this->cacheTagsInvalidator->invalidateTags(['rendered']);
     }
 

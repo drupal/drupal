@@ -25,6 +25,8 @@ class TestControllers {
   }
 
   public function testEntityLanguage(NodeInterface $node) {
-    return ['#markup' => $node->label()];
+    $build = ['#markup' => $node->label()];
+    \Drupal::service('renderer')->addCacheableDependency($build, $node);
+    return $build;
   }
 }

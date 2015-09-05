@@ -399,7 +399,7 @@ class PageCacheTest extends WebTestBase {
     // that implementation.
     \Drupal::state()->set('page_cache_bypass_form_immutability', TRUE);
     \Drupal::moduleHandler()->resetImplementations();
-    \Drupal::cache('render')->deleteAll();
+    Cache::invalidateTags(['rendered']);
 
     $this->drupalGet('page_cache_form_test_immutability');
 

@@ -63,7 +63,7 @@ class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $this->state->get('test_block_access', FALSE) ? AccessResult::allowed() : AccessResult::forbidden();
+    return $this->state->get('test_block_access', FALSE) ? AccessResult::allowed()->setCacheMaxAge(0) : AccessResult::forbidden()->setCacheMaxAge(0);
   }
 
   /**

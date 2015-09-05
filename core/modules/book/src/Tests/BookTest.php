@@ -8,6 +8,7 @@
 namespace Drupal\book\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
@@ -124,11 +125,12 @@ class BookTest extends WebTestBase {
 
     // Enable the debug output.
     \Drupal::state()->set('book_test.debug_book_navigation_cache_context', TRUE);
+    Cache::invalidateTags(['book_test.debug_book_navigation_cache_context']);
 
     $this->drupalLogin($this->bookAuthor);
 
     // On non-node route.
-    $this->drupalGet('');
+    $this->drupalGet($this->adminUser->urlInfo());
     $this->assertRaw('[route.book_navigation]=book.none');
 
     // On non-book node route.
