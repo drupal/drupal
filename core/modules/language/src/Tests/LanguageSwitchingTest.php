@@ -205,20 +205,20 @@ class LanguageSwitchingTest extends WebTestBase {
     /** @var \Drupal\Core\Routing\UrlGenerator $generator */
     $generator = $this->container->get('url_generator');
 
-    // Verfify the English URL is correct
+    // Verify the English URL is correct
     list($english_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', array(
       ':id' => 'block-test-language-block',
       ':hreflang' => 'en',
     ));
-    $english_url = $generator->generateFromPath('user/2', array('language' => $languages['en']));
+    $english_url = $generator->generateFromRoute('entity.user.canonical', array('user' => 2), array('language' => $languages['en']));
     $this->assertEqual($english_url, (string) $english_link['href']);
 
-    // Verfify the Italian URL is correct
+    // Verify the Italian URL is correct
     list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', array(
       ':id' => 'block-test-language-block',
       ':hreflang' => 'it',
     ));
-    $italian_url = $generator->generateFromPath('user/2', array('language' => $languages['it']));
+    $italian_url = $generator->generateFromRoute('entity.user.canonical', array('user' => 2), array('language' => $languages['it']));
     $this->assertEqual($italian_url, (string) $italian_link['href']);
   }
 
