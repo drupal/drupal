@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -28,6 +29,8 @@ use Drupal\field\FieldStorageConfigInterface;
  * a single field.
  */
 class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorageSchemaInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The entity manager.

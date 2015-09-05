@@ -63,12 +63,22 @@ class EditorImageDialog extends FormBase {
    *   The filter format for which this dialog corresponds.
    */
   public function buildForm(array $form, FormStateInterface $form_state, FilterFormat $filter_format = NULL) {
-    // The default values are set directly from \Drupal::request()->request,
-    // provided by the editor plugin opening the dialog.
-    if (!$image_element = $form_state->get('image_element')) {
-      $user_input = $form_state->getUserInput();
-      $image_element = isset($user_input['editor_object']) ? $user_input['editor_object'] : [];
+    // This form is special, in that the default values do not come from the
+    // server side, but from the client side, from a text editor. We must cache
+    // this data in form state, because when the form is rebuilt, we will be
+    // receiving values from the form, instead of the values from the text
+    // editor. If we don't cache it, this data will be lost.
+    if (isset($form_state->getUserInput()['editor_object'])) {
+      // By convention, the data that the text editor sends to any dialog is in
+      // the 'editor_object' key. And the image dialog for text editors expects
+      // that data to be the attributes for an <img> element.
+      $image_element = $form_state->getUserInput()['editor_object'];
       $form_state->set('image_element', $image_element);
+      $form_state->setCached(TRUE);
+    }
+    else {
+      // Retrieve the image element's attributes from form state.
+      $image_element = $form_state->get('image_element') ?: [];
     }
 
     $form['#tree'] = TRUE;
