@@ -619,7 +619,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
   }
 
   /**
-   * Tests ::applyEntityUpdate() and ::applyFieldUpdate().
+   * Tests applying single updates.
    */
   public function testSingleActionCalls() {
     $db_schema = $this->database->schema();
@@ -668,9 +668,9 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
     $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
 
-    // Ensure that installing an existing entity type is a no-op.
+    // Ensure that installing an existing field is a no-op.
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
-    $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), 'Installing an existing entity type is a no-op');
+    $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), 'Installing an existing field is a no-op');
 
     // Update an existing field schema.
     $this->modifyBaseField();

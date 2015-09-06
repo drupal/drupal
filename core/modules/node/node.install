@@ -197,10 +197,7 @@ function node_update_8003() {
   // The 'status' and 'uid' fields were added to the 'entity_keys' annotation
   // of \Drupal\node\Entity\Node in https://www.drupal.org/node/2498919, but
   // this update function wasn't added until
-  // https://www.drupal.org/node/2542748. In between, sites could have
-  // performed interim updates, which would have included automated entity
-  // schema updates prior to that being removed (see that issue for details).
-  // Therefore, we check for whether the keys have already been installed.
+  // https://www.drupal.org/node/2542748.
   $manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $manager->getEntityType('node');
   $entity_keys = $entity_type->getKeys();
@@ -212,10 +209,10 @@ function node_update_8003() {
   // @todo The above should be enough, since that is the only definition that
   //   changed. But \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema varies
   //   field schema by whether a field is an entity key, so invoke
-  //   onFieldStorageDefinitionUpdate() with an unmodified
-  //   $field_storage_definition to trigger the necessary changes.
-  //   SqlContentEntityStorageSchema::onEntityTypeUpdate() should be fixed to
-  //   automatically handle this.
+  //   EntityDefinitionUpdateManagerInterface::updateFieldStorageDefinition()
+  //   with an unmodified field storage definition to trigger the necessary
+  //   changes. SqlContentEntityStorageSchema::onEntityTypeUpdate() should be
+  //   fixed to automatically handle this.
   //   See https://www.drupal.org/node/2554245.
   foreach (array('status', 'uid') as $field_name) {
     $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));

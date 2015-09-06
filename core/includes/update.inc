@@ -10,7 +10,6 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Utility\Error;
 
 /**

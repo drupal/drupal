@@ -68,9 +68,9 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
     $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
-    // Make 'user_id' multiple by running updates.
+    // Make 'user_id' multiple by applying updates.
     $this->enableUpdates('entity_test', 'entity_definition_updates', 8001);
-    $this->runUpdates();
+    $this->applyUpdates();
 
     // Check that data was correctly migrated.
     $entity = $this->reloadEntity($entity);
@@ -85,14 +85,21 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
     $this->assertEqual($entity->user_id[1]->target_id, $user_ids[1]);
 
-    // Make 'user_id' single again by running updates.
+    // Make 'user_id' single again by applying updates.
     $this->enableUpdates('entity_test', 'entity_definition_updates', 8002);
-    $this->runUpdates();
+    $this->applyUpdates();
 
     // Check that data was correctly migrated/dropped.
     $entity = $this->reloadEntity($entity);
     $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
+
+    // Check that only a single value is stored for 'user_id' again.
+    $entity->user_id = $user_ids;
+    $entity->save();
+    $entity = $this->reloadEntity($entity);
+    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
   }
 
   /**
@@ -109,9 +116,9 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
     $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
-    // Make 'user_id' multiple and then single again by running updates.
+    // Make 'user_id' multiple and then single again by applying updates.
     $this->enableUpdates('entity_test', 'entity_definition_updates', 8002);
-    $this->runUpdates();
+    $this->applyUpdates();
 
     // Check that data was correctly migrated back and forth.
     $entity = $this->reloadEntity($entity);
@@ -154,8 +161,8 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
     $this->assertRaw('Out of date');
     $this->assertNoRaw('Mismatch detected');
 
-    // Run db updates and check that entity updates were not applied.
-    $this->runUpdates();
+    // Apply db updates and check that entity updates were not applied.
+    $this->applyUpdates();
     $this->drupalGet('admin/reports/status');
     $this->assertNoRaw('Out of date');
     $this->assertRaw('Mismatch detected');
@@ -180,7 +187,7 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
     // entity updates were not applied even when no data exists.
     $entity->delete();
     $this->enableUpdates('entity_test', 'status_report', 8002);
-    $this->runUpdates();
+    $this->applyUpdates();
     $this->drupalGet('admin/reports/status');
     $this->assertNoRaw('Out of date');
     $this->assertRaw('Mismatch detected');

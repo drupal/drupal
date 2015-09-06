@@ -11,7 +11,10 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
- * Provides methods to conditionally enable db update functions and run updates.
+ * Provides methods to conditionally enable db update functions and apply
+ * pending db updates through the Update UI.
+ *
+ * This should be used only by classes extending \Drupal\simpletest\WebTestBase.
  */
 trait DbUpdatesTrait {
 
@@ -32,9 +35,9 @@ trait DbUpdatesTrait {
   }
 
   /**
-   * Runs DB updates.
+   * Applies any pending DB updates through the Update UI.
    */
-  protected function runUpdates() {
+  protected function applyUpdates() {
     $this->drupalGet(Url::fromRoute('system.db_update'));
     $this->clickLink($this->t('Continue'));
     $this->clickLink($this->t('Apply pending updates'));
