@@ -165,21 +165,11 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'short':
-          $date_format = DateFormat::load('short');
-          $bubbleable_metadata->addCacheableDependency($date_format);
-          $replacements[$original] = format_date($date, 'short', '', NULL, $langcode);
-          break;
-
         case 'medium':
-          $date_format = DateFormat::load('medium');
-          $bubbleable_metadata->addCacheableDependency($date_format);
-          $replacements[$original] = format_date($date, 'medium', '', NULL, $langcode);
-          break;
-
         case 'long':
-          $date_format = DateFormat::load('long');
+          $date_format = DateFormat::load($name);
           $bubbleable_metadata->addCacheableDependency($date_format);
-          $replacements[$original] = format_date($date, 'long', '', NULL, $langcode);
+          $replacements[$original] = format_date($date, $name, '', NULL, $langcode);
           break;
 
         case 'since':
