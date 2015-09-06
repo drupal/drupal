@@ -76,6 +76,14 @@ class ValidationTest extends WebTestBase {
   }
 
   /**
+   * Tests that a form with a disabled CSRF token can be validated.
+   */
+  function testDisabledToken() {
+    $this->drupalPostForm('form-test/validate-no-token', [], 'Save');
+    $this->assertText('The form_test_validate_no_token form has been submitted successfully.');
+  }
+
+  /**
    * Tests partial form validation through #limit_validation_errors.
    */
   function testValidateLimitErrors() {

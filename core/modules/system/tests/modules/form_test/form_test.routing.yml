@@ -100,6 +100,14 @@ form_test.validate_required_no_title:
   requirements:
     _access: 'TRUE'
 
+form_test.validate_without_csrf_token:
+  path: '/form-test/validate-no-token'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestValidateNoToken'
+    _title: 'Form validation on forms with a disabled CSRF token'
+  requirements:
+    _access: 'TRUE'
+
 form_test.validate_with_error_suppresion:
   path: '/form-test/limit-validation-errors'
   defaults:
