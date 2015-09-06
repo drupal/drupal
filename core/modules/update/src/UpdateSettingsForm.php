@@ -77,7 +77,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
 
     $form['update_check_disabled'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Check for updates of disabled modules and themes'),
+      '#title' => t('Check for updates of uninstalled modules and themes'),
       '#default_value' => $config->get('check.disabled_extensions'),
     );
 

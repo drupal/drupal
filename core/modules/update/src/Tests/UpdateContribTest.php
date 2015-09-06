@@ -281,12 +281,12 @@ class UpdateContribTest extends UpdateTestBase {
       // themes.
       $this->assertNoText(t('Themes'));
       if ($check_disabled) {
-        $this->assertText(t('Disabled themes'));
+        $this->assertText(t('Uninstalled themes'));
         $this->assertRaw($base_theme_project_link, 'Link to the Update test base theme project appears.');
         $this->assertRaw($sub_theme_project_link, 'Link to the Update test subtheme project appears.');
       }
       else {
-        $this->assertNoText(t('Disabled themes'));
+        $this->assertNoText(t('Uninstalled themes'));
         $this->assertNoRaw($base_theme_project_link, 'Link to the Update test base theme project does not appear.');
         $this->assertNoRaw($sub_theme_project_link, 'Link to the Update test subtheme project does not appear.');
       }
