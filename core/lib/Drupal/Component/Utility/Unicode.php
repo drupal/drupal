@@ -412,8 +412,8 @@ EOD;
       // Find the starting byte offset.
       $bytes = 0;
       if ($start > 0) {
-        // Count all the continuation bytes from the start until we have found
-        // $start characters or the end of the string.
+        // Count all the characters except continuation bytes from the start
+        // until we have found $start characters or the end of the string.
         $bytes = -1; $chars = -1;
         while ($bytes < $strlen - 1 && $chars < $start) {
           $bytes++;
@@ -424,8 +424,8 @@ EOD;
         }
       }
       elseif ($start < 0) {
-        // Count all the continuation bytes from the end until we have found
-        // abs($start) characters.
+        // Count all the characters except continuation bytes from the end
+        // until we have found abs($start) characters.
         $start = abs($start);
         $bytes = $strlen; $chars = 0;
         while ($bytes > 0 && $chars < $start) {
@@ -443,9 +443,9 @@ EOD;
         $iend = $strlen;
       }
       elseif ($length > 0) {
-        // Count all the continuation bytes from the starting index until we have
-        // found $length characters or reached the end of the string, then
-        // backtrace one byte.
+        // Count all the characters except continuation bytes from the starting
+        // index until we have found $length characters or reached the end of
+        // the string, then backtrace one byte.
         $iend = $istart - 1;
         $chars = -1;
         $last_real = FALSE;
@@ -458,15 +458,15 @@ EOD;
             $last_real = TRUE;
           }
         }
-        // Backtrace one byte if the last character we found was a real character
-        // and we don't need it.
+        // Backtrace one byte if the last character we found was a real
+        // character and we don't need it.
         if ($last_real && $chars >= $length) {
           $iend--;
         }
       }
       elseif ($length < 0) {
-        // Count all the continuation bytes from the end until we have found
-        // abs($start) characters, then backtrace one byte.
+        // Count all the characters except continuation bytes from the end
+        // until we have found abs($start) characters, then backtrace one byte.
         $length = abs($length);
         $iend = $strlen; $chars = 0;
         while ($iend > 0 && $chars < $length) {
@@ -695,6 +695,35 @@ EOD;
     // containing invalid UTF-8 byte sequences. It does not reject character
     // codes above U+10FFFF (represented by 4 or more octets), though.
     return (preg_match('/^./us', $text) == 1);
+  }
+
+  /**
+   * Finds the position of the first occurrence of a string in another string.
+   *
+   * @param string $haystack
+   *   The string to search in.
+   * @param string $needle
+   *   The string to find in $haystack.
+   * @param int $offset
+   *   If specified, start the search at this number of characters from the
+   *   beginning (default 0).
+   *
+   * @return int|false
+   *   The position where $needle occurs in $haystack, always relative to the
+   *   beginning (independent of $offset), or FALSE if not found. Note that
+   *   a return value of 0 is not the same as FALSE.
+   */
+  public static function strpos($haystack, $needle, $offset = 0) {
+    if (static::getStatus() == static::STATUS_MULTIBYTE) {
+      return mb_strpos($haystack, $needle, $offset);
+    }
+    else {
+      // Remove Unicode continuation characters, to be compatible with
+      // Unicode::strlen() and Unicode::substr().
+      $haystack = preg_replace("/[\x80-\xBF]/", '', $haystack);
+      $needle = preg_replace("/[\x80-\xBF]/", '', $needle);
+      return strpos($haystack, $needle, $offset);
+    }
   }
 
 }

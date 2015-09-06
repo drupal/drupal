@@ -262,7 +262,7 @@ function search_simplify($text, $langcode = NULL) {
   // Lowercase
   $text = Unicode::strtolower($text);
 
-  // Remove diacitics.
+  // Remove diacritics.
   $text = \Drupal::service('transliteration')->removeDiacritics($text);
 
   // Call an external processor for word handling.
@@ -383,10 +383,22 @@ function search_index_split($text, $langcode = NULL) {
  * Helper function for array_walk in search_index_split.
  */
 function _search_index_truncate(&$text) {
+  // Use a static array to avoid re-truncating text we've done before.
+  // The same words may often be passed in during excerpt generation.
+  static $truncated = array();
+  if (isset($truncated[$text])) {
+    $text = $truncated[$text];
+    return;
+  }
+
+  // If we didn't find it in the static array, perform the operation.
+  $original = $text;
   if (is_numeric($text)) {
     $text = ltrim($text, '0');
   }
   $text = Unicode::truncate($text, 50);
+  // Save it for the next time.
+  $truncated[$original] = $text;
 }
 
 /**
@@ -632,7 +644,9 @@ function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
  */
 function search_excerpt($keys, $text, $langcode = NULL) {
   // We highlight around non-indexable or CJK characters.
-  $boundary = '(?:(?<=[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . '])|(?=[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . ']))';
+  $boundary_character = '[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . ']';
+  $preceded_by_boundary = '(?<=' . $boundary_character . ')';
+  $followed_by_boundary = '(?=' . $boundary_character . ')';
 
   // Extract positive keywords and phrases.
   preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' ' . $keys, $matches);
@@ -648,7 +662,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // search_simplify().
   $temp_keys = array();
   foreach ($keys as $key) {
-    $key = _search_find_match_with_simplify($key, $text, $boundary, $langcode);
+    $key = _search_find_match_with_simplify($key, $text, $boundary_character, $langcode);
     if (isset($key)) {
       // Quote slashes so they can be used in regular expressions.
       $temp_keys[] = preg_quote($key, '/');
@@ -683,7 +697,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
       // we are requiring a match on a word boundary, make sure $text starts
       // and ends with a space.
       $matches = array();
-      if (preg_match('/' . $boundary . $key . $boundary . '/iu', ' ' . $text . ' ', $matches, PREG_OFFSET_CAPTURE, $look_start[$key])) {
+      if (preg_match('/' . $preceded_by_boundary . $key . $followed_by_boundary . '/iu', ' ' . $text . ' ', $matches, PREG_OFFSET_CAPTURE, $look_start[$key])) {
         $found_position = $matches[0][1];
         $look_start[$key] = $found_position + 1;
         // Keep track of which keys we found this time, in case we need to
@@ -768,7 +782,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').
-  $text = trim(preg_replace('/' . $boundary . '(?:' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
+  $text = trim(preg_replace('/' . $preceded_by_boundary . '(?:' . implode('|', $keys) . ')' . $followed_by_boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
   return [
     '#markup' => $text,
     '#allowed_tags' => ['strong']
@@ -787,7 +801,8 @@ function search_excerpt($keys, $text, $langcode = NULL) {
  * @param string $text
  *   The text to search for the keyword.
  * @param string $boundary
- *   Regular expression for boundary characters between words.
+ *   Regular expression for the boundary character class (characters that
+ *   indicate spaces between words).
  * @param string|null $langcode
  *   Language code for the language of $text, if known.
  *
@@ -798,6 +813,9 @@ function search_excerpt($keys, $text, $langcode = NULL) {
  *   not located, NULL is returned.
  */
 function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NULL) {
+  $preceded_by_boundary = '(?<=' . $boundary . ')';
+  $followed_by_boundary = '(?=' . $boundary . ')';
+
   // See if $key appears as-is. When testing, make sure $text starts/ends with
   // a space, because we require $key to be surrounded by word boundary
   // characters.
@@ -805,8 +823,19 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   if ($temp == '') {
     return NULL;
   }
-  if (preg_match('/' . $boundary . preg_quote($temp, '/') . $boundary . '/iu', ' ' . $text . ' ')) {
-    return $key;
+  if (preg_match('/' . $preceded_by_boundary . preg_quote($temp, '/') . $followed_by_boundary . '/iu', ' ' . $text . ' ')) {
+    return $temp;
+  }
+
+  // See if there is a match after lower-casing and removing diacritics in
+  // both, which should preserve the string length.
+  $new_text = Unicode::strtolower($text);
+  $new_text = \Drupal::service('transliteration')->removeDiacritics($new_text);
+  $new_key = Unicode::strtolower($temp);
+  $new_key = \Drupal::service('transliteration')->removeDiacritics($new_key);
+  if (preg_match('/' . $preceded_by_boundary . preg_quote($new_key, '/') . $followed_by_boundary . '/u', ' ' . $new_text . ' ')) {
+    $position = Unicode::strpos($new_text, $new_key);
+    return Unicode::substr($text, $position, Unicode::strlen($new_key));
   }
 
   // Run both text and key through search_simplify.
@@ -818,45 +847,69 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   }
 
   // Split $text into words, keeping track of where the word boundaries are.
-  $words = preg_split('/' . $boundary . '/iu', $text, NULL, PREG_SPLIT_OFFSET_CAPTURE);
+  $words = preg_split('/' . $boundary . '+/u', $text, NULL, PREG_SPLIT_OFFSET_CAPTURE);
   // Add an entry pointing to the end of the string, for the loop below.
   $words[] = array('', strlen($text));
   $num_words = count($words);
 
-  // Find the smallest segment of complete words in $text that we can simplify
-  // to match $simplified_key.
-  $start_position = 0;
-  $word_end = 0;
-  for ($word_index = 0; $word_index < $num_words; $word_index++) {
-    // See if we can move the starting position out from our previously-saved
-    // best position to here and still have a match.
-    $trial_position = $words[$word_index][1];
-    if ($trial_position < strlen($text)) {
-      $candidate = substr($text, $trial_position);
-      $test_text = trim(search_simplify($candidate, $langcode));
-      if (strpos($test_text, $simplified_key) !== FALSE) {
-        $start_position = $trial_position;
-        $word_end = $trial_position + strlen($words[$word_index][0]);
-        continue;
-      }
+  // Using a binary search, find the earliest possible ending position in
+  // $text where it will still match the keyword after applying
+  // search_simplify().
+  $start_index = 0;
+  $start_pos = $words[$start_index][1];
+  $min_end_index = 1;
+  $max_end_index = count($words) - 1;
+  while ($max_end_index > $min_end_index) {
+    // Check the index half way between min and max. See if we ended there,
+    // if we would still have a match.
+    $proposed_end_index = floor(($max_end_index + $min_end_index) / 2);
+    $proposed_end_pos = $words[$proposed_end_index][1];
+    // Since the split was done with preg_split(), the positions are byte counts
+    // not character counts, so use substr() not Unicode::substr() here.
+    $trial_text = trim(search_simplify(substr($text, $start_pos, $proposed_end_pos - $start_pos), $langcode));
+    if (strpos($trial_text, $simplified_key) !== FALSE) {
+      // The proposed endpoint is fine, text still matches.
+      $max_end_index = $proposed_end_index;
     }
-
-    // See if we can end at our currently-saved word-ending position and still
-    // match, in which case this is the minimal matching string.
-    if ($word_end > $start_position) {
-      $candidate = substr($text, $start_position, $word_end - $start_position);
-      $test_text = trim(search_simplify($candidate, $langcode));
-      if (strpos($test_text, $simplified_key) !== FALSE) {
-        return $candidate;
-      }
+    else {
+      // The proposed endpoint index is too early, so the earliest possible
+      // OK ending point would be the next index.
+      $min_end_index = $proposed_end_index + 1;
     }
-
-    // Save the end position of this word for the next time through this loop.
-    $word_end = $trial_position + strlen($words[$word_index][0]);
   }
 
-  // If we get here, we couldn't find a match.
-  return NULL;
+  // Now do the same for the starting position: using a binary search, find the
+  // latest possible starting position in $text where it will still match the
+  // keyword after applying search_simplify().
+  $end_index = $min_end_index;
+  $end_pos = $words[$end_index][1];
+  $min_start_index = 0;
+  $max_start_index = $end_index - 1;
+  while ($max_start_index > $min_start_index) {
+    // Check the index half way between min and max. See if we started there,
+    // if we would still have a match.
+    $proposed_start_index = ceil(($max_start_index + $min_start_index) / 2);
+    $proposed_start_pos = $words[$proposed_start_index][1];
+    // Since the split was done with preg_split(), the positions are byte counts
+    // not character counts, so use substr() not Unicode::substr() here.
+    $trial_text = trim(search_simplify(substr($text, $proposed_start_pos, $end_pos - $proposed_start_pos), $langcode));
+    if (strpos($trial_text, $simplified_key) !== FALSE) {
+      // The proposed start point is fine, text still matches.
+      $min_start_index = $proposed_start_index;
+    }
+    else {
+      // The proposed start point index is too late, so the latest possible
+      // OK starting point would be the previous index.
+      $max_start_index = $proposed_start_index - 1;
+    }
+  }
+  $start_index = $max_start_index;
+
+  // Return the matching text. We need to use substr() here and not the
+  // Unicode::substr() function, because the indices in $words came from
+  // preg_split(), so they are Unicode-safe byte positions, not character
+  // positions.
+  return trim(substr($text, $words[$start_index][1], $words[$end_index][1] - $words[$start_index][1]));
 }
 
 /**
