@@ -91,20 +91,10 @@ function responsive_image_theme() {
  *   - url: An optional \Drupal\Core\Url object.
  */
 function template_preprocess_responsive_image_formatter(&$variables) {
-  // Provide fallback to standard image if valid responsive image style is not
-  // provided in the responsive image formatter.
-  $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
-  if ($responsive_image_style) {
-    $variables['responsive_image'] = array(
-      '#type' => 'responsive_image',
-      '#responsive_image_style_id' => $variables['responsive_image_style_id'],
-    );
-  }
-  else {
-    $variables['responsive_image'] = array(
-      '#theme' => 'image',
-    );
-  }
+  $variables['responsive_image'] = array(
+    '#type' => 'responsive_image',
+    '#responsive_image_style_id' => $variables['responsive_image_style_id'],
+  );
   $item = $variables['item'];
   $attributes = array();
   // Do not output an empty 'title' attribute.
@@ -157,13 +147,6 @@ function template_preprocess_responsive_image(&$variables) {
 
   $image = \Drupal::service('image.factory')->get($variables['uri']);
   $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
-  // If a responsive image style is not selected, log the error and stop
-  // execution.
-  if (!$responsive_image_style) {
-    $variables['img_element'] = [];
-    \Drupal::logger('responsive_image')->log(\Drupal\Core\Logger\RfcLogLevel::ERROR, 'Failed to load responsive image style: “@style“ while displaying responsive image.', ['@style' => $variables['responsive_image_style_id']]);
-    return;
-  }
   // Retrieve all breakpoints and multipliers and reverse order of breakpoints.
   // By default, breakpoints are ordered from smallest weight to largest:
   // the smallest weight is expected to have the smallest breakpoint width,
