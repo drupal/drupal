@@ -27,4 +27,21 @@ class ArgumentValidatorTest extends ArgumentValidatorPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['test_value'] = ['default' => ''];
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateArgument($arg) {
+    return $arg == $this->options['test_value'];
+  }
+
 }
