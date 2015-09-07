@@ -1503,6 +1503,20 @@ services:
     arguments: ['@controller_resolver', '@renderer']
     tags:
       - { name: event_subscriber }
+  # Placeholder strategies for rendering placeholders.
+  html_response.placeholder_strategy_subscriber:
+    class: Drupal\Core\EventSubscriber\HtmlResponsePlaceholderStrategySubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@placeholder_strategy']
+  placeholder_strategy:
+    class: Drupal\Core\Render\Placeholder\ChainedPlaceholderStrategy
+    tags:
+      - { name: service_collector, tag: placeholder_strategy, call: addPlaceholderStrategy }
+  placeholder_strategy.single_flush:
+    class: Drupal\Core\Render\Placeholder\SingleFlushStrategy
+    tags:
+      - { name: placeholder_strategy, priority: -1000 }
   email.validator:
     class: Egulias\EmailValidator\EmailValidator
 
