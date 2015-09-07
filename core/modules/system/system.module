@@ -105,6 +105,9 @@ function system_help($route_name, RouteMatchInterface $route_match) {
 
     case 'system.themes_page':
       $output = '<p>' . t('Set and configure the default theme for your website.  Alternative <a href="!themes">themes</a> are available.', array('!themes' => 'https://www.drupal.org/project/themes')) . '</p>';
+      if (\Drupal::moduleHandler()->moduleExists('block')) {
+        $output .= '<p>' . t('You can place blocks for each theme on the <a href="@blocks">block layout</a> page.', array('@blocks' => \Drupal::url('block.admin_display'))) . '</p>';
+      }
       return $output;
 
     case 'system.theme_settings_theme':

@@ -411,6 +411,22 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
+   * Tests that a link exists to block layout from the appearance form.
+   */
+  public function testThemeAdminLink() {
+    $this->drupalPlaceBlock('help_block', ['region' => 'help']);
+    $theme_admin = $this->drupalCreateUser([
+      'administer blocks',
+      'administer themes',
+      'access administration pages',
+    ]);
+    $this->drupalLogin($theme_admin);
+    $this->drupalGet('admin/appearance');
+    $this->assertText('You can place blocks for each theme on the block layout page');
+    $this->assertLinkByHref('admin/structure/block');
+  }
+
+  /**
    * Tests that uninstalling a theme removes its block configuration.
    */
   public function testUninstallTheme() {
