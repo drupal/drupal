@@ -28,3 +28,9 @@ function test_basetheme_views_post_render(ViewExecutable $view, &$output, CacheP
  */
 function test_basetheme_preprocess_theme_test_template_test(&$variables) {
 }
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_test_function_suggestions theme functions.
+ */
+function test_basetheme_preprocess_theme_test_function_suggestions(&$variables) {
+}

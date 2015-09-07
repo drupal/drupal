@@ -100,6 +100,11 @@ class RegistryTest extends KernelTestBase {
       'test_basetheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
 
+    $preprocess_functions = $registry_base_theme->get()['theme_test_function_suggestions']['preprocess functions'];
+    $this->assertIdentical([
+       'template_preprocess_theme_test_function_suggestions',
+       'test_basetheme_preprocess_theme_test_function_suggestions',
+    ], $preprocess_functions, "Theme functions don't have template_preprocess but do have template_preprocess_HOOK");
   }
 
   /**

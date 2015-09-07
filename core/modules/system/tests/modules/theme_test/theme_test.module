@@ -82,6 +82,12 @@ function theme_test_page_bottom(array &$page_bottom) {
 }
 
 /**
+ * Implements template_preprocess_HOOK() for theme_test_function_suggestions theme functions.
+ */
+function template_preprocess_theme_test_function_suggestions(&$variables) {
+}
+
+/**
  * Theme function for testing _theme('theme_test_foo').
  */
 function theme_theme_test_foo($variables) {

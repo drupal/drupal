@@ -472,12 +472,14 @@ class Registry implements DestructableInterface {
         // A template file is the default implementation for a theme hook, but
         // if the theme hook specifies a function callback instead, check to
         // ensure the function actually exists.
-        if (isset($info['function']) && !function_exists($info['function'])) {
-          throw new \BadFunctionCallException(sprintf(
-            'Theme hook "%s" refers to a theme function callback that does not exist: "%s"',
-            $hook,
-            $info['function']
-          ));
+        if (isset($info['function'])) {
+          if (!function_exists($info['function'])) {
+            throw new \BadFunctionCallException(sprintf(
+              'Theme hook "%s" refers to a theme function callback that does not exist: "%s"',
+              $hook,
+              $info['function']
+            ));
+          }
         }
         // Provide a default naming convention for 'template' based on the
         // hook used. If the template does not exist, the theme engine used
