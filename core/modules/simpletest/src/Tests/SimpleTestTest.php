@@ -167,11 +167,20 @@ EOD;
     // Check to see if runtime assertions are indeed on, if successful this
     // will be the first of sixteen passes asserted in confirmStubResults()
     try {
-      assert(FALSE, 'Lorem Ipsum');
+      // Test with minimum possible arguments to make sure no notice for
+      // missing argument is thrown.
+      assert(FALSE);
       $this->fail('Runtime assertions are not working.');
     }
     catch (\AssertionError $e) {
-      $this->assertEqual($e->getMessage(), 'Lorem Ipsum', 'Runtime assertions Enabled and running.');
+      try {
+        // Now test with an error message to insure it is correctly passed
+        // along by the rethrow.
+        assert(FALSE, 'Lorem Ipsum');
+      }
+      catch ( \AssertionError $e ) {
+        $this->assertEqual($e->getMessage(), 'Lorem Ipsum', 'Runtime assertions Enabled and running.');
+      }
     }
     // This causes the second of the sixteen passes asserted in
     // confirmStubResults().

@@ -57,7 +57,7 @@ class Handle {
 
     if (version_compare(PHP_VERSION, '7.0.0-dev') < 0) {
       // PHP 5 - create a handler to throw the exception directly.
-      assert_options(ASSERT_CALLBACK, function($file, $line, $code, $message) {
+      assert_options(ASSERT_CALLBACK, function($file = '', $line = 0, $code = '', $message = '') {
         if (empty($message)) {
           $message = $code;
         }
