@@ -145,6 +145,9 @@ class ImageItem extends FileItem {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
 
+    unset($properties['display']);
+    unset($properties['description']);
+
     $properties['alt'] = DataDefinition::create('string')
       ->setLabel(t('Alternative text'))
       ->setDescription(t("Alternative image text, for the image's 'alt' attribute."));

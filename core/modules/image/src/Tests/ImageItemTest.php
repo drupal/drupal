@@ -115,6 +115,11 @@ class ImageItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test', array('mame' => $this->randomMachineName()));
     $entity->save();
 
+    // Test image item properties.
+    $expected = array('target_id', 'entity', 'alt', 'title', 'width', 'height');
+    $properties = $entity->getFieldDefinition('image_test')->getFieldStorageDefinition()->getPropertyDefinitions();
+    $this->assertEqual(array_keys($properties), $expected);
+
     // Test the generateSampleValue() method.
     $entity = entity_create('entity_test');
     $entity->image_test->generateSampleItems();
