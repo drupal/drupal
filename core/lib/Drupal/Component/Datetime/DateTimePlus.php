@@ -5,6 +5,7 @@
  * Contains \Drupal\Component\Datetime\DateTimePlus.
  */
 namespace Drupal\Component\Datetime;
+use Drupal\Component\Utility\ToStringTrait;
 
 /**
  * Wraps DateTime().
@@ -27,6 +28,8 @@ namespace Drupal\Component\Datetime;
  * errors using hasErrors() and getErrors().
  */
 class DateTimePlus {
+
+  use ToStringTrait;
 
   const FORMAT   = 'Y-m-d H:i:s';
 
@@ -271,16 +274,12 @@ class DateTimePlus {
   }
 
   /**
-   * Implements __toString() for dates.
+   * Renders the timezone name.
    *
-   * The DateTime class does not implement this.
-   *
-   * @see https://bugs.php.net/bug.php?id=62911
-   * @see http://www.serverphorums.com/read.php?7,555645
+   * @return string
    */
-  public function __toString() {
-    $format = static::FORMAT;
-    return $this->format($format) . ' ' . $this->getTimeZone()->getName();
+  protected function render() {
+    return $this->format(static::FORMAT) . ' ' . $this->getTimeZone()->getName();
   }
 
   /**

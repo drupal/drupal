@@ -65,6 +65,11 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
     $caller = Error::getLastCaller($backtrace);
 
     // We treat recoverable errors as fatal.
+    $recoverable = $error_level == E_RECOVERABLE_ERROR;
+    // As __toString() methods must not throw exceptions (recoverable errors)
+    // in PHP, we allow them to trigger a fatal error by emitting a user error
+    // using trigger_error().
+    $to_string = $error_level == E_USER_ERROR && substr($caller['function'], -strlen('__toString()')) == '__toString()';
     _drupal_log_error(array(
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages
@@ -75,7 +80,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       '%line' => $caller['line'],
       'severity_level' => $severity_level,
       'backtrace' => $backtrace,
-    ), $error_level == E_RECOVERABLE_ERROR);
+    ), $recoverable || $to_string);
   }
 }
 
