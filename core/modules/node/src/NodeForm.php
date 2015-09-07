@@ -83,7 +83,10 @@ class NodeForm extends ContentEntityForm {
 
     if ($preview = $store->get($uuid)) {
       /** @var $preview \Drupal\Core\Form\FormStateInterface */
-      $form_state = $preview;
+
+      foreach ($preview->getValues() as $name => $value) {
+        $form_state->setValue($name, $value);
+      }
 
       // Rebuild the form.
       $form_state->setRebuild();
