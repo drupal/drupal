@@ -39,6 +39,17 @@ class TestControllers {
   /**
    * Prints out test data.
    */
+  public function testSession() {
+    if (!isset($_SESSION['menu_test'])) {
+      $_SESSION['menu_test'] = 0;
+    }
+    $_SESSION['menu_test']++;
+    return ['#markup' => SafeMarkup::format('Session menu_test is @count', ['@count' => $_SESSION['menu_test']])];
+  }
+
+  /**
+   * Prints out test data.
+   */
   public function testDerived() {
     return ['#markup' => 'testDerived'];
   }

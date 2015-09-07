@@ -83,3 +83,8 @@ menu_test.child:
 menu_test.unsafe:
   route_name: menu_test.menu_name_test
   deriver: '\Drupal\menu_test\Plugin\Derivative\MenuLinkTestWithUnsafeTitle'
+
+menu_test.access_check:
+  title: 'Test custom route access check'
+  route_name: menu_test.router_test_session
+  menu_name: account

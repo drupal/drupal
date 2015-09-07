@@ -74,6 +74,15 @@ menu_test.router_test4:
   requirements:
     _access: 'TRUE'
 
+menu_test.router_test_session:
+  path: '/menu_test_access_check_session'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::testSession'
+  options:
+    no_cache: TRUE
+  requirements:
+    _menu_test_session_access: 'TRUE'
+
 menu_test.local_action1:
   path: '/menu-test-local-action'
   defaults:
