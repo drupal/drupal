@@ -45,12 +45,17 @@ class ViewEditTest extends UITestBase {
   }
 
   /**
-   * Tests the machine name form.
+   * Tests the machine name and administrative comment forms.
    */
-  public function testMachineNameOption() {
+  public function testOtherOptions() {
     $this->drupalGet('admin/structure/views/view/test_view');
     // Add a new attachment display.
     $this->drupalPostForm(NULL, array(), 'Add Attachment');
+
+    // Test that a long administrative comment is truncated.
+    $edit = array('display_comment' => 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_comment', $edit, 'Apply');
+    $this->assertText('one two three four five six seven eight nine ten eleven twelve thirteen fourteen...');
 
     // Change the machine name for the display from page_1 to test_1.
     $edit = array('display_id' => 'test_1');

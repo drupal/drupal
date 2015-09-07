@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -1130,7 +1129,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       );
     }
 
-    $display_comment = Unicode::substr($this->getOption('display_comment'), 0, 10);
+    $display_comment = views_ui_truncate($this->getOption('display_comment'), 80);
     $options['display_comment'] = array(
       'category' => 'other',
       'title' => $this->t('Administrative comment'),
