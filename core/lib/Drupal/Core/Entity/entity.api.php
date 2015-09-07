@@ -517,19 +517,19 @@ use Drupal\node\Entity\NodeType;
  * @param string $operation
  *   The operation that is to be performed on $entity.
  * @param \Drupal\Core\Session\AccountInterface $account
- *    The account trying to access the entity.
+ *   The account trying to access the entity.
  * @param string $langcode
- *    The code of the language $entity is accessed in.
+ *   The code of the language $entity is accessed in.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result. The final result is calculated by using
- *    \Drupal\Core\Access\AccessResultInterface::orIf() on the result of every
- *    hook_entity_access() and hook_ENTITY_TYPE_access() implementation, and the
- *    result of the entity-specific checkAccess() method in the entity access
- *    control handler. Be careful when writing generalized access checks shared
- *    between routing and entity checks: routing uses the andIf() operator. So
- *    returning an isNeutral() does not determine entity access at all but it
- *    always ends up denying access while routing.
+ *   The access result. The final result is calculated by using
+ *   \Drupal\Core\Access\AccessResultInterface::orIf() on the result of every
+ *   hook_entity_access() and hook_ENTITY_TYPE_access() implementation, and the
+ *   result of the entity-specific checkAccess() method in the entity access
+ *   control handler. Be careful when writing generalized access checks shared
+ *   between routing and entity checks: routing uses the andIf() operator. So
+ *   returning an isNeutral() does not determine entity access at all but it
+ *   always ends up denying access while routing.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_create_access()
@@ -550,12 +550,12 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  * @param string $operation
  *   The operation that is to be performed on $entity.
  * @param \Drupal\Core\Session\AccountInterface $account
- *    The account trying to access the entity.
+ *   The account trying to access the entity.
  * @param string $langcode
- *    The code of the language $entity is accessed in.
+ *   The code of the language $entity is accessed in.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result. hook_entity_access() has detailed documentation.
+ *   The access result. hook_entity_access() has detailed documentation.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_create_access()
@@ -572,16 +572,16 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  * Control entity create access.
  *
  * @param \Drupal\Core\Session\AccountInterface $account
- *    The account trying to access the entity.
+ *   The account trying to access the entity.
  * @param array $context
- *    An associative array of additional context values. By default it contains
- *    language:
- *    - langcode - the current language code.
+ *   An associative array of additional context values. By default it contains
+ *   language:
+ *   - langcode - the current language code.
  * @param string $entity_bundle
- *    The entity bundle name.
+ *   The entity bundle name.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result.
+ *   The access result.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_access()
@@ -598,16 +598,16 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  * Control entity create access for a specific entity type.
  *
  * @param \Drupal\Core\Session\AccountInterface $account
- *    The account trying to access the entity.
+ *   The account trying to access the entity.
  * @param array $context
- *    An associative array of additional context values. By default it contains
- *    language:
- *    - langcode - the current language code.
+ *   An associative array of additional context values. By default it contains
+ *   language:
+ *   - langcode - the current language code.
  * @param string $entity_bundle
- *    The entity bundle name.
+ *   The entity bundle name.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result.
+ *   The access result.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_access()
@@ -1064,7 +1064,7 @@ function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface
  *
  * This hook runs once the entity translation has been deleted from storage.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $translation
  *   The original entity object.
  *
  * @ingroup entity_crud
@@ -1084,7 +1084,7 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
  *
  * This hook runs once the entity translation has been deleted from storage.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $translation
  *   The original entity object.
  *
  * @ingroup entity_crud
@@ -1679,7 +1679,7 @@ function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $en
  * @see hook_entity_bundle_field_info_alter()
  *
  * @todo WARNING: This hook will be changed in
- *   https://www.drupal.org/node/2346329.
+ * https://www.drupal.org/node/2346329.
  */
 function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   // Alter the mymodule_text field to use a custom class.
@@ -1714,7 +1714,7 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
  *
  * @todo WARNING: This hook will be changed in
- *   https://www.drupal.org/node/2346347.
+ * https://www.drupal.org/node/2346347.
  */
 function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   // Add a property only to nodes of the 'article' bundle.
@@ -1743,7 +1743,7 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
  * @see hook_entity_bundle_field_info()
  *
  * @todo WARNING: This hook will be changed in
- *   https://www.drupal.org/node/2346347.
+ * https://www.drupal.org/node/2346347.
  */
 function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
   if ($entity_type->id() == 'node' && $bundle == 'article' && !empty($fields['mymodule_text'])) {

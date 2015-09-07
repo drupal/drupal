@@ -311,7 +311,7 @@ abstract class Entity implements EntityInterface {
         ->getAccessControlHandler($this->entityTypeId)
         ->createAccess($this->bundle(), $account, [], $return_as_object);
     }
-    return  $this->entityManager()
+    return $this->entityManager()
       ->getAccessControlHandler($this->entityTypeId)
       ->access($this, $operation, LanguageInterface::LANGCODE_DEFAULT, $account, $return_as_object);
   }
