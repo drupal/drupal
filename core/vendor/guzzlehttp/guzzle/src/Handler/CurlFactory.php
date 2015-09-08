@@ -7,6 +7,7 @@ use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\LazyOpenStream;
+use GuzzleHttp\TransferStats;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -30,6 +31,11 @@ class CurlFactory implements CurlFactoryInterface
 
     public function create(RequestInterface $request, array $options)
     {
+        if (isset($options['curl']['body_as_string'])) {
+            $options['_body_as_string'] = $options['curl']['body_as_string'];
+            unset($options['curl']['body_as_string']);
+        }
+
         $easy = new EasyHandle;
         $easy->request = $request;
         $easy->options = $options;
@@ -39,14 +45,9 @@ class CurlFactory implements CurlFactoryInterface
         $this->applyHeaders($easy, $conf);
         unset($conf['_headers']);
 
-        if (isset($options['curl']['body_as_string'])) {
-            $options['_body_as_string'] = $options['curl']['body_as_string'];
-            unset($options['curl']['body_as_string']);
-        }
-
         // Add handler options from the request configuration options
         if (isset($options['curl'])) {
-            $conf += $options['curl'];
+            $conf = array_replace($conf, $options['curl']);
         }
 
         $conf[CURLOPT_HEADERFUNCTION] = $this->createHeaderFn($easy);
@@ -94,6 +95,10 @@ class CurlFactory implements CurlFactoryInterface
         EasyHandle $easy,
         CurlFactoryInterface $factory
     ) {
+        if (isset($easy->options['on_stats'])) {
+            self::invokeStats($easy);
+        }
+
         if (!$easy->response || $easy->errno) {
             return self::finishError($handler, $easy, $factory);
         }
@@ -108,6 +113,19 @@ class CurlFactory implements CurlFactoryInterface
         }
 
         return new FulfilledPromise($easy->response);
+    }
+
+    private static function invokeStats(EasyHandle $easy)
+    {
+        $curlStats = curl_getinfo($easy->handle);
+        $stats = new TransferStats(
+            $easy->request,
+            $easy->response,
+            $curlStats['total_time'],
+            $easy->errno,
+            $curlStats
+        );
+        call_user_func($easy->options['on_stats'], $stats);
     }
 
     private static function finishError(
@@ -361,9 +379,15 @@ class CurlFactory implements CurlFactoryInterface
         if (isset($options['proxy'])) {
             if (!is_array($options['proxy'])) {
                 $conf[CURLOPT_PROXY] = $options['proxy'];
-            } elseif ($scheme = $easy->request->getUri()->getScheme()) {
+            } else {
+                $scheme = $easy->request->getUri()->getScheme();
                 if (isset($options['proxy'][$scheme])) {
-                    $conf[CURLOPT_PROXY] = $options['proxy'][$scheme];
+                    $host = $easy->request->getUri()->getHost();
+                    if (!isset($options['proxy']['no']) ||
+                        !\GuzzleHttp\is_host_in_noproxy($host, $options['proxy']['no'])
+                    ) {
+                        $conf[CURLOPT_PROXY] = $options['proxy'][$scheme];
+                    }
                 }
             }
         }

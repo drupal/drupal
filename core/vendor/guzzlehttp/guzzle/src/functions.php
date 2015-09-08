@@ -131,7 +131,7 @@ function default_user_agent()
 
     if (!$defaultAgent) {
         $defaultAgent = 'GuzzleHttp/' . Client::VERSION;
-        if (extension_loaded('curl')) {
+        if (extension_loaded('curl') && function_exists('curl_version')) {
             $defaultAgent .= ' curl/' . \curl_version()['version'];
         }
         $defaultAgent .= ' PHP/' . PHP_VERSION;
@@ -166,6 +166,8 @@ function default_ca_bundle()
         '/usr/local/share/certs/ca-root-nss.crt',
         // OS X provided by homebrew (using the default path)
         '/usr/local/etc/openssl/cert.pem',
+        // Google app engine
+        '/etc/ca-certificates.crt',
         // Windows?
         'C:\\windows\\system32\\curl-ca-bundle.crt',
         'C:\\windows\\curl-ca-bundle.crt',
@@ -222,4 +224,57 @@ function normalize_header_keys(array $headers)
     }
 
     return $result;
+}
+
+/**
+ * Returns true if the provided host matches any of the no proxy areas.
+ *
+ * This method will strip a port from the host if it is present. Each pattern
+ * can be matched with an exact match (e.g., "foo.com" == "foo.com") or a
+ * partial match: (e.g., "foo.com" == "baz.foo.com" and ".foo.com" ==
+ * "baz.foo.com", but ".foo.com" != "foo.com").
+ *
+ * Areas are matched in the following cases:
+ * 1. "*" (without quotes) always matches any hosts.
+ * 2. An exact match.
+ * 3. The area starts with "." and the area is the last part of the host. e.g.
+ *    '.mit.edu' will match any host that ends with '.mit.edu'.
+ *
+ * @param string $host         Host to check against the patterns.
+ * @param array  $noProxyArray An array of host patterns.
+ *
+ * @return bool
+ */
+function is_host_in_noproxy($host, array $noProxyArray)
+{
+    if (strlen($host) === 0) {
+        throw new \InvalidArgumentException('Empty host provided');
+    }
+
+    // Strip port if present.
+    if (strpos($host, ':')) {
+        $host = explode($host, ':', 2)[0];
+    }
+
+    foreach ($noProxyArray as $area) {
+        // Always match on wildcards.
+        if ($area === '*') {
+            return true;
+        } elseif (empty($area)) {
+            // Don't match on empty values.
+            continue;
+        } elseif ($area === $host) {
+            // Exact matches.
+            return true;
+        } else {
+            // Special match if the area when prefixed with ".". Remove any
+            // existing leading "." and add a new leading ".".
+            $area = '.' . ltrim($area, '.');
+            if (substr($host, -(strlen($area))) === $area) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

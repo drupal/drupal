@@ -7,7 +7,6 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use \InvalidArgumentException as Iae;
 
 /**
  * @method ResponseInterface get($uri, array $options = [])
@@ -150,8 +149,6 @@ class Client implements ClientInterface
      * Configures the default options for a client.
      *
      * @param array $config
-     *
-     * @return array
      */
     private function configureDefaults(array $config)
     {
@@ -172,6 +169,11 @@ class Client implements ClientInterface
             $defaults['proxy']['https'] = $proxy;
         }
 
+        if ($noProxy = getenv('NO_PROXY')) {
+            $cleanedNoProxy = str_replace(' ', '', $noProxy);
+            $defaults['proxy']['no'] = explode(',', $cleanedNoProxy);
+        }
+        
         $this->config = $config + $defaults;
 
         if (!empty($config['cookies']) && $config['cookies'] === true) {
@@ -298,9 +300,6 @@ class Client implements ClientInterface
             $elements = $options['multipart'];
             unset($options['multipart']);
             $options['body'] = new Psr7\MultipartStream($elements);
-            // Use a multipart/form-data POST if a Content-Type is not set.
-            $options['_conditional']['Content-Type'] = 'multipart/form-data; boundary='
-                . $options['body']->getBoundary();
         }
 
         if (!empty($options['decode_content'])
@@ -351,7 +350,7 @@ class Client implements ClientInterface
                 $value = http_build_query($value, null, '&', PHP_QUERY_RFC3986);
             }
             if (!is_string($value)) {
-                throw new Iae('query must be a string or array');
+                throw new \InvalidArgumentException('query must be a string or array');
             }
             $modify['query'] = $value;
             unset($options['query']);
@@ -364,6 +363,11 @@ class Client implements ClientInterface
         }
 
         $request = Psr7\modify_request($request, $modify);
+        if ($request->getBody() instanceof Psr7\MultipartStream) {
+            // Use a multipart/form-data POST if a Content-Type is not set.
+            $options['_conditional']['Content-Type'] = 'multipart/form-data; boundary='
+                . $request->getBody()->getBoundary();
+        }
 
         // Merge in conditional headers if they are not present.
         if (isset($options['_conditional'])) {
