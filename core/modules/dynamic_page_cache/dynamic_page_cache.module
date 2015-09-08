@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Caches HTML responses, request and response policies allowing.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function dynamic_page_cache_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.dynamic_page_cache':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Dynamic Page Cache module caches pages for all users in the database, handling dynamic content correctly. For more information, see the <a href="!dynamic_page_cache-documentation">online documentation for the Dynamic Page Cache module</a>.', ['!dynamic_page_cache-documentation' => 'https://www.drupal.org/documentation/modules/dynamic_page_cache']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Speeding up your site') . '</dt>';
+      $output .= '<dd>' . t('Pages are cached the first time they are requested if they are suitable from caching, then the cached version is served for all later requests. Dynamic content is handled automatically so that both cache correctness and hit ratio is maintained.') . '</dd>';
+      $output .= '<dd>' . t('The module requires no configuration. Every part of the page contains metadata that allows Dynamic Page Cache to figure this out on its own.') . '</dd>';
+      $output .= '</dl>';
+
+      return $output;
+  }
+}

@@ -5,9 +5,8 @@
  * Caches responses for anonymous users, request and response policies allowing.
  */
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -21,7 +20,8 @@ function page_cache_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Speeding up your site') . '</dt>';
       $output .= '<dd>' . t('Pages requested by anonymous users are stored the first time they are requested and then are reused. Depending on your site configuration and the amount of your web traffic tied to anonymous visitors, the caching system may significantly increase the speed of your site.') . '</dd>';
-      $output .= '<dd>' . t('Pages are usually identical for all anonymous users, while they can be customized for each authenticated user. This is why pages can be cached for anonymous users, whereas they will have to be rebuilt for every authenticated user.') . '</dd>';
+      $output .= '<dd>' . t('Pages are usually identical for all anonymous users, while they can be personalized for each authenticated user. This is why entire pages can be cached for anonymous users, whereas they will have to be rebuilt for every authenticated user.') . '</dd>';
+      $output .= '<dd>' . t('To speed up your site for authenticated users, see the <a href="!dynamic_page_cache-help">Dynamic Page Cache module</a>.', ['!dynamic_page_cache-help' => (\Drupal::moduleHandler()->moduleExists('dynamic_page_cache')) ? Url::fromRoute('help.page', ['name' => 'dynamic_page_cache'])->toString()  : '#']) . '</p>';
       $output .= '<dt>' . t('Configuring the internal page cache') . '</dt>';
       $output .= '<dd>' . t('On the <a href="!cache-settings">Performance page</a>, you can configure how long browsers and proxies may cache pages; that setting is also respected by the Internal Page Cache module. There is no other configuration.', array('!cache-settings' => \Drupal::url('system.performance_settings')))  . '</dd>';
       $output .= '</dl>';

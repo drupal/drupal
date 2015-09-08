@@ -1,0 +1,29 @@
+services:
+  cache.dynamic_page_cache:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [dynamic_page_cache]
+  dynamic_page_cache_subscriber:
+    class: Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber
+    arguments: ['@dynamic_page_cache_request_policy', '@dynamic_page_cache_response_policy', '@render_cache', '%renderer.config%']
+    tags:
+      - { name: event_subscriber }
+
+  # Request & response policies.
+  dynamic_page_cache_request_policy:
+    class: Drupal\dynamic_page_cache\PageCache\RequestPolicy\DefaultRequestPolicy
+    tags:
+      - { name: service_collector, tag: dynamic_page_cache_request_policy, call: addPolicy}
+  dynamic_page_cache_response_policy:
+    class: Drupal\Core\PageCache\ChainResponsePolicy
+    tags:
+      - { name: service_collector, tag: dynamic_page_cache_response_policy, call: addPolicy}
+    lazy: true
+  dynamic_page_cache_deny_admin_routes:
+    class: Drupal\dynamic_page_cache\PageCache\ResponsePolicy\DenyAdminRoutes
+    arguments: ['@current_route_match']
+    public: false
+    tags:
+      - { name: dynamic_page_cache_response_policy }

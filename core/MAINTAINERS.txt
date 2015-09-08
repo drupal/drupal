@@ -312,6 +312,10 @@ Database Logging module
 DateTime module
 - Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
 
+Dynamic Page Cache module
+- Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+
 Email module
 - Nils Destoop 'zuuperman' https://www.drupal.org/u/zuuperman
 

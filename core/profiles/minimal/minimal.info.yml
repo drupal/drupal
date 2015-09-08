@@ -8,5 +8,6 @@ dependencies:
   - block
   - dblog
   - page_cache
+  - dynamic_page_cache
 themes:
   - stark

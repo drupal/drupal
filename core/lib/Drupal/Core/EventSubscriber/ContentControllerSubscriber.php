@@ -40,7 +40,7 @@ class ContentControllerSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onRequestDeriveFormWrapper', 29);
+    $events[KernelEvents::REQUEST][] = array('onRequestDeriveFormWrapper', 25);
 
     return $events;
   }

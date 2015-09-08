@@ -9,6 +9,8 @@ namespace Drupal\standard\Tests;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\ContactForm;
+use Drupal\Core\Url;
+use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\Role;
@@ -177,5 +179,28 @@ class StandardTest extends WebTestBase {
     $this->assertText('Max 650x650');
     $this->assertText('Max 1300x1300');
     $this->assertText('Max 2600x2600');
+
+    // Verify certain routes' responses are cacheable by Dynamic Page Cache, to
+    // ensure these responses are very fast for authenticated users.
+    $this->dumpHeaders = TRUE;
+    $this->drupalLogin($this->adminUser);
+    $url = Url::fromRoute('contact.site_page');
+    $this->drupalGet($url);
+    $this->assertEqual('UNCACHEABLE', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Site-wide contact page cannot be cached by Dynamic Page Cache.');
+
+    $url = Url::fromRoute('<front>');
+    $this->drupalGet($url);
+    $this->drupalGet($url);
+    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Frontpage is cached by Dynamic Page Cache.');
+
+    $url = Url::fromRoute('entity.node.canonical', ['node' => 1]);
+    $this->drupalGet($url);
+    $this->drupalGet($url);
+    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Full node page is cached by Dynamic Page Cache.');
+
+    $url = Url::fromRoute('entity.user.canonical', ['user' => 1]);
+    $this->drupalGet($url);
+    $this->drupalGet($url);
+    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'User profile page is cached by Dynamic Page Cache.');
   }
 }
