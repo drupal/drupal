@@ -44,6 +44,14 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertEqual(\Drupal::config('system.site')->get('name'), 'Site-Install');
     $this->drupalGet('<front>');
     $this->assertText('Site-Install');
+
+    // Ensure that the database tasks have been run during set up. Neither MySQL
+    // nor SQLite make changes that are testable.
+    $database = $this->container->get('database');
+    if ($database->driver() == 'pgsql') {
+      $this->assertEqual('on', $database->query("SHOW standard_conforming_strings")->fetchField());
+      $this->assertEqual('escape', $database->query("SHOW bytea_output")->fetchField());
+    }
   }
 
   /**

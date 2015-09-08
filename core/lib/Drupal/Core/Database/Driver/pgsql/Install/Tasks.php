@@ -35,6 +35,10 @@ class Tasks extends InstallTasks {
       'arguments' => array(),
     );
     $this->tasks[] = array(
+      'function' => 'checkStandardConformingStrings',
+      'arguments' => array(),
+    );
+    $this->tasks[] = array(
       'function' => 'initializeDatabase',
       'arguments' => array(),
     );
@@ -182,6 +186,58 @@ class Tasks extends InstallTasks {
   protected function checkBinaryOutputSuccess() {
     $bytea_output = db_query("SHOW bytea_output")->fetchField();
     return ($bytea_output == 'escape');
+  }
+
+  /**
+   * Ensures standard_conforming_strings setting is 'on'.
+   *
+   * When standard_conforming_strings setting is 'on' string literals ('...')
+   * treat backslashes literally, as specified in the SQL standard. This allows
+   * Drupal to convert between bytea, text and varchar columns.
+   */
+  public function checkStandardConformingStrings() {
+    $database_connection = Database::getConnection();
+    if (!$this->checkStandardConformingStringsSuccess()) {
+      // First try to alter the database. If it fails, raise an error telling
+      // the user to do it themselves.
+      $connection_options = $database_connection->getConnectionOptions();
+      // It is safe to include the database name directly here, because this
+      // code is only called when a connection to the database is already
+      // established, thus the database name is guaranteed to be a correct
+      // value.
+      $query = "ALTER DATABASE \"" . $connection_options['database'] . "\" SET standard_conforming_strings = 'on';";
+      try {
+        $database_connection->query($query);
+      }
+      catch (\Exception $e) {
+        // Ignore possible errors when the user doesn't have the necessary
+        // privileges to ALTER the database.
+      }
+
+      // Close the database connection so that the configuration parameter
+      // is applied to the current connection.
+      Database::closeConnection();
+
+      // Recheck, if it fails, finally just rely on the end user to do the
+      // right thing.
+      if (!$this->checkStandardConformingStringsSuccess()) {
+        $replacements = array(
+          '%setting' => 'standard_conforming_strings',
+          '%current_value' => 'off',
+          '%needed_value' => 'on',
+          '!query' => "<code>" . $query . "</code>",
+        );
+        $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: !query", $replacements));
+      }
+    }
+  }
+
+  /**
+   * Verifies the standard_conforming_strings setting.
+   */
+  protected function checkStandardConformingStringsSuccess() {
+    $standard_conforming_strings = Database::getConnection()->query("SHOW standard_conforming_strings")->fetchField();
+    return ($standard_conforming_strings == 'on');
   }
 
   /**

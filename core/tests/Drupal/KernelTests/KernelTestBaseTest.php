@@ -74,8 +74,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $GLOBALS['destroy-me'] = TRUE;
     $this->assertArrayHasKey('destroy-me', $GLOBALS);
 
-    $schema = $this->container->get('database')->schema();
-    $schema->createTable('foo', array(
+    $database = $this->container->get('database');
+    $database->schema()->createTable('foo', array(
       'fields' => array(
         'number' => array(
           'type' => 'int',
@@ -84,7 +84,14 @@ class KernelTestBaseTest extends KernelTestBase {
         ),
       ),
     ));
-    $this->assertTrue($schema->tableExists('foo'));
+    $this->assertTrue($database->schema()->tableExists('foo'));
+
+    // Ensure that the database tasks have been run during set up. Neither MySQL
+    // nor SQLite make changes that are testable.
+    if ($database->driver() == 'pgsql') {
+      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
+      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
+    }
   }
 
   /**

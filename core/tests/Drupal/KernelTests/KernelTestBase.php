@@ -343,6 +343,14 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // register() is only called if a new container was built/compiled.
     $this->container = $kernel->getContainer();
 
+    // Ensure database tasks have been run.
+    require_once __DIR__ . '/../../../includes/install.inc';
+    $connection = Database::getConnection();
+    $errors = db_installer_object($connection->driver())->runTasks();
+    if (!empty($errors)) {
+      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
+    }
+
     if ($modules) {
       $this->container->get('module_handler')->loadAll();
     }

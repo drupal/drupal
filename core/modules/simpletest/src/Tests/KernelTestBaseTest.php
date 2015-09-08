@@ -68,6 +68,14 @@ EOS;
 
     // Verify that the settings.testing.php got taken into account.
     $this->assertTrue(function_exists('simpletest_test_stub_settings_function'));
+
+    // Ensure that the database tasks have been run during set up. Neither MySQL
+    // nor SQLite make changes that are testable.
+    $database = $this->container->get('database');
+    if ($database->driver() == 'pgsql') {
+      $this->assertEqual('on', $database->query("SHOW standard_conforming_strings")->fetchField());
+      $this->assertEqual('escape', $database->query("SHOW bytea_output")->fetchField());
+    }
   }
 
   /**

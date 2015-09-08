@@ -225,6 +225,14 @@ EOD;
     // the event dispatcher which can prevent modules from registering events.
     \Drupal::service('config.storage')->write('core.extension', array('module' => array(), 'theme' => array()));
 
+    // Ensure database tasks have been run.
+    require_once __DIR__ . '/../../../includes/install.inc';
+    $connection = Database::getConnection();
+    $errors = db_installer_object($connection->driver())->runTasks();
+    if (!empty($errors)) {
+      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
+    }
+
     // Collect and set a fixed module list.
     $class = get_class($this);
     $modules = array();

@@ -640,7 +640,7 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
-   * Tests changing columns between numeric types.
+   * Tests changing columns between types.
    */
   function testSchemaChangeField() {
     $field_specs = array(
@@ -661,6 +661,27 @@ class SchemaTest extends KernelTestBase {
         $this->assertFieldChange($old_spec, $new_spec);
       }
     }
+
+    $field_specs = array(
+      array('type' => 'varchar_ascii', 'length' => '255'),
+      array('type' => 'varchar', 'length' => '255'),
+      array('type' => 'text'),
+      array('type' => 'blob', 'size' => 'big'),
+    );
+
+    foreach ($field_specs as $i => $old_spec) {
+      foreach ($field_specs as $j => $new_spec) {
+        if ($i === $j) {
+          // Do not change a field into itself.
+          continue;
+        }
+        // Note if the serialized data contained an object this would fail on
+        // Postgres.
+        // @see https://www.drupal.org/node/1031122
+        $this->assertFieldChange($old_spec, $new_spec, serialize(['string' => "This \n has \\\\ some backslash \"*string action.\\n"]));
+      }
+    }
+
   }
 
   /**
@@ -671,7 +692,7 @@ class SchemaTest extends KernelTestBase {
    * @param $new_spec
    *   The ending field specification.
    */
-  protected function assertFieldChange($old_spec, $new_spec) {
+  protected function assertFieldChange($old_spec, $new_spec, $test_data = NULL) {
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = array(
       'fields' => array(
@@ -689,8 +710,23 @@ class SchemaTest extends KernelTestBase {
     // Remove inserted rows.
     db_truncate($table_name)->execute();
 
+    if ($test_data) {
+      $id = db_insert($table_name)
+        ->fields(['test_field'], [$test_data])
+        ->execute();
+    }
+
     // Change the field.
     db_change_field($table_name, 'test_field', 'test_field', $new_spec);
+
+    if ($test_data) {
+      $field_value = db_select($table_name)
+        ->fields($table_name, ['test_field'])
+        ->condition('serial_column', $id)
+        ->execute()
+        ->fetchField();
+      $this->assertIdentical($field_value, $test_data);
+    }
 
     // Check the field was changed.
     $this->assertFieldCharacteristics($table_name, 'test_field', $new_spec);
