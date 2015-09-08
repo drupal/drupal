@@ -259,6 +259,10 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
     }
   }
   $form['theme'] = array('#type' => 'value', '#value' => $theme);
+  if (isset($info['#attached'])) {
+    $form['#attached'] = $info['#attached'];
+    unset($info['#attached']);
+  }
   $form['info'] = array('#type' => 'value', '#value' => $info);
 
   return $form;

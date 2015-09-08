@@ -5,10 +5,6 @@
  * Lists available colors and color schemes for the Bartik theme.
  */
 
-// Put the logo path into JavaScript for the live preview.
-$js_attached['#attached']['drupalSettings']['color']['logo'] = theme_get_setting('logo.url', 'bartik');
-drupal_process_attached($js_attached);
-
 $info = array(
   // Available colors and color labels used in theme.
   'fields' => array(
@@ -121,4 +117,14 @@ $info = array(
   // Preview files.
   'preview_library' => 'bartik/color.preview',
   'preview_html' => 'color/preview.html',
+
+  // Attachments.
+  '#attached' => [
+    'drupalSettings' => [
+      'color' => [
+        // Put the logo path into JavaScript for the live preview.
+        'logo' => theme_get_setting('logo.url', 'bartik'),
+      ],
+    ],
+  ],
 );

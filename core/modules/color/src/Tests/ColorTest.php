@@ -177,4 +177,21 @@ class ColorTest extends WebTestBase {
       }
     }
   }
+
+  /**
+   * Test whether the custom logo is used in the color preview.
+   */
+  function testLogoSettingOverride() {
+    $this->drupalLogin($this->bigUser);
+    $edit = array(
+      'default_logo' => FALSE,
+      'logo_path' => 'core/misc/druplicon.png',
+    );
+    $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
+
+    // Ensure that the overridden logo is present in Bartik, which is colorable.
+    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->assertIdentical($GLOBALS['base_url'] . '/' . 'core/misc/druplicon.png', $this->getDrupalSettings()['color']['logo']);
+  }
+
 }
