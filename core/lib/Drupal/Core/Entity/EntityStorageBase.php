@@ -351,20 +351,26 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       return;
     }
 
+    // Ensure that the entities are keyed by ID.
+    $keyed_entities = [];
+    foreach ($entities as $entity) {
+      $keyed_entities[$entity->id()] = $entity;
+    }
+
     // Allow code to run before deleting.
     $entity_class = $this->entityClass;
-    $entity_class::preDelete($this, $entities);
-    foreach ($entities as $entity) {
+    $entity_class::preDelete($this, $keyed_entities);
+    foreach ($keyed_entities as $entity) {
       $this->invokeHook('predelete', $entity);
     }
 
     // Perform the delete and reset the static cache for the deleted entities.
-    $this->doDelete($entities);
-    $this->resetCache(array_keys($entities));
+    $this->doDelete($keyed_entities);
+    $this->resetCache(array_keys($keyed_entities));
 
     // Allow code to run after deleting.
-    $entity_class::postDelete($this, $entities);
-    foreach ($entities as $entity) {
+    $entity_class::postDelete($this, $keyed_entities);
+    foreach ($keyed_entities as $entity) {
       $this->invokeHook('delete', $entity);
     }
   }

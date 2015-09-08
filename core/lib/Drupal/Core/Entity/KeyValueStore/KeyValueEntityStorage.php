@@ -146,10 +146,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
    * {@inheritdoc}
    */
   public function doDelete($entities) {
-    $entity_ids = array();
-    foreach ($entities as $entity) {
-      $entity_ids[] = $entity->id();
-    }
+    $entity_ids = array_keys($entities);
     $this->keyValueStore->deleteMultiple($entity_ids);
   }
 

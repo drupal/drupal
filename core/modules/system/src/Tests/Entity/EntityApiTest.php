@@ -95,6 +95,31 @@ class EntityApiTest extends EntityUnitTestBase {
     if ($revision_table = $definition->getRevisionTable()) {
       $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $revision_table . '}')->fetchField(), 'Data table was emptied');
     }
+
+    // Test deleting a list of entities not indexed by entity id.
+    $entities = array();
+    $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => $user1->id()));
+    $entity->save();
+    $entities['test'] = $entity;
+    $entity = entity_create($entity_type, array('name' => 'test2', 'user_id' => $user1->id()));
+    $entity->save();
+    $entities['test2'] = $entity;
+    $controller = \Drupal::entityManager()->getStorage($entity_type);
+    $controller->delete($entities);
+
+    // Verify that entities got deleted.
+    $all = entity_load_multiple($entity_type);
+    $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', array('%entity_type' => $entity_type)));
+
+    // Verify that all data got deleted from the tables.
+    $definition = \Drupal::entityManager()->getDefinition($entity_type);
+    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition->getBaseTable() . '}')->fetchField(), 'Base table was emptied');
+    if ($data_table = $definition->getDataTable()) {
+      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $data_table . '}')->fetchField(), 'Data table was emptied');
+    }
+    if ($revision_table = $definition->getRevisionTable()) {
+      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $revision_table . '}')->fetchField(), 'Data table was emptied');
+    }
   }
 
   /**
