@@ -64,11 +64,34 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
       }
       $this->assertIdentical($filenames, $recorded_filenames, 'The uploaded files are present in the same order after the upgrade.');
     }
+
     // Test for the file with repeating basename to only have the streaming
     // path replaced.
     $node = node_load(40, 53);
     $repeated_basename_file = $node->upload[LANGUAGE_NONE][4];
     $this->assertEqual($repeated_basename_file['uri'], 'private://drupal-6/file/directory/path/crazy-basename.png', "The file with the repeated basename path only had the stream portion replaced");
+
+    // Ensure that filepaths are deduplicated.
+    $node0 = node_load(41, 54);
+    $node1 = node_load(41, 55);
+    // Ensure that both revisions point to the same file ID.
+    $items0 = field_get_items('node', $node0, 'upload');
+    $this->assertEqual(count($items0), 1);
+    $items1 = field_get_items('node', $node1, 'upload');
+    $this->assertEqual(count($items1), 2);
+    $this->assertEqual($items0[0]['fid'], $items1[0]['fid']);
+    $this->assertEqual($items0[0]['fid'], $items1[1]['fid']);
+    // The revision with more than one reference to the same file should retain
+    // the original settings for each reference.
+    $this->assertEqual($items1[0]['description'], 'first description');
+    $this->assertEqual($items1[0]['display'], 0);
+    $this->assertEqual($items1[1]['description'], 'second description');
+    $this->assertEqual($items1[1]['display'], 1);
+    // Ensure that the latest version of the files are used.
+    $this->assertEqual($items1[0]['filesize'], 316);
+    $this->assertEqual($items1[1]['filesize'], 316);
+    // No duplicate files should remain on the Drupal 7 site.
+    $this->assertEqual(0, db_query("SELECT COUNT(*) FROM {file_managed} GROUP BY uri HAVING COUNT(fid) > 1")->fetchField());
 
     // Make sure the file settings were properly migrated.
     $d6_file_directory_temp = '/drupal-6/file/directory/temp';

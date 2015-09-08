@@ -127,6 +127,38 @@ db_insert('files')->fields(array(
   'status' => '1',
   'timestamp' => '1285708958',
 ))
+// On some Drupal 6 sites, more than one file can have the same filepath. See
+// https://www.drupal.org/node/1260938.
+->values(array(
+  'fid' => '12',
+  'uid' => '1',
+  'filename' => 'duplicate-name.png',
+  'filepath' => 'sites/default/files/duplicate-name.png',
+  'filemime' => 'image/png',
+  'filesize' => '314',
+  'status' => '1',
+  'timestamp' => '1285708958',
+))
+->values(array(
+  'fid' => '13',
+  'uid' => '1',
+  'filename' => 'duplicate-name.png',
+  'filepath' => 'sites/default/files/duplicate-name.png',
+  'filemime' => 'image/png',
+  'filesize' => '315',
+  'status' => '1',
+  'timestamp' => '1285708958',
+))
+->values(array(
+  'fid' => '14',
+  'uid' => '1',
+  'filename' => 'duplicate-name.png',
+  'filepath' => 'sites/default/files/duplicate-name.png',
+  'filemime' => 'image/png',
+  'filesize' => '316',
+  'status' => '1',
+  'timestamp' => '1285708958',
+))
 ->execute();
 
 db_insert('node')->fields(array(
@@ -197,6 +229,23 @@ db_insert('node')->fields(array(
   'tnid' => '0',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '41',
+  'vid' => '55',
+  'type' => 'page',
+  'language' => '',
+  'title' => 'node title 41 revision 55',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1285709012',
+  'changed' => '1285709012',
+  'comment' => '0',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
  ->execute();
 
 db_insert('node_revisions')->fields(array(
@@ -250,6 +299,28 @@ db_insert('node_revisions')->fields(array(
   'title' => 'node title 40 revision 53',
   'body' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png\r\ncrazy-basename.png",
   'teaser' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png\r\ncrazy-basename.png",
+  'log' => '',
+  'timestamp' => '1285709012',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '41',
+  'vid' => '54',
+  'uid' => '1',
+  'title' => 'node title 41 revision 54',
+  'body' => "Attachments:\r\nduplicate-name.png",
+  'teaser' => "Attachments:\r\nduplicate-name.png",
+  'log' => '',
+  'timestamp' => '1285709012',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '41',
+  'vid' => '55',
+  'uid' => '1',
+  'title' => 'node title 41 revision 55',
+  'body' => "Attachments:\r\nduplicate-name.png\r\nduplicate-name.png",
+  'teaser' => "Attachments:\r\nduplicate-name.png\r\nduplicate-name.png",
   'log' => '',
   'timestamp' => '1285709012',
   'format' => '1',
@@ -415,6 +486,30 @@ db_insert('upload')->fields(array(
   'list' => '1',
   'weight' => '0',
 ))
+->values(array(
+  'fid' => '12',
+  'nid' => '41',
+  'vid' => '54',
+  'description' => 'duplicate-name.png',
+  'list' => '1',
+  'weight' => '0',
+))
+->values(array(
+  'fid' => '13',
+  'nid' => '41',
+  'vid' => '55',
+  'description' => 'first description',
+  'list' => '0',
+  'weight' => '0',
+))
+->values(array(
+  'fid' => '14',
+  'nid' => '41',
+  'vid' => '55',
+  'description' => 'second description',
+  'list' => '1',
+  'weight' => '0',
+))
 ->execute();
 
 // Add series of entries for invalid node vids to the {upload} table.
@@ -431,7 +526,7 @@ for ($i = 30; $i < 250; $i += 2) {
   ->values(array(
     'fid' => $i,
     'nid' => '40',
-    'vid' => 24 + $i,
+    'vid' => 26 + $i,
     'description' => 'crazy-basename.png',
     'list' => '1',
     'weight' => '0',
@@ -440,7 +535,7 @@ for ($i = 30; $i < 250; $i += 2) {
   ->values(array(
     'fid' => 2,
     'nid' => '40',
-    'vid' => 24 + $i + 1,
+    'vid' => 26 + $i + 1,
     'description' => 'crazy-basename.png',
     'list' => '1',
     'weight' => '0',

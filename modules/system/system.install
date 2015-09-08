@@ -2803,6 +2803,16 @@ function system_update_7061(&$sandbox) {
       ->from($query)
       ->execute();
 
+    // Retrieve a list of duplicate files with the same filepath. Only the
+    // most-recently uploaded of these will be moved to the new {file_managed}
+    // table (and all references will be updated to point to it), since
+    // duplicate file URIs are not allowed in Drupal 7.
+    // Since the Drupal 6 to 7 upgrade path leaves the {files} table behind
+    // after it's done, custom or contributed modules which need to migrate
+    // file references of their own can use a similar query to determine the
+    // file IDs that duplicate filepaths were mapped to.
+    $sandbox['duplicate_filepath_fids_to_use'] = db_query("SELECT filepath, MAX(fid) FROM {files} GROUP BY filepath HAVING COUNT(*) > 1")->fetchAllKeyed();
+
     // Initialize batch update information.
     $sandbox['progress'] = 0;
     $sandbox['last_vid_processed'] = -1;
@@ -2830,6 +2840,16 @@ function system_update_7061(&$sandbox) {
         ->fetchAssoc();
       if (!$file) {
         continue;
+      }
+
+      // If this file has a duplicate filepath, replace it with the
+      // most-recently uploaded file that has the same filepath.
+      if (isset($sandbox['duplicate_filepath_fids_to_use'][$file['filepath']]) && $record->fid != $sandbox['duplicate_filepath_fids_to_use'][$file['filepath']]) {
+        $file = db_select('files', 'f')
+          ->fields('f', array('fid', 'uid', 'filename', 'filepath', 'filemime', 'filesize', 'status', 'timestamp'))
+          ->condition('f.fid', $sandbox['duplicate_filepath_fids_to_use'][$file['filepath']])
+          ->execute()
+          ->fetchAssoc();
       }
 
       // Add in the file information from the upload table.

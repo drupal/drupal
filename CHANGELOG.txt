@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused the upgrade
+  to fail when there were multiple file records pointing to the same file.
 
 Drupal 7.39, 2015-08-19
 -----------------------
