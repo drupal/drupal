@@ -2,7 +2,7 @@ locale.settings:
   path: '/admin/config/regional/translate/settings'
   defaults:
     _form: 'Drupal\locale\Form\LocaleSettingsForm'
-    _title: 'Settings'
+    _title: 'Interface translation settings'
   requirements:
     _permission: 'translate interface'
 
@@ -25,7 +25,7 @@ locale.translate_import:
   path: '/admin/config/regional/translate/import'
   defaults:
     _form: '\Drupal\locale\Form\ImportForm'
-    _title: 'Import'
+    _title: 'Interface translation import'
   requirements:
     _permission: 'translate interface'
 
@@ -33,7 +33,7 @@ locale.translate_export:
   path: '/admin/config/regional/translate/export'
   defaults:
     _form: '\Drupal\locale\Form\ExportForm'
-    _title: 'Export'
+    _title: 'Interface translation export'
   requirements:
     _permission: 'translate interface'
 

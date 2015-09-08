@@ -363,7 +363,7 @@ system.theme_settings:
   path: '/admin/appearance/settings'
   defaults:
     _form: '\Drupal\system\Form\ThemeSettingsForm'
-    _title: 'Settings'
+    _title: 'Appearance settings'
   requirements:
     _permission: 'administer themes'
 
