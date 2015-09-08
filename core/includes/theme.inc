@@ -1269,19 +1269,15 @@ function template_preprocess_html(&$variables) {
   // Create placeholder strings for these keys.
   // @see \Drupal\Core\Render\HtmlResponseSubscriber
   $types = [
-    'styles',
-    'scripts',
-    'scripts_bottom',
-    'head',
+    'styles' => 'css',
+    'scripts' => 'js',
+    'scripts_bottom' => 'js-bottom',
+    'head' => 'head',
   ];
-  $token = Crypt::randomBytesBase64(55);
-  foreach ($types as $type) {
-    $placeholder = SafeMarkup::format('<drupal-html-response-attachment-placeholder type="@type" token="@token"></drupal-html-response-attachment-placeholder>', [
-      '@type' => $type,
-      '@token' => $token,
-    ]);
-    $variables[$type]['#markup'] = $placeholder;
-    $variables[$type]['#attached']['html_response_attachment_placeholders'][$type] = $placeholder;
+  $variables['placeholder_token'] = Crypt::randomBytesBase64(55);
+  foreach ($types as $type => $placeholder_name) {
+    $placeholder = '<' . $placeholder_name . '-placeholder token="' . $variables['placeholder_token'] . '" />';
+    $variables['#attached']['html_response_attachment_placeholders'][$type] = $placeholder;
   }
 }
 

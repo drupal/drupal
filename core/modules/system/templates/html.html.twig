@@ -7,9 +7,6 @@
  * - logged_in: A flag indicating if user is logged in.
  * - root_path: The root path of the current page (e.g., node, admin, user).
  * - node_type: The content type for the current node, if the page is a node.
- * - css: A list of CSS files for the current page.
- * - head: Markup for the HEAD element (including meta tags, keyword tags, and
- *   so on).
  * - head_title: List of text elements that make up the head_title variable.
  *   May contain or more of the following:
  *   - title: The title of the page.
@@ -19,11 +16,9 @@
  * - page: The rendered page markup.
  * - page_bottom: Closing rendered markup. This variable should be printed after
  *   'page'.
- * - styles: HTML necessary to import all necessary CSS files in <head>.
- * - scripts: HTML necessary to load JavaScript files and settings in <head>.
- * - scripts_bottom: HTML necessary to load JavaScript files before closing
- *   <body> tag.
  * - db_offline: A flag indicating if the database is offline.
+ * - placeholder_token: The token for generating head, css, js and js-bottom
+ *   placeholders.
  *
  * @see template_preprocess_html()
  *
@@ -33,10 +28,10 @@
 <!DOCTYPE html>
 <html{{ html_attributes }}>
   <head>
-    {{ head }}
+    <head-placeholder token="{{ placeholder_token|raw }}" />
     <title>{{ head_title|safe_join(' | ') }}</title>
-    {{ styles }}
-    {{ scripts }}
+    <css-placeholder token="{{ placeholder_token|raw }}" />
+    <js-placeholder token="{{ placeholder_token|raw }}" />
   </head>
   <body{{ attributes }}>
     <a href="#main-content" class="visually-hidden focusable">
@@ -45,6 +40,6 @@
     {{ page_top }}
     {{ page }}
     {{ page_bottom }}
-    {{ scripts_bottom }}
+    <js-bottom-placeholder token="{{ placeholder_token|raw }}" />
   </body>
 </html>
