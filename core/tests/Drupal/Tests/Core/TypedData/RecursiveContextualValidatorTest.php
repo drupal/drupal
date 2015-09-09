@@ -16,10 +16,8 @@ use Drupal\Core\TypedData\Validation\ExecutionContextFactory;
 use Drupal\Core\TypedData\Validation\RecursiveValidator;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Validator\DefaultTranslator;
 
 /**
  * @coversDefaultClass \Drupal\Core\TypedData\Validation\RecursiveContextualValidator
@@ -82,7 +80,12 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $container->set('typed_data_manager', $this->typedDataManager);
     \Drupal::setContainer($container);
 
-    $translator = new IdentityTranslator();
+    $translator = $this->getMock('Drupal\Core\Validation\TranslatorInterface');
+    $translator->expects($this->any())
+      ->method('trans')
+      ->willReturnCallback(function($id) {
+        return $id;
+      });
     $this->contextFactory = new ExecutionContextFactory($translator);
     $this->validatorFactory = new ConstraintValidatorFactory();
     $this->recursiveValidator = new RecursiveValidator($this->contextFactory, $this->validatorFactory, $this->typedDataManager);

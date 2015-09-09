@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Validation;
 
-use Symfony\Component\Translation\TranslatorInterface;
-
 /**
  * Translates strings using Drupal's translation system.
  *

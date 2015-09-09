@@ -12,7 +12,7 @@ return array(
     'Zend\\Diactoros\\' => array($vendorDir . '/zendframework/zend-diactoros/src'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Validator\\' => array($vendorDir . '/symfony/validator'),
-    'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
+    'Symfony\\Component\\Translation\\' => array($baseDir . '/lib/Symfony/Component/Translation'),
     'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
     'Symfony\\Component\\Routing\\' => array($vendorDir . '/symfony/routing'),
     'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),

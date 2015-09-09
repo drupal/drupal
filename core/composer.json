@@ -120,7 +120,8 @@
     "drupal/update": "self.version",
     "drupal/user": "self.version",
     "drupal/views": "self.version",
-    "drupal/views_ui": "self.version"
+    "drupal/views_ui": "self.version",
+    "symfony/translation": "~2.4"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -128,7 +129,8 @@
     "psr-4": {
       "Drupal\\Core\\": "lib/Drupal/Core",
       "Drupal\\Component\\": "lib/Drupal/Component",
-      "Drupal\\Driver\\": "../drivers/lib/Drupal/Driver"
+      "Drupal\\Driver\\": "../drivers/lib/Drupal/Driver",
+      "Symfony\\Component\\Translation\\": "lib/Symfony/Component/Translation"
     },
     "files": [
       "lib/Drupal.php"
