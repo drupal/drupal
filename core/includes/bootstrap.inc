@@ -101,6 +101,9 @@ const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
  * $config_directories key for active directory.
  *
  * @see config_get_config_directory()
+ *
+ * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Drupal core no
+ *   longer creates an active directory.
  */
 const CONFIG_ACTIVE_DIRECTORY = 'active';
 
@@ -162,14 +165,19 @@ function conf_path($require_settings = TRUE, $reset = FALSE, Request $request = 
 /**
  * Returns the path of a configuration directory.
  *
+ * Configuration directories are configured using $config_directories in
+ * settings.php.
+ *
  * @param string $type
- *   (optional) The type of config directory to return. Drupal core provides
- *   'active' and 'staging'. Defaults to CONFIG_ACTIVE_DIRECTORY.
+ *   The type of config directory to return. Drupal core provides the
+ *   CONFIG_STAGING_DIRECTORY constant to access the staging directory.
  *
  * @return string
  *   The configuration directory path.
+ *
+ * @throws \Exception
  */
-function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
+function config_get_config_directory($type) {
   global $config_directories;
 
   if (!empty($config_directories[$type])) {

@@ -673,4 +673,21 @@ class ConfigImporterTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests config_get_config_directory().
+   */
+  public function testConfigGetConfigDirectory() {
+    $directory = config_get_config_directory(CONFIG_STAGING_DIRECTORY);
+    $this->assertEqual($this->configDirectories[CONFIG_STAGING_DIRECTORY], $directory);
+
+    $message = 'Calling config_get_config_directory() with CONFIG_ACTIVE_DIRECTORY results in an exception.';
+    try {
+      config_get_config_directory(CONFIG_ACTIVE_DIRECTORY);
+      $this->fail($message);
+    }
+    catch (\Exception $e) {
+      $this->pass($message);
+    }
+  }
+
 }

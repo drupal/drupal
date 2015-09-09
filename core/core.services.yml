@@ -290,10 +290,6 @@ services:
     public: false
     tags:
       - { name: backend_overridable }
-  config.storage.file:
-    class: Drupal\Core\Config\FileStorage
-    factory: Drupal\Core\Config\FileStorageFactory::getActive
-    public: false
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
     factory: Drupal\Core\Config\FileStorageFactory::getStaging

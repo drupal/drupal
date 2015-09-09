@@ -38,7 +38,6 @@ class KernelTestBaseTest extends KernelTestBase {
             substr($this->databasePrefix, 10) => array(
               'files' => array(
                 'config' => array(
-                  'active' => array(),
                   'staging' => array(),
                 ),
               ),

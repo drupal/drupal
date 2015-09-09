@@ -116,23 +116,20 @@ abstract class KernelTestBase extends TestBase {
    * @see config_get_config_directory()
    *
    * @throws \RuntimeException
-   *   Thrown when CONFIG_ACTIVE_DIRECTORY or CONFIG_STAGING_DIRECTORY cannot
-   *   be created or made writable.
+   *   Thrown when CONFIG_STAGING_DIRECTORY cannot be created or made writable.
    */
   protected function prepareConfigDirectories() {
     $this->configDirectories = array();
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
-      // Assign the relative path to the global variable.
-      $path = $this->siteDirectory . '/config_' . $type;
-      $GLOBALS['config_directories'][$type] = $path;
-      // Ensure the directory can be created and is writeable.
-      if (!install_ensure_config_directory($type)) {
-        throw new \RuntimeException("Failed to create '$type' config directory $path");
-      }
-      // Provide the already resolved path for tests.
-      $this->configDirectories[$type] = $path;
+    // Assign the relative path to the global variable.
+    $path = $this->siteDirectory . '/config_' . CONFIG_STAGING_DIRECTORY;
+    $GLOBALS['config_directories'][CONFIG_STAGING_DIRECTORY] = $path;
+    // Ensure the directory can be created and is writeable.
+    if (!install_ensure_config_directory(CONFIG_STAGING_DIRECTORY)) {
+      throw new \RuntimeException("Failed to create '" . CONFIG_STAGING_DIRECTORY . "' config directory $path");
     }
+    // Provide the already resolved path for tests.
+    $this->configDirectories[CONFIG_STAGING_DIRECTORY] = $path;
   }
 
   /**

@@ -55,16 +55,11 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
     $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
     // Pre-configure config directories.
     $this->settings['config_directories'] = array(
-      CONFIG_ACTIVE_DIRECTORY => (object) array(
-        'value' => $site_path . '/files/config_active',
-        'required' => TRUE,
-      ),
       CONFIG_STAGING_DIRECTORY => (object) array(
         'value' => $site_path . '/files/config_staging',
         'required' => TRUE,
       ),
     );
-    mkdir($this->settings['config_directories'][CONFIG_ACTIVE_DIRECTORY]->value, 0777, TRUE);
     mkdir($this->settings['config_directories'][CONFIG_STAGING_DIRECTORY]->value, 0777, TRUE);
 
     parent::setUp();

@@ -254,7 +254,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->siteDirectory = vfsStream::url('root/sites/simpletest/' . $suffix);
 
     mkdir($this->siteDirectory . '/files', 0775);
-    mkdir($this->siteDirectory . '/files/config/' . CONFIG_ACTIVE_DIRECTORY, 0775, TRUE);
     mkdir($this->siteDirectory . '/files/config/' . CONFIG_STAGING_DIRECTORY, 0775, TRUE);
 
     // Ensure that all code that relies on drupal_valid_test_ua() can still be
@@ -273,7 +272,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     new Settings($settings);
 
     $GLOBALS['config_directories'] = array(
-      CONFIG_ACTIVE_DIRECTORY => $this->siteDirectory . '/files/config/active',
       CONFIG_STAGING_DIRECTORY => $this->siteDirectory . '/files/config/staging',
     );
 
@@ -1049,7 +1047,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     if ($name === 'configDirectories') {
       trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use config_get_config_directory() directly instead.", $name), E_USER_DEPRECATED);
       return array(
-        CONFIG_ACTIVE_DIRECTORY => config_get_config_directory(CONFIG_ACTIVE_DIRECTORY),
         CONFIG_STAGING_DIRECTORY => config_get_config_directory(CONFIG_STAGING_DIRECTORY),
       );
     }

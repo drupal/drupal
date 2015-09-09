@@ -238,7 +238,6 @@ $databases = array();
  * Example:
  * @code
  *   $config_directories = array(
- *     CONFIG_ACTIVE_DIRECTORY => '/some/directory/outside/webroot',
  *     CONFIG_STAGING_DIRECTORY => '/another/directory/outside/webroot',
  *   );
  * @endcode

@@ -335,7 +335,6 @@ function file_ensure_htaccess() {
     file_save_htaccess('private://', TRUE);
   }
   file_save_htaccess('temporary://', TRUE);
-  file_save_htaccess(config_get_config_directory(), TRUE);
   file_save_htaccess(config_get_config_directory(CONFIG_STAGING_DIRECTORY), TRUE);
 }
 
