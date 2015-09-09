@@ -2,15 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\quickedit\Ajax\BaseCommand.
+ * Contains \Drupal\Core\Ajax\BaseCommand.
  */
 
-namespace Drupal\quickedit\Ajax;
-
-use Drupal\Core\Ajax\CommandInterface;
+namespace Drupal\Core\Ajax;
 
 /**
- * Base command that only exists to simplify Quick Edit's actual AJAX commands.
+ * Base command that only exists to simplify AJAX commands.
  */
 class BaseCommand implements CommandInterface {
 
