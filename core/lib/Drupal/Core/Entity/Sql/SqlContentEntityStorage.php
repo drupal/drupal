@@ -258,8 +258,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The update entity type.
    *
-   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
-   *   See https://www.drupal.org/node/2274017.
+   * @internal Only to be used internally by Entity API. Expected to be
+   *   removed by https://www.drupal.org/node/2274017.
    */
   public function setEntityType(EntityTypeInterface $entity_type) {
     if ($this->entityType->id() == $entity_type->id()) {
