@@ -150,11 +150,6 @@ quote,
 code {
   margin: .5em 0;
 }
-code,
-pre,
-kbd {
-  font-size: 1.231em;
-}
 pre {
   margin: 0.5em 0;
   white-space: pre-wrap;
