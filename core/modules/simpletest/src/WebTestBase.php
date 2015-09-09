@@ -2223,7 +2223,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function drupalHead($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
-    $url = $this->container->get('url_generator')->generateFromPath($path, $options);
+    $url = $this->buildUrl($path, $options);
     $out = $this->curlExec(array(CURLOPT_NOBODY => TRUE, CURLOPT_URL => $url, CURLOPT_HTTPHEADER => $headers));
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
