@@ -10,7 +10,6 @@ namespace Drupal\field\Tests\Migrate\d7;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Migrate field widget settings.
@@ -25,28 +24,18 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
    * @var array
    */
   public static $modules = array(
+    'comment',
+    'datetime',
+    'entity_reference',
     'field',
-    'telephone',
-    'link',
     'file',
     'image',
-    'datetime',
+    'link',
     'node',
+    'taxonomy',
+    'telephone',
     'text',
   );
-
-  /**
-   * Creates a node type.
-   *
-   * @param string $id
-   *   The node type ID.
-   */
-  protected function createNodeType($id) {
-    NodeType::create(array(
-      'type' => $id,
-      'label' => $this->randomString(),
-    ))->save();
-  }
 
   /**
    * {@inheritdoc}
@@ -55,45 +44,14 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     parent::setUp();
 
     $this->installEntitySchema('node');
+    $this->installEntitySchema('comment');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installConfig(static::$modules);
 
-    $this->createNodeType('page');
-    $this->createNodeType('article');
-    $this->createNodeType('blog');
-    $this->createNodeType('book');
-    $this->createNodeType('forum');
-    $this->createNodeType('test_content_type');
-
-    // Add some id mappings for the dependent migrations.
-    $id_mappings = [
-      'd7_field' => [
-        [['comment', 'comment_body'], ['comment', 'comment_body']],
-        [['node', 'body'], ['node', 'body']],
-        [['node', 'field_tags'], ['node', 'field_tags']],
-        [['node', 'field_image'], ['node', 'field_image']],
-        [['node', 'taxonomy_forums'], ['node', 'taxonomy_forums']],
-        [['node', 'field_boolean'], ['node', 'field_boolean']],
-        [['node', 'field_email'], ['node', 'field_email']],
-        [['node', 'field_phone'], ['node', 'field_phone']],
-        [['node', 'field_date'], ['node', 'field_date']],
-        [['node', 'field_date_with_end_time'], ['node', 'field_date_with_end_time']],
-        [['node', 'field_file'], ['node', 'field_file']],
-        [['node', 'field_float'], ['node', 'field_float']],
-        [['node', 'field_images'], ['node', 'field_images']],
-        [['node', 'field_integer'], ['node', 'field_integer']],
-        [['node', 'field_link'], ['node', 'field_link']],
-        [['node', 'field_text_list'], ['node', 'field_text_list']],
-        [['node', 'field_integer_list'], ['node', 'field_integer_list']],
-        [['node', 'field_long_text'], ['node', 'field_long_text']],
-        [['node', 'field_term_reference'], ['node', 'field_term_reference']],
-        [['node', 'field_text'], ['node', 'field_text']],
-        [['node', 'field_integer'], ['node', 'field_integer']],
-        [['user', 'field_file'], ['user', 'field_file']],
-      ],
-      // We don't actually need any ID lookups from the d7_field_instance
-      // migration -- it's merely a sensible dependency.
-      'd7_field_instance' => [],
-    ];
-    $this->prepareMigrations($id_mappings);
+    $this->executeMigration('d7_node_type');
+    $this->executeMigration('d7_comment_type');
+    $this->executeMigration('d7_field');
+    $this->executeMigration('d7_field_instance');
     $this->executeMigration('d7_field_instance_widget_settings');
   }
 
@@ -143,7 +101,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity('node.article.default', 'node', 'article');
     $this->assertComponent('node.article.default', 'body', 'text_textarea_with_summary', -4);
-    $this->assertComponent('node.article.default', 'field_tags', 'taxonomy_autocomplete', -4);
+    $this->assertComponent('node.article.default', 'field_tags', 'entity_reference_autocomplete', -4);
     $this->assertComponent('node.article.default', 'field_image', 'image_image', -1);
 
     $this->assertEntity('node.blog.default', 'node', 'blog');
@@ -169,7 +127,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('node.test_content_type.default', 'field_integer_list', 'options_buttons', 12);
     $this->assertComponent('node.test_content_type.default', 'field_long_text', 'text_textarea_with_summary', 13);
     $this->assertComponent('node.test_content_type.default', 'field_phone', 'telephone_default', 6);
-    $this->assertComponent('node.test_content_type.default', 'field_term_reference', 'taxonomy_autocomplete', 14);
+    $this->assertComponent('node.test_content_type.default', 'field_term_reference', 'entity_reference_autocomplete', 14);
     $this->assertComponent('node.test_content_type.default', 'field_text', 'text_textfield', 15);
     $this->assertComponent('node.test_content_type.default', 'field_text_list', 'options_select', 11);
   }
