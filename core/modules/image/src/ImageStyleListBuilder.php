@@ -92,7 +92,7 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $build = parent::render();
     $build['#empty'] = $this->t('There are currently no styles. <a href="!url">Add a new one</a>.', array(
-      '!url' => $this->urlGenerator->generateFromPath('admin/config/media/image-styles/add'),
+      '!url' => $this->urlGenerator->generateFromRoute('image.style_add'),
     ));
     return $build;
   }
