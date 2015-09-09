@@ -8,6 +8,7 @@
 namespace Drupal\block\Tests\Views;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -271,6 +272,7 @@ class DisplayBlockTest extends ViewTestBase {
    * Tests the various testcases of empty block rendering.
    */
   public function testBlockEmptyRendering() {
+    $url = new Url('test_page_test.test_page');
     // Remove all views_test_data entries.
     \Drupal::database()->truncate('views_test_data')->execute();
     /** @var \Drupal\views\ViewEntityInterface $view */
@@ -285,12 +287,12 @@ class DisplayBlockTest extends ViewTestBase {
     $display['display_options']['block_hide_empty'] = TRUE;
     $view->save();
 
-    $this->drupalGet('');
+    $this->drupalGet($url);
     $this->assertEqual(0, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
     // Ensure that the view cachability metadata is propagated even, for an
     // empty block.
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format']);
 
     // Add a header displayed on empty result.
     $display = &$view->getDisplay('block_1');
@@ -305,10 +307,10 @@ class DisplayBlockTest extends ViewTestBase {
     ];
     $view->save();
 
-    $this->drupalGet('');
+    $this->drupalGet($url);
     $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format']);
 
     // Hide the header on empty results.
     $display = &$view->getDisplay('block_1');
@@ -323,10 +325,10 @@ class DisplayBlockTest extends ViewTestBase {
     ];
     $view->save();
 
-    $this->drupalGet('');
+    $this->drupalGet($url);
     $this->assertEqual(0, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format']);
 
     // Add an empty text.
     $display = &$view->getDisplay('block_1');
@@ -340,10 +342,10 @@ class DisplayBlockTest extends ViewTestBase {
     ];
     $view->save();
 
-    $this->drupalGet('');
+    $this->drupalGet($url);
     $this->assertEqual(1, count($this->xpath('//div[contains(@class, "block-views-blocktest-view-block-block-1")]')));
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block' ,'rendered']));
-    $this->assertCacheContexts(['url.path', 'url.query_args', 'user.roles:authenticated']);
+    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block' ,'rendered']));
+    $this->assertCacheContexts(['url.query_args:_wrapper_format']);
   }
 
   /**
