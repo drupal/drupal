@@ -92,7 +92,7 @@
         var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
         var $target = $context.find(options.target).addClass('machine-name-target');
         var $suffix = $context.find(options.suffix);
-        var $wrapper = $target.closest('.form-item');
+        var $wrapper = $target.closest('.js-form-item');
         // All elements have to exist.
         if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
           return;

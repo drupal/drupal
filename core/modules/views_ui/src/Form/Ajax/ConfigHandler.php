@@ -160,7 +160,7 @@ class ConfigHandler extends ViewsFormBase {
           $form['options']['form_description'] = array(
             '#markup' => $handler->definition['help'],
             '#theme_wrappers' => array('container'),
-            '#attributes' => array('class' => array('form-item description')),
+            '#attributes' => array('class' => array('js-form-item form-item description')),
             '#weight' => -1000,
           );
         }

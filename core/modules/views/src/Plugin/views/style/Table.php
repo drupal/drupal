@@ -413,7 +413,7 @@ class Table extends StylePluginBase implements CacheablePluginInterface {
     );
 
     $form['description_markup'] = array(
-      '#markup' => '<div class="description form-item">' . $this->t('Place fields into columns; you may combine multiple fields into the same column. If you do, the separator in the column specified will be used to separate the fields. Check the sortable box to make that column click sortable, and check the default sort radio to determine which column will be sorted by default, if any. You may control column order and field labels in the fields section.') . '</div>',
+      '#markup' => '<div class="js-form-item form-item description">' . $this->t('Place fields into columns; you may combine multiple fields into the same column. If you do, the separator in the column specified will be used to separate the fields. Check the sortable box to make that column click sortable, and check the default sort radio to determine which column will be sorted by default, if any. You may control column order and field labels in the fields section.') . '</div>',
     );
   }
 

@@ -69,7 +69,7 @@ trait BrokenHandlerTrait {
     $form['description'] = array(
       '#type' => 'container',
       '#attributes' => array(
-        'class' => array('form-item', 'description'),
+        'class' => array('js-form-item', 'form-item', 'description'),
       ),
       'description_top' => array(
         '#markup' => '<p>' . $description_top . '</p>',

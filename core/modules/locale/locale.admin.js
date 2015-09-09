@@ -36,7 +36,7 @@
           $row.addClass('changed');
           // Add an asterisk only once if row changed.
           if ($rowToMark.length) {
-            $rowToMark.find('td:first-child .form-item').append(marker);
+            $rowToMark.find('td:first-child .js-form-item').append(marker);
           }
         });
       }

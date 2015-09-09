@@ -1543,7 +1543,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $access_plugin = $this->getPlugin('access');
         if ($access_plugin->usesOptions()) {
           $form['markup'] = array(
-            '#prefix' => '<div class="form-item description">',
+            '#prefix' => '<div class="js-form-item form-item description">',
             '#markup' => $this->t('You may also adjust the !settings for the currently selected access restriction.', array('!settings' => $this->optionLink(t('settings'), 'access_options'))),
             '#suffix' => '</div>',
           );
@@ -1580,7 +1580,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $cache_plugin = $this->getPlugin('cache');
         if ($cache_plugin->usesOptions()) {
           $form['markup'] = array(
-            '#prefix' => '<div class="form-item description">',
+            '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
             '#markup' => $this->t('You may also adjust the !settings for the currently selected cache mechanism.', array('!settings' => $this->optionLink(t('settings'), 'cache_options'))),
           );
@@ -1652,7 +1652,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
         if ($style_plugin->usesOptions()) {
           $form['markup'] = array(
-            '#prefix' => '<div class="form-item description">',
+            '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
             '#markup' => $this->t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'style_options'))),
           );
@@ -1700,7 +1700,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
         if ($row_plugin_instance->usesOptions()) {
           $form['markup'] = array(
-            '#prefix' => '<div class="form-item description">',
+            '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
             '#markup' => $this->t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->optionLink(t('settings'), 'row_options'))),
           );
@@ -1767,7 +1767,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'exposed_block':
         $form['#title'] .= $this->t('Put the exposed form in a block');
         $form['description'] = array(
-          '#markup' => '<div class="description form-item">' . $this->t('If set, any exposed widgets will not appear with this view. Instead, a block will be made available to the Drupal block administration system, and the exposed form will appear there. Note that this block must be enabled manually, Views will not enable it for you.') . '</div>',
+          '#markup' => '<div class="js-form-item form-item description">' . $this->t('If set, any exposed widgets will not appear with this view. Instead, a block will be made available to the Drupal block administration system, and the exposed form will appear there. Note that this block must be enabled manually, Views will not enable it for you.') . '</div>',
         );
         $form['exposed_block'] = array(
           '#type' => 'radios',
@@ -1795,7 +1795,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $exposed_form_plugin = $this->getPlugin('exposed_form');
         if ($exposed_form_plugin->usesOptions()) {
           $form['markup'] = array(
-            '#prefix' => '<div class="form-item description">',
+            '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
             '#markup' => $this->t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'exposed_form_options'))),
           );
@@ -1831,7 +1831,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $pager_plugin = $this->getPlugin('pager');
         if ($pager_plugin->usesOptions()) {
           $form['markup'] = array(
-            '#prefix' => '<div class="form-item description">',
+            '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
             '#markup' => $this->t('You may also adjust the !settings for the currently selected pager.', array('!settings' => $this->optionLink(t('settings'), 'pager_options'))),
           );
