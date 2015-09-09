@@ -182,6 +182,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     // @TODO We may want to do different error handling for different
     // exception types, but for now we'll just log the exception and
     // return the message for printing.
+    // @see https://www.drupal.org/node/2564311
     catch (Exception $e) {
       watchdog_exception('update', $e);
 
@@ -214,7 +215,66 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = 'Updating ' . Html::escape($module) . ' module';
+  $context['message'] = t('Updating @module', ['@module' => $module]);
+}
+
+/**
+ * Executes a single hook_post_update_NAME().
+ *
+ * @param string $function
+ *   The function name, that should be executed.
+ * @param array $context
+ *   The batch context array.
+ */
+function update_invoke_post_update($function, &$context) {
+  $ret = [];
+
+  // If this update was aborted in a previous step, or has a dependency that was
+  // aborted in a previous step, go no further.
+  if (!empty($context['results']['#abort'])) {
+    return;
+  }
+
+  list($module, $name) = explode('_post_update_', $function, 2);
+  module_load_include('php', $module, $module . '.post_update');
+  if (function_exists($function)) {
+    try {
+      $ret['results']['query'] = $function($context['sandbox']);
+      $ret['results']['success'] = TRUE;
+
+      \Drupal::service('update.post_update_registry')->registerInvokedUpdates([$function]);
+    }
+    // @TODO We may want to do different error handling for different exception
+    // types, but for now we'll just log the exception and return the message
+    // for printing.
+    // @see https://www.drupal.org/node/2564311
+    catch (Exception $e) {
+      watchdog_exception('update', $e);
+
+      $variables = Error::decodeException($e);
+      unset($variables['backtrace']);
+      $ret['#abort'] = [
+        'success' => FALSE,
+        'query' => t('%type: @message in %function (line %line of %file).', $variables),
+      ];
+    }
+  }
+
+  if (isset($context['sandbox']['#finished'])) {
+    $context['finished'] = $context['sandbox']['#finished'];
+    unset($context['sandbox']['#finished']);
+  }
+  if (!isset($context['results'][$module][$name])) {
+    $context['results'][$module][$name] = array();
+  }
+  $context['results'][$module][$name] = array_merge($context['results'][$module][$name], $ret);
+
+  if (!empty($ret['#abort'])) {
+    // Record this function in the list of updates that were aborted.
+    $context['results']['#abort'][] = $function;
+  }
+
+  $context['message'] = t('Post updating @module', ['@module' => $module]);
 }
 
 /**

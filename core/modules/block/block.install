@@ -45,8 +45,9 @@ function block_update_8001() {
   }
 
   // Contributed modules should leverage hook_update_dependencies() in order to
-  // be executed before block_update_8002(), so they can update their context
-  // mappings, if wanted.
+  // be executed after block_update_8001(). The blocks are then disabled if the
+  // contexts are still missing via
+  // block_post_update_disable_blocks_with_missing_contexts().
   $config_factory = \Drupal::configFactory();
   $backup_values = $update_backup = [];
 
@@ -95,50 +96,10 @@ function block_update_8001() {
 }
 
 /**
- * Disable all blocks with missing context IDs in block_update_8001().
+ * Placeholder for the previous 8002 update.
  */
 function block_update_8002() {
-  $block_update_8001 = \Drupal::keyValue('update_backup')->get('block_update_8001', []);
-
-  $block_ids = array_keys($block_update_8001);
-  $config_factory = \Drupal::configFactory();
-  /** @var \Drupal\Core\Config\Config[] $blocks */
-  $blocks = [];
-  foreach ($block_ids as $block_id) {
-    $blocks[$block_id] = $block = $config_factory->getEditable('block.block.' . $block_id);
-    // This block will have an invalid context mapping service and must be
-    // disabled in order to prevent information disclosure.
-
-    // Disable currently enabled blocks.
-    if ($block_update_8001[$block_id]['status']) {
-      $block->set('status', FALSE);
-      $block->save(TRUE);
-    }
-  }
-
-  // Provides a list of plugin labels, keyed by plugin ID.
-  $condition_plugin_id_label_map = array_column(\Drupal::service('plugin.manager.condition')->getDefinitions(), 'label', 'id');
-
-  // Override with the UI labels we are aware of. Sadly they are not machine
-  // accessible, see
-  // \Drupal\node\Plugin\Condition\NodeType::buildConfigurationForm().
-  $condition_plugin_id_label_map['node_type'] = t('Content types');
-  $condition_plugin_id_label_map['request_path'] = t('Pages');
-  $condition_plugin_id_label_map['user_role'] = t('Roles');
-
-  if (count($block_ids) > 0) {
-    $message = t('Encountered an unknown context mapping key coming probably from a contributed or custom module: One or more mappings could not be updated. Please manually review your visibility settings for the following blocks, which are disabled now:');
-    $message .= '<ul>';
-    foreach ($blocks as $disabled_block_id => $disabled_block) {
-      $message .= '<li>' . t('@label (Visibility: @plugin_ids)', array(
-            '@label' => $disabled_block->get('settings.label'),
-            '@plugin_ids' => implode(', ', array_intersect_key($condition_plugin_id_label_map, array_flip(array_keys($block_update_8001[$disabled_block_id]['missing_context_ids']))))
-          )) . '</li>';
-    }
-    $message .= '</ul>';
-
-    return $message;
-  }
+  \Drupal::state()->set('block_update_8002_placeholder', TRUE);
 }
 
 /**

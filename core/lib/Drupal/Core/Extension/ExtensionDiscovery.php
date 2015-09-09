@@ -91,14 +91,29 @@ class ExtensionDiscovery {
   protected $fileCache;
 
   /**
+   * The site path.
+   *
+   * @var string
+   */
+  protected $sitePath;
+
+  /**
    * Constructs a new ExtensionDiscovery object.
    *
    * @param string $root
    *   The app root.
+   * @param bool $use_file_cache
+   *   Whether file cache should be used.
+   * @param string[] $profile_directories
+   *   The available profile directories
+   * @param string $site_path
+   *   The path to the site.
    */
-  public function __construct($root) {
+  public function __construct($root, $use_file_cache = TRUE, $profile_directories = NULL, $site_path = NULL) {
     $this->root = $root;
-    $this->fileCache = FileCacheFactory::get('extension_discovery');
+    $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
+    $this->profileDirectories = $profile_directories;
+    $this->sitePath = $site_path;
   }
 
   /**
@@ -172,7 +187,7 @@ class ExtensionDiscovery {
       $searchdirs[static::ORIGIN_SITE] = \Drupal::service('site.path');
     }
     else {
-      $searchdirs[static::ORIGIN_SITE] = DrupalKernel::findSitePath(Request::createFromGlobals());
+      $searchdirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals());
     }
 
     // Unless an explicit value has been passed, manually check whether we are
@@ -180,7 +195,7 @@ class ExtensionDiscovery {
     // Test extensions can also be included for debugging purposes by setting a
     // variable in settings.php.
     if (!isset($include_tests)) {
-      $include_tests = drupal_valid_test_ua() || Settings::get('extension_discovery_scan_tests');
+      $include_tests = Settings::get('extension_discovery_scan_tests') || drupal_valid_test_ua();
     }
 
     $files = array();
@@ -427,7 +442,7 @@ class ExtensionDiscovery {
         continue;
       }
 
-      if ($cached_extension = $this->fileCache->get($fileinfo->getPathName())) {
+      if ($this->fileCache && $cached_extension = $this->fileCache->get($fileinfo->getPathName())) {
         $files[$cached_extension->getType()][$key] = $cached_extension;
         continue;
       }
@@ -467,7 +482,10 @@ class ExtensionDiscovery {
       $extension->origin = $dir;
 
       $files[$type][$key] = $extension;
-      $this->fileCache->set($fileinfo->getPathName(), $extension);
+
+      if ($this->fileCache) {
+        $this->fileCache->set($fileinfo->getPathName(), $extension);
+      }
     }
     return $files;
   }

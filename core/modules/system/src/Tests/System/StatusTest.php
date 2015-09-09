@@ -21,6 +21,11 @@ class StatusTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = ['update_test_postupdate'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -56,6 +61,23 @@ class StatusTest extends WebTestBase {
     else {
       $this->assertNoLinkByHref(Url::fromRoute('system.php')->toString());
     }
+
+    // If a module is fully installed no pending updates exists.
+    $this->assertNoText(t('Out of date'));
+
+    // Set the schema version of update_test_postupdate to a lower version, so
+    // update_test_postupdate_update_8001() needs to be executed.
+    drupal_set_installed_schema_version('update_test_postupdate', 8000);
+    $this->drupalGet('admin/reports/status');
+    $this->assertText(t('Out of date'));
+
+    // Now cleanup the executed post update functions.
+    drupal_set_installed_schema_version('update_test_postupdate', 8001);
+    /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
+    $post_update_registry = \Drupal::service('update.post_update_registry');
+    $post_update_registry->filterOutInvokedUpdatesByModule('update_test_postupdate');
+    $this->drupalGet('admin/reports/status');
+    $this->assertText(t('Out of date'));
 
     $this->drupalGet('admin/reports/status/php');
     $this->assertResponse(200, 'The phpinfo page is reachable.');

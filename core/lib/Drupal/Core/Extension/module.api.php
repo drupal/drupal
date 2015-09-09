@@ -660,6 +660,71 @@ function hook_update_N(&$sandbox) {
 }
 
 /**
+ * Executes an update which is intended to update data, like entities.
+ *
+ * These implementations have to be placed in a MODULE.post_update.php file.
+ *
+ * These updates are executed after all hook_update_N() implementations. At this
+ * stage Drupal is already fully repaired so you can use any API as you wish.
+ *
+ * NAME can be arbitrary machine names. In contrast to hook_update_N() the order
+ * of functions in the file is the only thing which ensures the execution order
+ * of those functions.
+ *
+ * Drupal also ensures to not execute the same hook_post_update_NAME() function
+ * twice.
+ *
+ * @param array $sandbox
+ *   Stores information for batch updates. See above for more information.
+ *
+ * @throws \Drupal\Core\Utility\UpdateException|PDOException
+ *   In case of error, update hooks should throw an instance of
+ *   \Drupal\Core\Utility\UpdateException with a meaningful message for the
+ *   user. If a database query fails for whatever reason, it will throw a
+ *   PDOException.
+ *
+ * @return string|null
+ *   Optionally, hook_post_update_NAME() hooks may return a translated string
+ *   that will be displayed to the user after the update has completed. If no
+ *   message is returned, no message will be presented to the user.
+ *
+ * @ingroup update_api
+ *
+ * @see hook_update_N()
+ */
+function hook_post_update_NAME(&$sandbox) {
+  // Example of updating some content.
+  $node = \Drupal\node\Entity\Node::load(123);
+  $node->setTitle('foo');
+  $node->save();
+
+  $result = t('Node %nid saved', ['%nid' => $node->id()]);
+
+  // Example of disabling blocks with missing condition contexts. Note: The
+  // block itself is in a state which is valid at that point.
+  // @see block_update_8001()
+  // @see block_post_update_disable_blocks_with_missing_contexts()
+  $block_update_8001 = \Drupal::keyValue('update_backup')->get('block_update_8001', []);
+
+  $block_ids = array_keys($block_update_8001);
+  $block_storage = \Drupal::entityManager()->getStorage('block');
+  $blocks = $block_storage->loadMultiple($block_ids);
+  /** @var $blocks \Drupal\block\BlockInterface[] */
+  foreach ($blocks as $block) {
+    // This block has had conditions removed due to an inability to resolve
+    // contexts in block_update_8001() so disable it.
+
+    // Disable currently enabled blocks.
+    if ($block_update_8001[$block->id()]['status']) {
+      $block->setStatus(FALSE);
+      $block->save();
+    }
+  }
+
+  return $result;
+}
+
+/**
  * Return an array of information about module update dependencies.
  *
  * This can be used to indicate update functions from other modules that your

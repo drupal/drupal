@@ -598,17 +598,30 @@ function system_requirements($phase) {
     );
 
     // Check installed modules.
+    $has_pending_updates = FALSE;
     foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
       $updates = drupal_get_schema_versions($module);
       if ($updates !== FALSE) {
         $default = drupal_get_installed_schema_version($module);
         if (max($updates) > $default) {
-          $requirements['update']['severity'] = REQUIREMENT_ERROR;
-          $requirements['update']['value'] = t('Out of date');
-          $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => \Drupal::url('system.db_update')));
+          $has_pending_updates = TRUE;
           break;
         }
       }
+    }
+    if (!$has_pending_updates) {
+      /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
+      $post_update_registry = \Drupal::service('update.post_update_registry');
+      $missing_post_update_functions = $post_update_registry->getPendingUpdateFunctions();
+      if (!empty($missing_post_update_functions)) {
+        $has_pending_updates = TRUE;
+      }
+    }
+
+    if ($has_pending_updates) {
+      $requirements['update']['severity'] = REQUIREMENT_ERROR;
+      $requirements['update']['value'] = t('Out of date');
+      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => \Drupal::url('system.db_update')));
     }
 
     // Verify that no entity updates are pending after running every DB update.

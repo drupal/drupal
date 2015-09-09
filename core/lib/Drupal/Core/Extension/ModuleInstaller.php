@@ -260,6 +260,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
         drupal_set_installed_schema_version($module, $version);
 
+        // Ensure that all post_update functions are registered already.
+        /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
+        $post_update_registry = \Drupal::service('update.post_update_registry');
+        $post_update_registry->registerInvokedUpdates($post_update_registry->getModuleUpdateFunctions($module));
+
         // Record the fact that it was installed.
         $modules_installed[] = $module;
 
@@ -445,6 +450,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       $schema_store = \Drupal::keyValue('system.schema');
       $schema_store->delete($module);
+
+      /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
+      $post_update_registry = \Drupal::service('update.post_update_registry');
+      $post_update_registry->filterOutInvokedUpdatesByModule($module);
     }
     \Drupal::service('router.builder')->setRebuildNeeded();
     drupal_get_installed_schema_version(NULL, TRUE);

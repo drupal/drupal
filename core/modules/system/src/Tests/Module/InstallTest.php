@@ -53,6 +53,21 @@ class InstallTest extends WebTestBase {
     $this->assertTrue($version > 0, 'System module version is > 0.');
     $version = drupal_get_installed_schema_version('user', TRUE);
     $this->assertTrue($version > 0, 'User module version is > 0.');
+
+    $post_update_key_value = \Drupal::keyValue('post_update');
+    $existing_updates = $post_update_key_value->get('existing_updates', []);
+    $this->assertTrue(in_array('module_test_post_update_test', $existing_updates));
+  }
+
+  /**
+   * Ensures that post update functions are removed on uninstall.
+   */
+  public function testUninstallPostUpdateFunctions() {
+    \Drupal::service('module_installer')->uninstall(['module_test']);
+
+    $post_update_key_value = \Drupal::keyValue('post_update');
+    $existing_updates = $post_update_key_value->get('existing_updates', []);
+    $this->assertFalse(in_array('module_test_post_update_test', $existing_updates));
   }
 
   /**

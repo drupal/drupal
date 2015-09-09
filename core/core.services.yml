@@ -1518,6 +1518,12 @@ services:
       - { name: placeholder_strategy, priority: -1000 }
   email.validator:
     class: Egulias\EmailValidator\EmailValidator
+  update.post_update_registry:
+    class: Drupal\Core\Update\UpdateRegistry
+    factory: ['@update.post_update_registry_factory', create]
+  update.post_update_registry_factory:
+    class: Drupal\Core\Update\UpdateRegistryFactory
+    parent: container.trait
 
   response_filter.active_link:
     class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter

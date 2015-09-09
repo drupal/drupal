@@ -15,6 +15,7 @@ use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,6 +76,13 @@ class DbUpdateController extends ControllerBase {
   protected $root;
 
   /**
+   * The post update registry.
+   *
+   * @var \Drupal\Core\Update\UpdateRegistry
+   */
+  protected $postUpdateRegistry;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -91,8 +99,10 @@ class DbUpdateController extends ControllerBase {
    *   The current user.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
    *   The bare HTML page renderer.
+   * @param \Drupal\Core\Update\UpdateRegistry $post_update_registry
+   *   The post update registry.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -100,6 +110,7 @@ class DbUpdateController extends ControllerBase {
     $this->moduleHandler = $module_handler;
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
+    $this->postUpdateRegistry = $post_update_registry;
   }
 
   /**
@@ -113,7 +124,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('state'),
       $container->get('module_handler'),
       $container->get('current_user'),
-      $container->get('bare_html_page_renderer')
+      $container->get('bare_html_page_renderer'),
+      $container->get('update.post_update_registry')
     );
   }
 
@@ -257,35 +269,52 @@ class DbUpdateController extends ControllerBase {
     // Ensure system.module's updates appear first.
     $build['start']['system'] = array();
 
-    $updates = update_get_update_list();
     $starting_updates = array();
     $incompatible_updates_exist = FALSE;
-    foreach ($updates as $module => $update) {
-      if (!isset($update['start'])) {
-        $build['start'][$module] = array(
-          '#type' => 'item',
-          '#title' => $module . ' module',
-          '#markup'  => $update['warning'],
-          '#prefix' => '<div class="messages messages--warning">',
-          '#suffix' => '</div>',
-        );
-        $incompatible_updates_exist = TRUE;
-        continue;
+    $updates_per_module = [];
+    foreach (['update', 'post_update'] as $update_type) {
+      switch ($update_type) {
+        case 'update':
+          $updates = update_get_update_list();
+          break;
+        case 'post_update':
+          $updates = $this->postUpdateRegistry->getPendingUpdateInformation();
+          break;
       }
-      if (!empty($update['pending'])) {
-        $starting_updates[$module] = $update['start'];
-        $build['start'][$module] = array(
-          '#type' => 'hidden',
-          '#value' => $update['start'],
-        );
-        $build['start'][$module . '_updates'] = array(
-          '#theme' => 'item_list',
-          '#items' => $update['pending'],
-          '#title' => $module . ' module',
-        );
-      }
-      if (isset($update['pending'])) {
-        $count = $count + count($update['pending']);
+      foreach ($updates as $module => $update) {
+        if (!isset($update['start'])) {
+          $build['start'][$module] = array(
+            '#type' => 'item',
+            '#title' => $module . ' module',
+            '#markup' => $update['warning'],
+            '#prefix' => '<div class="messages messages--warning">',
+            '#suffix' => '</div>',
+          );
+          $incompatible_updates_exist = TRUE;
+          continue;
+        }
+        if (!empty($update['pending'])) {
+          $updates_per_module += [$module => []];
+          $updates_per_module[$module] = array_merge($updates_per_module[$module], $update['pending']);
+          $build['start'][$module] = array(
+            '#type' => 'hidden',
+            '#value' => $update['start'],
+          );
+          // Store the previous items in order to merge normal updates and
+          // post_update functions together.
+          $build['start'][$module] = array(
+            '#theme' => 'item_list',
+            '#items' => $updates_per_module[$module],
+            '#title' => $module . ' module',
+          );
+
+          if ($update_type === 'update') {
+            $starting_updates[$module] = $update['start'];
+          }
+        }
+        if (isset($update['pending'])) {
+          $count = $count + count($update['pending']);
+        }
       }
     }
 
@@ -415,7 +444,7 @@ class DbUpdateController extends ControllerBase {
         if ($module != '#abort') {
           $module_has_message = FALSE;
           $info_messages = array();
-          foreach ($updates as $number => $queries) {
+          foreach ($updates as $name => $queries) {
             $messages = array();
             foreach ($queries as $query) {
               // If there is no message for this update, don't show anything.
@@ -439,10 +468,16 @@ class DbUpdateController extends ControllerBase {
 
             if ($messages) {
               $module_has_message = TRUE;
+              if (is_numeric($name)) {
+                $title = $this->t('Update #@count', ['@count' => $name]);
+              }
+              else {
+                $title = $this->t('Update @name', ['@name' => trim($name, '_')]);
+              }
               $info_messages[] = array(
                 '#theme' => 'item_list',
                 '#items' => $messages,
-                '#title' => $this->t('Update #@count', array('@count' => $number)),
+                '#title' => $title,
               );
             }
           }
@@ -572,6 +607,17 @@ class DbUpdateController extends ControllerBase {
           unset($start[$update['module']]);
         }
         $operations[] = array('update_do_one', array($update['module'], $update['number'], $dependency_map[$function]));
+      }
+    }
+
+    $post_updates = $this->postUpdateRegistry->getPendingUpdateFunctions();
+
+    if ($post_updates) {
+      // Now we rebuild all caches and after that execute the hook_post_update()
+      // functions.
+      $operations[] = ['drupal_flush_all_caches', []];
+      foreach ($post_updates as $function) {
+        $operations[] = ['update_invoke_post_update', [$function]];
       }
     }
 
