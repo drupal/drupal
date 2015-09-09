@@ -22,10 +22,8 @@ class VocabularyPerType extends Vocabulary {
    */
   public function query() {
     $query = parent::query();
-    $query->fields('nt', array(
-        'type',
-      ));
     $query->join('vocabulary_node_types', 'nt', 'v.vid = nt.vid');
+    $query->fields('nt', array('type'));
     return $query;
   }
 

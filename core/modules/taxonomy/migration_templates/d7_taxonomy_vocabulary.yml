@@ -1,0 +1,15 @@
+id: d7_taxonomy_vocabulary
+label: Drupal 7 taxonomy vocabularies
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_taxonomy_vocabulary
+process:
+  vid: machine_name
+  label: name
+  name: name
+  description: description
+  hierarchy: hierarchy
+  weight: weight
+destination:
+  plugin: entity:taxonomy_vocabulary

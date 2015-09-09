@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\Migrate\d6\MigrateTaxonomyConfigsTest.
+ * Contains \Drupal\taxonomy\Tests\Migrate\MigrateTaxonomyConfigsTest.
  */
 
-namespace Drupal\taxonomy\Tests\Migrate\d6;
+namespace Drupal\taxonomy\Tests\Migrate;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -31,7 +31,7 @@ class MigrateTaxonomyConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_taxonomy_settings');
+    $this->executeMigration('taxonomy_settings');
   }
 
   /**

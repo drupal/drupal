@@ -63,6 +63,36 @@ class TaxonomyTermHierarchy extends DrupalDumpBase {
       'tid' => '6',
       'parent' => '0',
     ))->values(array(
+      'tid' => '9',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '10',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '11',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '12',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '13',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '14',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '15',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '16',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '17',
+      'parent' => '0',
+    ))->values(array(
+      'tid' => '18',
+      'parent' => '0',
+    ))->values(array(
       'tid' => '4',
       'parent' => '3',
     ))->values(array(
@@ -75,4 +105,4 @@ class TaxonomyTermHierarchy extends DrupalDumpBase {
   }
 
 }
-#ea3220ca740097f9251ba194e9bd736d
+#d93023562f8865e1410e3299511294d7

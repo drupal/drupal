@@ -62,8 +62,23 @@ class TaxonomyIndex extends DrupalDumpBase {
       'tid' => '4',
       'sticky' => '0',
       'created' => '1421727515',
+    ))->values(array(
+      'nid' => '2',
+      'tid' => '9',
+      'sticky' => '0',
+      'created' => '1441306772',
+    ))->values(array(
+      'nid' => '2',
+      'tid' => '14',
+      'sticky' => '0',
+      'created' => '1441306772',
+    ))->values(array(
+      'nid' => '2',
+      'tid' => '17',
+      'sticky' => '0',
+      'created' => '1441306772',
     ))->execute();
   }
 
 }
-#8204d7c1b294ccb506b5106f410bfa37
+#c5beb19e23b4c7867ff9ea86a4d5b3ac

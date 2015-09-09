@@ -127,8 +127,78 @@ class TaxonomyTermData extends DrupalDumpBase {
       'description' => '',
       'format' => NULL,
       'weight' => '0',
+    ))->values(array(
+      'tid' => '9',
+      'vid' => '1',
+      'name' => 'Benjamin Sisko',
+      'description' => 'Portrayed by Avery Brooks',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '10',
+      'vid' => '1',
+      'name' => 'Kira Nerys',
+      'description' => 'Portrayed by Nana Visitor',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '11',
+      'vid' => '1',
+      'name' => 'Dax',
+      'description' => 'Portrayed by Terry Farrell',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '12',
+      'vid' => '1',
+      'name' => 'Jake Sisko',
+      'description' => 'Portrayed by Cirroc Lofton',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '13',
+      'vid' => '1',
+      'name' => 'Gul Dukat',
+      'description' => 'Portrayed by Marc Alaimo',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '14',
+      'vid' => '1',
+      'name' => 'Odo',
+      'description' => 'Portrayed by Rene Auberjonois',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '15',
+      'vid' => '1',
+      'name' => 'Worf',
+      'description' => 'Portrayed by Michael Dorn',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '16',
+      'vid' => '1',
+      'name' => "Miles O'Brien",
+      'description' => 'Portrayed by Colm Meaney',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '17',
+      'vid' => '1',
+      'name' => 'Quark',
+      'description' => 'Portrayed by Armin Shimerman',
+      'format' => 'filtered_html',
+      'weight' => '0',
+    ))->values(array(
+      'tid' => '18',
+      'vid' => '1',
+      'name' => 'Elim Garak',
+      'description' => 'Portrayed by Andrew Robinson',
+      'format' => 'filtered_html',
+      'weight' => '0',
     ))->execute();
   }
 
 }
-#77a4e5089be7384cbdf2b8c42efc2707
+#96a4d71a6a8cfeef1c1b40e49ae22f16
