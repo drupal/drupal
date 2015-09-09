@@ -190,6 +190,22 @@ EOD;
     }
     $this->kernel->boot();
 
+    // Ensure database install tasks have been run.
+    require_once __DIR__ . '/../../../includes/install.inc';
+    $connection = Database::getConnection();
+    $errors = db_installer_object($connection->driver())->runTasks();
+    if (!empty($errors)) {
+      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
+    }
+
+    // Reboot the kernel because the container might contain a connection to the
+    // database that has been closed during the database install tasks. This
+    // prevents any services created during the first boot from having stale
+    // database connections, for example, \Drupal\Core\Config\DatabaseStorage.
+    $this->kernel->shutdown();
+    $this->kernel->boot();
+
+
     // Save the original site directory path, so that extensions in the
     // site-specific directory can still be discovered in the test site
     // environment.
@@ -221,14 +237,6 @@ EOD;
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
     \Drupal::service('config.storage')->write('core.extension', array('module' => array(), 'theme' => array()));
-
-    // Ensure database tasks have been run.
-    require_once __DIR__ . '/../../../includes/install.inc';
-    $connection = Database::getConnection();
-    $errors = db_installer_object($connection->driver())->runTasks();
-    if (!empty($errors)) {
-      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
-    }
 
     // Collect and set a fixed module list.
     $class = get_class($this);
