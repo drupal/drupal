@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eb73d28ce27162c98ea1a8865fddbf7d",
+    "hash": "641da18dedf5e11a7de3978b8fe619d6",
     "packages": [
         {
             "name": "behat/mink",
@@ -786,7 +786,7 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "dev-master",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",

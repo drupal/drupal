@@ -3422,8 +3422,8 @@
     },
     {
         "name": "guzzlehttp/guzzle",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "6.1.0",
+        "version_normalized": "6.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/guzzle/guzzle.git",
