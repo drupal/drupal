@@ -13,10 +13,18 @@ namespace Drupal\test_page_test\Controller;
 class TestPageTestController {
 
   /**
-   * @todo Remove test_page_test_page().
+   * Returns a test page and sets the title.
    */
   public function testPage() {
-    return test_page_test_page();
+    return [
+      '#title' => t('Test page'),
+      '#markup' => t('Test page text.'),
+      '#attached' => [
+        'drupalSettings' => [
+          'test-setting' => 'azAZ09();.,\\\/-_{}',
+        ],
+      ],
+    ];
   }
 
 }
