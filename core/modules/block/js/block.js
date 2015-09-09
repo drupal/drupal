@@ -84,6 +84,7 @@
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
+        updateLastPlaced(table, this);
       };
 
       // Add a handler so when a row is dropped, update fields dropped into
@@ -132,9 +133,27 @@
           updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, row);
+          // Update last placed block indication.
+          updateLastPlaced(table, row);
+          // Show unsaved changes warning.
+          if (!tableDrag.changed) {
+            $(Drupal.theme('tableDragChangedWarning')).insertBefore(tableDrag.table).hide().fadeIn('slow');
+            tableDrag.changed = true;
+          }
           // Remove focus from selectbox.
           select.trigger('blur');
         });
+
+      var updateLastPlaced = function ($table, rowObject) {
+        // Remove the color-success class from new block if applicable.
+        $table.find('.color-success').removeClass('color-success');
+
+        var $rowObject = $(rowObject);
+        if (!$rowObject.is('.drag-previous')) {
+          $table.find('.drag-previous').removeClass('drag-previous');
+          $rowObject.addClass('drag-previous');
+        }
+      };
 
       /**
        * Update block weights in the given region.

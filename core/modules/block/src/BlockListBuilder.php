@@ -256,7 +256,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
             ),
           );
           if ($placement && $placement == Html::getClass($entity_id)) {
-            $form[$entity_id]['#attributes']['class'][] = 'color-warning';
+            $form[$entity_id]['#attributes']['class'][] = 'color-success';
             $form[$entity_id]['#attributes']['class'][] = 'js-block-placed';
           }
           $form[$entity_id]['info'] = array(
