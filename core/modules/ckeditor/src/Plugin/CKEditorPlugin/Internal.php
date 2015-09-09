@@ -129,6 +129,9 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
     $button = function($name, $direction = 'ltr') {
       // In the markup below, we mostly use the name (which may include spaces),
       // but in one spot we use it as a CSS class, so strip spaces.
+      // Note: this uses str_replace() instead of Html::cleanCssIdentifier()
+      // because we must provide these class names exactly how CKEditor expects
+      // them in its library, which cleanCssIdentifier() does not do.
       $class_name = str_replace(' ', '', $name);
       return [
         '#type' => 'inline_template',
