@@ -13,9 +13,29 @@ use Drupal\Core\Render\Element;
  * Provides a render element for a details element, similar to a fieldset.
  *
  * Fieldsets can only be used in forms, while details elements can be used
- * outside of forms.
+ * outside of forms.  Users click on the the title to open or close the details
+ * element, showing or hiding the contained elements.
+ *
+ * Properties:
+ * - #title: The title of the details container. Defaults to "Details".
+ * - #open: Indicates whether the container should be open by default.
+ *   Defaults to FALSE.
+ *
+ * Usage example:
+ * @code
+ * $form['author'] = array(
+ *   '#type' => 'details',
+ *   '#title' => 'Author',
+ * );
+ *
+ * $form['author']['name'] = array(
+ *   '#type' => 'textfield',
+ *   '#title' => t('Name'),
+ * );
+ * @endcode
  *
  * @see \Drupal\Core\Render\Element\Fieldset
+ * @see \Drupal]Core\Render\Element\VerticalTabs
  *
  * @RenderElement("details")
  */

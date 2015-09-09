@@ -13,8 +13,18 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a wrapper element to group one or more buttons in a form.
  *
- * Use of the 'actions' element as an array key helps to ensure proper styling
- * in themes and to enable other modules to properly alter a form's actions.
+ * Use of a single Actions element with an array key of 'actions' to group the
+ * primary submit buttons on a form helps to ensure proper styling in themes,
+ * and enables other modules to properly alter a form's actions.
+ *
+ * Usage example:
+ * @code
+ * $form['actions'] = array('#type' => 'actions');
+ * $form['actions']['submit'] = array(
+ *   '#type' => 'submit',
+ *   '#value' => t('Save'),
+ * );
+ * @endcode
  *
  * @RenderElement("actions")
  */

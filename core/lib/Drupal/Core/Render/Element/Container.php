@@ -16,6 +16,31 @@ use Drupal\Core\Form\FormStateInterface;
  * Surrounds child elements with a <div> and adds attributes such as classes or
  * an HTML ID.
  *
+ * Usage example:
+ * @code
+ * $form['needs_accommodation'] = array(
+ *   '#type' => 'checkbox',
+ *   '#title' => 'Need Special Accommodations?',
+ * );
+ *
+ * $form['accommodation'] = array(
+ *   '#type' => 'container',
+ *   '#attributes' => array(
+ *     'class' => 'accommodation',
+ *   ),
+ *   '#states' => array(
+ *     'invisible' => array(
+ *       'input[name="needs_accommodation"]' => array('checked' => FALSE),
+ *     ),
+ *   ),
+ * );
+ *
+ * $form['accommodation']['diet'] = array(
+ *   '#type' => 'textfield',
+ *   '#title' => t('Dietary Restrictions'),
+ * );
+ * @endcode
+ *
  * @RenderElement("container")
  */
 class Container extends RenderElement {

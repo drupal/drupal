@@ -13,8 +13,42 @@ use Drupal\Core\Render\Element;
 /**
  * Provides a render element for vertical tabs in a form.
  *
- * Formats all child fieldsets and all non-child fieldsets whose #group is
- * assigned this element's name as vertical tabs.
+ * Formats all child and non-child details elements whose #group is assigned
+ * this element's name as vertical tabs.
+ *
+ * Properties:
+ * - #default_tab: The HTML ID of the rendered details element to be used as
+ *   the default tab. View the source of the rendered page to determine the ID.
+ *
+ * Usage example:
+ * @code
+ * $form['information'] = array(
+ *   '#type' => 'vertical_tabs',
+ *   '#default_tab' => 'edit-publication',
+ * );
+ *
+ * $form['author'] = array(
+ *   '#type' => 'details',
+ *   '#title' => 'Author',
+ *   '#group' => 'information',
+ * );
+ *
+ * $form['author']['name'] = array(
+ *   '#type' => 'textfield',
+ *   '#title' => t('Name'),
+ * );
+ *
+ * $form['publication'] = array(
+ *   '#type' => 'details',
+ *   '#title' => t('Publication'),
+ *   '#group' => 'information',
+ * );
+ *
+ * $form['publication']['publisher'] = array(
+ *   '#type' => 'textfield',
+ *   '#title' => t('Publisher'),
+ * );
+ * @endcode
  *
  * @FormElement("vertical_tabs")
  */

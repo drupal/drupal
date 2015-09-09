@@ -17,6 +17,41 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * Note: Although this extends FormElement, it can be used outside the
  * context of a form.
  *
+ * Properties:
+ * - #header: An array of table header labels.
+ * - #rows: An array of the rows to be displayed. Each row is either an array
+ *   of cell contents or an array of properties as described in table.html.twig
+ *   Alternatively specify the data for the table as child elements of the table
+ *   element. Table elements would contain rows elements that would in turn
+ *   contain column elements.
+ * - #empty: Text to display when no rows are present.
+ * - #responsive: Indicates whether to add the drupal.responsive_table library
+ *   providing responsive tables.  Defaults to TRUE.
+ * - #sticky: Indicates whether to add the drupal.tableheader library that makes
+ *   table headers always visible at the top of the page. Defaults to FALSE.
+ *
+ * Usage example:
+ * @code
+ * $form['contacts'] = array(
+ *   '#type' => 'table',
+ *   '#title' => 'Sample Table',
+ *   '#header' => array('Name', 'Phone'),
+ * );
+ *
+ * for ($i=1; $i<=4; $i++) {
+ *   $form['contacts'][$i]['name'] = array(
+ *     '#type' => 'textfield',
+ *     '#title' => t('Name'),
+ *     '#title_display' => 'invisible',
+ *   );
+ *
+ *   $form['contacts'][$i]['phone'] = array(
+ *     '#type' => 'tel',
+ *     '#title' => t('Phone'),
+ *     '#title_display' => 'invisible',
+ *   );
+ * }
+ * @endcode
  * @see \Drupal\Core\Render\Element\Tableselect
  *
  * @FormElement("table")
