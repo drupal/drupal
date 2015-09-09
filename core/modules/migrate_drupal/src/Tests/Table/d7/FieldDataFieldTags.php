@@ -90,35 +90,8 @@ class FieldDataFieldTags extends DrupalDumpBase {
       'delta',
       'field_tags_tid',
     ))
-    ->values(array(
-      'entity_type' => 'node',
-      'bundle' => 'article',
-      'deleted' => '0',
-      'entity_id' => '2',
-      'revision_id' => '2',
-      'language' => 'und',
-      'delta' => '0',
-      'field_tags_tid' => '9',
-    ))->values(array(
-      'entity_type' => 'node',
-      'bundle' => 'article',
-      'deleted' => '0',
-      'entity_id' => '2',
-      'revision_id' => '2',
-      'language' => 'und',
-      'delta' => '1',
-      'field_tags_tid' => '14',
-    ))->values(array(
-      'entity_type' => 'node',
-      'bundle' => 'article',
-      'deleted' => '0',
-      'entity_id' => '2',
-      'revision_id' => '2',
-      'language' => 'und',
-      'delta' => '2',
-      'field_tags_tid' => '17',
-    ))->execute();
+    ->execute();
   }
 
 }
-#b72078545dd0cae56f1c0b4698d064ad
+#9e0f85739f8ae8d2c27054edb43f388d

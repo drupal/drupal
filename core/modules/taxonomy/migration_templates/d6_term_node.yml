@@ -4,12 +4,17 @@ migration_tags:
   - Drupal 6
 builder:
   plugin: d6_term_node
+load:
+  plugin: d6_term_node
+
 source:
   plugin: d6_term_node
+
 process:
   nid: nid
   type: type
-  # The actual field name is dynamic and will be added by the builder.
+  # The actual field name is dynamic and will be added by the load plugin.
+
 destination:
   plugin: entity:node
 migration_dependencies:

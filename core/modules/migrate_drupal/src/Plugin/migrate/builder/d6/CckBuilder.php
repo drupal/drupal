@@ -2,13 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\builder\CckBuilder.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\builder\d6\CckBuilder.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\builder;
+namespace Drupal\migrate_drupal\Plugin\migrate\builder\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,13 +23,6 @@ abstract class CckBuilder extends BuilderBase implements ContainerFactoryPluginI
    * @var \Drupal\migrate\Plugin\MigratePluginManager
    */
   protected $cckPluginManager;
-
-  /**
-   * Already-instantiated cckfield plugins, keyed by ID.
-   *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface[]
-   */
-  protected $cckPluginCache = [];
 
   /**
    * Constructs a CckBuilder.
@@ -59,24 +51,6 @@ abstract class CckBuilder extends BuilderBase implements ContainerFactoryPluginI
       $plugin_definition,
       $container->get('plugin.manager.migrate.cckfield')
     );
-  }
-
-  /**
-   * Gets a cckfield plugin instance.
-   *
-   * @param string $field_type
-   *   The field type (plugin ID).
-   * @param \Drupal\migrate\Entity\MigrationInterface|NULL $migration
-   *   The migration, if any.
-   *
-   * @return \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface
-   *   The cckfield plugin instance.
-   */
-  protected function getCckPlugin($field_type, MigrationInterface $migration = NULL) {
-    if (empty($this->cckPluginCache[$field_type])) {
-      $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, [], $migration);
-    }
-    return $this->cckPluginCache[$field_type];
   }
 
 }

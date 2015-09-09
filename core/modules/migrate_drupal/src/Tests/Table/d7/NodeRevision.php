@@ -111,19 +111,8 @@ class NodeRevision extends DrupalDumpBase {
       'comment' => '2',
       'promote' => '1',
       'sticky' => '0',
-    ))->values(array(
-      'nid' => '2',
-      'vid' => '2',
-      'uid' => '1',
-      'title' => 'The thing about Deep Space 9',
-      'log' => '',
-      'timestamp' => '1441306832',
-      'status' => '1',
-      'comment' => '2',
-      'promote' => '1',
-      'sticky' => '0',
     ))->execute();
   }
 
 }
-#e111edf15130b7307ccaffac6f8f9b6f
+#e202cc75a51afc39cabf52cbf0a0f9e2

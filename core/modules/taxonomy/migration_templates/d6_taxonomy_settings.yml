@@ -1,8 +1,7 @@
-id: taxonomy_settings
-label: Drupal 6 and 7 taxonomy configuration
+id: d6_taxonomy_settings
+label: Drupal 6 taxonomy configuration
 migration_tags:
   - Drupal 6
-  - Drupal 7
 source:
   plugin: variable
   variables:

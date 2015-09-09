@@ -11,6 +11,7 @@ source:
       label: hidden
       type: entity_reference_label
       weight: 20
+
 process:
   entity_type: 'constants/entity_type'
   view_mode: 'constants/view_mode'
