@@ -57,7 +57,10 @@ class DisplayPathTest extends UITestBase {
 
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
-    $this->assertLink(t('View @display', array('@display' => 'Page')), 0, 'view page link found on the page.');
+    $display_link_text = t('View @display', ['@display' => 'Page']);
+    $this->assertLink($display_link_text, 0, 'view page link found on the page.');
+    $this->clickLink($display_link_text);
+    $this->assertUrl($random_path);
   }
 
   /**
