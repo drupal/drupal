@@ -209,11 +209,36 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorDenormalizeWithOptionalDefaultArgument()
     {
+        if (PHP_VERSION_ID <= 50316) {
+            $this->markTestSkipped('See https://bugs.php.net/62715');
+        }
         $obj = $this->normalizer->denormalize(
             array('bar' => 'test'),
             __NAMESPACE__.'\GetConstructorArgsWithDefaultValueDummy', 'any');
         $this->assertEquals(array(), $obj->getFoo());
         $this->assertEquals('test', $obj->getBar());
+    }
+
+    /**
+     * @requires PHP 5.6
+     */
+    public function testConstructorDenormalizeWithVariadicArgument()
+    {
+        $obj = $this->normalizer->denormalize(
+            array('foo' => array(1, 2, 3)),
+            'Symfony\Component\Serializer\Tests\Fixtures\VariadicConstructorArgsDummy', 'any');
+        $this->assertEquals(array(1, 2, 3), $obj->getFoo());
+    }
+
+    /**
+     * @requires PHP 5.6
+     */
+    public function testConstructorDenormalizeWithMissingVariadicArgument()
+    {
+        $obj = $this->normalizer->denormalize(
+            array(),
+            'Symfony\Component\Serializer\Tests\Fixtures\VariadicConstructorArgsDummy', 'any');
+        $this->assertEquals(array(), $obj->getFoo());
     }
 
     public function testConstructorWithObjectDenormalize()

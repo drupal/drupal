@@ -24,7 +24,9 @@ use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
  * Verifies that a validator satisfies the API of Symfony < 2.5.
  *
  * @since  2.5
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
+ * @group legacy
  */
 abstract class AbstractLegacyApiTest extends AbstractValidatorTest
 {
@@ -160,7 +162,7 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
 
         $violations = $this->validator->validate($entity, 'Group');
 
-        /** @var ConstraintViolationInterface[] $violations */
+        /* @var ConstraintViolationInterface[] $violations */
         $this->assertCount(1, $violations);
         $this->assertSame('Message value', $violations[0]->getMessage());
         $this->assertSame('Message %param%', $violations[0]->getMessageTemplate());
@@ -218,7 +220,7 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
 
         $violations = $this->validator->validate($entity, 'Group');
 
-        /** @var ConstraintViolationInterface[] $violations */
+        /* @var ConstraintViolationInterface[] $violations */
         $this->assertCount(1, $violations);
         $this->assertSame('Message value', $violations[0]->getMessage());
         $this->assertSame('Message %param%', $violations[0]->getMessageTemplate());
@@ -248,7 +250,7 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
 
         $violations = $this->validator->validate($entity);
 
-        /** @var ConstraintViolationInterface[] $violations */
+        /* @var ConstraintViolationInterface[] $violations */
         $this->assertCount(1, $violations);
         $this->assertSame('Message value', $violations[0]->getMessage());
         $this->assertSame('Message %param%', $violations[0]->getMessageTemplate());

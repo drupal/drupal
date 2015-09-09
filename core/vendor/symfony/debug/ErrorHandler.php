@@ -251,7 +251,7 @@ class ErrorHandler
     public function throwAt($levels, $replace = false)
     {
         $prev = $this->thrownErrors;
-        $this->thrownErrors = ($levels | E_RECOVERABLE_ERROR | E_USER_ERROR) & ~E_USER_DEPRECATED & ~E_DEPRECATED;
+        $this->thrownErrors = (E_ALL | E_STRICT) & ($levels | E_RECOVERABLE_ERROR | E_USER_ERROR) & ~E_USER_DEPRECATED & ~E_DEPRECATED;
         if (!$replace) {
             $this->thrownErrors |= $prev;
         }
@@ -352,7 +352,7 @@ class ErrorHandler
      */
     public function handleError($type, $message, $file, $line, array $context, array $backtrace = null)
     {
-        $level = error_reporting() | E_RECOVERABLE_ERROR | E_USER_ERROR;
+        $level = error_reporting() | E_RECOVERABLE_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED;
         $log = $this->loggedErrors & $type;
         $throw = $this->thrownErrors & $type & $level;
         $type &= $level | $this->screamedErrors;
@@ -445,7 +445,7 @@ class ErrorHandler
     }
 
     /**
-     * Handles an exception by logging then forwarding it to an other handler.
+     * Handles an exception by logging then forwarding it to another handler.
      *
      * @param \Exception|\Throwable $exception An exception to handle
      * @param array                 $error     An array as returned by error_get_last()
