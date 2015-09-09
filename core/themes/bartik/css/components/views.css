@@ -1,117 +1,35 @@
-/* ---------- Views styling ---------- */
-
-/* @group Lists */
-
-.views-display-top .secondary .action-list {
-  padding-left: 0; /* LTR */
-}
-
-[dir="rtl"] .views-display-top .secondary .action-list {
-  padding-left: inherit;
-  padding-right: 0;
-}
-
-/* @end */
-
-/* @group Attachment details tabs
- *
- * The tabs that switch between sections
+/**
+ * @file
+ * Styling for Views in Bartik.
  */
 
-.views-displays .region-content .secondary,
-.views-displays .region-content .secondary {
-  padding-bottom: 0;
-  padding-left: 0; /* LTR */
+/* Tab styles */
+.views-displays .tabs .open > a {
+  border-radius: 7px 7px 0 0;
 }
-[dir="rtl"] .views-displays .region-content .secondary {
-  padding-right: 0;
-}
-
-.views-displays .secondary a {
-  font-size: smaller;
-}
-
-.views-displays .secondary > li a {
-  border-radius: 5px;
-}
-
-.views-displays .secondary > li.open a {
-  border-radius: 5px 5px 0 0;
-}
-
-.views-displays .secondary .open > a:hover,
-.views-displays .secondary .open > a:focus {
+.views-displays .tabs .open > a:hover,
+.views-displays .tabs .open > a:focus {
   color: #0071B3;
 }
-
-.views-displays .secondary input.form-submit {
-  font-size: smaller;
+.views-displays .secondary .form-submit {
+  font-size: 0.846em;
 }
 
-/* @end */
+/* Tabs action list styles */
+.views-displays .tabs .action-list {
+  padding: 0;
+}
 
-/* @group Modal dialog box
- *
- * The contents of the popup dialog on the views edit form.
- */
-
+/* Contextual filter options styles */
 .views-filterable-options .filterable-option:nth-of-type(even) .form-type-checkbox {
   background-color: #F9F9F9;
 }
 
-/* @end */
-
-.views-display-column .details-wrapper {
-  margin-top: 0;
-}
-
-.views-display-column details summary {
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 13px;
-  line-height: inherit;
-  position: relative;
-  text-indent: 0;
-  text-shadow: none;
-  top: 3px;
-}
-
-.views-display-columns details {
-  position: inherit;
-}
-
-.views-display-columns details summary {
-  padding: 0 0 4px 2px; /* LTR */
-}
-[dir="rtl"] .views-display-columns details summary {
-  padding: 0 2px 4px 0;
-}
-
-.views-display-columns a.fieldset-title {
+/* Views action dropbutton styles */
+.views-ui-display-tab-actions .dropbutton .form-submit {
   color: #0071B3;
 }
-
-.views-display-columns a.fieldset-title:hover,
-.views-display-columns a.fieldset-title:focus {
+.views-ui-display-tab-actions .dropbutton .form-submit:hover,
+.views-ui-display-tab-actions .dropbutton .form-submit:focus {
   color: #018FE2;
-}
-
-/* @group Dropbutton */
-
-.views-ui-display-tab-actions .dropbutton input {
-  color: #0071B3;
-}
-
-.views-ui-display-tab-actions .dropbutton input:hover,
-.views-ui-display-tab-actions .dropbutton input:focus {
-  color: #018FE2;
-}
-
-.views-ui-display-tab-actions .dropbutton input.form-submit {
-  margin-right: 0; /* LTR */
-  margin-top: 0;
-}
-[dir="rtl"] .views-ui-display-tab-actions .dropbutton input.form-submit {
-  margin-left: 0;
 }
