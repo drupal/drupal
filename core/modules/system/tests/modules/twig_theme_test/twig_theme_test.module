@@ -62,6 +62,12 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     'variables' => array(),
     'template' => 'twig_theme_test.attach_library',
   );
+  $items['twig_theme_test_renderable'] = array(
+    'variables' => array(
+      'renderable' => NULL,
+    ),
+    'template' => 'twig_theme_test.renderable',
+  );
   return $items;
 }
 

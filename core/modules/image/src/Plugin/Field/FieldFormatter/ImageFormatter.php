@@ -10,6 +10,7 @@ namespace Drupal\image\Plugin\Field\FieldFormatter;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -40,13 +41,6 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
   protected $currentUser;
 
   /**
-   * The link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface
-   */
-  protected $linkGenerator;
-
-  /**
    * The image style entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -72,13 +66,10 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
    *   Any third party settings settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
-   *   The link generator service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator, EntityStorageInterface $image_style_storage) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
-    $this->linkGenerator = $link_generator;
     $this->imageStyleStorage = $image_style_storage;
   }
 
@@ -95,7 +86,6 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('current_user'),
-      $container->get('link_generator'),
       $container->get('entity.manager')->getStorage('image_style')
     );
   }
@@ -115,17 +105,20 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $image_styles = image_style_options(FALSE);
-    $element['image_style'] = array(
+    $description_link = Link::fromTextAndUrl(
+      $this->t('Configure Image Styles'),
+      Url::fromRoute('entity.image_style.collection')
+    );
+    $element['image_style'] = [
       '#title' => t('Image style'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('image_style'),
       '#empty_option' => t('None (original image)'),
       '#options' => $image_styles,
-      '#description' => array(
-        '#markup' => $this->linkGenerator->generate($this->t('Configure Image Styles'), new Url('entity.image_style.collection')),
-        '#access' => $this->currentUser->hasPermission('administer image styles'),
-      ),
-    );
+      '#description' => $description_link->toRenderable() + [
+        '#access' => $this->currentUser->hasPermission('administer image styles')
+      ],
+    ];
     $link_types = array(
       'content' => t('Content'),
       'file' => t('File'),

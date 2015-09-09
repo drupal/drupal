@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Template;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
@@ -150,6 +151,30 @@ class TwigExtensionTest extends UnitTestCase {
     ];
     $result = $twig_extension->safeJoin($twig_environment, $items, '<br/>');
     $this->assertEquals('&lt;em&gt;will be escaped&lt;/em&gt;<br/><em>will be markup</em><br/><strong>will be rendered</strong>', $result);
+  }
+
+  /**
+   * @dataProvider providerTestRenderVar
+   */
+  public function testRenderVar($result, $input) {
+    $renderer = $this->prophesize(RendererInterface::class);
+    $renderer->render($result += ['#printed' => FALSE])->willReturn('Rendered output');
+
+    $renderer = $renderer->reveal();
+    $twig_extension = new TwigExtension($renderer);
+
+    $this->assertEquals('Rendered output', $twig_extension->renderVar($input));
+  }
+
+  public function providerTestRenderVar() {
+    $data = [];
+
+    $renderable = $this->prophesize(RenderableInterface::class);
+    $render_array = ['#type' => 'test', '#var' => 'giraffe'];
+    $renderable->toRenderable()->willReturn($render_array);
+    $data['renderable'] = [$render_array, $renderable->reveal()];
+
+    return $data;
   }
 
 }

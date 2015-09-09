@@ -62,3 +62,10 @@ twig_theme_test_registry_loader:
     no_cache: TRUE
   requirements:
     _access: 'TRUE'
+
+twig_theme_test_renderable:
+  path: '/twig-theme-test/renderable'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::renderable'
+  requirements:
+    _access: 'TRUE'

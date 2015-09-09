@@ -137,4 +137,12 @@ class EngineTwigTest extends WebTestBase {
     $this->assertRaw('ckeditor.js');
   }
 
+  /**
+   * Tests the rendering of renderables.
+   */
+  public function testRenderable() {
+    $this->drupalGet('/twig-theme-test/renderable');
+    $this->assertRaw('<div>Example markup</div>');
+  }
+
 }
