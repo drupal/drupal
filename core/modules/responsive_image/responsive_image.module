@@ -64,6 +64,8 @@ function responsive_image_theme() {
         'uri' => NULL,
         'attributes' => array(),
         'responsive_image_style_id' => array(),
+        'height' => NULL,
+        'width' => NULL,
       ),
     ),
     'responsive_image_formatter' => array(
