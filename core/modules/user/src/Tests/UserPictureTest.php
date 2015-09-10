@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\simpletest\WebTestBase;
 use Drupal\file\Entity\File;
 
@@ -97,9 +98,15 @@ class UserPictureTest extends WebTestBase {
     // Enable user pictures on nodes.
     $this->config('system.theme.global')->set('features.node_user_picture', TRUE)->save();
 
-    // Verify that the image is displayed on the user account page.
+    $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
+    $style = ImageStyle::load($image_style_id);
+    $image_url = $style->buildUrl($file->getfileUri());
+    $alt_text = 'Profile picture for user ' . $this->webUser->getUsername();
+
+    // Verify that the image is displayed on the node page.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on node page.');
+    $elements = $this->cssSelect('.node__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
+    $this->assertEqual(count($elements), 1, 'User picture with alt text found on node page.');
 
     // Enable user pictures on comments, instead of nodes.
     $this->config('system.theme.global')
@@ -111,7 +118,8 @@ class UserPictureTest extends WebTestBase {
       'comment_body[0][value]' => $this->randomString(),
     );
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Save'));
-    $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on comment.');
+    $elements = $this->cssSelect('.comment__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
+    $this->assertEqual(count($elements), 1, 'User picture with alt text found on the comment.');
 
     // Disable user pictures on comments and nodes.
     $this->config('system.theme.global')
