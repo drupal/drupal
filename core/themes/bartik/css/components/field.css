@@ -82,7 +82,6 @@
 .field--name-field-tags ul.links {
   padding: 0;
   margin: 0;
-  list-style: none;
 }
 .field--name-field-tags ul.links li {
   float: left; /* LTR */

@@ -3,12 +3,9 @@
  * Visual styles for Bartik's search results.
  */
 
-ol.search-results {
-  padding-left: 0; /* LTR */
+.search-results {
+  padding: 0;
   list-style-position: inside;
-}
-[dir="rtl"] ol.search-results {
-  padding-right: 0;
 }
 .search-results li {
   border-bottom: 1px solid #d3d7d9;

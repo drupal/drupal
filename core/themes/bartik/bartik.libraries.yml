@@ -24,6 +24,7 @@ global-styling:
       css/components/list-group.css: {}
       css/components/list.css: {}
       css/components/main-content.css: {}
+      css/components/menu.css: {}
       css/components/messages.css: {}
       css/components/node.css: {}
       css/components/node-preview.css: {}

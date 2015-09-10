@@ -132,3 +132,20 @@ img {
   max-width: 100%;
   height: auto;
 }
+ul, ol {
+  margin: 0;
+  padding: 0 0 0.25em 1em; /* LTR */
+}
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+  padding: 0 1em 0.25em 0;
+}
+ol ol,
+ul ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em; /* LTR */
+}
+[dir="rtl"] ol ol,
+[dir="rtl"] ul ul {
+  padding: 0 1em 0.25em 0;
+}
