@@ -56,7 +56,7 @@
           <div class="forum__icon forum-status-{{ forum.icon_class }}" title="{{ forum.icon_title }}">
             <span class="visually-hidden">{{ forum.icon_title }}</span>
           </div>
-          <div class="name"><a href="{{ forum.link }}">{{ forum.label }}</a></div>
+          <div class="forum__name"><a href="{{ forum.link }}">{{ forum.label }}</a></div>
           {% if forum.description.value %}
             <div class="forum__description">{{ forum.description.value }}</div>
           {% endif %}
