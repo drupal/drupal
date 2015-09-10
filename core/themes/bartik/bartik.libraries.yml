@@ -32,7 +32,7 @@ global-styling:
       css/components/pager.css: {}
       css/components/panel.css: {}
       css/components/primary-menu.css: {}
-      css/components/search.css: {}
+      css/components/search-form.css: {}
       css/components/search-results.css: {}
       css/components/secondary-menu.css: {}
       css/components/shortcut.css: {}

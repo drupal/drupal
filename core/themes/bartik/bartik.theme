@@ -101,3 +101,25 @@ function bartik_preprocess_block(&$variables) {
 function bartik_preprocess_menu(&$variables) {
   $variables['attributes']['class'][] = 'clearfix';
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for form templates.
+ */
+function bartik_theme_suggestions_form_alter(array &$suggestions, array $variables) {
+  if ($variables['element']['#form_id'] == 'search_block_form') {
+    $suggestions[] = 'form__search_block_form';
+  }
+}
+
+/**
+ * Implements hook_form_alter() to add classes to the search form.
+ */
+function bartik_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if (in_array($form_id, ['search_block_form', 'search_form'])) {
+    $key = ($form_id == 'search_block_form') ? 'actions' : 'basic';
+    if (!isset($form[$key]['submit']['#attributes'])) {
+      $form[$key]['submit']['#attributes'] = new Attribute();
+    }
+    $form[$key]['submit']['#attributes']->addClass('search-form__submit');
+  }
+}
