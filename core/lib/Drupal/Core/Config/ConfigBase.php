@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
@@ -153,10 +154,6 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *
    * @param array $data
    *   The new configuration data.
-   * @param bool $validate_keys
-   *   (optional) Whether the data should be verified for valid keys. Set to
-   *   FALSE if the $data is known to be valid already (for example, being
-   *   loaded from the config storage).
    *
    * @return $this
    *   The configuration object.
@@ -164,10 +161,9 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * @throws \Drupal\Core\Config\ConfigValueException
    *   If any key in $data in any depth contains a dot.
    */
-  public function setData(array $data, $validate_keys = TRUE) {
-    if ($validate_keys) {
-      $this->validateKeys($data);
-    }
+  public function setData(array $data) {
+    $data = $this->castSafeStrings($data);
+    $this->validateKeys($data);
     $this->data = $data;
     return $this;
   }
@@ -187,6 +183,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   If $value is an array and any of its keys in any depth contains a dot.
    */
   public function set($key, $value) {
+    $value = $this->castSafeStrings($value);
     // The dot/period is a reserved character; it may appear between keys, but
     // not within keys.
     if (is_array($value)) {
@@ -278,6 +275,29 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    */
   public function getCacheMaxAge() {
     return $this->cacheMaxAge;
+  }
+
+  /**
+   * Casts any objects that implement SafeStringInterface to string.
+   *
+   * @param mixed $data
+   *   The configuration data.
+   *
+   * @return mixed
+   *   The data with any safe strings cast to string.
+   */
+  protected function castSafeStrings($data) {
+    if ($data instanceof SafeStringInterface) {
+      $data = (string) $data;
+    }
+    else if (is_array($data)) {
+      array_walk_recursive($data, function (&$value) {
+        if ($value instanceof SafeStringInterface) {
+          $value = (string) $value;
+        }
+      });
+    }
+    return $data;
   }
 
 }

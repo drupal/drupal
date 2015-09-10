@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Render\SafeString;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Config;
 use Drupal\Component\Utility\SafeMarkup;
@@ -526,6 +527,28 @@ class ConfigTest extends UnitTestCase {
       $config_value = $this->config->getOriginal($key, $apply_overrides);
       $this->assertEquals($value, $config_value);
     }
+  }
+
+  /**
+   * @covers ::setData
+   * @covers ::set
+   * @covers ::initWithData
+   */
+  public function testSafeStringHandling() {
+    // Safe strings are cast when using ::set().
+    $safe_string = SafeString::create('bar');
+    $this->config->set('foo', $safe_string);
+    $this->assertSame('bar', $this->config->get('foo'));
+    $this->config->set('foo', ['bar' => $safe_string]);
+    $this->assertSame('bar', $this->config->get('foo.bar'));
+
+    // Safe strings are cast when using ::setData().
+    $this->config->setData(['bar' => $safe_string]);
+    $this->assertSame('bar', $this->config->get('bar'));
+
+    // Safe strings are not cast when using ::initWithData().
+    $this->config->initWithData(['bar' => $safe_string]);
+    $this->assertSame($safe_string, $this->config->get('bar'));
   }
 
 }

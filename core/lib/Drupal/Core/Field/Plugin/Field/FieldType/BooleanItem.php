@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -33,8 +34,8 @@ class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
    */
   public static function defaultFieldSettings() {
     return array(
-      'on_label' => t('On'),
-      'off_label' => t('Off'),
+      'on_label' => new TranslationWrapper('On'),
+      'off_label' => new TranslationWrapper('Off'),
     ) + parent::defaultFieldSettings();
   }
 

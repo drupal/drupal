@@ -98,7 +98,7 @@ abstract class StorableConfigBase extends ConfigBase {
    */
   public function initWithData(array $data) {
     $this->isNew = FALSE;
-    $this->setData($data, FALSE);
+    $this->data = $data;
     $this->originalData = $this->data;
     return $this;
   }
