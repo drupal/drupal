@@ -241,6 +241,22 @@ function system_requirements($phase) {
     $requirements['php_extensions']['value'] = t('Enabled');
   }
 
+  if ($phase == 'install' || $phase == 'runtime') {
+    // Check to see if OPcache is installed.
+    $opcache_enabled = (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled']);
+    if (!$opcache_enabled) {
+      $requirements['php_opcache'] = array(
+        'value' => t('Not enabled'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="@opcache_link" target="_blank">OPcache</a> installed on your server.', array('@opcache_link' => 'http://php.net/manual/en/opcache.installation.php')),
+      );
+    }
+    else {
+      $requirements['php_opcache']['value'] = t('Enabled');
+    }
+    $requirements['php_opcache']['title'] = t('PHP OPcode caching');
+  }
+
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = array(
