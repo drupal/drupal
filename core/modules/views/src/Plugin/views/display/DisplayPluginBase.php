@@ -2217,7 +2217,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   public function renderArea($area, $empty = FALSE) {
     $return = array();
     foreach ($this->getHandlers($area) as $key => $area_handler) {
-      $return[$key] = $area_handler->render($empty);
+      if ($area_render = $area_handler->render($empty)) {
+        $return[$key] = $area_render;
+      }
     }
     return $return;
   }

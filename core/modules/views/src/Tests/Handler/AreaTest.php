@@ -116,6 +116,41 @@ class AreaTest extends HandlerTestBase {
   }
 
   /**
+   * Tests that the header and footer areas are not rendered if empty.
+   */
+  public function testRenderEmptyHeaderFooter() {
+    $view = Views::getView('test_example_area');
+    $view->initHandlers();
+
+    // Set example empty text.
+    $view->empty['test_example']->options['string'] = '<p>' . $this->randomMachineName() . '</p>';
+
+    $xpath = '//div[contains(@class, :class)]';
+
+    // Verify that the empty header and footer sections have not been rendered.
+    $output = $view->preview();
+    $html = $this->container->get('renderer')->renderRoot($output);
+    $this->setRawContent($html);
+    $this->assertEqual(0, count($this->xpath($xpath, [':class' => 'view-header'])));
+    $this->assertEqual(0, count($this->xpath($xpath, [':class' => 'view-footer'])));
+
+    // Set example header text.
+    $view->header['test_example']->options['string'] = '<p>' . $this->randomMachineName() . '</p>';
+    $view->header['test_example']->options['empty'] = TRUE;
+
+    // Set example footer text.
+    $view->footer['test_example']->options['string'] = '<p>' . $this->randomMachineName() . '</p>';
+    $view->footer['test_example']->options['empty'] = TRUE;
+
+    // Verify that the header and footer sections have been rendered.
+    $output = $view->preview();
+    $html = $this->container->get('renderer')->renderRoot($output);
+    $this->setRawContent($html);
+    $this->assertEqual(1, count($this->xpath($xpath, [':class' => 'view-header'])));
+    $this->assertEqual(1, count($this->xpath($xpath, [':class' => 'view-footer'])));
+  }
+
+  /**
    * Tests the access for an area.
    */
   public function testAreaAccess() {
