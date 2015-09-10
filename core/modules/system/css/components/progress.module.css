@@ -19,6 +19,7 @@
 .progress__bar {
   background-color: #000;
   height: 1.5em;
+  width: 3%;
   min-width: 3%;
   max-width: 100%;
 }
