@@ -44,17 +44,57 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
    * Tests the integrity of field plugin definitions.
    */
   public function testFieldPluginDefinitionIntegrity() {
-    // Load the IDs of all available field type plugins.
-    $available_field_type_ids = [];
     /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+
+    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_type_manager */
+    $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+
+    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_type_manager */
+    $field_widget_manager = \Drupal::service('plugin.manager.field.widget');
+
+    // Load the IDs of all available field type plugins.
+    $available_field_type_ids = [];
     foreach ($field_type_manager->getDefinitions() as $definition) {
       $available_field_type_ids[] = $definition['id'];
     }
 
+    // Load the IDs of all available field widget plugins.
+    $available_field_widget_ids = [];
+    foreach ($field_widget_manager->getDefinitions() as $definition) {
+      $available_field_widget_ids[] = $definition['id'];
+    }
+
+    // Load the IDs of all available field formatter plugins.
+    $available_field_formatter_ids = [];
+    foreach ($field_formatter_manager->getDefinitions() as $definition) {
+      $available_field_formatter_ids[] = $definition['id'];
+    }
+
+    // Test the field type plugins.
+    foreach ($field_type_manager->getDefinitions() as $definition) {
+      // Test default field widgets.
+      if (isset($definition['default_widget'])) {
+        if (in_array($definition['default_widget'], $available_field_widget_ids)) {
+          $this->pass(sprintf('Field type %s uses an existing field widget by default.', $definition['id']));
+        }
+        else {
+          $this->fail(sprintf('Field type %s uses a non-existent field widget by default: %s', $definition['id'], $definition['default_widget']));
+        }
+      }
+
+      // Test default field formatters.
+      if (isset($definition['default_formatter'])) {
+        if (in_array($definition['default_formatter'], $available_field_formatter_ids)) {
+          $this->pass(sprintf('Field type %s uses an existing field formatter by default.', $definition['id']));
+        }
+        else {
+          $this->fail(sprintf('Field type %s uses a non-existent field formatter by default: %s', $definition['id'], $definition['default_formatter']));
+        }
+      }
+    }
+
     // Test the field widget plugins.
-    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_widget_manager */
-    $field_widget_manager = \Drupal::service('plugin.manager.field.widget');
     foreach ($field_widget_manager->getDefinitions() as $definition) {
       $missing_field_type_ids = array_diff($definition['field_types'], $available_field_type_ids);
       if ($missing_field_type_ids) {
@@ -66,8 +106,6 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
     }
 
     // Test the field formatter plugins.
-    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_formatter_manager */
-    $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
     foreach ($field_formatter_manager->getDefinitions() as $definition) {
       $missing_field_type_ids = array_diff($definition['field_types'], $available_field_type_ids);
       if ($missing_field_type_ids) {
