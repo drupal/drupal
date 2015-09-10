@@ -153,41 +153,6 @@ class EditorImageDialog extends FormBase {
       '#default_value' => $alt,
       '#maxlength' => 2048,
     );
-    $form['dimensions'] = array(
-      '#type' => 'fieldset',
-      '#title' => $this->t('Image size'),
-      '#attributes' => array('class' => array(
-        'container-inline',
-        'fieldgroup',
-        'form-composite',
-      )),
-    );
-    $form['dimensions']['width'] = array(
-      '#title' => $this->t('Width'),
-      '#title_display' => 'invisible',
-      '#type' => 'number',
-      '#default_value' => isset($image_element['width']) ? $image_element['width'] : '',
-      '#size' => 8,
-      '#maxlength' => 8,
-      '#min' => 1,
-      '#max' => 99999,
-      '#placeholder' => $this->t('width'),
-      '#field_suffix' => ' × ',
-      '#parents' => array('attributes', 'width'),
-    );
-    $form['dimensions']['height'] = array(
-      '#title' => $this->t('Height'),
-      '#title_display' => 'invisible',
-      '#type' => 'number',
-      '#default_value' => isset($image_element['height']) ? $image_element['height'] : '',
-      '#size' => 8,
-      '#maxlength' => 8,
-      '#min' => 1,
-      '#max' => 99999,
-      '#placeholder' => $this->t('height'),
-      '#field_suffix' => $this->t('pixels'),
-      '#parents' => array('attributes', 'height'),
-    );
 
     // When Drupal core's filter_align is being used, the text editor may
     // offer the ability to change the alignment.
