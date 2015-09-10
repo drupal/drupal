@@ -73,6 +73,9 @@ class InputRequired extends ExposedFormPluginBase {
   }
 
   public function preRender($values) {
+    // Display the "text on demand" if needed. This is a site builder-defined
+    // text to display instead of results until the user selects and applies
+    // an exposed filter.
     if (!$this->exposedFilterApplied()) {
       $options = array(
         'id' => 'area',
@@ -81,14 +84,22 @@ class InputRequired extends ExposedFormPluginBase {
         'label' => '',
         'relationship' => 'none',
         'group_type' => 'group',
-        'content' => $this->options['text_input_required'],
-        'format' => $this->options['text_input_required_format'],
+        // We need to set the "Display even if view has no result" option to
+        // TRUE as the input required exposed form plugin will always force an
+        // empty result if no exposed filters are applied.
+        'empty' => TRUE,
+        'content' => [
+          // @see \Drupal\views\Plugin\views\area\Text::render()
+          'value' => $this->options['text_input_required'],
+          'format' => $this->options['text_input_required_format'],
+        ],
       );
       $handler = Views::handlerManager('area')->getHandler($options);
       $handler->init($this->view, $this->displayHandler, $options);
       $this->displayHandler->handlers['empty'] = array(
         'area' => $handler,
       );
+      // Override the existing empty result message (if applicable).
       $this->displayHandler->setOption('empty', array('text' => $options));
     }
   }

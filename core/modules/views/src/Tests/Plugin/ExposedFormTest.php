@@ -194,6 +194,31 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
+   * Test the "on demand text" for the input required exposed form type.
+   */
+  public function testTextInputRequired() {
+    $view = Views::getView('test_exposed_form_buttons');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['exposed_form']['type'] = 'input_required';
+    // Set up the "on demand text".
+    // @see https://www.drupal.org/node/535868
+    $on_demand_text = 'Select any filter and click Apply to see results.';
+    $display['display_options']['exposed_form']['options']['text_input_required'] = $on_demand_text;
+    $display['display_options']['exposed_form']['options']['text_input_required_format'] = filter_default_format();
+    $view->save();
+
+    // Ensure that the "on demand text" is displayed when no exposed filters are
+    // applied.
+    $this->drupalGet('test_exposed_form_buttons');
+    $this->assertText('Select any filter and click Apply to see results.');
+
+    // Ensure that the "on demand text" is not displayed when an exposed filter
+    // is applied.
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array('type' => 'article')));
+    $this->assertNoText($on_demand_text);
+  }
+
+  /**
    * Tests exposed forms with exposed sort and items per page.
    */
   public function testExposedSortAndItemsPerPage() {
