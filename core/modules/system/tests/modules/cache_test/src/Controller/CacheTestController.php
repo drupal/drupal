@@ -22,7 +22,7 @@ class CacheTestController {
   public function urlBubbling() {
     $url = Url::fromRoute('<current>')->setAbsolute();
     return [
-      '#markup' => SafeMarkup::format('This URL is early-rendered: !url. Yet, its bubbleable metadata should be bubbled.', ['!url' => $url->toString()])
+      '#markup' => 'This URL is early-rendered: ' . $url->toString() . '. Yet, its bubbleable metadata should be bubbled.',
     ];
   }
 

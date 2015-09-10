@@ -213,17 +213,17 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertEqual($may_view, $set['user']->hasPermission('administer comments') || ($set['comment']->isPublished() && $set['user']->hasPermission('access comments')), SafeMarkup::format('User @user !state view field !field on comment @comment', [
+        $this->assertEqual($may_view, $set['user']->hasPermission('administer comments') || ($set['comment']->isPublished() && $set['user']->hasPermission('access comments')), SafeMarkup::format('User @user @state view field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_update ? 'can' : 'cannot',
+          '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
-        $this->assertEqual($may_update, $set['user']->hasPermission('administer comments'), SafeMarkup::format('User @user !state update field !field on comment @comment', [
+        $this->assertEqual($may_update, $set['user']->hasPermission('administer comments'), SafeMarkup::format('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_update ? 'can' : 'cannot',
+          '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
       }
     }
@@ -231,9 +231,9 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
     // Check access to normal field.
     foreach ($permutations as $set) {
       $may_update = $set['comment']->access('update', $set['user']) && $set['comment']->subject->access('edit', $set['user']);
-      $this->assertEqual($may_update, $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()), SafeMarkup::format('User @user !state update field subject on comment @comment', [
+      $this->assertEqual($may_update, $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()), SafeMarkup::format('User @user @state update field subject on comment @comment', [
         '@user' => $set['user']->getUsername(),
-        '!state' => $may_update ? 'can' : 'cannot',
+        '@state' => $may_update ? 'can' : 'cannot',
         '@comment' => $set['comment']->getSubject(),
       ]));
     }
@@ -245,17 +245,17 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
         $this->assertEqual($may_view, $field != 'hostname' && ($set['user']->hasPermission('administer comments') ||
-            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user !state view field !field on comment @comment', [
+            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user @state view field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_view ? 'can' : 'cannot',
+          '@state' => $may_view ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
-        $this->assertFalse($may_update, SafeMarkup::format('User @user !state update field !field on comment @comment', [
+        $this->assertFalse($may_update, SafeMarkup::format('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_update ? 'can' : 'cannot',
+          '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
       }
     }
@@ -267,17 +267,17 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
         $this->assertEqual($may_view, $field != 'hostname' && ($set['user']->hasPermission('administer comments') ||
-            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user !state view field !field on comment @comment', [
+            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user @state view field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_view ? 'can' : 'cannot',
+          '@state' => $may_view ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
-        $this->assertEqual($may_update, $set['user']->hasPermission('post comments') && $set['comment']->isNew(), SafeMarkup::format('User @user !state update field !field on comment @comment', [
+        $this->assertEqual($may_update, $set['user']->hasPermission('post comments') && $set['comment']->isNew(), SafeMarkup::format('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_update ? 'can' : 'cannot',
+          '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
       }
     }
@@ -295,11 +295,11 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
             $set['comment']->isNew() &&
             $set['user']->hasPermission('post comments') &&
             $set['comment']->getFieldName() == 'comment_other'
-          ), SafeMarkup::format('User @user !state update field !field on comment @comment', [
+          ), SafeMarkup::format('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '!state' => $may_update ? 'can' : 'cannot',
+          '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
-          '!field' => $field,
+          '@field' => $field,
         ]));
       }
     }

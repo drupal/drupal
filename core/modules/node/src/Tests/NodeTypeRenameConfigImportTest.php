@@ -104,7 +104,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $this->drupalGet('admin/config/development/configuration');
     foreach ($expected as $rename) {
       $names = $this->configImporter()->getStorageComparer()->extractRenameNames($rename);
-      $this->assertText(SafeMarkup::format('!source_name to !target_name', array('!source_name' => $names['old_name'], '!target_name' => $names['new_name'])));
+      $this->assertText(SafeMarkup::format('@source_name to @target_name', array('@source_name' => $names['old_name'], '@target_name' => $names['new_name'])));
       // Test that the diff link is present for each renamed item.
       $href = \Drupal::urlGenerator()->getPathFromRoute('config.diff', array('source_name' => $names['old_name'], 'target_name' => $names['new_name']));
       $this->assertLinkByHref($href);

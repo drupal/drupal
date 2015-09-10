@@ -65,11 +65,11 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
     $this->copyConfig($active, $staging);
-    $this->assertTrue($staging->delete($field_storage_config_name), SafeMarkup::format('Deleted field storage: !field_storage', array('!field_storage' => $field_storage_config_name)));
-    $this->assertTrue($staging->delete($field_storage_config_name_2), SafeMarkup::format('Deleted field storage: !field_storage', array('!field_storage' => $field_storage_config_name_2)));
-    $this->assertTrue($staging->delete($field_config_name), SafeMarkup::format('Deleted field: !field', array('!field' => $field_config_name)));
-    $this->assertTrue($staging->delete($field_config_name_2a), SafeMarkup::format('Deleted field: !field', array('!field' => $field_config_name_2a)));
-    $this->assertTrue($staging->delete($field_config_name_2b), SafeMarkup::format('Deleted field: !field', array('!field' => $field_config_name_2b)));
+    $this->assertTrue($staging->delete($field_storage_config_name), SafeMarkup::format('Deleted field storage: @field_storage', array('@field_storage' => $field_storage_config_name)));
+    $this->assertTrue($staging->delete($field_storage_config_name_2), SafeMarkup::format('Deleted field storage: @field_storage', array('@field_storage' => $field_storage_config_name_2)));
+    $this->assertTrue($staging->delete($field_config_name), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name)));
+    $this->assertTrue($staging->delete($field_config_name_2a), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name_2a)));
+    $this->assertTrue($staging->delete($field_config_name_2b), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name_2b)));
 
     $deletes = $this->configImporter()->getUnprocessedConfiguration('delete');
     $this->assertEqual(count($deletes), 5, 'Importing configuration will delete 3 fields and 2 field storages.');

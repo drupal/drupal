@@ -80,10 +80,10 @@ function template_preprocess_locale_translation_update_info(array &$variables) {
     if ($variables['not_found']) {
       foreach ($variables['not_found'] as $update) {
         $version = $update['version'] ? $update['version'] : t('no version');
-        $releases[] = SafeMarkup::format('@module (@version). !info', array(
+        $releases[] = SafeMarkup::format('@module (@version). @info', array(
           '@module' => $update['name'],
           '@version' => $version,
-          '!info' => $update['info'],
+          '@info' => $update['info'],
         ));
       }
     }

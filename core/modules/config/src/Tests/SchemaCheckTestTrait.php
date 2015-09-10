@@ -33,13 +33,13 @@ trait SchemaCheckTestTrait {
     if ($errors === FALSE) {
       // @todo Since the use of this trait is under TestBase, it works.
       //   Can be fixed as part of https://www.drupal.org/node/2260053.
-      $this->fail(SafeMarkup::format('No schema for !config_name', array('!config_name' => $config_name)));
+      $this->fail(SafeMarkup::format('No schema for @config_name', array('@config_name' => $config_name)));
       return;
     }
     elseif ($errors === TRUE) {
       // @todo Since the use of this trait is under TestBase, it works.
       //   Can be fixed as part of https://www.drupal.org/node/2260053.
-      $this->pass(SafeMarkup::format('Schema found for !config_name and values comply with schema.', array('!config_name' => $config_name)));
+      $this->pass(SafeMarkup::format('Schema found for @config_name and values comply with schema.', array('@config_name' => $config_name)));
     }
     else {
       foreach ($errors as $key => $error) {
