@@ -145,7 +145,7 @@ class NumberFieldTest extends WebTestBase {
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => array(
-        'min' => $minimum, 'max' => $maximum,
+        'min' => $minimum, 'max' => $maximum, 'prefix' => 'ThePrefix',
       )
     ))->save();
 
@@ -160,6 +160,9 @@ class NumberFieldTest extends WebTestBase {
     entity_get_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => 'number_integer',
+        'settings' => array(
+          'prefix_suffix' => FALSE,
+        ),
       ))
       ->save();
 
@@ -234,7 +237,29 @@ class NumberFieldTest extends WebTestBase {
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
       $this->assertRaw($valid_entry, 'Value is displayed.');
+      $this->assertNoFieldByXpath('//div[@content="' . $valid_entry . '"]', NULL, 'The "content" attribute is not present since the Prefix is not being displayed');
     }
+
+    // Test for the content attribute when a Prefix is displayed. Presumably this also tests for the attribute when a Suffix is displayed.
+    entity_get_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'number_integer',
+        'settings' => array(
+          'prefix_suffix' => TRUE,
+        ),
+      ))
+      ->save();
+    $integer_value = '123';
+    $this->drupalGet('entity_test/add');
+    $edit = array(
+      "{$field_name}[0][value]" => $integer_value,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->drupalGet('entity_test/' . $id);
+    $this->assertFieldByXPath('//div[@content="' . $integer_value . '"]', 'ThePrefix' . $integer_value, 'The "content" attribute has been set to the value of the field, and the prefix is being displayed.');
   }
 
   /**

@@ -83,7 +83,7 @@ abstract class NumericFormatterBase extends FormatterBase {
       }
       // Output the raw value in a content attribute if the text of the HTML
       // element differs from the raw value (for example when a prefix is used).
-      if (!empty($item->_attributes) && $item->value != $output) {
+      if (isset($item->_attributes) && $item->value != $output) {
         $item->_attributes += array('content' => $item->value);
       }
 
