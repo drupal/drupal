@@ -268,7 +268,7 @@ class ModuleHandlerTest extends UnitTestCase {
    *
    * Note we load code, so isolate the test.
    *
-   * @runTestsInSeparateProcesses
+   * @runInSeparateProcess
    * @preserveGlobalState disabled
    */
   public function testLoadInclude() {
