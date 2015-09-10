@@ -24,7 +24,8 @@
  *
  * @section interface User interface
  *
- * - @link menu Routing, page controllers, and menu entries @endlink
+ * - @link menu Menu entries, local tasks, and other links @endlink
+ * - @link routing Routing API and page controllers @endlink
  * - @link form_api Forms @endlink
  * - @link block_api Blocks @endlink
  * - @link ajax Ajax @endlink
