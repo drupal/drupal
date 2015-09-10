@@ -2,41 +2,62 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Plugin\migrate\source\d6\Term.
+ * Contains \Drupal\taxonomy\Plugin\migrate\source\Term.
  */
 
-namespace Drupal\taxonomy\Plugin\migrate\source\d6;
+namespace Drupal\taxonomy\Plugin\migrate\source;
 
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal 6 taxonomy terms source from database.
+ * Taxonomy term source from database.
  *
  * @todo Support term_relation, term_synonym table if possible.
  *
  * @MigrateSource(
- *   id = "d6_taxonomy_term",
+ *   id = "taxonomy_term",
  *   source_provider = "taxonomy"
  * )
  */
 class Term extends DrupalSqlBase {
 
   /**
+   * Name of the term data table.
+   *
+   * @var string
+   */
+  protected $termDataTable;
+
+  /**
+   * Name of the term hierarchy table.
+   *
+   * @var string
+   */
+  protected $termHierarchyTable;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {
-    // Note the explode - this supports the (admittedly unusual) case of
-    // consolidating multiple vocabularies into one.
-    $query = $this->select('term_data', 'td')
-      ->fields('td', array('tid', 'vid', 'name', 'description', 'weight'))
-    // This works, but we cannot test that, because there is no support for
-    // distinct() in FakeSelect, yet.
+    if ($this->getModuleSchemaVersion('taxonomy') >= 7000) {
+      $this->termDataTable = 'taxonomy_term_data';
+      $this->termHierarchyTable = 'taxonomy_term_hierarchy';
+    }
+    else {
+      $this->termDataTable = 'term_data';
+      $this->termHierarchyTable = 'term_hierarchy';
+    }
+
+    $query = $this->select($this->termDataTable, 'td')
+      ->fields('td')
       ->distinct()
       ->orderBy('tid');
+
     if (isset($this->configuration['vocabulary'])) {
       $query->condition('vid', $this->configuration['vocabulary'], 'IN');
     }
+
     return $query;
   }
 
@@ -44,7 +65,7 @@ class Term extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    $fields = array(
       'tid' => $this->t('The term ID.'),
       'vid' => $this->t('Existing term VID'),
       'name' => $this->t('The name of the term.'),
@@ -52,6 +73,10 @@ class Term extends DrupalSqlBase {
       'weight' => $this->t('Weight'),
       'parent' => $this->t("The Drupal term IDs of the term's parents."),
     );
+    if ($this->getModuleSchemaVersion('taxonomy') >= 7000) {
+      $fields['format'] = $this->t('Format of the term description.');
+    }
+    return $fields;
   }
 
   /**
@@ -59,12 +84,13 @@ class Term extends DrupalSqlBase {
    */
   public function prepareRow(Row $row) {
     // Find parents for this row.
-    $parents = $this->select('term_hierarchy', 'th')
+    $parents = $this->select($this->termHierarchyTable, 'th')
       ->fields('th', array('parent', 'tid'))
       ->condition('tid', $row->getSourceProperty('tid'))
       ->execute()
       ->fetchCol();
     $row->setSourceProperty('parent', $parents);
+
     return parent::prepareRow($row);
   }
 

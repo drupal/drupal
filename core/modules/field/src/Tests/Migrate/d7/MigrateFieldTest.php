@@ -106,6 +106,13 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.field_phone', 'telephone', FALSE, 1);
     $this->assertEntity('node.field_date', 'datetime', FALSE, 1);
     $this->assertEntity('node.field_date_with_end_time', 'datetime', FALSE, 1);
+
+    // Assert that the taxonomy term reference fields are referencing the
+    // correct entity type.
+    $field = FieldStorageConfig::load('node.field_term_reference');
+    $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
+    $field = FieldStorageConfig::load('node.taxonomy_forums');
+    $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
   }
 
 }

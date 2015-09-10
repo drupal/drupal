@@ -26,6 +26,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'image',
     'link',
     'node',
+    'taxonomy',
     'telephone',
     'text',
   );
@@ -38,6 +39,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
+    $this->installEntitySchema('taxonomy_term');
     $this->installConfig(static::$modules);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('system', ['sequences']);

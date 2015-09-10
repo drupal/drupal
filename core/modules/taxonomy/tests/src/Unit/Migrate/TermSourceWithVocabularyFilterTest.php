@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\taxonomy\Unit\Migrate\d6\TermSourceWithVocabularyFilterTest.
+ * Contains \Drupal\Tests\taxonomy\Unit\Migrate\TermSourceWithVocabularyFilterTest.
  */
 
-namespace Drupal\Tests\taxonomy\Unit\Migrate\d6;
+namespace Drupal\Tests\taxonomy\Unit\Migrate;
 
 /**
- * Tests the Drupal 6 taxonomy term source with vocabulary filter.
+ * Tests the taxonomy term source with vocabulary filter.
  *
  * @group taxonomy
  */

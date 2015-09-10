@@ -102,8 +102,19 @@ class FieldRevisionBody extends DrupalDumpBase {
       'body_summary',
       'body_format',
     ))
-    ->execute();
+    ->values(array(
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'deleted' => '0',
+      'entity_id' => '2',
+      'revision_id' => '2',
+      'language' => 'und',
+      'delta' => '0',
+      'body_value' => "...is that it's the absolute best show ever. Trust me, I would know.",
+      'body_summary' => '',
+      'body_format' => 'filtered_html',
+    ))->execute();
   }
 
 }
-#088085ffa6940ff7b87442b920d39de3
+#eb2f8f6fd180db91769e5e2a6d5ff950

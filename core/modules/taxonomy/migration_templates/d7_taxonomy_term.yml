@@ -1,25 +1,25 @@
-id: d6_taxonomy_term
-label: Drupal 6 taxonomy terms
+id: d7_taxonomy_term
+label: Taxonomy terms
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
   plugin: taxonomy_term
 process:
   tid: tid
   vid:
     plugin: migration
-    migration: d6_taxonomy_vocabulary
+    migration: d7_taxonomy_vocabulary
     source: vid
   name: name
   description: description
   weight: weight
   parent:
     plugin: migration
-    migration: d6_taxonomy_term
+    migration: d7_taxonomy_term
     source: parent
   changed: timestamp
 destination:
   plugin: entity:taxonomy_term
 migration_dependencies:
   required:
-    - d6_taxonomy_vocabulary
+    - d7_taxonomy_vocabulary

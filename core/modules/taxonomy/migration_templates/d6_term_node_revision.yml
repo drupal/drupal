@@ -4,18 +4,12 @@ migration_tags:
   - Drupal 6
 builder:
   plugin: d6_term_node
-load:
-  plugin: d6_term_node
-  bundle_migration: d6_vocabulary_field
-
 source:
   plugin: d6_term_node_revision
-
 process:
   vid: vid
   type: type
-  # The actual field name is dynamic and will be added by the load plugin.
-
+  # The actual field name is dynamic and will be added by the builder.
 destination:
   plugin: entity_revision:node
 migration_dependencies:

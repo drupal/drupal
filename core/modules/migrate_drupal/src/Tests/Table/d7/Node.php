@@ -144,8 +144,23 @@ class Node extends DrupalDumpBase {
       'sticky' => '0',
       'tnid' => '0',
       'translate' => '0',
+    ))->values(array(
+      'nid' => '2',
+      'vid' => '2',
+      'type' => 'article',
+      'language' => 'en',
+      'title' => 'The thing about Deep Space 9',
+      'uid' => '2',
+      'status' => '1',
+      'created' => '1441306772',
+      'changed' => '1441306832',
+      'comment' => '2',
+      'promote' => '1',
+      'sticky' => '0',
+      'tnid' => '0',
+      'translate' => '0',
     ))->execute();
   }
 
 }
-#06cbcf4df265ff717f83f472c22fdbcf
+#c0239fe20ab594399f7d89ece5d1705f

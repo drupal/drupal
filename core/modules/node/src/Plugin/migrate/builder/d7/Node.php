@@ -8,12 +8,12 @@
 namespace Drupal\node\Plugin\migrate\builder\d7;
 
 use Drupal\migrate\Entity\Migration;
-use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
+use Drupal\migrate_drupal\Plugin\migrate\builder\CckBuilder;
 
 /**
  * @PluginID("d7_node")
  */
-class Node extends BuilderBase {
+class Node extends CckBuilder {
 
   /**
    * {@inheritdoc}
@@ -21,12 +21,11 @@ class Node extends BuilderBase {
   public function buildMigrations(array $template) {
     $migrations = [];
 
-    $fields = [];
+    // Read all field instance definitions in the source database.
+    $fields = array();
     foreach ($this->getSourcePlugin('d7_field_instance', $template['source']) as $field) {
-      $entity_type = $field->getSourceProperty('entity_type');
-      $bundle = $field->getSourceProperty('bundle');
-      $field_name = $field->getSourceProperty('field_name');
-      $fields[$entity_type][$bundle][$field_name] = $field->getSource();
+      $info = $field->getSource();
+      $fields[$info['entity_type']][$info['bundle']][$info['field_name']] = $info;
     }
 
     foreach ($this->getSourcePlugin('d7_node_type', $template['source']) as $node_type) {
@@ -38,8 +37,14 @@ class Node extends BuilderBase {
       $migration = Migration::create($values);
 
       if (isset($fields['node'][$bundle])) {
-        foreach (array_keys($fields['node'][$bundle]) as $field) {
-          $migration->setProcessOfProperty($field, $field);
+        foreach ($fields['node'][$bundle] as $field => $data) {
+          if ($this->cckPluginManager->hasDefinition($data['type'])) {
+            $this->getCckPlugin($data['type'])
+              ->processCckFieldValues($migration, $field, $data);
+          }
+          else {
+            $migration->setProcessOfProperty($field, $field);
+          }
         }
       }
 

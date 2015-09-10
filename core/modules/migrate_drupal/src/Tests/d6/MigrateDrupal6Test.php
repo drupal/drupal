@@ -124,7 +124,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_system_performance',
     'd6_system_rss',
     'd6_system_site',
-    'd6_taxonomy_settings',
+    'taxonomy_settings',
     'd6_taxonomy_term',
     'd6_taxonomy_vocabulary',
     'd6_term_node_revision:*',

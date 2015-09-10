@@ -91,8 +91,35 @@ class FieldRevisionFieldTags extends DrupalDumpBase {
       'delta',
       'field_tags_tid',
     ))
-    ->execute();
+    ->values(array(
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'deleted' => '0',
+      'entity_id' => '2',
+      'revision_id' => '2',
+      'language' => 'und',
+      'delta' => '0',
+      'field_tags_tid' => '9',
+    ))->values(array(
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'deleted' => '0',
+      'entity_id' => '2',
+      'revision_id' => '2',
+      'language' => 'und',
+      'delta' => '1',
+      'field_tags_tid' => '14',
+    ))->values(array(
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'deleted' => '0',
+      'entity_id' => '2',
+      'revision_id' => '2',
+      'language' => 'und',
+      'delta' => '2',
+      'field_tags_tid' => '17',
+    ))->execute();
   }
 
 }
-#16ce847952ff261838323685dcf2dbc3
+#3e8379dcd102dc753b93a396fa3e553c

@@ -29,6 +29,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     'image',
     'link',
     'node',
+    'taxonomy',
     'telephone',
     'text',
   ];
@@ -38,7 +39,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
+    $this->installEntitySchema('taxonomy_term');
+
     CommentType::create([
       'id' => 'comment_node_page',
       'label' => $this->randomMachineName(),
@@ -64,7 +69,6 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
       'label' => $this->randomMachineName(),
     ])->save();
 
-    $this->installEntitySchema('node');
     NodeType::create([
       'type' => 'page',
       'label' => $this->randomMachineName(),

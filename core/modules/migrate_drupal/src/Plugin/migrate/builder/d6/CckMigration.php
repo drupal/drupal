@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\builder\d6;
 
 use Drupal\migrate\Entity\Migration;
+use Drupal\migrate_drupal\Plugin\migrate\builder\CckBuilder;
 
 /**
  * @PluginID("d6_cck_migration")
