@@ -53,10 +53,11 @@ function system_requirements($phase) {
 
     // Warn if any experimental modules are installed.
     $experimental = array();
-    $enabled_modules = system_rebuild_module_data();
+    $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
-      if ($data->info['package'] === 'Core (Experimental)') {
-        $experimental[$module] = $data->info['name'];
+      $info = system_get_info('module', $module);
+      if ($info['package'] === 'Core (Experimental)') {
+        $experimental[$module] = $info['name'];
       }
     }
     if (!empty($experimental)) {
