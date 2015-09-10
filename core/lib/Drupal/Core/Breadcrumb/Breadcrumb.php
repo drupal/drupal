@@ -10,11 +10,12 @@ namespace Drupal\Core\Breadcrumb;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\Link;
+use Drupal\Core\Render\RenderableInterface;
 
 /**
  * Used to return generated breadcrumbs with associated cacheability metadata.
  */
-class Breadcrumb implements RefinableCacheableDependencyInterface {
+class Breadcrumb implements RenderableInterface, RefinableCacheableDependencyInterface {
 
   use RefinableCacheableDependencyTrait;
 
@@ -70,12 +71,7 @@ class Breadcrumb implements RefinableCacheableDependencyInterface {
   }
 
   /**
-   * Returns a render array representation of the object.
-   *
-   * @return mixed[]
-   *   A render array.
-   *
-   * @todo implement RenderableInterface once https://www.drupal.org/node/2529560 lands.
+   * {@inheritdoc}
    */
   public function toRenderable() {
     $build = [
