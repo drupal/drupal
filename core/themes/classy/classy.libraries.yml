@@ -1,6 +1,10 @@
 base:
   version: VERSION
   css:
+    component:
+      css/components/pager.css: { weight: -10 }
+      css/components/more-link.css: { weight: -10 }
+      css/components/exposed-filters.css: { weight: -10 }
     theme:
       css/layout.css: {}
 

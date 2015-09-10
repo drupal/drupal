@@ -26,7 +26,6 @@ base:
       css/components/collapse-processed.theme.css: { weight: -10 }
       css/components/container-inline.theme.css: { weight: -10 }
       css/components/details.theme.css: { weight: -10 }
-      css/components/exposed-filters.theme.css: { weight: -10 }
       css/components/field.theme.css: { weight: -10 }
       css/components/form.theme.css: { weight: -10 }
       css/components/icons.theme.css: { weight: -10 }
@@ -36,8 +35,6 @@ base:
       css/components/links.theme.css: { weight: -10 }
       css/components/menu.theme.css: { weight: -10 }
       css/components/messages.theme.css: { weight: -10 }
-      css/components/more-link.theme.css: { weight: -10 }
-      css/components/pager.theme.css: { weight: -10 }
       css/components/progress.theme.css: { weight: -10 }
       css/components/tableselect.theme.css: { weight: -10 }
       css/components/tabledrag.theme.css: { weight: -10 }
