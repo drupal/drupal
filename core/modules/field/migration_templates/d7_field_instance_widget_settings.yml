@@ -1,5 +1,5 @@
 id: d7_field_instance_widget_settings
-label: Drupal 7 field instance widget configuration
+label: Field instance widget configuration
 migration_tags:
   - Drupal 7
 source:

@@ -1,5 +1,5 @@
 id: d6_vocabulary_field
-label: Drupal 6 vocabulary field configuration
+label: Vocabulary field configuration
 migration_tags:
   - Drupal 6
 source:

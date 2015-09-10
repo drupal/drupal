@@ -1,5 +1,5 @@
 id: d6_date_formats
-label: Drupal 6 date format configuration
+label: Date format configuration
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,5 @@
 id: d6_field_instance_widget_settings
-label: Drupal 6 field instance widget configuration
+label: Field instance widget configuration
 migration_tags:
   - Drupal 6
 builder:

@@ -1,5 +1,5 @@
 id: d7_comment_entity_form_display
-label: Drupal 7 comment field form display configuration
+label: Comment field form display configuration
 migration_tags:
   - Drupal 7
 source:

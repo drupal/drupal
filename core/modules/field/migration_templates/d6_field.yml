@@ -1,5 +1,5 @@
 id: d6_field
-label: Drupal 6 field configuration
+label: Field configuration
 migration_tags:
   - Drupal 6
 builder:

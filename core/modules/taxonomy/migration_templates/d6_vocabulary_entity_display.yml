@@ -1,5 +1,5 @@
 id: d6_vocabulary_entity_display
-label: Drupal 6 vocabulary display configuration
+label: Vocabulary display configuration
 migration_tags:
   - Drupal 6
 source:

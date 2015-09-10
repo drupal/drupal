@@ -1,5 +1,5 @@
 id: d6_system_date
-label: Drupal 6 system date configuration
+label: System date configuration
 migration_tags:
   - Drupal 6
 source:

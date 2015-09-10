@@ -1,5 +1,5 @@
 id: d6_field_formatter_settings
-label: Drupal 6 field formatter configuration
+label: Field formatter configuration
 migration_tags:
   - Drupal 6
 builder:

@@ -1,5 +1,5 @@
 id: d6_node_revision
-label: Drupal 6 node revisions
+label: Node revisions
 migration_tags:
   - Drupal 6
 builder:

@@ -1,5 +1,5 @@
 id: d7_menu_links
-label: Drupal 7 menu links
+label: Menu links
 migration_tags:
   - Drupal 7
 source:

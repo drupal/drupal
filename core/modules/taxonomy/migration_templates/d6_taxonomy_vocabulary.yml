@@ -1,5 +1,5 @@
 id: d6_taxonomy_vocabulary
-label: Drupal 6 taxonomy vocabularies
+label: Taxonomy vocabularies
 migration_tags:
   - Drupal 6
 source:

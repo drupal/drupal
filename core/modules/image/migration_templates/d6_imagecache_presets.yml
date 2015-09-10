@@ -1,5 +1,5 @@
 id: d6_imagecache_presets
-label: Drupal 6 ImageCache Presets
+label: ImageCache Presets
 migration_tags:
   - Drupal 6
 source:

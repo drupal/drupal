@@ -1,5 +1,5 @@
 id: d6_filter_format
-label: Drupal 6 filter format configuration
+label: Filter format configuration
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,5 @@
 id: d7_blocked_ips
-label: Drupal 7 blocked IPs
+label: Blocked IPs
 migration_tags:
   - Drupal 7
 source:

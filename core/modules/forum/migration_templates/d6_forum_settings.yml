@@ -1,5 +1,5 @@
 id: d6_forum_settings
-label: Drupal 6 forum configuration
+label: Forum configuration
 migration_tags:
   - Drupal 6
 source:

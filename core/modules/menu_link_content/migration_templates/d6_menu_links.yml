@@ -1,5 +1,5 @@
 id: d6_menu_links
-label: Drupal 6 menu links
+label: Menu links
 migration_tags:
   - Drupal 6
 source:

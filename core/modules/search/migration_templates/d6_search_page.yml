@@ -1,5 +1,5 @@
 id: d6_search_page
-label: Drupal 6 search page configuration
+label: Search page configuration
 migration_tags:
   - Drupal 6
 source:

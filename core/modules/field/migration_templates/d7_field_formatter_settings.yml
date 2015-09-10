@@ -1,5 +1,5 @@
 id: d7_field_formatter_settings
-label: Drupal 7 field formatter configuration
+label: Field formatter configuration
 migration_tags:
   - Drupal 7
 source:

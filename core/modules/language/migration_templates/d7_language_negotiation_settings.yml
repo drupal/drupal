@@ -1,5 +1,5 @@
 id: d7_language_negotiation_settings
-label: Drupal 7 language negotiation settings
+label: Language negotiation settings
 migration_tags:
   - Drupal 7
 source:

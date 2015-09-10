@@ -1,5 +1,5 @@
 id: d7_node_type
-label: Drupal 7 node type configuration
+label: Node type configuration
 migration_tags:
   - Drupal 7
 source:

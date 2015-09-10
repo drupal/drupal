@@ -1,5 +1,5 @@
 id: d6_user_picture_file
-label: Drupal 6 user pictures
+label: User pictures
 migration_tags:
   - Drupal 6
 source:

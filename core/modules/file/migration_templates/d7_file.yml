@@ -1,7 +1,7 @@
 # Every migration that references a file by fid should specify this migration
 # as an optional dependency.
 id: d7_file
-label: Drupal 7 files
+label: Files
 migration_tags:
   - Drupal 7
 source:

@@ -1,5 +1,5 @@
 id: d6_block_content_type
-label: Drupal 6 block content type
+label: Block content type
 migration_tags:
   - Drupal 6
 source:

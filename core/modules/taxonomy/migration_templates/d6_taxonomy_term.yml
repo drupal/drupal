@@ -1,5 +1,5 @@
 id: d6_taxonomy_term
-label: Drupal 6 taxonomy terms
+label: Taxonomy terms
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,5 @@
 id: d6_upload
-label: Drupal 6 file uploads
+label: File uploads
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,5 @@
 id: d6_custom_block
-label: Drupal 6 custom blocks
+label: Custom blocks
 migration_tags:
   - Drupal 6
 source:

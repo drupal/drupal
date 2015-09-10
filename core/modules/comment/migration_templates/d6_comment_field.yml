@@ -1,5 +1,5 @@
 id: d6_comment_field
-label: Drupal 6 comment field configuration
+label: Comment field configuration
 migration_tags:
   - Drupal 6
 source:

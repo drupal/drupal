@@ -1,5 +1,5 @@
 id: d7_node_title_label
-label: Drupal 7 node title label
+label: Node title label
 migration_tags:
   - Drupal 7
 source:

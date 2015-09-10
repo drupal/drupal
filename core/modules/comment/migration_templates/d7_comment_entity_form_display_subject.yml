@@ -1,5 +1,5 @@
 id: d7_comment_entity_form_display_subject
-label: Drupal 7 comment subject form display configuration
+label: Comment subject form display configuration
 migration_tags:
   - Drupal 7
 source:

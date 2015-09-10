@@ -1,5 +1,5 @@
 id: d6_comment_entity_form_display_subject
-label: Drupal 6 comment subject form display configuration
+label: Comment subject form display configuration
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,5 @@
 id: d7_search_settings
-label: Drupal 7 search configuration
+label: Search configuration
 migration_tags:
   - Drupal 7
 source:

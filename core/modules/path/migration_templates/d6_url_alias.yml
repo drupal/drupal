@@ -1,5 +1,5 @@
 id: d6_url_alias
-label: Drupal 6 URL aliases
+label: URL aliases
 migration_tags:
   - Drupal 6
 source:

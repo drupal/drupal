@@ -1,5 +1,5 @@
 id: d6_user_contact_settings
-label: Drupal 6 user contact settings
+label: User contact settings
 migration_tags:
   - Drupal 6
 source:

@@ -1,5 +1,5 @@
 id: d6_block_content_body_field
-label: Drupal 6 block content body field configuration
+label: Block content body field configuration
 migration_tags:
   - Drupal 6
 source:

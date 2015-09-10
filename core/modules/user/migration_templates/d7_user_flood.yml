@@ -1,4 +1,5 @@
 id: d7_user_flood
+label: User flood configuration
 migration_tags:
   - Drupal 7
 source:

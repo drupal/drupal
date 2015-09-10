@@ -1,5 +1,5 @@
 id: d6_system_site
-label: Drupal 6 site configuration
+label: Site configuration
 migration_tags:
   - Drupal 6
 source:

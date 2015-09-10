@@ -1,5 +1,5 @@
 id: d6_user_role
-label: Drupal 6 user roles
+label: User roles
 migration_tags:
   - Drupal 6
 source:

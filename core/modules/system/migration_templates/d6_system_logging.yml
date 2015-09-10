@@ -1,5 +1,5 @@
 id: d6_system_logging
-label: Drupal 6 system logging
+label: System logging
 migration_tags:
   - Drupal 6
 source:

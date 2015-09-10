@@ -1,5 +1,5 @@
 id: d6_system_file
-label: Drupal 6 file system configuration
+label: File system configuration
 migration_tags:
   - Drupal 6
 source:

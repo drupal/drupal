@@ -1,5 +1,5 @@
 id: d6_comment_type
-label: Drupal 6 comment type
+label: Comment type
 migration_tags:
   - Drupal 6
 source:

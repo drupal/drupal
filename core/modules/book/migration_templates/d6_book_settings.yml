@@ -1,5 +1,5 @@
 id: d6_book_settings
-label: Drupal 6 book configuration
+label: Book configuration
 migration_tags:
   - Drupal 6
 source:

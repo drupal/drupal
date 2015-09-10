@@ -1,5 +1,5 @@
 id: d6_term_node
-label: Drupal 6 term/node relationships
+label: Term/node relationships
 migration_tags:
   - Drupal 6
 builder:

@@ -1,4 +1,5 @@
 id: d7_field_instance
+label: Field instance configuration
 migration_tags:
   - Drupal 7
 source:

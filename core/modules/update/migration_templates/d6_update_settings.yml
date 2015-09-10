@@ -1,5 +1,5 @@
 id: d6_update_settings
-label: Drupal 6 update configuration
+label: Update configuration
 migration_tags:
   - Drupal 6
 source:

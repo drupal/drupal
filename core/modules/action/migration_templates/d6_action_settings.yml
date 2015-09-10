@@ -1,5 +1,5 @@
 id: d6_action_settings
-label: Drupal 6 action configuration
+label: Action configuration
 migration_tags:
   - Drupal 6
 source:

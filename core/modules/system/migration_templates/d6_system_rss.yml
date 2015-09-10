@@ -1,5 +1,5 @@
 id: d6_system_rss
-label: Drupal 6 RSS configuration
+label: RSS configuration
 migration_tags:
   - Drupal 6
 source:

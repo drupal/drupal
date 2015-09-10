@@ -1,5 +1,5 @@
 id: d6_node_setting_sticky
-label: Drupal 6 node type 'sticky' setting
+label: Node type 'sticky' setting
 migration_tags:
   - Drupal 6
 source:

@@ -1,7 +1,7 @@
 # Every migration that saves into {file_managed} must have the d6_file
 # migration as an optional dependency to ensure d6_file runs first.
 id: d6_file
-label: Drupal 6 files
+label: Files
 migration_tags:
   - Drupal 6
 source:

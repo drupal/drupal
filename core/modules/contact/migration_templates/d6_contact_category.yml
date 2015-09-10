@@ -1,5 +1,5 @@
 id: d6_contact_category
-label: Drupal 6 contact category configuration
+label: Contact category configuration
 migration_tags:
   - Drupal 6
 source:

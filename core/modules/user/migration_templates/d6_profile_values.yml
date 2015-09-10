@@ -1,5 +1,5 @@
 id: d6_profile_values
-label: Drupal 6 profile values
+label: Profile values
 migration_tags:
   - Drupal 6
 builder:

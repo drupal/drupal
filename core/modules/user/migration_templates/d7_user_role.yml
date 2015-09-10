@@ -1,5 +1,5 @@
 id: d7_user_role
-label: Drupal 7 user roles
+label: User roles
 migration_tags:
   - Drupal 7
 source:

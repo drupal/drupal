@@ -1,5 +1,5 @@
 id: d6_node
-label: Drupal 6 nodes
+label: Nodes
 migration_tags:
   - Drupal 6
 builder:

@@ -1,5 +1,5 @@
 id: d6_aggregator_feed
-label: Drupal 6 aggregator feeds
+label: Aggregator feeds
 migration_tags:
   - Drupal 6
 source:

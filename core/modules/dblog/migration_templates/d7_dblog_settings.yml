@@ -1,5 +1,5 @@
 id: d7_dblog_settings
-label: Drupal 7 database logging configuration
+label: Database logging configuration
 migration_tags:
   - Drupal 7
 source:

@@ -1,5 +1,5 @@
 id: d6_node_setting_promote
-label: Drupal 6 node type 'promote' setting
+label: Node type 'promote' setting
 migration_tags:
   - Drupal 6
 source:

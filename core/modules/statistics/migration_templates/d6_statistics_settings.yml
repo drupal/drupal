@@ -1,5 +1,5 @@
 id: d6_statistics_settings
-label: Drupal 6 statistics configuration
+label: Statistics configuration
 migration_tags:
   - Drupal 6
 source:

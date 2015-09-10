@@ -1,5 +1,5 @@
 id: d6_dblog_settings
-label: Drupal 6 database logging configuration
+label: Database logging configuration
 migration_tags:
   - Drupal 6
 source:
