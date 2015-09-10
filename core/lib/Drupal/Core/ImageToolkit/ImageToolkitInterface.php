@@ -53,23 +53,27 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginInspectionInterface, PluginFormInterface {
 
   /**
-   * Sets the image object that this toolkit instance is tied to.
+   * Sets the source path of the image file.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   The image that this toolkit instance will be tied to.
+   * @param string $source
+   *   The source path of the image file.
+   *
+   * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
+   *   An instance of the current toolkit object.
    *
    * @throws \BadMethodCallException
-   *   When called twice.
+   *   After being set initially, the source image cannot be changed.
    */
-  public function setImage(ImageInterface $image);
+  public function setSource($source);
 
   /**
-   * Gets the image object that this toolkit instance is tied to.
+   * Gets the source path of the image file.
    *
-   * @return \Drupal\Core\Image\ImageInterface
-   *   The image object that this toolkit instance is tied to.
+   * @return string
+   *   The source path of the image file, or an empty string if the source is
+   *   not set.
    */
-  public function getImage();
+  public function getSource();
 
   /**
    * Checks if the image is valid.

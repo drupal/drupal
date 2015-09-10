@@ -8,8 +8,8 @@
 namespace Drupal\system\Tests\Image;
 
 use Drupal\Core\Image\ImageInterface;
-use \Drupal\simpletest\KernelTestBase;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that core image manipulations work properly: scale, resize, rotate,
@@ -399,6 +399,18 @@ class ToolkitGdTest extends KernelTestBase {
     $this->assertFalse($image->isValid(), 'CreateNew with invalid color hex string fails.');
     $image->createNew(50, 20, 'gif', '#ff0000');
     $this->assertTrue($image->isValid(), 'CreateNew with valid arguments validates the Image.');
+  }
+
+  /**
+   * Tests that GD resources are freed from memory.
+   */
+  public function testResourceDestruction() {
+    $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/image-test.png');
+    $res = $image->getToolkit()->getResource();
+    $this->assertTrue(is_resource($res), 'Successfully loaded image resource.');
+    // Force the toolkit to go out of scope.
+    $image = NULL;
+    $this->assertFalse(is_resource($res), 'Image resource was destroyed after losing scope.');
   }
 
   /**

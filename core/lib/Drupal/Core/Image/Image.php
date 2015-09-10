@@ -51,9 +51,9 @@ class Image implements ImageInterface {
    */
   public function __construct(ImageToolkitInterface $toolkit, $source = NULL) {
     $this->toolkit = $toolkit;
-    $this->getToolkit()->setImage($this);
     if ($source) {
       $this->source = $source;
+      $this->getToolkit()->setSource($this->source);
       // Defer image file validity check to the toolkit.
       if ($this->getToolkit()->parseFile()) {
         $this->fileSize = filesize($this->source);
