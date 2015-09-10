@@ -61,6 +61,7 @@
   border: 1px solid #d3d7d9;
   font-size: 0.929em;
   line-height: 1.6;
+  word-break: break-all;
 }
 
 .comment__content:before {
