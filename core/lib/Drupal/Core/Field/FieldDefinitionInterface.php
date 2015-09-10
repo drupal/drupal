@@ -179,7 +179,43 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
   public function isRequired();
 
   /**
+   * Returns the default value literal for the field.
+   *
+   * This method retrieves the raw property assigned to the field definition.
+   * When computing the runtime default value for a field in a given entity,
+   * ::getDefaultValue() should be used instead.
+   *
+   * @return array
+   *   The default value for the field, as a numerically indexed array of items,
+   *   each item being a property/value array (array() for no default value).
+   *
+   * @see FieldDefinitionInterface::getDefaultValue()
+   * @see FieldDefinitionInterface::getDefaultValueCallback()
+   */
+  public function getDefaultValueLiteral();
+
+  /**
+   * Returns the default value callback for the field.
+   *
+   * This method retrieves the raw property assigned to the field definition.
+   * When computing the runtime default value for a field in a given entity,
+   * ::getDefaultValue() should be used instead.
+   *
+   * @return string|null
+   *   The default value callback for the field.
+   *
+   * @see FieldDefinitionInterface::getDefaultValue()
+   * @see FieldDefinitionInterface::getDefaultValueLiteral()
+   */
+  public function getDefaultValueCallback();
+
+  /**
    * Returns the default value for the field in a newly created entity.
+   *
+   * This method computes the runtime default value for a field in a given
+   * entity. To access the raw properties assigned to the field definition,
+   * ::getDefaultValueLiteral() or ::getDefaultValueCallback() should be used
+   * instead.
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the default value is generated.
@@ -187,6 +223,9 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    * @return array
    *   The default value for the field, as a numerically indexed array of items,
    *   each item being a property/value array (array() for no default value).
+   *
+   * @see FieldDefinitionInterface::getDefaultValueLiteral()
+   * @see FieldDefinitionInterface::getDefaultValueCallback()
    */
   public function getDefaultValue(FieldableEntityInterface $entity);
 

@@ -170,7 +170,7 @@ class TranslationTest extends FieldUnitTestBase {
     // @todo Test every translation once the Entity Translation API allows for
     //   multilingual defaults.
     $langcode = $entity->language()->getId();
-    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->default_value, format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
+    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->getDefaultValueLiteral(), format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
 
     // Check that explicit empty values are not overridden with default values.
     foreach (array(NULL, array()) as $empty_items) {

@@ -196,7 +196,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
 
     // Set default value with NULL.
     $definition->setDefaultValue(NULL);
-    $this->assertEquals(NULL, $definition->getDefaultValue($entity));
+    $this->assertEquals([], $definition->getDefaultValue($entity));
   }
 
   /**

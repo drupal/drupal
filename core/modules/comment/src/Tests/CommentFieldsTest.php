@@ -60,8 +60,8 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
     $this->addDefaultCommentField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
-    $field = FieldConfig::load('node.test_node_type.who_likes_ponies');
-    $this->assertEqual($field->default_value[0]['status'], CommentItemInterface::CLOSED);
+    $field = FieldConfig::load('node.test_node_type.who_likes_ponies');;
+    $this->assertEqual($field->getDefaultValueLiteral()[0]['status'], CommentItemInterface::CLOSED);
   }
 
   /**

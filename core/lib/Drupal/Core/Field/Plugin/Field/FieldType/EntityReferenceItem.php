@@ -285,11 +285,11 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
     $dependencies = [];
-    if (is_array($field_definition->default_value) && count($field_definition->default_value)) {
+    if ($default_value = $field_definition->getDefaultValueLiteral()) {
       $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
-      foreach ($field_definition->default_value as $default_value) {
-        if (is_array($default_value) && isset($default_value['target_uuid'])) {
-          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $default_value['target_uuid']);
+      foreach ($default_value as $value) {
+        if (is_array($value) && isset($value['target_uuid'])) {
+          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // If the entity does not exist do not create the dependency.
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity) {
@@ -306,17 +306,20 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
     $changed = FALSE;
-    if (!empty($field_definition->default_value)) {
+    if ($default_value = $field_definition->getDefaultValueLiteral()) {
       $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
-      foreach ($field_definition->default_value as $key => $default_value) {
-        if (is_array($default_value) && isset($default_value['target_uuid'])) {
-          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $default_value['target_uuid']);
+      foreach ($default_value as $key => $value) {
+        if (is_array($value) && isset($value['target_uuid'])) {
+          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
-            unset($field_definition->default_value[$key]);
+            unset($default_value[$key]);
             $changed = TRUE;
           }
         }
+      }
+      if ($changed) {
+        $field_definition->setDefaultValue($default_value);
       }
     }
     return $changed;

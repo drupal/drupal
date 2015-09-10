@@ -145,11 +145,9 @@ function comment_theme() {
 function comment_field_config_create(FieldConfigInterface $field) {
   if ($field->getType() == 'comment' && !$field->isSyncing()) {
     // Assign default values for the field.
-    if (!isset($field->default_value)) {
-      $field->setDefaultValue(array());
-    }
-    $field->default_value += array(array());
-    $field->default_value[0] += array(
+    $default_value = $field->getDefaultValueLiteral();
+    $default_value += array(array());
+    $default_value[0] += array(
       'status' => CommentItemInterface::OPEN,
       'cid' => 0,
       'last_comment_timestamp' => 0,
@@ -157,6 +155,7 @@ function comment_field_config_create(FieldConfigInterface $field) {
       'last_comment_uid' => 0,
       'comment_count' => 0,
     );
+    $field->setDefaultValue($default_value);
   }
 }
 

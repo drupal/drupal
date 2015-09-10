@@ -100,12 +100,38 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    * any value set here.
    *
    * @param mixed $value
-   *   The default value in the format as returned by
-   *   \Drupal\Core\Field\FieldDefinitionInterface::getDefaultValue().
+   *   The default value for the field. This can be either:
+   *   - a literal, in which case it will be assigned to the first property of
+   *     the first item.
+   *   - a numerically indexed array of items, each item being a property/value
+   *     array.
+   *   - a non-numerically indexed array, in which case the array is assumed to
+   *     be a property/value array and used as the first item
+   *   - NULL or array() for no default value.
    *
    * @return $this
    */
   public function setDefaultValue($value);
+
+  /**
+   * Sets a custom default value callback.
+   *
+   * If set, the callback overrides any set default value.
+   *
+   * @param string|null $callback
+   *   The callback to invoke for getting the default value (pass NULL to unset
+   *   a previously set callback). The callback will be invoked with the
+   *   following arguments:
+   *   - \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *     The entity being created.
+   *   - \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *     The field definition.
+   *   It should return the default value in the format accepted by the
+   *   setDefaultValue() method.
+   *
+   * @return $this
+   */
+  public function setDefaultValueCallback($callback);
 
   /**
    * Sets constraints for a given field item property.

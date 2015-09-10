@@ -32,8 +32,8 @@ class DateTimeFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function defaultValuesForm(array &$form, FormStateInterface $form_state) {
-    if (empty($this->getFieldDefinition()->default_value_callback)) {
-      $default_value = $this->getFieldDefinition()->default_value;
+    if (empty($this->getFieldDefinition()->getDefaultValueCallback())) {
+      $default_value = $this->getFieldDefinition()->getDefaultValueLiteral();
 
       $element = array(
         '#parents' => array('default_value_input'),

@@ -172,7 +172,7 @@ class FieldConfigEditForm extends EntityForm {
       $items = $form['#entity']->get($this->entity->getName());
       $default_value = $items->defaultValuesFormSubmit($form['default_value'], $form, $form_state);
     }
-    $this->entity->default_value = $default_value;
+    $this->entity->setDefaultValue($default_value);
 }
 
   /**
