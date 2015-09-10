@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass.
+ * Contains \Drupal\Core\DependencyInjection\Compiler\RegisterEventSubscribersPass.
  */
 
 namespace Drupal\Core\DependencyInjection\Compiler;
@@ -10,7 +10,10 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
-class RegisterKernelListenersPass implements CompilerPassInterface {
+/**
+ * Registers all event subscribers to the event dispatcher.
+ */
+class RegisterEventSubscribersPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container) {
     if (!$container->hasDefinition('event_dispatcher')) {
       return;
