@@ -188,33 +188,36 @@ small .admin-link:after {
 }
 
 /* Status report. */
-.system-status-report td {
+.system-status-report__status-title {
+  position: relative;
   vertical-align: top;
+  width: 25%;
+  padding: 10px 6px 10px 40px; /* LTR */
+  box-sizing: border-box;
+  font-weight: normal;
 }
-.system-status-report__status-icon {
-  width: 16px;
-  padding-right: 0; /* LTR */
-}
-[dir="rtl"] .system-status-report__status-icon {
-  padding-left: 0;
-  padding-right: 6px;
+[dir="rtl"] .system-status-report__status-title {
+    padding: 10px 40px 10px 6px;
 }
 .system-status-report__status-icon:before {
   content: "";
   background-repeat: no-repeat;
   height: 16px;
   width: 16px;
-  margin-top: 2px;
   display: block;
+  position: absolute;
+  left: 12px; /* LTR */
+  top: 12px;
+}
+[dir="rtl"] .system-status-report__status-icon:before  {
+  left: auto;
+  right: 12px;
 }
 .system-status-report__status-icon--error:before {
   background-image: url(../../../misc/icons/e32700/error.svg);
 }
 .system-status-report__status-icon--warning:before {
   background-image: url(../../../misc/icons/e29700/warning.svg);
-}
-.system-status-report__status-title {
-  width: 25%;
 }
 
 /**

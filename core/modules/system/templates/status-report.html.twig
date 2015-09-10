@@ -18,29 +18,23 @@
  */
 #}
 <table class="system-status-report">
-  <thead>
-    <tr class="visually-hidden">
-      <th>{{ 'Status'|t }}</th><th>{{ 'Component'|t }}</th><th>{{ 'Details'|t }}</th>
-    </tr>
-  </thead>
-  <tbody>
   {% for requirement in requirements %}
-    {% if requirement.severity_status %}
-      <tr class="system-status-report__entry color-{{ requirement.severity_status }}">
-    {% endif %}
-        <td class="system-status-report__status-icon system-status-report__status-icon--{{ requirement.severity_status }}">
-          <div title="{{ requirement.severity_title }}">
-            <span class="visually-hidden">{{ requirement.severity_title }}</span>
-          </div>
-        </td>
-        <td class="system-status-report__status-title">{{ requirement.title }}</td>
-        <td>
-          {{ requirement.value }}
-          {% if requirement.description %}
-            <div class="description">{{ requirement.description }}</div>
-          {% endif %}
-        </td>
-      </tr>
+    <tr class="system-status-report__entry system-status-report__entry--{{ requirement.severity_status }} color-{{ requirement.severity_status }}">
+      {% if requirement.severity_status in ['warning', 'error'] %}
+        <th class="system-status-report__status-title system-status-report__status-icon system-status-report__status-icon--{{ requirement.severity_status }}">
+          <span class="visually-hidden">{{ requirement.severity_title }}</span>
+      {% else %}
+        <th class="system-status-report__status-title">
+      {% endif %}
+        {{ requirement.title }}
+      </th>
+      <td>
+        {{ requirement.value }}
+        {% if requirement.description %}
+          <div class="description">{{ requirement.description }}</div>
+        {% endif %}
+      </td>
+    </tr>
   {% endfor %}
   </tbody>
 </table>
