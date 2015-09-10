@@ -135,7 +135,7 @@ abstract class SqlBase extends SourcePluginBase {
       $delimiter = '';
       foreach ($this->getIds() as $field_name => $field_schema) {
         if (isset($field_schema['alias'])) {
-          $field_name = $field_schema['alias'] . '.' . $field_name;
+          $field_name = $field_schema['alias'] . '.' . $this->query->escapeField($field_name);
         }
         $map_join .= "$delimiter$field_name = map.sourceid" . $count++;
         $delimiter = ' AND ';
