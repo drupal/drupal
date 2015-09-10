@@ -98,7 +98,7 @@ class DbDumpCommand extends Command {
       $output->setDecorated(FALSE);
     }
 
-    $output->writeln($this->generateScript());
+    $output->writeln($this->generateScript(), OutputInterface::OUTPUT_RAW);
   }
 
   /**
