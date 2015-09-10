@@ -178,6 +178,10 @@ trait AssertContentTrait {
   protected function buildXPathQuery($xpath, array $args = array()) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
+      // Cast SafeStringInterface objects to string.
+      if (is_object($value)) {
+        $value = (string) $value;
+      }
       // XPath 1.0 doesn't support a way to escape single or double quotes in a
       // string literal. We split double quotes out of the string, and encode
       // them separately.
@@ -281,7 +285,7 @@ trait AssertContentTrait {
    *
    * An optional link index may be passed.
    *
-   * @param string $label
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $label
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
@@ -299,6 +303,8 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
+    // Cast SafeStringInterface objects to string.
+    $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ? $message : strtr('Link with label %label found.', array('%label' => $label)));
     return $this->assert(isset($links[$index]), $message, $group);
@@ -307,7 +313,7 @@ trait AssertContentTrait {
   /**
    * Passes if a link with the specified label is not found.
    *
-   * @param string $label
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $label
    *   Text between the anchor tags.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -324,6 +330,8 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLink($label, $message = '', $group = 'Other') {
+    // Cast SafeStringInterface objects to string.
+    $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ? $message : SafeMarkup::format('Link with label %label not found.', array('%label' => $label)));
     return $this->assert(empty($links), $message, $group);
@@ -613,7 +621,7 @@ trait AssertContentTrait {
    * through a web browser. In other words the HTML has been filtered out of
    * the contents.
    *
-   * @param string $text
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $text
    *   Plain text to look for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -640,7 +648,7 @@ trait AssertContentTrait {
    * through a web browser. In other words the HTML has been filtered out of
    * the contents.
    *
-   * @param string $text
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $text
    *   Plain text to look for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -665,7 +673,7 @@ trait AssertContentTrait {
    *
    * It is not recommended to call this function directly.
    *
-   * @param string $text
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $text
    *   Plain text to look for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -685,6 +693,8 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertUniqueTextHelper($text, $message = '', $group = 'Other', $be_unique = FALSE) {
+    // Cast SafeStringInterface objects to string.
+    $text = (string) $text;
     if (!$message) {
       $message = '"' . $text . '"' . ($be_unique ? ' found only once' : ' found more than once');
     }
@@ -1104,12 +1114,12 @@ trait AssertContentTrait {
    *
    * @param string $id
    *   ID of field to assert.
-   * @param string $value
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $value
    *   (optional) Value for the field to assert. You may pass in NULL to skip
    *   checking the value, while still checking that the field exists.
    *   However, the default value ('') asserts that the field value is an empty
    *   string.
-   * @param string $message
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -1124,6 +1134,11 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertFieldById($id, $value = '', $message = '', $group = 'Browser') {
+    // Cast SafeStringInterface objects to string.
+    if (isset($value)) {
+      $value = (string) $value;
+    }
+    $message = (string) $message;
     return $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : SafeMarkup::format('Found field by id @id', array('@id' => $id)), $group);
   }
 

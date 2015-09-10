@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SafeMarkup;
@@ -359,7 +360,7 @@ abstract class TestBase {
    * @param $status
    *   Can be 'pass', 'fail', 'exception', 'debug'.
    *   TRUE is a synonym for 'pass', FALSE for 'fail'.
-   * @param $message
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -377,6 +378,9 @@ abstract class TestBase {
    *   is the caller function itself.
    */
   protected function assert($status, $message = '', $group = 'Other', array $caller = NULL) {
+    if ($message instanceof SafeStringInterface) {
+      $message = (string) $message;
+    }
     // Convert boolean status to string status.
     if (is_bool($status)) {
       $status = $status ? 'pass' : 'fail';
@@ -654,6 +658,10 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertEqual($first, $second, $message = '', $group = 'Other') {
+    // We cast objects implementing SafeStringInterface to string ourself so as
+    // to not rely on PHP casting them to string depending on what we're
+    // comparing with.
+    $this->castSafeStrings($first, $second);
     return $this->assert($first == $second, $message ? $message : SafeMarkup::format('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
   }
 
@@ -680,6 +688,40 @@ abstract class TestBase {
    */
   protected function assertNotEqual($first, $second, $message = '', $group = 'Other') {
     return $this->assert($first != $second, $message ? $message : SafeMarkup::format('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+  }
+
+  /**
+   * Casts SafeStringInterface objects into string in 2 compared values.
+   *
+   * @param string|array &$first
+   *   The first value to act on.
+   * @param string|array &$second
+   *   The second value to act on (optional).
+   *
+   * @return mixed
+   *   The input values, with SafeStringInterface objects casted to string.
+   */
+  protected function castSafeStrings(&$first, &$second = NULL) {
+    if ($first instanceof SafeStringInterface) {
+      $first = (string) $first;
+    }
+    if ($second instanceof SafeStringInterface) {
+      $second = (string) $second;
+    }
+    if (is_array($first)) {
+      array_walk_recursive($first, function (&$first) {
+        if ($first instanceof SafeStringInterface) {
+          $first = (string) $first;
+        }
+      });
+    }
+    if (is_array($second)) {
+      array_walk_recursive($second, function (&$second) {
+        if ($second instanceof SafeStringInterface) {
+          $second = (string) $second;
+        }
+      });
+    }
   }
 
   /**
