@@ -174,7 +174,7 @@ EOD;
     }
     catch (\AssertionError $e) {
       try {
-        // Now test with an error message to insure it is correctly passed
+        // Now test with an error message to ensure it is correctly passed
         // along by the rethrow.
         assert(FALSE, 'Lorem Ipsum');
       }
