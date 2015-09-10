@@ -17,9 +17,10 @@ use org\bovigo\vfs\vfsStream;
  * @coversDefaultClass \Drupal\Core\Update\UpdateRegistry
  * @group Update
  *
- * Note we load code, so we should better run in isolation.
+ * Note we load code, so isolate the tests.
  *
  * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class UpdateRegistryTest extends UnitTestCase {
 

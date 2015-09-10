@@ -265,6 +265,11 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::loadInclude
+   *
+   * Note we load code, so isolate the test.
+   *
+   * @runTestsInSeparateProcesses
+   * @preserveGlobalState disabled
    */
   public function testLoadInclude() {
     // Include exists.
