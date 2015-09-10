@@ -22,7 +22,11 @@ class ConfigSingleImportExportTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config', 'config_test');
+  public static $modules = [
+    'block',
+    'config',
+    'config_test'
+  ];
 
   /**
    * Tests importing a single configuration file.
@@ -126,6 +130,10 @@ EOD;
   public function testImportSimpleConfiguration() {
     $this->drupalLogin($this->drupalCreateUser(array('import configuration')));
     $config = $this->config('system.site')->set('name', 'Test simple import');
+
+    // Place branding block with site name into header region.
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
+
     $edit = array(
       'config_type' => 'system.simple',
       'config_name' => $config->getName(),

@@ -23,7 +23,11 @@ class ConfigLanguageOverrideWebTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'system');
+  public static $modules = [
+    'block',
+    'language',
+    'system'
+  ];
 
   /**
    * {@inheritdoc}
@@ -53,6 +57,9 @@ class ConfigLanguageOverrideWebTest extends WebTestBase {
       ->getLanguageConfigOverride($langcode, 'system.site')
       ->set('name', 'XX site name')
       ->save();
+
+    // Place branding block with site name into header region.
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
 
     $this->drupalLogout();
 

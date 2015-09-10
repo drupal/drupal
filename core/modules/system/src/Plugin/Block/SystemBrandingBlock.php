@@ -160,10 +160,9 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     $build = array();
     $site_config = $this->configFactory->get('system.site');
 
-    $logo = theme_get_setting('logo');
     $build['site_logo'] = array(
       '#theme' => 'image',
-      '#uri' => $logo['url'],
+      '#uri' => theme_get_setting('logo.url'),
       '#alt' => $this->t('Home'),
       '#access' => $this->configuration['use_site_logo'],
     );

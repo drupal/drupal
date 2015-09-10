@@ -1320,7 +1320,8 @@ function system_update_8004() {
   // https://www.drupal.org/node/2542748. Regenerate the related schemas to
   // ensure they match the currently expected status.
   $manager = \Drupal::entityDefinitionUpdateManager();
-  foreach (array_keys(\Drupal::entityManager()->getDefinitions()) as $entity_type_id) {
+  foreach (array_keys(\Drupal::entityManager()
+    ->getDefinitions()) as $entity_type_id) {
     $manager->updateEntityType($manager->getEntityType($entity_type_id));
   }
 }
@@ -1475,7 +1476,78 @@ function system_update_8005() {
 }
 
 /**
- * Helper function to create block configuration objects for the update.
+ * Place branding blocks in every theme.
+ */
+function system_update_8006() {
+  // When block module is not installed, there is nothing that could be done
+  // except showing a warning.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return t('Block module is not enabled so site branding elements, which have been converted to a block, are not visible anymore.');
+  }
+
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $custom_themes_installed = FALSE;
+  $message = NULL;
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+
+  $site_branding_default_settings = [
+    'plugin' => 'system_branding_block',
+    'region' => 'content',
+    'settings.label' => 'Site Branding',
+    'settings.label_display' => 0,
+    'settings.cache.max_age' => 0,
+    'visibility' => [],
+    'weight' => 0,
+    'langcode' => $langcode,
+  ];
+  foreach ($theme_handler->listInfo() as $theme) {
+    $theme_name = $theme->getName();
+    switch ($theme_name) {
+      case 'bartik':
+        $name = 'block.block.bartik_branding';
+        $values = [
+            'id' => 'bartik_branding',
+            'region' => 'header',
+          ] + $site_branding_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'stark':
+        $name = 'block.block.stark_branding';
+        $values = [
+            'id' => 'stark_branding',
+            'region' => 'header',
+          ] + $site_branding_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'seven':
+      case 'classy':
+        // Don't place any blocks or trigger custom themes installed warning.
+        break;
+      default:
+        $custom_themes_installed = TRUE;
+        $name = sprintf('block.block.%s_branding', $theme_name);
+        $values = [
+            'id' => sprintf('%s_branding', $theme_name),
+            'region' => 'content',
+            'weight' => '-50',
+          ] + $site_branding_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+    }
+  }
+
+  if ($custom_themes_installed) {
+    $message = t('Because your site has custom theme(s) installed, we had to set the branding block into the content region. Please manually review the block configuration and remove the site name, slogan, and logo variables from your templates.');
+  }
+
+  return $message;
+}
+
+/**
+ * Helper function to create block configuration objects for an update.
  *
  * @param string $name
  *   The name of the config object.

@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -106,18 +107,25 @@ function color_library_info_alter(&$libraries, $extension) {
 }
 
 /**
- * Implements hook_preprocess_page().
- *
- * Replace the logo with the colored version if available.
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
  */
-function color_preprocess_page(&$variables) {
+function color_block_view_system_branding_block_alter(array &$build, BlockPluginInterface $block) {
+  $build['#pre_render'][] = 'color_block_view_pre_render';
+}
+
+/**
+ * #pre_render callback: Sets color preset logo.
+ */
+function color_block_view_pre_render(array $build) {
   $theme_key = \Drupal::theme()->getActiveTheme()->getName();
 
   // Override logo.
   $logo = \Drupal::config('color.theme.' . $theme_key)->get('logo');
-  if ($logo && $variables['logo'] && preg_match('!' . $theme_key . '/logo.svg$!', $variables['logo'])) {
-    $variables['logo'] = file_create_url($logo);
+  if ($logo && $build['content']['site_logo'] && preg_match('!' . $theme_key . '/logo.svg$!', $build['content']['site_logo']['#uri'])) {
+    $build['content']['site_logo']['#uri'] = file_create_url($logo);
   }
+
+  return $build;
 }
 
 /**

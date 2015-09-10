@@ -35,19 +35,19 @@ body.maintenance-page {
   background-color: #fff;
   background-image: none;
 }
-.maintenance-page #name-and-slogan {
+.maintenance-page .site-branding-text {
   margin-bottom: 50px;
   margin-left: 0; /* LTR */
   padding-top: 20px;
   font-size: 90%;
 }
-[dir="rtl"] .maintenance-page #name-and-slogan {
+[dir="rtl"] .maintenance-page .site-branding-text {
   margin-right: 0;
 }
-.maintenance-page #name-and-slogan,
-.maintenance-page #name-and-slogan a,
-.maintenance-page #name-and-slogan a:hover,
-.maintenance-page #name-and-slogan a:focus {
+.maintenance-page .site-branding-text,
+.maintenance-page .site-branding-text a,
+.maintenance-page .site-branding-text a:hover,
+.maintenance-page .site-branding-text a:focus {
   color: #777;
 }
 .maintenance-page  .page-title {

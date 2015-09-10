@@ -123,9 +123,11 @@ class ThemeTest extends WebTestBase {
       $this->assertEqual((string) $elements[1], $explicit_file);
       $this->assertEqual((string) $elements[2], $local_file);
 
-      // Verify the actual 'src' attribute of the logo being output.
+      // Verify the actual 'src' attribute of the logo being output in a site
+      // branding block.
+      $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
-      $elements = $this->xpath('//header/a[@rel=:rel]/img', array(
+      $elements = $this->xpath('//header//a[@rel=:rel]/img', array(
           ':rel' => 'home',
         )
       );
@@ -175,8 +177,9 @@ class ThemeTest extends WebTestBase {
     $fields = $this->xpath($this->constructFieldXpath('name', 'logo_path'));
     $uploaded_filename = 'public://' . $fields[0]['value'];
 
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
-    $elements = $this->xpath('//header/a[@rel=:rel]/img', array(
+    $elements = $this->xpath('//header//a[@rel=:rel]/img', array(
         ':rel' => 'home',
       )
     );

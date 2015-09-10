@@ -22,10 +22,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    * @var array
    */
   protected $defaultFeatures = array(
-    'logo',
     'favicon',
-    'name',
-    'slogan',
     'node_user_picture',
     'comment_user_picture',
     'comment_user_verification',

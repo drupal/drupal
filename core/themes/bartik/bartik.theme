@@ -40,9 +40,6 @@ function bartik_preprocess_html(&$variables) {
  * Implements hook_preprocess_HOOK() for page templates.
  */
 function bartik_preprocess_page(&$variables) {
-  // Set the options that apply to both page and maintenance page.
-  _bartik_process_page($variables);
-
   // Since the title and the shortcut link are both block level elements,
   // positioning them next to each other is much simpler with a wrapper div.
   if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
@@ -75,9 +72,6 @@ function bartik_preprocess_maintenance_page(&$variables) {
 
   // Bartik has custom styling for the maintenance page.
   $variables['#attached']['library'][] = 'bartik/maintenance_page';
-
-  // Set the options that apply to both page and maintenance page.
-  _bartik_process_page($variables);
 }
 
 /**
@@ -106,24 +100,4 @@ function bartik_preprocess_block(&$variables) {
  */
 function bartik_preprocess_menu(&$variables) {
   $variables['attributes']['class'][] = 'clearfix';
-}
-
-/**
- * Helper function for handling the site name and slogan.
- */
-function _bartik_process_page(&$variables) {
-  $site_config = \Drupal::config('system.site');
-  // Always print the site name and slogan, but if they are toggled off, we'll
-  // just hide them visually.
-  $variables['hide_site_name']   = theme_get_setting('features.name') ? FALSE : TRUE;
-  $variables['hide_site_slogan'] = theme_get_setting('features.slogan') ? FALSE : TRUE;
-  if ($variables['hide_site_name']) {
-    // If toggle_name is FALSE, the site_name will be empty, so we rebuild it.
-    $variables['site_name'] = $site_config->get('name');
-  }
-  if ($variables['hide_site_slogan']) {
-    // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we
-    // rebuild it.
-    $variables['site_slogan']['#markup'] = $site_config->get('slogan');
-  }
 }

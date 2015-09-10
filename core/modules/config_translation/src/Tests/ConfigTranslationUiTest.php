@@ -176,6 +176,9 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->assertFieldByName('translation[config_names][system.site][name]', $fr_site_name);
     $this->assertFieldByName('translation[config_names][system.site][slogan]', $fr_site_slogan);
 
+    // Place branding block with site name and slogan into header region.
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
+
     // Check French translation of site name and slogan are in place.
     $this->drupalGet('fr');
     $this->assertRaw($fr_site_name);

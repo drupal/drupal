@@ -25,13 +25,7 @@
  *   name has been disabled in the theme settings.
  * - site_slogan: The slogan of the site. This is empty when displaying the site
  *   slogan has been disabled in theme settings.
- * - hide_site_name: A flag indicating if the site name has been toggled off on
- *   the theme settings page. If hidden, the "visually-hidden" class is added
- *   to make the site name visually hidden, but still accessible.
- * - hide_site_slogan: A flag indicating if the site slogan has been toggled off
- *   on the theme settings page. If hidden, the "visually-hidden" class is
- *   added to make the site slogan visually hidden, but still accessible.
- *
+
  * Page content (in order of occurrence in the default page.html.twig):
  * - title_prefix: Additional output populated by modules, intended to be
  *   displayed in front of the main title tag that appears in the template.
@@ -72,34 +66,6 @@
     <header id="header" class="header" role="banner" aria-label="{{ 'Site header'|t}}">
       <div class="section layout-container clearfix">
         {{ page.secondary_menu }}
-        {% if logo %}
-          <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
-            <img src="{{ logo }}" alt="{{ 'Home'|t }}" />
-          </a>
-        {% endif %}
-        {% if site_name or site_slogan %}
-          <div id="name-and-slogan"{% if hide_site_name and hide_site_slogan %} class="visually-hidden"{% endif %}>
-            {% if site_name %}
-              {% if title %}
-                <div id="site-name"{% if hide_site_name %} class="visually-hidden"{% endif %}>
-                  <strong>
-                    <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
-                  </strong>
-                </div>
-              {# Use h1 when the content title is empty #}
-              {% else %}
-                <h1 id="site-name"{% if hide_site_name %} class="visually-hidden" {% endif %}>
-                  <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
-                </h1>
-              {% endif %}
-            {% endif %}
-            {% if site_slogan %}
-              <div id="site-slogan"{% if hide_site_slogan %} class="visually-hidden"{% endif %}>
-                {{ site_slogan }}
-              </div>
-            {% endif %}
-          </div>
-        {% endif %}
         {{ page.header }}
         {{ page.primary_menu }}
       </div>

@@ -1,0 +1,18 @@
+id: stark_branding
+theme: stark
+weight: 0
+status: true
+langcode: en
+region: header
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site Branding'
+  provider: system
+  label_display: '0'
+dependencies:
+  module:
+    - system
+  theme:
+    - stark
+visibility: {  }

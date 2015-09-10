@@ -37,6 +37,7 @@ global-styling:
       css/components/shortcut.css: {}
       css/components/skip-link.css: {}
       css/components/sidebar.css: {}
+      css/components/site-branding.css: {}
       css/components/site-footer.css: {}
       css/components/table.css: {}
       css/components/tabs.css: {}

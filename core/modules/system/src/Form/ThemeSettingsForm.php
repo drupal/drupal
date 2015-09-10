@@ -141,9 +141,6 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     // Toggle settings
     $toggles = array(
-      'logo' => t('Logo'),
-      'name' => t('Site name'),
-      'slogan' => t('Site slogan'),
       'node_user_picture' => t('User pictures in posts'),
       'comment_user_picture' => t('User pictures in comments'),
       'comment_user_verification' => t('User verification status in comments'),
