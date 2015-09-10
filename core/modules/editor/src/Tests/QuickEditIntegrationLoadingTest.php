@@ -86,7 +86,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
       $this->drupalGet('node/1');
 
       // Ensure the text is transformed.
-      $this->assertRaw('<p>Do you also love Drupal?</p><figure class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+      $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
       // Retrieving the untransformed text should result in an empty 403 response.
       $response = $this->drupalPost('editor/' . 'node/1/body/en/full', '', array(), array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax')));
@@ -104,7 +104,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
     $this->drupalGet('node/1');
 
     // Ensure the text is transformed.
-    $this->assertRaw('<p>Do you also love Drupal?</p><figure class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+    $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
     $response = $this->drupalPost('editor/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', array());
     $this->assertResponse(200);
