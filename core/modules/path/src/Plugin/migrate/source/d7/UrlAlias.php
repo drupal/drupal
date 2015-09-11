@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\path\Plugin\migrate\source\d6\UrlAlias.
+ * Contains \Drupal\path\Plugin\migrate\source\d7\UrlAlias.
  */
 
-namespace Drupal\path\Plugin\migrate\source\d6;
+namespace Drupal\path\Plugin\migrate\source\d7;
 
 use Drupal\path\Plugin\migrate\source\UrlAliasBase;
 
@@ -13,7 +13,7 @@ use Drupal\path\Plugin\migrate\source\UrlAliasBase;
  * URL aliases source from database.
  *
  * @MigrateSource(
- *   id = "d6_url_alias",
+ *   id = "d7_url_alias",
  *   source_provider = "path"
  * )
  */
@@ -24,8 +24,8 @@ class UrlAlias extends UrlAliasBase {
    */
   public function fields() {
     $fields = parent::fields();
-    $fields['src'] = $this->t('The internal system path.');
-    $fields['dst'] = $this->t('The path alias.');
+    $fields['source'] = $this->t('The internal system path.');
+    $fields['alias'] = $this->t('The path alias.');
     return $fields;
   }
 

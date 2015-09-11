@@ -1,9 +1,9 @@
-id: d6_url_alias
+id: d7_url_alias
 label: URL aliases
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_url_alias
+  plugin: d7_url_alias
   constants:
     slash: '/'
 process:
@@ -11,12 +11,12 @@ process:
     plugin: concat
     source:
       - constants/slash
-      - src
+      - source
   alias:
     plugin: concat
     source:
       - constants/slash
-      - dst
+      - alias
   langcode: language
 destination:
   plugin: url_alias

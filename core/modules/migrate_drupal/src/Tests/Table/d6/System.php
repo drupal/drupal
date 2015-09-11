@@ -280,7 +280,7 @@ class System extends DrupalDumpBase {
       'name' => 'path',
       'type' => 'module',
       'owner' => '',
-      'status' => '0',
+      'status' => '1',
       'throttle' => '0',
       'bootstrap' => '0',
       'schema_version' => '-1',
@@ -939,4 +939,4 @@ class System extends DrupalDumpBase {
   }
 
 }
-#67a0176adb132bf6a171a703fa411e49
+#05805c5d8ae80ed61f9abeb67143ec6f
