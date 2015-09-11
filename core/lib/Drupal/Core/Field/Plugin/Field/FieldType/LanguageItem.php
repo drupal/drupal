@@ -44,7 +44,6 @@ class LanguageItem extends FieldItemBase {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Language code'))
-      ->setSetting('is_ascii', TRUE)
       ->setRequired(TRUE);
 
     $properties['language'] = DataReferenceDefinition::create('language')
@@ -74,9 +73,8 @@ class LanguageItem extends FieldItemBase {
     return array(
       'columns' => array(
         'value' => array(
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 12,
-          'is_ascii' => TRUE,
         ),
       ),
     );

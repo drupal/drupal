@@ -1587,5 +1587,60 @@ function _system_update_create_block($name, $theme_name, array $values) {
 }
 
 /**
+ * Set langcode fields to be ASCII-only.
+ */
+function system_update_8007() {
+  $database = \Drupal::database();
+  $database_schema = $database->schema();
+
+  $schema = \Drupal::keyValue('entity.storage_schema.sql')->getAll();
+  $schema_copy = $schema;
+  foreach ($schema as $item_name => $item) {
+    foreach ($item as $table_name => $table_schema) {
+      foreach ($table_schema as $schema_key => $schema_data) {
+        if ($schema_key == 'fields') {
+          foreach ($schema_data as $field_name => $field_data) {
+            foreach ($field_data as $field_data_property => $field_data_value) {
+              // Langcode fields have the property 'is_ascii' set, instead
+              // they should have set the type to 'varchar_ascii'.
+              if ($field_data_property == 'is_ascii') {
+                unset($schema_copy[$item_name][$table_name]['fields'][$field_name]['is_ascii']);
+                $schema_copy[$item_name][$table_name]['fields'][$field_name]['type'] = 'varchar_ascii';
+                if ($database->driver() == 'mysql') {
+                  $database_schema->changeField($table_name, $field_name, $field_name, $schema_copy[$item_name][$table_name]['fields'][$field_name]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \Drupal::keyValue('entity.storage_schema.sql')->setMultiple($schema_copy);
+
+  $definitions = \Drupal::keyValue('entity.definitions.installed')->getAll();
+  $definitions_copy = $definitions;
+  foreach ($definitions as $item_name => $item_value) {
+    $suffix = '.field_storage_definitions';
+    if (substr($item_name, -strlen($suffix)) == $suffix) {
+      foreach ($item_value as $field_name => $field_definition) {
+        $reflection = new \ReflectionObject($field_definition);
+        $schema_property = $reflection->getProperty('schema');
+        $schema_property->setAccessible(TRUE);
+        $schema = $schema_property->getValue($field_definition);
+        if (isset($schema['columns']['value']['is_ascii'])) {
+          $schema['columns']['value']['type'] = 'varchar_ascii';
+          unset($schema['columns']['value']['is_ascii']);
+        }
+        $schema_property->setValue($field_definition, $schema);
+        $schema_property->setAccessible(FALSE);
+        $definitions_copy[$item_name][$field_name] = $field_definition;
+      }
+    }
+  }
+  \Drupal::keyValue('entity.definitions.installed')->setMultiple($definitions_copy);
+}
+
+/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */
