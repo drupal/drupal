@@ -127,7 +127,8 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $node = Node::load(1);
     $this->assertTrue($node->field_boolean->value);
     $this->assertIdentical('99-99-99-99', $node->field_phone->value);
-    $this->assertIdentical('1', $node->field_float->value);
+    // Use assertEqual() here instead, since SQLite interprets floats strictly.
+    $this->assertEqual('1', $node->field_float->value);
     $this->assertIdentical('5', $node->field_integer->value);
     $this->assertIdentical('Some more text', $node->field_text_list[0]->value);
     $this->assertIdentical('7', $node->field_integer_list[0]->value);
