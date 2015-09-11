@@ -60,6 +60,10 @@ class RequirementsException extends \RuntimeException {
   public function getRequirementsString() {
     $output = '';
     foreach ($this->requirements as $requirement_type => $requirements) {
+      if (!is_array($requirements)) {
+        $requirements = array($requirements);
+      }
+
       foreach ($requirements as $value) {
         $output .= "$requirement_type: $value. ";
       }
