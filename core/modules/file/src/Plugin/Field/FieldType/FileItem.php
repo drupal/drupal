@@ -309,8 +309,12 @@ class FileItem extends EntityReferenceItem {
     $random = new Random();
     $settings = $field_definition->getSettings();
 
+    // Prepare destination.
+    $dirname = $settings['uri_scheme'] . '://' . $settings['file_directory'];
+    file_prepare_directory($dirname, FILE_CREATE_DIRECTORY);
+
     // Generate a file entity.
-    $destination = $settings['uri_scheme'] . '://' . $settings['file_directory'] . $random->name(10, TRUE) . '.txt';
+    $destination = $dirname . '/' . $random->name(10, TRUE) . '.txt';
     $data = $random->paragraphs(3);
     $file = file_save_data($data, $destination, FILE_EXISTS_ERROR);
     $values = array(
