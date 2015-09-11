@@ -178,8 +178,25 @@ function simpletest_run_tests($test_list) {
  */
 function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames) {
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
-  simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file);
-  return simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
+  $ret = simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file);
+  if ($ret) {
+    // Something broke during the execution of phpunit.
+    // Return an error record of all failed classes.
+    $rows[] = [
+      'test_id' => '1',
+      'test_class' => implode(",", $unescaped_test_classnames),
+      'status' => 'fail',
+      'message' => 'PHPunit Test failed to complete',
+      'message_group' => 'Other',
+      'function' => implode(",", $unescaped_test_classnames),
+      'line' => '0',
+      'file' => $phpunit_file,
+    ];
+  }
+  else {
+    $rows = simpletest_phpunit_xml_to_rows($test_id, $phpunit_file);
+  }
+  return $rows;
 }
 
 /**
@@ -274,7 +291,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
 
   // exec in a subshell so that the environment is isolated when running tests
   // via the simpletest UI.
-  $ret = exec(join($command, " "));
+  exec(join($command, " "), $output, $ret);
   chdir($old_cwd);
   putenv('SIMPLETEST_DB=');
   return $ret;
