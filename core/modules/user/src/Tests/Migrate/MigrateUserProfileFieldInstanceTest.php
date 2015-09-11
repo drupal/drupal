@@ -64,12 +64,10 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('Favorite bands', $field->label());
     $this->assertIdentical("Enter your favorite bands. When you've saved your profile, you'll be able to find other people with the same favorites.", $field->getDescription());
 
-/*
     // Migrated URL field.
     $field = FieldConfig::load('user.user.profile_blog');
-    $this->assertIdentical('Your blog', $field->label());
-    $this->assertIdentical("Paste the full URL, $field->getDescription(), including http://, of your personal blog.");
-*/
+    $this->assertIdentical('Blog', $field->label());
+    $this->assertIdentical("Paste the full URL, including http://, of your personal blog.", $field->getDescription());
 
     // Migrated date field.
     $field = FieldConfig::load('user.user.profile_birthdate');

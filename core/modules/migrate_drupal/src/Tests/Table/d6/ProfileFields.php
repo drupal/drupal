@@ -212,8 +212,22 @@ class ProfileFields extends DrupalDumpBase {
       'visibility' => '2',
       'autocomplete' => '0',
       'options' => '',
+    ))->values(array(
+      'fid' => '16',
+      'title' => 'Blog',
+      'name' => 'profile_blog',
+      'explanation' => 'Paste the full URL, including http://, of your personal blog.',
+      'category' => 'Personal information',
+      'page' => '',
+      'type' => 'url',
+      'weight' => '3',
+      'required' => '0',
+      'register' => '0',
+      'visibility' => '3',
+      'autocomplete' => '0',
+      'options' => '',
     ))->execute();
   }
 
 }
-#59b9afb9195888ed98c5b2dc0c35305c
+#f403976a12145f09209b3a2781684305

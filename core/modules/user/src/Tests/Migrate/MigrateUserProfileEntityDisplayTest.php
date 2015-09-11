@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests\Migrate;
 
-use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -29,66 +28,8 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    // Create some fields so the data gets stored.
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_color',
-      'type' => 'text',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_biography',
-      'type' => 'text_long',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_sell_address',
-      'type' => 'boolean',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_sold_to',
-      'type' => 'list_string',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_bands',
-      'type' => 'text',
-      'cardinality' => -1,
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_blog',
-      'type' => 'link',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_birthdate',
-      'type' => 'datetime',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_love_migrations',
-      'type' => 'boolean',
-    ))->save();
-
-    $field_data = Database::getConnection('default', 'migrate')
-      ->select('profile_fields', 'u')
-      ->fields('u')
-      ->execute()
-      ->fetchAll();
-    foreach ($field_data as $field) {
-      entity_create('field_config', array(
-        'label' => $field->title,
-        'description' => '',
-        'field_name' => $field->name,
-        'entity_type' => 'user',
-        'bundle' => 'user',
-        'required' => 1,
-      ))->save();
-    }
-
+    $this->executeMigration('user_profile_field');
+    $this->executeMigration('user_profile_field_instance');
     $this->executeMigration('user_profile_entity_display');
   }
 

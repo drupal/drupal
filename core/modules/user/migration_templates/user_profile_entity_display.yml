@@ -27,7 +27,7 @@ process:
       selection: list_default
       textfield: text_default
       textarea: text_default
-      url: link_default
+      url: link
   options: 'constants/options'
   'options/type': @type
   hidden:
@@ -39,3 +39,6 @@ process:
       4: true # PROFILE_HIDDEN
 destination:
   plugin: component_entity_display
+migration_dependencies:
+  required:
+    - user_profile_field_instance
