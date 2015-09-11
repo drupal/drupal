@@ -1,0 +1,32 @@
+The libraries listed here are the only ones we officially depend on. Anything
+else is either provided only for development purposes or an implicit dependency
+that may be removed in the future, if it is properly decoupled from the packages
+depending on it.
+
+doctrine/common
+doctrine/annotations
+easyrdf/easyrdf
+egulias/email-validator
+fabpot/goutte
+guzzlehttp/guzzle
+masterminds/html5
+stack/builder
+symfony/class-loader
+symfony/console
+symfony/dependency-injection
+symfony/event-dispatcher
+symfony/http-foundation
+symfony/http-kernel
+symfony/routing
+symfony/serializer
+symfony/validator
+symfony/process
+symfony/yaml
+symfony-cmf/routing
+symfony/psr-http-message-bridge
+twig/twig
+zendframework/zend-diactoros
+zendframework/zend-feed
+
+If you are writing code that depends on a library not listed here, you should
+add it explicitly as a dependency yourself in your own "composer.json" file.
