@@ -78,10 +78,8 @@ class NodeTranslationHandler extends ContentTranslationHandler {
     if ($form_state->hasValue('content_translation')) {
       $translation = &$form_state->getValue('content_translation');
       $translation['status'] = $entity->isPublished();
-      // $form['content_translation']['name'] is the equivalent field
-      // for translation author uid.
       $account = $entity->uid->entity;
-      $translation['name'] = $account ? $account->getUsername() : '';
+      $translation['uid'] = $account ? $account->id() : 0;
       $translation['created'] = format_date($entity->created->value, 'custom', 'Y-m-d H:i:s O');
     }
     parent::entityFormEntityBuild($entity_type, $entity, $form, $form_state);

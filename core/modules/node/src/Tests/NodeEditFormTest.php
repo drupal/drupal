@@ -2,19 +2,40 @@
 
 /**
  * @file
- * Contains \Drupal\node\Tests\PageEditTest.
+ * Contains \Drupal\node\Tests\NodeEditFormTest.
  */
 
 namespace Drupal\node\Tests;
+
+use Drupal\node\NodeInterface;
 
 /**
  * Create a node and test node edit functionality.
  *
  * @group node
  */
-class PageEditTest extends NodeTestBase {
+class NodeEditFormTest extends NodeTestBase {
+
+  /**
+   * A normal logged in user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
   protected $webUser;
+
+  /**
+   * A user with permission to bypass content access checks.
+   *
+   * @var \Drupal\user\UserInterface
+   */
   protected $adminUser;
+
+  /**
+   * The node storage.
+   *
+   * @var \Drupal\node\NodeStorageInterface
+   */
+  protected $nodeStorage;
 
   /**
    * Modules to enable.
@@ -29,12 +50,14 @@ class PageEditTest extends NodeTestBase {
     $this->webUser = $this->drupalCreateUser(array('edit own page content', 'create page content'));
     $this->adminUser = $this->drupalCreateUser(array('bypass node access', 'administer nodes'));
     $this->drupalPlaceBlock('local_tasks_block');
+
+    $this->nodeStorage = $this->container->get('entity.manager')->getStorage('node');
   }
 
   /**
    * Checks node edit functionality.
    */
-  function testPageEdit() {
+  public function testNodeEdit() {
     $this->drupalLogin($this->webUser);
 
     $title_key = 'title[0][value]';
@@ -98,8 +121,7 @@ class PageEditTest extends NodeTestBase {
   /**
    * Tests changing a node's "authored by" field.
    */
-  function testPageAuthoredBy() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+  public function testNodeEditAuthoredBy() {
     $this->drupalLogin($this->adminUser);
 
     // Create node to edit.
@@ -113,18 +135,69 @@ class PageEditTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertIdentical($node->getOwnerId(), $this->adminUser->id(), 'Node authored by admin user.');
 
+    $this->checkVariousAuthoredByValues($node, 'uid[0][target_id]');
+
+    // Check that normal users cannot change the authored by information.
+    $this->drupalLogin($this->webUser);
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertNoFieldByName('uid[0][target_id]');
+
+    // Now test with the Autcomplete (Tags) field widget.
+    /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+    $form_display = \Drupal::entityManager()->getStorage('entity_form_display')->load('node.page.default');
+    $widget = $form_display->getComponent('uid');
+    $widget['type'] = 'entity_reference_autocomplete_tags';
+    $widget['settings'] = [
+      'match_operator' => 'CONTAINS',
+      'size' => 60,
+      'placeholder' => '',
+    ];
+    $form_display->setComponent('uid', $widget);
+    $form_display->save();
+
+    $this->drupalLogin($this->adminUser);
+
+    // Save the node without making any changes.
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and keep published'));
+    $this->nodeStorage->resetCache(array($node->id()));
+    $node = $this->nodeStorage->load($node->id());
+    $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
+
+    $this->checkVariousAuthoredByValues($node, 'uid[target_id]');
+
+    // Hide the 'authored by' field from the form.
+    $form_display->removeComponent('uid')->save();
+
+    // Check that saving the node without making any changes keeps the proper
+    // author ID.
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and keep published'));
+    $this->nodeStorage->resetCache(array($node->id()));
+    $node = $this->nodeStorage->load($node->id());
+    $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
+  }
+
+  /**
+   * Checks that the "authored by" works correctly with various values.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   A node object.
+   * @param string $form_element_name
+   *   The name of the form element to populate.
+   */
+  protected function checkVariousAuthoredByValues(NodeInterface $node, $form_element_name) {
     // Try to change the 'authored by' field to an invalid user name.
     $edit = array(
-      'uid[0][target_id]' => 'invalid-name',
+      $form_element_name => 'invalid-name',
     );
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $this->assertRaw(t('There are no entities matching "%name".', array('%name' => 'invalid-name')));
 
-    // Change the authored by field to the anonymous user (uid 0).
-    $edit['uid[0][target_id]'] = 'Anonymous (0)';
+    // Change the authored by field to an empty string, which should assign
+    // authorship to the anonymous user (uid 0).
+    $edit[$form_element_name] = '';
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
-    $node_storage->resetCache(array($node->id()));
-    $node = $node_storage->load($node->id());
+    $this->nodeStorage->resetCache(array($node->id()));
+    $node = $this->nodeStorage->load($node->id());
     $uid = $node->getOwnerId();
     // Most SQL database drivers stringify fetches but entities are not
     // necessarily stored in a SQL database. At the same time, NULL/FALSE/""
@@ -133,15 +206,11 @@ class PageEditTest extends NodeTestBase {
 
     // Change the authored by field to another user's name (that is not
     // logged in).
-    $edit['uid[0][target_id]'] = $this->webUser->getUsername();
+    $edit[$form_element_name] = $this->webUser->getUsername();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
-    $node_storage->resetCache(array($node->id()));
-    $node = $node_storage->load($node->id());
+    $this->nodeStorage->resetCache(array($node->id()));
+    $node = $this->nodeStorage->load($node->id());
     $this->assertIdentical($node->getOwnerId(), $this->webUser->id(), 'Node authored by normal user.');
-
-    // Check that normal users cannot change the authored by information.
-    $this->drupalLogin($this->webUser);
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertNoFieldByName('uid[0][target_id]');
   }
+
 }

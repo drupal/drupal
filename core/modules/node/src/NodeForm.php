@@ -356,24 +356,6 @@ class NodeForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildEntity(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\node\NodeInterface $entity */
-    $entity = parent::buildEntity($form, $form_state);
-    // A user might assign the node author by entering a user name in the node
-    // form, which we then need to translate to a user ID.
-    // @todo: Remove it when https://www.drupal.org/node/2322525 is pushed.
-    if (!empty($form_state->getValue('uid')[0]['target_id']) && $account = User::load($form_state->getValue('uid')[0]['target_id'])) {
-      $entity->setOwnerId($account->id());
-    }
-    else {
-      $entity->setOwnerId(0);
-    }
-    return $entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $node = $this->entity;
     $insert = $node->isNew();
