@@ -255,6 +255,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->processRow($row);
         $save = TRUE;
       }
+      catch (MigrateException $e) {
+        $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus(), $this->rollbackAction);
+        $this->saveMessage($e->getMessage(), $e->getLevel());
+        $save = FALSE;
+      }
       catch (MigrateSkipRowException $e) {
         $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED, $this->rollbackAction);
         $save = FALSE;
@@ -283,7 +288,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
         catch (MigrateException $e) {
           $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus(), $this->rollbackAction);
           $this->saveMessage($e->getMessage(), $e->getLevel());
-          $this->message->display($e->getMessage(), 'error');
         }
         catch (\Exception $e) {
           $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED, $this->rollbackAction);
