@@ -19,7 +19,10 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
   use CommentTestTrait;
 
-  static $modules = array('node', 'comment', 'text', 'filter');
+  // Directly testing that comments' entity_id is populated upon importing is
+  // not straightforward, but RDF module serves as an implicit test -
+  // its hook_comment_storage_load() references a stubbed comment.
+  static $modules = ['node', 'comment', 'text', 'filter', 'rdf'];
 
   /**
    * {@inheritdoc}
@@ -30,7 +33,11 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installSchema('system', ['router']);
     $this->installConfig(['node', 'comment']);
+
+    // The entity.node.canonical route must exist when the RDF hook is called.
+    $this->container->get('router.builder')->rebuild();
 
     entity_create('node_type', array('type' => 'page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
