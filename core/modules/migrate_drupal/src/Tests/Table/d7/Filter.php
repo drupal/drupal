@@ -177,6 +177,48 @@ class Filter extends DrupalDumpBase {
       'status' => '1',
       'settings' => 'a:1:{s:17:"filter_url_length";i:72;}',
     ))->values(array(
+      'format' => 'php_code',
+      'module' => 'filter',
+      'name' => 'filter_autop',
+      'weight' => '0',
+      'status' => '0',
+      'settings' => 'a:0:{}',
+    ))->values(array(
+      'format' => 'php_code',
+      'module' => 'filter',
+      'name' => 'filter_html',
+      'weight' => '-10',
+      'status' => '0',
+      'settings' => 'a:3:{s:12:"allowed_html";s:74:"<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>";s:16:"filter_html_help";i:1;s:20:"filter_html_nofollow";i:0;}',
+    ))->values(array(
+      'format' => 'php_code',
+      'module' => 'filter',
+      'name' => 'filter_htmlcorrector',
+      'weight' => '10',
+      'status' => '0',
+      'settings' => 'a:0:{}',
+    ))->values(array(
+      'format' => 'php_code',
+      'module' => 'filter',
+      'name' => 'filter_html_escape',
+      'weight' => '-10',
+      'status' => '0',
+      'settings' => 'a:0:{}',
+    ))->values(array(
+      'format' => 'php_code',
+      'module' => 'filter',
+      'name' => 'filter_url',
+      'weight' => '0',
+      'status' => '0',
+      'settings' => 'a:1:{s:17:"filter_url_length";i:72;}',
+    ))->values(array(
+      'format' => 'php_code',
+      'module' => 'php',
+      'name' => 'php_code',
+      'weight' => '0',
+      'status' => '1',
+      'settings' => 'a:0:{}',
+    ))->values(array(
       'format' => 'plain_text',
       'module' => 'filter',
       'name' => 'filter_autop',
@@ -215,4 +257,4 @@ class Filter extends DrupalDumpBase {
   }
 
 }
-#d47ad1c59579daa0db744321977c5e4b
+#7f8ea668d5deed8ce2d6c782dad2bcd5

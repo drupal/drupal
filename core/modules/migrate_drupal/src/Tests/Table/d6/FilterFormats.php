@@ -72,8 +72,13 @@ class FilterFormats extends DrupalDumpBase {
       'name' => 'Escape HTML Filter',
       'roles' => '',
       'cache' => '1',
+    ))->values(array(
+      'format' => '4',
+      'name' => 'PHP Code',
+      'roles' => ',3,4,5,',
+      'cache' => '0',
     ))->execute();
   }
 
 }
-#bbec2c10ac788fac1807d23774b34b49
+#6b9360c3aed58a0826b32b015d659c94

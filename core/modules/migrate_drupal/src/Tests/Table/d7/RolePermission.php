@@ -373,6 +373,10 @@ class RolePermission extends DrupalDumpBase {
       'permission' => 'use advanced search',
       'module' => 'search',
     ))->values(array(
+      'rid' => '3',
+      'permission' => 'use PHP for settings',
+      'module' => 'php',
+    ))->values(array(
       'rid' => '2',
       'permission' => 'use text format custom_text_format',
       'module' => 'filter',
@@ -416,4 +420,4 @@ class RolePermission extends DrupalDumpBase {
   }
 
 }
-#f2497ea0a9b301afa3b03fea57bcf71a
+#452b942b6abf9fb88da1a682e7f333fd

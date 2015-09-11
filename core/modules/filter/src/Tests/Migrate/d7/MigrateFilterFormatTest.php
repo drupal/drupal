@@ -71,6 +71,11 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('<div> <span> <ul> <li>', $config['settings']['allowed_html']);
     $config = $format->filters('filter_url')->getConfiguration();
     $this->assertIdentical(128, $config['settings']['filter_url_length']);
+
+    // The php_code format gets migrated, but the php_code filter is changed to
+    // filter_null.
+    $filters = FilterFormat::load('php_code')->get('filters');
+    $this->assertTrue(isset($filters['filter_null']));
   }
 
 }

@@ -34,8 +34,6 @@ process:
             - filter_url
             - filter_htmlcorrector
             - filter_html_escape
-          php:
-            - php_code
       settings: settings
       status:
         plugin: default_value

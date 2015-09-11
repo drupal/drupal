@@ -8,6 +8,20 @@ process:
   format: format
   name: name
   cache: cache
-  filters: filters
+  filters:
+    plugin: iterator
+    source: filters
+    key: @id
+    process:
+      id:
+        plugin: static_map
+        bypass: true
+        source: name
+        map:
+          php_code: filter_null
+      settings: settings
+      status:
+        plugin: default_value
+        default_value: true
 destination:
   plugin: entity:filter_format
