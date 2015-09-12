@@ -229,7 +229,7 @@ function simpletest_process_phpunit_results($phpunit_results) {
  *   Path to the PHPUnit XML file to use for the current $test_id.
  */
 function simpletest_phpunit_xml_filepath($test_id) {
-  return drupal_realpath('public://simpletest') . '/phpunit-' . $test_id . '.xml';
+  return \Drupal::service('file_system')->realpath('public://simpletest') . '/phpunit-' . $test_id . '.xml';
 }
 
 /**
