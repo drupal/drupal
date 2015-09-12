@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Installer\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -16,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides the language selection form.
+ *
+ * Note that hardcoded text provided by this form is not translated. This is
+ * because translations are downloaded as a result of submitting this form.
  */
 class SelectLanguageForm extends FormBase {
 
@@ -40,7 +42,7 @@ class SelectLanguageForm extends FormBase {
     $select_options = array();
     $browser_options = array();
 
-    $form['#title'] = $this->t('Choose language');
+    $form['#title'] = 'Choose language';
 
     // Build a select list with language names in native language for the user
     // to choose from. And build a list of available languages for the browser
@@ -62,18 +64,18 @@ class SelectLanguageForm extends FormBase {
     $browser_langcode = UserAgent::getBestMatchingLangcode($request->server->get('HTTP_ACCEPT_LANGUAGE'), $browser_options);
     $form['langcode'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Choose language'),
+      '#title' => 'Choose language',
       '#title_display' => 'invisible',
       '#options' => $select_options,
       // Use the browser detected language as default or English if nothing found.
       '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
     );
+    $link_to_english = install_full_redirect_url(array('parameters' => array('langcode' => 'en')));
     $form['help'] = array(
       '#type' => 'item',
-      '#markup' => SafeMarkup::format('<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>.
-      If you do not want this, select <a href="!english">English</a>.</p>', array(
-          '!english' => install_full_redirect_url(array('parameters' => array('langcode' => 'en'))),
-        )),
+      // #markup is XSS admin filtered which ensures unsafe protocols will be
+      // removed from the url.
+      '#markup' => '<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>. If you do not want this, select <a href="' . $link_to_english . '">English</a>.</p>',
       '#states' => array(
         'invisible' => array(
           'select[name="langcode"]' => array('value' => 'en'),
@@ -83,7 +85,7 @@ class SelectLanguageForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] =  array(
       '#type' => 'submit',
-      '#value' => $this->t('Save and continue'),
+      '#value' => 'Save and continue',
       '#button_type' => 'primary',
     );
     return $form;
