@@ -290,5 +290,7 @@ function database_test_schema() {
     'primary key' => array('id'),
   );
 
+  $schema['TEST_UPPERCASE'] = $schema['test'];
+
   return $schema;
 }

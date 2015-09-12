@@ -67,6 +67,74 @@ class QueryTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests SQL injection via condition operator.
+   */
+  public function testConditionOperatorArgumentsSQLInjection() {
+    $injection = "IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
+
+    // Convert errors to exceptions for testing purposes below.
+    set_error_handler(function ($severity, $message, $filename, $lineno) {
+      throw new \ErrorException($message, 0, $severity, $filename, $lineno);
+    });
+    try {
+      $result = db_select('test', 't')
+        ->fields('t')
+        ->condition('name', 1, $injection)
+        ->execute();
+      $this->fail('Should not be able to attempt SQL injection via condition operator.');
+    }
+    catch (\ErrorException $e) {
+      $this->pass('SQL injection attempt via condition arguments should result in a database exception.');
+    }
+
+    // Test that the insert query that was used in the SQL injection attempt did
+    // not result in a row being inserted in the database.
+    $result = db_select('test')
+      ->condition('name', 'test12345678')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+
+    // Attempt SQLi via union query with no unsafe characters.
+    $this->enableModules(['user']);
+    $this->installEntitySchema('user');
+    db_insert('test')
+      ->fields(['name' => '123456'])
+      ->execute();
+    $injection = "= 1 UNION ALL SELECT password FROM user WHERE uid =";
+
+    try {
+      $result = db_select('test', 't')
+        ->fields('t', array('name', 'name'))
+        ->condition('name', 1, $injection)
+        ->execute();
+      $this->fail('Should not be able to attempt SQL injection via operator.');
+    }
+    catch (\ErrorException $e) {
+      $this->pass('SQL injection attempt via condition arguments should result in a database exception.');
+    }
+
+    // Attempt SQLi via union query - uppercase tablename.
+    db_insert('TEST_UPPERCASE')
+      ->fields(['name' => 'secrets'])
+      ->execute();
+    $injection = "IS NOT NULL) UNION ALL SELECT name FROM {TEST_UPPERCASE} -- ";
+
+    try {
+      $result = db_select('test', 't')
+        ->fields('t', array('name'))
+        ->condition('name', 1, $injection)
+        ->execute();
+      $this->fail('Should not be able to attempt SQL injection via operator.');
+    }
+    catch (\ErrorException $e) {
+      $this->pass('SQL injection attempt via condition arguments should result in a database exception.');
+    }
+    restore_error_handler();
+  }
+
+  /**
    * Tests numeric query parameter expansion in expressions.
    *
    * @see \Drupal\Core\Database\Driver\sqlite\Statement::getStatement()
