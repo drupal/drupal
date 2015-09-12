@@ -421,8 +421,18 @@ core.date_format.*:
       type: boolean
       label: 'Locked'
     pattern:
-      type: date_format
+      type: core_date_format_pattern.[%parent.locked]
       label: 'PHP date format'
+
+# Unlocked date formats should use the translatable type.
+core_date_format_pattern.0:
+  type: date_format
+  label: 'Date format'
+
+# Locked date formats are just used to transport the value.
+core_date_format_pattern.1:
+  type: string
+  label: 'Date format'
 
 # Generic field settings schemas.
 

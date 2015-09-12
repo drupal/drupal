@@ -282,8 +282,12 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         return $value;
       }
       elseif (!$parts) {
+        $value = $data[$name];
+        if (is_bool($value)) {
+          $value = (int) $value;
+        }
         // If no more parts left, this is the final property.
-        return (string)$data[$name];
+        return (string) $value;
       }
       else {
         // Get nested value and continue processing.
