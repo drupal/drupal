@@ -222,8 +222,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     }
     $output = $renderer->renderRoot($form);
 
-    drupal_process_attached($form);
-
     // These forms have the title built in, so set the title here:
     $title = $form_state->get('title') ?: '';
 

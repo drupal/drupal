@@ -869,9 +869,14 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *   The rendered string output (typically HTML).
    */
   protected function render(array &$elements) {
-    $content = $this->container->get('renderer')->render($elements);
-    drupal_process_attached($elements);
-    $this->setRawContent($content);
+    // Use the bare HTML page renderer to render our links.
+    $renderer = $this->container->get('bare_html_page_renderer');
+    $response = $renderer->renderBarePage(
+      $build, '', $this->container->get('theme.manager')->getActiveTheme()->getName()
+    );
+
+    // Glean the content from the response object.
+    $this->setRawContent($response->getContent());
     $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
   }
