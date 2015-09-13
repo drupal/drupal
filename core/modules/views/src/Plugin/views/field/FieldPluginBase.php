@@ -862,19 +862,23 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Setup the tokens for fields.
       $previous = $this->getPreviousFieldLabels();
+      // We cast the optgroup labels to string as array keys must not be objects
+      // and t() may return a TranslationWrapper once issue #2557113 lands.
+      $optgroup_arguments = (string) t('Arguments');
+      $optgroup_fields = (string) t('Fields');
       foreach ($previous as $id => $label) {
-        $options[t('Fields')]["{{ $id }}"] = substr(strrchr($label, ":"), 2 );
+        $options[$optgroup_fields]["{{ $id }}"] = substr(strrchr($label, ":"), 2 );
       }
       // Add the field to the list of options.
-      $options[t('Fields')]["{{ {$this->options['id']} }}"] = substr(strrchr($this->adminLabel(), ":"), 2 );
+      $options[$optgroup_fields]["{{ {$this->options['id']} }}"] = substr(strrchr($this->adminLabel(), ":"), 2 );
 
       $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-        $options[t('Arguments')]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-        $options[t('Arguments')]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+        $options[$optgroup_arguments]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+        $options[$optgroup_arguments]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
       }
 
-      $this->documentSelfTokens($options[t('Fields')]);
+      $this->documentSelfTokens($options[$optgroup_fields]);
 
       // Default text.
 

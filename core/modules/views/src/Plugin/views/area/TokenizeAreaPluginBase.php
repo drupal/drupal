@@ -52,14 +52,18 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
 
     // Get a list of the available fields and arguments for token replacement.
     $options = array();
+    // We cast the optgroup labels to string as array keys must not be objects
+    // and t() may return a TranslationWrapper once issue #2557113 lands.
+    $optgroup_arguments = (string) t('Arguments');
+    $optgroup_fields = (string) t('Fields');
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
-      $options[t('Fields')]["[$field]"] = $handler->adminLabel();
+      $options[$optgroup_fields]["[$field]"] = $handler->adminLabel();
     }
 
     $count = 0; // This lets us prepare the key as we want it printed.
     foreach ($this->view->display_handler->getHandlers('argument') as $handler) {
-      $options[t('Arguments')]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-      $options[t('Arguments')]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+      $options[$optgroup_arguments]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+      $options[$optgroup_arguments]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
     }
 
     if (!empty($options)) {

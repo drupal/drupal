@@ -1726,9 +1726,13 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
         $options = array();
         $count = 0; // This lets us prepare the key as we want it printed.
+        // We cast the optgroup label to string as array keys must not be
+        // objects and t() may return a TranslationWrapper once issue #2557113
+        // lands.
+        $optgroup_arguments = (string) t('Arguments');
         foreach ($this->view->display_handler->getHandlers('argument') as $handler) {
-          $options[t('Arguments')]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-          $options[t('Arguments')]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+          $options[$optgroup_arguments]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+          $options[$optgroup_arguments]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
         }
 
         // Default text.

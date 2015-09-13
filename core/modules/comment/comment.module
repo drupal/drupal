@@ -299,8 +299,11 @@ function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInt
     $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
   }
   if (!_comment_entity_uses_integer_id($form_state->get('entity_type_id'))) {
+    // We cast the optgroup label to string as array keys must not be objects
+    // and t() will return a TranslationWrapper once issue #2557113 lands.
+    $optgroup = (string) t('General');
     // You cannot use comment fields on entity types with non-integer IDs.
-    unset($form['add']['new_storage_type']['#options'][t('General')]['comment']);
+    unset($form['add']['new_storage_type']['#options'][$optgroup]['comment']);
   }
 }
 

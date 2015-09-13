@@ -94,8 +94,10 @@ class ImportForm extends FormBase {
     else {
       $default = key($existing_languages);
       $language_options = array(
-        $this->t('Existing languages') => $existing_languages,
-        $this->t('Languages not yet added') => $this->languageManager->getStandardLanguageListWithoutConfigured(),
+        // We cast the optgroup labels to string as array keys must not be objects
+        // and t() may return a TranslationWrapper once issue #2557113 lands.
+        (string) $this->t('Existing languages') => $existing_languages,
+        (string) $this->t('Languages not yet added') => $this->languageManager->getStandardLanguageListWithoutConfigured(),
       );
     }
 
