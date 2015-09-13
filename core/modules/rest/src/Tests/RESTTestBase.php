@@ -7,11 +7,9 @@
 
 namespace Drupal\rest\Tests;
 
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
-use Drupal\user\UserInterface;
 
 /**
  * Test helper class that provides a REST client method to send HTTP requests.
@@ -45,6 +43,14 @@ abstract class RESTTestBase extends WebTestBase {
    * @var array
    */
   protected $defaultAuth;
+
+
+  /**
+   * The raw response body from http request operations.
+   *
+   * @var array
+   */
+  protected $responseBody;
 
   /**
    * Modules to install.
@@ -153,7 +159,7 @@ abstract class RESTTestBase extends WebTestBase {
         break;
     }
 
-    $response = $this->curlExec($curl_options);
+    $this->responseBody = $this->curlExec($curl_options);
 
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
@@ -163,9 +169,9 @@ abstract class RESTTestBase extends WebTestBase {
     $this->verbose($method . ' request to: ' . $url .
       '<hr />Code: ' . curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE) .
       '<hr />Response headers: ' . nl2br(print_r($headers, TRUE)) .
-      '<hr />Response body: ' . $response);
+      '<hr />Response body: ' . $this->responseBody);
 
-    return $response;
+    return $this->responseBody;
   }
 
   /**
@@ -388,4 +394,27 @@ abstract class RESTTestBase extends WebTestBase {
     return $node;
   }
 
+  /**
+   * Check to see if the HTTP request response body is identical to the expected
+   * value.
+   *
+   * @param $expected
+   *   The first value to check.
+   * @param $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertResponseBody($expected, $message = '', $group = 'REST Response') {
+    return $this->assertIdentical($expected, $this->responseBody, $message ? $message : strtr('Response body @expected (expected) is equal to @response (actual).', array('@expected' => var_export($expected, TRUE), '@response' => var_export($this->responseBody, TRUE))), $group);
+  }
 }
