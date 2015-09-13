@@ -27,9 +27,9 @@
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
-      <ul{{ attributes }}>
+      <ul{{ attributes.addClass('menu') }}>
     {% else %}
-      <ul>
+      <ul class="menu">
     {% endif %}
       {% for item in items %}
         <li{{ item.attributes }}>
