@@ -5,8 +5,6 @@ description: 'A flexible, recolorable theme with many regions and a responsive, 
 package: Core
 version: VERSION
 core: 8.x
-stylesheets-remove:
-  - '@classy/css/layout.css'
 libraries:
   - bartik/global-styling
 ckeditor_stylesheets:
