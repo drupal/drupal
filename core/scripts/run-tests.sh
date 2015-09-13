@@ -1271,7 +1271,7 @@ function simpletest_script_open_browser() {
 
   // Make the html page to write to disk.
   $render_service = \Drupal::service('renderer');
-  $html = '<head>' . ($js_assets_header) . $render_service->renderPlain($css_assets) . '</head><body>' . $render_service->renderPlain($form) . $render_service->renderPlain($js_assets_footer) .'</body>';
+  $html = '<head>' . $render_service->renderPlain($js_assets_header) . $render_service->renderPlain($css_assets) . '</head><body>' . $render_service->renderPlain($form) . $render_service->renderPlain($js_assets_footer) .'</body>';
 
   // Ensure we have assets verbose directory - tests with no verbose output will not
   // have created one.
