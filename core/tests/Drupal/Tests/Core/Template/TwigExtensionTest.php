@@ -33,7 +33,7 @@ class TwigExtensionTest extends UnitTestCase {
     $twig = new \Twig_Environment(NULL, array(
       'debug' => TRUE,
       'cache' => FALSE,
-      'autoescape' => TRUE,
+      'autoescape' => 'html',
       'optimizations' => 0
     ));
     $twig->addExtension((new TwigExtension($renderer))->setUrlGenerator($this->getMock('Drupal\Core\Routing\UrlGeneratorInterface')));
@@ -113,7 +113,7 @@ class TwigExtensionTest extends UnitTestCase {
     $twig = new \Twig_Environment(NULL, array(
       'debug' => TRUE,
       'cache' => FALSE,
-      'autoescape' => TRUE,
+      'autoescape' => 'html',
       'optimizations' => 0
     ));
     $twig_extension = new TwigExtension($renderer);
