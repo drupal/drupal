@@ -96,7 +96,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $edit = array('preprocess_css' => FALSE);
     $this->drupalPostForm('admin/config/development/performance', $edit, t('Save configuration'));
     $this->drupalGet('<front>');
-    $this->assertRaw('classy/css/components/action-links.css');
+    $this->assertRaw('classy/css/layout.css');
 
     // Verify the strings from the translation files were imported.
     $test_samples = ['Save and continue', 'Anonymous'];
