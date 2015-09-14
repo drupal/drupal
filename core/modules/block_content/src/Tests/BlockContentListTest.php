@@ -46,7 +46,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Test the contents of each th cell.
     $expected_items = array(t('Block description'), t('Operations'));
     foreach ($elements as $key => $element) {
-      $this->assertIdentical((string) $element[0], $expected_items[$key]);
+      $this->assertEqual($element[0], $expected_items[$key]);
     }
 
     $label = 'Antelope';

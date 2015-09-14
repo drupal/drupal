@@ -178,14 +178,14 @@ class ModuleTest extends ViewKernelTestBase {
     foreach ($all_views as $id => $view) {
       $expected_options[$id] = $view->label();
     }
-    $this->assertIdentical($expected_options, Views::getViewsAsOptions(TRUE), 'Expected options array was returned.');
+    $this->assertIdentical($expected_options, $this->castSafeStrings(Views::getViewsAsOptions(TRUE)), 'Expected options array was returned.');
 
     // Test the default.
-    $this->assertIdentical($this->formatViewOptions($all_views), Views::getViewsAsOptions(), 'Expected options array for all views was returned.');
+    $this->assertIdentical($this->formatViewOptions($all_views), $this->castSafeStrings(Views::getViewsAsOptions()), 'Expected options array for all views was returned.');
     // Test enabled views.
-    $this->assertIdentical($this->formatViewOptions($expected_enabled), Views::getViewsAsOptions(FALSE, 'enabled'), 'Expected enabled options array was returned.');
+    $this->assertIdentical($this->formatViewOptions($expected_enabled), $this->castSafeStrings(Views::getViewsAsOptions(FALSE, 'enabled')), 'Expected enabled options array was returned.');
     // Test disabled views.
-    $this->assertIdentical($this->formatViewOptions($expected_disabled), Views::getViewsAsOptions(FALSE, 'disabled'), 'Expected disabled options array was returned.');
+    $this->assertIdentical($this->formatViewOptions($expected_disabled), $this->castSafeStrings(Views::getViewsAsOptions(FALSE, 'disabled')), 'Expected disabled options array was returned.');
 
     // Test the sort parameter.
     $all_views_sorted = $all_views;
@@ -201,10 +201,10 @@ class ModuleTest extends ViewKernelTestBase {
     $expected_opt_groups = array();
     foreach ($all_views as $view) {
       foreach ($view->get('display') as $display) {
-          $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = t('@view : @display', array('@view' => $view->id(), '@display' => $display['id']));
+          $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = (string) t('@view : @display', array('@view' => $view->id(), '@display' => $display['id']));
       }
     }
-    $this->assertIdentical($expected_opt_groups, Views::getViewsAsOptions(FALSE, 'all', NULL, TRUE), 'Expected option array for an option group returned.');
+    $this->assertIdentical($expected_opt_groups, $this->castSafeStrings(Views::getViewsAsOptions(FALSE, 'all', NULL, TRUE)), 'Expected option array for an option group returned.');
   }
 
   /**
@@ -347,7 +347,7 @@ class ModuleTest extends ViewKernelTestBase {
     $expected_options = array();
     foreach ($views as $view) {
       foreach ($view->get('display') as $display) {
-        $expected_options[$view->id() . ':' . $display['id']] = t('View: @view - Display: @display',
+        $expected_options[$view->id() . ':' . $display['id']] = (string) t('View: @view - Display: @display',
           array('@view' => $view->id(), '@display' => $display['id']));
       }
     }

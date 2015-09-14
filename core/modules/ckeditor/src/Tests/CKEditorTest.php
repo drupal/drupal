@@ -94,8 +94,9 @@ class CKEditorTest extends KernelTestBase {
         'drupallink' => file_create_url('core/modules/ckeditor/js/plugins/drupallink/plugin.js'),
       ),
     );
+    $expected_config = $this->castSafeStrings($expected_config);
     ksort($expected_config);
-    $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for default configuration.');
+    $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for default configuration.');
 
     // Customize the configuration: add button, have two contextually enabled
     // buttons, and configure a CKEditor plugin setting.
@@ -116,7 +117,7 @@ class CKEditorTest extends KernelTestBase {
     $expected_config['drupalExternalPlugins']['llama_contextual_and_button'] = file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual_and_button.js');
     $expected_config['contentsCss'][] = file_create_url('core/modules/ckeditor/tests/modules/ckeditor_test.css');
     ksort($expected_config);
-    $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for customized configuration.');
+    $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
     // Change the allowed HTML tags; the "allowedContent" and "format_tags"
     // settings for CKEditor should automatically be updated as well.
@@ -127,7 +128,7 @@ class CKEditorTest extends KernelTestBase {
     $expected_config['allowedContent']['pre'] = array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE);
     $expected_config['allowedContent']['h3'] = array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE);
     $expected_config['format_tags'] = 'p;h2;h3;h4;h5;h6;pre';
-    $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for customized configuration.');
+    $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
     // Disable the filter_html filter: allow *all *tags.
     $format->setFilterConfig('filter_html', array('status' => 0));
@@ -136,7 +137,7 @@ class CKEditorTest extends KernelTestBase {
     $expected_config['allowedContent'] = TRUE;
     $expected_config['disallowedContent'] = FALSE;
     $expected_config['format_tags'] = 'p;h1;h2;h3;h4;h5;h6;pre';
-    $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for customized configuration.');
+    $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
     // Enable the filter_test_restrict_tags_and_attributes filter.
     $format->setFilterConfig('filter_test_restrict_tags_and_attributes', array(
@@ -205,7 +206,7 @@ class CKEditorTest extends KernelTestBase {
     );
     $expected_config['format_tags'] = 'p';
     ksort($expected_config);
-    $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for customized configuration.');
+    $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
   }
 
   /**
@@ -216,7 +217,7 @@ class CKEditorTest extends KernelTestBase {
 
     // Default toolbar.
     $expected = $this->getDefaultToolbarConfig();
-    $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for default toolbar.');
+    $this->assertIdentical($expected, $this->castSafeStrings($this->ckeditor->buildToolbarJSSetting($editor)), '"toolbar" configuration part of JS settings built correctly for default toolbar.');
 
     // Customize the configuration.
     $settings = $editor->getSettings();
@@ -224,7 +225,7 @@ class CKEditorTest extends KernelTestBase {
     $editor->setSettings($settings);
     $editor->save();
     $expected[0]['items'][] = 'Strike';
-    $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for customized toolbar.');
+    $this->assertIdentical($expected, $this->castSafeStrings($this->ckeditor->buildToolbarJSSetting($editor)), '"toolbar" configuration part of JS settings built correctly for customized toolbar.');
 
     // Enable the editor_test module, customize further.
     $this->enableModules(array('ckeditor_test'));
@@ -236,7 +237,7 @@ class CKEditorTest extends KernelTestBase {
     $editor->save();
     $expected[0]['name'] = 'JunkScience';
     $expected[0]['items'][] = 'Llama';
-    $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for customized toolbar with contrib module-provided CKEditor plugin.');
+    $this->assertIdentical($expected, $this->castSafeStrings($this->ckeditor->buildToolbarJSSetting($editor)), '"toolbar" configuration part of JS settings built correctly for customized toolbar with contrib module-provided CKEditor plugin.');
   }
 
   /**
@@ -442,23 +443,23 @@ class CKEditorTest extends KernelTestBase {
   protected function getDefaultToolbarConfig() {
     return array(
       array(
-        'name' => t('Formatting'),
+        'name' => 'Formatting',
         'items' => array('Bold', 'Italic',),
       ),
       array(
-        'name' => t('Links'),
+        'name' => 'Links',
         'items' => array('DrupalLink', 'DrupalUnlink',),
       ),
       array(
-        'name' => t('Lists'),
+        'name' => 'Lists',
         'items' => array('BulletedList', 'NumberedList',),
       ),
       array(
-        'name' => t('Media'),
+        'name' => 'Media',
         'items' => array('Blockquote', 'DrupalImage',),
       ),
       array(
-        'name' => t('Tools'),
+        'name' => 'Tools',
         'items' => array('Source',),
       ),
       '/',

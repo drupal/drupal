@@ -73,7 +73,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     // Test the contents of each th cell.
     $expected_items = array(t('Name'), t('Weight'), t('Operations'));
     foreach ($elements as $key => $element) {
-      $this->assertIdentical((string) $element[0], $expected_items[$key]);
+      $this->assertEqual((string) $element[0], $expected_items[$key]);
     }
 
     // Look for test shortcuts in the table.

@@ -193,7 +193,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     );
     $breakpoint_groups = \Drupal::service('breakpoint.manager')->getGroups();
     // Ensure the order is as expected. Should be sorted by label.
-    $this->assertIdentical($expected, $breakpoint_groups);
+    $this->assertIdentical($expected, $this->castSafeStrings($breakpoint_groups));
 
     $expected = array(
       'breakpoint_theme_test' => 'theme',

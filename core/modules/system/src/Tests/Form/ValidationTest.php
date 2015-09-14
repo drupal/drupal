@@ -293,7 +293,7 @@ class ValidationTest extends WebTestBase {
         $this->fail(format_string('The error message for the "@title" element with key "@key" was not found.', ['@title' => $message['title'], '@key' => $message['key']]));
       }
       else {
-        $this->assertIdentical($message['message'], (string) $element[$delta]);
+        $this->assertEqual($message['message'], (string) $element[$delta]);
       }
 
       // Gather the element for checking the jump link section.

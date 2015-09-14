@@ -20,6 +20,7 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Site\Settings;
 use Drupal\simpletest\AssertContentTrait;
+use Drupal\simpletest\AssertHelperTrait;
 use Drupal\simpletest\RandomGeneratorTrait;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
   use AssertLegacyTrait;
   use AssertContentTrait;
+  use AssertHelperTrait;
   use RandomGeneratorTrait;
 
   /**

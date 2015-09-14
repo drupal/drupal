@@ -238,8 +238,10 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'hr',
     ));
 
-    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', 'Long month name context is working.');
-    $this->assertIdentical(t('May', array(), array('langcode' => 'hr')), 'Svi.', 'Default context is working.');
+    // We cast the return value of t() to string so as to retrieve the
+    // translated value, rendered as a string.
+    $this->assertIdentical((string) t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', 'Long month name context is working.');
+    $this->assertIdentical((string) t('May', array(), array('langcode' => 'hr')), 'Svi.', 'Default context is working.');
   }
 
   /**
@@ -254,7 +256,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
-    $this->assertIdentical(t('Operations', array(), array('langcode' => $langcode)), 'Műveletek', 'String imported and translated.');
+    $this->assertIdentical((string) t('Operations', array(), array('langcode' => $langcode)), 'Műveletek', 'String imported and translated.');
 
     // Try importing a .po file.
     $this->importPoFile($this->getPoFileWithEmptyMsgstr(), array(

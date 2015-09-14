@@ -31,8 +31,8 @@ class InspectionTest extends PluginTestBase {
       $plugin = $this->mockBlockManager->createInstance($id);
       $expected_definition = $this->mockBlockExpectedDefinitions[$id];
       $this->assertIdentical($plugin->getPluginId(), $id);
-      $this->assertIdentical($this->mockBlockManager->getDefinition($id), $expected_definition);
-      $this->assertIdentical($plugin->getPluginDefinition(), $expected_definition);
+      $this->assertIdentical($this->castSafeStrings($this->mockBlockManager->getDefinition($id)), $expected_definition);
+      $this->assertIdentical($this->castSafeStrings($plugin->getPluginDefinition()), $expected_definition);
     }
     // Test a plugin manager that provides defaults.
     foreach (array('test_block1', 'test_block2') as $id) {
@@ -40,7 +40,7 @@ class InspectionTest extends PluginTestBase {
       $expected_definition = $this->defaultsTestPluginExpectedDefinitions[$id];
       $this->assertIdentical($plugin->getPluginId(), $id);
       $this->assertIdentical($this->defaultsTestPluginManager->getDefinition($id), $expected_definition);
-      $this->assertIdentical($plugin->getPluginDefinition(), $expected_definition);
+      $this->assertIdentical($this->castSafeStrings($plugin->getPluginDefinition()), $expected_definition);
     }
   }
 

@@ -87,23 +87,23 @@ class CKEditorAdminTest extends WebTestBase {
           // Button groups
           array(
             array(
-              'name' => t('Formatting'),
+              'name' => 'Formatting',
               'items' => array('Bold', 'Italic',),
             ),
             array(
-              'name' => t('Links'),
+              'name' => 'Links',
               'items' => array('DrupalLink', 'DrupalUnlink',),
             ),
             array(
-              'name' => t('Lists'),
+              'name' => 'Lists',
               'items' => array('BulletedList', 'NumberedList',),
             ),
             array(
-              'name' => t('Media'),
+              'name' => 'Media',
               'items' => array('Blockquote', 'DrupalImage',),
             ),
             array(
-              'name' => t('Tools'),
+              'name' => 'Tools',
               'items' => array('Source',),
             ),
           ),
@@ -111,7 +111,7 @@ class CKEditorAdminTest extends WebTestBase {
       ),
       'plugins' => array(),
     );
-    $this->assertIdentical($ckeditor->getDefaultSettings(), $expected_default_settings);
+    $this->assertIdentical($this->castSafeStrings($ckeditor->getDefaultSettings()), $expected_default_settings);
 
     // Keep the "CKEditor" editor selected and click the "Configure" button.
     $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
@@ -279,7 +279,7 @@ class CKEditorAdminTest extends WebTestBase {
     $expected_settings['plugins']['stylescombo']['styles'] = '';
     $editor = entity_load('editor', 'amazing_format');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists now.');
-    $this->assertIdentical($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertIdentical($this->castSafeStrings($expected_settings), $this->castSafeStrings($editor->getSettings()), 'The Editor config entity has the correct settings.');
   }
 
 }

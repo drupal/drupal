@@ -107,12 +107,12 @@ class CKEditorLoadingTest extends WebTestBase {
     $expected = array('formats' => array('filtered_html' => array(
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
-      'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
+      'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
       'editorSupportsContentFiltering' => TRUE,
       'isXssSafe' => FALSE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
-    $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
+    $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
     $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
@@ -138,12 +138,12 @@ class CKEditorLoadingTest extends WebTestBase {
         'filtered_html' => array(
           'format' => 'filtered_html',
           'editor' => 'ckeditor',
-          'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
+          'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
           'editorSupportsContentFiltering' => TRUE,
           'isXssSafe' => FALSE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
-    $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
+    $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
   }

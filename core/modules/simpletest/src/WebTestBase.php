@@ -1697,7 +1697,7 @@ abstract class WebTestBase extends TestBase {
       $submit = (string) $submit;
     }
     if (is_array($edit)) {
-      array_walk_recursive($edit, [$this, 'castSafeStrings']);
+      $edit = $this->castSafeStrings($edit);
     }
 
     $submit_matches = FALSE;

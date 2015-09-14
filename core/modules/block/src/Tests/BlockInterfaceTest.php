@@ -109,7 +109,7 @@ class BlockInterfaceTest extends KernelTestBase {
     $actual_form = $display_block->buildConfigurationForm(array(), $form_state);
     // Remove the visibility sections, as that just tests condition plugins.
     unset($actual_form['visibility'], $actual_form['visibility_tabs']);
-    $this->assertIdentical($actual_form, $expected_form, 'Only the expected form elements were present.');
+    $this->assertIdentical($this->castSafeStrings($actual_form), $this->castSafeStrings($expected_form), 'Only the expected form elements were present.');
 
     $expected_build = array(
       '#children' => 'My custom display message.',

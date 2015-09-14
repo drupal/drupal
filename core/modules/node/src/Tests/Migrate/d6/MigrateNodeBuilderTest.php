@@ -34,8 +34,8 @@ class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
   protected function assertEntity($id, $label) {
     $migration = $this->builtMigrations[$id];
     $this->assertTrue($migration instanceof Migration);
-    $this->assertIdentical($id, $migration->Id());
-    $this->assertIdentical($label, $migration->label());
+    $this->assertIdentical($id, $migration->id());
+    $this->assertEqual($label, $migration->label());
   }
 
   /**
