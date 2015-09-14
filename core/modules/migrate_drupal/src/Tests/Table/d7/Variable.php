@@ -293,11 +293,26 @@ class Variable extends DrupalDumpBase {
       'name' => 'filter_fallback_format',
       'value' => 's:10:"plain_text";',
     ))->values(array(
+      'name' => 'forum_block_num_active',
+      'value' => 'i:9;',
+    ))->values(array(
+      'name' => 'forum_block_num_new',
+      'value' => 'i:4;',
+    ))->values(array(
       'name' => 'forum_containers',
       'value' => 'a:1:{i:0;s:1:"6";}',
     ))->values(array(
+      'name' => 'forum_hot_topic',
+      'value' => 'i:10;',
+    ))->values(array(
       'name' => 'forum_nav_vocabulary',
       'value' => 's:1:"2";',
+    ))->values(array(
+      'name' => 'forum_order',
+      'value' => 'i:1;',
+    ))->values(array(
+      'name' => 'forum_per_page',
+      'value' => 'i:25;',
     ))->values(array(
       'name' => 'image_style_preview_image',
       'value' => 's:33:"core/modules/image/testsample.png";',
@@ -692,4 +707,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#ce49dea65e803f696bbb2b7adb81548b
+#d20a0a7f31645aba285f0ce7505c80a5

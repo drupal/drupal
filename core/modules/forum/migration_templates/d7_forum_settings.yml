@@ -1,0 +1,29 @@
+id: d7_forum_settings
+label: Forum configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - forum_hot_topic
+    - forum_per_page
+    - forum_order
+    - forum_block_num_active
+    - forum_block_num_new
+    - forum_nav_vocabulary
+process:
+  'block/active/limit': forum_block_num_active
+  'block/new/limit': forum_block_num_new
+  'topics/hot_threshold': forum_hot_topic
+  'topics/page_limit': forum_per_page
+  'topics/order': forum_order
+  vocabulary:
+    plugin: migration
+    migration: d7_taxonomy_vocabulary
+    source: forum_nav_vocabulary
+destination:
+  plugin: config
+  config_name: forum.settings
+migration_dependencies:
+  required:
+    - d7_taxonomy_vocabulary
