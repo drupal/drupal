@@ -1,9 +1,9 @@
-id: d6_custom_block
+id: d7_custom_block
 label: Custom blocks
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_box
+  plugin: d7_block_custom
   constants:
     type: basic
 process:
@@ -12,7 +12,7 @@ process:
   info: info
   'body/format':
     plugin: migration
-    migration: d6_filter_format
+    migration: d7_filter_format
     source: format
   'body/value': body
 destination:
@@ -20,5 +20,5 @@ destination:
   no_stub: true
 migration_dependencies:
   required:
-    - d6_filter_format
+    - d7_filter_format
     - block_content_body_field

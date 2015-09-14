@@ -27,8 +27,8 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
     $this->installConfig(array('block_content'));
     $this->installEntitySchema('block_content');
 
-    $this->executeMigration('d6_block_content_type');
-    $this->executeMigration('d6_block_content_body_field');
+    $this->executeMigration('block_content_type');
+    $this->executeMigration('block_content_body_field');
 
     $this->prepareMigrations(array(
       'd6_filter_format' => array(

@@ -28,3 +28,41 @@ function block_content_update_8001() {
   \Drupal::entityDefinitionUpdateManager()
     ->installFieldStorageDefinition('revision_translation_affected', 'block_content', 'block_content', $storage_definition);
 }
+
+/**
+ * Generalizes the d6_block_content_type and d6_block_content_body_field
+ * migrations.
+ */
+function block_content_update_8002() {
+  if (\Drupal::moduleHandler()->moduleExists('migrate')) {
+    $config = \Drupal::configFactory();
+    $templates = \Drupal::service('migrate.template_storage');
+
+    $migration = $config->getEditable('migrate.migration.d6_block_content_type');
+    if ($migration) {
+      $template = $templates->getTemplateByName('block_content_type');
+      $migration
+        ->set('id', $template['id'])
+        ->set('label', $template['label'])
+        ->set('migration_tags', $template['migration_tags'])
+        ->set('source', array_merge($migration->get('source'), $template['source']))
+        ->clear('source.constants')
+        ->set('process', $template['process'])
+        ->save(TRUE);
+    }
+
+    $migration = $config->getEditable('migrate.migration.d6_block_content_body_field');
+    if ($migration) {
+      $template = $templates->getTemplateByName('block_content_body_field');
+      $migration
+        ->set('id', $template['id'])
+        ->set('label', $template['label'])
+        ->set('migration_tags', $template['migration_tags'])
+        ->set('source', array_merge($migration->get('source'), $template['source']))
+        ->clear('source.constants')
+        ->set('process', $template['process'])
+        ->set('migration_dependencies', $template['migration_dependencies'])
+        ->save(TRUE);
+    }
+  }
+}
