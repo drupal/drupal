@@ -160,4 +160,12 @@ class ElementTest extends WebTestBase {
     $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
   }
 
+  /**
+   * Tests form element error messages.
+   */
+  public function testFormElementErrors() {
+    $this->drupalPostForm('form_test/details-form', [], 'Submit');
+    $this->assertText('I am an error on the details element.');
+  }
+
 }

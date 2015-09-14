@@ -257,6 +257,12 @@ function template_preprocess_details(&$variables) {
   $variables['description'] = (!empty($element['#description'])) ? $element['#description'] : '';
   $variables['children'] = (isset($element['#children'])) ? $element['#children'] : '';
   $variables['value'] = (isset($element['#value'])) ? $element['#value'] : '';
+
+  // Display any error messages.
+  $variables['errors'] = NULL;
+  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
+    $variables['errors'] = $element['#errors'];
+  }
 }
 
 /**
