@@ -58,7 +58,7 @@ class UserRolesAssignmentTest extends WebTestBase {
       "roles[$rid]" => $rid,
     );
     $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
-    $this->assertText(t('Created a new user account for !name.', array('!name' => $edit['name'])));
+    $this->assertText(t('Created a new user account for @name.', array('@name' => $edit['name'])));
     // Get the newly added user.
     $account = user_load_by_name($edit['name']);
 

@@ -66,7 +66,7 @@ class ThemeTest extends WebTestBase {
     $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => '');
     foreach ($foos as $type => $example) {
       $output = \Drupal::theme()->render('theme_test_foo', array('foo' => $example));
-      $this->assertTrue($output instanceof SafeStringInterface || is_string($output), format_string('\Drupal::theme() returns an object that implements SafeStringInterface or a string for data type !type.', array('!type' => $type)));
+      $this->assertTrue($output instanceof SafeStringInterface || is_string($output), format_string('\Drupal::theme() returns an object that implements SafeStringInterface or a string for data type @type.', array('@type' => $type)));
       if ($output instanceof SafeStringInterface) {
         $this->assertIdentical((string) $example, $output->__toString());
       }

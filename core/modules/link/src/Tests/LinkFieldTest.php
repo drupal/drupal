@@ -277,14 +277,14 @@ class LinkFieldTest extends WebTestBase {
             "{$field_name}[0][uri]" => 'http://www.example.com',
           );
           $this->drupalPostForm(NULL, $edit, t('Save'));
-          $this->assertText(t('!name field is required.', array('!name' => t('Link text'))));
+          $this->assertText(t('@name field is required.', array('@name' => t('Link text'))));
 
           // Verify that the link text is not required, if the URL is empty.
           $edit = array(
             "{$field_name}[0][uri]" => '',
           );
           $this->drupalPostForm(NULL, $edit, t('Save'));
-          $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
+          $this->assertNoText(t('@name field is required.', array('@name' => t('Link text'))));
 
           // Verify that a URL and link text meets requirements.
           $this->drupalGet('entity_test/add');
@@ -293,7 +293,7 @@ class LinkFieldTest extends WebTestBase {
             "{$field_name}[0][title]" => 'Example',
           );
           $this->drupalPostForm(NULL, $edit, t('Save'));
-          $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
+          $this->assertNoText(t('@name field is required.', array('@name' => t('Link text'))));
         }
       }
     }

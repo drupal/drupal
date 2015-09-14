@@ -185,7 +185,7 @@ class FormTest extends WebTestBase {
         $expected[] = $form[$key]['#form_test_required_error'];
       }
       else {
-        $expected[] = t('!name field is required.', array('!name' => $form[$key]['#title']));
+        $expected[] = t('@name field is required.', array('@name' => $form[$key]['#title']));
       }
     }
 
@@ -335,7 +335,7 @@ class FormTest extends WebTestBase {
     // First, try to submit without the required checkbox.
     $edit = array();
     $this->drupalPostForm('form-test/checkbox', $edit, t('Submit'));
-    $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), 'A required checkbox is actually mandatory');
+    $this->assertRaw(t('@name field is required.', array('@name' => 'required_checkbox')), 'A required checkbox is actually mandatory');
 
     // Now try to submit the form correctly.
     $values = Json::decode($this->drupalPostForm(NULL, array('required_checkbox' => 1), t('Submit')));
@@ -361,7 +361,6 @@ class FormTest extends WebTestBase {
    */
   function testSelect() {
     $form = \Drupal::formBuilder()->getForm('Drupal\form_test\Form\FormTestSelectForm');
-    $error = '!name field is required.';
     $this->drupalGet('form-test/select');
 
     // Posting without any values should throw validation errors.
@@ -379,7 +378,7 @@ class FormTest extends WebTestBase {
         'multiple_no_default',
     );
     foreach ($no_errors as $key) {
-      $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+      $this->assertNoText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
     }
 
     $expected_errors = array(
@@ -390,7 +389,7 @@ class FormTest extends WebTestBase {
         'multiple_no_default_required',
     );
     foreach ($expected_errors as $key) {
-      $this->assertText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+      $this->assertText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
     }
 
     // Post values for required fields.

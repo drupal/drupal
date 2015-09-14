@@ -48,8 +48,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('!block %name has been created.', array(
-      '!block' => 'basic',
+    $this->assertRaw(format_string('@block %name has been created.', array(
+      '@block' => 'basic',
       '%name' => $edit['info[0][value]']
     )), 'Basic block created.');
 
@@ -95,8 +95,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('!block %name has been created.', array(
-      '!block' => 'basic',
+    $this->assertRaw(format_string('@block %name has been created.', array(
+      '@block' => 'basic',
       '%name' => $edit['info[0][value]']
     )), 'Basic block created.');
 
@@ -144,8 +144,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add', $edit, t('Save'));
 
     // Check that the block has been created and that it is a basic block.
-    $this->assertRaw(format_string('!block %name has been created.', array(
-      '!block' => 'basic',
+    $this->assertRaw(format_string('@block %name has been created.', array(
+      '@block' => 'basic',
       '%name' => $edit['info[0][value]'],
     )), 'Basic block created.');
 

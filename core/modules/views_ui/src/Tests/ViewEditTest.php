@@ -110,7 +110,7 @@ class ViewEditTest extends UITestBase {
       $this->assertResponse(200);
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       $this->assertNoLinkByHref($langcode_url);
-      $this->assertNoLink(t('!type language selected for page', array('!type' => t('Content'))));
+      $this->assertNoLink(t('@type language selected for page', array('@type' => t('Content'))));
       $this->assertNoLink(t('Content language of view row'));
     }
 
@@ -127,12 +127,12 @@ class ViewEditTest extends UITestBase {
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       if ($view_name == 'test_view') {
         $this->assertNoLinkByHref($langcode_url);
-        $this->assertNoLink(t('!type language selected for page', array('!type' => t('Content'))));
+        $this->assertNoLink(t('@type language selected for page', array('@type' => t('Content'))));
         $this->assertNoLink(t('Content language of view row'));
       }
       else {
         $this->assertLinkByHref($langcode_url);
-        $this->assertNoLink(t('!type language selected for page', array('!type' => t('Content'))));
+        $this->assertNoLink(t('@type language selected for page', array('@type' => t('Content'))));
         $this->assertLink(t('Content language of view row'));
       }
 

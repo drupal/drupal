@@ -118,19 +118,19 @@ class ValidationTest extends WebTestBase {
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
     $this->drupalPostForm($path, $edit, t('Partial validate'));
-    $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertNoText(t('@name field is required.', array('@name' => 'Title')));
     $this->assertText('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
     $this->drupalPostForm($path, $edit, t('Partial validate (numeric index)'));
-    $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertNoText(t('@name field is required.', array('@name' => 'Title')));
     $this->assertText('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
     $this->drupalPostForm($path, $edit, t('Partial validate (substring)'));
-    $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertNoText(t('@name field is required.', array('@name' => 'Title')));
     $this->assertText('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
@@ -140,7 +140,7 @@ class ValidationTest extends WebTestBase {
     // Now test full form validation and ensure that the #element_validate
     // handler is still triggered.
     $this->drupalPostForm($path, $edit, t('Full validate'));
-    $this->assertText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertText(t('@name field is required.', array('@name' => 'Title')));
     $this->assertText('Test element is invalid');
   }
 
@@ -218,7 +218,7 @@ class ValidationTest extends WebTestBase {
     $messages = [];
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertNoText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
         $messages[] = [
           'title' => $form[$key]['#title'],
           'message' => $form[$key]['#required_error'],
@@ -226,7 +226,7 @@ class ValidationTest extends WebTestBase {
         ];
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertNoText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
         $messages[] = [
           'title' => $form[$key]['#title'],
           'message' => $form[$key]['#form_test_required_error'],
@@ -236,7 +236,7 @@ class ValidationTest extends WebTestBase {
       elseif (!empty($form[$key]['#required'])) {
         $messages[] = [
           'title' => $form[$key]['#title'],
-          'message' => t('!name field is required.', ['!name' => $form[$key]['#title']]),
+          'message' => t('@name field is required.', ['@name' => $form[$key]['#title']]),
           'key' => $key,
         ];
       }
@@ -254,17 +254,17 @@ class ValidationTest extends WebTestBase {
     $messages = [];
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertNoText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
         $this->assertNoText($form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertNoText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
         $this->assertNoText($form[$key]['#form_test_required_error']);
       }
       elseif (!empty($form[$key]['#required'])) {
         $messages[] = [
           'title' => $form[$key]['#title'],
-          'message' => t('!name field is required.', ['!name' => $form[$key]['#title']]),
+          'message' => t('@name field is required.', ['@name' => $form[$key]['#title']]),
           'key' => $key,
         ];
       }

@@ -273,8 +273,8 @@ class ConfigExportImportUITest extends WebTestBase {
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText(t('There are no configuration changes to import.'));
-    $this->assertText(t('!collection configuration collection', array('!collection' => 'collection.test1')));
-    $this->assertText(t('!collection configuration collection', array('!collection' => 'collection.test2')));
+    $this->assertText(t('@collection configuration collection', array('@collection' => 'collection.test1')));
+    $this->assertText(t('@collection configuration collection', array('@collection' => 'collection.test2')));
     $this->assertText('config_test.create');
     $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.create');
     $this->assertText('config_test.update');

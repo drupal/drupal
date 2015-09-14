@@ -35,7 +35,7 @@ class EmailTest extends WebTestBase {
     $edit['email_required'] = ' ';
     $this->drupalPostForm('form-test/email', $edit, 'Submit');
     $this->assertRaw(t('The email address %mail is not valid.', array('%mail' => 'invalid')));
-    $this->assertRaw(t('!name field is required.', array('!name' => 'Address')));
+    $this->assertRaw(t('@name field is required.', array('@name' => 'Address')));
 
     $edit = array();
     $edit['email_required'] = '  foo.bar@example.com ';

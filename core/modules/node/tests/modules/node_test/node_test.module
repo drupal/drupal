@@ -20,12 +20,12 @@ function node_test_node_view(array &$build, NodeInterface $node, EntityViewDispl
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(
       'key' => 'testElement',
-      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->id())),
+      'value' => t('Value of testElement RSS element for node @nid.', array('@nid' => $node->id())),
     );
 
     // Add content that should be displayed only in the RSS feed.
     $build['extra_feed_content'] = array(
-      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->id())) . '</p>',
+      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node @nid.', array('@nid' => $node->id())) . '</p>',
       '#weight' => 10,
     );
   }
@@ -33,7 +33,7 @@ function node_test_node_view(array &$build, NodeInterface $node, EntityViewDispl
   if ($view_mode != 'rss') {
     // Add content that should NOT be displayed in the RSS feed.
     $build['extra_non_feed_content'] = array(
-      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->id())) . '</p>',
+      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node @nid.', array('@nid' => $node->id())) . '</p>',
     );
   }
 }

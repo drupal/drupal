@@ -280,7 +280,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $edit = array();
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertText(t('!name field is required.', array('!name' => t('Text format'))), 'Error message is displayed.');
+    $this->assertText(t('@name field is required.', array('@name' => t('Text format'))), 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');
@@ -315,7 +315,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $edit = array();
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertText(t('!name field is required.', array('!name' => t('Text format'))), 'Error message is displayed.');
+    $this->assertText(t('@name field is required.', array('@name' => t('Text format'))), 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');

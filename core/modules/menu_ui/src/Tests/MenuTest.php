@@ -195,8 +195,8 @@ class MenuTest extends MenuWebTestBase {
 
     // Verify that using a menu_name that is too long results in a validation
     // message.
-    $this->assertRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array(
-      '!name' => t('Menu name'),
+    $this->assertRaw(t('@name cannot be longer than %max characters but is currently %length characters long.', array(
+      '@name' => t('Menu name'),
       '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
       '%length' => Unicode::strlen($menu_name),
     )));
@@ -207,8 +207,8 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
 
     // Verify that no validation error is given for menu_name length.
-    $this->assertNoRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array(
-      '!name' => t('Menu name'),
+    $this->assertNoRaw(t('@name cannot be longer than %max characters but is currently %length characters long.', array(
+      '@name' => t('Menu name'),
       '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
       '%length' => Unicode::strlen($menu_name),
     )));

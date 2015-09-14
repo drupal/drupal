@@ -52,7 +52,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the Basic page has been created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit['title[0][value]'])), 'Basic page created.');
+    $this->assertRaw(t('@post %title has been created.', array('@post' => 'Basic page', '%title' => $edit['title[0][value]'])), 'Basic page created.');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -141,7 +141,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertText(t('Test page text'));
 
     // Confirm that the node was created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit['title[0][value]'])));
+    $this->assertRaw(t('@post %title has been created.', array('@post' => 'Basic page', '%title' => $edit['title[0][value]'])));
   }
 
   /**

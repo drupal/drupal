@@ -220,7 +220,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertNoRaw(t('For security reasons, your upload has been renamed'), 'Found no security message.');
-    $this->assertRaw(t('File name is !filename', array('!filename' => $this->phpfile->filename)), 'Dangerous file was not renamed when insecure uploads is TRUE.');
+    $this->assertRaw(t('File name is @filename', array('@filename' => $this->phpfile->filename)), 'Dangerous file was not renamed when insecure uploads is TRUE.');
     $this->assertRaw(t('You WIN!'), 'Found the success message.');
 
     // Check that the correct hooks were called.
@@ -254,7 +254,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('For security reasons, your upload has been renamed'), 'Found security message.');
-    $this->assertRaw(t('File name is !filename', array('!filename' => $munged_filename)), 'File was successfully munged.');
+    $this->assertRaw(t('File name is @filename', array('@filename' => $munged_filename)), 'File was successfully munged.');
     $this->assertRaw(t('You WIN!'), 'Found the success message.');
 
     // Check that the correct hooks were called.
@@ -272,7 +272,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertNoRaw(t('For security reasons, your upload has been renamed'), 'Found no security message.');
-    $this->assertRaw(t('File name is !filename', array('!filename' => $this->image->getFilename())), 'File was not munged when allowing any extension.');
+    $this->assertRaw(t('File name is @filename', array('@filename' => $this->image->getFilename())), 'File was not munged when allowing any extension.');
     $this->assertRaw(t('You WIN!'), 'Found the success message.');
 
     // Check that the correct hooks were called.

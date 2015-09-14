@@ -269,7 +269,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select invalid 'none' option.
     $edit = array('card_1' => '_none');
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $field->getName())), 'Cannot save a required field when selecting "none" from the select list.');
+    $this->assertRaw(t('@title field is required.', array('@title' => $field->getName())), 'Cannot save a required field when selecting "none" from the select list.');
 
     // Submit form: select first option.
     $edit = array('card_1' => 0);

@@ -326,7 +326,7 @@ class OptionsFieldUITest extends FieldTestBase {
     );
 
     $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
-    $this->assertText(format_string('Updated field !field_name field settings.', array('!field_name' => $this->fieldName)), "The 'On' and 'Off' form fields work for boolean fields.");
+    $this->assertText(format_string('Updated field @field_name field settings.', array('@field_name' => $this->fieldName)), "The 'On' and 'Off' form fields work for boolean fields.");
 
     // Select a default value.
     $edit = array(

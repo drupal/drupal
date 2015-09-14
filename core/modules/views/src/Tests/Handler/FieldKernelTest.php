@@ -242,25 +242,25 @@ class FieldKernelTest extends ViewKernelTestBase {
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_0, $row) {
         return $name_field_0->advancedRender($row);
       });
-      $this->assertEqual($output, $expected_output_0, format_string('Test token replacement: "!token" gave "!output"', [
-        '!token' => $name_field_0->options['alter']['text'],
-        '!output' => $output,
+      $this->assertEqual($output, $expected_output_0, format_string('Test token replacement: "@token" gave "@output"', [
+        '@token' => $name_field_0->options['alter']['text'],
+        '@output' => $output,
       ]));
 
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_1, $row) {
         return $name_field_1->advancedRender($row);
       });
-      $this->assertEqual($output, $expected_output_1, format_string('Test token replacement: "!token" gave "!output"', [
-        '!token' => $name_field_1->options['alter']['text'],
-        '!output' => $output,
+      $this->assertEqual($output, $expected_output_1, format_string('Test token replacement: "@token" gave "@output"', [
+        '@token' => $name_field_1->options['alter']['text'],
+        '@output' => $output,
       ]));
 
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_2, $row) {
         return $name_field_2->advancedRender($row);
       });
-      $this->assertEqual($output, $expected_output_2, format_string('Test token replacement: "!token" gave "!output"', [
-        '!token' => $name_field_2->options['alter']['text'],
-        '!output' => $output,
+      $this->assertEqual($output, $expected_output_2, format_string('Test token replacement: "@token" gave "@output"', [
+        '@token' => $name_field_2->options['alter']['text'],
+        '@output' => $output,
       ]));
     }
 
@@ -273,10 +273,10 @@ class FieldKernelTest extends ViewKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertSubString($output, $random_text, format_string('Make sure the self token (!token => !value) appears in the output (!output)', [
-      '!value' => $random_text,
-      '!output' => $output,
-      '!token' => $job_field->options['alter']['text'],
+    $this->assertSubString($output, $random_text, format_string('Make sure the self token (@token => @value) appears in the output (@output)', [
+      '@value' => $random_text,
+      '@output' => $output,
+      '@token' => $job_field->options['alter']['text'],
     ]));
 
     // Verify the token format used in D7 and earlier does not get substituted.
@@ -287,10 +287,10 @@ class FieldKernelTest extends ViewKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEqual($output, $old_token, format_string('Make sure the old token style (!token => !value) is not changed in the output (!output)', [
-      '!value' => $random_text,
-      '!output' => $output,
-      '!token' => $job_field->options['alter']['text'],
+    $this->assertEqual($output, $old_token, format_string('Make sure the old token style (@token => @value) is not changed in the output (@output)', [
+      '@value' => $random_text,
+      '@output' => $output,
+      '@token' => $job_field->options['alter']['text'],
     ]));
 
     // Verify HTML tags are allowed in rewrite templates while token
@@ -320,9 +320,9 @@ class FieldKernelTest extends ViewKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEqual($output, $random_text, format_string('Make sure a script tag in the template (!template) is removed, leaving only the replaced token in the output (!output)', [
-      '!output' => $output,
-      '!template' => $rewrite_template,
+    $this->assertEqual($output, $random_text, format_string('Make sure a script tag in the template (@template) is removed, leaving only the replaced token in the output (@output)', [
+      '@output' => $output,
+      '@template' => $rewrite_template,
     ]));
   }
 

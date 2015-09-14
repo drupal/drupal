@@ -184,7 +184,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
     $this->assertEqual(count($errors), 1);
-    $this->assertEqual($errors, array('required_validate' => t('!name field is required.', array('!name' => 'required_validate'))));
+    $this->assertEqual($errors, array('required_validate' => t('@name field is required.', array('@name' => 'required_validate'))));
 
     // Test invalid parameters.
     $form_state = (new FormState())

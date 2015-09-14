@@ -33,12 +33,12 @@ class FormTestVerticalTabsForm extends FormBase {
     for ($i = 1; $i <= $tab_count; $i++) {
       $form['tab' . $i] = array(
         '#type' => 'fieldset',
-        '#title' => t('Tab !num', array('!num' => $i)),
+        '#title' => t('Tab @num', array('@num' => $i)),
         '#group' => 'vertical_tabs',
         '#access' => \Drupal::currentUser()->hasPermission('access vertical_tab_test tabs'),
       );
       $form['tab' . $i]['field' . $i] = array(
-        '#title' => t('Field !num', array('!num' => $i)),
+        '#title' => t('Field @num', array('@num' => $i)),
         '#type' => 'textfield',
 
       );

@@ -111,7 +111,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if translations are available for Drupal core.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Updates for: !project', array('!project' => t('Drupal core'))), 'Translations found');
+    $this->assertText(t('Updates for: @project', array('@project' => t('Drupal core'))), 'Translations found');
     $this->assertText(SafeMarkup::format('@module (@date)', array('@module' => t('Drupal core'), '@date' => format_date(REQUEST_TIME, 'html_date'))), 'Core translation update');
     $update_button = $this->xpath('//input[@type="submit"][@value="' . t('Update translations') . '"]');
     $this->assertTrue($update_button, 'Update translations button');
