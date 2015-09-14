@@ -1,4 +1,7 @@
-/* -------------- Shortcut Links -------------- */
+/**
+ * @file
+ * Visual styles for the Shortcut action link in Bartik.
+ */
 
 .shortcut-wrapper {
   margin: 2.2em 0 1.1em 0; /* Same as usual .page-title margin. */
@@ -11,5 +14,16 @@
   float: right;
 }
 .shortcut-action {
-  padding-top: 0.9em;
+  border-bottom: none;
+  margin-left: 0.5em; /* LTR */
+  padding-top: 0.35em;
+}
+[dir="rtl"] .shortcut-action {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+.shortcut-action:hover,
+.shortcut-action:active,
+.shortcut-action:focus {
+  border-bottom: none;
 }
