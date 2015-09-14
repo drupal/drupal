@@ -583,7 +583,7 @@ abstract class StylePluginBase extends PluginBase {
               $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
             }
             if ($rendered) {
-              $grouping = $group_content;
+              $grouping = (string) $group_content;
               if ($rendered_strip) {
                 $group_content = $grouping = strip_tags(htmlspecialchars_decode($group_content));
               }
