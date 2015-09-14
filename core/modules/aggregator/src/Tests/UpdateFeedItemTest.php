@@ -37,7 +37,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     );
 
     $this->drupalGet($edit['url[0][value]']);
-    $this->assertResponse(array(200), format_string('URL !url is accessible', array('!url' => $edit['url[0][value]'])));
+    $this->assertResponse(200);
 
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed !name has been added.', array('!name' => $edit['title[0][value]'])));
