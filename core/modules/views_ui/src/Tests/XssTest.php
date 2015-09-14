@@ -29,8 +29,8 @@ class XssTest extends UITestBase {
     $this->assertEscaped('<marquee>test</marquee>', 'Field admin label is properly escaped.');
 
     $this->drupalGet('admin/structure/views/nojs/handler/sa_contrib_2013_035/page_1/header/area');
-    $this->assertRaw('[title] == &amp;lt;marquee&amp;gt;test&amp;lt;/marquee&amp;gt;', 'Token label is properly escaped.');
-    $this->assertRaw('[title_1] == &amp;lt;script&amp;gt;alert(&amp;quot;XSS&amp;quot;)&amp;lt;/script&amp;gt;', 'Token label is properly escaped.');
+    $this->assertRaw('{{ title }} == &amp;lt;marquee&amp;gt;test&amp;lt;/marquee&amp;gt;', 'Token label is properly escaped.');
+    $this->assertRaw('{{ title_1 }} == &amp;lt;script&amp;gt;alert(&amp;quot;XSS&amp;quot;)&amp;lt;/script&amp;gt;', 'Token label is properly escaped.');
   }
 
 }

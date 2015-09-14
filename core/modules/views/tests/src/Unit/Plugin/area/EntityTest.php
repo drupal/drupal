@@ -130,10 +130,10 @@ class EntityTest extends UnitTestCase {
    */
   public function providerTestTokens() {
     return [
-      ['!1', 5],
-      ['%2', 6],
+      ['{{ raw_arguments.test1 }}', 5],
+      ['{{ arguments.test2 }}', 6],
       ['{{ test_render_token }}', 7],
-      ['[test:global_token]', 8],
+      ['{{ test:global_token }}', 8],
     ];
   }
 

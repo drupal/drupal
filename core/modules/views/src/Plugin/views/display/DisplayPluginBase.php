@@ -1725,21 +1725,27 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
 
         $options = array();
-        $count = 0; // This lets us prepare the key as we want it printed.
         // We cast the optgroup label to string as array keys must not be
         // objects and t() may return a TranslationWrapper once issue #2557113
         // lands.
         $optgroup_arguments = (string) t('Arguments');
-        foreach ($this->view->display_handler->getHandlers('argument') as $handler) {
-          $options[$optgroup_arguments]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-          $options[$optgroup_arguments]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+        foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
+          $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+          $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
         }
 
         // Default text.
         // We have some options, so make a list.
-        $output = '';
+        $description = [];
+        $description[] = [
+          '#markup' => $this->t('A Drupal path or external URL the more link will point to. Note that this will override the link display setting above.'),
+        ];
         if (!empty($options)) {
-          $output = $this->t('<p>The following tokens are available for this link.</p>');
+          $description[] = [
+            '#prefix' => '<p>',
+            '#markup' => $this->t('The following tokens are available for this link. You may use Twig syntax in this field.'),
+            '#suffix' => '</p>',
+          ];
           foreach (array_keys($options) as $type) {
             if (!empty($options[$type])) {
               $items = array();
@@ -1749,9 +1755,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
               $item_list = array(
                 '#theme' => 'item_list',
                 '#items' => $items,
-                '#list_type' => $type,
               );
-              $output .= drupal_render($item_list);
+              $description[] = $item_list;
             }
           }
         }
@@ -1760,7 +1765,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           '#type' => 'textfield',
           '#title' => $this->t('Custom URL'),
           '#default_value' => $this->getOption('link_url'),
-          '#description' => $this->t('A Drupal path or external URL the more link will point to. Note that this will override the link display setting above.') . $output,
+          '#description' => $description,
           '#states' => array(
             'visible' => array(
               ':input[name="link_display"]' => array('value' => 'custom_url'),

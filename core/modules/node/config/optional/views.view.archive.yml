@@ -87,7 +87,7 @@ display:
           exception:
             title_enable: true
           title_enable: true
-          title: '%1'
+          title: '{{ arguments.created_year_month }}'
           default_argument_type: fixed
           summary:
             sort_order: desc
@@ -186,7 +186,7 @@ display:
           exception:
             title_enable: true
           title_enable: true
-          title: '%1'
+          title: '{{ arguments.created_year_month }}'
           default_argument_type: fixed
           summary:
             format: default_summary

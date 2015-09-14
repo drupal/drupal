@@ -43,6 +43,16 @@ class PluginBaseTest extends KernelTestBase {
     $this->assertIdentical($result, 'en means English');
   }
 
+  /**
+   * Tests viewsTokenReplace without any twig tokens.
+   */
+  public function testViewsTokenReplaceWithTwigTokens() {
+    $text = 'Just some text';
+    $tokens = [];
+    $result = $this->testPluginBase->viewsTokenReplace($text, $tokens);
+    $this->assertIdentical($result, 'Just some text');
+  }
+
 }
 
 /**

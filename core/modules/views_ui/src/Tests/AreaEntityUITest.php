@@ -69,8 +69,8 @@ class AreaEntityUITest extends UITestBase {
     $this->assertFieldByName('options[target]', $entity_test->id());
 
     // Replace the header target entities with argument placeholders.
-    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => '!1'], 'Apply');
-    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test", ['options[target]' => '!1'], 'Apply');
+    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
+    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test", ['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
     $this->drupalPostForm(NULL, [], 'Save');
 
     // Confirm that the argument placeholders are saved.
@@ -78,15 +78,15 @@ class AreaEntityUITest extends UITestBase {
     $header = $view->getDisplay('default')['display_options']['header'];
     $this->assertEqual(['entity_block', 'entity_entity_test'], array_keys($header));
 
-    $this->assertEqual('!1', $header['entity_block']['target']);
-    $this->assertEqual('!1', $header['entity_entity_test']['target']);
+    $this->assertEqual('{{ raw_arguments.null }}', $header['entity_block']['target']);
+    $this->assertEqual('{{ raw_arguments.null }}', $header['entity_entity_test']['target']);
 
     // Confirm that the argument placeholders are still displayed in the form.
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_block");
-    $this->assertFieldByName('options[target]', '!1');
+    $this->assertFieldByName('options[target]', '{{ raw_arguments.null }}');
 
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test");
-    $this->assertFieldByName('options[target]', '!1');
+    $this->assertFieldByName('options[target]', '{{ raw_arguments.null }}');
 
     // Change the targets for both headers back to the entities.
     $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => $block->id()], 'Apply');

@@ -337,10 +337,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * Replaces Views' tokens in a given string. The resulting string will be
    * sanitized with Xss::filterAdmin.
    *
-   * This used to be a simple strtr() scattered throughout the code. Some Views
-   * tokens, such as arguments (e.g.: %1 or !1), still use the old format so we
-   * handle those as well as the new Twig-based tokens (e.g.: {{ field_name }})
-   *
    * @param $text
    *   Unsanitized string with possible tokens.
    * @param $tokens
@@ -357,34 +353,44 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       return Xss::filterAdmin($text);
     }
 
-    // Separate Twig tokens from other tokens (e.g.: contextual filter tokens in
-    // the form of %1).
     $twig_tokens = array();
-    $other_tokens = array();
     foreach ($tokens as $token => $replacement) {
+      // Twig wants a token replacement array stripped of curly-brackets.
+      // Some Views tokens come with curly-braces, others do not.
+      //@todo: https://www.drupal.org/node/2544392
       if (strpos($token, '{{') !== FALSE) {
         // Twig wants a token replacement array stripped of curly-brackets.
-        $token = trim(str_replace(array('{', '}'), '', $token));
+        $token = trim(str_replace(['{{', '}}'], '', $token));
+      }
 
+      // Check for arrays in Twig tokens. Internally these are passed as
+      // dot-delimited strings, but need to be turned into associative arrays
+      // for parsing.
+      if (strpos($token, '.') === FALSE) {
         // We need to validate tokens are valid Twig variables. Twig uses the
         // same variable naming rules as PHP.
         // @see http://php.net/manual/en/language.variables.basics.php
         assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $token) === 1', 'Tokens need to be valid Twig variables.');
-
         $twig_tokens[$token] = $replacement;
       }
       else {
-        $other_tokens[$token] = $replacement;
+        $parts = explode('.', $token);
+        $top = array_shift($parts);
+        assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $top) === 1', 'Tokens need to be valid Twig variables.');
+        $token_array = array(array_pop($parts) => $replacement);
+        foreach(array_reverse($parts) as $key) {
+          assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $key) === 1', 'Tokens need to be valid Twig variables.');
+          $token_array = array($key => $token_array);
+        }
+        $twig_tokens[$top] = $token_array;
       }
     }
 
-    // Non-Twig tokens are a straight string replacement, Twig tokens get run
-    // through an inline template for rendering and replacement.
-    $text = strtr($text, $other_tokens);
     if ($twig_tokens) {
       // Use the unfiltered text for the Twig template, then filter the output.
       // Otherwise, Xss::filterAdmin could remove valid Twig syntax before the
       // template is parsed.
+
       $build = array(
         '#type' => 'inline_template',
         '#template' => $text,
@@ -396,10 +402,14 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         ],
       );
 
-      return (string) $this->getRenderer()->render($build);
+      // Currently you cannot attach assets to tokens with
+      // Renderer::renderPlain(). This may be unnecessarily limiting. Consider
+      // using Renderer::executeInRenderContext() instead.
+      // @todo: https://www.drupal.org/node/2566621
+      return (string) $this->getRenderer()->renderPlain($build);
     }
     else {
-      return $text;
+      return Xss::filterAdmin($text);
     }
   }
 

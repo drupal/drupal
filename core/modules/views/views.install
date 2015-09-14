@@ -117,5 +117,199 @@ function views_update_8001(&$sandbox) {
 }
 
 /**
+ * Updates %1 and !1 tokens to argument tokens.
+ */
+function views_update_8002() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $view = $config_factory->getEditable($view_config_name);
+
+    $displays = $view->get('display');
+    $argument_map_per_display = _views_update_argument_map($displays);
+
+    $changed = FALSE;
+
+    // Update all the field settings, which support tokens.
+    foreach ($displays as $display_name => &$display) {
+      if (!empty($display['display_options']['fields'])) {
+        $token_values = [
+          'path',
+          'alt',
+          'link_class',
+          'rel',
+          'target',
+          'query',
+          'fragment',
+          'prefix',
+          'suffix',
+          'more_link_text',
+          'more_link_path',
+          'link_attributes',
+          'text',
+        ];
+
+        foreach ($display['display_options']['fields'] as $field_name => &$field) {
+          foreach ($token_values as $token_name) {
+            if (!empty($field['alter'][$token_name])) {
+              if (is_array($field['alter'][$token_name])) {
+                foreach (array_keys($field['alter'][$token_name]) as $key) {
+                  $field['alter'][$token_name][$key] = _views_update_8002_token_update($field['alter'][$token_name][$key], $argument_map_per_display[$display_name]);
+                  $changed = TRUE;
+                }
+              }
+              else {
+                $field['alter'][$token_name] = _views_update_8002_token_update($field['alter'][$token_name], $argument_map_per_display[$display_name]);
+                $changed = TRUE;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Update the area handlers with tokens.
+    foreach ($displays as $display_name => &$display) {
+      $area_types = ['header', 'footer', 'empty'];
+      foreach ($area_types as $area_type) {
+        if (!empty($display['display_options'][$area_type])) {
+          foreach ($display['display_options'][$area_type] as &$area) {
+            switch ($area['plugin_id']) {
+              case 'title':
+                $area['title'] = _views_update_8002_token_update($area['title'], $argument_map_per_display[$display_name]);
+                $changed = TRUE;
+                break;
+              case 'result':
+                $area['content'] = _views_update_8002_token_update($area['content'], $argument_map_per_display[$display_name]);
+                $changed = TRUE;
+                break;
+              case 'text':
+                $area['content']['value'] = _views_update_8002_token_update($area['content']['value'], $argument_map_per_display[$display_name]);
+                $changed = TRUE;
+                break;
+              case 'text_custom':
+                $area['content'] = _views_update_8002_token_update($area['content'], $argument_map_per_display[$display_name]);
+                $changed = TRUE;
+                break;
+              case 'entity':
+                $area['target'] = _views_update_8002_token_update($area['target'], $argument_map_per_display[$display_name]);
+                $changed = TRUE;
+                break;
+            }
+          }
+        }
+      }
+    }
+
+    // Update the argument title settings.
+    foreach ($displays as $display_name => &$display) {
+      if (!empty($display['display_options']['arguments'])) {
+        foreach ($display['display_options']['arguments'] as &$argument) {
+          if (isset($argument['exception']['title'])) {
+            $argument['exception']['title'] = _views_update_8002_token_update($argument['exception']['title'], $argument_map_per_display[$display_name]);
+            $changed = TRUE;
+          }
+          if (isset($argument['title'])) {
+            $argument['title'] = _views_update_8002_token_update($argument['title'], $argument_map_per_display[$display_name]);
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+
+    // Update the display title settings.
+    // Update the more link text and more link URL.
+    foreach ($displays as $display_name => &$display) {
+      if (!empty($display['display_options']['title'])) {
+        $display['display_options']['title'] = _views_update_8002_token_update($display['display_options']['title'], $argument_map_per_display[$display_name]);
+        $changed = TRUE;
+      }
+      if (!empty($display['display_options']['use_more_text'])) {
+        $display['display_options']['use_more_text'] = _views_update_8002_token_update($display['display_options']['use_more_text'], $argument_map_per_display[$display_name]);
+        $changed = TRUE;
+      }
+      if (!empty($display['display_options']['link_url'])) {
+        $display['display_options']['link_url'] = _views_update_8002_token_update($display['display_options']['link_url'], $argument_map_per_display[$display_name]);
+        $changed = TRUE;
+      }
+    }
+
+    // Update custom classes for row class + grid classes.
+    // Update RSS description field.
+    foreach ($displays as $display_name => &$display) {
+      if (!empty($display['display_options']['style'])) {
+        if (!empty($display['display_options']['style']['options']['row_class_custom'])) {
+          $display['display_options']['style']['options']['row_class_custom'] = _views_update_8002_token_update($display['display_options']['style']['options']['row_class_custom'], $argument_map_per_display[$display_name]);
+          $changed = TRUE;
+        }
+        if (!empty($display['display_options']['style']['options']['col_class_custom'])) {
+          $display['display_options']['style']['options']['col_class_custom'] = _views_update_8002_token_update($display['display_options']['style']['options']['col_class_custom'], $argument_map_per_display[$display_name]);
+          $changed = TRUE;
+        }
+        if (!empty($display['display_options']['style']['options']['description'])) {
+          $display['display_options']['style']['options']['description'] = _views_update_8002_token_update($display['display_options']['style']['options']['description'], $argument_map_per_display[$display_name]);
+          $changed = TRUE;
+        }
+      }
+    }
+
+    if ($changed) {
+      $view->set('display', $displays);
+      $view->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Updates a views configuration string from using %/! to twig tokens.
+ *
+ * @param string $text
+ *   Text in which to search for argument tokens and replace them with their
+ *   twig representation.
+ * @param array $argument_map
+ *   A map of argument machine names keyed by their previous index.
+ *
+ * @return string
+ *   The updated token.
+ */
+function _views_update_8002_token_update($text, array $argument_map) {
+  $text = preg_replace_callback('/%(\d)/', function ($match) use ($argument_map) {
+    return "{{ arguments.{$argument_map[$match[1]]} }}";
+  }, $text);
+  $text = preg_replace_callback('/!(\d)/', function ($match) use ($argument_map) {
+    return "{{ raw_arguments.{$argument_map[$match[1]]} }}";
+  }, $text);
+
+  return $text;
+}
+
+/**
+ * Builds an argument map for each Views display.
+ *
+ * @param array $displays
+ *   A list of Views displays.
+ *
+ * @return array
+ *   The argument map keyed by display id.
+ */
+function _views_update_argument_map($displays) {
+  $argument_map = [];
+  foreach ($displays as $display_id => $display) {
+    $argument_map[$display_id] = [];
+    if (isset($display['display_options']['arguments'])) {
+      foreach (array_keys($display['display_options']['arguments']) as $number => $name) {
+        $argument_map[$display_id][$number + 1] = $name;
+      }
+    }
+    elseif (isset($displays['default']['display_options']['arguments'])) {
+      foreach (array_keys($displays['default']['display_options']['arguments']) as $number => $name) {
+        $argument_map[$display_id][$number + 1] = $name;
+      }
+    }
+  }
+
+  return $argument_map;
+}
+
+/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */

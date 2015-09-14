@@ -27,7 +27,7 @@ class FieldKernelTest extends ViewKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_field_tokens', 'test_field_output');
+  public static $testViews = array('test_view', 'test_field_tokens', 'test_field_argument_tokens', 'test_field_output');
 
   /**
    * Map column names.
@@ -171,6 +171,44 @@ class FieldKernelTest extends ViewKernelTestBase {
       return $id_field->theme($row);
     });
     $this->assertSubString($output, $random_text);
+  }
+
+  /**
+   * Tests the arguments tokens on field level.
+   */
+  public function testArgumentTokens() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $view = Views::getView('test_field_argument_tokens');
+    $this->executeView($view, ['{{ { "#pre_render": ["views_test_data_test_pre_render_function"]} }}']);
+
+    $name_field_0 = $view->field['name'];
+
+    // Test the old style tokens.
+    $name_field_0->options['alter']['alter_text'] = TRUE;
+    $name_field_0->options['alter']['text'] = '%1 !1';
+
+    $row = $view->result[0];
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_0, $row) {
+      return $name_field_0->advancedRender($row);
+    });
+
+    $this->assertFalse(strpos((string) $output, 'views_test_data_test_pre_render_function executed') !== FALSE, 'Ensure that the pre_render function was not executed');
+    $this->assertEqual('%1 !1', (string) $output, "Ensure that old style placeholders aren't replaced");
+
+    // This time use new style tokens but ensure that we still don't allow
+    // arbitrary code execution.
+    $name_field_0->options['alter']['alter_text'] = TRUE;
+    $name_field_0->options['alter']['text'] = '{{ arguments.null }} {{ raw_arguments.null }}';
+
+    $row = $view->result[0];
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_0, $row) {
+      return $name_field_0->advancedRender($row);
+    });
+
+    $this->assertFalse(strpos((string) $output, 'views_test_data_test_pre_render_function executed') !== FALSE, 'Ensure that the pre_render function was not executed');
+    $this->assertEqual('{{ { &quot;#pre_render&quot;: [&quot;views_test_data_test_pre_render_function&quot;]} }} {{ { &quot;#pre_render&quot;: [&quot;views_test_data_test_pre_render_function&quot;]} }}', (string) $output, 'Ensure that new style placeholders are replaced');
   }
 
   /**

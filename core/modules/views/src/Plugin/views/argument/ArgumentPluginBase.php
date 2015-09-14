@@ -211,7 +211,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
       '#title_display' => 'invisible',
       '#size' => 20,
       '#default_value' => $this->options['exception']['title'],
-      '#description' => $this->t('Override the view and other argument titles. Use "%1" for the first argument, "%2" for the second, etc.'),
+      '#description' => $this->t('Override the view and other argument titles. You may use Twig syntax in this field as well as the "arguments" and "raw_arguments" arrays.'),
       '#states' => array(
         'visible' => array(
           ':input[name="options[exception][title_enable]"]' => array('checked' => TRUE),
@@ -249,7 +249,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
       '#title' => $this->t('Provide title'),
       '#title_display' => 'invisible',
       '#default_value' => $this->options['title'],
-      '#description' => $this->t('Override the view and other argument titles. Use "%1" for the first argument, "%2" for the second, etc.'),
+      '#description' => $this->t('Override the view and other argument titles. You may use Twig syntax in this field.'),
       '#states' => array(
         'visible' => array(
           ':input[name="options[title_enable]"]' => array('checked' => TRUE),
@@ -257,6 +257,23 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
       ),
       '#fieldset' => 'argument_present',
     );
+
+    $output = $this->getTokenHelp();
+    $form['token_help'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Replacement patterns'),
+      '#value' => $output,
+      '#states' => [
+        'visible' => [
+          [
+            ':input[name="options[title_enable]"]' => ['checked' => TRUE],
+          ],
+          [
+            ':input[name="options[exception][title_enable]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ],
+    ];
 
     $form['specify_validation'] = array(
       '#type' => 'checkbox',
@@ -347,6 +364,45 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
       '#fieldset' => 'argument_present',
     );
   }
+
+  /**
+   * Provide token help information for the argument.
+   *
+   * @return array
+   *   A render array.
+   */
+  protected function getTokenHelp() {
+    $output = [];
+
+    foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
+      /** @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase $handler */
+      $options[(string) t('Arguments')]["{{ arguments.$arg }}"] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+      $options[(string) t('Arguments')]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+    }
+
+    // We have some options, so make a list.
+    if (!empty($options)) {
+      $output[] = [
+        '#markup' => '<p>' . $this->t("The following replacement tokens are available for this argument.") . '</p>',
+      ];
+      foreach (array_keys($options) as $type) {
+        if (!empty($options[$type])) {
+          $items = array();
+          foreach ($options[$type] as $key => $value) {
+            $items[] = $key . ' == ' . $value;
+          }
+          $item_list = array(
+            '#theme' => 'item_list',
+            '#items' => $items,
+          );
+          $output[] = $item_list;
+        }
+      }
+    }
+
+    return $output;
+  }
+
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $option_values = &$form_state->getValue('options');

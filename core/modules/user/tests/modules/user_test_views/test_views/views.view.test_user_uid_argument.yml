@@ -28,7 +28,7 @@ display:
           table: users_field_data
           field: uid
           title_enable: true
-          title: '%1'
+          title: '{{ arguments.uid }}'
           plugin_id: user_uid
           entity_type: user
           entity_field: uid

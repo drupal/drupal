@@ -333,7 +333,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function tokenizeValue($value, $row_index = NULL) {
-    if (strpos($value, '{{') !== FALSE || strpos($value, '!') !== FALSE || strpos($value, '%') !== FALSE) {
+    if (strpos($value, '{{') !== FALSE) {
       $fake_item = array(
         'alter_text' => TRUE,
         'text' => $value,
@@ -872,10 +872,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // Add the field to the list of options.
       $options[$optgroup_fields]["{{ {$this->options['id']} }}"] = substr(strrchr($this->adminLabel(), ":"), 2 );
 
-      $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-        $options[$optgroup_arguments]['%' . ++$count] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-        $options[$optgroup_arguments]['!' . $count] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+        $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
+        $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
       }
 
       $this->documentSelfTokens($options[$optgroup_fields]);
@@ -900,7 +899,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
             $item_list = array(
               '#theme' => 'item_list',
               '#items' => $items,
-              '#list_type' => $type,
             );
             $output[] = $item_list;
           }
@@ -1561,7 +1559,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
     $count = 0;
     foreach ($this->displayHandler->getHandlers('argument') as $arg => $handler) {
-      $token = '%' . ++$count;
+      $token = "{{ arguments.$arg }}";
       if (!isset($tokens[$token])) {
         $tokens[$token] = '';
       }
@@ -1569,7 +1567,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
       // were removed by SafeMarkup::checkPlain().
-      $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(Html::decodeEntities($this->view->args[$count - 1])) : '';
+      $tokens["{{ raw_arguments.$arg }}"] = isset($this->view->args[$count]) ? strip_tags(Html::decodeEntities($this->view->args[$count])) : '';
+      $count++;
     }
 
     // Get flattened set of tokens for any array depth in query parameters.
@@ -1665,8 +1664,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
       else {
         // Create a token key based on array element structure.
-        $token_string = !empty($parent_keys) ? implode('_', $parent_keys) . '_' . $param : $param;
-        $tokens['%' . $token_string] = strip_tags(Html::decodeEntities($val));
+        $token_string = !empty($parent_keys) ? implode('.', $parent_keys) . '.' . $param : $param;
+        $tokens['{{ arguments.' . $token_string . ' }}'] = strip_tags(Html::decodeEntities($val));
       }
     }
 

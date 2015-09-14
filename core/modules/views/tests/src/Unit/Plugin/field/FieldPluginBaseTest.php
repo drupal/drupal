@@ -449,8 +449,8 @@ class FieldPluginBaseTest extends UnitTestCase {
     ];
 
     $this->renderer->expects($this->once())
-      ->method('render')
-      ->with($build, FALSE)
+      ->method('renderPlain')
+      ->with($build)
       ->willReturn('base:test-path/123');
 
     $result = $field->advancedRender($row);
@@ -495,6 +495,67 @@ class FieldPluginBaseTest extends UnitTestCase {
     $field->setLinkGenerator($this->linkGenerator);
 
     return $field;
+  }
+
+  /**
+   * @covers ::getRenderTokens
+   */
+  public function testGetRenderTokensWithoutFieldsAndArguments() {
+    $field = $this->setupTestField();
+
+    $this->display->expects($this->any())
+      ->method('getHandlers')
+      ->willReturnMap([
+        ['argument', []],
+        ['field', []],
+      ]);
+
+    $this->assertEquals([], $field->getRenderTokens([]));
+  }
+
+  /**
+   * @covers ::getRenderTokens
+   */
+  public function testGetRenderTokensWithoutArguments() {
+    $field = $this->setupTestField(['id' => 'id']);
+
+    $field->last_render = 'last rendered output';
+    $this->display->expects($this->any())
+      ->method('getHandlers')
+      ->willReturnMap([
+        ['argument', []],
+        ['field', ['id' => $field]],
+      ]);
+
+    $this->assertEquals(['{{ id }}' => 'last rendered output'], $field->getRenderTokens([]));
+  }
+
+  /**
+   * @covers ::getRenderTokens
+   */
+  public function testGetRenderTokensWithArguments() {
+    $field = $this->setupTestField(['id' => 'id']);
+    $field->view->args = ['argument value'];
+    $field->view->build_info['substitutions']['{{ arguments.name }}'] = 'argument value';
+
+    $argument = $this->getMockBuilder('\Drupal\views\Plugin\views\argument\ArgumentPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $field->last_render = 'last rendered output';
+    $this->display->expects($this->any())
+      ->method('getHandlers')
+      ->willReturnMap([
+        ['argument', ['name' => $argument]],
+        ['field', ['id' => $field]],
+      ]);
+
+    $expected = [
+      '{{ id }}' => 'last rendered output',
+      '{{ arguments.name }}' => 'argument value',
+      '{{ raw_arguments.name }}' => 'argument value',
+    ];
+    $this->assertEquals($expected, $field->getRenderTokens([]));
   }
 
 }
