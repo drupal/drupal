@@ -47,7 +47,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(FALSE, $menu_link->isExpanded());
     $this->assertIdentical(['attributes' => ['title' => 'Test menu link 1']], $menu_link->link->options);
     $this->assertIdentical('internal:/user/login', $menu_link->link->uri);
-    $this->assertIdentical(15, $menu_link->getWeight());
+    $this->assertIdentical(-50, $menu_link->getWeight());
 
     $menu_link = MenuLinkContent::load(139);
     $this->assertIdentical('Test 2', $menu_link->getTitle());
@@ -57,7 +57,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(TRUE, $menu_link->isExpanded());
     $this->assertIdentical(['query' => 'foo=bar', 'attributes' => ['title' => 'Test menu link 2']], $menu_link->link->options);
     $this->assertIdentical('internal:/admin', $menu_link->link->uri);
-    $this->assertIdentical(12, $menu_link->getWeight());
+    $this->assertIdentical(-49, $menu_link->getWeight());
 
     $menu_link = MenuLinkContent::load(140);
     $this->assertIdentical('Drupal.org', $menu_link->getTitle());
@@ -67,7 +67,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(FALSE, $menu_link->isExpanded());
     $this->assertIdentical(['attributes' => ['title' => '']], $menu_link->link->options);
     $this->assertIdentical('https://www.drupal.org', $menu_link->link->uri);
-    $this->assertIdentical(0, $menu_link->getWeight());
+    $this->assertIdentical(-50, $menu_link->getWeight());
 
     // assert that missing title attributes don't stop or break migration.
     $menu_link = MenuLinkContent::load(393);
@@ -78,7 +78,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(FALSE, $menu_link->isExpanded());
     $this->assertIdentical([], $menu_link->link->options);
     $this->assertIdentical('internal:/user/login', $menu_link->link->uri);
-    $this->assertIdentical(15, $menu_link->getWeight());
+    $this->assertIdentical(-47, $menu_link->getWeight());
   }
 
 }

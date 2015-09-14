@@ -25,6 +25,8 @@ class MenuLink extends DrupalSqlBase {
   public function query() {
     return $this->select('menu_links', 'ml')
       ->fields('ml')
+      ->orderby('ml.depth')
+      ->orderby('ml.mlid')
       ->condition('module', 'menu')
       ->condition('customized', 1);
   }
