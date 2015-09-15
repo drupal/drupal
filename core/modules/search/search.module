@@ -776,7 +776,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
 
   // Combine the text chunks with "…" separators. The "…" needs to be
   // translated. Let translators have the … separator text as one chunk.
-  $ellipses = explode('!excerpt', t('… !excerpt … !excerpt …'));
+  $ellipses = explode('@excerpt', t('… @excerpt … @excerpt …'));
   $text = (isset($new_ranges[0]) ? '' : $ellipses[0]) . implode($ellipses[1], $out) . (($max_end < strlen($text) - 1) ? $ellipses[2] : '');
   $text = Html::escape($text);
 
