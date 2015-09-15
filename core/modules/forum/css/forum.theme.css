@@ -7,9 +7,6 @@
   font-size: 0.9em;
   margin: 0.5em;
 }
-.forum td {
-  white-space: nowrap;
-}
 .forum__icon {
   background-image: url(../icons/forum-icons.png);
   background-repeat: no-repeat;
