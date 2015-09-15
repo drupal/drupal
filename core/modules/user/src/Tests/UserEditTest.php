@@ -85,6 +85,27 @@ class UserEditTest extends WebTestBase {
     $config->set('password_strength', FALSE)->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
+
+    // Check that the user status field has the correct value and that it is
+    // properly displayed.
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('user/' . $user1->id() . '/edit');
+    $this->assertNoFieldChecked('edit-status-0');
+    $this->assertFieldChecked('edit-status-1');
+
+    $edit = array('status' => 0);
+    $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'));
+    $this->assertFieldChecked('edit-status-0');
+    $this->assertNoFieldChecked('edit-status-1');
+
+    $edit = array('status' => 1);
+    $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'));
+    $this->assertNoFieldChecked('edit-status-0');
+    $this->assertFieldChecked('edit-status-1');
   }
 
   /**
