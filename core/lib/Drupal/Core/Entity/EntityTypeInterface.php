@@ -108,8 +108,8 @@ interface EntityTypeInterface {
    *   - label: (optional) The name of the property that contains the entity
    *     label. For example, if the entity's label is located in
    *     $entity->subject, then 'subject' should be specified here. If complex
-   *     logic is required to build the label, a 'label_callback' should be
-   *     defined instead (see the $label_callback block above for details).
+   *     logic is required to build the label,
+   *     \Drupal\Core\Entity\EntityInterface::label() should be used.
    *   - langcode: (optional) The name of the property that contains the
    *     language code. For instance, if the entity's language is located in
    *     $entity->langcode, then 'langcode' should be specified here.
@@ -493,15 +493,23 @@ interface EntityTypeInterface {
    * entity label is the main string associated with an entity; for example, the
    * title of a node or the subject of a comment. If there is an entity object
    * property that defines the label, use the 'label' element of the
-   * 'entity_keys' return value component to provide this information (see
-   * below). If more complex logic is needed to determine the label of an
-   * entity, you can instead specify a callback function here, which will be
-   * called to determine the entity label. See also the
-   * \Drupal\Core\Entity\EntityInterface::label() method, which implements this
-   * logic.
+   * 'entity_keys' return value component to provide this information. If more
+   * complex logic is needed to determine the label of an entity, you can
+   * instead specify a callback function here, which will be called to determine
+   * the entity label.
    *
    * @return callable|null
    *   The callback, or NULL if none exists.
+   *
+   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   *   Use Drupal\Core\Entity\EntityInterface::label() for complex label
+   *   generation as needed.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::label()
+   * @see \Drupal\Core\Entity\EntityTypeInterface::setLabelCallback()
+   * @see \Drupal\Core\Entity\EntityTypeInterface::hasLabelCallback()
+   *
+   * @todo Remove usages of label_callback https://www.drupal.org/node/2450793.
    */
   public function getLabelCallback();
 
@@ -512,6 +520,13 @@ interface EntityTypeInterface {
    *   A callable that returns the label of the entity.
    *
    * @return $this
+   *
+   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   *   Use EntityInterface::label() for complex label generation as needed.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::label()
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback()
+   * @see \Drupal\Core\Entity\EntityTypeInterface::hasLabelCallback()
    */
   public function setLabelCallback($callback);
 
@@ -519,6 +534,13 @@ interface EntityTypeInterface {
    * Indicates if a label callback exists.
    *
    * @return bool
+   *
+   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   *   Use EntityInterface::label() for complex label generation as needed.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::label()
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback()
+   * @see \Drupal\Core\Entity\EntityTypeInterface::setLabelCallback()
    */
   public function hasLabelCallback();
 
