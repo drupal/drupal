@@ -168,8 +168,8 @@ function pager_get_query_parameters() {
  *     - #tags: An array of labels for the controls in the pager.
  *     - #element: An optional integer to distinguish between multiple pagers on
  *       one page.
- *     - #parameters: An associative array of query string parameters to append to
- *       the pager links.
+ *     - #parameters: An associative array of query string parameters to append
+ *       to the pager links.
  *     - #quantity: The number of pages in the list.
  */
 function template_preprocess_pager(&$variables) {
@@ -189,13 +189,13 @@ function template_preprocess_pager(&$variables) {
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
   $pager_middle = ceil($quantity / 2);
-  // current is the page we are currently paged to
+  // current is the page we are currently paged to.
   $pager_current = $pager_page_array[$element] + 1;
-  // first is the first page listed by this pager piece (re quantity)
+  // first is the first page listed by this pager piece (re quantity).
   $pager_first = $pager_current - $pager_middle + 1;
-  // last is the last page listed by this pager piece (re quantity)
+  // last is the last page listed by this pager piece (re quantity).
   $pager_last = $pager_current + $quantity - $pager_middle;
-  // max is the maximum page number
+  // max is the maximum page number.
   $pager_max = $pager_total[$element];
   // End of marker calculations.
 
@@ -278,64 +278,48 @@ function template_preprocess_pager(&$variables) {
 
   $variables['items'] = $items;
 
-  // The rendered link needs to play well with any other query parameter
-  // used on the page, like exposed filters, so for the cacheability all query
+  // The rendered link needs to play well with any other query parameter used
+  // on the page, like exposed filters, so for the cacheability all query
   // parameters matter.
   $variables['#cache']['contexts'][] = 'url.query_args';
 }
 
 /**
- * Adds the 'page' parameter to the query parameter array of a pager link.
+ * Get the query parameter array of a pager link.
+ *
+ * Adds or adjusts the 'page' parameter to make sure that, following the link,
+ * the requested $page for the given $element is displayed.
+ * The 'page' parameter is a comma-delimited string, where each value is the
+ * target page for the corresponding pager $element.
  *
  * @param array $query
  *   An associative array of query parameters to add to.
  * @param integer $element
  *   An integer to distinguish between multiple pagers on one page.
  * @param integer $index
- *   The index of the target page in the pager array.
+ *   The index of the target page, for the given element, in the pager array.
  *
  * @return array
  *   The altered $query parameter array.
- *
- * @todo Document the pager/element/index architecture and logic. It is not
- *   clear what is happening in this function as well as pager_load_array(),
- *   and whether this can be simplified in any way.
  */
 function pager_query_add_page(array $query, $element, $index) {
   global $pager_page_array;
 
-  // Determine the first result to display on the linked page.
-  $page_new = pager_load_array($index, $element, $pager_page_array);
-
-  $page = \Drupal::request()->query->get('page', '');
-  if ($new_page = implode(',', pager_load_array($page_new[$element], $element, explode(',', $page)))) {
-    $query['page'] = $new_page;
+  // Build the 'page' query parameter. This is built based on the current
+  // page of each pager element (or NULL if the pager is not set), with the
+  // exception of the requested page index for the current element.
+  $max_element = max(array_keys($pager_page_array));
+  $element_pages = [];
+  for ($i = 0; $i <= $max_element; $i++) {
+    $element_pages[] = ($i == $element) ? $index : (isset($pager_page_array[$i]) ? $pager_page_array[$i] : NULL);
   }
+  $query['page'] = implode(',', $element_pages);
+
   // Merge the query parameters passed to this function with the parameters
-  // from the current request. In case of collision, the parameters passed
-  // into this function take precedence.
+  // from the current request. In case of collision, the parameters passed into
+  // this function take precedence.
   if ($current_request_query = pager_get_query_parameters()) {
     $query = array_merge($current_request_query, $query);
   }
   return $query;
-}
-
-/**
- * Helper function
- *
- * Copies $old_array to $new_array and sets $new_array[$element] = $value
- * Fills in $new_array[0 .. $element - 1] = 0
- */
-function pager_load_array($value, $element, $old_array) {
-  $new_array = $old_array;
-  // Look for empty elements.
-  for ($i = 0; $i < $element; $i++) {
-    if (empty($new_array[$i])) {
-      // Load found empty element with 0.
-      $new_array[$i] = 0;
-    }
-  }
-  // Update the changed element.
-  $new_array[$element] = (int) $value;
-  return $new_array;
 }

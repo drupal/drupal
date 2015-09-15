@@ -143,18 +143,28 @@ class PagerTest extends WebTestBase {
       $next = array_pop($elements);
     }
 
+    // We remove elements from the $elements array in the following code, so
+    // we store the total number of pages for verifying the "last" link.
+    $total_pages = count($elements);
+
     // Verify items and links to pages.
     foreach ($elements as $page => $element) {
       // Make item/page index 1-based.
       $page++;
+
       if ($current_page == $page) {
         $this->assertClass($element, 'is-active', 'Element for current page has .is-active class.');
         $this->assertTrue($element->a, 'Element for current page has link.');
+        $destination = $element->a['href'][0]->__toString();
+        // URL query string param is 0-indexed.
+        $this->assertEqual($destination, '?page=' . ($page - 1));
       }
       else {
         $this->assertNoClass($element, 'is-active', "Element for page $page has no .is-active class.");
         $this->assertClass($element, 'pager__item', "Element for page $page has .pager__item class.");
         $this->assertTrue($element->a, "Link to page $page found.");
+        $destination = $element->a['href'][0]->__toString();
+        $this->assertEqual($destination, '?page=' . ($page - 1));
       }
       unset($elements[--$page]);
     }
@@ -166,21 +176,32 @@ class PagerTest extends WebTestBase {
       $this->assertClass($first, 'pager__item--first', 'Element for first page has .pager__item--first class.');
       $this->assertTrue($first->a, 'Link to first page found.');
       $this->assertNoClass($first->a, 'is-active', 'Link to first page is not active.');
+      $destination = $first->a['href'][0]->__toString();
+      $this->assertEqual($destination, '?page=0');
     }
     if (isset($previous)) {
       $this->assertClass($previous, 'pager__item--previous', 'Element for first page has .pager__item--previous class.');
       $this->assertTrue($previous->a, 'Link to previous page found.');
       $this->assertNoClass($previous->a, 'is-active', 'Link to previous page is not active.');
+      $destination = $previous->a['href'][0]->__toString();
+      // URL query string param is 0-indexed, $current_page is 1-indexed.
+      $this->assertEqual($destination, '?page=' . ($current_page - 2));
     }
     if (isset($next)) {
       $this->assertClass($next, 'pager__item--next', 'Element for next page has .pager__item--next class.');
       $this->assertTrue($next->a, 'Link to next page found.');
       $this->assertNoClass($next->a, 'is-active', 'Link to next page is not active.');
+      $destination = $next->a['href'][0]->__toString();
+      // URL query string param is 0-indexed, $current_page is 1-indexed.
+      $this->assertEqual($destination, '?page=' . $current_page);
     }
     if (isset($last)) {
       $this->assertClass($last, 'pager__item--last', 'Element for last page has .pager__item--last class.');
       $this->assertTrue($last->a, 'Link to last page found.');
       $this->assertNoClass($last->a, 'is-active', 'Link to last page is not active.');
+      $destination = $last->a['href'][0]->__toString();
+      // URL query string param is 0-indexed.
+      $this->assertEqual($destination, '?page=' . ($total_pages - 1));
     }
   }
 
