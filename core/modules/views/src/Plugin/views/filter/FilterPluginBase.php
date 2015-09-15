@@ -594,7 +594,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       '#default_value' => $this->options['expose']['remember'],
     );
 
-    $role_options = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names());
+    $role_options = array_map('\Drupal\Component\Utility\Html::escape', user_role_names());
     $form['expose']['remember_roles'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('User roles'),

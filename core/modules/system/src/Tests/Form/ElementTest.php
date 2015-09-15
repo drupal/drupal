@@ -62,6 +62,12 @@ class ElementTest extends WebTestBase {
       }
     }
 
+    // Verify that the choices are admin filtered as expected.
+    $this->assertRaw("<em>Special Char</em>alert('checkboxes');");
+    $this->assertRaw("<em>Special Char</em>alert('radios');");
+    $this->assertRaw('<em>Bar - checkboxes</em>');
+    $this->assertRaw('<em>Bar - radios</em>');
+
     // Enable customized option sub-elements.
     $this->drupalGet('form-test/checkboxes-radios/customize');
 

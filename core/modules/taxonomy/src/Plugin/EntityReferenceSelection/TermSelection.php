@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -73,7 +73,7 @@ class TermSelection extends SelectionBase {
       if ($vocabulary = Vocabulary::load($bundle)) {
         if ($terms = $this->entityManager->getStorage('taxonomy_term')->loadTree($vocabulary->id(), 0, NULL, TRUE)) {
           foreach ($terms as $term) {
-            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . SafeMarkup::checkPlain($term->getName());
+            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . Html::escape($term->getName());
           }
         }
       }

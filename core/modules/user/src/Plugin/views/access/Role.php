@@ -115,7 +115,7 @@ class Role extends AccessPluginBase implements CacheablePluginInterface {
       '#type' => 'checkboxes',
       '#title' => $this->t('Role'),
       '#default_value' => $this->options['role'],
-      '#options' => array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names()),
+      '#options' => array_map('\Drupal\Component\Utility\Html::escape', user_role_names()),
       '#description' => $this->t('Only the checked roles will be able to access this display.'),
     );
   }

@@ -205,7 +205,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#access' => $admin,
     );
 
-    $roles = array_map(array('\Drupal\Component\Utility\SafeMarkup', 'checkPlain'), user_role_names(TRUE));
+    $roles = array_map(array('\Drupal\Component\Utility\Html', 'escape'), user_role_names(TRUE));
 
     $form['account']['roles'] = array(
       '#type' => 'checkboxes',

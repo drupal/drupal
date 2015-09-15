@@ -363,6 +363,10 @@ class FormTest extends WebTestBase {
     $form = \Drupal::formBuilder()->getForm('Drupal\form_test\Form\FormTestSelectForm');
     $this->drupalGet('form-test/select');
 
+    // Verify that the options are escaped as expected.
+    $this->assertEscaped('<strong>four</strong>');
+    $this->assertNoRaw('<strong>four</strong>');
+
     // Posting without any values should throw validation errors.
     $this->drupalPostForm(NULL, array(), 'Submit');
     $no_errors = array(

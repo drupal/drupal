@@ -65,7 +65,7 @@ class User extends Entity {
     $form['roles'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('Restrict to the selected roles'),
-      '#options' => array_map(array('\Drupal\Component\Utility\SafeMarkup', 'checkPlain'), user_role_names(TRUE)),
+      '#options' => array_map(array('\Drupal\Component\Utility\Html', 'escape'), user_role_names(TRUE)),
       '#default_value' => $this->options['roles'],
       '#description' => $this->t('If no roles are selected, users from any role will be allowed.'),
       '#states' => array(

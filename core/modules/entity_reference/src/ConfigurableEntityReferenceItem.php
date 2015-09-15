@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
@@ -80,7 +80,9 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
 
     $return = array();
     foreach ($options as $bundle => $entity_ids) {
-      $bundle_label = SafeMarkup::checkPlain($bundles[$bundle]['label']);
+      // The label does not need sanitizing since it is used as an optgroup
+      // which is only supported by select elements and auto-escaped.
+      $bundle_label = $bundles[$bundle]['label'];
       $return[$bundle_label] = $entity_ids;
     }
 
@@ -135,11 +137,11 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
       // entity type specific plugins (e.g., 'default:node', 'default:user',
       // etc.).
       if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
-        $handlers_options[$selection_group_id] = SafeMarkup::checkPlain($selection_plugins[$selection_group_id][$selection_group_id]['label']);
+        $handlers_options[$selection_group_id] = Html::escape($selection_plugins[$selection_group_id][$selection_group_id]['label']);
       }
       elseif (array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
         $selection_group_plugin = $selection_group_id . ':' . $this->getSetting('target_type');
-        $handlers_options[$selection_group_plugin] = SafeMarkup::checkPlain($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
+        $handlers_options[$selection_group_plugin] = Html::escape($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
       }
     }
 

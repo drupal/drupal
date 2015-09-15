@@ -554,7 +554,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     );
 
     // Add node types.
-    $types = array_map(array('\Drupal\Component\Utility\SafeMarkup', 'checkPlain'), node_type_get_names());
+    $types = array_map(array('\Drupal\Component\Utility\Html', 'escape'), node_type_get_names());
     $form['advanced']['types-fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Types'),

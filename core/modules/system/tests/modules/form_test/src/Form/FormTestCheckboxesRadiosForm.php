@@ -36,8 +36,8 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         0 => 'Zero',
         'foo' => 'Foo',
         1 => 'One',
-        'bar' => 'Bar',
-        '>' => 'Special Char',
+        'bar' => $this->t('<em>Bar - checkboxes</em>'),
+        '>' => "<em>Special Char</em><script>alert('checkboxes');</script>",
       ),
     );
     if ($customize) {
@@ -60,8 +60,8 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         0 => 'Zero',
         'foo' => 'Foo',
         1 => 'One',
-        'bar' => 'Bar',
-        '>' => 'Special Char',
+        'bar' => '<em>Bar - radios</em>',
+        '>' => "<em>Special Char</em><script>alert('radios');</script>",
       ),
     );
     if ($customize) {

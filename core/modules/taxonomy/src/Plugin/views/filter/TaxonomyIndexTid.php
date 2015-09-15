@@ -183,7 +183,7 @@ class TaxonomyIndexTid extends ManyToOne {
         if ($tree) {
           foreach ($tree as $term) {
             $choice = new \stdClass();
-            $choice->option = array($term->id() => str_repeat('-', $term->depth) . SafeMarkup::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label()));
+            $choice->option = array($term->id() => str_repeat('-', $term->depth) . \Drupal::entityManager()->getTranslationFromContext($term)->label());
             $options[] = $choice;
           }
         }
@@ -201,7 +201,7 @@ class TaxonomyIndexTid extends ManyToOne {
         }
         $terms = Term::loadMultiple($query->execute());
         foreach ($terms as $term) {
-          $options[$term->id()] = SafeMarkup::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
+          $options[$term->id()] = \Drupal::entityManager()->getTranslationFromContext($term)->label();
         }
       }
 

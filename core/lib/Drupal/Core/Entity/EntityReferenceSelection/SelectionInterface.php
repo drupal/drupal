@@ -27,7 +27,7 @@ interface SelectionInterface extends PluginFormInterface {
    *
    * @return array
    *   A nested array of entities, the first level is keyed by the
-   *   entity bundle, which contains an array of entity labels (safe HTML),
+   *   entity bundle, which contains an array of entity labels (escaped),
    *   keyed by the entity ID.
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0);

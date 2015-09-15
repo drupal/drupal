@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -235,7 +235,7 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
     $entities = entity_load_multiple($target_type, $result);
     foreach ($entities as $entity_id => $entity) {
       $bundle = $entity->bundle();
-      $options[$bundle][$entity_id] = SafeMarkup::checkPlain($entity->label());
+      $options[$bundle][$entity_id] = Html::escape($entity->label());
     }
 
     return $options;
