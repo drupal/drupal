@@ -1511,7 +1511,7 @@ function system_update_8006() {
   $site_branding_default_settings = [
     'plugin' => 'system_branding_block',
     'region' => 'content',
-    'settings.label' => 'Site Branding',
+    'settings.label' => 'Site branding',
     'settings.label_display' => 0,
     'settings.cache.max_age' => 0,
     'visibility' => [],

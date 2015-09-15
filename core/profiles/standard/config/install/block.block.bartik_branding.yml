@@ -7,7 +7,7 @@ region: header
 plugin: system_branding_block
 settings:
   id: system_branding_block
-  label: 'Site Branding'
+  label: 'Site branding'
   provider: system
   label_display: '0'
 dependencies:
