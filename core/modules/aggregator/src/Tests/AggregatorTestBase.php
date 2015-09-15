@@ -66,7 +66,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   public function createFeed($feed_url = NULL, array $edit = array()) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed !name has been added.', array('!name' => $edit['title[0][value]'])));
+    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed @name has been added.', array('@name' => $edit['title[0][value]'])));
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title[0][value]'], ':url' => $edit['url[0][value]']))->fetchField();
     $this->assertTrue(!empty($fid), 'The feed found in database.');
@@ -185,7 +185,7 @@ abstract class AggregatorTestBase extends WebTestBase {
 
     if ($expected_count !== NULL) {
       $feed->item_count = count($feed->items);
-      $this->assertEqual($expected_count, $feed->item_count, format_string('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $expected_count, '!val2' => $feed->item_count)));
+      $this->assertEqual($expected_count, $feed->item_count, format_string('Total items in feed equal to the total items in database (@val1 != @val2)', array('@val1' => $expected_count, '@val2' => $feed->item_count)));
     }
   }
 
