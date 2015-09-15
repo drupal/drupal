@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -292,12 +291,12 @@ class NumericFilter extends FilterPluginBase {
     }
 
     $options = $this->operatorOptions('short');
-    $output = SafeMarkup::checkPlain($options[$this->operator]);
+    $output = $options[$this->operator];
     if (in_array($this->operator, $this->operatorValues(2))) {
       $output .= ' ' . $this->t('@min and @max', array('@min' => $this->value['min'], '@max' => $this->value['max']));
     }
     elseif (in_array($this->operator, $this->operatorValues(1))) {
-      $output .= ' ' . SafeMarkup::checkPlain($this->value['value']);
+      $output .= ' ' . $this->value['value'];
     }
     return $output;
   }

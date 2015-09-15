@@ -181,8 +181,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function adminLabel($short = FALSE) {
     if (!empty($this->options['admin_label'])) {
-      $title = SafeMarkup::checkPlain($this->options['admin_label']);
-      return $title;
+      return $this->options['admin_label'];
     }
     $title = ($short && isset($this->definition['title short'])) ? $this->definition['title short'] : $this->definition['title'];
     return $this->t('!group: !title', array('!group' => $this->definition['group'], '!title' => $title));

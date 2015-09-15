@@ -14,7 +14,6 @@ use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -172,7 +171,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
    * Display the filter on the administrative summary
    */
   public function adminSummary() {
-    return SafeMarkup::checkPlain((string) $this->operator) . ' ' . SafeMarkup::checkPlain((string) $this->value);
+    return $this->operator . ' ' . $this->value;
   }
 
   /**

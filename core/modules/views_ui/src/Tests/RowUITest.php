@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\views\Views;
 
 /**
@@ -87,6 +88,13 @@ class RowUITest extends UITestBase {
     $this->drupalPostForm(NULL, ['row[type]' => 'entity:node'], t('Apply'));
     $this->assertUrl($row_options_url);
     $this->assertFieldByName('row_options[view_mode]', 'teaser');
+
+    // Change the teaser label to have markup so we can test escaping.
+    $teaser = EntityViewMode::load('node.teaser');
+    $teaser->set('label', 'Teaser <em>markup</em>');
+    $teaser->save();
+    $this->drupalGet('admin/structure/views/view/frontpage/edit/default');
+    $this->assertEscaped('Teaser <em>markup</em>');
   }
 
 }
