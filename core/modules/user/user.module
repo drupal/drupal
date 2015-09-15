@@ -1270,7 +1270,7 @@ function user_form_process_password_confirm($element) {
     $password_settings += array(
       'strengthTitle' => t('Password strength:'),
       'hasWeaknesses' => t('To make your password stronger:'),
-      'tooShort' => t('Make it at least 6 characters'),
+      'tooShort' => t('Make it at least 12 characters'),
       'addLowerCase' => t('Add lowercase letters'),
       'addUpperCase' => t('Add uppercase letters'),
       'addNumbers' => t('Add numbers'),
