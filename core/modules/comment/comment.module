@@ -717,8 +717,8 @@ function template_preprocess_comment(&$variables) {
     $permalink_uri_parent->setOption('attributes', $attributes);
     $variables['parent_title'] = \Drupal::l($comment_parent->getSubject(), $permalink_uri_parent);
     $variables['parent_permalink'] = \Drupal::l(t('Parent permalink'), $permalink_uri_parent);
-    $variables['parent'] = t('In reply to !parent_title by !parent_username',
-        array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
+    $variables['parent'] = t('In reply to @parent_title by @parent_username',
+        array('@parent_username' => $variables['parent_author'], '@parent_title' => $variables['parent_title']));
   }
   else {
     $variables['parent_comment'] = '';
