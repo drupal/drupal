@@ -7,6 +7,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 
 /**
  * Manages discovery and instantiation of menu local task plugins.
@@ -47,11 +48,13 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
    *
    * @param string $current_route_name
    *   The route for which to make renderable local tasks.
+   * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
+   *   The cacheability metadata for the local tasks.
    *
    * @return array
    *   A render array as expected by menu-local-tasks.html.twig.
    */
-  public function getTasksBuild($current_route_name);
+  public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface &$cacheability);
 
   /**
    * Collects the local tasks (tabs) for the current route.

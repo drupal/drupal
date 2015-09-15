@@ -193,10 +193,11 @@ class StandardTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Frontpage is cached by Dynamic Page Cache.');
 
-    $url = Url::fromRoute('entity.node.canonical', ['node' => 1]);
-    $this->drupalGet($url);
-    $this->drupalGet($url);
-    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Full node page is cached by Dynamic Page Cache.');
+    // @todo uncomment after https://www.drupal.org/node/2543334 has landed.
+    //url = Url::fromRoute('entity.node.canonical', ['node' => 1]);
+    //$this->drupalGet($url);
+    //$this->drupalGet($url);
+    //$this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Full node page is cached by Dynamic Page Cache.');
 
     $url = Url::fromRoute('entity.user.canonical', ['user' => 1]);
     $this->drupalGet($url);

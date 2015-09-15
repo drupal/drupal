@@ -57,7 +57,7 @@ class DisplayPageWebTest extends PluginTestBase {
 
     $this->drupalGet('test_route_with_argument/1');
     $this->assertResponse(200);
-    $this->assertCacheContexts(['languages:language_interface', 'route.name', 'theme', 'url']);
+    $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url']);
     $result = $this->xpath('//span[@class="field-content"]');
     $this->assertEqual(count($result), 1, 'Ensure that just the filtered entry was returned.');
     $this->assertEqual((string) $result[0], 1, 'The passed ID was returned.');

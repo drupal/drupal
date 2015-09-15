@@ -7,12 +7,14 @@
 
 namespace Drupal\field_ui\Tests;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
+use Drupal\Tests\Core\Entity\EntityManagerTest;
 
 /**
  * Tests the entity display configuration entities.
@@ -435,4 +437,21 @@ class EntityDisplayTest extends KernelTestBase {
     $display = entity_get_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($display->getComponent($field_name));
   }
+
+  /**
+   * Ensure that entity view display changes invalidates cache tags.
+   */
+  public function testEntityDisplayInvalidateCacheTags() {
+    $cache = \Drupal::cache();
+    $cache->set('cid', 'kittens', Cache::PERMANENT, ['config:entity_view_display_list']);
+    $display = EntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ]);
+    $display->setComponent('kitten');
+    $display->save();
+    $this->assertFalse($cache->get('cid'));
+  }
+
 }

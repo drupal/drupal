@@ -7,10 +7,18 @@
 
 namespace Drupal\Tests\Core\Menu;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Menu\LocalTaskInterface;
 use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Zend\Stdlib\ArrayObject;
@@ -85,6 +93,13 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected $routeMatch;
 
   /**
+   * The mocked account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $account;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -98,8 +113,10 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
     $this->routeMatch = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
 
     $this->setupLocalTaskManager();
+    $this->setupNullCacheabilityMetadataValidation();
   }
 
   /**
@@ -249,8 +266,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $account);
+    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);
@@ -391,6 +407,89 @@ class LocalTaskManagerTest extends UnitTestCase {
     $local_tasks['children']['menu_local_task_test_tasks_view.tab']['menu_local_task_test_tasks_view_child1']['weight'] = 3e-6;
     $local_tasks['children']['menu_local_task_test_tasks_view.tab']['menu_local_task_test_tasks_view_child2']['weight'] = 4e-6;
     return $local_tasks;
+  }
+
+  /**
+   * @covers ::getTasksBuild
+   */
+  public function testGetTasksBuildWithCacheabilityMetadata() {
+    $definitions = $this->getLocalTaskFixtures();
+
+    $this->pluginDiscovery->expects($this->once())
+      ->method('getDefinitions')
+      ->will($this->returnValue($definitions));
+
+    // Set up some cacheablity metadata and ensure its merged together.
+    $definitions['menu_local_task_test_tasks_settings']['cache_tags'] = ['tag.example1'];
+    $definitions['menu_local_task_test_tasks_settings']['cache_contexts'] = ['context.example1'];
+    $definitions['menu_local_task_test_tasks_edit']['cache_tags'] = ['tag.example2'];
+    $definitions['menu_local_task_test_tasks_edit']['cache_contexts'] = ['context.example2'];
+    // Test the cacheability metadata of access checking.
+    $definitions['menu_local_task_test_tasks_view_child1']['access'] = AccessResult::allowed()->addCacheContexts(['user.permissions']);
+
+    $this->setupFactoryAndLocalTaskPlugins($definitions, 'menu_local_task_test_tasks_view');
+    $this->setupLocalTaskManager();
+
+    $this->controllerResolver->expects($this->any())
+      ->method('getArguments')
+      ->willReturn([]);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRouteName')
+      ->willReturn('menu_local_task_test_tasks_view');
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturn(new ParameterBag());
+
+    $cacheability = new CacheableMetadata();
+    $local_tasks = $this->manager->getTasksBuild('menu_local_task_test_tasks_view', $cacheability);
+
+    // Ensure that all cacheability metadata is merged together.
+    $this->assertEquals(['tag.example1', 'tag.example2'], $cacheability->getCacheTags());
+    $this->assertEquals(['context.example1', 'context.example2', 'route', 'user.permissions'], $cacheability->getCacheContexts());
+ }
+
+  protected function setupFactoryAndLocalTaskPlugins(array $definitions, $active_plugin_id) {
+    $map = [];
+    $access_manager_map = [];
+
+    foreach ($definitions as $plugin_id => $info) {
+      $info += ['access' => AccessResult::allowed()];
+
+      $mock = $this->prophesize(LocalTaskInterface::class);
+      $mock->willImplement(CacheableDependencyInterface::class);
+      $mock->getRouteName()->willReturn($info['route_name']);
+      $mock->getTitle()->willReturn($info['title']);
+      $mock->getRouteParameters(Argument::cetera())->willReturn([]);
+      $mock->getOptions(Argument::cetera())->willReturn([]);
+      $mock->getActive()->willReturn($plugin_id === $active_plugin_id);
+      $mock->getWeight()->willReturn(isset($info['weight']) ? $info['weight'] : 0);
+      $mock->getCacheContexts()->willReturn(isset($info['cache_contexts']) ? $info['cache_contexts'] : []);
+      $mock->getCacheTags()->willReturn(isset($info['cache_tags']) ? $info['cache_tags'] : []);
+      $mock->getCacheMaxAge()->willReturn(isset($info['cache_max_age']) ? $info['cache_max_age'] : Cache::PERMANENT);
+
+
+      $access_manager_map[] = [$info['route_name'], [], $this->account, TRUE, $info['access']];
+
+      $map[] = [$info['id'], [], $mock->reveal()];
+    }
+
+    $this->accessManager->expects($this->any())
+      ->method('checkNamedRoute')
+      ->willReturnMap($access_manager_map);
+
+    $this->factory->expects($this->any())
+      ->method('createInstance')
+      ->will($this->returnValueMap($map));
+  }
+
+  protected function setupNullCacheabilityMetadataValidation() {
+    $container = \Drupal::hasContainer() ? \Drupal::getContainer() : new ContainerBuilder();
+
+    $cache_context_manager = $this->prophesize(CacheContextsManager::class);
+
+    $container->set('cache_contexts_manager', $cache_context_manager->reveal());
+    \Drupal::setContainer($container);
   }
 
 }

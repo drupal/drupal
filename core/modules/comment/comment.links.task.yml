@@ -29,6 +29,8 @@ comment.admin_approval:
   class: Drupal\comment\Plugin\Menu\LocalTask\UnapprovedComments
   parent_id: comment.admin
   weight: 1
+  cache_tags:
+    - comment_list
 
 # Default tab for comment type editing.
 entity.comment_type.edit_form:

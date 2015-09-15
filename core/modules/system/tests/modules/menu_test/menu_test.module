@@ -5,6 +5,7 @@
  * Module that implements various hooks for menu tests.
  */
 
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Url;
 
 /**
@@ -29,7 +30,7 @@ function menu_test_menu_links_discovered_alter(&$links) {
 /**
  * Implements hook_menu_local_tasks_alter().
  */
-function menu_test_menu_local_tasks_alter(&$data, $route_name) {
+function menu_test_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
   if (in_array($route_name, array('menu_test.tasks_default'))) {
     $data['tabs'][0]['foo'] = array(
       '#theme' => 'menu_local_task',
@@ -48,6 +49,7 @@ function menu_test_menu_local_tasks_alter(&$data, $route_name) {
       '#weight' => 20,
     );
   }
+  $cacheability->addCacheTags(['kittens:dwarf-cat']);
 }
 
 /**

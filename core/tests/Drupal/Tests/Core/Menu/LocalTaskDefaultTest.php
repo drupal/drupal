@@ -301,6 +301,23 @@ class LocalTaskDefaultTest extends UnitTestCase {
     ), $this->localTaskBase->getOptions($route_match));
   }
 
+  /**
+   * @covers ::getCacheContexts
+   * @covers ::getCacheTags
+   * @covers ::getCacheMaxAge
+   */
+  public function testCacheabilityMetadata() {
+    $this->pluginDefinition['cache_contexts'] = ['route'];
+    $this->pluginDefinition['cache_tags'] = ['kitten'];
+    $this->pluginDefinition['cache_max_age'] = 3600;
+
+    $this->setupLocalTaskDefault();
+
+    $this->assertEquals(['route'], $this->localTaskBase->getCacheContexts());
+    $this->assertEquals(['kitten'], $this->localTaskBase->getCacheTags());
+    $this->assertEquals(3600, $this->localTaskBase->getCacheMaxAge());
+  }
+
 }
 
 class TestLocalTaskDefault extends LocalTaskDefault {

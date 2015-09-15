@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui\Plugin\Derivative;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
@@ -138,6 +139,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
             ),
             'parent_id' => "field_ui.fields:form_display_overview_$entity_type_id",
             'weight' => $weight++,
+            'cache_tags' => $this->entityManager->getDefinition('entity_form_display')->getListCacheTags(),
           );
         }
 
@@ -152,6 +154,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
             ),
             'parent_id' => "field_ui.fields:display_overview_$entity_type_id",
             'weight' => $weight++,
+            'cache_tags' => $this->entityManager->getDefinition('entity_view_display')->getListCacheTags(),
           );
         }
       }
@@ -189,5 +192,4 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
       }
     }
   }
-
 }

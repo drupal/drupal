@@ -94,32 +94,8 @@ class LocalActionsBlock extends BlockBase implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildConfigurationForm($form, $form_state);
-
-    // The "Primary admin actions" block is never cacheable because hooks creating local
-    // actions don't provide cacheability metadata.
-    // @todo Remove after https://www.drupal.org/node/2511516 has landed.
-    $form['cache']['#disabled'] = TRUE;
-    $form['cache']['#description'] = $this->t('This block is never cacheable.');
-    $form['cache']['max_age']['#value'] = 0;
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    // @todo Remove after https://www.drupal.org/node/2511516 has landed.
-    return 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheContexts() {
-    return ['route.name'];
+    return ['route'];
   }
 
 }

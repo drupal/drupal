@@ -181,6 +181,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Reset the render cache for the target entity type.
+    parent::postSave($storage, $update);
     if (\Drupal::entityManager()->hasHandler($this->targetEntityType, 'view_builder')) {
       \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();
     }

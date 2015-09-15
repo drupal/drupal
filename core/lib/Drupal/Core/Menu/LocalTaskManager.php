@@ -10,7 +10,9 @@ namespace Drupal\Core\Menu;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -288,7 +290,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   /**
    * {@inheritdoc}
    */
-  public function getTasksBuild($current_route_name) {
+  public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface &$cacheability) {
     $tree = $this->getLocalTasksForRoute($current_route_name);
     $build = array();
 
@@ -303,14 +305,15 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     // of SQL queries that would otherwise be triggered by the access manager.
     $routes = $route_names ? $this->routeProvider->getRoutesByNames($route_names) : array();
 
-    // @todo add cacheability data in https://www.drupal.org/node/2511516 so
-    // that we are not re-building inaccessible links on every page request.
     foreach ($tree as $level => $instances) {
       /** @var $instances \Drupal\Core\Menu\LocalTaskInterface[] */
       foreach ($instances as $plugin_id => $child) {
         $route_name = $child->getRouteName();
         $route_parameters = $child->getRouteParameters($this->routeMatch);
 
+        // Given that the active flag depends on the route we have to add the
+        // route cache context.
+        $cacheability->addCacheContexts(['route']);
         $active = $this->isRouteActive($current_route_name, $route_name, $route_parameters);
 
         // The plugin may have been set active in getLocalTasksForRoute() if
@@ -323,13 +326,15 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           'url' => Url::fromRoute($route_name, $route_parameters),
           'localized_options' => $child->getOptions($this->routeMatch),
         ];
+        $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE);
         $build[$level][$plugin_id] = [
           '#theme' => 'menu_local_task',
           '#link' => $link,
           '#active' => $active,
           '#weight' => $child->getWeight(),
-          '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE),
+          '#access' => $access,
         ];
+        $cacheability->addCacheableDependency($access)->addCacheableDependency($child);
       }
     }
 
@@ -341,21 +346,25 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    */
   public function getLocalTasks($route_name, $level = 0) {
     if (!isset($this->taskData[$route_name])) {
+      $cacheability = new CacheableMetadata();
+      $cacheability->addCacheContexts(['route']);
       // Look for route-based tabs.
       $this->taskData[$route_name] = [
         'tabs' => [],
+        'cacheability' => $cacheability,
       ];
 
       if (!$this->requestStack->getCurrentRequest()->attributes->has('exception')) {
         // Safe to build tasks only when no exceptions raised.
         $data = [];
-        $local_tasks = $this->getTasksBuild($route_name);
+        $local_tasks = $this->getTasksBuild($route_name, $cacheability);
         foreach ($local_tasks as $tab_level => $items) {
           $data[$tab_level] = empty($data[$tab_level]) ? $items : array_merge($data[$tab_level], $items);
         }
         $this->taskData[$route_name]['tabs'] = $data;
         // Allow modules to alter local tasks.
-        $this->moduleHandler->alter('menu_local_tasks', $this->taskData[$route_name], $route_name);
+        $this->moduleHandler->alter('menu_local_tasks', $this->taskData[$route_name], $route_name, $cacheability);
+        $this->taskData[$route_name]['cacheability'] = $cacheability;
       }
     }
 
@@ -363,12 +372,14 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
       return [
         'tabs' => $this->taskData[$route_name]['tabs'][$level],
         'route_name' => $route_name,
+        'cacheability' => $this->taskData[$route_name]['cacheability'],
       ];
     }
 
     return [
       'tabs' => [],
       'route_name' => $route_name,
+      'cacheability' => $this->taskData[$route_name]['cacheability'],
     ];
   }
 

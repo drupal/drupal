@@ -159,6 +159,9 @@ class LocalTasksTest extends WebTestBase {
     $this->assertEqual('Settings', (string) $result[0], 'The settings tab is active.');
     $this->assertEqual('Dynamic title for TestTasksSettingsSub1', (string) $result[1], 'The sub1 tab is active.');
 
+    $this->assertCacheTag('kittens:ragdoll');
+    $this->assertCacheTag('kittens:dwarf-cat');
+
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive1']));
     $this->assertLocalTasks($sub_tasks, 1);
 

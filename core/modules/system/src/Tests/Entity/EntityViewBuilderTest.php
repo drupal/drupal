@@ -49,6 +49,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
+    $cache = \Drupal::cache();
 
     // Force a request via GET so we can get drupal_render() cache working.
     $request = \Drupal::request();
@@ -78,8 +79,10 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
 
     // Re-save the entity and check that the cache entry has been deleted.
+    $cache->set('kittens', 'Kitten data', Cache::PERMANENT, $build['#cache']['tags']);
     $entity_test->save();
     $this->assertFalse($this->container->get('cache.' . $bin)->get($cid), 'The entity render cache has been cleared when the entity was saved.');
+    $this->assertFalse($cache->get('kittens'), 'The entity saving has invalidated cache tags.');
 
     // Rebuild the render array (creating a new cache entry in the process) and
     // delete the entity to check the cache entry is deleted.
