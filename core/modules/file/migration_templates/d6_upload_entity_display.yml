@@ -19,7 +19,7 @@ process:
   field_name: 'constants/name'
   type: 'constants/type'
   options: 'constants/options'
-  'options/type': @type
+  'options/type': '@type'
 destination:
   plugin: component_entity_display
 migration_dependencies:

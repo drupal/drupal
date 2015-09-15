@@ -29,7 +29,7 @@ process:
       textarea: text_default
       url: link
   options: 'constants/options'
-  'options/type': @type
+  'options/type': '@type'
   hidden:
     plugin: static_map
     source: visibility

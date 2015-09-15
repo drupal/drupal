@@ -19,7 +19,7 @@ process:
   filters:
     plugin: iterator
     source: filters
-    key: @id
+    key: '@id'
     process:
       id:
         plugin: static_map

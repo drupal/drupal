@@ -33,10 +33,10 @@ process:
     source:
       - link_path
       - options
-  route_name: @route/route_name
-  route_parameters: @route/route_parameters
-  url: @route/url
-  options: @route/options
+  route_name: '@route/route_name'
+  route_parameters: '@route/route_parameters'
+  url: '@route/url'
+  options: '@route/options'
   external: external
   weight: weight
   expanded: expanded

@@ -62,7 +62,7 @@ process:
     source:
       - region
       - theme
-      - @theme
+      - '@theme'
     region_map:
       left: sidebar_first
       right: sidebar_second
@@ -76,7 +76,7 @@ process:
   settings:
     plugin: d6_block_settings
     source:
-      - @plugin
+      - '@plugin'
       - delta
       - settings
   visibility:

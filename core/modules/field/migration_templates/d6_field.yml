@@ -128,7 +128,7 @@ process:
   settings:
     plugin: field_settings
     source:
-      - @type
+      - '@type'
       - global_settings
       - widget_settings
 

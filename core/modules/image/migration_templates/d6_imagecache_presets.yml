@@ -18,7 +18,7 @@ process:
   effects:
     plugin: d6_imagecache_actions
     source:
-      - @plugin
+      - '@plugin'
       - data
 destination:
   plugin: entity:image_style

@@ -22,7 +22,7 @@ process:
   form_mode: 'constants/form_mode'
   type: 'constants/type'
   options: 'constants/options'
-  'options/type': @type
+  'options/type': '@type'
 destination:
   plugin: component_entity_form_display
 migration_dependencies:
