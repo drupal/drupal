@@ -216,15 +216,31 @@ function theme_system_modules_details($variables) {
     // Add the description, along with any modules it requires.
     $description = '';
     $description .= '<div class="requirements">';
-    $description .= '<div class="admin-requirements">' . t('Machine name: !machine-name', array('!machine-name' => '<span dir="ltr" class="table-filter-text-source">' . $key . '</span>')) . '</div>';
+    $renderer = \Drupal::service('renderer');
+    $machine_name_render = [
+      '#prefix' => '<span dir="ltr" class="table-filter-text-source">',
+      '#plain_text' => $key,
+      '#suffix' => '</span'
+    ];
+    $description .= '<div class="admin-requirements">' . t('Machine name: @machine-name', array('@machine-name' =>  $renderer->render($machine_name_render))) . '</div>';
     if ($version) {
-      $description .= '<div class="admin-requirements">' . t('Version: !module-version', array('!module-version' => drupal_render($module['version']))) . '</div>';
+      $description .= '<div class="admin-requirements">' . t('Version: @module-version', array('@module-version' => $renderer->render($module['version']))) . '</div>';
     }
     if ($requires) {
-      $description .= '<div class="admin-requirements">' . t('Requires: !module-list', array('!module-list' => implode(', ', $module['#requires']))) . '</div>';
+      $requires = [
+        '#theme' => 'item_list',
+        '#items' => $module['#requires'],
+        '#context' => ['list_style' => 'comma-list'],
+      ];
+      $description .= '<div class="admin-requirements">' . t('Requires: @module-list', array('@module-list' => $renderer->render($requires))) . '</div>';
     }
     if ($required_by) {
-      $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
+      $required_by = [
+        '#theme' => 'item_list',
+        '#items' => $module['#required_by'],
+        '#context' => ['list_style' => 'comma-list'],
+      ];
+      $description .= '<div class="admin-requirements">' . t('Required by: @module-list', array('@module-list' => $renderer->render($required_by))) . '</div>';
     }
     $description .= '</div>';
     $links = '';
@@ -412,7 +428,7 @@ function template_preprocess_system_themes_page(&$variables) {
         if (substr_count($theme->info['php'], '.') < 2) {
           $theme->info['php'] .= '.*';
         }
-        $current_theme['incompatible'] = t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $theme->info['php'], '!php_version' => phpversion()));
+        $current_theme['incompatible'] = t('This theme requires PHP version @php_required and is incompatible with PHP version @php_version.', array('@php_required' => $theme->info['php'], '@php_version' => phpversion()));
       }
       elseif (!empty($theme->incompatible_base)) {
         $current_theme['incompatible'] = t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => $theme->info['base theme']));
