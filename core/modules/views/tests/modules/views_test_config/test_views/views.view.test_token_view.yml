@@ -335,7 +335,7 @@ display:
       style:
         type: rss
         options:
-          description: %1-description-!1
+          description: '%1-description-!1'
 
       path: test-token-view.xml
     cache_metadata:
