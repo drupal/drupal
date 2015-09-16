@@ -122,10 +122,9 @@ class Tasks extends InstallTasks {
         $this->pass(t('Database is encoded in UTF-8'));
       }
       else {
-        $this->fail(t('The %driver database must use %encoding encoding to work with Drupal. Recreate the database with %encoding encoding. See !link for more details.', array(
+        $this->fail(t('The %driver database must use %encoding encoding to work with Drupal. Recreate the database with %encoding encoding. See <a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a> for more details.', array(
           '%encoding' => 'UTF8',
           '%driver' => $this->name(),
-          '!link' => '<a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a>'
         )));
       }
     }
@@ -172,9 +171,9 @@ class Tasks extends InstallTasks {
             '%setting' => 'bytea_output',
             '%current_value' => 'hex',
             '%needed_value' => 'escape',
-            '!query' => "<code>" . $query . "</code>",
+            '@query' => $query,
           );
-          $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: !query", $replacements));
+          $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: <code>@query</code>", $replacements));
         }
       }
     }
@@ -225,9 +224,9 @@ class Tasks extends InstallTasks {
           '%setting' => 'standard_conforming_strings',
           '%current_value' => 'off',
           '%needed_value' => 'on',
-          '!query' => "<code>" . $query . "</code>",
+          '@query' => $query,
         );
-        $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: !query", $replacements));
+        $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: <code>@query</code>", $replacements));
       }
     }
   }
