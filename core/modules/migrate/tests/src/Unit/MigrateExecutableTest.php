@@ -200,10 +200,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue($destination));
 
     $this->idMap->expects($this->once())
-      ->method('delete')
-      ->with(array('id' => 'test'), TRUE);
-
-    $this->idMap->expects($this->once())
       ->method('saveIdMapping')
       ->with($row, array(), MigrateIdMapInterface::STATUS_FAILED, NULL);
 
@@ -376,57 +372,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->with($exception_message);
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
-  }
-
-  /**
-   * Tests saving of queued messages.
-   */
-  public function testSaveQueuedMessages() {
-    // Assert no queued messages before save.
-    $this->assertAttributeEquals(array(), 'queuedMessages', $this->executable);
-    // Set required source_id_values for MigrateIdMapInterface::saveMessage().
-    $expected_messages[] = array('message' => 'message 1', 'level' => MigrationInterface::MESSAGE_ERROR);
-    $expected_messages[] = array('message' => 'message 2', 'level' => MigrationInterface::MESSAGE_WARNING);
-    $expected_messages[] = array('message' => 'message 3', 'level' => MigrationInterface::MESSAGE_INFORMATIONAL);
-    foreach ($expected_messages as $queued_message) {
-      $this->executable->queueMessage($queued_message['message'], $queued_message['level']);
-    }
-    $this->executable->setSourceIdValues(array());
-    $this->assertAttributeEquals($expected_messages, 'queuedMessages', $this->executable);
-    // No asserts of saved messages since coverage exists
-    // in MigrateSqlIdMapTest::saveMessage().
-    $this->executable->saveQueuedMessages();
-    // Assert no queued messages after save.
-    $this->assertAttributeEquals(array(), 'queuedMessages', $this->executable);
-  }
-
-  /**
-   * Tests the queuing of messages.
-   */
-  public function testQueueMessage() {
-    // Assert no queued messages.
-    $expected_messages = array();
-    $this->assertAttributeEquals(array(), 'queuedMessages', $this->executable);
-    // Assert a single (default level) queued message.
-    $expected_messages[] = array(
-      'message' => 'message 1',
-      'level' => MigrationInterface::MESSAGE_ERROR,
-    );
-    $this->executable->queueMessage('message 1');
-    $this->assertAttributeEquals($expected_messages, 'queuedMessages', $this->executable);
-    // Assert multiple queued messages.
-    $expected_messages[] = array(
-      'message' => 'message 2',
-      'level' => MigrationInterface::MESSAGE_WARNING,
-    );
-    $this->executable->queueMessage('message 2', MigrationInterface::MESSAGE_WARNING);
-    $this->assertAttributeEquals($expected_messages, 'queuedMessages', $this->executable);
-    $expected_messages[] = array(
-      'message' => 'message 3',
-      'level' => MigrationInterface::MESSAGE_INFORMATIONAL,
-    );
-    $this->executable->queueMessage('message 3', MigrationInterface::MESSAGE_INFORMATIONAL);
-    $this->assertAttributeEquals($expected_messages, 'queuedMessages', $this->executable);
   }
 
   /**

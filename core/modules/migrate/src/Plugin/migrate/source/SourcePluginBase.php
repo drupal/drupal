@@ -126,14 +126,6 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $iterator;
 
   /**
-   * @TODO, find out how to remove this.
-   * @see https://www.drupal.org/node/2443617
-   *
-   * @var MigrateExecutableInterface
-   */
-  public $migrateExecutable;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
@@ -199,11 +191,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     if ($skip) {
       // Make sure we replace any previous messages for this item with any
       // new ones.
-      $id_map = $this->migration->getIdMap();
-      $id_map->delete($this->currentSourceIds, TRUE);
-      $this->migrateExecutable->saveQueuedMessages();
       if ($save_to_map) {
-        $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED, $this->migrateExecutable->rollbackAction);
+        $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED);
         $this->currentRow = NULL;
         $this->currentSourceIds = NULL;
       }
@@ -305,6 +294,12 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       // Pick up the existing map row, if any, unless getNextRow() did it.
       if (!$this->mapRowAdded && ($id_map = $this->idMap->getRowBySource($this->currentSourceIds))) {
         $row->setIdMap($id_map);
+      }
+
+      // Clear any previous messages for this row before potentially adding
+      // new ones.
+      if (!empty($this->currentSourceIds)) {
+        $this->idMap->delete($this->currentSourceIds, TRUE);
       }
 
       // Preparing the row gives source plugins the chance to skip.

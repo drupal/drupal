@@ -42,17 +42,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $sourceRowStatus;
 
   /**
-   * The queued messages not yet saved.
-   *
-   * Each element in the array is an array with two keys:
-   * - 'message': The message string.
-   * - 'level': The level, a MigrationInterface::MESSAGE_* constant.
-   *
-   * @var array
-   */
-  protected $queuedMessages = array();
-
-  /**
    * The ratio of the memory limit at which an operation will be interrupted.
    *
    * @var float
@@ -178,10 +167,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected function getSource() {
     if (!isset($this->source)) {
       $this->source = $this->migration->getSourcePlugin();
-
-      // @TODO, find out how to remove this.
-      // @see https://www.drupal.org/node/2443617
-      $this->source->migrateExecutable = $this;
     }
     return $this->source;
   }
@@ -245,11 +230,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $destination = $this->migration->getDestinationPlugin();
     while ($source->valid()) {
       $row = $source->current();
-      if ($this->sourceIdValues = $row->getSourceIdValues()) {
-        // Wipe old messages, and save any new messages.
-        $id_map->delete($this->sourceIdValues, TRUE);
-        $this->saveQueuedMessages();
-      }
+      $this->sourceIdValues = $row->getSourceIdValues();
 
       try {
         $this->processRow($row);
@@ -397,23 +378,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   public function saveMessage($message, $level = MigrationInterface::MESSAGE_ERROR) {
     $this->migration->getIdMap()->saveMessage($this->sourceIdValues, $message, $level);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function queueMessage($message, $level = MigrationInterface::MESSAGE_ERROR) {
-    $this->queuedMessages[] = array('message' => $message, 'level' => $level);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function saveQueuedMessages() {
-    foreach ($this->queuedMessages as $queued_message) {
-      $this->saveMessage($queued_message['message'], $queued_message['level']);
-    }
-    $this->queuedMessages = array();
   }
 
   /**
