@@ -703,17 +703,16 @@ class Renderer implements RendererInterface {
 
     // Generate placeholder markup. Note that the only requirement is that this
     // is unique markup that isn't easily guessable. The #lazy_builder callback
-    // and its arguments are put in the placeholder markup solely to simplify
+    // and its arguments are put in the placeholder markup solely to simplify<<<
     // debugging.
-    $attributes = new Attribute();
-    $attributes['callback'] = $placeholder_render_array['#lazy_builder'][0];
-    $attributes['arguments'] = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
-    $attributes['token'] = hash('crc32b', serialize($placeholder_render_array));
-    $placeholder_markup = SafeMarkup::format('<drupal-render-placeholder@attributes></drupal-render-placeholder>', ['@attributes' => $attributes]);
+    $callback = $placeholder_render_array['#lazy_builder'][0];
+    $arguments = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
+    $token = hash('crc32b', serialize($placeholder_render_array));
+    $placeholder_markup = '<drupal-render-placeholder callback="' . $callback . '" arguments="' . $arguments . '" token="' . $token . '"></drupal-render-placeholder>';
 
     // Build the placeholder element to return.
     $placeholder_element = [];
-    $placeholder_element['#markup'] = $placeholder_markup;
+    $placeholder_element['#markup'] = SafeString::create($placeholder_markup);
     $placeholder_element['#attached']['placeholders'][$placeholder_markup] = $placeholder_render_array;
     return $placeholder_element;
   }
