@@ -1,7 +1,7 @@
-id: d6_block
+id: d7_block
 label: Blocks
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
   plugin: block
 process:
@@ -12,13 +12,13 @@ process:
     method: row
     source: status
   id:
-    # We need something unique, so aggregator, aggregator_1 etc will do.
-    plugin: dedupe_entity
-    entity_type: block
-    field: id
-    postfix: _
-    length: 32
-    source: module
+    -
+      plugin: concat
+      source:
+        - theme
+        - module
+        - delta
+      delimiter: _
   plugin:
     -
       plugin: static_map
@@ -28,27 +28,28 @@ process:
         - delta
       map:
         book:
-          0: book_navigation
+          navigation: book_navigation
         comment:
-          0: views_block:comments_recent-block_1
+          recent: views_block:comments_recent-block_1
         forum:
-          0: forum_active_block
-          1: forum_new_block
-        locale:
-          0: language_block
+          active: forum_active_block
+          new: forum_new_block
+        # locale:
+        #  0: language_block
         node:
-          0: node_syndicate_block
+          syndicate: node_syndicate_block
         search:
-          0: search_form_block
+          form: search_form_block
         statistics:
-          0: statistics_popular_block
+          popular: statistics_popular_block
         system:
-          0: system_powered_by_block
+          main: system_main_block
+          'powered-by': system_powered_by_block
         user:
-          0: user_login_block
-          1: system_menu_block:tools
-          2: views_block:who_s_new-block_1
-          3: views_block:who_s_online-who_s_online_block
+          login: user_login_block
+          # 1: system_menu_block:tools
+          new: views_block:who_s_new-block_1
+          online: views_block:who_s_online-who_s_online_block
     -
       plugin: block_plugin_id
     -
@@ -94,7 +95,6 @@ process:
 destination:
   plugin: entity:block
 migration_dependencies:
-  required:
-    - menu
-    - d6_custom_block
-    - d6_user_role
+  optional:
+    - d7_custom_block
+    - d7_user_role

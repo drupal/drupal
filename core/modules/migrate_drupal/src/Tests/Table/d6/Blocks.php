@@ -130,7 +130,7 @@ class Blocks extends DrupalDumpBase {
       'custom' => '0',
       'throttle' => '0',
       'visibility' => '0',
-      'pages' => '',
+      'pages' => "<front>\r\nnode/1\nblog/*",
       'title' => '',
       'cache' => '-1',
     ))->values(array(
@@ -297,8 +297,8 @@ class Blocks extends DrupalDumpBase {
       'region' => 'left',
       'custom' => '0',
       'throttle' => '0',
-      'visibility' => '0',
-      'pages' => '',
+      'visibility' => '2',
+      'pages' => "<?php\nreturn TRUE;",
       'title' => '',
       'cache' => '-1',
     ))->values(array(
@@ -403,4 +403,4 @@ class Blocks extends DrupalDumpBase {
   }
 
 }
-#aecc8e1067d73824c43bfaf26f9ebf8c
+#471b4ac718c0db89c0f48f4051b2583d

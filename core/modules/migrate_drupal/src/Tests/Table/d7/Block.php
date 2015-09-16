@@ -689,9 +689,9 @@ class Block extends DrupalDumpBase {
       'module' => 'block',
       'delta' => '1',
       'theme' => 'bartik',
-      'status' => '0',
+      'status' => '1',
       'weight' => '0',
-      'region' => '-1',
+      'region' => 'highlighted',
       'custom' => '0',
       'visibility' => '0',
       'pages' => '',
@@ -714,4 +714,4 @@ class Block extends DrupalDumpBase {
   }
 
 }
-#1c70ba712296177505a2e00cfca073eb
+#be0543597cafbd2f12cadf1beacb04fc

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\Plugin\migrate\process\d6\BlockSettings.
+ * Contains \Drupal\block\Plugin\migrate\process\BlockSettings.
  */
 
-namespace Drupal\block\Plugin\migrate\process\d6;
+namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -13,7 +13,7 @@ use Drupal\migrate\Row;
 
 /**
  * @MigrateProcessPlugin(
- *   id = "d6_block_settings"
+ *   id = "block_settings"
  * )
  */
 class BlockSettings extends ProcessPluginBase {

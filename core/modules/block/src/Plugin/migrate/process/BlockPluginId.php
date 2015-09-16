@@ -2,34 +2,38 @@
 
 /**
  * @file
- * Contains \Drupal\block\Plugin\migrate\process\d6\BlockPluginId.
+ * Contains \Drupal\block\Plugin\migrate\process\BlockPluginId.
  */
 
-namespace Drupal\block\Plugin\migrate\process\d6;
+namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\MigrateSkipRowException;
-use Drupal\migrate\Plugin\MigratePluginManager;
+use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @MigrateProcessPlugin(
- *   id = "d6_block_plugin_id"
+ *   id = "block_plugin_id"
  * )
  */
 class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var \Drupal\migrate\Plugin\MigratePluginManager
+   * The migration process plugin, configured for lookups in d6_custom_block
+   * and d7_custom_block.
+   *
+   * @var \Drupal\migrate\Plugin\MigrateProcessInterface
    */
-  protected $processPluginManager;
+  protected $migrationPlugin;
 
   /**
+   * The block_content entity storage handler.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $blockContentStorage;
@@ -37,11 +41,10 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, MigratePluginManager $process_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityStorageInterface $storage, MigrateProcessInterface $migration_plugin) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->blockContentStorage = $storage;
-    $this->migration = $migration;
-    $this->processPluginManager = $process_plugin_manager;
+    $this->migrationPlugin = $migration_plugin;
   }
 
   /**
@@ -49,13 +52,18 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     $entity_manager = $container->get('entity.manager');
+    $migration_configuration = array(
+      'migration' => array(
+        'd6_custom_block',
+        'd7_custom_block',
+      ),
+    );
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $migration,
       $entity_manager->getDefinition('block_content') ? $entity_manager->getStorage('block_content') : NULL,
-      $container->get('plugin.manager.migrate.process')
+      $container->get('plugin.manager.migrate.process')->createInstance('migration', $migration_configuration, $migration)
     );
   }
 
@@ -70,31 +78,28 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
       switch ($module) {
         case 'aggregator':
           list($type, $id) = explode('-', $delta);
-          if ($type == 'category') {
-            // @TODO skip row.
-            // throw new MigrateSkipRowException();
+          if ($type == 'feed') {
+            return 'aggregator_feed_block';
           }
-          $value = 'aggregator_feed_block';
           break;
         case 'menu':
-          $value = "system_menu_block:$delta";
-          break;
+          return "system_menu_block:$delta";
         case 'block':
           if ($this->blockContentStorage) {
-            $block_ids = $this->processPluginManager
-              ->createInstance('migration', array('migration' => 'd6_custom_block'), $this->migration)
+            $block_id = $this->migrationPlugin
               ->transform($delta, $migrate_executable, $row, $destination_property);
-            $value = 'block_content:' . $this->blockContentStorage->load($block_ids[0])->uuid();
-          }
-          else {
-            throw new MigrateSkipRowException();
+            if ($block_id) {
+              return 'block_content:' . $this->blockContentStorage->load($block_id)->uuid();
+            }
           }
           break;
         default:
-          throw new MigrateSkipRowException();
+          break;
       }
     }
-    return $value;
+    else {
+      return $value;
+    }
   }
 
 }

@@ -51,8 +51,12 @@ class BlockRole extends DrupalDumpBase {
       'delta',
       'rid',
     ))
-    ->execute();
+    ->values(array(
+      'module' => 'block',
+      'delta' => '1',
+      'rid' => '2',
+    ))->execute();
   }
 
 }
-#3ac5281aec06873398b6cde3ca21d461
+#0280c4568cc18ce4b7e173c046a61a05

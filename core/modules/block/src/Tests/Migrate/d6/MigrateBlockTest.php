@@ -11,7 +11,7 @@ use Drupal\block\Entity\Block;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
- * Upgrade block settings to block.block.*.yml.
+ * Tests migration of blocks to configuration entities.
  *
  * @group migrate_drupal_6
  */
@@ -49,7 +49,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       $entity->save();
     }
     $this->prepareMigrations(array(
-      'd6_custom_block'  => array(
+      'd6_custom_block' => array(
         array(array(1), array(1)),
         array(array(2), array(2)),
       ),
@@ -75,108 +75,93 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test the block settings migration.
+   * Asserts various aspects of a block.
+   *
+   * @param string $id
+   *   The block ID.
+   * @param string $module
+   *   The module.
+   * @param array $visibility
+   *   The block visibility settings.
+   * @param string $region
+   *   The display region.
+   * @param string $theme
+   *   The theme.
+   * @param string $weight
+   *   The block weight.
+   */
+  public function assertEntity($id, $visibility, $region, $theme, $weight) {
+    $block = Block::load($id);
+    $this->assertTrue($block instanceof Block);
+    $this->assertIdentical($visibility, $block->getVisibility());
+    $this->assertIdentical($region, $block->getRegion());
+    $this->assertIdentical($theme, $block->getTheme());
+    $this->assertIdentical($weight, $block->getWeight());
+  }
+
+  /**
+   * Tests the block migration.
    */
   public function testBlockMigration() {
     $blocks = Block::loadMultiple();
-    $this->assertIdentical(count($blocks), 10);
+    $this->assertIdentical(9, count($blocks));
 
     // User blocks
-    $test_block_user = $blocks['user'];
-    $this->assertNotNull($test_block_user);
-    $this->assertIdentical('sidebar_first', $test_block_user->getRegion());
-    $this->assertIdentical('bartik', $test_block_user->getTheme());
-    $visibility = $test_block_user->getVisibility();
-    $this->assertTrue(empty($visibility));
-    $this->assertIdentical(0, $test_block_user->getWeight());
+    $visibility = [];
+    $visibility['request_path']['id'] = 'request_path';
+    $visibility['request_path']['negate'] = TRUE;
+    $visibility['request_path']['pages'] = "<front>\n/node/1\n/blog/*";
+    $this->assertEntity('user', $visibility, 'sidebar_first', 'bartik', 0);
 
-    $test_block_user_1 = $blocks['user_1'];
-    $this->assertNotNull($test_block_user_1);
-    $this->assertIdentical('sidebar_first', $test_block_user_1->getRegion());
-    $this->assertIdentical('bartik', $test_block_user_1->getTheme());
-    $visibility = $test_block_user_1->getVisibility();
-    $this->assertTrue(empty($visibility));
-    $this->assertIdentical(0, $test_block_user_1->getWeight());
+    $visibility = [];
+    $this->assertEntity('user_1', $visibility, 'sidebar_first', 'bartik', 0);
 
-    $test_block_user_2 = $blocks['user_2'];
-    $this->assertNotNull($test_block_user_2);
-    $this->assertIdentical('sidebar_second', $test_block_user_2->getRegion());
-    $this->assertIdentical('bartik', $test_block_user_2->getTheme());
-    $visibility = $test_block_user_2->getVisibility();
-    $this->assertIdentical($visibility['user_role']['id'], 'user_role');
-    $roles = array();
+    $visibility['user_role']['id'] = 'user_role';
     $roles['authenticated'] = 'authenticated';
-    $this->assertIdentical($visibility['user_role']['roles'], $roles);
-    $this->assertFalse($visibility['user_role']['negate']);
-    $this->assertIdentical(-9, $test_block_user_2->getWeight());
+    $visibility['user_role']['roles'] = $roles;
+    $context_mapping['user'] = '@user.current_user_context:current_user';
+    $visibility['user_role']['context_mapping'] = $context_mapping;
+    $visibility['user_role']['negate'] = FALSE;
+    $this->assertEntity('user_2', $visibility, 'sidebar_second', 'bartik', -9);
 
-    $test_block_user_3 = $blocks['user_3'];
-    $this->assertNotNull($test_block_user_3);
-    $this->assertIdentical('sidebar_second', $test_block_user_3->getRegion());
-    $this->assertIdentical('bartik', $test_block_user_3->getTheme());
-    $visibility = $test_block_user_3->getVisibility();
-    $this->assertIdentical($visibility['user_role']['id'], 'user_role');
-    $roles = array();
-    $roles['migrate_test_role_1'] = 'migrate_test_role_1';
-    $this->assertIdentical($visibility['user_role']['roles'], $roles);
-    $this->assertFalse($visibility['user_role']['negate']);
-    $this->assertIdentical(-6, $test_block_user_3->getWeight());
+    $visibility = [];
+    $visibility['user_role']['id'] = 'user_role';
+    $visibility['user_role']['roles'] = [
+      'migrate_test_role_1' => 'migrate_test_role_1'
+    ];
+    $context_mapping['user'] = '@user.current_user_context:current_user';
+    $visibility['user_role']['context_mapping'] = $context_mapping;
+    $visibility['user_role']['negate'] = FALSE;
+    $this->assertEntity('user_3', $visibility, 'sidebar_second', 'bartik', -6);
 
     // Check system block
-    $test_block_system = $blocks['system'];
-    $this->assertNotNull($test_block_system);
-    $this->assertIdentical('footer', $test_block_system->getRegion());
-    $this->assertIdentical('bartik', $test_block_system->getTheme());
-    $visibility = $test_block_system->getVisibility();
-    $this->assertIdentical('request_path', $visibility['request_path']['id']);
-    $this->assertIdentical('node/1', $visibility['request_path']['pages']);
-    $this->assertTrue($visibility['request_path']['negate']);
-    $this->assertIdentical(-5, $test_block_system->getWeight());
+    $visibility = [];
+    $visibility['request_path']['id'] = 'request_path';
+    $visibility['request_path']['negate'] = TRUE;
+    $visibility['request_path']['pages'] = '/node/1';
+    $this->assertEntity('system', $visibility, 'footer', 'bartik', -5);
 
     // Check menu blocks
-    $test_block_menu = $blocks['menu'];
-    $this->assertNotNull($test_block_menu);
-    $this->assertIdentical('header', $test_block_menu->getRegion());
-    $this->assertIdentical('bartik', $test_block_menu->getTheme());
-    $visibility = $test_block_menu->getVisibility();
-    $this->assertTrue(empty($visibility));
-    $this->assertIdentical(-5, $test_block_menu->getWeight());
+    $visibility = [];
+    $this->assertEntity('menu', $visibility, 'header', 'bartik', -5);
 
     // Check custom blocks
-    $test_block_block = $blocks['block'];
-    $this->assertNotNull($test_block_block);
-    $this->assertIdentical('content', $test_block_block->getRegion());
-    $this->assertIdentical('bartik', $test_block_block->getTheme());
-    $visibility = $test_block_block->getVisibility();
-    $this->assertIdentical('request_path', $visibility['request_path']['id']);
-    $this->assertIdentical('<front>', $visibility['request_path']['pages']);
-    $this->assertFalse($visibility['request_path']['negate']);
-    $this->assertIdentical(0, $test_block_block->getWeight());
+    $visibility['request_path']['id'] = 'request_path';
+    $visibility['request_path']['negate'] = FALSE;
+    $visibility['request_path']['pages'] = '<front>';
+    $this->assertEntity('block', $visibility, 'content', 'bartik', 0);
 
-    $test_block_block_1 = $blocks['block_1'];
-    $this->assertNotNull($test_block_block_1);
-    $this->assertIdentical('right', $test_block_block_1->getRegion());
-    $this->assertIdentical('bluemarine', $test_block_block_1->getTheme());
-    $visibility = $test_block_block_1->getVisibility();
-    $this->assertIdentical('request_path', $visibility['request_path']['id']);
-    $this->assertIdentical('node', $visibility['request_path']['pages']);
-    $this->assertFalse($visibility['request_path']['negate']);
-    $this->assertIdentical(-4, $test_block_block_1->getWeight());
+    $visibility['request_path']['id'] = 'request_path';
+    $visibility['request_path']['negate'] = FALSE;
+    $visibility['request_path']['pages'] = '/node';
+    $this->assertEntity('block_1', $visibility, 'right', 'bluemarine', -4);
 
-    $test_block_block_2 = $blocks['block_2'];
-    $this->assertNotNull($test_block_block_2);
-    $this->assertIdentical('right', $test_block_block_2->getRegion());
-    $this->assertIdentical('test_theme', $test_block_block_2->getTheme());
-    $visibility = $test_block_block_2->getVisibility();
-    $this->assertTrue(empty($visibility));
-    $this->assertIdentical(-7, $test_block_block_2->getWeight());
+    $visibility = [];
+    $this->assertEntity('block_2', $visibility, 'right', 'test_theme', -7);
 
-    $test_block_block_3 = $blocks['block_3'];
-    $this->assertNotNull($test_block_block_3);
-    $this->assertIdentical('left', $test_block_block_3->getRegion());
-    $this->assertIdentical('test_theme', $test_block_block_3->getTheme());
-    $visibility = $test_block_block_3->getVisibility();
-    $this->assertTrue(empty($visibility));
-    $this->assertIdentical(-2, $test_block_block_3->getWeight());
+    // Custom block with php code is not migrated.
+    $block = Block::load('block_3');
+    $this->assertFalse($block instanceof Block);
   }
+
 }

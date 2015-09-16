@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\Plugin\migrate\process\d6\BlockRegion.
+ * Contains \Drupal\block\Plugin\migrate\process\BlockRegion.
  */
 
-namespace Drupal\block\Plugin\migrate\process\d6;
+namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -13,10 +13,11 @@ use Drupal\migrate\Row;
 
 /**
  * @MigrateProcessPlugin(
- *   id = "d6_block_region"
+ *   id = "block_region"
  * )
  */
 class BlockRegion extends ProcessPluginBase {
+
   /**
    * {@inheritdoc}
    *

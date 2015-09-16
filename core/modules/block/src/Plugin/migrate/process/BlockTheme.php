@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\Plugin\migrate\process\d6\BlockTheme.
+ * Contains \Drupal\block\Plugin\migrate\process\BlockTheme.
  */
 
-namespace Drupal\block\Plugin\migrate\process\d6;
+namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @MigrateProcessPlugin(
- *   id = "d6_block_theme"
+ *   id = "block_theme"
  * )
  */
 class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -74,11 +74,9 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
 
   /**
    * {@inheritdoc}
-   *
-   * Set the block theme, based on the current default theme.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($theme, $d6_default_theme, $d6_admin_theme) = $value;
+    list($theme, $default_theme, $admin_theme) = $value;
 
     // If the source theme exists on the destination, we're good.
     if (isset($this->themes[$theme])) {
@@ -87,13 +85,13 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
 
     // If the source block is assigned to a region in the source default theme,
     // then assign it to the destination default theme.
-    if (strtolower($theme) == strtolower($d6_default_theme)) {
+    if (strtolower($theme) == strtolower($default_theme)) {
       return $this->themeConfig->get('default');
     }
 
     // If the source block is assigned to a region in the source admin theme,
     // then assign it to the destination admin theme.
-    if (strtolower($theme) == strtolower($d6_admin_theme)) {
+    if (strtolower($theme) == strtolower($admin_theme)) {
       return $this->themeConfig->get('admin');
     }
 

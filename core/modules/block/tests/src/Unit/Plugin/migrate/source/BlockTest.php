@@ -2,31 +2,27 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\block\Unit\Plugin\migrate\source\d6\BlockTest.
+ * Contains \Drupal\Tests\block\Unit\Plugin\migrate\source\BlockTest.
  */
 
-namespace Drupal\Tests\block\Unit\Plugin\migrate\source\d6;
+namespace Drupal\Tests\block\Unit\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
- * Tests D6 block source plugin.
+ * Tests block source plugin.
  *
- * @coversDefaultClass \Drupal\block\Plugin\migrate\source\d6\Block
+ * @coversDefaultClass \Drupal\block\Plugin\migrate\source\Block
  * @group block
  */
 class BlockTest extends MigrateSqlSourceTestCase {
 
-  // The plugin system is not working during unit testing so the source plugin
-  // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\block\Plugin\migrate\source\d6\Block';
+  const PLUGIN_CLASS = 'Drupal\block\Plugin\migrate\source\Block';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
-    // The ID of the entity, can be any string.
     'id' => 'test',
     'source' => array(
-      'plugin' => 'd6_block',
+      'plugin' => 'block',
     ),
   );
 
@@ -79,6 +75,20 @@ class BlockTest extends MigrateSqlSourceTestCase {
   protected function setUp() {
     $this->databaseContents['blocks'] = $this->expectedResults;
     $this->databaseContents['blocks_roles'] = $this->expectedBlocksRoles;
+    $this->databaseContents['system'] = array(
+      array(
+        'filename' => 'modules/system/system.module',
+        'name' => 'system',
+        'type' => 'module',
+        'owner' => '',
+        'status' => '1',
+        'throttle' => '0',
+        'bootstrap' => '0',
+        'schema_version' => '6055',
+        'weight' => '0',
+        'info' => 'a:0:{}',
+      )
+    );
     parent::setUp();
   }
 
