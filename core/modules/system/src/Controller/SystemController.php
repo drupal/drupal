@@ -231,8 +231,8 @@ class SystemController extends ControllerBase {
         if (isset($themes[$theme_key]) && file_exists($themes[$theme_key]->info['screenshot'])) {
           $theme->screenshot = array(
             'uri' => $themes[$theme_key]->info['screenshot'],
-            'alt' => $this->t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
-            'title' => $this->t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
+            'alt' => $this->t('Screenshot for @theme theme', array('@theme' => $theme->info['name'])),
+            'title' => $this->t('Screenshot for @theme theme', array('@theme' => $theme->info['name'])),
             'attributes' => array('class' => array('screenshot')),
           );
           break;
@@ -259,7 +259,7 @@ class SystemController extends ControllerBase {
           $theme->operations[] = array(
             'title' => $this->t('Settings'),
             'url' => Url::fromRoute('system.theme_settings_theme', ['theme' => $theme->getName()]),
-            'attributes' => array('title' => $this->t('Settings for !theme theme', array('!theme' => $theme->info['name']))),
+            'attributes' => array('title' => $this->t('Settings for @theme theme', array('@theme' => $theme->info['name']))),
           );
         }
         if (!empty($theme->status)) {
@@ -279,14 +279,14 @@ class SystemController extends ControllerBase {
                 'title' => $this->t('Uninstall'),
                 'url' => Url::fromRoute('system.theme_uninstall'),
                 'query' => $query,
-                'attributes' => array('title' => $this->t('Uninstall !theme theme', array('!theme' => $theme->info['name']))),
+                'attributes' => array('title' => $this->t('Uninstall @theme theme', array('@theme' => $theme->info['name']))),
               );
             }
             $theme->operations[] = array(
               'title' => $this->t('Set as default'),
               'url' => Url::fromRoute('system.theme_set_default'),
               'query' => $query,
-              'attributes' => array('title' => $this->t('Set !theme as default theme', array('!theme' => $theme->info['name']))),
+              'attributes' => array('title' => $this->t('Set @theme as default theme', array('@theme' => $theme->info['name']))),
             );
           }
           $admin_theme_options[$theme->getName()] = $theme->info['name'];
@@ -296,13 +296,13 @@ class SystemController extends ControllerBase {
             'title' => $this->t('Install'),
             'url' => Url::fromRoute('system.theme_install'),
             'query' => $query,
-            'attributes' => array('title' => $this->t('Install !theme theme', array('!theme' => $theme->info['name']))),
+            'attributes' => array('title' => $this->t('Install @theme theme', array('@theme' => $theme->info['name']))),
           );
           $theme->operations[] = array(
             'title' => $this->t('Install and set as default'),
             'url' => Url::fromRoute('system.theme_set_default'),
             'query' => $query,
-            'attributes' => array('title' => $this->t('Install !theme as default theme', array('!theme' => $theme->info['name']))),
+            'attributes' => array('title' => $this->t('Install @theme as default theme', array('@theme' => $theme->info['name']))),
           );
         }
       }
