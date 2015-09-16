@@ -1,0 +1,20 @@
+id: d7_shortcut_set
+label: Shortcut sets
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_shortcut_set
+process:
+  id:
+    -
+      plugin: static_map
+      bypass: true
+      source: set_name
+      map:
+        shortcut-set-1: default
+    -
+      plugin: machine_name
+      field: id
+  label: title
+destination:
+  plugin: entity:shortcut_set
