@@ -83,8 +83,13 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>';
       $output .= t('Contextual links for an area on a page are displayed using a contextual links button. There are two ways to make the contextual links button visible:');
       $output .= '<ol>';
-      $sample_picture = '<img src="' . file_create_url('core/misc/icons/bebebe/pencil.svg') . '" alt="' . t('contextual links button') . '" />';
-      $output .= '<li>' . t('Hovering over the area of interest will temporarily make the contextual links button visible (which looks like a pencil in most themes, and is normally displayed in the upper right corner of the area). The icon typically looks like this: !picture', array('!picture' => $sample_picture)) . '</li>';
+      $sample_picture = [
+        '#theme' => 'image',
+        '#uri' => 'core/misc/icons/bebebe/pencil.svg',
+        '#alt' => t('contextual links button')
+      ];
+      $sample_picture = \Drupal::service('renderer')->render($sample_picture);
+      $output .= '<li>' . t('Hovering over the area of interest will temporarily make the contextual links button visible (which looks like a pencil in most themes, and is normally displayed in the upper right corner of the area). The icon typically looks like this: @picture', array('@picture' => $sample_picture)) . '</li>';
       $output .= '<li>' . t('If you have the <a href="!toolbar">Toolbar module</a> enabled, clicking the contextual links button in the toolbar (which looks like a pencil) will make all contextual links buttons on the page visible. Clicking this button again will toggle them to invisible.', array('!toolbar' => (\Drupal::moduleHandler()->moduleExists('toolbar')) ? \Drupal::url('help.page', array('name' => 'toolbar')) : '#')) . '</li>';
       $output .= '</ol>';
       $output .= t('Once the contextual links button for the area of interest is visible, click the button to display the links.');
