@@ -4,9 +4,3 @@ httpkernel_test.empty:
     _controller: '\Drupal\httpkernel_test\Controller\TestController::get'
   requirements:
     _access: 'TRUE'
-httpkernel_test.teapot:
-  path: '/httpkernel-test/teapot'
-  defaults:
-    _controller: '\Drupal\httpkernel_test\Controller\TestController::teapot'
-  requirements:
-    _access: 'TRUE'

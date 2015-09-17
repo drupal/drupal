@@ -21,21 +21,4 @@ class TestController {
     return new Response();
   }
 
-  /**
-   * Test special header and status code rendering.
-   *
-   * @return array
-   *   A render array using features of the 'http_header' directive.
-   */
-  public function teapot() {
-    $render = [];
-    $render['#attached']['http_header'][] = ['X-Test-Teapot-Replace', 'This value gets replaced'];
-    $render['#attached']['http_header'][] = ['X-Test-Teapot-Replace', 'Teapot replaced', TRUE];
-    $render['#attached']['http_header'][] = ['X-Test-Teapot-No-Replace', 'This value is not replaced'];
-    $render['#attached']['http_header'][] = ['X-Test-Teapot-No-Replace', 'This one is added', FALSE];
-    $render['#attached']['http_header'][] = ['X-Test-Teapot', 'Teapot Mode Active'];
-    $render['#attached']['http_header'][] = ['Status', "418 I'm a teapot."];
-    return $render;
-  }
-
 }

@@ -148,62 +148,6 @@ const JS_THEME = 100;
 const LOCALE_PLURAL_DELIMITER = "\03";
 
 /**
- * Adds output to the HEAD tag of the HTML page.
- *
- * This function can be called as long as the headers aren't sent. Pass no
- * arguments (or NULL for both) to retrieve the currently stored elements.
- *
- * @param $data
- *   A renderable array. If the '#type' key is not set then 'html_tag' will be
- *   added as the default '#type'.
- * @param $key
- *   A unique string key to allow implementations of hook_html_head_alter() to
- *   identify the element in $data. Required if $data is not NULL.
- *
- * @return
- *   An array of all stored HEAD elements.
- *
- * @see \Drupal\Core\Render\Element\HtmlTag::preRenderHtmlTag()
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use #attached on render arrays.
- */
-function _drupal_add_html_head($data = NULL, $key = NULL) {
-  $stored_head = &drupal_static(__FUNCTION__, array());
-
-  if (isset($data) && isset($key)) {
-    if (!isset($data['#type'])) {
-      $data['#type'] = 'html_tag';
-    }
-    $stored_head[$key] = $data;
-  }
-  return $stored_head;
-}
-
-/**
- * Retrieves output to be displayed in the HEAD tag of the HTML page.
- *
- * @param bool $render
- *   If TRUE render the HEAD elements, otherwise return just the elements.
- *
- * @return string|array
- *   Return the rendered HTML head or the elements itself.
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use #attached on render arrays.
- */
-function drupal_get_html_head($render = TRUE) {
-  $elements = _drupal_add_html_head();
-  \Drupal::moduleHandler()->alter('html_head', $elements);
-  if ($render) {
-    return \Drupal::service('renderer')->renderPlain($elements);
-  }
-  else {
-    return $elements;
-  }
-}
-
-/**
  * Prepares a 'destination' URL query parameter for use with url().
  *
  * Used to direct the user back to the referring page after completing a form.
@@ -477,39 +421,6 @@ function base_path() {
 }
 
 /**
- * Adds a LINK tag with a distinct 'rel' attribute to the page's HEAD.
- *
- * This function can be called as long the HTML header hasn't been sent, which
- * on normal pages is up through the preprocess step of _theme('html'). Adding
- * a link will overwrite a prior link with the exact same 'rel' and 'href'
- * attributes.
- *
- * @param $attributes
- *   Associative array of element attributes including 'href' and 'rel'.
- * @param $header
- *   Optional flag to determine if a HTTP 'Link:' header should be sent.
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use #attached on render arrays.
- */
-function _drupal_add_html_head_link($attributes, $header = FALSE) {
-  $element = array(
-    '#tag' => 'link',
-    '#attributes' => $attributes,
-  );
-  $href = $attributes['href'];
-
-  if ($header) {
-    // Also add a HTTP header "Link:".
-    $href = '<' . Html::escape($attributes['href']) . '>;';
-    unset($attributes['href']);
-    $element['#attached']['http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
-  }
-
-  _drupal_add_html_head($element, 'html_head_link:' . $attributes['rel'] . ':' . $href);
-}
-
-/**
  * Deletes old cached CSS files.
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
@@ -607,39 +518,8 @@ function drupal_js_defaults($data = NULL) {
  *   'bare_html_page_renderer' service.
  */
 function drupal_process_attached(array $elements) {
-  // Asset attachments are handled by \Drupal\Core\Asset\AssetResolver.
-  foreach (array('library', 'drupalSettings') as $type) {
-    unset($elements['#attached'][$type]);
-  }
-
-  // Add additional types of attachments specified in the render() structure.
-  foreach ($elements['#attached'] as $callback => $options) {
-    foreach ($elements['#attached'][$callback] as $args) {
-      // Limit the amount allowed entries.
-      switch ($callback) {
-        case 'html_head':
-          call_user_func_array('_drupal_add_html_head', $args);
-          break;
-        case 'feed':
-          $args = [[
-            'href' => $args[0],
-            'rel' => 'alternate',
-            'title' => $args[1],
-            'type' => 'application/rss+xml',
-          ]];
-          call_user_func_array('_drupal_add_html_head_link', $args);
-          break;
-        case 'html_head_link':
-          call_user_func_array('_drupal_add_html_head_link', $args);
-          break;
-        case 'http_header':
-          // @todo Remove validation in https://www.drupal.org/node/2477223
-          break;
-        default:
-          throw new \LogicException(sprintf('You are not allowed to use %s in #attached', $callback));
-      }
-    }
-  }
+  $build['#attached'] = $elements['#attached'];
+  \Drupal::service('renderer')->render($build);
 }
 
 /**

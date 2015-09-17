@@ -466,7 +466,6 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['base_url'] = $base_url;
   $variables['language'] = $language_interface;
   $variables['language_rtl'] = ($language_interface->getDirection() == LanguageInterface::DIRECTION_RTL);
-  $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.
   $attributes = array();

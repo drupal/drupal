@@ -68,7 +68,6 @@ class AddFeedTest extends WebTestBase {
     );
     // Glean the content from the response object.
     $this->setRawContent($response->getContent());
-
     // Assert that the content contains the RSS links we specified.
     foreach ($urls as $description => $feed_info) {
       $this->assertPattern($this->urlToRSSLinkPattern($feed_info['url'], $feed_info['title']), format_string('Found correct feed header for %description', array('%description' => $description)));

@@ -586,7 +586,6 @@ EOD;
    */
   protected function render(array &$elements) {
     $content = $this->container->get('renderer')->renderRoot($elements);
-    drupal_process_attached($elements);
     $this->setRawContent($content);
     $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;

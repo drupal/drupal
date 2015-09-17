@@ -375,7 +375,10 @@
  * Libraries, JavaScript settings, feeds, HTML <head> tags and HTML <head> links
  * are attached to elements using the #attached property. The #attached property
  * is an associative array, where the keys are the attachment types and the
- * values are the attached data. For example:
+ * values are the attached data.
+ *
+ * The #attached property can also be used to specify HTTP headers and the
+ * response status code.
  *
  * The #attached property allows loading of asset libraries (which may contain
  * CSS assets, JavaScript assets, and JavaScript setting assets), JavaScript
@@ -386,10 +389,11 @@
  * @code
  * $build['#attached']['library'][] = 'core/jquery';
  * $build['#attached']['drupalSettings']['foo'] = 'bar';
- * $build['#attached']['feed'][] = ['aggregator/rss', $this->t('Feed title')];
+ * $build['#attached']['feed'][] = [$url, $this->t('Feed title')];
  * @endcode
  *
- * See drupal_process_attached() for additional information.
+ * See \Drupal\Core\Render\AttachmentsResponseProcessorInterface for additional
+ * information.
  *
  * See \Drupal\Core\Asset\LibraryDiscoveryParser::parseLibraryInfo() for more
  * information on how to define libraries.

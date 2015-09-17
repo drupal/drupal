@@ -55,12 +55,13 @@ class RenderTest extends KernelTestBase {
   /**
    * Tests that we get an exception when we try to attach an illegal type.
    */
-  public function testDrupalProcessAttached() {
+  public function testProcessAttached() {
     // Specify invalid attachments in a render array.
     $build['#attached']['library'][] = 'core/drupal.states';
     $build['#attached']['drupal_process_states'][] = [];
+    $renderer = $this->container->get('bare_html_page_renderer');
     try {
-      $this->render($build);
+      $renderer->renderBarePage($build, '', $this->container->get('theme.manager')->getActiveTheme()->getName());
       $this->fail("Invalid #attachment 'drupal_process_states' allowed");
     }
     catch (\LogicException $e) {

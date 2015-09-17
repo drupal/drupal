@@ -11,10 +11,22 @@ use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Processes attachments of HTML responses.
+ *
+ * This class is used by the rendering service to process the #attached part of
+ * the render array, for HTML responses.
+ *
+ * To render attachments to HTML for testing without a controller, use the
+ * 'bare_html_page_renderer' service to generate a
+ * Drupal\Core\Render\HtmlResponse object. Then use its getContent(),
+ * getStatusCode(), and/or the headers property to access the result.
  *
  * @see template_preprocess_html()
  * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface
@@ -67,6 +79,13 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected $renderer;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a HtmlResponseAttachmentsProcessor object.
    *
    * @param \Drupal\Core\Asset\AssetResolverInterface $asset_resolver
@@ -81,14 +100,17 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   The request stack.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer) {
+  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler) {
     $this->assetResolver = $asset_resolver;
     $this->config = $config_factory->get('system.performance');
     $this->cssCollectionRenderer = $css_collection_renderer;
     $this->jsCollectionRenderer = $js_collection_renderer;
     $this->requestStack = $request_stack;
     $this->renderer = $renderer;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -117,7 +139,17 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       return $e->getResponse();
     }
 
+    // Get a reference to the attachments.
     $attached = $response->getAttachments();
+
+    // Send a message back if the render array has unsupported #attached types.
+    $unsupported_types = array_diff(
+      array_keys($attached),
+      ['html_head', 'feed', 'html_head_link', 'http_header', 'library', 'html_response_attachment_placeholders', 'placeholders', 'drupalSettings']
+    );
+    if (!empty($unsupported_types)) {
+      throw new \LogicException(sprintf('You are not allowed to use %s in #attached.', implode(', ', $unsupported_types)));
+    }
 
     // Get the placeholders from attached and then remove them.
     $attachment_placeholders = $attached['html_response_attachment_placeholders'];
@@ -125,19 +157,49 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
     $variables = $this->processAssetLibraries($attached, $attachment_placeholders);
 
-    // Handle all non-asset attachments. This populates drupal_get_html_head().
-    $all_attached = ['#attached' => $attached];
-    drupal_process_attached($all_attached);
+    // Since we can only replace content in the HTML head section if there's a
+    // placeholder for it, we can safely avoid processing the render array if
+    // it's not present.
+    if (!empty($attachment_placeholders['head'])) {
+      // 'feed' is a special case of 'html_head_link'. We process them into
+      // 'html_head_link' entries and merge them.
+      if (!empty($attached['feed'])) {
+        $attached = BubbleableMetadata::mergeAttachments(
+          $attached,
+          $this->processFeed($attached['feed'])
+        );
+      }
+      // 'html_head_link' is a special case of 'html_head' which can be present
+      // as a head element, but also as a Link: HTTP header depending on
+      // settings in the render array. Processing it can add to both the
+      // 'html_head' and 'http_header' keys of '#attached', so we must address
+      // it before 'html_head'.
+      if (!empty($attached['html_head_link'])) {
+        // Merge the processed 'html_head_link' into $attached so that its
+        // 'html_head' and 'http_header' values are present for further
+        // processing.
+        $attached = BubbleableMetadata::mergeAttachments(
+          $attached,
+          $this->processHtmlHeadLink($attached['html_head_link'])
+        );
+      }
 
-    // Get HTML head elements - if present.
-    if (isset($attachment_placeholders['head'])) {
-      $variables['head'] = drupal_get_html_head(FALSE);
+      // Now we can process 'html_head', which contains both 'feed' and
+      // 'html_head_link'.
+      if (!empty($attached['html_head'])) {
+        $html_head = $this->processHtmlHead($attached['html_head']);
+        // Invoke hook_html_head_alter().
+        $this->moduleHandler->alter('html_head', $html_head);
+        // Store the result in $variables so it can be inserted into the
+        // placeholder.
+        $variables['head'] = $html_head;
+      }
     }
 
     // Now replace the attachment placeholders.
     $this->renderHtmlResponseAttachmentPlaceholders($response, $attachment_placeholders, $variables);
 
-    // Finally set the headers on the response if any bubbled.
+    // Set the HTTP headers and status code on the response if any bubbled.
     if (!empty($attached['http_header'])) {
       $this->setHeaders($response, $attached['http_header']);
     }
@@ -243,6 +305,9 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   /**
    * Renders HTML response attachment placeholders.
    *
+   * This is the last step where all of the attachments are placed into the
+   * response object's contents.
+   *
    * @param \Drupal\Core\Render\HtmlResponse $response
    *   The HTML response to update.
    * @param array $placeholders
@@ -268,7 +333,13 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    * @param \Drupal\Core\Render\HtmlResponse $response
    *   The HTML response to update.
    * @param array $headers
-   *   The headers to set.
+   *   The headers to set, as an array. The items in this array should be as
+   *   follows:
+   *   - The header name.
+   *   - The header value.
+   *   - (optional) Whether to replace a current value with the new one, or add
+   *     it to the others. If the value is not replaced, it will be appended,
+   *     resulting in a header like this: 'Header: value1,value2'
    */
   protected function setHeaders(HtmlResponse $response, array $headers) {
     foreach ($headers as $values) {
@@ -281,8 +352,105 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       if (strtolower($name) === 'status') {
         $response->setStatusCode($value);
       }
-      $response->headers->set($name, $value, $replace);
+      else {
+        $response->headers->set($name, $value, $replace);
+      }
     }
+  }
+
+  /**
+   * Ensure proper key/data order and defaults for renderable head items.
+   *
+   * @param array $html_head
+   *   The ['#attached']['html_head'] portion of a render array.
+   *
+   * @return array
+   *   The ['#attached']['html_head'] portion of a render array with #type of
+   *   html_tag added for items without a #type.
+   */
+  protected function processHtmlHead(array $html_head) {
+    $head = [];
+    foreach ($html_head as $item) {
+      list($data, $key) = $item;
+      if (!isset($data['#type'])) {
+        $data['#type'] = 'html_tag';
+      }
+      $head[$key] = $data;
+    }
+    return $head;
+  }
+
+  /**
+   * Transform a html_head_link array into html_head and http_header arrays.
+   *
+   * html_head_link is a special case of html_head which can be present as
+   * a link item in the HTML head section, and also as a Link: HTTP header,
+   * depending on options in the render array. Processing it can add to both the
+   * html_head and http_header sections.
+   *
+   * @param array $html_head_link
+   *   The 'html_head_link' value of a render array. Each head link is specified
+   *   by a two-element array:
+   *   - An array specifying the attributes of the link.
+   *   - A boolean specifying whether the link should also be a Link: HTTP
+   *     header.
+   *
+   * @return array
+   *   An ['#attached'] section of a render array. This allows us to easily
+   *   merge the results with other render arrays. The array could contain the
+   *   following keys:
+   *   - http_header
+   *   - html_head
+   */
+  protected function processHtmlHeadLink(array $html_head_link) {
+    $attached = [];
+
+    foreach ($html_head_link as $item) {
+      $attributes = $item[0];
+      $should_add_header = isset($item[1]) ? $item[1] : FALSE;
+
+      $element = array(
+        '#tag' => 'link',
+        '#attributes' => $attributes,
+      );
+      $href = $attributes['href'];
+      $attached['html_head'][] = [$element, 'html_head_link:' . $attributes['rel'] . ':' . $href];
+
+      if ($should_add_header) {
+        // Also add a HTTP header "Link:".
+        $href = '<' . Html::escape($attributes['href'] . '>');
+        unset($attributes['href']);
+        $attached['http_header'][] = ['Link', $href . drupal_http_header_attributes($attributes), TRUE];
+      }
+    }
+    return $attached;
+  }
+
+  /**
+   * Transform a 'feed' attachment into an 'html_head_link' attachment.
+   *
+   * The RSS feed is a special case of 'html_head_link', so we just turn it into
+   * one.
+   *
+   * @param array $attached_feed
+   *   The ['#attached']['feed'] portion of a render array.
+   *
+   * @return array
+   *   An ['#attached']['html_head_link'] array, suitable for merging with
+   *   another 'html_head_link' array.
+   */
+  protected function processFeed($attached_feed) {
+    $html_head_link = [];
+    foreach($attached_feed as $item) {
+      $feed_link = [
+        'href' => $item[0],
+        'rel' => 'alternate',
+        'title' => empty($item[1]) ? '' : $item[1],
+        'type' => 'application/rss+xml',
+      ];
+      $html_head_link[] = [$feed_link, FALSE];
+    }
+    return ['html_head_link' => $html_head_link];
   }
 
 }
