@@ -574,10 +574,37 @@ function drupal_js_defaults($data = NULL) {
  *   The structured array describing the data being rendered.
  *
  * @see drupal_render()
+ * @see hook_html_head_alter()
  * @see \Drupal\Core\Asset\AssetResolver
+ * @see \Drupal\Core\EventSubscriber\FinishResponseSubscriber
+ * @see \Symfony\Component\HttpKernel\KernelEvents::RESPONSE
  *
  * @throws LogicException
  *   When attaching something of a non-existing attachment type.
+ *
+ * @deprecated Will be removed before Drupal 8.0.0. Specify attached elements in
+ *   the render array from a controller, using ['#attached']. They will be
+ *   rendered into the response towards the end of the render process. For
+ *   example:
+ *   @code
+ *   $build['#attached'] = [
+ *     'library' => ['core/jquery']
+ *   ];
+ *   $build['#attached']['http_header'] = [
+ *     ['Content-Type', 'application/rss+xml; charset=utf-8'],
+ *   ];
+ *   return $build;
+ *   @endcode
+ *   For manipulating attached renderable items in non-controller applications,
+ *   there are three options:
+ *   - Use hook_page_attachments() and/or hook_page_attachments_alter() to
+ *     change attachments.
+ *   - Set up an event subscriber for the
+ *     Symfony\Component\HttpKernel\KernelEvents::RESPONSE event. See
+ *     Drupal\Core\EventSubscriber\FinishResponseSubscriber for an example.
+ *   - Specify $variables['#attached'] in theme preprocess functions.
+ *   To render attachments without a controller, use the
+ *   'bare_html_page_renderer' service.
  */
 function drupal_process_attached(array $elements) {
   // Asset attachments are handled by \Drupal\Core\Asset\AssetResolver.
