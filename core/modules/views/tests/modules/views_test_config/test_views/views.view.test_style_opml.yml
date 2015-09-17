@@ -295,7 +295,7 @@ display:
   page:
     display_plugin: page
     id: page_1
-    display_title: Page
+    display_title: <em>Page</em>
     position: 1
     display_options:
       path: test-opml-style

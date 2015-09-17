@@ -11,7 +11,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\PrerenderList;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
@@ -153,7 +152,7 @@ class TaxonomyIndexTid extends PrerenderList {
           $this->items[$node_nid][$tid]['name'] = \Drupal::entityManager()->getTranslationFromContext($term)->label();
           $this->items[$node_nid][$tid]['tid'] = $tid;
           $this->items[$node_nid][$tid]['vocabulary_vid'] = $term->getVocabularyId();
-          $this->items[$node_nid][$tid]['vocabulary'] = SafeMarkup::checkPlain($vocabularies[$term->getVocabularyId()]->label());
+          $this->items[$node_nid][$tid]['vocabulary'] = $vocabularies[$term->getVocabularyId()]->label();
 
           if (!empty($this->options['link_to_taxonomy'])) {
             $this->items[$node_nid][$tid]['make_link'] = TRUE;

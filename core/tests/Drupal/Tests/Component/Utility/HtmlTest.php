@@ -231,7 +231,7 @@ class HtmlTest extends UnitTestCase {
   /**
    * Data provider for testDecodeEntities().
    *
-   * @see testCheckPlain()
+   * @see testDecodeEntities()
    */
   public function providerDecodeEntities() {
     return array(
@@ -272,7 +272,7 @@ class HtmlTest extends UnitTestCase {
   /**
    * Data provider for testEscape().
    *
-   * @see testCheckPlain()
+   * @see testEscape()
    */
   public function providerEscape() {
     return array(

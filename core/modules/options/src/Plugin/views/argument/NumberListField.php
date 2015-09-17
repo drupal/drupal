@@ -7,7 +7,6 @@
 
 namespace Drupal\options\Plugin\views\argument;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FieldFilteredString;
 use Drupal\Core\Form\FormStateInterface;
@@ -85,7 +84,7 @@ class NumberListField extends NumericArgument {
     }
     // Else, fallback to the key.
     else {
-      return SafeMarkup::checkPlain($value);
+      return $value;
     }
   }
 

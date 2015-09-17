@@ -167,8 +167,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: false
-          title: ''
+          title_enable: true
+          title: '{{ arguments.type }}'
           default_argument_type: fixed
           default_argument_options:
             argument: ''

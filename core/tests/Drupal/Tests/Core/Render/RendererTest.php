@@ -740,7 +740,7 @@ class RendererTest extends RendererTestBase {
       'child1' => ['#markup' => SafeString::create('1')],
       'child2' => ['#markup' => SafeString::create('2')],
       // Mark the value as safe.
-      '#custom_property' => SafeMarkup::checkPlain('custom_value'),
+      '#custom_property' => SafeString::create('custom_value'),
       '#custom_property_array' => ['custom value'],
     ];
 

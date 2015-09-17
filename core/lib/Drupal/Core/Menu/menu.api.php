@@ -461,9 +461,6 @@ function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$bread
  *       must be a string; other elements are more flexible, as they just need
  *       to work as an argument for the constructor of the class
  *       Drupal\Core\Template\Attribute($options['attributes']).
- *     - html: Whether or not HTML should be allowed as the link text. If FALSE,
- *       the text will be run through
- *       \Drupal\Component\Utility\SafeMarkup::checkPlain() before being output.
  *
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromPath()
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute()

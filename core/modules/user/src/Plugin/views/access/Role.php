@@ -97,7 +97,7 @@ class Role extends AccessPluginBase implements CacheablePluginInterface {
     else {
       $rids = user_role_names();
       $rid = reset($this->options['role']);
-      return SafeMarkup::checkPlain($rids[$rid]);
+      return $rids[$rid];
     }
   }
 

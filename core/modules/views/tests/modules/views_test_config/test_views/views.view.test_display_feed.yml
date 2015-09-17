@@ -123,6 +123,6 @@ display:
     display_options:
       path: test-feed-display
     display_plugin: page
-    display_title: Page
+    display_title: <em>Page</em>
     id: page
     position: 0

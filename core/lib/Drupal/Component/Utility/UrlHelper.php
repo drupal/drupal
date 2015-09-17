@@ -304,7 +304,7 @@ class UrlHelper {
    * \Drupal\Component\Utility\Xss::filter(), but those functions return an
    * HTML-encoded string, so this function can be called independently when the
    * output needs to be a plain-text string for passing to functions that will
-   * call \Drupal\Component\Utility\SafeMarkup::checkPlain() separately.
+   * call \Drupal\Component\Utility\Html::escape() separately.
    *
    * @param string $uri
    *   A plain-text URI that might contain dangerous protocols.

@@ -479,8 +479,6 @@ class FilterUnitTest extends KernelTestBase {
 
   /**
    * Tests the HTML escaping filter.
-   *
-   * \Drupal\Component\Utility\SafeMarkup::checkPlain() is not tested here.
    */
   function testHtmlEscapeFilter() {
     // Get FilterHtmlEscape object.

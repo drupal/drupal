@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\block\Unit;
 
+use Drupal\Component\Utility\Html;
 use Drupal\block\Controller\CategoryAutocompleteController;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,7 +48,7 @@ class CategoryAutocompleteTest extends UnitTestCase {
    */
   public function testAutocompleteSuggestions($string, $suggestions) {
     $suggestions = array_map(function ($suggestion) {
-      return array('value' => $suggestion, 'label' => SafeMarkup::checkPlain($suggestion));
+      return array('value' => $suggestion, 'label' => Html::escape($suggestion));
     }, $suggestions);
     $result = $this->autocompleteController->autocomplete(new Request(array('q' => $string)));
     $this->assertSame($suggestions, json_decode($result->getContent(), TRUE));

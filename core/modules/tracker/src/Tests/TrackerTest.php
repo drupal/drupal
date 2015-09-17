@@ -198,6 +198,17 @@ class TrackerTest extends WebTestBase {
     $this->drupalPostForm('comment/1/edit', array('status' => CommentInterface::NOT_PUBLISHED), t('Save'));
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoText($other_published_my_comment->label(), 'Unpublished comments are not counted on the tracker listing.');
+
+    // Test escaping of title on user's tracker tab.
+    \Drupal::service('module_installer')->install(['user_hooks_test']);
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
+    $this->drupalGet('user/' . $this->user->id() . '/activity');
+    $this->assertEscaped('<em>' . $this->user->id() . '</em>');
+
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
+    $this->drupalGet('user/' . $this->user->id() . '/activity');
+    $this->assertNoEscaped('<em>' . $this->user->id() . '</em>');
+    $this->assertRaw('<em>' . $this->user->id() . '</em>');
   }
 
   /**

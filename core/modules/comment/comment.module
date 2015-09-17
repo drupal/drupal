@@ -16,7 +16,6 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -579,7 +578,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
 
     if (!empty($account) && $account->isAuthenticated()) {
       $comment->setOwner($account);
-      $comment->setAuthorName(SafeMarkup::checkPlain($account->getUsername()));
+      $comment->setAuthorName($account->getUsername());
     }
     elseif (empty($author_name)) {
       $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));

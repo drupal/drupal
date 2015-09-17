@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 
@@ -76,11 +75,11 @@ class Serialized extends FieldPluginBase {
     $value = $values->{$this->field_alias};
 
     if ($this->options['format'] == 'unserialized') {
-      return SafeMarkup::checkPlain(print_r(unserialize($value), TRUE));
+      return $this->sanitizeValue(print_r(unserialize($value), TRUE));
     }
     elseif ($this->options['format'] == 'key' && !empty($this->options['key'])) {
       $value = (array) unserialize($value);
-      return SafeMarkup::checkPlain($value[$this->options['key']]);
+      return $this->sanitizeValue($value[$this->options['key']]);
     }
 
     return $value;

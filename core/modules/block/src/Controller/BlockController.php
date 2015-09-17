@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Controller;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandler;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -55,7 +56,7 @@ class BlockController extends ControllerBase {
    */
   public function demo($theme) {
     $page = [
-      '#title' => $this->themeHandler->getName($theme),
+      '#title' => Html::escape($this->themeHandler->getName($theme)),
       '#type' => 'page',
       '#attached' => array(
         'drupalSettings' => [

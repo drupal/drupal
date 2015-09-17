@@ -67,8 +67,8 @@ function views_views_pre_render($view) {
         'views_dom_id:' . $view->dom_id => array(
           'view_name' => $view->storage->id(),
           'view_display_id' => $view->current_display,
-          'view_args' => SafeMarkup::checkPlain(implode('/', $view->args)),
-          'view_path' => SafeMarkup::checkPlain(Url::fromRoute('<current>')->toString()),
+          'view_args' => Html::escape(implode('/', $view->args)),
+          'view_path' => Html::escape(Url::fromRoute('<current>')->toString()),
           'view_base_path' => $view->getPath(),
           'view_dom_id' => $view->dom_id,
           // To fit multiple views on a page, the programmer may have

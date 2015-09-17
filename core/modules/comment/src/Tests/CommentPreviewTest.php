@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentManagerInterface;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
 
@@ -39,16 +40,30 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
 
-    // Login as web user and add a user picture.
+    // Login as web user.
     $this->drupalLogin($this->webUser);
-    $image = current($this->drupalGetTestFiles('image'));
-    $edit['files[user_picture_0]'] = drupal_realpath($image->uri);
-    $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
 
-    // As the web user, fill in the comment form and preview the comment.
+    // Test escaping of the username on the preview form.
+    \Drupal::service('module_installer')->install(['user_hooks_test']);
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     $edit = array();
     $edit['subject[0][value]'] = $this->randomMachineName(8);
     $edit['comment_body[0][value]'] = $this->randomMachineName(16);
+    $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
+    $this->assertEscaped('<em>' . $this->webUser->id() . '</em>');
+
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
+    $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
+    $this->assertTrue(SafeMarkup::isSafe($this->webUser->getUsername()), 'Username is marked safe');
+    $this->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
+    $this->assertRaw('<em>' . $this->webUser->id() . '</em>');
+
+    // Add a user picture.
+    $image = current($this->drupalGetTestFiles('image'));
+    $user_edit['files[user_picture_0]'] = drupal_realpath($image->uri);
+    $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $user_edit, t('Save'));
+
+    // As the web user, fill in the comment form and preview the comment.
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.

@@ -8,7 +8,7 @@
 # here in order for a test to ensure that this correctly prevents the module
 # version from being loaded, and that errors aren't caused by the lack of this
 # file within the theme folder.
-name: 'Test theme'
+name: '<strong>Test theme</strong>'
 type: theme
 description: 'Theme for testing the theme system'
 version: VERSION

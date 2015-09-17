@@ -106,7 +106,7 @@ class Xss {
    *
    * Use only for fields where it is impractical to use the
    * whole filter system, but where some (mainly inline) mark-up
-   * is desired (so \Drupal\Component\Utility\SafeMarkup::checkPlain() is
+   * is desired (so \Drupal\Component\Utility\Html::escape() is
    * not acceptable).
    *
    * Allows all tags that can be used inside an HTML body, save

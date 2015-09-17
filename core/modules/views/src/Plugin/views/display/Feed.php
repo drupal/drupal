@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Form\FormStateInterface;
@@ -204,7 +203,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
       $display = array_shift($displays);
       $displays = $this->view->storage->get('display');
       if (!empty($displays[$display])) {
-        $attach_to = SafeMarkup::checkPlain($displays[$display]['display_title']);
+        $attach_to = $displays[$display]['display_title'];
       }
     }
 
@@ -256,7 +255,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
           '#title' => $this->t('Displays'),
           '#type' => 'checkboxes',
           '#description' => $this->t('The feed icon will be available only to the selected displays.'),
-          '#options' => $displays,
+          '#options' => array_map('\Drupal\Component\Utility\Html::escape', $displays),
           '#default_value' => $this->getOption('displays'),
         );
         break;

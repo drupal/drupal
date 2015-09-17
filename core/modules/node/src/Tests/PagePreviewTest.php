@@ -139,7 +139,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Fill in node creation form and preview node.
     $edit = array();
-    $edit[$title_key] = $this->randomMachineName(8);
+    $edit[$title_key] = '<em>' . $this->randomMachineName(8) . '</em>';
     $edit[$body_key] = $this->randomMachineName(16);
     $edit[$term_key] = $this->term->getName();
 
@@ -153,7 +153,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check that the preview is displaying the title, body and term.
     $this->assertTitle(t('@title | Drupal', array('@title' => $edit[$title_key])), 'Basic page title is preview.');
-    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertEscaped($edit[$title_key], 'Title displayed and escaped.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
     $this->assertLink(t('Back to content editing'));
@@ -185,7 +185,7 @@ class PagePreviewTest extends NodeTestBase {
     // Return to page preview to check everything is as expected.
     $this->drupalPostForm(NULL, array(), t('Preview'));
     $this->assertTitle(t('@title | Drupal', array('@title' => $edit[$title_key])), 'Basic page title is preview.');
-    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertEscaped($edit[$title_key], 'Title displayed and escaped.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
     $this->assertLink(t('Back to content editing'));

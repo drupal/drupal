@@ -28,6 +28,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
    * Tests the "all terms" field handler.
    */
   public function testViewsHandlerAllTermsField() {
+    $this->term1->setName('<em>Markup</em>')->save();
     $view = Views::getView('taxonomy_all_terms_test');
     $this->executeView($view);
     $this->drupalGet('taxonomy_all_terms_test');
@@ -36,6 +37,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term1 links');
     $this->assertEqual($actual[0]->__toString(), $this->term1->label());
     $this->assertEqual($actual[1]->__toString(), $this->term1->label());
+    $this->assertEscaped($this->term1->label());
 
     $actual = $this->xpath('//a[@href="' . $this->term2->url() . '"]');
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term2 links');

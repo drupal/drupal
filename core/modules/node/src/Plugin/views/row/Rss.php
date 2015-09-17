@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Plugin\views\row;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\row\RssPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -78,7 +77,7 @@ class Rss extends RssPluginBase {
 
   public function summaryTitle() {
     $options = $this->buildOptionsForm_summary_options();
-    return SafeMarkup::checkPlain($options[$this->options['view_mode']]);
+    return $options[$this->options['view_mode']];
   }
 
   public function preRender($values) {

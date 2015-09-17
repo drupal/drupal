@@ -1396,8 +1396,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $path = preg_replace(['/(\%7B){2}(\%20)*/', '/(\%20)*(\%7D){2}/'], ['{{','}}'], $path);
 
       // Use strip tags as there should never be HTML in the path.
-      // However, we need to preserve special characters like " that
-      // were removed by SafeMarkup::checkPlain().
+      // However, we need to preserve special characters like " that are escaped
+      // by \Drupal\Component\Utility\Html::escape().
       $path = strip_tags(Html::decodeEntities($this->viewsTokenReplace($path, $tokens)));
 
       if (!empty($alter['path_case']) && $alter['path_case'] != 'none' && !$alter['url']->isRouted()) {
@@ -1483,8 +1483,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['attributes']['rel'] = $rel;
     }
 
-    // Not sure if this SafeMarkup::checkPlain() is needed here?
-    $target = SafeMarkup::checkPlain(trim($this->viewsTokenReplace($alter['target'], $tokens)));
+    $target = trim($this->viewsTokenReplace($alter['target'], $tokens));
     if (!empty($target)) {
       $options['attributes']['target'] = $target;
     }

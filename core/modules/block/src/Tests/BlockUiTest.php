@@ -86,6 +86,10 @@ class BlockUiTest extends WebTestBase {
     $this->clickLink(t('Demonstrate block regions (@theme)', array('@theme' => 'Classy')));
     $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', array(':title' => 'Highlighted'));
     $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
+
+    \Drupal::service('theme_handler')->install(array('test_theme'));
+    $this->drupalGet('admin/structure/block/demo/test_theme');
+    $this->assertEscaped('<strong>Test theme</strong>');
   }
 
   /**

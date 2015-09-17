@@ -130,12 +130,6 @@ function drupal_install_schema($module) {
  *
  * @param string $module
  *   The module for which the tables will be removed.
- *
- * @return array
- *   An array of arrays with the following key/value pairs:
- *    - success: a boolean indicating whether the query succeeded.
- *    - query: the SQL query(s) executed, passed through
- *      \Drupal\Component\Utility\SafeMarkup::checkPlain().
  */
 function drupal_uninstall_schema($module) {
   $schema = drupal_get_module_schema($module);

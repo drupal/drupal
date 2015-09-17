@@ -7,7 +7,6 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FieldFilteredString;
@@ -203,7 +202,7 @@ class FieldConfigEditForm extends EntityForm {
    *   The label of the field.
    */
   public function getTitle(FieldConfigInterface $field_config) {
-    return SafeMarkup::checkPlain($field_config->label());
+    return $field_config->label();
   }
 
 }

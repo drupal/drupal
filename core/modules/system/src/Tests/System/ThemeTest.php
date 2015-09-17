@@ -348,9 +348,9 @@ class ThemeTest extends WebTestBase {
    */
   function testInstallAndSetAsDefault() {
     $this->drupalGet('admin/appearance');
-    // Bartik is uninstalled in the test profile and has the second "Install and
+    // Bartik is uninstalled in the test profile and has the third "Install and
     // set as default" link.
-    $this->clickLink(t('Install and set as default'), 1);
+    $this->clickLink(t('Install and set as default'), 2);
     // Test the confirmation message.
     $this->assertText('Bartik is now the default theme.');
     // Make sure Bartik is now set as the default theme in config.

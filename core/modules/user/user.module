@@ -413,9 +413,7 @@ function user_preprocess_block(&$variables) {
  *   The account object for the user whose name is to be formatted.
  *
  * @return string
- *   An unsanitized string with the username to display. The code receiving
- *   this result must ensure that \Drupal\Component\Utility\SafeMarkup::checkPlain()
- *   is called on it before it is printed to the page.
+ *   An unsanitized string with the username to display.
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Core\Session\AccountInterface::getUsername().
@@ -453,9 +451,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  *   - account: The user account (\Drupal\Core\Session\AccountInterface).
  *
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
- * that the final string is safe to include directly in the output by using
- * \Drupal\Component\Utility\SafeMarkup::checkPlain() or
- * \Drupal\Component\Utility\Xss::filter().
+ * that the final string is safe.
  */
 function template_preprocess_username(&$variables) {
   $account = $variables['account'] ?: new AnonymousUserSession();

@@ -16,7 +16,6 @@ use Drupal\taxonomy\VocabularyStorageInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Tags;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -359,7 +358,7 @@ class TaxonomyIndexTid extends ManyToOne {
       $this->value = array_filter($this->value);
       $terms = Term::loadMultiple($this->value);
       foreach ($terms as $term) {
-        $this->valueOptions[$term->id()] = SafeMarkup::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
+        $this->valueOptions[$term->id()] = \Drupal::entityManager()->getTranslationFromContext($term)->label();
       }
     }
     return parent::adminSummary();

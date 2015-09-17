@@ -2,15 +2,16 @@ langcode: en
 status: true
 dependencies:
   module:
+    - node
     - taxonomy
     - user
-id: taxonomy_default_argument_test
-label: taxonomy_default_argument_test
+id: test_argument_taxonomy_index_tid_depth
+label: test_argument_taxonomy_index_tid_depth
 module: views
 description: ''
 tag: ''
-base_table: taxonomy_term_field_data
-base_field: tid
+base_table: node_field_data
+base_field: nid
 core: 8.x
 display:
   default:
@@ -54,7 +55,7 @@ display:
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 20, 40, 60'
+            items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
@@ -73,15 +74,19 @@ display:
           default_row_class: true
           uses_fields: false
       row:
-        type: 'entity:taxonomy_term'
+        type: fields
         options:
-          relationship: none
-          view_mode: default
+          inline: {  }
+          separator: ''
+          hide_empty: false
+          default_field_elements: true
       fields:
-        name:
-          id: name
-          table: taxonomy_term_field_data
-          field: name
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          entity_type: node
+          entity_field: title
           label: ''
           alter:
             alter_text: false
@@ -94,6 +99,9 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
+          settings:
+            link_to_entity: true
+          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
@@ -108,40 +116,68 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          plugin_id: field
+          click_sort_column: value
           type: string
-          settings:
-            link_to_entity: true
-          entity_type: taxonomy_term
-          entity_field: name
-      filters: {  }
-      sorts: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          order: DESC
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
       header: {  }
       footer: {  }
       empty: {  }
       relationships: {  }
       arguments:
-        tid:
-          id: tid
-          table: taxonomy_term_field_data
-          field: tid
+        term_node_tid_depth:
+          id: term_node_tid_depth
+          table: node_field_data
+          field: term_node_tid_depth
           relationship: none
           group_type: group
           admin_label: ''
-          default_action: default
+          default_action: ignore
           exception:
             value: all
             title_enable: false
             title: All
-          title_enable: false
-          title: ''
-          default_argument_type: taxonomy_tid
+          title_enable: true
+          title: '{{ arguments.term_node_tid_depth }}'
+          default_argument_type: fixed
           default_argument_options:
-            term_page: '1'
-            node: true
-            anyall: ','
-            limit: false
-            vids: {  }
+            argument: ''
           default_argument_skip_url: false
           summary_options:
             base_path: ''
@@ -157,16 +193,35 @@ display:
             type: none
             fail: 'not found'
           validate_options: {  }
+          depth: 0
           break_phrase: false
-          not: false
-          plugin_id: taxonomy
-          entity_type: taxonomy_term
-          entity_field: tid
-      rendering_language: '***LANGUAGE_entity_translation***'
+          use_taxonomy_term_path: false
+          entity_type: node
+          plugin_id: taxonomy_index_tid_depth
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   page_1:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: null
+    position: 1
     display_options:
-      path: taxonomy_default_argument_test
+      display_extenders: {  }
+      path: test_argument_taxonomy_index_tid_depth
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false

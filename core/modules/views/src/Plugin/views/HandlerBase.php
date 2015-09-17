@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\Render\ViewsRenderPipelineSafeString;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\views\Views;
@@ -229,13 +230,13 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
         $value = Xss::filterAdmin($value);
         break;
       case 'url':
-        $value = SafeMarkup::checkPlain(UrlHelper::stripDangerousProtocols($value));
+        $value = Html::escape(UrlHelper::stripDangerousProtocols($value));
         break;
       default:
-        $value = SafeMarkup::checkPlain($value);
+        $value = Html::escape($value);
         break;
     }
-    return $value;
+    return ViewsRenderPipelineSafeString::create($value);
   }
 
   /**

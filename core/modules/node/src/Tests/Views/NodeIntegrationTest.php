@@ -29,7 +29,7 @@ class NodeIntegrationTest extends NodeTestBase {
     $types = array();
     $all_nids = array();
     for ($i = 0; $i < 2; $i++) {
-      $type = $this->drupalCreateContentType();
+      $type = $this->drupalCreateContentType(['name' => '<em>' . $this->randomMachineName() . '</em>']);
       $types[] = $type;
 
       for ($j = 0; $j < 5; $j++) {
@@ -49,6 +49,7 @@ class NodeIntegrationTest extends NodeTestBase {
 
     foreach ($types as $type) {
       $this->drupalGet("test-node-view/{$type->id()}");
+      $this->assertEscaped($type->label());
       $this->assertNids(array_keys($nodes[$type->id()]));
     }
   }

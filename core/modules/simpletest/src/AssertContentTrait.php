@@ -437,7 +437,7 @@ trait AssertContentTrait {
    */
   protected function assertRaw($raw, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = SafeMarkup::format('Raw "@raw" found', array('@raw' => $raw));
+      $message = 'Raw "' . Html::escape($raw) . '" found';
     }
     return $this->assert(strpos($this->getRawContent(), (string) $raw) !== FALSE, $message, $group);
   }
@@ -465,7 +465,7 @@ trait AssertContentTrait {
    */
   protected function assertNoRaw($raw, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = SafeMarkup::format('Raw "@raw" not found', array('@raw' => $raw));
+      $message = 'Raw "' . Html::escape($raw) . '" not found';
     }
     return $this->assert(strpos($this->getRawContent(), (string) $raw) === FALSE, $message, $group);
   }
@@ -493,7 +493,7 @@ trait AssertContentTrait {
    */
   protected function assertEscaped($raw, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = SafeMarkup::format('Escaped "@raw" found', array('@raw' => $raw));
+      $message = 'Escaped "' . Html::escape($raw) . '" found';
     }
     return $this->assert(strpos($this->getRawContent(), Html::escape($raw)) !== FALSE, $message, $group);
   }
@@ -522,7 +522,7 @@ trait AssertContentTrait {
    */
   protected function assertNoEscaped($raw, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = SafeMarkup::format('Escaped "@raw" not found', array('@raw' => $raw));
+      $message = 'Escaped "' . Html::escape($raw) . '" not found';
     }
     return $this->assert(strpos($this->getRawContent(), Html::escape($raw)) === FALSE, $message, $group);
   }

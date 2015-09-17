@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 
@@ -92,7 +91,7 @@ class Attachment extends DisplayPluginBase {
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
       if ($display = $this->view->storage->getDisplay($display)) {
-        $attach_to = SafeMarkup::checkPlain($display['display_title']);
+        $attach_to = $display['display_title'];
       }
     }
 
@@ -204,7 +203,7 @@ class Attachment extends DisplayPluginBase {
           '#title' => $this->t('Displays'),
           '#type' => 'checkboxes',
           '#description' => $this->t('Select which display or displays this should attach to.'),
-          '#options' => $displays,
+          '#options' => array_map('\Drupal\Component\Utility\Html::escape', $displays),
           '#default_value' => $this->getOption('displays'),
         );
         break;

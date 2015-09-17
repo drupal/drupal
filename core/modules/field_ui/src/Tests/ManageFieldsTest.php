@@ -80,8 +80,8 @@ class ManageFieldsTest extends WebTestBase {
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->contentType = $type->id();
 
-    // Create random field name.
-    $this->fieldLabel = $this->randomMachineName(8);
+    // Create random field name with markup to test escaping.
+    $this->fieldLabel = '<em>' . $this->randomMachineName(8) . '</em>';
     $this->fieldNameInput =  strtolower($this->randomMachineName(8));
     $this->fieldName = 'field_'. $this->fieldNameInput;
 
@@ -194,6 +194,7 @@ class ManageFieldsTest extends WebTestBase {
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     // Go to the field edit page.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
+    $this->assertEscaped($this->fieldLabel);
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
