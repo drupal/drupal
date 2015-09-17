@@ -200,7 +200,7 @@ class Table extends FormElement {
               }
             }
             if (isset($title) && $title !== '') {
-              $title = t('Update !title', array('!title' => $title));
+              $title = t('Update @title', array('@title' => $title));
             }
           }
 

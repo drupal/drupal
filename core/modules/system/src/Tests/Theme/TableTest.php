@@ -21,7 +21,7 @@ class TableTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system', 'form_test'];
 
   /**
    * {@inheritdoc}
@@ -308,4 +308,15 @@ class TableTest extends KernelTestBase {
     $this->assertRaw('<tbody><tr><td>1-one</td><td>1-two</td><td>1-three</td></tr>', 'Table row 1 found.');
     $this->assertRaw('<tr><td>2-one</td><td>2-two</td><td><b>2-three</b></td></tr></tbody>', 'Table row 2 found.');
   }
+
+  /**
+   * Tests that the select/checkbox label is being generated and escaped.
+   */
+  public function testThemeTableTitle() {
+    $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestTableForm');
+    $this->render($form);
+    $this->assertEscaped('Update <em>kitten</em>');
+    $this->assertRaw('Update my favourite fruit is <strong>bananas</strong>');
+  }
+
 }
