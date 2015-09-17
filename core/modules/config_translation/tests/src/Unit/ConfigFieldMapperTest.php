@@ -50,7 +50,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
     $definition = array(
       'class' => '\Drupal\config_translation\ConfigFieldMapper',
       'base_route_name' => 'entity.field_config.node_field_edit_form',
-      'title' => '!label field',
+      'title' => '@label field',
       'names' => array(),
       'entity_type' => 'field_config',
     );

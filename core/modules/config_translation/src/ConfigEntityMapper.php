@@ -154,11 +154,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    * {@inheritdoc}
    */
   public function getTitle() {
-    // Title based on the entity label. Should be translated for display in the
-    // current page language. The title placeholder is later escaped for
-    // display.
-    $entity_type_info = $this->entityManager->getDefinition($this->entityType);
-    return $this->t($this->pluginDefinition['title'], array('!label' => $this->entity->label(), '!entity_type' => $entity_type_info->getLowercaseLabel()));
+    return $this->entity->label() . ' ' . $this->pluginDefinition['title'];
   }
 
   /**

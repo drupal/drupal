@@ -115,7 +115,6 @@ function config_translation_config_translation_info(&$info) {
         $info[$entity_type_id . '_fields'] = array(
           'base_route_name' => "entity.field_config.{$entity_type_id}_field_edit_form",
           'entity_type' => 'field_config',
-          'title' => '!label field',
           'class' => '\Drupal\config_translation\ConfigFieldMapper',
           'base_entity_type' => $entity_type_id,
           'weight' => 10,
@@ -144,7 +143,7 @@ function config_translation_config_translation_info(&$info) {
     $info[$entity_type_id] = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
       'base_route_name' => $base_route_name,
-      'title' => '!label !entity_type',
+      'title' => $entity_type->getLowercaseLabel(),
       'names' => array(),
       'entity_type' => $entity_type_id,
       'weight' => 10,

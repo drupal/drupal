@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\aggregator\Tests;
+use Drupal\Component\Utility\Html;
 
 /**
  * Add feed test.
@@ -42,6 +43,23 @@ class AddFeedTest extends AggregatorTestBase {
 
     // Delete feed.
     $this->deleteFeed($feed);
+  }
+
+  /**
+   * Ensures that the feed label is escaping when rendering the feed icon.
+   */
+  public function testFeedLabelEscaping() {
+    $feed = $this->createFeed(NULL, ['title[0][value]' => 'Test feed title <script>alert(123);</script>']);
+    $this->checkForMetaRefresh();
+
+    $this->drupalGet('aggregator/sources/' . $feed->id());
+    $this->assertResponse(200);
+
+    $result = $this->xpath('//h1');
+    $this->assertEqual((string) $result[0], 'Test feed title alert(123);');
+
+    // Ensure the feed icon title is escaped.
+    $this->assertTrue(strpos(str_replace(["\n", "\r"], '', $this->getRawContent()), 'class="feed-icon">  Subscribe to Test feed title &lt;script&gt;alert(123);&lt;/script&gt; feed</a>') !== FALSE);
   }
 
   /**

@@ -388,7 +388,7 @@ function hook_contextual_links_alter(array &$links, $group, array $route_paramet
     // Dynamically use the menu name for the title of the menu_edit contextual
     // link.
     $menu = \Drupal::entityManager()->getStorage('menu')->load($route_parameters['menu']);
-    $links['menu_edit']['title'] = t('Edit menu: !label', array('!label' => $menu->label()));
+    $links['menu_edit']['title'] = t('Edit menu: @label', array('@label' => $menu->label()));
   }
 }
 

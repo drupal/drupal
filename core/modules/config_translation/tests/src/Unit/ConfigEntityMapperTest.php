@@ -70,7 +70,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $definition = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
       'base_route_name' => 'entity.configurable_language.edit_form',
-      'title' => '!label language',
+      'title' => '@label language',
       'names' => array(),
       'entity_type' => 'configurable_language',
       'route_name' => 'config_translation.item.overview.entity.configurable_language.edit_form',

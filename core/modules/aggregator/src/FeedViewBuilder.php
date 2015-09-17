@@ -114,7 +114,7 @@ class FeedViewBuilder extends EntityViewBuilder {
         $build[$id]['feed_icon'] = array(
           '#theme' => 'feed_icon',
           '#url' => $entity->getUrl(),
-          '#title' => t('!title feed', array('!title' => $entity->label())),
+          '#title' => t('@title feed', array('@title' => $entity->label())),
         );
       }
 
