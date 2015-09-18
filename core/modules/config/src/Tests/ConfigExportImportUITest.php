@@ -187,13 +187,16 @@ class ConfigExportImportUITest extends WebTestBase {
       ->save();
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText(t('Warning message'));
-    $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import. system.site');
+    $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
+    // Ensure the item is displayed as part of a list (to avoid false matches
+    // on the rest of the page) and that the list markup is not escaped.
+    $this->assertRaw('<li>system.site</li>');
     // Remove everything from staging. The warning about differences between the
     // active and snapshot should no longer exist.
     \Drupal::service('config.storage.staging')->deleteAll();
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText(t('Warning message'));
-    $this->assertNoText('The following items in your active configuration have changes since the last import that may be lost on the next import. system.site');
+    $this->assertNoText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
     $this->assertText(t('There are no configuration changes to import.'));
     // Write a file to staging. The warning about differences between the
     // active and snapshot should now exist.
@@ -205,7 +208,10 @@ class ConfigExportImportUITest extends WebTestBase {
     $staging->write('system.site', $data);
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText(t('Warning message'));
-    $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import. system.site');
+    $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
+    // Ensure the item is displayed as part of a list (to avoid false matches
+    // on the rest of the page) and that the list markup is not escaped.
+    $this->assertRaw('<li>system.site</li>');
   }
 
   /**
