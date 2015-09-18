@@ -372,19 +372,25 @@ class ManagedFile extends FormElement {
           if ($file->isPermanent()) {
             $references = static::fileUsage()->listUsage($file);
             if (empty($references)) {
-              $form_state->setError($element, t('The file used in the !name field may not be referenced.', ['!name' => $element['#title']]));
+              // We expect the field name placeholder value to be wrapped in t()
+              // here, so it won't be escaped again as it's already marked safe.
+              $form_state->setError($element, t('The file used in the @name field may not be referenced.', ['@name' => $element['#title']]));
             }
           }
         }
         else {
-          $form_state->setError($element, t('The file referenced by the !name field does not exist.', ['!name' => $element['#title']]));
+          // We expect the field name placeholder value to be wrapped in t()
+          // here, so it won't be escaped again as it's already marked safe.
+          $form_state->setError($element, t('The file referenced by the @name field does not exist.', ['@name' => $element['#title']]));
         }
       }
     }
 
     // Check required property based on the FID.
     if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, ['upload_button', 'remove_button'])) {
-      $form_state->setError($element, t('!name is required.', ['!name' => $element['#title']]));
+      // We expect the field name placeholder value to be wrapped in t()
+      // here, so it won't be escaped again as it's already marked safe.
+      $form_state->setError($element, t('@name is required.', ['@name' => $element['#title']]));
     }
 
     // Consolidate the array value of this field to array of FIDs.
