@@ -54,3 +54,13 @@
 [dir="rtl"] .password-parent {
   clear: right;
 }
+
+/* Styling for the status indicator of the passwords match test.  */
+.password-confirm .ok {
+  color: #325e1c;
+  font-weight: bold;
+}
+.password-confirm .error {
+  color: #a51b00;
+  font-weight: bold;
+}
