@@ -7,6 +7,7 @@
 
 namespace Drupal\KernelTests;
 
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
@@ -91,6 +92,8 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
       $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
     }
+
+    $this->assertNotNull(FileCacheFactory::getPrefix());
   }
 
   /**

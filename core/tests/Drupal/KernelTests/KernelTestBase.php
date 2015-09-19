@@ -7,6 +7,9 @@
 
 namespace Drupal\KernelTests;
 
+use Drupal\Component\FileCache\ApcuFileCacheBackend;
+use Drupal\Component\FileCache\FileCache;
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigImporter;
@@ -214,6 +217,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     parent::setUp();
 
     $this->root = static::getDrupalRoot();
+    $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
   }
@@ -488,6 +492,32 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   /**
+   * Initializes the FileCache component.
+   *
+   * We can not use the Settings object in a component, that's why we have to do
+   * it here instead of \Drupal\Component\FileCache\FileCacheFactory.
+   */
+  protected function initFileCache() {
+    $configuration = Settings::get('file_cache');
+
+    // Provide a default configuration, if not set.
+    if (!isset($configuration['default'])) {
+      $configuration['default'] = [
+        'class' => FileCache::class,
+        'cache_backend_class' => NULL,
+        'cache_backend_configuration' => [],
+      ];
+      // @todo Use extension_loaded('apcu') for non-testbot
+      //  https://www.drupal.org/node/2447753.
+      if (function_exists('apc_fetch')) {
+        $configuration['default']['cache_backend_class'] = ApcuFileCacheBackend::class;
+      }
+    }
+    FileCacheFactory::setConfiguration($configuration);
+    FileCacheFactory::setPrefix(Settings::getApcuPrefix('file_cache', $this->root));
+  }
+
+  /**
    * Returns Extension objects for $modules to enable.
    *
    * @param string[] $modules
@@ -632,6 +662,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
         $this->{$property->name} = NULL;
       }
     }
+
+    // Clean FileCache cache.
+    FileCache::reset();
 
     // Clean up statics, container, and settings.
     if (function_exists('drupal_static_reset')) {

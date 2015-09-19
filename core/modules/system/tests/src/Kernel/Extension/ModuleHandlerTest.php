@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\system\Kernel\Extension;
 
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use \Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\KernelTests\KernelTestBase;
@@ -17,6 +18,11 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Extension
  */
 class ModuleHandlerTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['system'];
 
   /**
    * {@inheritdoc}
@@ -48,7 +54,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * The basic functionality of retrieving enabled modules.
    */
   function testModuleList() {
-    $module_list = array();
+    $module_list = ['system'];
 
     $this->assertModuleList($module_list, 'Initial');
 
