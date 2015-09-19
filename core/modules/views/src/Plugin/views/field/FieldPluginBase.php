@@ -862,8 +862,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Setup the tokens for fields.
       $previous = $this->getPreviousFieldLabels();
-      // We cast the optgroup labels to string as array keys must not be objects
-      // and t() may return a TranslationWrapper once issue #2557113 lands.
       $optgroup_arguments = (string) t('Arguments');
       $optgroup_fields = (string) t('Fields');
       foreach ($previous as $id => $label) {

@@ -144,7 +144,7 @@ class FormTest extends WebTestBase {
               // Select elements are going to have validation errors with empty
               // input, since those are illegal choices. Just make sure the
               // error is not "field is required".
-              $this->assertTrue((empty($errors[$element]) || strpos('field is required', $errors[$element]) === FALSE), "Optional '$type' field '$element' is not treated as a required element");
+              $this->assertTrue((empty($errors[$element]) || strpos('field is required', (string) $errors[$element]) === FALSE), "Optional '$type' field '$element' is not treated as a required element");
             }
             else {
               // Make sure there is *no* form error for this element.

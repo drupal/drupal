@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
@@ -490,9 +491,9 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
       $_SESSION['messages'][$type] = array();
     }
 
-    // Convert strings which are in the safe markup list to SafeString objects.
-    if (is_string($message) && SafeMarkup::isSafe($message)) {
-      $message = \Drupal\Core\Render\SafeString::create($message);
+    // Convert strings which are safe to the simplest SafeString objects.
+    if (!($message instanceof SafeString) && SafeMarkup::isSafe($message)) {
+      $message = SafeString::create((string) $message);
     }
 
     // Do not use strict type checking so that equivalent string and

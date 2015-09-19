@@ -117,8 +117,6 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
   $variables['active_buttons'] = array();
   foreach ($active_buttons as $row_number => $button_row) {
     foreach ($button_groups[$row_number] as $group_name) {
-      // We cast the group name to string as array keys must not be objects
-      // and t() may return a TranslationWrapper once issue #2557113 lands.
       $group_name = (string) $group_name;
       $variables['active_buttons'][$row_number][$group_name] = array(
         'group_name_class' => Html::getClass($group_name),

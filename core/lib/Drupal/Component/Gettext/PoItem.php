@@ -193,7 +193,7 @@ class PoItem {
         strpos($this->_source, LOCALE_PLURAL_DELIMITER) !== FALSE) {
       $this->setSource(explode(LOCALE_PLURAL_DELIMITER, $this->_source));
       $this->setTranslation(explode(LOCALE_PLURAL_DELIMITER, $this->_translation));
-      $this->setPlural(count($this->_translation) > 1);
+      $this->setPlural(count($this->_source) > 1);
     }
   }
 

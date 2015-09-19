@@ -78,7 +78,7 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('User name'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
       'context' => array(
-        'user' => new ContextDefinition('entity:user', t('User')),
+        'user' => $this->createContextDefinition('entity:user', t('User')),
       ),
     ));
 
@@ -87,7 +87,7 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('User name optional'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
       'context' => array(
-        'user' => new ContextDefinition('entity:user', t('User'), FALSE),
+        'user' => $this->createContextDefinition('entity:user', t('User'), FALSE),
       ),
     ));
 
@@ -102,8 +102,8 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('Complex context'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
       'context' => array(
-        'user' => new ContextDefinition('entity:user', t('User')),
-        'node' => new ContextDefinition('entity:node', t('Node')),
+        'user' => $this->createContextDefinition('entity:user', t('User')),
+        'node' => $this->createContextDefinition('entity:node', t('Node')),
       ),
     ));
 
@@ -117,5 +117,25 @@ class MockBlockManager extends PluginManagerBase {
     // the plugin definitions (e.g., since that's where the plugin's class is
     // specified), so we provide it the discovery object.
     $this->factory = new ReflectionFactory($this->discovery);
+  }
+
+  /**
+   * Creates a new context definition with a label that is cast to string.
+   *
+   * @param string $data_type
+   *   The required data type.
+   * @param mixed string|null $label
+   *   The label of this context definition for the UI.
+   * @param bool $required
+   *   Whether the context definition is required.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextDefinition
+   */
+  protected function createContextDefinition($data_type, $label, $required = TRUE) {
+    // We cast the label to string for testing purposes only, as it may be
+    // a TranslationWrapper and we will do assertEqual() checks on arrays that
+    // include ContextDefinition objects, and var_export() has problems
+    // printing TranslationWrapper objects.
+    return new ContextDefinition($data_type, (string) $label, $required);
   }
 }

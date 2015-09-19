@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Validation;
 
+use Drupal\Component\Utility\SafeStringInterface;
+
 /**
  * Translates strings using Drupal's translation system.
  *
@@ -73,8 +75,14 @@ class DrupalTranslator implements TranslatorInterface {
   protected function processParameters(array $parameters) {
     $return = array();
     foreach ($parameters as $key => $value) {
+      // We allow the values in the parameters to be safe string objects. This
+      // can be useful when we want to use parameter values that are
+      // TranslationWrappers.
+      if ($value instanceof SafeStringInterface) {
+        $value = (string) $value;
+      }
       if (is_object($value)) {
-        // t() does not work will objects being passed as replacement strings.
+        // t() does not work with objects being passed as replacement strings.
       }
       // Check for symfony replacement patterns in the form "{{ name }}".
       elseif (strpos($key, '{{ ') === 0 && strrpos($key, ' }}') == strlen($key) - 3) {

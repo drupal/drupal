@@ -52,8 +52,6 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
 
     // Get a list of the available fields and arguments for token replacement.
     $options = array();
-    // We cast the optgroup labels to string as array keys must not be objects
-    // and t() may return a TranslationWrapper once issue #2557113 lands.
     $optgroup_arguments = (string) t('Arguments');
     $optgroup_fields = (string) t('Fields');
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {

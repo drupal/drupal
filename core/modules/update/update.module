@@ -140,6 +140,11 @@ function update_page_top() {
     $status = update_requirements('runtime');
     foreach (array('core', 'contrib') as $report_type) {
       $type = 'update_' . $report_type;
+      // hook_requirements() supports render arrays therefore we need to render
+      // them before using drupal_set_message().
+      if (isset($status[$type]['description']) && is_array($status[$type]['description'])) {
+        $status[$type]['description'] = \Drupal::service('renderer')->renderPlain($status[$type]['description']);
+      }
       if (!empty($verbose)) {
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {

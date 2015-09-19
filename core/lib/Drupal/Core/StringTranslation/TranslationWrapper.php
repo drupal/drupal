@@ -7,21 +7,25 @@
 
 namespace Drupal\Core\StringTranslation;
 
+use Drupal\Component\Utility\PlaceholderTrait;
 use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Component\Utility\ToStringTrait;
 
 /**
- * Provides a class to wrap a translatable string.
+ * Provides translatable string class.
  *
- * This class can be used to delay translating strings until the translation
- * system is ready. This is useful for using translation in very low level
- * subsystems like entity definition and stream wrappers.
+ * This class delays translating strings until rendering them.
  *
+ * This is useful for using translation in very low level subsystems like entity
+ * definition and stream wrappers.
+ *
+ * @see \Drupal\Core\StringTranslation\TranslationManager::translate()
+ * @see \Drupal\Core\StringTranslation\TranslationManager::translateString()
  * @see \Drupal\Core\Annotation\Translation
  */
 class TranslationWrapper implements SafeStringInterface {
 
-  use StringTranslationTrait;
+  use PlaceholderTrait;
   use ToStringTrait;
 
   /**
@@ -30,6 +34,13 @@ class TranslationWrapper implements SafeStringInterface {
    * @var string
    */
   protected $string;
+
+  /**
+   * The translated string without placeholder replacements.
+   *
+   * @var string
+   */
+  protected $translatedString;
 
   /**
    * The translation arguments.
@@ -46,6 +57,13 @@ class TranslationWrapper implements SafeStringInterface {
   protected $options;
 
   /**
+   * The string translation service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $stringTranslation;
+
+  /**
    * Constructs a new class instance.
    *
    * Parses values passed into this class through the t() function in Drupal and
@@ -57,11 +75,14 @@ class TranslationWrapper implements SafeStringInterface {
    *   (optional) An array with placeholder replacements, keyed by placeholder.
    * @param array $options
    *   (optional) An array of additional options.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   (optional) The string translation service.
    */
-  public function __construct($string, array $arguments = array(), array $options = array()) {
+  public function __construct($string, array $arguments = array(), array $options = array(), TranslationInterface $string_translation = NULL) {
     $this->string = $string;
     $this->arguments = $arguments;
     $this->options = $options;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -96,6 +117,17 @@ class TranslationWrapper implements SafeStringInterface {
   public function getOptions() {
     return $this->options;
   }
+
+  /**
+   * Gets all argments from this translation wrapper.
+   *
+   * @return mixed[]
+   *   The array of arguments.
+   */
+  public function getArguments() {
+    return $this->arguments;
+  }
+
   /**
    * Renders the object as a string.
    *
@@ -103,7 +135,18 @@ class TranslationWrapper implements SafeStringInterface {
    *   The translated string.
    */
   public function render() {
-    return $this->t($this->string, $this->arguments, $this->options);
+    if (!isset($this->translatedString)) {
+      $this->translatedString = $this->getStringTranslation()->translateString($this);
+    }
+
+    // Handle any replacements.
+    // @todo https://www.drupal.org/node/2509218 Note that the argument
+    //   replacement is not stored so that different sanitization strategies can
+    //   be used in different contexts.
+    if ($args = $this->getArguments()) {
+      return $this->placeholderFormat($this->translatedString, $args);
+    }
+    return $this->translatedString;
   }
 
   /**
@@ -123,5 +166,18 @@ class TranslationWrapper implements SafeStringInterface {
     return $this->__toString();
   }
 
+  /**
+   * Gets the string translation service.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslationInterface
+   *   The string translation service.
+   */
+  protected function getStringTranslation() {
+    if (!$this->stringTranslation) {
+      $this->stringTranslation = \Drupal::service('string_translation');
+    }
+
+    return $this->stringTranslation;
+  }
 
 }

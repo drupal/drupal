@@ -12,6 +12,8 @@ use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Component\Utility\PlaceholderTrait;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
@@ -19,6 +21,8 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
  * @ingroup testing
  */
 abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
+
+  use PlaceholderTrait;
 
   /**
    * The random generator.
@@ -214,7 +218,17 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     $translation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
     $translation->expects($this->any())
       ->method('translate')
-      ->will($this->returnCallback('Drupal\Component\Utility\SafeMarkup::format'));
+      ->willReturnCallback(function ($string, array $args = array(), array $options = array()) use ($translation) {
+        $wrapper = new TranslationWrapper($string, $args, $options, $translation);
+        // Pretend everything is not safe.
+        // @todo https://www.drupal.org/node/2570037 return the wrapper instead.
+        return (string) $wrapper;
+      });
+    $translation->expects($this->any())
+      ->method('translateString')
+      ->willReturnCallback(function (TranslationWrapper $wrapper) {
+        return $wrapper->getUntranslatedString();
+      });
     $translation->expects($this->any())
       ->method('formatPlural')
       ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) {

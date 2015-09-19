@@ -806,6 +806,8 @@ trait AssertContentTrait {
     preg_match('@<title>(.*)</title>@', $this->getRawContent(), $matches);
     if (isset($matches[1])) {
       $actual = $matches[1];
+      $actual = $this->castSafeStrings($actual);
+      $title = $this->castSafeStrings($title);
       if (!$message) {
         $message = SafeMarkup::format('Page title @actual is equal to @expected.', array(
           '@actual' => var_export($actual, TRUE),

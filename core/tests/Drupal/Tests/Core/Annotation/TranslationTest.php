@@ -45,9 +45,6 @@ class TranslationTest extends UnitTestCase {
     $options = isset($values['context']) ? array(
       'context' => $values['context'],
     ) : array();
-    $this->translationManager->expects($this->once())
-      ->method('translate')
-      ->with($values['value'], $arguments, $options);
 
     $annotation = new Translation($values);
 

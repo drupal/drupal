@@ -945,9 +945,6 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
     foreach ($definitions as $entity_type_id => $definition) {
       if ($group) {
-        // We cast the optgroup label to string as array keys must not be
-        // objects and t() may return a TranslationWrapper once issue #2557113
-        // lands.
         $options[(string) $definition->getGroupLabel()][$entity_type_id] = $definition->getLabel();
       }
       else {
@@ -963,8 +960,6 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
       // Make sure that the 'Content' group is situated at the top.
       $content = $this->t('Content', array(), array('context' => 'Entity type group'));
-      // We cast the optgroup label to string as array keys must not be objects
-      // and t() may return a TranslationWrapper once issue #2557113 lands.
       $options = array((string) $content => $options[(string) $content]) + $options;
     }
 

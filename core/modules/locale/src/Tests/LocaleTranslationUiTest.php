@@ -64,7 +64,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Add string.
-    t($name, array(), array('langcode' => $langcode));
+    t($name, array(), array('langcode' => $langcode))->render();
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
@@ -237,9 +237,10 @@ class LocaleTranslationUiTest extends WebTestBase {
 
     // Retrieve the source string of the first string available in the
     // {locales_source} table and translate it.
-    $source = db_select('locales_source', 'l')
-      ->fields('l', array('source'))
-      ->condition('l.source', '%.js%', 'LIKE')
+    $query = db_select('locales_source', 's');
+    $query->addJoin('INNER', 'locales_location', 'l', 's.lid = l.lid');
+    $source = $query->fields('s', array('source'))
+      ->condition('l.type', 'javascript')
       ->range(0, 1)
       ->execute()
       ->fetchField();
@@ -302,7 +303,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Add string.
-    t($name, array(), array('langcode' => $langcode));
+    t($name, array(), array('langcode' => $langcode))->render();
     // Reset locale cache.
     $search = array(
       'string' => $name,
@@ -361,7 +362,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Add string.
-    t($name, array(), array('langcode' => $langcode));
+    t($name, array(), array('langcode' => $langcode))->render();
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->drupalLogout();

@@ -25,6 +25,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\SafeString;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -260,7 +261,7 @@ function check_url($uri) {
  *   Optional language code to translate to a language other than what is used
  *   to display the page.
  *
- * @return
+ * @return \Drupal\Core\StringTranslation\TranslationWrapper
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
@@ -269,16 +270,7 @@ function format_size($size, $langcode = NULL) {
   }
   else {
     $size = $size / Bytes::KILOBYTE; // Convert bytes to kilobytes.
-    $units = array(
-      t('@size KB', array(), array('langcode' => $langcode)),
-      t('@size MB', array(), array('langcode' => $langcode)),
-      t('@size GB', array(), array('langcode' => $langcode)),
-      t('@size TB', array(), array('langcode' => $langcode)),
-      t('@size PB', array(), array('langcode' => $langcode)),
-      t('@size EB', array(), array('langcode' => $langcode)),
-      t('@size ZB', array(), array('langcode' => $langcode)),
-      t('@size YB', array(), array('langcode' => $langcode)),
-    );
+    $units = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     foreach ($units as $unit) {
       if (round($size, 2) >= Bytes::KILOBYTE) {
         $size = $size / Bytes::KILOBYTE;
@@ -287,7 +279,26 @@ function format_size($size, $langcode = NULL) {
         break;
       }
     }
-    return str_replace('@size', round($size, 2), $unit);
+    $args = ['@size' => round($size, 2)];
+    $options = ['langcode' => $langcode];
+    switch ($unit) {
+      case 'KB':
+        return new TranslationWrapper('@size KB', $args, $options);
+      case 'MB':
+        return new TranslationWrapper('@size MB', $args, $options);
+      case 'GB':
+        return new TranslationWrapper('@size GB', $args, $options);
+      case 'TB':
+        return new TranslationWrapper('@size TB', $args, $options);
+      case 'PB':
+        return new TranslationWrapper('@size PB', $args, $options);
+      case 'EB':
+        return new TranslationWrapper('@size EB', $args, $options);
+      case 'ZB':
+        return new TranslationWrapper('@size ZB', $args, $options);
+      case 'YB':
+        return new TranslationWrapper('@size YB', $args, $options);
+    }
   }
 }
 

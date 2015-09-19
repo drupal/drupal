@@ -109,7 +109,8 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface
     elseif (is_bool($value)) {
       $value = new AttributeBoolean($name, $value);
     }
-    elseif (!is_object($value)) {
+    // As a development aid, we allow the value to be a safe string object.
+    elseif (!is_object($value) || $value instanceof SafeStringInterface) {
       $value = new AttributeString($name, $value);
     }
     return $value;

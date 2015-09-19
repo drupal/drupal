@@ -16,6 +16,7 @@ use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\UriInterface;
 use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
+use Drupal\Component\Utility\SafeStringInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -49,7 +50,7 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
     if ($typed_data instanceof IntegerInterface && filter_var($value, FILTER_VALIDATE_INT) === FALSE) {
       $valid = FALSE;
     }
-    if ($typed_data instanceof StringInterface && !is_scalar($value)) {
+    if ($typed_data instanceof StringInterface && !is_scalar($value) && !($value instanceof SafeStringInterface)) {
       $valid = FALSE;
     }
     // Ensure that URIs comply with http://tools.ietf.org/html/rfc3986, which

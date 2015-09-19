@@ -31,6 +31,7 @@ namespace Drupal\Component\Utility;
  * @see theme_render
  */
 class SafeMarkup {
+  use PlaceholderTrait;
 
   /**
    * The list of safe strings.
@@ -204,40 +205,12 @@ class SafeMarkup {
    */
   public static function format($string, array $args) {
     $safe = TRUE;
-
-    // Transform arguments before inserting them.
-    foreach ($args as $key => $value) {
-      switch ($key[0]) {
-        case '@':
-          // Escaped only.
-          if (!SafeMarkup::isSafe($value)) {
-            $args[$key] = Html::escape($value);
-          }
-          break;
-
-        case '%':
-        default:
-          // Escaped and placeholder.
-          if (!SafeMarkup::isSafe($value)) {
-            $value = Html::escape($value);
-          }
-          $args[$key] = '<em class="placeholder">' . $value . '</em>';
-          break;
-
-        case '!':
-          // Pass-through.
-          if (!static::isSafe($value)) {
-            $safe = FALSE;
-          }
-      }
-    }
-
-    $output = strtr($string, $args);
+    $output = static::placeholderFormat($string, $args, $safe);
     if ($safe) {
       static::$safeStrings[$output]['html'] = TRUE;
     }
-
     return $output;
+
   }
 
 }

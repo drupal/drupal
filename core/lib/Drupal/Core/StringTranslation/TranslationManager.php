@@ -140,21 +140,27 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * {@inheritdoc}
    */
   public function translate($string, array $args = array(), array $options = array()) {
-    $string = $this->doTranslate($string, $options);
-    if (empty($args)) {
-      // We add the string to the safe list as opposed to making it an object
-      // implementing SafeStringInterface as we may need to call __toString()
-      // on the object before render time, at which point the string ceases to
-      // be safe, and working around this would require significant rework.
-      // Adding this string to the safe list is assumed to be safe because
-      // translate() should only be called with strings defined in code.
-      // @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
-      SafeMarkup::setMultiple([$string => ['html' => TRUE]]);
-      return $string;
+    $safe = TRUE;
+    foreach (array_keys($args) as $arg_key) {
+      // If the string has arguments that start with '!' we consider it unsafe
+      // and return the translation as a string for backward compatibility
+      // purposes.
+      // @todo https://www.drupal.org/node/2570037 remove this temporary
+      // workaround.
+      if (0 === strpos($arg_key, '!') && !SafeMarkup::isSafe($args[$arg_key])) {
+        $safe = FALSE;
+        break;
+      }
     }
-    else {
-      return SafeMarkup::format($string, $args);
-    }
+    $wrapper = new TranslationWrapper($string, $args, $options, $this);
+    return $safe ? $wrapper : (string) $wrapper;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function translateString(TranslationWrapper $translated_string) {
+    return $this->doTranslate($translated_string->getUntranslatedString(), $translated_string->getOptions());
   }
 
   /**
@@ -172,13 +178,11 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    *   The translated string.
    */
   protected function doTranslate($string, array $options = array()) {
-    // Merge in defaults.
-    if (empty($options['langcode'])) {
-      $options['langcode'] = $this->defaultLangcode;
-    }
-    if (empty($options['context'])) {
-      $options['context'] = '';
-    }
+    // Merge in options defaults.
+    $options = $options + [
+      'langcode' => $this->defaultLangcode,
+      'context' => '',
+    ];
     $translation = $this->getStringTranslation($options['langcode'], $string, $options['context']);
     return $translation === FALSE ? $string : $translation;
   }

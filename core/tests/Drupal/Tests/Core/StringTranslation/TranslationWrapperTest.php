@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -55,9 +56,11 @@ class TranslationWrapperTest extends UnitTestCase {
    * @covers ::__toString
    */
   public function testToString() {
+    $translation = $this->getMock(TranslationInterface::class);
+
     $string = 'May I have an exception please?';
-    $text = $this->getMockBuilder('Drupal\Core\StringTranslation\TranslationWrapper')
-      ->setConstructorArgs([$string])
+    $text = $this->getMockBuilder(TranslationWrapper::class)
+      ->setConstructorArgs([$string, [], [], $translation])
       ->setMethods(['_die'])
       ->getMock();
     $text
@@ -65,11 +68,12 @@ class TranslationWrapperTest extends UnitTestCase {
       ->method('_die')
       ->willReturn('');
 
-    $translation = $this->prophesize(TranslationInterface::class);
-    $translation->translate($string, [], [])->will(function () {
+    $translation
+      ->method('translateString')
+      ->with($text)
+      ->willReturnCallback(function () {
       throw new \Exception('Yes you may.');
     });
-    $text->setStringTranslation($translation->reveal());
 
     // We set a custom error handler because of https://github.com/sebastianbergmann/phpunit/issues/487
     set_error_handler([$this, 'errorHandler']);

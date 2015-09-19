@@ -641,7 +641,7 @@ function locale_form_language_admin_overview_form_alter(&$form, FormStateInterfa
     }
   }
 
-  array_splice($form['languages']['#header'], -1, 0, t('Interface translation'));
+  array_splice($form['languages']['#header'], -1, 0, ['translation-interface' => t('Interface translation')]);
 
   foreach ($languages as $langcode => $language) {
     $stats[$langcode] += array(

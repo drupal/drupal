@@ -233,11 +233,10 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * @covers ::getTitle
    */
   public function testGetTitle() {
-    $this->pluginDefinition['title'] = (new TranslationWrapper('Example'))
-      ->setStringTranslation($this->stringTranslation);
+    $this->pluginDefinition['title'] = (new TranslationWrapper('Example', [], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
-      ->method('translate')
-      ->with('Example', array(), array())
+      ->method('translateString')
+      ->with($this->pluginDefinition['title'])
       ->will($this->returnValue('Example translated'));
 
     $this->setupLocalTaskDefault();
@@ -249,11 +248,10 @@ class LocalTaskDefaultTest extends UnitTestCase {
    */
   public function testGetTitleWithContext() {
     $title = 'Example';
-    $this->pluginDefinition['title'] = (new TranslationWrapper($title, array(), array('context' => 'context')))
-      ->setStringTranslation($this->stringTranslation);
+    $this->pluginDefinition['title'] = (new TranslationWrapper($title, array(), array('context' => 'context'), $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
-      ->method('translate')
-      ->with($title, array(), array('context' => 'context'))
+      ->method('translateString')
+      ->with($this->pluginDefinition['title'])
       ->will($this->returnValue('Example translated with context'));
 
     $this->setupLocalTaskDefault();
@@ -264,12 +262,10 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * @covers ::getTitle
    */
   public function testGetTitleWithTitleArguments() {
-    $title = 'Example @test';
-    $this->pluginDefinition['title'] = (new TranslationWrapper('Example @test', array('@test' => 'value')))
-      ->setStringTranslation($this->stringTranslation);
+    $this->pluginDefinition['title'] = (new TranslationWrapper('Example @test', array('@test' => 'value'), [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
-      ->method('translate')
-      ->with($title, array('@test' => 'value'), array())
+      ->method('translateString')
+      ->with($this->pluginDefinition['title'])
       ->will($this->returnValue('Example value'));
 
     $this->setupLocalTaskDefault();

@@ -1725,9 +1725,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
 
         $options = array();
-        // We cast the optgroup label to string as array keys must not be
-        // objects and t() may return a TranslationWrapper once issue #2557113
-        // lands.
         $optgroup_arguments = (string) t('Arguments');
         foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
           $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));

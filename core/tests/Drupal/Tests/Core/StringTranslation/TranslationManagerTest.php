@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\StringTranslation {
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
 
@@ -59,6 +60,44 @@ class TranslationManagerTest extends UnitTestCase {
     $this->assertEquals(SafeMarkup::isSafe($result), $safe);
   }
 
+  /**
+   * Tests translation using placeholders.
+   *
+   * @param string $string
+   *   A string containing the English string to translate.
+   * @param array $args
+   *   An associative array of replacements to make after translation.
+   * @param string $expected_string
+   *   The expected translated string value.
+   * @param bool $returns_translation_wrapper
+   *   Whether we are expecting a TranslationWrapper object to be returned.
+   *
+   * @dataProvider providerTestTranslatePlaceholder
+   */
+  public function testTranslatePlaceholder($string, array $args = array(), $expected_string, $returns_translation_wrapper) {
+    $actual = $this->translationManager->translate($string, $args);
+    if ($returns_translation_wrapper) {
+      $this->assertInstanceOf(SafeStringInterface::class, $actual);
+    }
+    else {
+      $this->assertInternalType('string', $actual);
+    }
+    $this->assertEquals($expected_string, $actual);
+  }
+
+  /**
+   * Provides test data for translate().
+   *
+   * @return array
+   */
+  public function providerTestTranslatePlaceholder() {
+    return [
+      ['foo @bar', ['@bar' => 'bar'], 'foo bar', TRUE],
+      ['bar !baz', ['!baz' => 'baz'], 'bar baz', FALSE],
+      ['bar @bar !baz', ['@bar' => 'bar', '!baz' => 'baz'], 'bar bar baz', FALSE],
+      ['bar !baz @bar', ['!baz' => 'baz', '@bar' => 'bar'], 'bar baz bar', FALSE],
+    ];
+  }
 }
 
 class TestTranslationManager extends TranslationManager {
