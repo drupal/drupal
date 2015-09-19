@@ -276,17 +276,19 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function createDerivative($original_uri, $derivative_uri) {
+
+    // If the source file doesn't exist, return FALSE without creating folders.
+    $image = \Drupal::service('image.factory')->get($original_uri);
+    if (!$image->isValid()) {
+      return FALSE;
+    }
+
     // Get the folder for the final location of this style.
     $directory = drupal_dirname($derivative_uri);
 
     // Build the destination folder tree if it doesn't already exist.
     if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
       \Drupal::logger('image')->error('Failed to create style directory: %directory', array('%directory' => $directory));
-      return FALSE;
-    }
-
-    $image = \Drupal::service('image.factory')->get($original_uri);
-    if (!$image->isValid()) {
       return FALSE;
     }
 

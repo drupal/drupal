@@ -224,6 +224,34 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $this->assertIdentical(strpos($generate_url, IMAGE_DERIVATIVE_TOKEN . '='), FALSE, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
     $this->assertResponse(200, 'Image was accessible at the URL with a missing token.');
+
+    // Stop supressing the security token in the URL.
+    $this->config('image.settings')->set('suppress_itok_output', FALSE)->save();
+    // Ensure allow_insecure_derivatives is enabled.
+    $this->assertEqual($this->config('image.settings')->get('allow_insecure_derivatives'), TRUE);
+    // Check that a security token is still required when generating a second
+    // image derivative using the first one as a source.
+    $nested_url = $this->style->buildUrl($generated_uri, $clean_url);
+    $matches_expected_url_format = (boolean) preg_match('/styles\/' . $this->style->id() . '\/' . $scheme . '\/styles\/' . $this->style->id() . '\/' . $scheme . '/', $nested_url);
+    $this->assertTrue($matches_expected_url_format, "Url for a derivative of an image style matches expected format.");
+    $nested_url_with_wrong_token = str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $nested_url);
+    $this->drupalGet($nested_url_with_wrong_token);
+    $this->assertResponse(403, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token.');
+    // Check that this restriction cannot be bypassed by adding extra slashes
+    // to the URL.
+    $this->drupalGet(substr_replace($nested_url_with_wrong_token, '//styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
+    $this->assertResponse(403, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token, even with an extra forward slash in the URL.');
+    $this->drupalGet(substr_replace($nested_url_with_wrong_token, '////styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
+    $this->assertResponse(403, 'Image generated from an earlier derivative was inaccessible at the URL with a missing token, even with multiple forward slashes in the URL.');
+    // Make sure the image can still be generated if a correct token is used.
+    $this->drupalGet($nested_url);
+    $this->assertResponse(200, 'Image was accessible when a correct token was provided in the URL.');
+
+    // Check that requesting a nonexistent image does not create any new
+    // directories in the file system.
+    $directory = $scheme . '://styles/' .  $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
+    $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
+    $this->assertFalse(file_exists($directory), 'New directory was not created in the filesystem when requesting an unauthorized image.');
   }
 
 }
