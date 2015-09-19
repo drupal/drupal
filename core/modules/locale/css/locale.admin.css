@@ -123,6 +123,14 @@
   font-size: 0.9em;
   color: #666;
 }
+.locale-translation-update__details ul {
+  margin: 0;
+  padding: 0;
+}
+.locale-translation-update__details li {
+  margin: 0 0 0.25em 1.5em;
+  padding: 0;
+}
 @media screen and (max-width: 40em) {
   #locale-translation-status-form th.title {
     width: 20%;

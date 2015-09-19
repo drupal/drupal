@@ -52,52 +52,19 @@ function locale_translation_manual_status() {
  * @see \Drupal\locale\Form\TranslationStatusForm
  */
 function template_preprocess_locale_translation_update_info(array &$variables) {
-  $details = array();
-
   // Build output for available updates.
   if (isset($variables['updates'])) {
-    $releases = array();
+    $variables['available_updates'] = [];
     if ($variables['updates']) {
       foreach ($variables['updates'] as $update) {
-        $modules[] = $update['name'];
-        $releases[] = SafeMarkup::format('@module (@date)', array(
-          '@module' => $update['name'],
-          '@date' => format_date($update['timestamp'], 'html_date'),
-        ));
-      }
-      $variables['modules'] = $modules;
-    }
-    $details['available_updates_list'] = array(
-      '#theme' => 'item_list',
-      '#items' => $releases,
-    );
-  }
-
-  // Build output for updates not found.
-  if (isset($variables['not_found'])) {
-    $releases = array();
-    $variables['missing_updates_status'] = \Drupal::translation()->formatPlural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects');
-    if ($variables['not_found']) {
-      foreach ($variables['not_found'] as $update) {
-        $version = $update['version'] ? $update['version'] : t('no version');
-        $releases[] = SafeMarkup::format('@module (@version). @info', array(
-          '@module' => $update['name'],
-          '@version' => $version,
-          '@info' => $update['info'],
-        ));
+        $variables['modules'][] = $update['name'];
+        // Format date for Twig template.
+        $release = $update;
+        $release['date'] = \Drupal::service('date.formatter')->format($update['timestamp'], 'html_date');
+        $variables['available_updates'][] = $release;
       }
     }
-    $details['missing_updates_list'] = array(
-      '#theme' => 'item_list',
-      '#items' => $releases,
-    );
-    // Prefix the missing updates list if there is an available updates lists
-    // before it.
-    if (!empty($details['available_updates_list']['#items'])) {
-      $details['missing_updates_list']['#prefix'] = t('Missing translations for:');
-    }
   }
-  $variables['details'] = $details;
 }
 
 /**

@@ -6,12 +6,9 @@
  * Displays translation status information per language.
  *
  * Available variables:
- * - modules: A list of names of modules that have available translation
- *   updates.
- * - details: Rendered list of the translation details.
- * - missing_updates_status: If there are any modules that are missing
- *   translation updates, this variable will contain text indicating how many
- *   modules are missing translations.
+ * - modules: A list of modules names that have available translation updates.
+ * - available_updates: A list of available translation updates.
+ * - not_found: A list of modules missing translation updates.
  *
  * @see template_preprocess_locale_translation_update_info()
  *
@@ -23,10 +20,40 @@
   {% if modules %}
     {% set module_list = modules|safe_join(', ') %}
     <span class="locale-translation-update__message">{% trans %}Updates for: {{ module_list }}{% endtrans %}</span>
-  {% elseif missing_updates_status %}
-    <span class="locale-translation-update__message">{{ missing_updates_status }}</span>
+  {% elseif not_found %}
+    <span class="locale-translation-update__message">
+      {%- trans -%}
+        Missing translations for one project
+      {%- plural not_found|length -%}
+        Missing translations for @count projects
+      {%- endtrans -%}
+    </span>
   {% endif %}
-  {% if details %}
-    <div class="locale-translation-update__details">{{ details }}</div>
+  {% if available_updates or not_found %}
+    <div class="locale-translation-update__details">
+      {% if available_updates %}
+        <ul>
+          {% for update in available_updates %}
+            <li>{{ update.name }} ({{ update.date }})</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if not_found %}
+        {#
+          Prefix the missing updates list if there is an available updates lists
+          before it.
+        #}
+        {% if available_updates %}
+          {{ 'Missing translations for:'|t }}
+        {% endif %}
+        {% if not_found %}
+          <ul class="item_list">
+            {% for update in not_found %}
+              <li>{{ update.name }} ({{ update.version|default('no version'|t) }}). {{ update.info }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endif %}
+    </div>
   {% endif %}
 </div>
