@@ -121,13 +121,15 @@ class ViewsUIController extends ControllerBase {
   public function reportPlugins() {
     $rows = Views::pluginList();
     foreach ($rows as &$row) {
+      $views = [];
       // Link each view name to the view itself.
       foreach ($row['views'] as $row_name => $view) {
-        $row['views'][$row_name] = $this->l($view, new Url('entity.view.edit_form', array('view' => $view)));
+        $views[] = $this->l($view, new Url('entity.view.edit_form', array('view' => $view)));
       }
+      unset($row['views']);
       $row['views']['data'] = [
         '#theme' => 'item_list',
-        '#items' => $row['views'],
+        '#items' => $views,
         '#context' => ['list_style' => 'comma-list'],
       ];
     }

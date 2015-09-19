@@ -542,20 +542,16 @@ class Drupal {
    *   The link text for the anchor tag.
    * @param \Drupal\Core\Url $url
    *   The URL object used for the link.
-   * @param bool $collect_bubbleable_metadata
-   *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
-   *   associated bubbleable metadata are returned.
    *
-   * @return string|\Drupal\Core\GeneratedLink
-   *   An HTML string containing a link to the given route and parameters.
-   *   When $collect_bubbleable_metadata is TRUE, a GeneratedLink object is
-   *   returned, containing the generated link plus bubbleable metadata.
+   * @return \Drupal\Core\GeneratedLink
+   *   A GeneratedLink object containing a link to the given route and
+   *   parameters and bubbleable metadata.
    *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    * @see \Drupal\Core\Url
    */
-  public static function l($text, Url $url, $collect_bubbleable_metadata = FALSE) {
-    return static::getContainer()->get('link_generator')->generate($text, $url, $collect_bubbleable_metadata);
+  public static function l($text, Url $url) {
+    return static::getContainer()->get('link_generator')->generate($text, $url);
   }
 
   /**

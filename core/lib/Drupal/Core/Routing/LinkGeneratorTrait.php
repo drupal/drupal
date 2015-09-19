@@ -35,8 +35,9 @@ trait LinkGeneratorTrait {
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate() for details
    *   on the arguments, usage, and possible exceptions.
    *
-   * @return string
-   *   An HTML string containing a link to the given route and parameters.
+   * @return \Drupal\Core\GeneratedLink
+   *   A GeneratedLink object containing a link to the given route and
+   *   parameters and bubbleable metadata.
    */
   protected function l($text, Url $url) {
     return $this->getLinkGenerator()->generate($text, $url);

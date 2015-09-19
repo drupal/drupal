@@ -7,7 +7,10 @@
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -174,6 +177,22 @@ class FieldPluginBaseTest extends UnitTestCase {
     \Drupal::getContainer()->set('unrouted_url_assembler', $this->unroutedUrlAssembler);
 
     $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface'), $this->renderer);
+    $this->renderer
+      ->method('render')
+      ->willReturnCallback(
+        // Pretend to do a render.
+        function (&$elements, $is_root_call = FALSE) {
+          // Mock the ability to theme links
+          $link = $this->linkGenerator->generate($elements['#title'], $elements['#url']);
+          if (isset($elements['#prefix'])) {
+            $link = $elements['#prefix'] . $link;
+          }
+          if (isset($elements['#suffix'])) {
+            $link = $link . $elements['#suffix'];
+          }
+          return SafeString::create($link);
+        }
+      );
   }
 
   /**
@@ -229,7 +248,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     $row = new ResultRow(['key' => 'value']);
 
     $result = $field->advancedRender($row);
-    $this->assertEquals($final_html, $result);
+    $this->assertEquals($final_html, (string) $result);
   }
 
   /**
@@ -308,8 +327,8 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
-      ->with($expected_url->getRouteName(), $expected_url->getRouteParameters(), $expected_url_options)
-      ->willReturn($url_path);
+      ->with($expected_url->getRouteName(), $expected_url->getRouteParameters(), $expected_url_options, TRUE)
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl($url_path));
 
     $result = $field->advancedRender($row);
     $this->assertEquals($final_html, $result);

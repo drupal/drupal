@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Utility {
 
+use Drupal\Component\Utility\SafeStringInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
@@ -111,8 +112,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with($route_name, $parameters, array('absolute' => $absolute) + $this->defaultOptions)
-      ->will($this->returnValue($expected_url));
-
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl($expected_url));
     $this->moduleHandler->expects($this->once())
       ->method('alter');
 
@@ -133,7 +133,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_route_1', array(), array('fragment' => 'the-fragment') + $this->defaultOptions)
-      ->will($this->returnValue('/test-route-1#the-fragment'));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-1#the-fragment'));
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
@@ -197,7 +197,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlAssembler->expects($this->once())
       ->method('assemble')
       ->with('base:example', array('query' => array('foo' => '"bar"', 'zoo' => 'baz')) + $this->defaultOptions)
-      ->will($this->returnValue('/example?foo=%22bar%22&zoo=baz'));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/example?foo=%22bar%22&zoo=baz'));
 
     $path_validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
     $container_builder = new ContainerBuilder();
@@ -228,9 +228,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_route_1', array(), $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-1'
-      ));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-1'));
 
     // Test that HTML attributes are added to the anchor.
     $url = new Url('test_route_1', array(), array(
@@ -255,9 +253,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_route_1', array(), array('query' => array('test' => 'value')) + $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-1?test=value'
-      ));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-1?test=value'));
 
     $url = new Url('test_route_1', array(), array(
       'query' => array('test' => 'value'),
@@ -280,9 +276,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_route_1', array('test' => 'value'), $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-1?test=value'
-      ));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-1?test=value'));
 
     $url = new Url('test_route_1', array('test' => 'value'), array());
     $url->setUrlGenerator($this->urlGenerator);
@@ -303,10 +297,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_route_1', array(), array('key' => 'value') + $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-1?test=value'
-      ));
-
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-1?test=value'));
     $url = new Url('test_route_1', array(), array(
       'key' => 'value',
     ));
@@ -328,9 +319,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_route_4', array(), $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-4'
-      ));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-4'));
 
     // Test that HTML link text is escaped by default.
     $url = new Url('test_route_4');
@@ -348,15 +337,11 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->at(0))
       ->method('generateFromRoute')
       ->with('test_route_5', array(), $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-5'
-      ));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-5'));
     $this->urlGenerator->expects($this->at(1))
       ->method('generateFromRoute')
       ->with('test_route_5', array(), $this->defaultOptions)
-      ->will($this->returnValue(
-        '/test-route-5'
-      ));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-5'));
 
     // Test that HTML tags are stripped from the 'title' attribute.
     $url = new Url('test_route_5', array(), array(
@@ -394,11 +379,18 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateActive() {
     $this->urlGenerator->expects($this->exactly(5))
       ->method('generateFromRoute')
-      ->will($this->returnValueMap(array(
-        array('test_route_1', array(), FALSE, '/test-route-1'),
-        array('test_route_3', array(), FALSE, '/test-route-3'),
-        array('test_route_4', array('object' => '1'), FALSE, '/test-route-4/1'),
-      )));
+      ->willReturnCallback(function($name, $parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
+        switch ($name) {
+          case 'test_route_1':
+            return (new GeneratedUrl())->setGeneratedUrl('/test-route-1');
+          case 'test_route_3':
+            return (new GeneratedUrl())->setGeneratedUrl('/test-route-3');
+          case 'test_route_4':
+            if ($parameters['object'] == '1') {
+              return (new GeneratedUrl())->setGeneratedUrl('/test-route-4/1');
+            }
+        }
+      });
 
     $this->urlGenerator->expects($this->exactly(4))
       ->method('getPathFromRoute')
@@ -479,7 +471,6 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->will($this->returnValueMap([
-        ['test_route_1', [], $options, FALSE, '/test-route-1'],
         ['test_route_1', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-1')],
       ]));
 
@@ -488,16 +479,16 @@ class LinkGeneratorTest extends UnitTestCase {
     $expected_link_markup = '<a href="/test-route-1">Test</a>';
 
     // Test ::generate().
-    $this->assertSame($expected_link_markup, $this->linkGenerator->generate('Test', $url));
-    $generated_link = $this->linkGenerator->generate('Test', $url, TRUE);
-    $this->assertSame($expected_link_markup, $generated_link->getGeneratedLink());
+    $this->assertSame($expected_link_markup, (string) $this->linkGenerator->generate('Test', $url));
+    $generated_link = $this->linkGenerator->generate('Test', $url);
+    $this->assertSame($expected_link_markup, (string) $generated_link->getGeneratedLink());
     $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_link);
 
     // Test ::generateFromLink().
     $link = new Link('Test', $url);
-    $this->assertSame($expected_link_markup, $this->linkGenerator->generateFromLink($link));
-    $generated_link = $this->linkGenerator->generateFromLink($link, TRUE);
-    $this->assertSame($expected_link_markup, $generated_link->getGeneratedLink());
+    $this->assertSame($expected_link_markup, (string) $this->linkGenerator->generateFromLink($link));
+    $generated_link = $this->linkGenerator->generateFromLink($link);
+    $this->assertSame($expected_link_markup, (string) $generated_link->getGeneratedLink());
     $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_link);
   }
 
@@ -508,12 +499,12 @@ class LinkGeneratorTest extends UnitTestCase {
    *   An associative array of link properties, with the following keys:
    *   - attributes: optional array of HTML attributes that should be present.
    *   - content: optional link content.
-   * @param string $html
+   * @param \Drupal\Component\Utility\SafeStringInterface $html
    *   The HTML to check.
    * @param int $count
    *   How many times the link should be present in the HTML. Defaults to 1.
    */
-  public static function assertLink(array $properties, $html, $count = 1) {
+  public static function assertLink(array $properties, SafeStringInterface $html, $count = 1) {
     // Provide default values.
     $properties += array('attributes' => array());
 

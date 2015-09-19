@@ -1305,8 +1305,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     // Preserve whether or not the string is safe. Since $suffix comes from
-    // \Drupal::l(), it is safe to append.
-    if ($value_is_safe) {
+    // \Drupal::l(), it is safe to append. Use SafeMarkup::isSafe() here because
+    // renderAsLink() can return both safe and unsafe values.
+    if (SafeMarkup::isSafe($value)) {
       return ViewsRenderPipelineSafeString::create($value . $suffix);
     }
     else {
@@ -1531,19 +1532,20 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // Build the link based on our altered Url object, adding on the optional
     // prefix and suffix
-    $value = '';
+    $render = [
+      '#type' => 'link',
+      '#title' => $text,
+      '#url' => $final_url,
+    ];
 
     if (!empty($alter['prefix'])) {
-      $value .= Xss::filterAdmin($this->viewsTokenReplace($alter['prefix'], $tokens));
+      $render['#prefix'] = $this->viewsTokenReplace($alter['prefix'], $tokens);
     }
-
-    $value .= $this->linkGenerator()->generate($text, $final_url);
-
     if (!empty($alter['suffix'])) {
-      $value .= Xss::filterAdmin($this->viewsTokenReplace($alter['suffix'], $tokens));
+      $render['#suffix'] = $this->viewsTokenReplace($alter['suffix'], $tokens);
     }
+    return $this->getRenderer()->render($render);
 
-    return $value;
   }
 
   /**

@@ -140,20 +140,14 @@ class Link implements RenderableInterface {
   /**
    * Generates the HTML for this Link object.
    *
-   * @param bool $collect_bubbleable_metadata
-   *   (optional) Defaults to FALSE. When TRUE, both the generated link and its
-   *   associated bubbleable metadata are returned.
-   *
-   * @return string|\Drupal\Core\GeneratedLink
+   * @return \Drupal\Core\GeneratedLink
    *   The link HTML markup.
-   *   When $collect_bubbleable_metadata is TRUE, a GeneratedLink object is
-   *   returned, containing the generated link plus bubbleable metadata.
    *
    * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
    *   self::toRenderable() instead.
    */
-  public function toString($collect_bubbleable_metadata = FALSE) {
-    return $this->getLinkGenerator()->generateFromLink($this, $collect_bubbleable_metadata);
+  public function toString() {
+    return $this->getLinkGenerator()->generateFromLink($this);
   }
 
   /**
