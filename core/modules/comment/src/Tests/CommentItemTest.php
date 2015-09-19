@@ -60,6 +60,9 @@ class CommentItemTest extends FieldUnitTestBase {
       CommentItemInterface::CLOSED,
       CommentItemInterface::OPEN,
     ]), 'Comment status value in defined range');
+
+    $mainProperty = $entity->comment[0]->mainPropertyName();
+    $this->assertEqual('status', $mainProperty);
   }
 
 }
