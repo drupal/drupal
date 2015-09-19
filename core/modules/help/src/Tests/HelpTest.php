@@ -112,6 +112,11 @@ class HelpTest extends WebTestBase {
         }
         foreach ($admin_tasks as $task) {
           $this->assertLink($task['title']);
+          // Ensure there are no double escaped '&' or '<' characters.
+          $this->assertNoEscaped('&amp;', 'The help text does not have double escaped &amp;.');
+          $this->assertNoEscaped('&lt;', 'The help text does not have double escaped &lt;.');
+          // Ensure there are no escaped '<' characters.
+          $this->assertNoEscaped('<', 'The help text does not have single escaped &lt;.');
         }
       }
     }
