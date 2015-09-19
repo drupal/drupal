@@ -426,10 +426,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
     if ($pct_memory > $threshold) {
       $this->message->display(
-        $this->t('Memory usage is !usage (!pct% of limit !limit), reclaiming memory.',
-          array('!pct' => round($pct_memory*100),
-                '!usage' => $this->formatSize($usage),
-                '!limit' => $this->formatSize($this->memoryLimit))),
+        $this->t('Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
+          array('@pct' => round($pct_memory*100),
+                '@usage' => $this->formatSize($usage),
+                '@limit' => $this->formatSize($this->memoryLimit))),
         'warning');
       $usage = $this->attemptMemoryReclaim();
       $pct_memory = $usage / $this->memoryLimit;
@@ -437,19 +437,19 @@ class MigrateExecutable implements MigrateExecutableInterface {
       // coming back here and trimming a tiny amount
       if ($pct_memory > (0.90 * $threshold)) {
         $this->message->display(
-          $this->t('Memory usage is now !usage (!pct% of limit !limit), not enough reclaimed, starting new batch',
-            array('!pct' => round($pct_memory*100),
-                  '!usage' => $this->formatSize($usage),
-                  '!limit' => $this->formatSize($this->memoryLimit))),
+          $this->t('Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
+            array('@pct' => round($pct_memory*100),
+                  '@usage' => $this->formatSize($usage),
+                  '@limit' => $this->formatSize($this->memoryLimit))),
           'warning');
         return TRUE;
       }
       else {
         $this->message->display(
-          $this->t('Memory usage is now !usage (!pct% of limit !limit), reclaimed enough, continuing',
-            array('!pct' => round($pct_memory*100),
-                  '!usage' => $this->formatSize($usage),
-                  '!limit' => $this->formatSize($this->memoryLimit))),
+          $this->t('Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
+            array('@pct' => round($pct_memory*100),
+                  '@usage' => $this->formatSize($usage),
+                  '@limit' => $this->formatSize($this->memoryLimit))),
           'warning');
         return FALSE;
       }
