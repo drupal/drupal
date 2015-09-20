@@ -191,43 +191,20 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * {@inheritdoc}
    */
   public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array()) {
-    $translatable_string = implode(LOCALE_PLURAL_DELIMITER, array($singular, $plural));
-    $translated_strings = $this->doTranslate($translatable_string, $options);
-    return $this->formatPluralTranslated($count, $translated_strings, $args, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function formatPluralTranslated($count, $translation, array $args = array(), array $options = array()) {
-    $args['@count'] = $count;
-    $translated_array = explode(LOCALE_PLURAL_DELIMITER, $translation);
-
-    if ($count == 1) {
-      return SafeMarkup::format($translated_array[0], $args);
-    }
-
-    // Get the plural index through the gettext formula.
-    // @todo implement static variable to minimize function_exists() usage.
-    $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
-    if ($index == 0) {
-      // Singular form.
-      $return = $translated_array[0];
-    }
-    else {
-      if (isset($translated_array[$index])) {
-        // N-th plural form.
-        $return = $translated_array[$index];
-      }
-      else {
-        // If the index cannot be computed or there's no translation, use
-        // the second plural form as a fallback (which allows for most flexibility
-        // with the replaceable @count value).
-        $return = $translated_array[1];
+    $safe = TRUE;
+    foreach (array_keys($args) as $arg_key) {
+      // If the string has arguments that start with '!' we consider it unsafe
+      // and return the translation as a string for backward compatibility
+      // purposes.
+      // @todo https://www.drupal.org/node/2570037 remove this temporary
+      // workaround.
+      if (0 === strpos($arg_key, '!') && !SafeMarkup::isSafe($args[$arg_key])) {
+        $safe = FALSE;
+        break;
       }
     }
-
-    return SafeMarkup::format($return, $args);
+    $plural = new PluralTranslatableString($count, $singular, $plural, $args, $options, $this);
+    return $safe ? $plural : (string) $plural;
   }
 
   /**

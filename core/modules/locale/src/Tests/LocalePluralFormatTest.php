@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Core\StringTranslation\PluralTranslatableString;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -130,12 +131,15 @@ class LocalePluralFormatTest extends WebTestBase {
         // expected index as per the logic for translation lookups.
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
         $expected_plural_string = str_replace('@count', $count, $plural_strings[$langcode][$expected_plural_index]);
-        $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', array(), array('langcode' => $langcode)), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
-        // DO NOT use translation to pass into formatPluralTranslated() this
-        // way. It is designed to be used with *already* translated text like
-        // settings from configuration. We use PHP translation here just because
-        // we have the expected result data in that format.
-        $this->assertIdentical(\Drupal::translation()->formatPluralTranslated($count, \Drupal::translation()->translate('1 hour' . LOCALE_PLURAL_DELIMITER . '@count hours', array(), array('langcode' => $langcode)), array(), array('langcode' => $langcode)), $expected_plural_string, 'Translated plural lookup of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
+        $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', array(), array('langcode' => $langcode))->render(), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
+        // DO NOT use translation to pass translated strings into
+        // PluralTranslatableString::createFromTranslatedString() this way. It
+        // is designed to be used with *already* translated text like settings
+        // from configuration. We use PHP translation here just because we have
+        // the expected result data in that format.
+        $translated_string = \Drupal::translation()->translate('1 hour' . PluralTranslatableString::DELIMITER . '@count hours', array(), array('langcode' => $langcode));
+        $plural = PluralTranslatableString::createFromTranslatedString($count, $translated_string, array(), array('langcode' => $langcode));
+        $this->assertIdentical($plural->render(), $expected_plural_string);
       }
     }
   }
@@ -223,7 +227,7 @@ class LocalePluralFormatTest extends WebTestBase {
     // langcode here because the language will be English by default and will
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
-    \Drupal::translation()->formatPlural(1, '1 day', '@count days', array(), array('langcode' => 'fr'));
+    \Drupal::translation()->formatPlural(1, '1 day', '@count days', array(), array('langcode' => 'fr'))->render();
     $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 day" . LOCALE_PLURAL_DELIMITER . "@count days"))->fetchField();
     // Look up editing page for this plural string and check fields.
     $search = array(

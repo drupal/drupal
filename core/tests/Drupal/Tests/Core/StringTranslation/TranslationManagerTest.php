@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\Core\StringTranslation\TranslationManagerTest.
  */
 
-namespace Drupal\Tests\Core\StringTranslation {
+namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SafeStringInterface;
@@ -105,12 +105,4 @@ class TestTranslationManager extends TranslationManager {
   public function __construct() {
   }
 
-}
-
-}
-
-namespace {
-  if (!defined('LOCALE_PLURAL_DELIMITER')) {
-    define('LOCALE_PLURAL_DELIMITER', "\03");
-  }
 }

@@ -14,6 +14,8 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\Utility\PlaceholderTrait;
 use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\PluralTranslatableString;
+
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
@@ -231,8 +233,9 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
       });
     $translation->expects($this->any())
       ->method('formatPlural')
-      ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) {
-        return $count === 1 ? SafeMarkup::format($singular, $args) : SafeMarkup::format($plural, $args + ['@count' => $count]);
+      ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) use ($translation) {
+        $wrapper = new PluralTranslatableString($count, $singular, $plural, $args, $options, $translation);
+        return $wrapper;
       });
     return $translation;
   }

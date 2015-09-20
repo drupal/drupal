@@ -33,6 +33,7 @@ use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
+use Drupal\Core\StringTranslation\PluralTranslatableString;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -142,11 +143,11 @@ const JS_THEME = 100;
 /**
  * The delimiter used to split plural strings.
  *
- * This is the ETX (End of text) character and is used as a minimal means to
- * separate singular and plural variants in source and translation text. It
- * was found to be the most compatible delimiter for the supported databases.
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\StringTranslation\PluralTranslatableString::DELIMITER
+ *   instead.
  */
-const LOCALE_PLURAL_DELIMITER = "\03";
+const LOCALE_PLURAL_DELIMITER = PluralTranslatableString::DELIMITER;
 
 /**
  * Prepares a 'destination' URL query parameter for use with url().
