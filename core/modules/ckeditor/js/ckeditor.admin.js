@@ -25,9 +25,9 @@
       var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').once('ckeditor-configuration');
       if ($configurationForm.length) {
         var $textarea = $configurationForm
-          // Hide the textarea that contains the serialized representation of
-          // the CKEditor configuration.
-          .find('.form-item-editor-settings-toolbar-button-groups')
+          // Hide the textarea that contains the serialized representation of the
+          // CKEditor configuration.
+          .find('.js-form-item-editor-settings-toolbar-button-groups')
           .hide()
           // Return the textarea child node from this expression.
           .find('textarea');

@@ -601,7 +601,7 @@
       }
       var $context = $(context);
       var $table = $context.find('#views-rearrange-filters').once('views-rearrange-filters');
-      var $operator = $context.find('.form-item-filter-groups-operator').once('views-rearrange-filters');
+      var $operator = $context.find('.js-form-item-filter-groups-operator').once('views-rearrange-filters');
       if ($table.length) {
         new Drupal.viewsUi.RearrangeFilterHandler($table, $operator);
       }
@@ -1004,9 +1004,9 @@
     attach: function (context) {
       var $context = $(context);
 
-      var $selectAll = $context.find('.form-item-options-value-all').once('filterConfigSelectAll');
+      var $selectAll = $context.find('.js-form-item-options-value-all').once('filterConfigSelectAll');
       var $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
-      var $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.form-item-options-value-all) input[type="checkbox"]');
+      var $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]');
 
       if ($selectAll.length) {
          // Show the select all checkbox.

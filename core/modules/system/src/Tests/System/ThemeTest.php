@@ -96,7 +96,7 @@ class ThemeTest extends WebTestBase {
 
       // Verify logo path examples.
       $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', array(
-        ':item' => 'form-item-logo-path',
+        ':item' => 'js-form-item-logo-path',
         ':description' => 'description',
       ));
       // Expected default values (if all else fails).

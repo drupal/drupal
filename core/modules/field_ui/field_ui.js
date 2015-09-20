@@ -23,9 +23,9 @@
         // submitted at the same time. The actual validation will happen
         // server-side.
         $form.find(
-          '.form-item-label label,' +
-          '.form-item-field-name label,' +
-          '.form-item-existing-storage-label label')
+          '.js-form-item-label label,' +
+          '.js-form-item-field-name label,' +
+          '.js-form-item-existing-storage-label label')
           .addClass('js-form-required form-required');
 
         var $newFieldType = $form.find('select[name="new_storage_type"]');

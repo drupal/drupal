@@ -34,7 +34,7 @@ tips:
     body: '<p>You can change the default language of the site by choosing one of your configured languages as default. The site will use the default language in situations where no choice is made but a language should be set, for example as the language of the displayed interface.</p>'
     weight: 4
     attributes:
-      data-class: form-item-site-default-language
+      data-class: js-form-item-site-default-language
   language-operations:
     id: language-operations
     plugin: text

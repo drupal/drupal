@@ -15,7 +15,7 @@
     attach: function (context) {
       var $context = $(context);
       $context.find('fieldset.comment-entity-settings-form').drupalSetSummary(function (context) {
-        return Drupal.checkPlain($(context).find('.form-item-comment input:checked').next('label').text());
+        return Drupal.checkPlain($(context).find('.js-form-item-comment input:checked').next('label').text());
       });
     }
   };

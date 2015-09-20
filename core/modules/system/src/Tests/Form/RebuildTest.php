@@ -109,7 +109,7 @@ class RebuildTest extends WebTestBase {
 
     // Ensure that the form contains two items in the multi-valued field, so we
     // know we're testing a form that was correctly retrieved from cache.
-    $this->assert(count($this->xpath('//form[contains(@id, "node-page-form")]//div[contains(@class, "form-item-field-ajax-test")]//input[@type="text"]')) == 2, 'Form retained its state from cache.');
+    $this->assert(count($this->xpath('//form[contains(@id, "node-page-form")]//div[contains(@class, "js-form-item-field-ajax-test")]//input[@type="text"]')) == 2, 'Form retained its state from cache.');
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');

@@ -19,8 +19,8 @@
     attach: function (context) {
       $(context).find('.menu-link-form').drupalSetSummary(function (context) {
         var $context = $(context);
-        if ($context.find('.form-item-menu-enabled input').is(':checked')) {
-          return Drupal.checkPlain($context.find('.form-item-menu-title input').val());
+        if ($context.find('.js-form-item-menu-enabled input').is(':checked')) {
+          return Drupal.checkPlain($context.find('.js-form-item-menu-title input').val());
         }
         else {
           return Drupal.t('Not in menu');
@@ -46,9 +46,9 @@
         // Try to find menu settings widget elements as well as a 'title' field
         // in the form, but play nicely with user permissions and form
         // alterations.
-        var $checkbox = $this.find('.form-item-menu-enabled input');
-        var $link_title = $context.find('.form-item-menu-title input');
-        var $title = $this.closest('form').find('.form-item-title-0-value input');
+        var $checkbox = $this.find('.js-form-item-menu-enabled input');
+        var $link_title = $context.find('.js-form-item-menu-title input');
+        var $title = $this.closest('form').find('.js-form-item-title-0-value input');
         // Bail out if we do not have all required fields.
         if (!($checkbox.length && $link_title.length && $title.length)) {
           return;
