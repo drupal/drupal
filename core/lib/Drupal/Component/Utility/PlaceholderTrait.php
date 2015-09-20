@@ -48,6 +48,14 @@ trait PlaceholderTrait {
           $args[$key] = '<em class="placeholder">' . $value . '</em>';
           break;
 
+        case ':':
+          // URL attributes must be escaped unconditionally (even if they were
+          // already marked safe) since content that has been filtered for XSS
+          // can still contain characters that are unsafe for use in attributes.
+          // @todo decide what to do about non-URL attribute values (#2570431)
+          $args[$key] = Html::escape(UrlHelper::stripDangerousProtocols($value));
+          break;
+
         case '!':
           // Pass-through.
           if (!SafeMarkup::isSafe($value)) {

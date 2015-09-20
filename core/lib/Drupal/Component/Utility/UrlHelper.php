@@ -304,7 +304,22 @@ class UrlHelper {
    * \Drupal\Component\Utility\Xss::filter(), but those functions return an
    * HTML-encoded string, so this function can be called independently when the
    * output needs to be a plain-text string for passing to functions that will
-   * call \Drupal\Component\Utility\Html::escape() separately.
+   * call Html::escape() separately. The exact behavior depends on the value:
+   * - If the value is a well-formed (per RFC 3986) relative URL or
+   *   absolute URL that does not use a dangerous protocol (like
+   *   "javascript:"), then the URL remains unchanged. This includes all
+   *   URLs generated via Url::toString() and UrlGeneratorTrait::url().
+   * - If the value is a well-formed absolute URL with a dangerous protocol,
+   *   the protocol is stripped. This process is repeated on the remaining URL
+   *   until it is stripped down to a safe protocol.
+   * - If the value is not a well-formed URL, the same sanitization behavior as
+   *   for well-formed URLs will be invoked, which strips most substrings that
+   *   precede a ":". The result can be used in URL attributes such as "href"
+   *   or "src" (only after calling Html::escape() separately), but this may not
+   *   produce valid HTML (e.g., malformed URLs within "href" attributes fail
+   *   HTML validation). This can be avoided by using
+   *   Url::fromUri($possibly_not_a_url)->toString(), which either throws an
+   *   exception or returns a well-formed URL.
    *
    * @param string $uri
    *   A plain-text URI that might contain dangerous protocols.
@@ -314,6 +329,11 @@ class UrlHelper {
    *   strings, this return value must not be output to an HTML page without
    *   being sanitized first. However, it can be passed to functions
    *   expecting plain-text strings.
+   *
+   * @see \Drupal\Component\Utility\Html::escape()
+   * @see \Drupal\Core\Url::toString()
+   * @see \Drupal\Core\Routing\UrlGeneratorTrait::url()
+   * @see \Drupal\Core\Url::fromUri()
    */
   public static function stripDangerousProtocols($uri) {
     $allowed_protocols = array_flip(static::$allowedProtocols);

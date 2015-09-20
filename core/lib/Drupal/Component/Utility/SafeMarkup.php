@@ -162,11 +162,18 @@ class SafeMarkup {
   /**
    * Formats a string for HTML display by replacing variable placeholders.
    *
-   * This function replaces variable placeholders in a string with the requested
+   * This method replaces variable placeholders in a string with the requested
    * values and escapes the values so they can be safely displayed as HTML. It
    * should be used on any unknown text that is intended to be printed to an
    * HTML page (especially text that may have come from untrusted users, since
    * in that case it prevents cross-site scripting and other security problems).
+   *
+   * This method is not intended for passing arbitrary user input into any
+   * HTML attribute value, as only URL attributes such as "src" and "href" are
+   * supported (using ":variable"). Never use this method on unsafe HTML
+   * attributes such as "on*" and "style" and take care when using this with
+   * unsupported attributes such as "title" or "alt" as this can lead to
+   * unexpected output.
    *
    * In most cases, you should use t() rather than calling this function
    * directly, since it will translate the text (on non-English-only sites) in
@@ -180,13 +187,27 @@ class SafeMarkup {
    *   any key in $args are replaced with the corresponding value, after
    *   optional sanitization and formatting. The type of sanitization and
    *   formatting depends on the first character of the key:
-   *   - @variable: Escaped to HTML using self::escape(). Use this as the
-   *     default choice for anything displayed on a page on the site.
-   *   - %variable: Escaped to HTML wrapped in <em> tags, which makes the
-   *     following HTML code:
+   *   - @variable: Escaped to HTML using Html::escape() unless the value is
+   *     already HTML-safe. Use this as the default choice for anything
+   *     displayed on a page on the site, but not within HTML attributes.
+   *   - %variable: Escaped to HTML just like @variable, but also wrapped in
+   *     <em> tags, which makes the following HTML code:
    *     @code
    *       <em class="placeholder">text output here.</em>
    *     @endcode
+   *     As with @variable, do not use this within HTML attributes.
+   *   - :variable: Escaped to HTML using Html::escape() and filtered for
+   *     dangerous protocols using UrlHelper::stripDangerousProtocols(). Use
+   *     this when passing in a URL, such as when using the "src" or "href"
+   *     attributes, ensuring the value is always wrapped in quotes:
+   *     - Secure: <a href=":variable">@variable</a>
+   *     - Insecure: <a href=:variable>@variable</a>
+   *     When ":variable" comes from arbitrary user input, the result is secure,
+   *     but not guaranteed to be a valid URL (which means the resulting output
+   *     could fail HTML validation). To guarantee a valid URL, use
+   *     Url::fromUri($user_input)->toString() (which either throws an exception
+   *     or returns a well-formed URL) before passing the result into a
+   *     ":variable" placeholder.
    *   - !variable: Inserted as is, with no sanitization or formatting. Only
    *     use this when the resulting string is being generated for one of:
    *     - Non-HTML usage, such as a plain-text email.
@@ -202,6 +223,9 @@ class SafeMarkup {
    * @ingroup sanitization
    *
    * @see t()
+   * @see \Drupal\Component\Utility\Html::escape()
+   * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
+   * @see \Drupal\Core\Url::fromUri()
    */
   public static function format($string, array $args) {
     $safe = TRUE;
