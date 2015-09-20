@@ -9,7 +9,6 @@ namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Render\SafeString;
 
 /**
@@ -21,27 +20,6 @@ use Drupal\Core\Render\SafeString;
  * @see core\vendor\twig\twig\lib\Twig\Environment.php
  */
 class TwigEnvironment extends \Twig_Environment {
-
-  /**
-   * The cache object used for auto-refresh via mtime.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache_object = NULL;
-
-  /**
-   * The PhpStorage object used for storing the templates.
-   *
-   * @var \Drupal\Core\PhpStorage\PhpStorageFactory
-   */
-  protected $storage = NULL;
-
-  /**
-   * The template cache filename prefix.
-   *
-   * @var string
-   */
-  protected $templateCacheFilenamePrefix;
 
   /**
    * Static cache of template classes.
@@ -66,9 +44,6 @@ class TwigEnvironment extends \Twig_Environment {
    *   The options for the Twig environment.
    */
   public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, \Twig_LoaderInterface $loader = NULL, $options = array()) {
-    $this->cache_object = $cache;
-    $this->templateCacheFilenamePrefix = $twig_extension_hash;
-
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like TwigExtension::escapeFilter() are called.
     require_once $root . '/core/themes/engines/twig/twig.engine';
@@ -84,50 +59,12 @@ class TwigEnvironment extends \Twig_Environment {
     // Ensure autoescaping is always on.
     $options['autoescape'] = 'html';
 
-    $this->loader = $loader;
-    parent::__construct($this->loader, $options);
-  }
-
-  /**
-   * Checks if the compiled template needs an update.
-   */
-  protected function isFresh($cache_filename, $name) {
-    $cid = 'twig:' . $cache_filename;
-    $obj = $this->cache_object->get($cid);
-    $mtime = isset($obj->data) ? $obj->data : FALSE;
-    return $mtime === FALSE || $this->isTemplateFresh($name, $mtime);
-  }
-
-  /**
-   * Compile the source and write the compiled template to disk.
-   */
-  public function updateCompiledTemplate($cache_filename, $name) {
-    $source = $this->loader->getSource($name);
-    $compiled_source = $this->compileSource($source, $name);
-    $this->storage()->save($cache_filename, $compiled_source);
-    // Save the last modification time
-    $cid = 'twig:' . $cache_filename;
-    $this->cache_object->set($cid, REQUEST_TIME);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheFilename($name) {
-    // We override the cache filename in order to avoid issues with not using
-    // shared filesystems. The Twig templates for example rely on available Twig
-    // extensions, so we use the twig extension hash which varies by extensions
-    // and their mtime.
-    // @see \Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass
-
-    if (!$this->cache) {
-      return FALSE;
+    if ($options['cache'] === TRUE) {
+      $options['cache'] = new TwigPhpStorageCache($cache, $twig_extension_hash);
     }
 
-    $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
-
-    // The first part is what is invalidated.
-    return $this->templateCacheFilenamePrefix . '_' . basename($name) . '_' . $class;
+    $this->loader = $loader;
+    parent::__construct($this->loader, $options);
   }
 
   /**
@@ -159,20 +96,14 @@ class TwigEnvironment extends \Twig_Environment {
     }
 
     if (!class_exists($cls, FALSE)) {
-      $cache_filename = $this->getCacheFilename($name);
+      $key = $this->cache->generateKey($name, $cls);
 
-      if ($cache_filename !== FALSE) {
-        // If autoreload is on, check that the template has not been
-        // modified since the last compilation.
-        if ($this->isAutoReload() && !$this->isFresh($cache_filename, $name)) {
-          $this->updateCompiledTemplate($cache_filename, $name);
-        }
-
-        if (!$this->storage()->load($cache_filename)) {
-          $this->updateCompiledTemplate($cache_filename, $name);
-          $this->storage()->load($cache_filename);
-        }
+      if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
+        $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
       }
+
+      $this->cache->load($key);
+
       if (!class_exists($cls, FALSE)) {
         $compiled_source = $this->compileSource($this->loader->getSource($name), $name);
         eval('?' . '>' . $compiled_source);
@@ -184,18 +115,6 @@ class TwigEnvironment extends \Twig_Environment {
     }
 
     return $this->loadedTemplates[$cls] = new $cls($this);
-  }
-
-  /**
-   * Gets the PHP code storage object to use for the compiled Twig files.
-   *
-   * @return \Drupal\Component\PhpStorage\PhpStorageInterface
-   */
-  protected function storage() {
-    if (!isset($this->storage)) {
-      $this->storage = PhpStorageFactory::get('twig');
-    }
-    return $this->storage;
   }
 
   /**

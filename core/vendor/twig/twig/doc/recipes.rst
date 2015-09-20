@@ -337,24 +337,33 @@ Refreshing modified Templates when OPcache or APC is enabled
 
 When using OPcache with ``opcache.validate_timestamps`` set to ``0`` or APC
 with ``apc.stat`` set to ``0`` and Twig cache enabled, clearing the template
-cache won't update the cache. To get around this, one can extend
-``Twig_Environment`` and force the update of the cache when Twig rewrites the
-cache::
+cache won't update the cache.
 
-    class Twig_Environment_APC extends Twig_Environment
-    {
-        protected function writeCacheFile($file, $content)
+To get around this, force Twig to invalidate the bytecode cache::
+
+    $twig = new Twig_Environment($loader, array(
+        'cache' => new Twig_Cache_Filesystem('/some/cache/path', Twig_Cache_Filesystem::FORCE_BYTECODE_INVALIDATION),
+        // ...
+    ));
+
+.. note::
+
+    Before Twig 1.22, you should extend ``Twig_Environment`` instead::
+
+        class OpCacheAwareTwigEnvironment extends Twig_Environment
         {
-            parent::writeCacheFile($file, $content);
+            protected function writeCacheFile($file, $content)
+            {
+                parent::writeCacheFile($file, $content);
 
-            // Compile cached file into bytecode cache
-            if (extension_loaded('Zend OPcache') && ini_get('opcache.enable')) {
-                opcache_invalidate($file);
-            } elseif (extension_loaded('apc') && ini_get('apc.enabled')) {
-                apc_compile_file($file);
+                // Compile cached file into bytecode cache
+                if (function_exists('opcache_invalidate')) {
+                    opcache_invalidate($file, true);
+                } elseif (function_exists('apc_compile_file')) {
+                    apc_compile_file($file);
+                }
             }
         }
-    }
 
 Reusing a stateful Node Visitor
 -------------------------------
@@ -484,5 +493,26 @@ logical name, and not the path from the filesystem::
 
 Now that the ``base.twig`` templates is defined in an array loader, you can
 remove it from the database, and everything else will still work as before.
+
+Loading a Template from a String
+--------------------------------
+
+From a template, you can easily load a template stored in a string via the
+``template_from_string`` function (available as of Twig 1.11 via the
+``Twig_Extension_StringLoader`` extension)::
+
+.. code-block:: jinja
+
+    {{ include(template_from_string("Hello {{ name }}")) }}
+
+From PHP, it's also possible to load a template stored in a string via
+``Twig_Environment::createTemplate()`` (available as of Twig 1.18)::
+
+    $template = $twig->createTemplate('hello {{ name }}');
+    echo $template->render(array('name' => 'Fabien'));
+
+.. note::
+
+    Never use the ``Twig_Loader_String`` loader, which has severe limitations.
 
 .. _callback: http://www.php.net/manual/en/function.is-callable.php

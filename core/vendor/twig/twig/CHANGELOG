@@ -1,3 +1,18 @@
+* 1.22.1 (2015-09-15)
+
+ * fixed regression in template_from_string
+
+* 1.22.0 (2015-09-13)
+
+ * made Twig_Test_IntegrationTestCase more flexible
+ * added an option to force PHP bytecode invalidation when writing a compiled template into the cache
+ * fixed the profiler duration for the root node
+ * changed template cache names to take into account enabled extensions
+ * deprecated Twig_Environment::clearCacheFiles(), Twig_Environment::getCacheFilename(),
+   Twig_Environment::writeCacheFile(), and Twig_Environment::getTemplateClassPrefix()
+ * added a way to override the filesystem template cache system
+ * added a way to get the original template source from Twig_Template
+
 * 1.21.2 (2015-09-09)
 
  * fixed variable names for the deprecation triggering code
