@@ -11,7 +11,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 
 /**
  * Implements hook_help().
@@ -42,9 +42,9 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
 function dblog_menu_links_discovered_alter(&$links) {
   if (\Drupal::moduleHandler()->moduleExists('search')) {
     $links['dblog.search'] = array(
-      'title' => new TranslationWrapper('Top search phrases'),
+      'title' => new TranslatableString('Top search phrases'),
       'route_name' => 'dblog.search',
-      'description' => new TranslationWrapper('View most popular search phrases.'),
+      'description' => new TranslatableString('View most popular search phrases.'),
       'parent' => 'system.admin_reports',
     );
   }

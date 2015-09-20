@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\LocalActionDefault;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +83,7 @@ class LocalActionDefaultTest extends UnitTestCase {
    * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
    */
   public function testGetTitle() {
-    $this->pluginDefinition['title'] = (new TranslationWrapper('Example', [], [], $this->stringTranslation));
+    $this->pluginDefinition['title'] = (new TranslatableString('Example', [], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
@@ -99,7 +99,7 @@ class LocalActionDefaultTest extends UnitTestCase {
    * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
    */
   public function testGetTitleWithContext() {
-    $this->pluginDefinition['title'] = (new TranslationWrapper('Example', array(), array('context' => 'context'), $this->stringTranslation));
+    $this->pluginDefinition['title'] = (new TranslatableString('Example', array(), array('context' => 'context'), $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
@@ -113,7 +113,7 @@ class LocalActionDefaultTest extends UnitTestCase {
    * Tests the getTitle method with title arguments.
    */
   public function testGetTitleWithTitleArguments() {
-    $this->pluginDefinition['title'] = (new TranslationWrapper('Example @test', array('@test' => 'value'), [], $this->stringTranslation));
+    $this->pluginDefinition['title'] = (new TranslatableString('Example @test', array('@test' => 'value'), [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])

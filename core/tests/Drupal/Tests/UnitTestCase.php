@@ -13,7 +13,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\Utility\PlaceholderTrait;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
@@ -219,14 +219,14 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     $translation->expects($this->any())
       ->method('translate')
       ->willReturnCallback(function ($string, array $args = array(), array $options = array()) use ($translation) {
-        $wrapper = new TranslationWrapper($string, $args, $options, $translation);
+        $wrapper = new TranslatableString($string, $args, $options, $translation);
         // Pretend everything is not safe.
         // @todo https://www.drupal.org/node/2570037 return the wrapper instead.
         return (string) $wrapper;
       });
     $translation->expects($this->any())
       ->method('translateString')
-      ->willReturnCallback(function (TranslationWrapper $wrapper) {
+      ->willReturnCallback(function (TranslatableString $wrapper) {
         return $wrapper->getUntranslatedString();
       });
     $translation->expects($this->any())

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Update;
 
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 
 /**
  * Tests system_update_8001().
@@ -54,11 +54,11 @@ class MenuTreeSerializationTitleTest extends UpdatePathTestBase {
       $title = unserialize($link->title);
       $description = unserialize($link->description);
       // Verify that all the links from system module have a been updated with
-      // a TranslationWrapper as title and description due to the rebuild.
+      // a TranslatableString as title and description due to the rebuild.
       if (strpos($link->id, 'system.') === 0) {
-        $this->assertTrue($title instanceof TranslationWrapper, get_class($title));
+        $this->assertTrue($title instanceof TranslatableString, get_class($title));
         if ($description) {
-          $this->assertTrue($description instanceof TranslationWrapper, get_class($description));
+          $this->assertTrue($description instanceof TranslatableString, get_class($description));
         }
       }
     }

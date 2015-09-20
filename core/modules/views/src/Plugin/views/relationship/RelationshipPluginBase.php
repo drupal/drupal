@@ -97,7 +97,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     // aren't get another default value.
     if (!empty($this->definition['label'])) {
       // Cast the label to a string since it is an object.
-      // @see \Drupal\Core\StringTranslation\TranslationWrapper
+      // @see \Drupal\Core\StringTranslation\TranslatableString
       $label = (string) $this->definition['label'];
     }
     else {

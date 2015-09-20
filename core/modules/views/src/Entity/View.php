@@ -191,7 +191,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       'display_plugin' => $plugin_id,
       'id' => $id,
       // Cast the display title to a string since it is an object.
-      // @see \Drupal\Core\StringTranslation\TranslationWrapper
+      // @see \Drupal\Core\StringTranslation\TranslatableString
       'display_title' => (string) $title,
       'position' => $id === 'default' ? 0 : count($this->display),
       'display_options' => array(),

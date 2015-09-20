@@ -16,7 +16,7 @@ use Drupal\Core\TypedData\Plugin\DataType\Uri;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -64,7 +64,7 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
     $data[] = [new IntegerData(DataDefinition::create('integer')), 1.5, FALSE];
     $data[] = [new IntegerData(DataDefinition::create('integer')), 'test', FALSE];
     $data[] = [new StringData(DataDefinition::create('string')), 'test', TRUE];
-    $data[] = [new StringData(DataDefinition::create('string')), new TranslationWrapper('test'), TRUE];
+    $data[] = [new StringData(DataDefinition::create('string')), new TranslatableString('test'), TRUE];
     // It is odd that 1 is a valid string.
     // $data[] = [$this->getMock('Drupal\Core\TypedData\Type\StringInterface'), 1, FALSE];
     $data[] = [new StringData(DataDefinition::create('string')), [], FALSE];

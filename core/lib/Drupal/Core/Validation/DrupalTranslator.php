@@ -77,7 +77,7 @@ class DrupalTranslator implements TranslatorInterface {
     foreach ($parameters as $key => $value) {
       // We allow the values in the parameters to be safe string objects. This
       // can be useful when we want to use parameter values that are
-      // TranslationWrappers.
+      // TranslatableStrings.
       if ($value instanceof SafeStringInterface) {
         $value = (string) $value;
       }

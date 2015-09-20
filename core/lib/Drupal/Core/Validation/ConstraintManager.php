@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 
 /**
  * Constraint plugin manager.
@@ -91,22 +91,22 @@ class ConstraintManager extends DefaultPluginManager {
    */
   public function registerDefinitions() {
     $this->getDiscovery()->setDefinition('Callback', array(
-      'label' => new TranslationWrapper('Callback'),
+      'label' => new TranslatableString('Callback'),
       'class' => '\Symfony\Component\Validator\Constraints\Callback',
       'type' => FALSE,
     ));
     $this->getDiscovery()->setDefinition('Blank', array(
-      'label' => new TranslationWrapper('Blank'),
+      'label' => new TranslatableString('Blank'),
       'class' => '\Symfony\Component\Validator\Constraints\Blank',
       'type' => FALSE,
     ));
     $this->getDiscovery()->setDefinition('NotBlank', array(
-      'label' => new TranslationWrapper('Not blank'),
+      'label' => new TranslatableString('Not blank'),
       'class' => '\Symfony\Component\Validator\Constraints\NotBlank',
       'type' => FALSE,
     ));
     $this->getDiscovery()->setDefinition('Email', array(
-      'label' => new TranslationWrapper('Email'),
+      'label' => new TranslatableString('Email'),
       'class' => '\Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint',
       'type' => array('string'),
     ));

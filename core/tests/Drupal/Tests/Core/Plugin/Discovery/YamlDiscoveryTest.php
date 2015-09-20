@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use org\bovigo\vfs\vfsStream;
@@ -104,9 +104,9 @@ EOS;
     $plugin_1 = $definitions['test_plugin'];
     $plugin_2 = $definitions['test_plugin2'];
 
-    $this->assertInstanceOf(TranslationWrapper::class, $plugin_1['title']);
+    $this->assertInstanceOf(TranslatableString::class, $plugin_1['title']);
     $this->assertEquals([], $plugin_1['title']->getOptions());
-    $this->assertInstanceOf(TranslationWrapper::class, $plugin_2['title']);
+    $this->assertInstanceOf(TranslatableString::class, $plugin_2['title']);
     $this->assertEquals(['context' => 'test-context'], $plugin_2['title']->getOptions());
   }
 

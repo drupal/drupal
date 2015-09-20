@@ -26,7 +26,7 @@ trait PlaceholderTrait {
    *   The string with the placeholders replaced.
    *
    * @see \Drupal\Component\Utility\SafeMarkup::format()
-   * @see \Drupal\Core\StringTranslation\TranslationWrapper::render()
+   * @see \Drupal\Core\StringTranslation\TranslatableString::render()
    */
   protected static function placeholderFormat($string, array $args, &$safe = TRUE) {
     // Transform arguments before inserting them.

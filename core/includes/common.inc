@@ -25,7 +25,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\SafeString;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -261,7 +261,7 @@ function check_url($uri) {
  *   Optional language code to translate to a language other than what is used
  *   to display the page.
  *
- * @return \Drupal\Core\StringTranslation\TranslationWrapper
+ * @return \Drupal\Core\StringTranslation\TranslatableString
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
@@ -283,21 +283,21 @@ function format_size($size, $langcode = NULL) {
     $options = ['langcode' => $langcode];
     switch ($unit) {
       case 'KB':
-        return new TranslationWrapper('@size KB', $args, $options);
+        return new TranslatableString('@size KB', $args, $options);
       case 'MB':
-        return new TranslationWrapper('@size MB', $args, $options);
+        return new TranslatableString('@size MB', $args, $options);
       case 'GB':
-        return new TranslationWrapper('@size GB', $args, $options);
+        return new TranslatableString('@size GB', $args, $options);
       case 'TB':
-        return new TranslationWrapper('@size TB', $args, $options);
+        return new TranslatableString('@size TB', $args, $options);
       case 'PB':
-        return new TranslationWrapper('@size PB', $args, $options);
+        return new TranslatableString('@size PB', $args, $options);
       case 'EB':
-        return new TranslationWrapper('@size EB', $args, $options);
+        return new TranslatableString('@size EB', $args, $options);
       case 'ZB':
-        return new TranslationWrapper('@size ZB', $args, $options);
+        return new TranslatableString('@size ZB', $args, $options);
       case 'YB':
-        return new TranslationWrapper('@size YB', $args, $options);
+        return new TranslatableString('@size YB', $args, $options);
     }
   }
 }

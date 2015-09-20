@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\Core\Entity\Annotation;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 
 /**
  * Defines a config entity type annotation object.
@@ -37,7 +37,7 @@ class ConfigEntityType extends EntityType {
    * {@inheritdoc}
    */
   public function get() {
-    $this->definition['group_label'] = new TranslationWrapper('Configuration', array(), array('context' => 'Entity type group'));
+    $this->definition['group_label'] = new TranslatableString('Configuration', array(), array('context' => 'Entity type group'));
 
     return parent::get();
   }

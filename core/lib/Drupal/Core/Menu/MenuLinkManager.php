@@ -41,10 +41,10 @@ class MenuLinkManager implements MenuLinkManagerInterface {
     // The external URL if this link has one (required if route_name is empty).
     'url' => '',
     // The static title for the menu link. If this came from a YAML definition
-    // or other safe source this may be a TranslationWrapper object.
+    // or other safe source this may be a TranslatableString object.
     'title' => '',
     // The description. If this came from a YAML definition or other safe source
-    // this may be be a TranslationWrapper object.
+    // this may be be a TranslatableString object.
     'description' => '',
     // The plugin ID of the parent link (or NULL for a top-level link).
     'parent' => '',

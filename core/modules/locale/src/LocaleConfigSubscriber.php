@@ -133,7 +133,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   The configuration name.
    * @param array $config
    *   The active configuration data or override data.
-   * @param array|\Drupal\Core\StringTranslation\TranslationWrapper[] $translatable
+   * @param array|\Drupal\Core\StringTranslation\TranslatableString[] $translatable
    *   The translatable array structure.
    *   @see \Drupal\locale\LocaleConfigManager::getTranslatableData()
    * @param string $langcode
@@ -169,9 +169,9 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *
    * @param string $name
    *   The configuration name.
-   * @param array|\Drupal\Core\StringTranslation\TranslationWrapper $translatable
-   *   Either a possibly nested array with TranslationWrapper objects at the
-   *   leaf items or a TranslationWrapper object directly.
+   * @param array|\Drupal\Core\StringTranslation\TranslatableString $translatable
+   *   Either a possibly nested array with TranslatableString objects at the
+   *   leaf items or a TranslatableString object directly.
    * @param array|string $reference_config
    *   Either a possibly nested array with strings at the leaf items or a string
    *   directly. Only those $translatable items that are also present in

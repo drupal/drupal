@@ -80,7 +80,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Cacheab
    * {@inheritdoc}
    */
   public function getTitle(Request $request = NULL) {
-    // The title from YAML file discovery may be a TranslationWrapper object.
+    // The title from YAML file discovery may be a TranslatableString object.
     return (string) $this->pluginDefinition['title'];
   }
 

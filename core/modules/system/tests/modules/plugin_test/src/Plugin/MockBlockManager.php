@@ -133,9 +133,9 @@ class MockBlockManager extends PluginManagerBase {
    */
   protected function createContextDefinition($data_type, $label, $required = TRUE) {
     // We cast the label to string for testing purposes only, as it may be
-    // a TranslationWrapper and we will do assertEqual() checks on arrays that
+    // a TranslatableString and we will do assertEqual() checks on arrays that
     // include ContextDefinition objects, and var_export() has problems
-    // printing TranslationWrapper objects.
+    // printing TranslatableString objects.
     return new ContextDefinition($data_type, (string) $label, $required);
   }
 }

@@ -14,7 +14,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -566,7 +566,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // The language name may have already been translated, no need to
       // translate it again.
       // @see Drupal\Core\Language::filterLanguages().
-      if (!$name instanceof TranslationWrapper) {
+      if (!$name instanceof TranslatableString) {
         $name = $this->t($name);
       }
       $list[PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT] = $name;

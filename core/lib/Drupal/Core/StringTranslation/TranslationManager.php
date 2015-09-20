@@ -152,14 +152,14 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
         break;
       }
     }
-    $wrapper = new TranslationWrapper($string, $args, $options, $this);
+    $wrapper = new TranslatableString($string, $args, $options, $this);
     return $safe ? $wrapper : (string) $wrapper;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function translateString(TranslationWrapper $translated_string) {
+  public function translateString(TranslatableString $translated_string) {
     return $this->doTranslate($translated_string->getUntranslatedString(), $translated_string->getOptions());
   }
 

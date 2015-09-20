@@ -9,7 +9,7 @@ namespace Drupal\entity_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -39,9 +39,9 @@ class FieldTestItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     // This is called very early by the user entity roles field. Prevent
-    // early t() calls by using the TranslationWrapper.
+    // early t() calls by using the TranslatableString.
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(new TranslationWrapper('Test value'))
+      ->setLabel(new TranslatableString('Test value'))
       ->setRequired(TRUE);
 
     return $properties;

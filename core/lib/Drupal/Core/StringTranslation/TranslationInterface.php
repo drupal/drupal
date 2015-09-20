@@ -33,7 +33,7 @@ interface TranslationInterface {
    *      what is used to display the page.
    *   - 'context': The context the source string belongs to.
    *
-   * @return string|\Drupal\Core\StringTranslation\TranslationWrapper
+   * @return string|\Drupal\Core\StringTranslation\TranslatableString
    *   The translated string.
    *
    * @see \Drupal\Component\Utility\SafeMarkup::format()
@@ -41,15 +41,15 @@ interface TranslationInterface {
   public function translate($string, array $args = array(), array $options = array());
 
   /**
-   * Translates a TranslationWrapper object to a string.
+   * Translates a TranslatableString object to a string.
    *
-   * @param \Drupal\Core\StringTranslation\TranslationWrapper $translated_string
-   *   A TranslationWrapper object.
+   * @param \Drupal\Core\StringTranslation\TranslatableString $translated_string
+   *   A TranslatableString object.
    *
    * @return string
    *   The translated string.
    */
-  public function translateString(TranslationWrapper $translated_string);
+  public function translateString(TranslatableString $translated_string);
 
   /**
    * Formats a string containing a count of items.

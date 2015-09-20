@@ -10,7 +10,7 @@ namespace Drupal\Core\Language;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\Url;
 
 /**
@@ -109,13 +109,13 @@ class LanguageManager implements LanguageManagerInterface {
   public function getDefinedLanguageTypesInfo() {
     $this->definedLanguageTypesInfo = array(
       LanguageInterface::TYPE_INTERFACE => array(
-        'name' => new TranslationWrapper('Interface text'),
-        'description' => new TranslationWrapper('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
+        'name' => new TranslatableString('Interface text'),
+        'description' => new TranslatableString('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_CONTENT => array(
-        'name' => new TranslationWrapper('Content'),
-        'description' => new TranslationWrapper('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+        'name' => new TranslatableString('Content'),
+        'description' => new TranslatableString('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_URL => array(
@@ -210,16 +210,16 @@ class LanguageManager implements LanguageManagerInterface {
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     // This is called very early while initializing the language system. Prevent
-    // early t() calls by using the TranslationWrapper.
+    // early t() calls by using the TranslatableString.
     $languages[LanguageInterface::LANGCODE_NOT_SPECIFIED] = new Language(array(
       'id' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'name' => new TranslationWrapper('Not specified'),
+      'name' => new TranslatableString('Not specified'),
       'weight' => ++$weight,
     ) + $locked_language);
 
     $languages[LanguageInterface::LANGCODE_NOT_APPLICABLE] = new Language(array(
       'id' => LanguageInterface::LANGCODE_NOT_APPLICABLE,
-      'name' => new TranslationWrapper('Not applicable'),
+      'name' => new TranslatableString('Not applicable'),
       'weight' => ++$weight,
     ) + $locked_language);
 

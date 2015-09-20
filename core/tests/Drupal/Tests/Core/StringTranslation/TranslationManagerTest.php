@@ -70,7 +70,7 @@ class TranslationManagerTest extends UnitTestCase {
    * @param string $expected_string
    *   The expected translated string value.
    * @param bool $returns_translation_wrapper
-   *   Whether we are expecting a TranslationWrapper object to be returned.
+   *   Whether we are expecting a TranslatableString object to be returned.
    *
    * @dataProvider providerTestTranslatePlaceholder
    */

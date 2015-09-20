@@ -1179,7 +1179,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       }
       else {
         // Cast the label to a string since it can be an object.
-        // @see \Drupal\Core\StringTranslation\TranslationWrapper
+        // @see \Drupal\Core\StringTranslation\TranslatableString
         $options[$value] = strip_tags(Html::decodeEntities((string) $label));
       }
     }

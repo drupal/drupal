@@ -71,7 +71,7 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    */
   public function getTitle(Request $request = NULL) {
     // Subclasses may pull in the request or specific attributes as parameters.
-    // The title from YAML file discovery may be a TranslationWrapper object.
+    // The title from YAML file discovery may be a TranslatableString object.
     return (string) $this->pluginDefinition['title'];
   }
 

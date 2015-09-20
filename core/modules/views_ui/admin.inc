@@ -93,7 +93,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   // For easiest integration with the form API and the testing framework, we
   // always give the button a unique #value, rather than playing around with
   // #name. We also cast the #title to string as we will use it as an array
-  // key and it may be a TranslationWrapper.
+  // key and it may be a TranslatableString.
   $button_title = !empty($triggering_element['#title']) ? (string) $triggering_element['#title'] : $trigger_key;
   if (empty($seen_buttons[$button_title])) {
     $wrapping_element[$button_key]['#value'] = t('Update "@title" choice', array(

@@ -12,7 +12,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
@@ -122,7 +122,7 @@ class LocaleConfigManager {
   }
 
   /**
-   * Gets array of translation wrappers for translatable configuration.
+   * Gets array of translated strings for translatable configuration.
    *
    * @param string $name
    *   Configuration object name.
@@ -150,11 +150,11 @@ class LocaleConfigManager {
    * @param \Drupal\Core\TypedData\TypedDataInterface $element
    *   Typed configuration element.
    *
-   * @return array|\Drupal\Core\StringTranslation\TranslationWrapper
+   * @return array|\Drupal\Core\StringTranslation\TranslatableString
    *   A nested array matching the exact structure under $element with only the
-   *   elements that are translatable wrapped into a TranslationWrapper. If the
+   *   elements that are translatable wrapped into a TranslatableString. If the
    *   provided $element is not traversable, the return value is a single
-   *   TranslationWrapper.
+   *   TranslatableString.
    */
   protected function getTranslatableData(TypedDataInterface $element) {
     $translatable = array();
@@ -173,7 +173,7 @@ class LocaleConfigManager {
         if (isset($definition['translation context'])) {
           $options['context'] = $definition['translation context'];
         }
-        return new TranslationWrapper($element->getValue(), array(), $options);
+        return new TranslatableString($element->getValue(), array(), $options);
       }
     }
     return $translatable;
@@ -191,10 +191,10 @@ class LocaleConfigManager {
    *   The configuration name.
    * @param array $active
    *   The active configuration data.
-   * @param array|\Drupal\Core\StringTranslation\TranslationWrapper[] $translatable
+   * @param array|\Drupal\Core\StringTranslation\TranslatableString[] $translatable
    *   The translatable array structure. A nested array matching the exact
    *   structure under of the default configuration for $name with only the
-   *   elements that are translatable wrapped into a TranslationWrapper.
+   *   elements that are translatable wrapped into a TranslatableString.
    *   @see self::getTranslatableData().
    * @param string $langcode
    *   The language code to process the array with.

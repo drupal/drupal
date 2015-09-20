@@ -10,7 +10,7 @@ namespace Drupal\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Discovery\YamlDiscovery as ComponentYamlDiscovery;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableString;
 
 /**
  * Allows YAML files to define plugin definitions.
@@ -18,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslationWrapper;
  * If the value of a key (like title) in the definition is translatable then
  * the addTranslatableProperty() method can be used to mark it as such and also
  * to add translation context. Then
- * \Drupal\Core\StringTranslation\TranslationWrapper will be used to translate
+ * \Drupal\Core\StringTranslation\TranslatableString will be used to translate
  * the string and also to mark it safe. Only strings written in the YAML files
  * should be marked as safe, strings coming from dynamic plugin definitions
  * potentially containing user input should not.
@@ -83,7 +83,7 @@ class YamlDiscovery implements DiscoveryInterface {
     $definitions = array();
     foreach ($plugins as $provider => $list) {
       foreach ($list as $id => $definition) {
-        // Add translation wrappers.
+        // Add TranslatableStrings.
         foreach ($this->translatableProperties as $property => $context_key) {
           if (isset($definition[$property])) {
             $options = [];
@@ -93,7 +93,7 @@ class YamlDiscovery implements DiscoveryInterface {
               $options['context'] = $definition[$context_key];
               unset($definition[$context_key]);
             }
-            $definition[$property] = new TranslationWrapper($definition[$property], [], $options);
+            $definition[$property] = new TranslatableString($definition[$property], [], $options);
           }
         }
         // Add ID and provider.
