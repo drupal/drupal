@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
@@ -295,7 +296,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], SafeMarkup::format("Unexpected error during import with operation @op for @name: 'config_test' entity with ID '@name_secondary' already exists.", array('@op' => 'create', '@name' => $name_primary, '@name_secondary' => 'secondary')));
+    $this->assertEqual($logs[0], Html::escape("Unexpected error during import with operation create for $name_primary: 'config_test' entity with ID 'secondary' already exists."));
   }
 
   /**
