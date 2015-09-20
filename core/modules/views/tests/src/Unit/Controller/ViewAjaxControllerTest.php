@@ -97,6 +97,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       $this->getMock('\Drupal\Core\Controller\ControllerResolverInterface'),
       $this->getMock('\Drupal\Core\Theme\ThemeManagerInterface'),
       $element_info_manager,
+      $this->getMock('\Drupal\Core\Render\PlaceholderGeneratorInterface'),
       $this->getMock('\Drupal\Core\Render\RenderCacheInterface'),
       $request_stack,
       [

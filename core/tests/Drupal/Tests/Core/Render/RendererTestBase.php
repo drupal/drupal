@@ -12,7 +12,8 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\RenderCache;
+use Drupal\Core\Render\PlaceholderGenerator;
+use Drupal\Core\Render\PlaceholderingRenderCache;
 use Drupal\Core\Render\Renderer;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,9 +35,16 @@ class RendererTestBase extends UnitTestCase {
   /**
    * The tested render cache.
    *
-   * @var \Drupal\Core\Render\RenderCache
+   * @var \Drupal\Core\Render\PlaceholderingRenderCache
    */
   protected $renderCache;
+
+  /**
+   * The tested placeholder generator.
+   *
+   * @var \Drupal\Core\Render\PlaceholderGenerator
+   */
+  protected $placeholderGenerator;
 
   /**
    * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -158,8 +166,9 @@ class RendererTestBase extends UnitTestCase {
         }
         return new ContextCacheKeys($keys, new CacheableMetadata());
       });
-    $this->renderCache = new RenderCache($this->requestStack, $this->cacheFactory, $this->cacheContextsManager);
-    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->renderCache, $this->requestStack, $this->rendererConfig);
+    $this->placeholderGenerator = new PlaceholderGenerator($this->rendererConfig);
+    $this->renderCache = new PlaceholderingRenderCache($this->requestStack, $this->cacheFactory, $this->cacheContextsManager, $this->placeholderGenerator);
+    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->placeholderGenerator, $this->renderCache, $this->requestStack, $this->rendererConfig);
 
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $this->cacheContextsManager);
@@ -267,6 +276,36 @@ class PlaceholdersTest {
         ],
       ],
     ];
+  }
+
+  /**
+   * #lazy_builder callback; attaches setting, generates markup, user-specific.
+   *
+   * @param string $animal
+   *  An animal.
+   *
+   * @return array
+   *   A renderable array.
+   */
+  public static function callbackPerUser($animal) {
+    $build = static::callback($animal);
+    $build['#cache']['contexts'][] = 'user';
+    return $build;
+  }
+
+  /**
+   * #lazy_builder callback; attaches setting, generates markup, cache tag.
+   *
+   * @param string $animal
+   *  An animal.
+   *
+   * @return array
+   *   A renderable array.
+   */
+  public static function callbackTagCurrentTemperature($animal) {
+    $build = static::callback($animal);
+    $build['#cache']['tags'][] = 'current-temperature';
+    return $build;
   }
 
 }

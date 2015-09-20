@@ -50,11 +50,12 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *        tags in its subtree, i.e. via bubbling)
    * - B) manually generated placeholder
    *
-   * So, in total 2*5 = 10 permutations.
+   * So, in total 2*8 = 16 permutations. (On one axis: uncacheable vs.
+   * uncacheable = 2; on the other axis: A1–7 and B = 8.)
    *
-   * @todo Cases A5, A6 and A7 are not yet supported by core. So that makes for
-   *   only 10 permutations currently, instead of 16. That will be done in
-   *   https://www.drupal.org/node/2543334
+   * @todo Case A5 is not yet supported by core. So that makes for only 14
+   *   permutations currently, instead of 16. That will be done in
+   *   https://www.drupal.org/node/2559847
    *
    * @return array
    */
@@ -141,6 +142,42 @@ class RendererPlaceholdersTest extends RendererTestBase {
         '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', $args],
       ],
     ];
+    // Note the absence of '#create_placeholder', presence of max-age=0 created
+    // by the #lazy_builder callback.
+    // @todo in https://www.drupal.org/node/2559847
+    $base_element_a5 = [];
+    // Note the absence of '#create_placeholder', presence of high cardinality
+    // cache context created by the #lazy_builder callback.
+    // @see \Drupal\Tests\Core\Render\PlaceholdersTest::callbackPerUser()
+    $base_element_a6 = [
+      '#attached' => [
+        'drupalSettings' => [
+          'foo' => 'bar',
+        ],
+      ],
+      'placeholder' => [
+        '#cache' => [
+          'contexts' => [],
+        ],
+        '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callbackPerUser', $args],
+      ],
+    ];
+    // Note the absence of '#create_placeholder', presence of high-invalidation
+    // frequency cache tag created by the #lazy_builder callback.
+    // @see \Drupal\Tests\Core\Render\PlaceholdersTest::callbackTagCurrentTemperature()
+    $base_element_a7 = [
+      '#attached' => [
+        'drupalSettings' => [
+          'foo' => 'bar',
+        ],
+      ],
+      'placeholder' => [
+        '#cache' => [
+          'contexts' => [],
+        ],
+        '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callbackTagCurrentTemperature', $args],
+      ],
+    ];
     // Note the absence of '#create_placeholder', but the presence of
     // '#attached[placeholders]'.
     $base_element_b = [
@@ -172,6 +209,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $expected_placeholder_render_array,
       FALSE,
       [],
+      [],
+      [],
     ];
 
     // Case two: render array that has a placeholder that is:
@@ -185,6 +224,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $args,
       $expected_placeholder_render_array,
       $keys,
+      [],
+      [],
       [
         '#markup' => '<p>This is a rendered placeholder!</p>',
         '#attached' => [
@@ -211,6 +252,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $expected_placeholder_render_array,
       FALSE,
       [],
+      [],
+      [],
     ];
 
     // Case four: render array that has a placeholder that is:
@@ -224,7 +267,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $args,
       $expected_placeholder_render_array,
       FALSE,
-      []
+      [],
+      [],
+      [],
     ];
 
     // Case five: render array that has a placeholder that is:
@@ -238,6 +283,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $args,
       $expected_placeholder_render_array,
       FALSE,
+      [],
+      [],
       [],
     ];
 
@@ -257,6 +304,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $args,
       $expected_placeholder_render_array,
       $cid_parts,
+      [],
+      [],
       [
         '#markup' => '<p>This is a rendered placeholder!</p>',
         '#attached' => [
@@ -284,6 +333,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $expected_placeholder_render_array,
       FALSE,
       [],
+      [],
+      [],
     ];
 
     // Case eight: render array that has a placeholder that is:
@@ -298,6 +349,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $args,
       $expected_placeholder_render_array,
       $keys,
+      [],
+      [],
       [
         '#markup' => '<p>This is a rendered placeholder!</p>',
         '#attached' => [
@@ -313,7 +366,109 @@ class RendererPlaceholdersTest extends RendererTestBase {
       ],
     ];
 
-    // Case nine: render array that has a placeholder that is:
+    // Case nine: render array that DOES NOT have a placeholder that is:
+    // - NOT created, despite max-age=0 that is bubbled
+    // - uncacheable
+    // (because the render element with #lazy_builder does not have #cache[keys]
+    // and hence the max-age=0 bubbles up further)
+    // @todo in https://www.drupal.org/node/2559847
+
+    // Case ten: render array that has a placeholder that is:
+    // - automatically created, and automatically triggered due to max-age=0
+    //   that is bubbled
+    // - cacheable
+    // @todo in https://www.drupal.org/node/2559847
+
+    // Case eleven: render array that DOES NOT have a placeholder that is:
+    // - NOT created, despite high cardinality cache contexts that are bubbled
+    // - uncacheable
+    $element_without_cache_keys = $base_element_a6;
+    $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a6['placeholder']);
+    $cases[] = [
+      $element_without_cache_keys,
+      $args,
+      $expected_placeholder_render_array,
+      FALSE,
+      ['user'],
+      [],
+      [],
+    ];
+
+    // Case twelve: render array that has a placeholder that is:
+    // - automatically created, and automatically triggered due to high
+    //   cardinality cache contexts that are bubbled
+    // - cacheable
+    $element_with_cache_keys = $base_element_a6;
+    $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
+    $expected_placeholder_render_array['#cache']['keys'] = $keys;
+    $cases[] = [
+      $element_with_cache_keys,
+      $args,
+      $expected_placeholder_render_array,
+      $keys,
+      ['user'],
+      [],
+      [
+        '#markup' => '<p>This is a rendered placeholder!</p>',
+        '#attached' => [
+          'drupalSettings' => [
+            'dynamic_animal' => $args[0],
+          ],
+        ],
+        '#cache' => [
+          'contexts' => ['user'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+      ],
+    ];
+
+    // Case thirteen: render array that has a placeholder that is:
+    // - automatically created, and automatically triggered due to high
+    //   invalidation frequency cache tags that are bubbled
+    // - uncacheable
+    $element_without_cache_keys = $base_element_a7;
+    $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a7['placeholder']);
+    $cases[] = [
+      $element_without_cache_keys,
+      $args,
+      $expected_placeholder_render_array,
+      FALSE,
+      [],
+      ['current-temperature'],
+      [],
+    ];
+
+    // Case fourteen: render array that has a placeholder that is:
+    // - automatically created, and automatically triggered due to high
+    //   invalidation frequency cache tags that are bubbled
+    // - cacheable
+    $element_with_cache_keys = $base_element_a7;
+    $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
+    $expected_placeholder_render_array['#cache']['keys'] = $keys;
+    $cases[] = [
+      $element_with_cache_keys,
+      $args,
+      $expected_placeholder_render_array,
+      $keys,
+      [],
+      [],
+      [
+        '#markup' => '<p>This is a rendered placeholder!</p>',
+        '#attached' => [
+          'drupalSettings' => [
+            'dynamic_animal' => $args[0],
+          ],
+        ],
+        '#cache' => [
+          'contexts' => [],
+          'tags' => ['current-temperature'],
+          'max-age' => Cache::PERMANENT,
+        ],
+      ],
+    ];
+
+    // Case fifteen: render array that has a placeholder that is:
     // - manually created
     // - uncacheable
     $x = $base_element_b;
@@ -325,9 +480,11 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $expected_placeholder_render_array,
       FALSE,
       [],
+      [],
+      [],
     ];
 
-    // Case ten: render array that has a placeholder that is:
+    // Case sixteen: render array that has a placeholder that is:
     // - manually created
     // - cacheable
     $x = $base_element_b;
@@ -345,6 +502,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $args,
       $expected_placeholder_render_array,
       $keys,
+      [],
+      [],
       [
         '#markup' => '<p>This is a rendered placeholder!</p>',
         '#attached' => [
@@ -388,11 +547,28 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @param array $expected_data
    *   FALSE if no render cache item is expected, a render array with the
    *   expected values if a render cache item is expected.
+   * @param string[] $bubbled_cache_contexts
+   *   Additional cache contexts that were bubbled when the placeholder was
+   *   rendered.
    */
-  protected function assertPlaceholderRenderCache($cid_parts, array $expected_data) {
+  protected function assertPlaceholderRenderCache($cid_parts, array $bubbled_cache_contexts, array $expected_data) {
     if ($cid_parts !== FALSE) {
+      if ($bubbled_cache_contexts) {
+        // Verify render cached placeholder.
+        $cached_element = $this->memoryCache->get(implode(':', $cid_parts))->data;
+        $expected_redirect_element = [
+          '#cache_redirect' => TRUE,
+          '#cache' => $expected_data['#cache'] + [
+            'keys' => $cid_parts,
+            'bin' => 'render',
+          ],
+        ];
+        $this->assertEquals($expected_redirect_element, $cached_element, 'The correct cache redirect exists.');
+      }
+
       // Verify render cached placeholder.
-      $cached_element = $this->memoryCache->get(implode(':', $cid_parts))->data;
+      $cached = $this->memoryCache->get(implode(':', array_merge($cid_parts, $bubbled_cache_contexts)));
+      $cached_element = $cached->data;
       $this->assertEquals($expected_data, $cached_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by the placeholder being replaced.');
     }
   }
@@ -402,7 +578,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *
    * @dataProvider providerPlaceholders
    */
-  public function testUncacheableParent($element, $args, array $expected_placeholder_render_array, $placeholder_cid_parts, array $placeholder_expected_render_cache_array) {
+  public function testUncacheableParent($element, $args, array $expected_placeholder_render_array, $placeholder_cid_parts, array $bubbled_cache_contexts, array $bubbled_cache_tags, array $placeholder_expected_render_cache_array) {
     if ($placeholder_cid_parts) {
       $this->setupMemoryCache();
     }
@@ -422,7 +598,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
       'dynamic_animal' => $args[0],
     ];
     $this->assertSame($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the placeholder #lazy_builder callback exist.');
-    $this->assertPlaceholderRenderCache($placeholder_cid_parts, $placeholder_expected_render_cache_array);
+    $this->assertPlaceholderRenderCache($placeholder_cid_parts, $bubbled_cache_contexts, $placeholder_expected_render_cache_array);
   }
 
   /**
@@ -434,14 +610,15 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *
    * @dataProvider providerPlaceholders
    */
-  public function testCacheableParent($test_element, $args, array $expected_placeholder_render_array, $placeholder_cid_parts, array $placeholder_expected_render_cache_array) {
+  public function testCacheableParent($test_element, $args, array $expected_placeholder_render_array, $placeholder_cid_parts, array $bubbled_cache_contexts, array $bubbled_cache_tags, array $placeholder_expected_render_cache_array) {
     $element = $test_element;
     $this->setupMemoryCache();
 
     $this->setUpRequest('GET');
 
     $token = hash('crc32b', serialize($expected_placeholder_render_array));
-    $expected_placeholder_markup = '<drupal-render-placeholder callback="Drupal\Tests\Core\Render\PlaceholdersTest::callback" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>';
+    $placeholder_callback = $expected_placeholder_render_array['#lazy_builder'][0];
+    $expected_placeholder_markup = '<drupal-render-placeholder callback="' . $placeholder_callback . '" arguments="0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>';
     $this->assertSame($expected_placeholder_markup, Html::normalize($expected_placeholder_markup), 'Placeholder unaltered by Html::normalize() which is used by FilterHtmlCorrector.');
 
     // GET request: #cache enabled, cache miss.
@@ -456,30 +633,105 @@ class RendererPlaceholdersTest extends RendererTestBase {
       'dynamic_animal' => $args[0],
     ];
     $this->assertSame($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the placeholder #lazy_builder callback exist.');
-    $this->assertPlaceholderRenderCache($placeholder_cid_parts, $placeholder_expected_render_cache_array);
+    $this->assertPlaceholderRenderCache($placeholder_cid_parts, $bubbled_cache_contexts, $placeholder_expected_render_cache_array);
 
     // GET request: validate cached data.
-    $cached_element = $this->memoryCache->get('placeholder_test_GET')->data;
-    $expected_element = [
-      '#markup' => '<p>#cache enabled, GET</p>' . $expected_placeholder_markup,
-      '#attached' => [
-        'drupalSettings' => [
-          'foo' => 'bar',
+    $cached = $this->memoryCache->get('placeholder_test_GET');
+    // There are three edge cases, where the shape of the render cache item for
+    // the parent (with CID 'placeholder_test_GET') is vastly different. These
+    // are the cases where:
+    // - the placeholder is uncacheable (because it has no #cache[keys]), and;
+    // - cacheability metadata that meets auto_placeholder_conditions is bubbled
+    $has_uncacheable_lazy_builder = !isset($test_element['placeholder']['#cache']['keys']) && isset($test_element['placeholder']['#lazy_builder']);
+    // Edge cases: always where both bubbling of an auto-placeholdering
+    // condition happens from within a #lazy_builder that is uncacheable.
+    // - uncacheable + A5 (cache max-age)
+    // @todo in https://www.drupal.org/node/2559847
+    // - uncacheable + A6 (cache context)
+    $edge_case_a6_uncacheable = $has_uncacheable_lazy_builder && $test_element['placeholder']['#lazy_builder'][0] === 'Drupal\Tests\Core\Render\PlaceholdersTest::callbackPerUser';
+    // - uncacheable + A7 (cache tag)
+    $edge_case_a7_uncacheable = $has_uncacheable_lazy_builder && $test_element['placeholder']['#lazy_builder'][0] === 'Drupal\Tests\Core\Render\PlaceholdersTest::callbackTagCurrentTemperature';
+    // The redirect-cacheable edge case: a high-cardinality cache context is
+    // bubbled from a #lazy_builder callback for an uncacheable placeholder. The
+    // element containing the uncacheable placeholder has cache keys set, and
+    // due to the bubbled cache contexts it creates a cache redirect.
+    if ($edge_case_a6_uncacheable) {
+      $cached_element = $cached->data;
+      $expected_redirect = [
+        '#cache_redirect' => TRUE,
+        '#cache' => [
+          'keys' => ['placeholder_test_GET'],
+          'contexts' => ['user'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+          'bin' => 'render',
         ],
-        'placeholders' => [
-          $expected_placeholder_markup => [
-            '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', $args],
+      ];
+      $this->assertEquals($expected_redirect, $cached_element);
+      // Follow the redirect.
+      $cached_element = $this->memoryCache->get('placeholder_test_GET:' . implode(':', $bubbled_cache_contexts))->data;
+      $expected_element = [
+        '#markup' => '<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>',
+        '#attached' => [
+          'drupalSettings' => [
+            'foo' => 'bar',
+            'dynamic_animal' => $args[0],
           ],
         ],
-      ],
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => Cache::PERMANENT,
-      ],
-    ];
-    $expected_element['#attached']['placeholders'][$expected_placeholder_markup] = $expected_placeholder_render_array;
-    $this->assertEquals($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by placeholder #lazy_builder callbacks.');
+        '#cache' => [
+          'contexts' => $bubbled_cache_contexts,
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+      ];
+      $this->assertEquals($expected_element, $cached_element, 'The parent is render cached with a redirect in ase a cache context is bubbled from an uncacheable child (no #cache[keys]) with a #lazy_builder.');
+    }
+    // The normally cacheable edge case: a high-invalidation frequency cache tag
+    // is bubbled from a #lazy_builder callback for an uncacheable placeholder.
+    // The element containing the uncacheable placeholder has cache keys set,
+    // and also has the bubbled cache tags.
+    elseif ($edge_case_a7_uncacheable) {
+      $cached_element = $cached->data;
+      $expected_element = [
+        '#markup' => '<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>',
+        '#attached' => [
+          'drupalSettings' => [
+            'foo' => 'bar',
+            'dynamic_animal' => $args[0],
+          ],
+        ],
+        '#cache' => [
+          'contexts' => [],
+          'tags' => $bubbled_cache_tags,
+          'max-age' => Cache::PERMANENT,
+        ],
+      ];
+      $this->assertEquals($expected_element, $cached_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by placeholder #lazy_builder callbacks.');
+    }
+    // The regular case.
+    else {
+      $cached_element = $cached->data;
+      $expected_element = [
+        '#markup' => '<p>#cache enabled, GET</p>' . $expected_placeholder_markup,
+        '#attached' => [
+          'drupalSettings' => [
+            'foo' => 'bar',
+          ],
+          'placeholders' => [
+            $expected_placeholder_markup => [
+              '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', $args],
+            ],
+          ],
+        ],
+        '#cache' => [
+          'contexts' => [],
+          'tags' => $bubbled_cache_tags,
+          'max-age' => Cache::PERMANENT,
+        ],
+      ];
+      $expected_element['#attached']['placeholders'][$expected_placeholder_markup] = $expected_placeholder_render_array;
+      $this->assertEquals($expected_element, $cached_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by placeholder #lazy_builder callbacks.');
+    }
 
     // GET request: #cache enabled, cache hit.
     $element = $test_element;
@@ -527,7 +779,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Even when the child element's placeholder is cacheable, it should not
     // generate a render cache item.
-    $this->assertPlaceholderRenderCache(FALSE, []);
+    $this->assertPlaceholderRenderCache(FALSE, [], []);
   }
 
   /**

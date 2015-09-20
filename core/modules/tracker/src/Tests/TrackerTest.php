@@ -90,6 +90,12 @@ class TrackerTest extends WebTestBase {
     // Assert cache tags for the action/tabs blocks, visible node, and node list
     // cache tag.
     $expected_tags = Cache::mergeTags($published->getCacheTags(), $published->getOwner()->getCacheTags());
+    // Because the 'user.permissions' cache context is being optimized away.
+    $role_tags = [];
+    foreach ($this->user->getRoles() as $rid) {
+      $role_tags[] = "config:user.role.$rid";
+    }
+    $expected_tags = Cache::mergeTags($expected_tags, $role_tags);
     $block_tags = [
       'block_view',
       'config:block.block.page_actions_block',
@@ -170,6 +176,12 @@ class TrackerTest extends WebTestBase {
     $expected_tags = Cache::mergeTags($my_published->getCacheTags(), $my_published->getOwner()->getCacheTags());
     $expected_tags = Cache::mergeTags($expected_tags, $other_published_my_comment->getCacheTags());
     $expected_tags = Cache::mergeTags($expected_tags, $other_published_my_comment->getOwner()->getCacheTags());
+    // Because the 'user.permissions' cache context is being optimized away.
+    $role_tags = [];
+    foreach ($this->user->getRoles() as $rid) {
+      $role_tags[] = "config:user.role.$rid";
+    }
+    $expected_tags = Cache::mergeTags($expected_tags, $role_tags);
     $block_tags = [
       'block_view',
       'config:block.block.page_actions_block',
@@ -201,11 +213,13 @@ class TrackerTest extends WebTestBase {
 
     // Test escaping of title on user's tracker tab.
     \Drupal::service('module_installer')->install(['user_hooks_test']);
+    Cache::invalidateTags(['rendered']);
     \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertEscaped('<em>' . $this->user->id() . '</em>');
 
     \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
+    Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoEscaped('<em>' . $this->user->id() . '</em>');
     $this->assertRaw('<em>' . $this->user->id() . '</em>');

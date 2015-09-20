@@ -102,6 +102,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:block.block.bartik_local_tasks',
       'node_view',
       'node:' . $node_1->id(),
+      'user:0',
       'user:' . $author_1->id(),
       'config:filter.format.basic_html',
       'config:system.menu.account',
@@ -152,6 +153,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       // FinishResponseSubscriber adds this cache tag to responses that have the
       // 'user.permissions' cache context for anonymous users.
       'config:user.role.anonymous',
+      'user:0',
     ));
   }
 

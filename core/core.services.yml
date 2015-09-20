@@ -1491,12 +1491,16 @@ services:
     tags:
       - { name: mime_type_guesser }
     lazy: true
+  render_placeholder_generator:
+    class: Drupal\Core\Render\PlaceholderGenerator
+    arguments: ['%renderer.config%']
+    public: false
   render_cache:
-    class: Drupal\Core\Render\RenderCache
-    arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager']
+    class: Drupal\Core\Render\PlaceholderingRenderCache
+    arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager', '@render_placeholder_generator']
   renderer:
     class: Drupal\Core\Render\Renderer
-    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_cache', '@request_stack', '%renderer.config%']
+    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_placeholder_generator', '@render_cache', '@request_stack', '%renderer.config%']
   early_rendering_controller_wrapper_subscriber:
     class: Drupal\Core\EventSubscriber\EarlyRenderingControllerWrapperSubscriber
     arguments: ['@controller_resolver', '@renderer']
