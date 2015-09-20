@@ -217,6 +217,11 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->drupalGet('admin/config/people/accounts');
     $this->assertFieldChecked('edit-language-content-translation');
+
+    // Make sure account settings can be saved.
+    $this->drupalPostForm('admin/config/people/accounts', array('anonymous' => 'Save me please!'), 'Save configuration');
+    $this->assertFieldByName('anonymous', 'Save me please!', 'Anonymous name has been changed.');
+    $this->assertText('The configuration options have been saved.');
   }
 
   /**

@@ -471,7 +471,14 @@ function content_translation_language_configuration_element_process(array $eleme
     );
 
     $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-    $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
+    // Only add the submit handler on the submit button if the #submit property
+    // is already available, otherwise this breaks the form submit function.
+    if (isset($form['actions'][$submit_name]['#submit'])) {
+      $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
+    }
+    else {
+      $form['#submit'][] = 'content_translation_language_configuration_element_submit';
+    }
   }
   return $element;
 }
