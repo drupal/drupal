@@ -39,10 +39,21 @@ use Drupal\Component\Utility\SafeStringInterface;
  *  {# Produces <cat class="cat black-cat white-cat black-white-cat my-custom-class" id="socks"> #}
  * @endcode
  *
- * The attribute keys and values are automatically sanitized for output with
- * Html::escape() and the entire attribute string is marked safe for output.
+ * The attribute keys and values are automatically escaped for output with
+ * Html::escape(). No protocol filtering is applied, so when using user-entered
+ * input as a value for an attribute that expects an URI (href, src, ...),
+ * UrlHelper::stripDangerousProtocols() should be used to ensure dangerous
+ * protocols (such as 'javascript:') are removed. For example:
+ * @code
+ *  $path = 'javascript:alert("xss");';
+ *  $path = UrlHelper::stripDangerousProtocols($path);
+ *  $attributes = new Attribute(array('href' => $path));
+ *  echo '<a' . $attributes . '>';
+ *  // Produces <a href="alert(&quot;xss&quot;);">
+ * @endcode
  *
  * @see \Drupal\Component\Utility\Html::escape()
+ * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
  */
 class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface {
 
