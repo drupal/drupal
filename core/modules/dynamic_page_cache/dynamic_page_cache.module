@@ -14,7 +14,7 @@ function dynamic_page_cache_help($route_name, RouteMatchInterface $route_match) 
   switch ($route_name) {
     case 'help.page.dynamic_page_cache':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Dynamic Page Cache module caches pages for all users in the database, handling dynamic content correctly. For more information, see the <a href="!dynamic_page_cache-documentation">online documentation for the Dynamic Page Cache module</a>.', ['!dynamic_page_cache-documentation' => 'https://www.drupal.org/documentation/modules/dynamic_page_cache']) . '</p>';
+      $output .= '<p>' . t('The Dynamic Page Cache module caches pages for all users in the database, handling dynamic content correctly. For more information, see the <a href=":dynamic_page_cache-documentation">online documentation for the Dynamic Page Cache module</a>.', [':dynamic_page_cache-documentation' => 'https://www.drupal.org/documentation/modules/dynamic_page_cache']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Speeding up your site') . '</dt>';

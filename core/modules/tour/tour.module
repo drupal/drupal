@@ -16,13 +16,13 @@ function tour_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.tour':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t("The Tour module provides users with guided tours of the site interface. Each tour consists of several tips that highlight elements of the user interface, guide the user through a workflow, or explain key concepts of the website. For more information, see <a href='!tour'>the online documentation for the Tour module</a>.", array('!tour' => 'https://www.drupal.org/documentation/modules/tour')) . '</p>';
+      $output .= '<p>' . t("The Tour module provides users with guided tours of the site interface. Each tour consists of several tips that highlight elements of the user interface, guide the user through a workflow, or explain key concepts of the website. For more information, see <a href=':tour'>the online documentation for the Tour module</a>.", array(':tour' => 'https://www.drupal.org/documentation/modules/tour')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Viewing tours') . '</dt>';
       $output .= '<dd>' . t("If a tour is available on a page, a <em>Tour</em> button will be visible in the toolbar. If you click this button the first tip of the tour will appear. The tour continues after clicking the <em>Next</em> button in the tip. To see a tour users must have the permission <em>Access tour</em> and JavaScript must be enabled in the browser") . '</dd>';
       $output .= '<dt>' . t('Creating tours') . '</dt>';
-      $output .= '<dd>' . t("Tours can be written as YAML-documents with a text editor, or using the contributed <a href='!tour_ui'>Tour UI</a> module. For more information, see <a href='!doc_url'>the online documentation for writing tours</a>.", array('!doc_url' => 'https://www.drupal.org/developing/api/tour', '!tour_ui' => 'https://www.drupal.org/project/tour_ui')) . '</dd>';
+      $output .= '<dd>' . t("Tours can be written as YAML-documents with a text editor, or using the contributed <a href=':tour_ui'>Tour UI</a> module. For more information, see <a href=':doc_url'>the online documentation for writing tours</a>.", array(':doc_url' => 'https://www.drupal.org/developing/api/tour', ':tour_ui' => 'https://www.drupal.org/project/tour_ui')) . '</dd>';
       $output .= '</dl>';
       return $output;
   }

@@ -22,11 +22,11 @@ function color_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.color':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to change the color scheme (color of links, backgrounds, text, and other theme elements) of compatible themes. For more information, see <a href="!color_do">the online documentation for the Color module</a>.', array('!color_do' => 'https://www.drupal.org/documentation/modules/color')) . '</p>';
+      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to change the color scheme (color of links, backgrounds, text, and other theme elements) of compatible themes. For more information, see <a href=":color_do">the online documentation for the Color module</a>.', array(':color_do' => 'https://www.drupal.org/documentation/modules/color')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Changing colors') . '</dt>';
-      $output .= '<dd><p>' . t('To change the color settings, select the <em>Settings</em> link for your theme on the <a href="!appearance">Appearance</a> page. If the color picker does not appear then the theme is not compatible with the Color module.', array('!appearance' => \Drupal::url('system.themes_page'))) . '</p>';
+      $output .= '<dd><p>' . t('To change the color settings, select the <em>Settings</em> link for your theme on the <a href=":appearance">Appearance</a> page. If the color picker does not appear then the theme is not compatible with the Color module.', array(':appearance' => \Drupal::url('system.themes_page'))) . '</p>';
       $output .= '<p>' . t('The Color module saves a modified copy of the theme\'s specified stylesheets in the files directory. If you make any manual changes to your theme\'s stylesheet, <em>you must save your color settings again, even if you haven\'t changed the colors</em>. This step is required because the module stylesheets in the files directory need to be recreated to reflect your changes.') . '</p></dd>';
       $output .= '</dl>';
       return $output;

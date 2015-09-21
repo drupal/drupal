@@ -15,7 +15,7 @@ function migrate_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.migrate':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>';
-      $output .= t('The Migrate module provides a framework for migrating data, usually from an external source into your site. It does not provide a user interface. For more information, see the <a href="!migrate">online documentation for the Migrate module</a>.', array('!migrate' => 'https://www.drupal.org/documentation/modules/migrate'));
+      $output .= t('The Migrate module provides a framework for migrating data, usually from an external source into your site. It does not provide a user interface. For more information, see the <a href=":migrate">online documentation for the Migrate module</a>.', array(':migrate' => 'https://www.drupal.org/documentation/modules/migrate'));
       $output .= '</p>';
       return $output;
   }

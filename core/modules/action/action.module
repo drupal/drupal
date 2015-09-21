@@ -15,13 +15,13 @@ function action_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.action':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Actions module provides tasks that can be executed by the site such as unpublishing content, sending email messages, or blocking a user. Other modules can trigger these actions when specific system events happen; for example, when new content is posted or when a user logs in. Modules can also provide additional actions. For more information, see the <a href="!documentation">online documentation for the Action module</a>.', array('!documentation' => 'https://www.drupal.org/documentation/modules/action')) . '</p>';
+      $output .= '<p>' . t('The Actions module provides tasks that can be executed by the site such as unpublishing content, sending email messages, or blocking a user. Other modules can trigger these actions when specific system events happen; for example, when new content is posted or when a user logs in. Modules can also provide additional actions. For more information, see the <a href=":documentation">online documentation for the Action module</a>.', array(':documentation' => 'https://www.drupal.org/documentation/modules/action')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Using simple actions') . '</dt>';
-      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href="!actions">Actions page</a>.', array('!actions' => \Drupal::url('entity.action.collection'))) . '</dd>';
+      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href=":actions">Actions page</a>.', array(':actions' => \Drupal::url('entity.action.collection'))) . '</dd>';
       $output .= '<dt>' . t('Creating and configuring advanced actions') . '</dt>';
-      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href="!actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', array('!actions' => \Drupal::url('entity.action.collection'))) . '</dd>';
+      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href=":actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', array(':actions' => \Drupal::url('entity.action.collection'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 

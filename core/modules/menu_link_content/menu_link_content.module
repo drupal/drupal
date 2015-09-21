@@ -18,10 +18,10 @@ function menu_link_content_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
       if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-        $output .= ' ' . t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href="!menu-help">Menu UI module help page</a> and the <a href="!drupal-org-help">online documentation for the Custom Menu Links module</a>.', array('!menu-help' => \Drupal::url('help.page', array('name' => 'menu_ui')), '!drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link'));
+        $output .= ' ' . t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', array(':menu-help' => \Drupal::url('help.page', array('name' => 'menu_ui')), ':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link'));
       }
       else {
-        $output .= ' ' . t('For more information, see the <a href="!drupal-org-help">online documentation for the Custom Menu Links module</a>. If you enable the Menu UI module, it provides an interface for managing menus and menu links.', array('!drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link'));
+        $output .= ' ' . t('For more information, see the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>. If you enable the Menu UI module, it provides an interface for managing menus and menu links.', array(':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link'));
       }
       $output .= '</p>';
       return $output;

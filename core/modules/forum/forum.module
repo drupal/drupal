@@ -23,7 +23,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped.') . '</p>';
-      $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href="!node_help">Node module help page</a>.', array('!node_help'=>\Drupal::url('help.page', array('name' => 'node')))) . '</p>';
+      $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', array(':node_help'=>\Drupal::url('help.page', array('name' => 'node')))) . '</p>';
       $output .= '<p>' . t('A forum is represented by a hierarchical structure, consisting of:');
       $output .= '<ul>';
       $output .= '<li>' . t('<em>Forums</em> (for example, <em>Recipes for cooking vegetables</em>)') . '</li>';
@@ -32,15 +32,15 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<li>' . t('Optional <em>containers</em>, used to group similar forums. Forums can be placed inside containers, and vice versa.').'</li>';
       $output .= '</ul>';
       $output .= '</p>';
-      $output .= '<p>' . t('For more information, see <a href="!forum">the online documentation for the Forum module</a>.', array('!forum' => 'https://www.drupal.org/documentation/modules/forum')) . '</p>';
+      $output .= '<p>' . t('For more information, see <a href=":forum">the online documentation for the Forum module</a>.', array(':forum' => 'https://www.drupal.org/documentation/modules/forum')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Setting up the forum structure') . '</dt>';
-      $output .= '<dd>' . t('Visit the <a href="!forums">Forums page</a> to set up containers and forums to hold your discussion topics.', array('!forums' => \Drupal::url('forum.overview'))) . '</dd>';
+      $output .= '<dd>' . t('Visit the <a href=":forums">Forums page</a> to set up containers and forums to hold your discussion topics.', array(':forums' => \Drupal::url('forum.overview'))) . '</dd>';
       $output .= '<dt>' . t('Starting a discussion') . '</dt>';
-      $output .= '<dd>' . t('The <a href="!create-topic">Forum topic</a> link on the <a href="!content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', array('!create-topic' => \Drupal::url('node.add', array('node_type' => 'forum')), '!content-add' => \Drupal::url('node.add_page'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href=":create-topic">Forum topic</a> link on the <a href=":content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', array(':create-topic' => \Drupal::url('node.add', array('node_type' => 'forum')), ':content-add' => \Drupal::url('node.add_page'))) . '</dd>';
       $output .= '<dt>' . t('Navigating in the forum') . '</dt>';
-      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the Tools menu that links to the <a href="!forums">Forums page</a>.', array('!forums' => \Drupal::url('forum.index'))) . '</dd>';
+      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the Tools menu that links to the <a href=":forums">Forums page</a>.', array(':forums' => \Drupal::url('forum.index'))) . '</dd>';
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';
       $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
       $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';
@@ -75,7 +75,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('A forum holds related forum topics.') . '</p>';
 
     case 'forum.settings':
-      return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href="!forum-structure">forum structure page</a>.', array('!forum-structure' => \Drupal::url('forum.overview'))) . '</p>';
+      return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href=":forum-structure">forum structure page</a>.', array(':forum-structure' => \Drupal::url('forum.overview'))) . '</p>';
   }
 }
 
