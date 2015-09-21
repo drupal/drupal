@@ -73,7 +73,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
 
     $operators = $this->getMatchOperatorOptions();
     $summary[] = t('Autocomplete matching: @match_operator', array('@match_operator' => $operators[$this->getSetting('match_operator')]));
-    $summary[] = t('Textfield size: !size', array('!size' => $this->getSetting('size')));
+    $summary[] = t('Textfield size: @size', array('@size' => $this->getSetting('size')));
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
       $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
