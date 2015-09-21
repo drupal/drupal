@@ -86,7 +86,7 @@ class NumericFormatPluralTest extends ViewTestBase {
     $formula = 'nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);';
     $header = new PoHeader();
     list($nplurals, $formula) = $header->parsePluralForms($formula);
-    \Drupal::state()->set('locale.translation.plurals', ['sl' => ['plurals' => $nplurals, 'formula' => $formula]]);
+    \Drupal::service('locale.plural.formula')->setPluralFormula('sl', $nplurals, $formula);
 
     // Change the view to Slovenian.
     $config = $this->config('views.view.numeric_test');

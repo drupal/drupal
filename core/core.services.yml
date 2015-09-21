@@ -671,9 +671,7 @@ services:
       - { name: string_translator, priority: 30 }
   string_translation:
     class: Drupal\Core\StringTranslation\TranslationManager
-    arguments: ['@language_manager', '@state']
-    calls:
-      - [initLanguageManager]
+    arguments: ['@language.default']
     tags:
       - { name: service_collector, tag: string_translator, call: addTranslator }
   database.replica:

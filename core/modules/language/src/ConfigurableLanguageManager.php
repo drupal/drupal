@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\Url;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -469,7 +470,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         unset($predefined[$key]);
         continue;
       }
-      $predefined[$key] = $this->t($value[0]);
+      $predefined[$key] = new TranslatableString($value[0]);
     }
     asort($predefined);
     return $predefined;

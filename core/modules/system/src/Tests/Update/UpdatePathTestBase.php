@@ -284,11 +284,8 @@ abstract class UpdatePathTestBase extends WebTestBase {
       ->register('language.default', 'Drupal\Core\Language\LanguageDefault')
       ->addArgument('%language.default_values%');
     $container
-      ->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('language.default'));
-    $container
       ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
-      ->addArgument(new Reference('language_manager'));
+      ->addArgument(new Reference('language.default'));
     \Drupal::setContainer($container);
 
     require_once __DIR__ . '/../../../../../includes/install.inc';

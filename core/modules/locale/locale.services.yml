@@ -14,6 +14,9 @@ services:
   locale.project:
     class: Drupal\locale\LocaleProjectStorage
     arguments: ['@keyvalue']
+  locale.plural.formula:
+    class: Drupal\locale\PluralFormula
+    arguments: ['@language_manager', '@state']
   string_translator.locale.lookup:
     class: Drupal\locale\LocaleTranslation
     arguments: ['@locale.storage', '@cache.default', '@lock', '@config.factory', '@language_manager', '@request_stack']

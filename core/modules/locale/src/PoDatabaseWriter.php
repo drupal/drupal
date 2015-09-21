@@ -175,11 +175,7 @@ class PoDatabaseWriter implements PoWriterInterface {
       $plural = $header->getPluralForms();
       if (isset($plural) && $p = $header->parsePluralForms($plural)) {
         list($nplurals, $formula) = $p;
-        $locale_plurals[$langcode] = array(
-          'plurals' => $nplurals,
-          'formula' => $formula,
-        );
-        \Drupal::state()->set('locale.translation.plurals', $locale_plurals);
+        \Drupal::service('locale.plural.formula')->setPluralFormula($langcode, $nplurals, $formula);
       }
     }
   }

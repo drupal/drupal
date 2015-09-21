@@ -16,14 +16,6 @@ use Drupal\Core\Url;
 interface LanguageManagerInterface {
 
   /**
-   * Injects the string translation service.
-   *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
-   *   The string translation service.
-   */
-  public function setTranslation(TranslationInterface $translation);
-
-  /**
    * Returns whether or not the site has more than one language added.
    *
    * @return bool

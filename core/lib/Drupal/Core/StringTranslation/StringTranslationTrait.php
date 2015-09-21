@@ -70,12 +70,17 @@ trait StringTranslationTrait {
   /**
    * Returns the number of plurals supported by a given language.
    *
-   * See the
-   * \Drupal\Core\StringTranslation\TranslationInterface::getNumberOfPlurals()
+   * See the \Drupal\locale\PluralFormulaInterface::getNumberOfPlurals()
    * documentation for details.
+   *
+   * @see \Drupal\locale\PluralFormulaInterface::getNumberOfPlurals()
    */
   protected function getNumberOfPlurals($langcode = NULL) {
-    return $this->getStringTranslation()->getNumberOfPlurals($langcode);
+    if (\Drupal::hasService('locale.plural.formula')) {
+      return \Drupal::service('locale.plural.formula')->getNumberOfPlurals($langcode);
+    }
+    // We assume 2 plurals if Locale's services are not available.
+    return 2;
   }
 
   /**

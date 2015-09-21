@@ -8,21 +8,13 @@
 namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\State\StateInterface;
+use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 
 /**
  * Defines a chained translation implementation combining multiple translators.
  */
 class TranslationManager implements TranslationInterface, TranslatorInterface {
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
 
   /**
    * An array of active translators keyed by priority.
@@ -54,35 +46,13 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
   protected $defaultLangcode;
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a TranslationManager object.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   (optional) The state service.
+   * @param \Drupal\Core\Language\LanguageDefault $default_language
+   *   The default language.
    */
-  public function __construct(LanguageManagerInterface $language_manager, StateInterface $state = NULL) {
-    $this->languageManager = $language_manager;
-    $this->defaultLangcode = $language_manager->getDefaultLanguage()->getId();
-    $this->state = $state;
-  }
-
-  /**
-   * Initializes the injected language manager with the translation manager.
-   *
-   * This should be called right after instantiating the translation manager to
-   * make it available to the language manager without introducing a circular
-   * dependency.
-   */
-  public function initLanguageManager() {
-    $this->languageManager->setTranslation($this);
+  public function __construct(LanguageDefault $default_language) {
+    $this->defaultLangcode = $default_language->get()->getId();
   }
 
   /**
@@ -227,23 +197,6 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
     foreach ($this->sortedTranslators as $translator) {
       $translator->reset();
     }
-  }
-
-  /**
-   * @inheritdoc.
-   */
-  public function getNumberOfPlurals($langcode = NULL) {
-    // If the state service is not injected, we assume 2 plural variants are
-    // allowed. This may happen in the installer for simplicity. We also assume
-    // 2 plurals if there is no explicit information yet.
-    if (isset($this->state)) {
-      $langcode = $langcode ?: $this->languageManager->getCurrentLanguage()->getId();
-      $plural_formulas = $this->state->get('locale.translation.plurals') ?: array();
-      if (isset($plural_formulas[$langcode]['plurals'])) {
-        return $plural_formulas[$langcode]['plurals'];
-      }
-    }
-    return 2;
   }
 
 }

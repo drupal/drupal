@@ -346,11 +346,8 @@ function install_begin_request($class_loader, &$install_state) {
     ->register('language.default', 'Drupal\Core\Language\LanguageDefault')
     ->addArgument('%language.default_values%');
   $container
-    ->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-    ->addArgument(new Reference('language.default'));
-  $container
     ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
-    ->addArgument(new Reference('language_manager'));
+    ->addArgument(new Reference('language.default'));
 
   // Register the stream wrapper manager.
   $container

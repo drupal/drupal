@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Installer;
 
+use Drupal\Core\Language\LanguageManager;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
@@ -26,7 +27,7 @@ class InstallerLanguagePageTest extends InstallerTestBase {
 
     // Check that all predefined languages show up with their native names.
     $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');
-    foreach (\Drupal::languageManager()->getStandardLanguageList() as $langcode => $names) {
+    foreach (LanguageManager::getStandardLanguageList() as $langcode => $names) {
       $this->assertOption('edit-langcode', $langcode);
       $this->assertRaw('>' . $names[1] . '<');
     }

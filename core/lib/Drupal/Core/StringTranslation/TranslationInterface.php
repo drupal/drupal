@@ -102,16 +102,4 @@ interface TranslationInterface {
    */
   public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array());
 
-   /**
-    * Returns the number of plurals supported by a given language.
-    *
-    * @param null|string $langcode
-    *   (optional) The language code. If not provided, the current language
-    *   will be used.
-    *
-    * @return int
-    *   Number of plural variants supported by the given language.
-    */
-   public function getNumberOfPlurals($langcode = NULL);
-
 }

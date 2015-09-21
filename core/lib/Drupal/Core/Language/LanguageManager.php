@@ -7,9 +7,7 @@
 
 namespace Drupal\Core\Language;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\Url;
 
@@ -18,13 +16,6 @@ use Drupal\Core\Url;
  */
 class LanguageManager implements LanguageManagerInterface {
   use DependencySerializationTrait;
-
-  /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translation;
 
   /**
    * A static cache of translated language lists.
@@ -54,22 +45,6 @@ class LanguageManager implements LanguageManagerInterface {
    */
   public function __construct(LanguageDefault $default_language) {
     $this->defaultLanguage = $default_language;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setTranslation(TranslationInterface $translation) {
-    $this->translation = $translation;
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * @see \Drupal\Core\StringTranslation\TranslationInterface()
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation ? $this->translation->translate($string, $args, $options) : SafeMarkup::format($string, $args);
   }
 
   /**
@@ -187,15 +162,15 @@ class LanguageManager implements LanguageManagerInterface {
    */
   public function getLanguageName($langcode) {
     if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      return $this->t('None');
+      return new TranslatableString('None');
     }
     if ($language = $this->getLanguage($langcode)) {
       return $language->getName();
     }
     if (empty($langcode)) {
-      return $this->t('Unknown');
+      return new TranslatableString('Unknown');
     }
-    return $this->t('Unknown (@langcode)', array('@langcode' => $langcode));
+    return new TranslatableString('Unknown (@langcode)', array('@langcode' => $langcode));
   }
 
   /**
@@ -377,7 +352,6 @@ class LanguageManager implements LanguageManagerInterface {
     return $this->getCurrentLanguage();
   }
 
-
   /**
    * Filters the full list of languages based on the value of the flag.
    *
@@ -409,7 +383,7 @@ class LanguageManager implements LanguageManagerInterface {
       $default = new Language(
         array(
           'id' => $defaultLanguage->getId(),
-          'name' => $this->t("Site's default language (@lang_name)",
+          'name' => new TranslatableString("Site's default language (@lang_name)",
             array('@lang_name' => $defaultLanguage->getName())),
           'direction' => $defaultLanguage->getDirection(),
           'weight' => $defaultLanguage->getWeight(),

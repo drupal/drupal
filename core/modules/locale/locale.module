@@ -276,8 +276,6 @@ function locale_translatable_language_list() {
 function locale_get_plural($count, $langcode = NULL) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-  // Used to locally cache the plural formulas for all languages.
-  $plural_formulas = &drupal_static(__FUNCTION__, array());
   // Used to store precomputed plural indexes corresponding to numbers
   // individually for each language.
   $plural_indexes = &drupal_static(__FUNCTION__ . ':plurals', array());
@@ -286,18 +284,17 @@ function locale_get_plural($count, $langcode = NULL) {
 
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
-    if (empty($plural_formulas)) {
-      $plural_formulas = \Drupal::state()->get('locale.translation.plurals') ?: array();
-    }
+    $plural_formulas = \Drupal::service('locale.plural.formula')->getFormula($langcode);
+
     // If there is a plural formula for the language, evaluate it for the given
     // $count and statically cache the result for the combination of language
     // and count, since the result will always be identical.
-    if (!empty($plural_formulas[$langcode])) {
+    if (!empty($plural_formulas)) {
       // Plural formulas are stored as an array for 0-199. 100 is the highest
       // modulo used but storing 0-99 is not enough because below 100 we often
       // find exceptions (1, 2, etc).
       $index = $count > 199 ? 100 + ($count % 100) : $count;
-      $plural_indexes[$langcode][$count] = isset($plural_formulas[$langcode]['formula'][$index]) ? $plural_formulas[$langcode]['formula'][$index] : $plural_formulas[$langcode]['formula']['default'];
+      $plural_indexes[$langcode][$count] = isset($plural_formulas[$index]) ? $plural_formulas[$index] : $plural_formulas['default'];
     }
     // In case there is no plural formula for English (no imported translation
     // for English), use a default formula.
@@ -1272,9 +1269,9 @@ function _locale_rebuild_js($langcode = NULL) {
       'strings' => $translations,
     );
 
-    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
-    if (!empty($locale_plurals[$language->getId()]['formula'])) {
-      $data['pluralFormula'] = $locale_plurals[$language->getId()]['formula'];
+    $locale_plurals = \Drupal::service('locale.plural.formula')->getFormula($language->getId());
+    if ($locale_plurals) {
+      $data['pluralFormula'] = $locale_plurals;
     }
 
     $data = 'window.drupalTranslations = ' . Json::encode($data) . ';';
