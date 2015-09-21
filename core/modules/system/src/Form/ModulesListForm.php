@@ -353,8 +353,8 @@ class ModulesListForm extends FormBase {
     // Check the core compatibility.
     if ($module->info['core'] != \Drupal::CORE_COMPATIBILITY) {
       $compatible = FALSE;
-      $reasons[] = $this->t('This version is not compatible with Drupal !core_version and should be replaced.', array(
-        '!core_version' => \Drupal::CORE_COMPATIBILITY,
+      $reasons[] = $this->t('This version is not compatible with Drupal @core_version and should be replaced.', array(
+        '@core_version' => \Drupal::CORE_COMPATIBILITY,
       ));
     }
 
@@ -362,9 +362,9 @@ class ModulesListForm extends FormBase {
     if (version_compare(phpversion(), $module->info['php']) < 0) {
       $compatible = FALSE;
       $required = $module->info['php'] . (substr_count($module->info['php'], '.') < 2 ? '.*' : '');
-      $reasons[] = $this->t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array(
+      $reasons[] = $this->t('This module requires PHP version @php_required and is incompatible with PHP version @php_version.', array(
         '@php_required' => $required,
-        '!php_version' => phpversion(),
+        '@php_version' => phpversion(),
       ));
     }
 
