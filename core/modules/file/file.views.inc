@@ -24,7 +24,7 @@ function file_field_views_data(FieldStorageConfigInterface $field_storage) {
       'base' => 'file_managed',
       'entity type' => 'file',
       'base field' => 'fid',
-      'label' => t('file from !field_name', array('!field_name' => $field_storage->getName())),
+      'label' => t('file from @field_name', array('@field_name' => $field_storage->getName())),
     );
   }
 

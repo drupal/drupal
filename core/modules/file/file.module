@@ -1182,7 +1182,7 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   if ($files_uploaded) {
     if (!$files = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
       \Drupal::logger('file')->notice('The file upload failed. %upload', array('%upload' => $upload_name));
-      $form_state->setError($element, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
+      $form_state->setError($element, t('Files in the @name field were unable to be uploaded.', array('@name' => $element['#title'])));
       return array();
     }
 
