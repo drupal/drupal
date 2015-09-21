@@ -57,7 +57,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $summary[] = t('Number of summary rows: !rows', array('!rows' => $this->getSetting('summary_rows')));
+    $summary[] = t('Number of summary rows: @rows', array('@rows' => $this->getSetting('summary_rows')));
 
     return $summary;
   }
