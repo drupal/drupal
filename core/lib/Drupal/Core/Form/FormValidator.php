@@ -296,7 +296,7 @@ class FormValidator implements FormValidatorInterface {
         // form constructors are encouraged to set #title anyway, and then set
         // #title_display to 'invisible'. This improves accessibility.
         elseif (isset($elements['#title'])) {
-          $form_state->setError($elements, $this->t('!name field is required.', array('!name' => $elements['#title'])));
+          $form_state->setError($elements, $this->t('@name field is required.', array('@name' => $elements['#title'])));
         }
         else {
           $form_state->setError($elements);
@@ -331,7 +331,7 @@ class FormValidator implements FormValidatorInterface {
   protected function performRequiredValidation(&$elements, FormStateInterface &$form_state) {
     // Verify that the value is not longer than #maxlength.
     if (isset($elements['#maxlength']) && Unicode::strlen($elements['#value']) > $elements['#maxlength']) {
-      $form_state->setError($elements, $this->t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => Unicode::strlen($elements['#value']))));
+      $form_state->setError($elements, $this->t('@name cannot be longer than %max characters but is currently %length characters long.', array('@name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => Unicode::strlen($elements['#value']))));
     }
 
     if (isset($elements['#options']) && isset($elements['#value'])) {

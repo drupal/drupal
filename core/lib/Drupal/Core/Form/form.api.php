@@ -110,8 +110,8 @@ function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
 function callback_batch_finished($success, $results, $operations) {
   if ($success) {
     // Here we do something meaningful with the results.
-    $message = t("!count items were processed.", array(
-      '!count' => count($results),
+    $message = t("@count items were processed.", array(
+      '@count' => count($results),
       ));
     $list = array(
       '#theme' => 'item_list',
