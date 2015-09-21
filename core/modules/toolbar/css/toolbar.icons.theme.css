@@ -145,9 +145,6 @@
 .toolbar-icon-help-main.is-active:before {
   background-image: url(../../../misc/icons/000000/questionmark-disc.svg);
 }
-.toolbar .toolbar-bar .toolbar-icon:before {
-  min-height: 3em;
-}
 
 @media only screen and (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
@@ -261,20 +258,18 @@
  * Orientation toggle.
  */
 .toolbar .toolbar-toggle-orientation button {
-  height: 16px;
+  height: 39px;
   padding: 0;
   text-indent: -999em;
-  width: 20px;
+  width: 39px;
 }
 .toolbar .toolbar-toggle-orientation button:before {
-  left: 0; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-toggle-orientation button:before {
-  left: auto;
+  left: 0;
   right: 0;
+  margin: 0 auto;
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation .toolbar-icon {
-  padding-right: 0;
+  padding: 0;
 }
 /**
  * In order to support a hover effect on the SVG images, while also supporting
@@ -299,7 +294,7 @@
 .toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
   background-image: url(../../../misc/icons/bebebe/push-up.svg);
 }
-.toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before {
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before,
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:focus:before {
   background-image: url(../../../misc/icons/787878/push-up.svg);
 }
-
