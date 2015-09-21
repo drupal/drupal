@@ -159,7 +159,9 @@ class LinkWidget extends WidgetBase {
   public static function validateTitleElement(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
       $element['title']['#required'] = TRUE;
-      $form_state->setError($element['title'], t('!name field is required.', array('!name' => $element['title']['#title'])));
+      // We expect the field name placeholder value to be wrapped in t() here,
+      // so it won't be escaped again as it's already marked safe.
+      $form_state->setError($element['title'], t('@name field is required.', array('@name' => $element['title']['#title'])));
     }
   }
 
