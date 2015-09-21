@@ -218,7 +218,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $fields['description'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Description'))
-      ->setDescription(t("The parent website's description that comes from the !description element in the feed.", array('!description' => '<description>')));
+      ->setDescription(t("The parent website's description that comes from the @description element in the feed.", array('@description' => '<description>')));
 
     $fields['image'] = BaseFieldDefinition::create('uri')
       ->setLabel(t('Image'))
