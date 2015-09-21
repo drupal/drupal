@@ -383,7 +383,9 @@ class ImageItem extends FileItem {
     if (!empty($element['x']['#value']) || !empty($element['y']['#value'])) {
       foreach (array('x', 'y') as $dimension) {
         if (!$element[$dimension]['#value']) {
-          $form_state->setError($element[$dimension], t('Both a height and width value must be specified in the !name field.', array('!name' => $element['#title'])));
+          // We expect the field name placeholder value to be wrapped in t()
+          // here, so it won't be escaped again as it's already marked safe.
+          $form_state->setError($element[$dimension], t('Both a height and width value must be specified in the @name field.', array('@name' => $element['#title'])));
           return;
         }
       }
