@@ -53,7 +53,7 @@ function hook_config_translation_info(&$info) {
         $info[$entity_type_id . '_fields'] = array(
           'base_route_name' => 'entity.field_config.' . $entity_type_id . '_field_edit_form',
           'entity_type' => 'field_config',
-          'title' => t('!label field'),
+          'title' => t('Title'),
           'class' => '\Drupal\config_translation\ConfigFieldMapper',
           'base_entity_type' => $entity_type_id,
           'weight' => 10,
