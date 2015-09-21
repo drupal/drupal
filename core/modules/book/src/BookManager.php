@@ -357,7 +357,7 @@ class BookManager implements BookManagerInterface {
         '#type' => 'select',
         '#title' => $this->t('Parent item'),
         '#default_value' => $book_link['pid'],
-        '#description' => $this->t('The parent page in the book. The maximum depth for a book and all child pages is !maxdepth. Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => static::BOOK_MAX_DEPTH)),
+        '#description' => $this->t('The parent page in the book. The maximum depth for a book and all child pages is @maxdepth. Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('@maxdepth' => static::BOOK_MAX_DEPTH)),
         '#options' => $this->getTableOfContents($book_link['bid'], $book_link['parent_depth_limit'], array($book_link['nid'])),
         '#attributes' => array('class' => array('book-title-select')),
         '#prefix' => '<div id="edit-book-plid-wrapper">',
