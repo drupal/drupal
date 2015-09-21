@@ -122,7 +122,7 @@ function hook_user_cancel_methods_alter(&$methods) {
 function hook_user_format_name_alter(&$name, $account) {
   // Display the user's uid instead of name.
   if ($account->id()) {
-    $name = t('User !uid', array('!uid' => $account->id()));
+    $name = t('User @uid', array('@uid' => $account->id()));
   }
 }
 
