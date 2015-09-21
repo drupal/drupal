@@ -1513,7 +1513,6 @@ function system_update_8006() {
     'region' => 'content',
     'settings.label' => 'Site branding',
     'settings.label_display' => 0,
-    'settings.cache.max_age' => 0,
     'visibility' => [],
     'weight' => 0,
     'langcode' => $langcode,

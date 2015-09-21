@@ -148,9 +148,7 @@ class BlockCacheTest extends WebTestBase {
    * Test non-cacheable block.
    */
   function testNoCache() {
-    $this->setBlockCacheConfig(array(
-      'max_age' => 0,
-    ));
+    \Drupal::state()->set('block_test.cache_max_age', 0);
 
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
@@ -217,15 +215,6 @@ class BlockCacheTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertResponse(200);
     $this->assertText($old_content, 'Block content cached for the test page.');
-  }
-
-  /**
-   * Private helper method to set the test block's cache configuration.
-   */
-  private function setBlockCacheConfig($cache_config) {
-    $block = $this->block->getPlugin();
-    $block->setConfigurationValue('cache', $cache_config);
-    $this->block->save();
   }
 
 }

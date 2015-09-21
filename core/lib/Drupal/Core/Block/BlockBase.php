@@ -9,13 +9,11 @@ namespace Drupal\Core\Block;
 
 use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Transliteration\TransliterationInterface;
 
@@ -89,10 +87,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       'label' => '',
       'provider' => $this->pluginDefinition['provider'],
       'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
-      'cache' => array(
-        // Blocks are cacheable by default.
-        'max_age' => Cache::PERMANENT,
-      ),
     );
   }
 
@@ -180,23 +174,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       '#default_value' => ($this->configuration['label_display'] === BlockInterface::BLOCK_LABEL_VISIBLE),
       '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
     );
-    // Identical options to the ones for page caching.
-    // @see \Drupal\system\Form\PerformanceForm::buildForm()
-    $period = array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);
-    $period = array_map(array(\Drupal::service('date.formatter'), 'formatInterval'), array_combine($period, $period));
-    $period[0] = '<' . $this->t('no caching') . '>';
-    $period[\Drupal\Core\Cache\Cache::PERMANENT] = $this->t('Forever');
-    $form['cache'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Cache settings'),
-    );
-    $form['cache']['max_age'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Maximum age'),
-      '#description' => $this->t('The maximum time this block may be cached.'),
-      '#default_value' => $this->configuration['cache']['max_age'],
-      '#options' => $period,
-    );
 
     // Add plugin-specific settings for this block type.
     $form += $this->blockForm($form, $form_state);
@@ -244,7 +221,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       $this->configuration['label'] = $form_state->getValue('label');
       $this->configuration['label_display'] = $form_state->getValue('label_display');
       $this->configuration['provider'] = $form_state->getValue('provider');
-      $this->configuration['cache'] = $form_state->getValue('cache');
       $this->blockSubmit($form, $form_state);
     }
   }
@@ -270,16 +246,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $transliterated = preg_replace('@[^a-z0-9_.]+@', '', $transliterated);
 
     return $transliterated;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    $max_age = parent::getCacheMaxAge();
-    // @todo Configurability of this will be removed in
-    //   https://www.drupal.org/node/2458763.
-    return Cache::mergeMaxAges($max_age, (int) $this->configuration['cache']['max_age']);
   }
 
   /**

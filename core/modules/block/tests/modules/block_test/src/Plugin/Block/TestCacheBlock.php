@@ -8,6 +8,7 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a block to test caching.
@@ -37,6 +38,13 @@ class TestCacheBlock extends BlockBase {
    */
   public function getCacheContexts() {
     return \Drupal::state()->get('block_test.cache_contexts', []);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return \Drupal::state()->get('block_test.cache_max_age', parent::getCacheMaxAge());
   }
 
 }

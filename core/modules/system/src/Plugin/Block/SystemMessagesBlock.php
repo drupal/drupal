@@ -43,20 +43,6 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildConfigurationForm($form, $form_state);
-
-    // @see ::getCacheMaxAge()
-    $form['cache']['#description'] = $this->t('This block is cacheable forever, it is not configurable.');
-    $form['cache']['max_age']['#value'] = Cache::PERMANENT;
-    $form['cache']['max_age']['#disabled'] = TRUE;
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheMaxAge() {
     // The messages are session-specific and hence aren't cacheable, but the
     // block itself *is* cacheable because it uses a #lazy_builder callback and

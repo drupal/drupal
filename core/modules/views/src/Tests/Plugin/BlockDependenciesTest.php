@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\views\Tests\ViewKernelTestBase;
 
 /**
@@ -83,7 +82,6 @@ class BlockDependenciesTest extends ViewKernelTestBase {
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
    *   - visibility: Empty array.
-   *   - cache: array('max_age' => Cache::PERMANENT).
    *
    * @return \Drupal\block\Entity\Block
    *   The block entity.
@@ -97,9 +95,6 @@ class BlockDependenciesTest extends ViewKernelTestBase {
       'label' => $this->randomMachineName(8),
       'visibility' => array(),
       'weight' => 0,
-      'cache' => array(
-        'max_age' => Cache::PERMANENT,
-      ),
     );
     $values = [];
     foreach (array('region', 'id', 'theme', 'plugin', 'weight', 'visibility') as $key) {

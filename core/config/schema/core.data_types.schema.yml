@@ -295,13 +295,6 @@ block_settings:
     label_display:
       type: string
       label: 'Display title'
-    cache:
-      type: mapping
-      label: 'Cache settings'
-      mapping:
-        max_age:
-          type: integer
-          label: 'Maximum age'
     status:
       type: boolean
       label: 'Status'

@@ -43,17 +43,4 @@ class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterfa
     return $this->mainContent;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildConfigurationForm($form, $form_state);
-
-    $form['cache']['#disabled'] = TRUE;
-    $form['cache']['#description'] = $this->t("This block's maximum age cannot be configured, because it depends on the contents.");
-    $form['cache']['max_age']['#value'] = Cache::PERMANENT;
-
-    return $form;
-  }
-
 }

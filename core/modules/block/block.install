@@ -103,5 +103,26 @@ function block_update_8002() {
 }
 
 /**
+ * Remove 'cache' setting.
+ */
+function block_update_8003() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('block.block.') as $block_config_name) {
+    $block = $config_factory->getEditable($block_config_name);
+
+    // Remove the 'cache' setting.
+    $settings = $block->get('settings');
+    unset($settings['cache']);
+    $block->set('settings', $settings);
+
+    // Mark the resulting configuration as trusted data. This avoids issues with
+    // future schema changes.
+    $block->save(TRUE);
+  }
+
+  return t('Block settings updated.');
+}
+
+/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */

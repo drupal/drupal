@@ -49,7 +49,7 @@ class AjaxFormCacheTest extends AjaxTestBase {
     $this->drupalLogin($this->rootUser);
 
     $this->drupalPlaceBlock('search_form_block', ['weight' => -5]);
-    $this->drupalPlaceBlock('ajax_forms_test_block', ['cache' => ['max_age' => 0]]);
+    $this->drupalPlaceBlock('ajax_forms_test_block');
 
     $this->drupalGet('');
     $this->drupalPostAjaxForm(NULL, ['test1' => 'option1'], 'test1');
@@ -66,7 +66,7 @@ class AjaxFormCacheTest extends AjaxTestBase {
     $this->container->get('module_installer')->install(['block']);
     $this->drupalLogin($this->rootUser);
 
-    $this->drupalPlaceBlock('ajax_forms_test_block', ['cache' => ['max_age' => 0]]);
+    $this->drupalPlaceBlock('ajax_forms_test_block');
 
     $url = Url::fromRoute('entity.user.canonical', ['user' => $this->rootUser->id()], ['query' => ['foo' => 'bar']]);
     $this->drupalGet($url);
