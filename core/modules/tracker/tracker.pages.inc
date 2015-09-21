@@ -106,8 +106,8 @@ function tracker_page($account = NULL) {
           'data-history-node-last-comment-timestamp' => $node->last_comment_timestamp,
         ),
         'last updated' => array(
-          'data' => t('!time ago', array(
-            '!time' => \Drupal::service('date.formatter')->formatTimeDiffSince($node->last_activity),
+          'data' => t('@time ago', array(
+            '@time' => \Drupal::service('date.formatter')->formatTimeDiffSince($node->last_activity),
           )),
         ),
       );

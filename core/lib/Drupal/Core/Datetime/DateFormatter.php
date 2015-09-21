@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Datetime;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -131,7 +130,8 @@ class DateFormatter {
    *   the user interface language for the page.
    *
    * @return string
-   *   A translated date string in the requested format.
+   *   A translated date string in the requested format. Since the format may
+   *   contain user input, this value should be escaped when output.
    */
   public function format($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
     if (!isset($timezone)) {
@@ -168,7 +168,7 @@ class DateFormatter {
     $settings = array(
       'langcode' => $langcode,
     );
-    return Xss::filter($date->format($format, $settings));
+    return $date->format($format, $settings);
   }
 
   /**

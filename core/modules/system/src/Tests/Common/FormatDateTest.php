@@ -117,5 +117,10 @@ class FormatDateTest extends WebTestBase {
     $this->assertIdentical(format_date($timestamp, 'html_week'), '2007-W12', 'Test html_week date format.');
     $this->assertIdentical(format_date($timestamp, 'html_month'), '2007-03', 'Test html_month date format.');
     $this->assertIdentical(format_date($timestamp, 'html_year'), '2007', 'Test html_year date format.');
+
+    // HTML is not escaped by the date formatter, it must be escaped later.
+    $formatter = \Drupal::service('date.formatter');
+    $this->assertIdentical($formatter->format($timestamp, 'custom', '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'Y\'\)\;\<\/\s\c\r\i\p\t\>'), "<script>alert('2007');</script>", 'Script tags not removed from dates.');
+    $this->assertIdentical($formatter->format($timestamp, 'custom', '\<\e\m\>Y\<\/\e\m\>'), '<em>2007</em>', 'Em tags are not removed from dates.');
   }
 }

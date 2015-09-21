@@ -278,7 +278,7 @@ class DateTimePlus {
    *
    * @return string
    */
-  protected function render() {
+  public function render() {
     return $this->format(static::FORMAT) . ' ' . $this->getTimeZone()->getName();
   }
 

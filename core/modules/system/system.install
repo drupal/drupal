@@ -464,7 +464,7 @@ function system_requirements($phase) {
     }
 
     // Set summary and description based on values determined above.
-    $summary = t('Last run !time ago', array('!time' => \Drupal::service('date.formatter')->formatTimeDiffSince($cron_last)));
+    $summary = t('Last run @time ago', array('@time' => \Drupal::service('date.formatter')->formatTimeDiffSince($cron_last)));
 
     $requirements['cron'] = array(
       'title' => t('Cron maintenance tasks'),
