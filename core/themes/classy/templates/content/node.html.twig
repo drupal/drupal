@@ -97,13 +97,7 @@
   {% endif %}
 
   <div{{ content_attributes.addClass('node__content') }}>
-    {{ content|without('links') }}
+    {{ content }}
   </div>
-
-  {% if content.links %}
-    <div class="node__links">
-      {{ content.links }}
-    </div>
-  {% endif %}
 
 </article>

@@ -53,6 +53,7 @@
 /* Node links styles. */
 .node__links {
   text-align: right; /* LTR */
+  font-size: 0.93em;
 }
 [dir="rtl"] .node__links {
   text-align: left;

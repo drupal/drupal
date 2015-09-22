@@ -10,6 +10,9 @@
 #content .comment-wrapper h2.comment-form__title {
   margin-bottom: 1em;
 }
+.field-node--comment {
+  font-size: 0.934em;
+}
 .comment {
   margin-bottom: 19px;
   vertical-align: top;

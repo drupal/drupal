@@ -93,10 +93,6 @@
     {% endif %}
   </header>
   <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
-    {{ content|without('comment', 'links') }}
+    {{ content }}
   </div>
-  {% if content.links %}
-    <div class="node__links">{{ content.links }}</div>
-  {% endif %}
-  {{ content.comment }}
 </article>
