@@ -664,7 +664,12 @@ abstract class TestBase {
     // comparing with.
     $first = $this->castSafeStrings($first);
     $second = $this->castSafeStrings($second);
-    return $this->assert($first == $second, $message ? $message : SafeMarkup::format('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    $is_equal = $first == $second;
+    if (!$is_equal || !$message) {
+      $default_message = SafeMarkup::format('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $message = $message ? $message . PHP_EOL . $default_message : $default_message;
+    }
+    return $this->assert($is_equal, $message, $group);
   }
 
   /**
@@ -689,7 +694,17 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotEqual($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first != $second, $message ? $message : SafeMarkup::format('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    // Cast objects implementing SafeStringInterface to string instead of
+    // relying on PHP casting them to string depending on what they are being
+    // comparing with.
+    $first = $this->castSafeStrings($first);
+    $second = $this->castSafeStrings($second);
+    $not_equal = $first != $second;
+    if (!$not_equal || !$message) {
+      $default_message = SafeMarkup::format('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $message = $message ? $message . PHP_EOL . $default_message : $default_message;
+    }
+    return $this->assert($not_equal, $message, $group);
   }
 
   /**
@@ -714,7 +729,12 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertIdentical($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first === $second, $message ? $message : SafeMarkup::format('Value @first is identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    $is_identical = $first === $second;
+    if (!$is_identical || !$message) {
+      $default_message = SafeMarkup::format('Value @first is identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $message = $message ? $message . PHP_EOL . $default_message : $default_message;
+    }
+    return $this->assert($is_identical, $message, $group);
   }
 
   /**
@@ -739,7 +759,12 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotIdentical($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first !== $second, $message ? $message : SafeMarkup::format('Value @first is not identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    $not_identical = $first !== $second;
+    if (!$not_identical || !$message) {
+      $default_message = SafeMarkup::format('Value @first is not identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $message = $message ? $message . PHP_EOL . $default_message : $default_message;
+    }
+    return $this->assert($not_identical, $message, $group);
   }
 
   /**
