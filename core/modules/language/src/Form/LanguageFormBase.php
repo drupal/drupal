@@ -70,7 +70,7 @@ abstract class LanguageFormBase extends EntityForm {
         '#required' => TRUE,
         '#default_value' => '',
         '#disabled' => FALSE,
-        '#description' => $this->t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
+        '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array(':w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
       );
     }
     $form['label'] = array(
@@ -101,9 +101,9 @@ abstract class LanguageFormBase extends EntityForm {
   public function validateCommon(array $form, FormStateInterface $form_state) {
     // Ensure sane field values for langcode and name.
     if (!isset($form['langcode_view']) && !preg_match('@^[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$@', $form_state->getValue('langcode'))) {
-      $form_state->setErrorByName('langcode', $this->t('%field must be a valid language tag as <a href="@url">defined by the W3C</a>.', array(
+      $form_state->setErrorByName('langcode', $this->t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', array(
         '%field' => $form['langcode']['#title'],
-        '@url' => 'http://www.w3.org/International/articles/language-tags/',
+        ':url' => 'http://www.w3.org/International/articles/language-tags/',
       )));
     }
     if ($form_state->getValue('label') != Html::escape($form_state->getValue('label'))) {

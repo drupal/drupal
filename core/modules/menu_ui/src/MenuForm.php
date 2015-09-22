@@ -277,8 +277,8 @@ class MenuForm extends EntityForm {
       ),
     );
 
-    $form['links']['#empty'] = $this->t('There are no menu links yet. <a href="@url">Add link</a>.', [
-      '@url' => $this->url('entity.menu.add_link_form', ['menu' => $this->entity->id()], [
+    $form['links']['#empty'] = $this->t('There are no menu links yet. <a href=":url">Add link</a>.', [
+      ':url' => $this->url('entity.menu.add_link_form', ['menu' => $this->entity->id()], [
         'query' => ['destination' => $this->entity->url('edit-form')],
       ]),
     ]);

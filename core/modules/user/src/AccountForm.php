@@ -151,10 +151,10 @@ abstract class AccountForm extends ContentEntityForm {
         // The user may only change their own password without their current
         // password if they logged in via a one-time login link.
         if (!$form_state->get('user_pass_reset')) {
-          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %mail or %pass below. <a href="!request_new_url" title="Send password reset instructions via e-mail.">Reset your password</a>.', array(
+          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %mail or %pass below. <a href=":request_new_url" title="Send password reset instructions via e-mail.">Reset your password</a>.', array(
             '%mail' => $form['account']['mail']['#title'],
             '%pass' => $this->t('Password'),
-            '!request_new_url' => $this->url('user.pass'),
+            ':request_new_url' => $this->url('user.pass'),
           ));
         }
       }

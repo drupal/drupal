@@ -31,7 +31,7 @@ interface LinkGeneratorInterface {
    * However, for links enclosed in translatable text you should use t() and
    * embed the HTML anchor tag directly in the translated string. For example:
    * @code
-   * $text = t('Visit the <a href="@url">content types</a> page', array('@url' => \Drupal::url('entity.node_type.collection')));
+   * $text = t('Visit the <a href=":url">content types</a> page', array(':url' => \Drupal::url('entity.node_type.collection')));
    * @endcode
    * This keeps the context of the link title ('settings' in the example) for
    * translators.

@@ -55,9 +55,9 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
-    $this->assertRaw(t('%field must be a valid language tag as <a href="@url">defined by the W3C</a>.', array(
+    $this->assertRaw(t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', array(
       '%field' => t('Language code'),
-      '@url' => 'http://www.w3.org/International/articles/language-tags/',
+      ':url' => 'http://www.w3.org/International/articles/language-tags/',
     )));
 
     $this->assertRaw(t('%field cannot contain any markup.', array('%field' => t('Language name'))));

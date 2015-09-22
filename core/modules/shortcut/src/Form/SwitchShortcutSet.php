@@ -187,12 +187,12 @@ class SwitchShortcutSet extends FormBase {
       $replacements = array(
         '%user' => $this->user->label(),
         '%set_name' => $set->label(),
-        '@switch-url' => $this->url('<current>'),
+        ':switch-url' => $this->url('<current>'),
       );
       if ($account_is_user) {
         // Only administrators can create new shortcut sets, so we know they have
         // access to switch back.
-        drupal_set_message($this->t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href="@switch-url">switch back to a different one.</a>', $replacements));
+        drupal_set_message($this->t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href=":switch-url">switch back to a different one.</a>', $replacements));
       }
       else {
         drupal_set_message($this->t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));

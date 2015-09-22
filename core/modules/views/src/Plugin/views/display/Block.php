@@ -196,7 +196,7 @@ class Block extends DisplayPluginBase {
         $form['block_category'] = array(
           '#type' => 'textfield',
           '#autocomplete_route_name' => 'block.category_autocomplete',
-          '#description' => $this->t('The category this block will appear under on the <a href="@href">blocks placement page</a>.', array('@href' => \Drupal::url('block.admin_display'))),
+          '#description' => $this->t('The category this block will appear under on the <a href=":href">blocks placement page</a>.', array(':href' => \Drupal::url('block.admin_display'))),
           '#default_value' => $this->getOption('block_category'),
         );
         break;

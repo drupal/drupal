@@ -950,13 +950,13 @@ function hook_requirements($phase) {
     }
     else {
       $requirements['cron'] = array(
-        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'https://www.drupal.org/cron')),
+        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', array(':url' => 'https://www.drupal.org/cron')),
         'severity' => REQUIREMENT_ERROR,
         'value' => t('Never run'),
       );
     }
 
-    $requirements['cron']['description'] .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => \Drupal::url('system.run_cron')));
+    $requirements['cron']['description'] .= ' ' . t('You can <a href=":cron">run cron manually</a>.', array(':cron' => \Drupal::url('system.run_cron')));
 
     $requirements['cron']['title'] = t('Cron maintenance tasks');
   }

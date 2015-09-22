@@ -67,7 +67,7 @@ class SystemInfoController implements ContainerInjectionInterface {
       $output = ob_get_clean();
     }
     else {
-      $output = t('The phpinfo() function has been disabled for security reasons. For more information, visit <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'https://www.drupal.org/node/243993'));
+      $output = t('The phpinfo() function has been disabled for security reasons. For more information, visit <a href=":phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array(':phpinfo' => 'https://www.drupal.org/node/243993'));
     }
     return new Response($output);
   }

@@ -141,12 +141,12 @@ class ViewEditForm extends ViewFormBase {
       $lock_message_substitutions = array(
         '@user' => drupal_render($username),
         '@age' => $this->dateFormatter->formatTimeDiffSince($view->lock->updated),
-        '@url' => $view->url('break-lock-form'),
+        ':url' => $view->url('break-lock-form'),
       );
       $form['locked'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-locked', 'messages', 'messages--warning')),
-        '#children' => $this->t('This view is being edited by user @user, and is therefore locked from editing by others. This lock is @age old. Click here to <a href="@url">break this lock</a>.', $lock_message_substitutions),
+        '#children' => $this->t('This view is being edited by user @user, and is therefore locked from editing by others. This lock is @age old. Click here to <a href=":url">break this lock</a>.', $lock_message_substitutions),
         '#weight' => -10,
       );
     }

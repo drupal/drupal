@@ -219,8 +219,8 @@ class NodeTypeTest extends NodeTestBase {
 
     // Navigate to content type administration screen
     $this->drupalGet('admin/structure/types');
-    $this->assertRaw(t('No content types available. <a href="@link">Add content type</a>.', [
-        '@link' => Url::fromRoute('node.type_add')->toString()
+    $this->assertRaw(t('No content types available. <a href=":link">Add content type</a>.', [
+        ':link' => Url::fromRoute('node.type_add')->toString()
       ]), 'Empty text when there are no content types in the system is correct.');
   }
 

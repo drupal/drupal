@@ -69,8 +69,8 @@ class ContactController extends ControllerBase {
       // If there are no forms, do not display the form.
       if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
-          drupal_set_message($this->t('The contact form has not been configured. <a href="@add">Add one or more forms</a> .', array(
-            '@add' => $this->url('contact.form_add'))), 'error');
+          drupal_set_message($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', array(
+            ':add' => $this->url('contact.form_add'))), 'error');
           return array();
         }
         else {

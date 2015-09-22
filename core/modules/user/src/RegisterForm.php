@@ -116,7 +116,7 @@ class RegisterForm extends AccountForm {
 
     // New administrative account without notification.
     if ($admin && !$notify) {
-      drupal_set_message($this->t('Created a new user account for <a href="@url">%name</a>. No email has been sent.', array('@url' => $account->url(), '%name' => $account->getUsername())));
+      drupal_set_message($this->t('Created a new user account for <a href=":url">%name</a>. No email has been sent.', array(':url' => $account->url(), '%name' => $account->getUsername())));
     }
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
@@ -128,13 +128,13 @@ class RegisterForm extends AccountForm {
     // No administrator approval required.
     elseif ($account->isActive() || $notify) {
       if (!$account->getEmail() && $notify) {
-        drupal_set_message($this->t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => $account->url(), '%name' => $account->getUsername())));
+        drupal_set_message($this->t('The new user <a href=":url">%name</a> was created without an email address, so no welcome message was sent.', array(':url' => $account->url(), '%name' => $account->getUsername())));
       }
       else {
         $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
         if (_user_mail_notify($op, $account)) {
           if ($notify) {
-            drupal_set_message($this->t('A welcome message with further instructions has been emailed to the new user <a href="@url">%name</a>.', array('@url' => $account->url(), '%name' => $account->getUsername())));
+            drupal_set_message($this->t('A welcome message with further instructions has been emailed to the new user <a href=":url">%name</a>.', array(':url' => $account->url(), '%name' => $account->getUsername())));
           }
           else {
             drupal_set_message($this->t('A welcome message with further instructions has been sent to your email address.'));

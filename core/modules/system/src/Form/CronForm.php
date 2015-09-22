@@ -106,8 +106,9 @@ class CronForm extends ConfigFormBase {
       '#markup' => $status,
     );
 
+    $cron_url = $this->url('system.cron', array('key' => $this->state->get('system.cron_key')), array('absolute' => TRUE));
     $form['cron_url'] = array(
-      '#markup' => '<p>' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => $this->url('system.cron', array('key' => $this->state->get('system.cron_key')), array('absolute' => TRUE)))) . '</p>',
+      '#markup' => '<p>' . t('To run cron from outside the site, go to <a href=":cron">@cron</a>', array(':cron' => $cron_url, '@cron' => $cron_url)) . '</p>',
     );
 
     $form['cron'] = array(
@@ -119,7 +120,7 @@ class CronForm extends ConfigFormBase {
     $form['cron']['cron_safe_threshold'] = array(
       '#type' => 'select',
       '#title' => t('Run cron every'),
-      '#description' => t('More information about setting up scheduled tasks can be found by <a href="@url">reading the cron tutorial on drupal.org</a>.', array('@url' => 'https://www.drupal.org/cron')),
+      '#description' => t('More information about setting up scheduled tasks can be found by <a href=":url">reading the cron tutorial on drupal.org</a>.', array(':url' => 'https://www.drupal.org/cron')),
       '#default_value' => $config->get('threshold.autorun'),
       '#options' => array(0 => t('Never')) + array_map(array($this->dateFormatter, 'formatInterval'), array_combine($options, $options)),
     );

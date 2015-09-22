@@ -286,9 +286,9 @@ function update_storage_clear_submit($form, FormStateInterface $form_state) {
  */
 function _update_no_data() {
   $destination = \Drupal::destination()->getAsArray();
-  return t('No update information available. <a href="@run_cron">Run cron</a> or <a href="@check_manually">check manually</a>.', array(
-    '@run_cron' => \Drupal::url('system.run_cron', [], ['query' => $destination]),
-    '@check_manually' => \Drupal::url('update.manual_status', [], ['query' => $destination]),
+  return t('No update information available. <a href=":run_cron">Run cron</a> or <a href=":check_manually">check manually</a>.', array(
+    ':run_cron' => \Drupal::url('system.run_cron', [], ['query' => $destination]),
+    ':check_manually' => \Drupal::url('update.manual_status', [], ['query' => $destination]),
   ));
 }
 
@@ -525,10 +525,10 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
     case UPDATE_NOT_FETCHED:
     case UPDATE_FETCH_PENDING:
       if ($msg_type == 'core') {
-        $text = t('There was a problem checking <a href="@update-report">available updates</a> for Drupal.', array('@update-report' => \Drupal::url('update.status')), array('langcode' => $langcode));
+        $text = t('There was a problem checking <a href=":update-report">available updates</a> for Drupal.', array(':update-report' => \Drupal::url('update.status')), array('langcode' => $langcode));
       }
       else {
-        $text = t('There was a problem checking <a href="@update-report">available updates</a> for your modules or themes.', array('@update-report' => \Drupal::url('update.status')), array('langcode' => $langcode));
+        $text = t('There was a problem checking <a href=":update-report">available updates</a> for your modules or themes.', array(':update-report' => \Drupal::url('update.status')), array('langcode' => $langcode));
       }
       break;
   }
@@ -596,7 +596,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     && file_exists("$directory/$project/core/modules/system/system.module")
   ) {
     return array(
-      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href="@upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', array('@upgrade-guide' => 'https://www.drupal.org/upgrade')),
+      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href=":upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', array(':upgrade-guide' => 'https://www.drupal.org/upgrade')),
     );
   }
 

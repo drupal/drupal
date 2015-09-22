@@ -98,7 +98,7 @@ class UpdateReady extends FormBase {
 
     $form['backup'] = array(
       '#prefix' => '<strong>',
-      '#markup' => $this->t('Back up your database and site before you continue. <a href="@backup_url">Learn how</a>.', array('@backup_url' => 'https://www.drupal.org/node/22281')),
+      '#markup' => $this->t('Back up your database and site before you continue. <a href=":backup_url">Learn how</a>.', array(':backup_url' => 'https://www.drupal.org/node/22281')),
       '#suffix' => '</strong>',
     );
 

@@ -86,10 +86,10 @@ class UpdateManagerInstall extends FormBase {
 
     $form['help_text'] = array(
       '#prefix' => '<p>',
-      '#markup' => $this->t('You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> on <a href="@drupal_org_url">drupal.org</a>. The following file extensions are supported: %extensions.', array(
-        '@module_url' => 'https://www.drupal.org/project/modules',
-        '@theme_url' => 'https://www.drupal.org/project/themes',
-        '@drupal_org_url' => 'https://www.drupal.org',
+      '#markup' => $this->t('You can find <a href=":module_url">modules</a> and <a href=":theme_url">themes</a> on <a href=":drupal_org_url">drupal.org</a>. The following file extensions are supported: %extensions.', array(
+        ':module_url' => 'https://www.drupal.org/project/modules',
+        ':theme_url' => 'https://www.drupal.org/project/themes',
+        ':drupal_org_url' => 'https://www.drupal.org',
         '%extensions' => archiver_get_extensions(),
       )),
       '#suffix' => '</p>',

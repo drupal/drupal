@@ -482,9 +482,9 @@ function drupal_install_config_directories() {
   // itself. But if it somehow fails anyway, the installation cannot proceed.
   // Bail out using a similar error message as in system_requirements().
   if (!install_ensure_config_directory(CONFIG_STAGING_DIRECTORY)) {
-    throw new Exception(t('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href="@handbook_url">online handbook</a>.', array(
+    throw new Exception(t('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href=":handbook_url">online handbook</a>.', array(
       '%directory' => config_get_config_directory(CONFIG_STAGING_DIRECTORY),
-      '@handbook_url' => 'https://www.drupal.org/server-permissions',
+      ':handbook_url' => 'https://www.drupal.org/server-permissions',
     )));
   }
 

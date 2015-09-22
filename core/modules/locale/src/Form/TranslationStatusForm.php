@@ -133,16 +133,16 @@ class TranslationStatusForm extends FormBase {
     );
 
     if (!$languages) {
-      $empty = $this->t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array(
-        '@add_language' => $this->url('entity.configurable_language.collection'),
+      $empty = $this->t('No translatable languages available. <a href=":add_language">Add a language</a> first.', array(
+        ':add_language' => $this->url('entity.configurable_language.collection'),
       ));
     }
     elseif ($status) {
       $empty = $this->t('All translations up to date.');
     }
     else {
-      $empty = $this->t('No translation status available. <a href="@check">Check manually</a>.', array(
-        '@check' => $this->url('locale.check_translation'),
+      $empty = $this->t('No translation status available. <a href=":check">Check manually</a>.', array(
+        ':check' => $this->url('locale.check_translation'),
       ));
     }
 

@@ -123,7 +123,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
     $form['new_mapping']['browser_langcode'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Browser language code'),
-      '#description' => $this->t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
+      '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array(':w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
       '#size' => 20,
     );
     $form['new_mapping']['drupal_langcode'] = array(

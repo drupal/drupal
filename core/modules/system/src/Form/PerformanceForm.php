@@ -141,7 +141,7 @@ class PerformanceForm extends ConfigFormBase {
     $disabled = !$is_writable;
     $disabled_message = '';
     if (!$is_writable) {
-      $disabled_message = ' ' . t('<strong class="error">Set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => $this->url('system.file_system_settings')));
+      $disabled_message = ' ' . t('<strong class="error">Set up the <a href=":file-system">public files directory</a> to make these optimizations available.</strong>', array(':file-system' => $this->url('system.file_system_settings')));
     }
 
     $form['bandwidth_optimization'] = array(

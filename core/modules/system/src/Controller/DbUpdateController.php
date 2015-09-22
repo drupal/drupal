@@ -222,8 +222,8 @@ class DbUpdateController extends ControllerBase {
     );
 
     $info[] = $this->t("<strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.");
-    $info[] = $this->t('Put your site into <a href="@url">maintenance mode</a>.', array(
-      '@url' => Url::fromRoute('system.site_maintenance_mode')->toString(TRUE)->getGeneratedUrl(),
+    $info[] = $this->t('Put your site into <a href=":url">maintenance mode</a>.', array(
+      ':url' => Url::fromRoute('system.site_maintenance_mode')->toString(TRUE)->getGeneratedUrl(),
     ));
     $info[] = $this->t('<strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.');
     $info[] = $this->t('Install your new files in the appropriate location, as described in the handbook.');
@@ -401,8 +401,8 @@ class DbUpdateController extends ControllerBase {
     // Report end result.
     $dblog_exists = $this->moduleHandler->moduleExists('dblog');
     if ($dblog_exists && $this->account->hasPermission('access site reports')) {
-      $log_message = $this->t('All errors have been <a href="@url">logged</a>.', array(
-        '@url' => Url::fromRoute('dblog.overview')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl(),
+      $log_message = $this->t('All errors have been <a href=":url">logged</a>.', array(
+        ':url' => Url::fromRoute('dblog.overview')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl(),
       ));
     }
     else {
@@ -410,7 +410,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     if (!empty($_SESSION['update_success'])) {
-      $message = '<p>' . $this->t('Updates were attempted. If you see no failures below, you may proceed happily back to your <a href="@url">site</a>. Otherwise, you may need to update your database manually.', array('@url' => Url::fromRoute('<front>')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl())) . ' ' . $log_message . '</p>';
+      $message = '<p>' . $this->t('Updates were attempted. If you see no failures below, you may proceed happily back to your <a href=":url">site</a>. Otherwise, you may need to update your database manually.', array(':url' => Url::fromRoute('<front>')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl())) . ' ' . $log_message . '</p>';
     }
     else {
       $last = reset($_SESSION['updates_remaining']);
@@ -528,7 +528,7 @@ class DbUpdateController extends ControllerBase {
     $build['status_report'] = array(
       '#theme' => 'status_report',
       '#requirements' => $requirements,
-      '#suffix' => $this->t('Check the messages and <a href="@url">try again</a>.', array('@url' => $try_again_url))
+      '#suffix' => $this->t('Check the messages and <a href=":url">try again</a>.', array(':url' => $try_again_url))
     );
 
     $build['#title'] = $this->t('Requirements problem');

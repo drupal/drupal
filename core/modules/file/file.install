@@ -98,18 +98,18 @@ function file_requirements($phase) {
     }
     elseif (!$implementation && extension_loaded('apc')) {
       $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress through APC, but it is not enabled. Add <code>apc.rfc1867 = 1</code> to your php.ini configuration. Alternatively, it is recommended to use <a href="@url">PECL uploadprogress</a>, which supports more than one simultaneous upload.', array('@url' => 'http://pecl.php.net/package/uploadprogress'));
+      $description = t('Your server is capable of displaying file upload progress through APC, but it is not enabled. Add <code>apc.rfc1867 = 1</code> to your php.ini configuration. Alternatively, it is recommended to use <a href=":url">PECL uploadprogress</a>, which supports more than one simultaneous upload.', array(':url' => 'http://pecl.php.net/package/uploadprogress'));
     }
     elseif (!$implementation) {
       $value = t('Not enabled');
-      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="@uploadprogress_url">PECL uploadprogress library</a> (preferred) or to install <a href="@apc_url">APC</a>.', array('@uploadprogress_url' => 'http://pecl.php.net/package/uploadprogress', '@apc_url' => 'http://php.net/apc'));
+      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href=":uploadprogress_url">PECL uploadprogress library</a> (preferred) or to install <a href=":apc_url">APC</a>.', array(':uploadprogress_url' => 'http://pecl.php.net/package/uploadprogress', ':apc_url' => 'http://php.net/apc'));
     }
     elseif ($implementation == 'apc') {
-      $value = t('Enabled (<a href="@url">APC RFC1867</a>)', array('@url' => 'http://php.net/manual/apc.configuration.php#ini.apc.rfc1867'));
-      $description = t('Your server is capable of displaying file upload progress using APC RFC1867. Note that only one upload at a time is supported. It is recommended to use the <a href="@url">PECL uploadprogress library</a> if possible.', array('@url' => 'http://pecl.php.net/package/uploadprogress'));
+      $value = t('Enabled (<a href=":url">APC RFC1867</a>)', array(':url' => 'http://php.net/manual/apc.configuration.php#ini.apc.rfc1867'));
+      $description = t('Your server is capable of displaying file upload progress using APC RFC1867. Note that only one upload at a time is supported. It is recommended to use the <a href=":url">PECL uploadprogress library</a> if possible.', array(':url' => 'http://pecl.php.net/package/uploadprogress'));
     }
     elseif ($implementation == 'uploadprogress') {
-      $value = t('Enabled (<a href="@url">PECL uploadprogress</a>)', array('@url' => 'http://pecl.php.net/package/uploadprogress'));
+      $value = t('Enabled (<a href=":url">PECL uploadprogress</a>)', array(':url' => 'http://pecl.php.net/package/uploadprogress'));
     }
     $requirements['file_progress'] = array(
       'title' => t('Upload progress'),

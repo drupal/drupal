@@ -29,26 +29,26 @@ function unicode_requirements() {
     'value' => $libraries[$library],
     'severity' => $severities[$library],
   );
-  $t_args = array('@url' => 'http://www.php.net/mbstring');
+  $t_args = array(':url' => 'http://www.php.net/mbstring');
   switch ($failed_check) {
     case 'mb_strlen':
-      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', $t_args);
+      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href=":url">PHP mbstring extension</a> for improved Unicode support.', $t_args);
       break;
 
     case 'mbstring.func_overload':
-      $requirements['unicode']['description'] = t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      $requirements['unicode']['description'] = t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href=":url">PHP mbstring documentation</a> for more information.', $t_args);
       break;
 
     case 'mbstring.encoding_translation':
-      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href=":url">PHP mbstring documentation</a> for more information.', $t_args);
       break;
 
     case 'mbstring.http_input':
-      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href=":url">PHP mbstring documentation</a> for more information.', $t_args);
       break;
 
     case 'mbstring.http_output':
-      $requirements['unicode']['description'] = t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      $requirements['unicode']['description'] = t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href=":url">PHP mbstring documentation</a> for more information.', $t_args);
       break;
   }
 

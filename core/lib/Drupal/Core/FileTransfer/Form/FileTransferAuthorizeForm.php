@@ -63,7 +63,7 @@ class FileTransferAuthorizeForm extends FormBase {
     if (!$this->getRequest()->isSecure()) {
       $form['information']['https_warning'] = array(
         '#prefix' => '<div class="messages messages--error">',
-        '#markup' => $this->t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'https://www.drupal.org/https-information')),
+        '#markup' => $this->t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href=":https-link">Learn more</a>.', array(':https-link' => 'https://www.drupal.org/https-information')),
         '#suffix' => '</div>',
       );
     }
@@ -179,9 +179,9 @@ class FileTransferAuthorizeForm extends FormBase {
       catch (\Exception $e) {
         // The format of this error message is similar to that used on the
         // database connection form in the installer.
-        $form_state->setErrorByName('connection_settings', $this->t('Failed to connect to the server. The server reports the following message: <p class="error">@message</p> For more help installing or updating code on your server, see the <a href="@handbook_url">handbook</a>.', array(
+        $form_state->setErrorByName('connection_settings', $this->t('Failed to connect to the server. The server reports the following message: <p class="error">@message</p> For more help installing or updating code on your server, see the <a href=":handbook_url">handbook</a>.', array(
           '@message' => $e->getMessage(),
-          '@handbook_url' => 'https://www.drupal.org/documentation/install/modules-themes',
+          ':handbook_url' => 'https://www.drupal.org/documentation/install/modules-themes',
         )));
       }
     }

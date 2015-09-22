@@ -118,7 +118,7 @@ class ResponsiveImageStyleForm extends EntityForm {
         );
         $image_style_mapping = $responsive_image_style->getImageStyleMapping($breakpoint_id, $multiplier);
         if (\Drupal::moduleHandler()->moduleExists('help')) {
-          $description = $this->t('See the <a href="!responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', array('!responsive_image_help' => (\Drupal::url('help.page', array('name' => 'responsive_image')))));
+          $description = $this->t('See the <a href=":responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', array(':responsive_image_help' => \Drupal::url('help.page', array('name' => 'responsive_image'))));
         }
         else {
           $description = $this->t('Enable the Help module for more information on the sizes attribute.');

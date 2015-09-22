@@ -28,8 +28,8 @@ function node_requirements($phase) {
     $requirements['node_access'] = array(
       'title' => t('Node Access Permissions'),
       'value' => $value,
-      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href="@rebuild">Rebuild permissions</a>', array(
-        '@rebuild' => \Drupal::url('node.configure_rebuild_confirm'),
+      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href=":rebuild">Rebuild permissions</a>', array(
+        ':rebuild' => \Drupal::url('node.configure_rebuild_confirm'),
       )),
     );
   }

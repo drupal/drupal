@@ -82,9 +82,9 @@ class ViewsSelection extends SelectionBase {
     else {
       if ($this->currentUser->hasPermission('administer views') && $this->moduleHandler->moduleExists('views_ui')) {
         $form['view']['no_view_help'] = array(
-          '#markup' => '<p>' . $this->t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
-            '@create' => Url::fromRoute('views_ui.add')->toString(),
-            '@existing' => Url::fromRoute('entity.view.collection')->toString(),
+          '#markup' => '<p>' . $this->t('No eligible views were found. <a href=":create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href=":existing">existing view</a>.', array(
+            ':create' => Url::fromRoute('views_ui.add')->toString(),
+            ':existing' => Url::fromRoute('entity.view.collection')->toString(),
           )) . '</p>',
         );
       }

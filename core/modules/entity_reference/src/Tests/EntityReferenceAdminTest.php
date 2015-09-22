@@ -170,9 +170,9 @@ class EntityReferenceAdminTest extends WebTestBase {
       'settings[handler]' => 'views',
     );
     $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
-    $this->assertRaw(t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
-      '@create' => \Drupal::url('views_ui.add'),
-      '@existing' => \Drupal::url('entity.view.collection'),
+    $this->assertRaw(t('No eligible views were found. <a href=":create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href=":existing">existing view</a>.', array(
+      ':create' => \Drupal::url('views_ui.add'),
+      ':existing' => \Drupal::url('entity.view.collection'),
     )));
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     // If no eligible view is available we should see a message.

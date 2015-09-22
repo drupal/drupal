@@ -136,7 +136,7 @@ function system_requirements($phase) {
         'title' => t('Apache version'),
         'value' => $apache_version_string,
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href="@link">enabling clean URLs</a> page for more information on mod_rewrite.', array('@link' => 'http://drupal.org/node/15365')),
+        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', array(':link' => 'http://drupal.org/node/15365')),
       );
     }
 
@@ -145,7 +145,7 @@ function system_requirements($phase) {
         'title' => t('Clean URLs'),
         'value' => t('Disabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href="@link">Enable clean URLs</a>', array('@link' => 'http://drupal.org/node/15365')),
+        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', array(':link' => 'http://drupal.org/node/15365')),
       );
     }
   }
@@ -154,7 +154,7 @@ function system_requirements($phase) {
   $phpversion = $phpversion_label = phpversion();
   if (function_exists('phpinfo')) {
     if ($phase === 'runtime') {
-      $phpversion_label = t('@phpversion (<a href="@url">more information</a>)', ['@phpversion' => $phpversion, '@url' => (new Url('system.php'))->toString()]);
+      $phpversion_label = t('@phpversion (<a href=":url">more information</a>)', ['@phpversion' => $phpversion, ':url' => (new Url('system.php'))->toString()]);
     }
     $requirements['php'] = array(
       'title' => t('PHP'),
@@ -165,7 +165,7 @@ function system_requirements($phase) {
     $requirements['php'] = array(
       'title' => t('PHP'),
       'value' => $phpversion_label,
-      'description' => t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'https://www.drupal.org/node/243993')),
+      'description' => t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href=":phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array(':phpinfo' => 'https://www.drupal.org/node/243993')),
       'severity' => REQUIREMENT_INFO,
     );
   }
@@ -216,8 +216,8 @@ function system_requirements($phase) {
   }
 
   if (!empty($missing_extensions)) {
-    $description = t('Drupal requires you to enable the PHP extensions in the following list (see the <a href="@system_requirements">system requirements page</a> for more information):', array(
-      '@system_requirements' => 'https://www.drupal.org/requirements',
+    $description = t('Drupal requires you to enable the PHP extensions in the following list (see the <a href=":system_requirements">system requirements page</a> for more information):', array(
+      ':system_requirements' => 'https://www.drupal.org/requirements',
     ));
 
     // We use twig inline_template to avoid twig's autoescape.
@@ -248,7 +248,7 @@ function system_requirements($phase) {
       $requirements['php_opcache'] = array(
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="@opcache_link" target="_blank">OPcache</a> installed on your server.', array('@opcache_link' => 'http://php.net/manual/en/opcache.installation.php')),
+        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href=":opcache_link" target="_blank">OPcache</a> installed on your server.', array(':opcache_link' => 'http://php.net/manual/en/opcache.installation.php')),
       );
     }
     else {
@@ -266,8 +266,8 @@ function system_requirements($phase) {
     // Make sure PDO is available.
     $database_ok = extension_loaded('pdo');
     if (!$database_ok) {
-      $pdo_message = t('Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension. See the <a href="@link">system requirements</a> page for more information.', array(
-        '@link' => 'https://www.drupal.org/requirements/pdo',
+      $pdo_message = t('Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension. See the <a href=":link">system requirements</a> page for more information.', array(
+        ':link' => 'https://www.drupal.org/requirements/pdo',
       ));
     }
     else {
@@ -275,16 +275,16 @@ function system_requirements($phase) {
       $drivers = drupal_detect_database_types();
       if (empty($drivers)) {
         $database_ok = FALSE;
-        $pdo_message = t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array(
-          '@drupal-databases' => 'https://www.drupal.org/node/270#database',
+        $pdo_message = t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href=":drupal-databases">Drupal supports</a>.', array(
+          ':drupal-databases' => 'https://www.drupal.org/node/270#database',
         ));
       }
       // Make sure the native PDO extension is available, not the older PEAR
       // version. (See install_verify_pdo() for details.)
       if (!defined('PDO::ATTR_DEFAULT_FETCH_MODE')) {
         $database_ok = FALSE;
-        $pdo_message = t('Your web server seems to have the wrong version of PDO installed. Drupal requires the PDO extension from PHP core. This system has the older PECL version. See the <a href="@link">system requirements</a> page for more information.', array(
-          '@link' => 'https://www.drupal.org/requirements/pdo#pecl',
+        $pdo_message = t('Your web server seems to have the wrong version of PDO installed. Drupal requires the PDO extension from PHP core. This system has the older PECL version. See the <a href=":link">system requirements</a> page for more information.', array(
+          ':link' => 'https://www.drupal.org/requirements/pdo#pecl',
         ));
       }
     }
@@ -339,7 +339,7 @@ function system_requirements($phase) {
         $description['memory'] = t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
       }
 
-      $handbook_link = t('For more information, see the online handbook entry for <a href="@memory-limit">increasing the PHP memory limit</a>.', array('@memory-limit' => 'https://www.drupal.org/node/207036'));
+      $handbook_link = t('For more information, see the online handbook entry for <a href=":memory-limit">increasing the PHP memory limit</a>.', array(':memory-limit' => 'https://www.drupal.org/node/207036'));
 
       $description = array(
         '#type' => 'inline_template',
@@ -430,11 +430,12 @@ function system_requirements($phase) {
       // Check for the string which was added to the recommended .htaccess file
       // in the latest security update.
       if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
+        $url = 'https://www.drupal.org/SA-CORE-2013-003';
         $requirements[$htaccess_file] = array(
           'title' => $info['title'],
           'value' => t('Not fully protected'),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('See <a href="@url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array('@url' => 'https://www.drupal.org/SA-CORE-2013-003', '%directory' => $info['directory'])),
+          'description' => t('See <a href=":url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array(':url' => $url, '@url' => $url, '%directory' => $info['directory'])),
         );
       }
     }
@@ -478,18 +479,19 @@ function system_requirements($phase) {
           '#suffix' => ' ',
         ],
         [
-          '#markup' => t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', ['@cron-handbook' => 'https://www.drupal.org/cron']),
+          '#markup' => t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/cron']),
           '#suffix' => ' ',
         ],
       ];
     }
+    $cron_url = \Drupal::url('system.cron', ['key' => \Drupal::state()->get('system.cron_key'), ['absolute' => TRUE]]);
     $requirements['cron']['description'][] = [
       [
-        '#markup' => t('You can <a href="@cron">run cron manually</a>.', ['@cron' => \Drupal::url('system.run_cron')]),
+        '#markup' => t('You can <a href=":cron">run cron manually</a>.', [':cron' => \Drupal::url('system.run_cron')]),
       ],
       [
         '#prefix' => '<br />',
-        '#markup' => t('To run cron from outside the site, go to <a href="@cron">@cron</a>', ['@cron' => \Drupal::url('system.cron', ['key' => \Drupal::state()->get('system.cron_key'), ['absolute' => TRUE]])]),
+        '#markup' => t('To run cron from outside the site, go to <a href=":url">@cron</a>', [':url' => $cron_url, '@cron' => $cron_url]),
       ],
     ];
   }
@@ -574,12 +576,12 @@ function system_requirements($phase) {
       }
       // The files directory requirement check is done only during install and runtime.
       if ($phase == 'runtime') {
-        $description = t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => \Drupal::url('system.file_system_settings')));
+        $description = t('You may need to set the correct directory at the <a href=":admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array(':admin-file-system' => \Drupal::url('system.file_system_settings')));
       }
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will
         // be treated as version, so provide none there.
-        $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'https://www.drupal.org/server-permissions'));
+        $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', array(':handbook_url' => 'https://www.drupal.org/server-permissions'));
         $requirements['file system']['value'] = '';
       }
       if (!empty($description)) {
@@ -638,7 +640,7 @@ function system_requirements($phase) {
     if ($has_pending_updates) {
       $requirements['update']['severity'] = REQUIREMENT_ERROR;
       $requirements['update']['value'] = t('Out of date');
-      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => \Drupal::url('system.db_update')));
+      $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href=":update">database update script</a> immediately.', array(':update' => \Drupal::url('system.db_update')));
     }
 
     // Verify that no entity updates are pending after running every DB update.
@@ -728,9 +730,9 @@ function system_requirements($phase) {
       $requirements['update status'] = array(
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array(
-          '@update' => 'https://www.drupal.org/documentation/modules/update',
-          '@module' => \Drupal::url('system.modules_list'),
+        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href=":module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href=":update">Update status handbook page</a>.', array(
+          ':update' => 'https://www.drupal.org/documentation/modules/update',
+          ':module' => \Drupal::url('system.modules_list'),
         )),
       );
     }
@@ -759,7 +761,7 @@ function system_requirements($phase) {
       $requirements['trusted_host_patterns'] = array(
         'title' => t('Trusted Host Settings'),
         'value' => t('Not enabled'),
-        'description' => t('The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is <strong>highly recommended</strong> that you configure this. See <a href="@url">Protecting against HTTP HOST Header attacks</a> for more information.', array('@url' => 'https://www.drupal.org/node/1992030')),
+        'description' => t('The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is <strong>highly recommended</strong> that you configure this. See <a href=":url">Protecting against HTTP HOST Header attacks</a> for more information.', array(':url' => 'https://www.drupal.org/node/1992030')),
         'severity' => REQUIREMENT_ERROR,
       );
     }
@@ -781,10 +783,10 @@ function system_requirements($phase) {
     ];
     if (!function_exists('twig_template_get_attributes')) {
       $requirements['twig_c_extension']['value'] = t('Not available');
-      $requirements['twig_c_extension']['description'] = t('Enabling the Twig C extension can greatly increase rendering performance. See <a href="@url">the installation instructions</a> for more detail.', ['@url' => $url]);
+      $requirements['twig_c_extension']['description'] = t('Enabling the Twig C extension can greatly increase rendering performance. See <a href=":url">the installation instructions</a> for more detail.', [':url' => $url]);
     }
     else {
-      $requirements['twig_c_extension']['description'] = t('The <a href="@url">Twig C extension</a> is available', ['@url' => $url]);
+      $requirements['twig_c_extension']['description'] = t('The <a href=":url">Twig C extension</a> is available', [':url' => $url]);
     }
   }
 

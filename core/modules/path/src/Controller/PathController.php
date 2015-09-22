@@ -128,7 +128,7 @@ class PathController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => $this->t('No URL aliases available. <a href="@link">Add URL alias</a>.', array('@link' => $this->url('path.admin_add'))),
+      '#empty' => $this->t('No URL aliases available. <a href=":link">Add URL alias</a>.', array(':link' => $this->url('path.admin_add'))),
     );
     $build['path_pager'] = array('#type' => 'pager');
 

@@ -376,8 +376,8 @@ function content_translation_form_field_config_edit_form_alter(array &$form, For
     $toggle_url = \Drupal::url('language.content_settings_page', array(), array(
       'query' => \Drupal::destination()->getAsArray(),
     ));
-    $form['translatable']['#description'] = t('To configure translation for this field, <a href="@language-settings-url">enable language support</a> for this type.', array(
-      '@language-settings-url' => $toggle_url,
+    $form['translatable']['#description'] = t('To configure translation for this field, <a href=":language-settings-url">enable language support</a> for this type.', array(
+      ':language-settings-url' => $toggle_url,
     ));
   }
 

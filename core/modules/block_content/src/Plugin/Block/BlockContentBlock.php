@@ -156,9 +156,9 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     }
     else {
       return array(
-        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href="!url">Add custom block</a>.', array(
+        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href=":url">Add custom block</a>.', array(
           '%uuid' => $this->getDerivativeId(),
-          '!url' => $this->urlGenerator->generate('block_content.add_page')
+          ':url' => $this->urlGenerator->generate('block_content.add_page')
         )),
         '#access' => $this->account->hasPermission('administer blocks')
       );

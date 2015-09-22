@@ -133,7 +133,7 @@ class FormValidator implements FormValidatorInterface {
     $url = $this->requestStack->getCurrentRequest()->getRequestUri();
 
     // Setting this error will cause the form to fail validation.
-    $form_state->setErrorByName('form_token', $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+    $form_state->setErrorByName('form_token', $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href=":link">reload this page</a>.', array(':link' => $url)));
   }
 
   /**

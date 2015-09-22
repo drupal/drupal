@@ -86,8 +86,8 @@ class BlockContentController extends ControllerBase {
     }
     if (count($types) === 0) {
       return array(
-        '#markup' => $this->t('You have not created any block types yet. Go to the <a href="!url">block type creation page</a> to add a new block type.', [
-          '!url' => Url::fromRoute('block_content.type_add')->toString(),
+        '#markup' => $this->t('You have not created any block types yet. Go to the <a href=":url">block type creation page</a> to add a new block type.', [
+          ':url' => Url::fromRoute('block_content.type_add')->toString(),
         ]),
       );
     }

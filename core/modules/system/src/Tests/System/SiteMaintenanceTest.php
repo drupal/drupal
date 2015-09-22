@@ -54,7 +54,7 @@ class SiteMaintenanceTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/development/maintenance', $edit, t('Save configuration'));
 
-    $admin_message = t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => \Drupal::url('system.site_maintenance_mode')));
+    $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', array(':url' => \Drupal::url('system.site_maintenance_mode')));
     $user_message = t('Operating in maintenance mode.');
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => $this->config('system.site')->get('name')));
 

@@ -116,7 +116,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         // settings page.
         if ($route_match->getRouteName() != 'system.site_maintenance_mode') {
           if ($this->account->hasPermission('administer site configuration')) {
-            $this->drupalSetMessage($this->t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => $this->urlGenerator->generate('system.site_maintenance_mode'))), 'status', FALSE);
+            $this->drupalSetMessage($this->t('Operating in maintenance mode. <a href=":url">Go online.</a>', array(':url' => $this->urlGenerator->generate('system.site_maintenance_mode'))), 'status', FALSE);
           }
           else {
             $this->drupalSetMessage($this->t('Operating in maintenance mode.'), 'status', FALSE);

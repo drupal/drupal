@@ -90,7 +90,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // The import should have created 1 string and rejected 2.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
 
-    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.', array('@url' => \Drupal::url('dblog.overview')));
+    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.', array(':url' => \Drupal::url('dblog.overview')));
     $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
 
     // Repeat the process with a user that can access site reports, and this
@@ -102,7 +102,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'fr',
     ));
 
-    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => \Drupal::url('dblog.overview')));
+    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', array(':url' => \Drupal::url('dblog.overview')));
     $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
 
     // Check empty files import with a user that cannot access site reports..
@@ -122,7 +122,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'fr',
     ));
     // The import should have created 0 string and rejected 0.
-    $this->assertRaw(t('One translation file could not be imported. <a href="@url">See the log</a> for details.', array('@url' => \Drupal::url('dblog.overview'))), 'The empty translation file import reported no translations imported.');
+    $this->assertRaw(t('One translation file could not be imported. <a href=":url">See the log</a> for details.', array(':url' => \Drupal::url('dblog.overview'))), 'The empty translation file import reported no translations imported.');
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomMachineName(16);
