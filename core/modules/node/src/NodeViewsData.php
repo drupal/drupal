@@ -24,7 +24,7 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_data']['table']['base']['access query tag'] = 'node_access';
     $data['node_field_data']['table']['wizard_id'] = 'node';
 
-    $data['node_field_data']['nid']['field']['argument'] = [
+    $data['node_field_data']['nid']['argument'] = [
       'id' => 'node_nid',
       'name field' => 'title',
       'numeric' => TRUE,
