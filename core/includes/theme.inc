@@ -1480,11 +1480,7 @@ function template_preprocess_field(&$variables, $hook) {
   // readers.
   $variables['label'] = $element['#title'];
 
-
-  // @todo Check for is_object() required due to pseudo field used in
-  // quickedit_test_entity_view_alter(). Remove this check after this is fixed
-  // in https://www.drupal.org/node/2550225.
-  $variables['multiple'] = is_object($element['#items']) ? $element['#items']->getFieldDefinition()->getFieldStorageDefinition()->isMultiple() : FALSE;
+  $variables['multiple'] = $element['#items']->getFieldDefinition()->getFieldStorageDefinition()->isMultiple();
 
   static $default_attributes;
   if (!isset($default_attributes)) {

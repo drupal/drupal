@@ -130,10 +130,9 @@ function quickedit_preprocess_field(&$variables) {
     return;
   }
 
-  // Fields that are not part of the entity (i.e. dynamically injected "pseudo
-  // fields") and computed fields are not editable.
+  // Fields that are computed fields are not editable.
   $definition = $entity->getFieldDefinition($element['#field_name']);
-  if ($definition && !$definition->isComputed()) {
+  if (!$definition->isComputed()) {
     $variables['attributes']['data-quickedit-field-id'] = $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
   }
 }

@@ -397,20 +397,6 @@ class QuickEditLoadingTest extends WebTestBase {
   }
 
   /**
-   * Tests that Quick Edit doesn't make pseudo fields or computed fields
-   * editable.
-   */
-  public function testPseudoFields() {
-    \Drupal::service('module_installer')->install(array('quickedit_test'));
-
-    $this->drupalLogin($this->authorUser);
-    $this->drupalGet('node/1');
-
-    // Check that the data- attribute is not added.
-    $this->assertNoRaw('data-quickedit-field-id="node/1/quickedit_test_pseudo_field/en/default"');
-  }
-
-  /**
    * Tests that Quick Edit doesn't make fields rendered with display options
    * editable.
    */
