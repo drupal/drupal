@@ -126,10 +126,16 @@ class NodeAdminTest extends NodeTestBase {
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');
     $this->assertResponse(200);
+
+    $node_type_labels = $this->xpath('//td[contains(@class, "views-field-type")]');
+    $delta = 0;
     foreach ($nodes as $node) {
       $this->assertLinkByHref('node/' . $node->id());
       $this->assertLinkByHref('node/' . $node->id() . '/edit');
       $this->assertLinkByHref('node/' . $node->id() . '/delete');
+      // Verify that we can see the content type label.
+      $this->assertEqual(trim((string) $node_type_labels[$delta]), $node->type->entity->label());
+      $delta++;
     }
 
     // Verify filtering by publishing status.
