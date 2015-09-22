@@ -141,10 +141,10 @@ class DateTimeDatelistWidget extends DateTimeWidgetBase {
   public function settingsSummary() {
     $summary = array();
 
-    $summary[] = t('Date part order: !order', array('!order' => $this->getSetting('date_order')));
+    $summary[] = t('Date part order: @order', array('@order' => $this->getSetting('date_order')));
     if ($this->getFieldSetting('datetime_type') == 'datetime') {
-      $summary[] = t('Time type: !time_type', array('!time_type' => $this->getSetting('time_type')));
-      $summary[] = t('Time increments: !increment', array('!increment' => $this->getSetting('increment')));
+      $summary[] = t('Time type: @time_type', array('@time_type' => $this->getSetting('time_type')));
+      $summary[] = t('Time increments: @increment', array('@increment' => $this->getSetting('increment')));
     }
 
     return $summary;

@@ -148,8 +148,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
             break;
           default:
             $limit = PHP_INT_MAX;
-            $this->message->display($this->t('Invalid PHP memory_limit !limit, setting to unlimited.',
-              array('!limit' => $limit)));
+            $this->message->display($this->t('Invalid PHP memory_limit @limit, setting to unlimited.',
+              array('@limit' => $limit)));
         }
       }
       $this->memoryLimit = $limit;

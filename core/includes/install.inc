@@ -549,16 +549,22 @@ function drupal_verify_profile($install_state) {
 
   $requirements = array();
 
-  if (count($missing_modules)) {
-    $modules = array();
+  if ($missing_modules) {
+    $build = [
+      '#theme' => 'item_list',
+      '#context' => ['list_style' => 'comma-list'],
+    ];
+
     foreach ($missing_modules as $module) {
-      $modules[] = '<span class="admin-missing">' . Unicode::ucfirst($module) . '</span>';
+      $build['#items'][] = array('#markup' => '<span class="admin-missing">' . Unicode::ucfirst($module) . '</span>');
     }
+
+    $modules_list = \Drupal::service('renderer')->renderPlain($build);
     $requirements['required_modules'] = array(
-      'title'       => t('Required modules'),
-      'value'       => t('Required modules not found.'),
-      'severity'    => REQUIREMENT_ERROR,
-      'description' => t('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
+      'title' => t('Required modules'),
+      'value' => t('Required modules not found.'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: @modules', array('@modules' => $modules_list)),
     );
   }
   return $requirements;
