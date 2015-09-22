@@ -37,7 +37,7 @@ class Date extends NumericFilter {
         '#title' => $this->t('Value type'),
         '#options' => array(
           'date' => $this->t('A date in any machine readable format. CCYY-MM-DD HH:MM:SS is preferred.'),
-          'offset' => $this->t('An offset from the current time such as "!example1" or "!example2"', array('!example1' => '+1 day', '!example2' => '-2 hours -30 minutes')),
+          'offset' => $this->t('An offset from the current time such as "@example1" or "@example2"', array('@example1' => '+1 day', '@example2' => '-2 hours -30 minutes')),
         ),
         '#default_value' => !empty($this->value['type']) ? $this->value['type'] : 'date',
       );

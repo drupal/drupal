@@ -512,6 +512,14 @@ td.group-title {
   margin-right: 0.2083em;
 }
 
+.views-ui-display-tab-setting > span {
+  margin-left: 0.5em; /* LTR */
+}
+[dir="rtl"] .views-ui-display-tab-setting > span {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+
 /** Applies an overridden(italics) font style to overridden buckets.
  * The better way to implement this would be to add the overridden class
  * to the bucket header when the bucket is overridden and style it as a

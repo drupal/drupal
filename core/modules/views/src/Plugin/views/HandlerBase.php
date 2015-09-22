@@ -185,7 +185,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       return $this->options['admin_label'];
     }
     $title = ($short && isset($this->definition['title short'])) ? $this->definition['title short'] : $this->definition['title'];
-    return $this->t('!group: !title', array('!group' => $this->definition['group'], '!title' => $title));
+    return $this->t('@group: @title', array('@group' => $this->definition['group'], '@title' => $title));
   }
 
   /**

@@ -585,7 +585,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           $name = $types_info[$id]['name'];
           // Surround IDs by '***LANGUAGE_...***', to avoid query collisions.
           $id = '***LANGUAGE_' . $id . '***';
-          $list[$id] = $this->t('!type language selected for page', array('!type' => $name));
+          $list[$id] = $this->t('@type language selected for page', array('@type' => $name));
         }
       }
       if (!empty($current_values)) {
@@ -595,7 +595,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           // add that option too, so it is not lost. If not among the current
           // values, skip displaying it to avoid user confusion.
           if (isset($type['name']) && !isset($list[$id]) && in_array($id, $current_values)) {
-            $list[$id] = $this->t('!type language selected for page', array('!type' => $type['name']));
+            $list[$id] = $this->t('@type language selected for page', array('@type' => $type['name']));
           }
         }
       }

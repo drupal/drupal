@@ -1544,7 +1544,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         if ($access_plugin->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="js-form-item form-item description">',
-            '#markup' => $this->t('You may also adjust the !settings for the currently selected access restriction.', array('!settings' => $this->optionLink(t('settings'), 'access_options'))),
+            '#markup' => $this->t('You may also adjust the @settings for the currently selected access restriction.', array('@settings' => $this->optionLink($this->t('settings'), 'access_options'))),
             '#suffix' => '</div>',
           );
         }
@@ -1582,7 +1582,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $form['markup'] = array(
             '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
-            '#markup' => $this->t('You may also adjust the !settings for the currently selected cache mechanism.', array('!settings' => $this->optionLink(t('settings'), 'cache_options'))),
+            '#markup' => $this->t('You may also adjust the @settings for the currently selected cache mechanism.', array('@settings' => $this->optionLink($this->t('settings'), 'cache_options'))),
           );
         }
         break;
@@ -1654,7 +1654,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $form['markup'] = array(
             '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
-            '#markup' => $this->t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'style_options'))),
+            '#markup' => $this->t('You may also adjust the @settings for the currently selected style.', array('@settings' => $this->optionLink($this->t('settings'), 'style_options'))),
           );
         }
 
@@ -1702,7 +1702,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $form['markup'] = array(
             '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
-            '#markup' => $this->t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->optionLink(t('settings'), 'row_options'))),
+            '#markup' => $this->t('You may also adjust the @settings for the currently selected row style.', array('@settings' => $this->optionLink($this->t('settings'), 'row_options'))),
           );
         }
 
@@ -1803,7 +1803,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $form['markup'] = array(
             '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
-            '#markup' => $this->t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'exposed_form_options'))),
+            '#markup' => $this->t('You may also adjust the @settings for the currently selected style.', array('@settings' => $this->optionLink($this->t('settings'), 'exposed_form_options'))),
           );
         }
         break;
@@ -1839,7 +1839,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $form['markup'] = array(
             '#prefix' => '<div class="js-form-item form-item description">',
             '#suffix' => '</div>',
-            '#markup' => $this->t('You may also adjust the !settings for the currently selected pager.', array('!settings' => $this->optionLink(t('settings'), 'pager_options'))),
+            '#markup' => $this->t('You may also adjust the @settings for the currently selected pager.', array('@settings' => $this->optionLink($this->t('settings'), 'pager_options'))),
           );
         }
 

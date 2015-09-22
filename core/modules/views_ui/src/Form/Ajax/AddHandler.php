@@ -139,7 +139,7 @@ class AddHandler extends ViewsFormBase {
         foreach ($group_options as $key => $option) {
           $form['options']['name'][$key] = array(
             '#type' => 'checkbox',
-            '#title' => $this->t('!group: !field', array('!group' => $option['group'], '!field' => $option['title'])),
+            '#title' => $this->t('@group: @field', array('@group' => $option['group'], '@field' => $option['title'])),
             '#description' => $option['help'],
             '#return_value' => $key,
             '#prefix' => "<div class='filterable-option'>",
