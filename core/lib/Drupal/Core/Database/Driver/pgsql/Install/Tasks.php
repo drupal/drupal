@@ -250,18 +250,23 @@ class Tasks extends InstallTasks {
     // At the same time checking for the existence of the function fixes
     // concurrency issues, when both try to update at the same time.
     try {
+      $connection = Database::getConnection();
       // Don't use {} around pg_proc table.
-      if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'")->fetchField()) {
-        db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
+      if (!$connection->query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'")->fetchField()) {
+        $connection->query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
           \'SELECT random();\'
-          LANGUAGE \'sql\''
+          LANGUAGE \'sql\'',
+          [],
+          [ 'allow_delimiter_in_query' => TRUE ]
         );
       }
 
-      if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'substring_index'")->fetchField()) {
-        db_query('CREATE OR REPLACE FUNCTION "substring_index"(text, text, integer) RETURNS text AS
+      if (!$connection->query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'substring_index'")->fetchField()) {
+        $connection->query('CREATE OR REPLACE FUNCTION "substring_index"(text, text, integer) RETURNS text AS
           \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
-          LANGUAGE \'sql\''
+          LANGUAGE \'sql\'',
+          [],
+          [ 'allow_delimiter_in_query' => TRUE ]
         );
       }
 

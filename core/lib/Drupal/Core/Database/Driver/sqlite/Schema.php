@@ -48,7 +48,7 @@ class Schema extends DatabaseSchema {
    */
   public function createTableSql($name, $table) {
     $sql = array();
-    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumnsSql($name, $table) . "\n);\n";
+    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumnsSql($name, $table) . "\n)\n";
     return array_merge($sql, $this->createIndexSql($name, $table));
   }
 
@@ -60,12 +60,12 @@ class Schema extends DatabaseSchema {
     $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
-        $sql[] = 'CREATE UNIQUE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
+        $sql[] = 'CREATE UNIQUE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . ")\n";
       }
     }
     if (!empty($schema['indexes'])) {
       foreach ($schema['indexes'] as $key => $fields) {
-        $sql[] = 'CREATE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
+        $sql[] = 'CREATE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . ")\n";
       }
     }
     return $sql;

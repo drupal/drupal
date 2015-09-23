@@ -539,7 +539,8 @@ class Schema extends DatabaseSchema {
       // Add table prefixes before truncating.
       $comment = Unicode::truncate($this->connection->prefixTables($comment), $length, TRUE, TRUE);
     }
-
+    // Remove semicolons to avoid triggering multi-statement check.
+    $comment = strtr($comment, array(';' => '.'));
     return $this->connection->quote($comment);
   }
 

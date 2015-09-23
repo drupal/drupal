@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * Tests of the core database system.
@@ -122,19 +123,38 @@ class ConnectionTest extends DatabaseTestBase {
    * Ensure that you cannot execute multiple statements on phpversion() > 5.5.21 or > 5.6.5.
    */
   public function testMultipleStatementsForNewPhp() {
-    // This just tests mysql, as other PDO integrations don't allow to disable
+    // This just tests mysql, as other PDO integrations don't allow disabling
     // multiple statements.
     if (Database::getConnection()->databaseType() !== 'mysql' || !defined('\PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
       return;
     }
 
     $db = Database::getConnection('default', 'default');
+    // Disable the protection at the PHP level.
     try {
-      $db->query('SELECT * FROM {test}; SELECT * FROM {test_people}')->execute();
-      $this->fail('NO PDO exception thrown for multiple statements.');
+      $db->query('SELECT * FROM {test}; SELECT * FROM {test_people}',
+        [],
+        [ 'allow_delimiter_in_query' => TRUE ]
+      );
+      $this->fail('No PDO exception thrown for multiple statements.');
     }
-    catch (\Exception $e) {
+    catch (DatabaseExceptionWrapper $e) {
       $this->pass('PDO exception thrown for multiple statements.');
+    }
+  }
+
+  /**
+   * Ensure that you cannot execute multiple statements.
+   */
+  public function testMultipleStatements() {
+
+    $db = Database::getConnection('default', 'default');
+    try {
+      $db->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
+      $this->fail('No exception thrown for multiple statements.');
+    }
+    catch (\InvalidArgumentException $e) {
+      $this->pass('Exception thrown for multiple statements.');
     }
   }
 

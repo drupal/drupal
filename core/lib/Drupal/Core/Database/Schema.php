@@ -640,6 +640,8 @@ abstract class Schema implements PlaceholderInterface {
    *   The prepared comment.
    */
   public function prepareComment($comment, $length = NULL) {
+    // Remove semicolons to avoid triggering multi-statement check.
+    $comment = strtr($comment, [';' => '.']);
     return $this->connection->quote($comment);
   }
 

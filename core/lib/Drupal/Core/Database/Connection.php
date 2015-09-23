@@ -239,6 +239,12 @@ abstract class Connection {
    *   further up the call chain can take an appropriate action. To suppress
    *   that behavior and simply return NULL on failure, set this option to
    *   FALSE.
+   * - allow_delimiter_in_query: By default, queries which have the ; delimiter
+   *   any place in them will cause an exception. This reduces the chance of SQL
+   *   injection attacks that terminate the original query and add one or more
+   *   additional queries (such as inserting new user accounts). In rare cases,
+   *   such as creating an SQL function, a ; is needed and can be allowed by
+   *   changing this option to TRUE.
    *
    * @return array
    *   An array of default query options.
@@ -249,6 +255,7 @@ abstract class Connection {
       'fetch' => \PDO::FETCH_OBJ,
       'return' => Database::RETURN_STATEMENT,
       'throw_exception' => TRUE,
+      'allow_delimiter_in_query' => FALSE,
     );
   }
 
@@ -491,7 +498,7 @@ abstract class Connection {
       return '';
 
     // Flatten the array of comments.
-    $comment = implode('; ', $comments);
+    $comment = implode('. ', $comments);
 
     // Sanitize the comment string so as to avoid SQL injection attacks.
     return '/* ' . $this->filterComment($comment) . ' */ ';
@@ -516,7 +523,7 @@ abstract class Connection {
    *
    * Would result in the following SQL statement being generated:
    * @code
-   * "/ * Exploit * / DROP TABLE node; -- * / UPDATE example SET field2=..."
+   * "/ * Exploit * / DROP TABLE node. -- * / UPDATE example SET field2=..."
    * @endcode
    *
    * Unless the comment is sanitised first, the SQL server would drop the
@@ -529,7 +536,8 @@ abstract class Connection {
    *   A sanitized version of the query comment string.
    */
   protected function filterComment($comment = '') {
-    return strtr($comment, ['*' => ' * ']);
+    // Change semicolons to period to avoid triggering multi-statement check.
+    return strtr($comment, ['*' => ' * ', ';' => '.']);
   }
 
   /**
@@ -593,6 +601,16 @@ abstract class Connection {
       }
       else {
         $this->expandArguments($query, $args);
+        // To protect against SQL injection, Drupal only supports executing one
+        // statement at a time.  Thus, the presence of a SQL delimiter (the
+        // semicolon) is not allowed unless the option is set.  Allowing
+        // semicolons should only be needed for special cases like defining a
+        // function or stored procedure in SQL. Trim any trailing delimiter to
+        // minimize false positives.
+        $query = rtrim($query, ";  \t\n\r\0\x0B");
+        if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
+          throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
+        }
         $stmt = $this->prepareQuery($query);
         $stmt->execute($args, $options);
       }
