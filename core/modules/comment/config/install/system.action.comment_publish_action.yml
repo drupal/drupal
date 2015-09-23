@@ -1,9 +1,10 @@
-id: comment_publish_action
-label: 'Publish comment'
-status: true
 langcode: en
-type: comment
-plugin: comment_publish_action
+status: true
 dependencies:
   module:
     - comment
+id: comment_publish_action
+label: 'Publish comment'
+type: comment
+plugin: comment_publish_action
+configuration: {  }

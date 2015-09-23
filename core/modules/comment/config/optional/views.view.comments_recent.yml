@@ -235,6 +235,13 @@ display:
           content: 'No comments available.'
           tokenize: false
           plugin_id: text_custom
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false
   block_1:
     display_plugin: block
     id: block_1
@@ -245,3 +252,10 @@ display:
       block_category: 'Lists (Views)'
       allow:
         items_per_page: true
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false

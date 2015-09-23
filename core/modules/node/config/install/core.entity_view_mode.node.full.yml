@@ -1,8 +1,9 @@
-id: node.full
-label: 'Full content'
+langcode: en
 status: false
-cache: true
-targetEntityType: node
 dependencies:
   module:
     - node
+id: node.full
+label: 'Full content'
+targetEntityType: node
+cache: true

@@ -466,6 +466,8 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false
   page_1:
     display_plugin: page
@@ -488,4 +490,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false

@@ -1,8 +1,9 @@
-id: aggregator_item.summary
-label: Summary
+langcode: en
 status: true
-cache: true
-targetEntityType: aggregator_item
 dependencies:
   module:
     - aggregator
+id: aggregator_item.summary
+label: Summary
+targetEntityType: aggregator_item
+cache: true

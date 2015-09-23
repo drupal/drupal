@@ -1,6 +1,10 @@
-format: basic_html
-name: 'Basic HTML'
+langcode: en
 status: true
+dependencies:
+  module:
+    - editor
+name: 'Basic HTML'
+format: basic_html
 weight: 0
 roles:
   - authenticated
@@ -44,7 +48,3 @@ filters:
     status: true
     weight: 11
     settings: {  }
-langcode: en
-dependencies:
-  module:
-    - editor

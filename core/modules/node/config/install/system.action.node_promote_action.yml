@@ -1,9 +1,10 @@
-id: node_promote_action
-label: 'Promote content to front page'
-status: true
 langcode: en
-type: node
-plugin: node_promote_action
+status: true
 dependencies:
   module:
     - node
+id: node_promote_action
+label: 'Promote content to front page'
+type: node
+plugin: node_promote_action
+configuration: {  }

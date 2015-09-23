@@ -233,10 +233,18 @@ display:
       relationships: {  }
       fields: {  }
       arguments: {  }
+      display_extenders: {  }
     display_plugin: default
     display_title: Master
     id: default
     position: 0
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -264,10 +272,25 @@ display:
         options:
           relationship: none
           view_mode: rss
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   page_1:
     display_options:
       path: node
+      display_extenders: {  }
     display_plugin: page
     display_title: Page
     id: page_1
     position: 1
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false

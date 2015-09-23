@@ -1,16 +1,5 @@
-id: stark_admin
-theme: stark
-weight: 1
-status: true
 langcode: en
-region: sidebar_first
-plugin: 'system_menu_block:admin'
-settings:
-  label: Administration
-  provider: system
-  label_display: visible
-  level: 1
-  depth: 0
+status: true
 dependencies:
   config:
     - system.menu.admin
@@ -18,4 +7,17 @@ dependencies:
     - system
   theme:
     - stark
+id: stark_admin
+theme: stark
+region: sidebar_first
+weight: 1
+provider: null
+plugin: 'system_menu_block:admin'
+settings:
+  id: 'system_menu_block:admin'
+  label: Administration
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
 visibility: {  }

@@ -1,6 +1,10 @@
-id: user.user_picture
-status: true
 langcode: en
+status: true
+dependencies:
+  module:
+    - image
+    - user
+id: user.user_picture
 field_name: user_picture
 entity_type: user
 type: image
@@ -12,14 +16,15 @@ settings:
     title: ''
     width: null
     height: null
+  target_type: file
+  display_field: false
+  display_default: false
+  target_bundle: null
 module: image
 locked: false
 cardinality: 1
+translatable: true
 indexes:
   target_id:
     - target_id
-dependencies:
-  module:
-    - image
-    - user
 persist_with_no_fields: false

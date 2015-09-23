@@ -1,9 +1,10 @@
-id: node_publish_action
-label: 'Publish content'
-status: true
 langcode: en
-type: node
-plugin: node_publish_action
+status: true
 dependencies:
   module:
     - node
+id: node_publish_action
+label: 'Publish content'
+type: node
+plugin: node_publish_action
+configuration: {  }

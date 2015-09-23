@@ -129,6 +129,14 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
+      cacheable: false
   feed_items:
     display_plugin: feed
     id: feed_items
@@ -139,3 +147,10 @@ display:
       display_description: ''
       defaults:
         arguments: true
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false

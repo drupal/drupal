@@ -346,6 +346,16 @@ display:
           plugin_id: language
           entity_type: node
           entity_field: langcode
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   attachment_1:
     id: attachment_1
     display_title: Attachment
@@ -403,6 +413,16 @@ display:
         default: default
         page_1: page_1
       inherit_arguments: false
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   page_1:
     id: page_1
     display_title: Page
@@ -419,3 +439,13 @@ display:
         weight: 0
         menu_name: main
         parent: ''
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false

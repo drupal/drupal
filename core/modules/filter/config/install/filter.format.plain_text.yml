@@ -2,13 +2,12 @@
 # - is accessible to all users.
 # - is secure, using very basic formatting only.
 # - may be modified by installation profiles to have other properties.
-format: plain_text
-name: 'Plain text'
+langcode: en
 status: true
+dependencies: {  }
+name: 'Plain text'
+format: plain_text
 weight: 10
-roles:
-  - anonymous
-  - authenticated
 filters:
   # Escape all HTML.
   filter_html_escape:

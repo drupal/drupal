@@ -1,17 +1,19 @@
-id: stark_login
-theme: stark
-weight: 0
-status: true
 langcode: en
-region: sidebar_first
-plugin: user_login_block
-settings:
-  label: 'User login'
-  provider: user
-  label_display: visible
+status: true
 dependencies:
   module:
     - user
   theme:
     - stark
+id: stark_login
+theme: stark
+region: sidebar_first
+weight: 0
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: 'User login'
+  provider: user
+  label_display: visible
 visibility: {  }

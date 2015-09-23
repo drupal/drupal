@@ -1,16 +1,4 @@
-id: aggregator_item.aggregator_item.summary
-targetEntityType: aggregator_item
-bundle: aggregator_item
-mode: summary
-status: true
-content:
-  timestamp:
-    weight: 0
-hidden:
-  link: true
-  author: true
-  feed: true
-  description: true
+langcode: en
 status: true
 dependencies:
   config:
@@ -18,3 +6,15 @@ dependencies:
   module:
     - aggregator
     - entity_reference
+id: aggregator_item.aggregator_item.summary
+targetEntityType: aggregator_item
+bundle: aggregator_item
+mode: summary
+content:
+  timestamp:
+    weight: 0
+hidden:
+  author: true
+  description: true
+  feed: true
+  link: true

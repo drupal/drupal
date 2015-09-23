@@ -1,8 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.user.user.user_picture
+  module:
+    - image
+    - user
 id: user.user.default
 targetEntityType: user
 bundle: user
 mode: default
 content:
+  member_for:
+    weight: 5
   user_picture:
     type: image
     weight: 0
@@ -11,8 +21,4 @@ content:
       image_link: content
     third_party_settings: {  }
     label: hidden
-status: true
-dependencies:
-  module:
-    - image
-    - user
+hidden: {  }

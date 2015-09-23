@@ -18,5 +18,4 @@ default_value: {  }
 default_value_callback: ''
 settings:
   display_summary: false
-third_party_settings: {  }
 field_type: text_with_summary

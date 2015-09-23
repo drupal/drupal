@@ -395,8 +395,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_false: 'Temporary'
-            format_custom_true: 'Permanent'
+            format_custom_false: Temporary
+            format_custom_true: Permanent
           plugin_id: field
           entity_type: file
           entity_field: status
@@ -718,8 +718,11 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_content'
+        - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false
   page_1:
     display_plugin: page
@@ -751,8 +754,11 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_content'
+        - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false
   page_2:
     display_plugin: page
@@ -1105,6 +1111,8 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false

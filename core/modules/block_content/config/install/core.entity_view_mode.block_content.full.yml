@@ -1,8 +1,9 @@
-id: block_content.full
-label: Full
+langcode: en
 status: false
-cache: true
-targetEntityType: block_content
 dependencies:
   module:
     - block_content
+id: block_content.full
+label: Full
+targetEntityType: block_content
+cache: true

@@ -1,8 +1,5 @@
-id: node.print
-label: Print
+langcode: en
 status: false
-cache: true
-targetEntityType: node
 dependencies:
   module:
     - book
@@ -10,3 +7,7 @@ dependencies:
   enforced:
     module:
       - book
+id: node.print
+label: Print
+targetEntityType: node
+cache: true

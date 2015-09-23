@@ -1,8 +1,9 @@
-id: user.full
-label: 'User account'
+langcode: en
 status: false
-cache: true
-targetEntityType: user
 dependencies:
   module:
     - user
+id: user.full
+label: 'User account'
+targetEntityType: user
+cache: true

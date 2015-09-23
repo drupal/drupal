@@ -166,6 +166,15 @@ display:
       empty: {  }
       relationships: {  }
       fields: {  }
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   block_1:
     id: block_1
     display_title: Block
@@ -195,6 +204,15 @@ display:
           specify_validation: true
           plugin_id: date_year_month
           entity_type: node
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false
   page_1:
     id: page_1
     display_title: Page
@@ -205,3 +223,12 @@ display:
         type: views_query
         options: {  }
       path: archive
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      cacheable: false

@@ -1,7 +1,9 @@
-id: language-edit
-module: language
-label: Editing languages
 langcode: en
+status: true
+dependencies: {  }
+id: language-edit
+label: 'Editing languages'
+module: language
 routes:
   - route_name: entity.configurable_language.edit_form
 tips:

@@ -1,17 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bartik
 id: bartik_messages
 theme: bartik
-weight: 0
-status: true
-langcode: en
 region: highlighted
+weight: 0
+provider: null
 plugin: system_messages_block
 settings:
   id: system_messages_block
   label: 'Status messages'
   provider: system
   label_display: '0'
-dependencies:
-  module:
-    - system
-  theme:
-    - bartik
+visibility: {  }

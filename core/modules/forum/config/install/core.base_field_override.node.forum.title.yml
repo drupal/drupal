@@ -1,4 +1,3 @@
-# Changes the label of the title base field on the forum node type.
 langcode: en
 status: true
 dependencies:
@@ -9,6 +8,7 @@ field_name: title
 entity_type: node
 bundle: forum
 label: Subject
+description: ''
 required: true
 translatable: true
 default_value: {  }

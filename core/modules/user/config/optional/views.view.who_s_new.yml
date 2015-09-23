@@ -163,6 +163,13 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false
   block_1:
     display_plugin: block
     id: block_1
@@ -172,3 +179,10 @@ display:
       display_description: 'A list of new users'
       block_description: 'Who''s new'
       block_category: User
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      cacheable: false

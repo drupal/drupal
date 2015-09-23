@@ -12,19 +12,12 @@ targetEntityType: node
 bundle: book
 mode: default
 content:
-  title:
-    type: string_textfield
-    weight: -5
+  body:
+    type: text_textarea_with_summary
+    weight: 26
     settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
+      rows: 9
+      summary_rows: 3
       placeholder: ''
     third_party_settings: {  }
   created:
@@ -44,13 +37,19 @@ content:
       display_label: true
     weight: 16
     third_party_settings: {  }
-  body:
-    type: text_textarea_with_summary
-    weight: 26
+  title:
+    type: string_textfield
+    weight: -5
     settings:
-      rows: 9
-      summary_rows: 3
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
       placeholder: ''
     third_party_settings: {  }
 hidden: {  }
-third_party_settings: {  }

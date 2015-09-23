@@ -22,6 +22,4 @@ content:
     third_party_settings: {  }
   links:
     weight: 101
-hidden:
-  langcode: true
-third_party_settings: {  }
+hidden: {  }

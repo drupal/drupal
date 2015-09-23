@@ -1,8 +1,9 @@
-id: user.compact
-label: Compact
+langcode: en
 status: true
-cache: true
-targetEntityType: user
 dependencies:
   module:
     - user
+id: user.compact
+label: Compact
+targetEntityType: user
+cache: true

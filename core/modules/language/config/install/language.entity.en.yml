@@ -1,7 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
 id: en
 label: English
-direction: 'ltr'
+direction: ltr
 weight: 0
 locked: false
-status: true
-langcode: en

@@ -1,10 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_image
+    - node.type.article
+  module:
+    - image
 id: node.article.field_image
+field_name: field_image
 entity_type: node
 bundle: article
-field_name: field_image
 label: Image
 description: ''
 required: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -23,10 +32,6 @@ settings:
     title: ''
     width: null
     height: null
-status: true
-langcode: en
+  handler: 'default:node'
+  handler_settings: {  }
 field_type: image
-dependencies:
-  config:
-    - field.storage.node.field_image
-    - node.type.article

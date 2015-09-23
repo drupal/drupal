@@ -16,5 +16,5 @@ content:
     settings: {  }
     third_party_settings: {  }
     label: above
-hidden: {  }
-third_party_settings: {  }
+hidden:
+  forum_container: true

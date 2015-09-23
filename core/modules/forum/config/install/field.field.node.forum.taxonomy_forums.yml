@@ -17,12 +17,11 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default
+  handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
       forums: forums
     sort:
       field: _none
     auto_create: true
-third_party_settings: {  }
 field_type: entity_reference

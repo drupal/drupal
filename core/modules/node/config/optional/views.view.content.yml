@@ -561,10 +561,13 @@ display:
     position: 0
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_content'
+        - 'languages:language_interface'
         - url
+        - url.query_args
         - user
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
   page_1:
     display_options:
@@ -589,8 +592,11 @@ display:
     position: 1
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_content'
+        - 'languages:language_interface'
         - url
+        - url.query_args
         - user
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false

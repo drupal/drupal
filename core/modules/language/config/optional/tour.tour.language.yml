@@ -1,7 +1,9 @@
-id: language
-module: language
-label: Language
 langcode: en
+status: true
+dependencies: {  }
+id: language
+label: Language
+module: language
 routes:
   - route_name: entity.configurable_language.collection
 tips:

@@ -9,23 +9,14 @@ dependencies:
     - node.type.article
   module:
     - comment
-    - entity_reference
     - image
     - path
-    - taxonomy
     - text
 id: node.article.default
 targetEntityType: node
 bundle: article
 mode: default
 content:
-  title:
-    type: string_textfield
-    weight: 0
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   body:
     type: text_textarea_with_summary
     weight: 1
@@ -34,9 +25,14 @@ content:
       summary_rows: 3
       placeholder: ''
     third_party_settings: {  }
-  field_tags:
-    type: entity_reference_autocomplete_tags
-    weight: 3
+  comment:
+    type: comment_default
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 10
     settings: {  }
     third_party_settings: {  }
   field_image:
@@ -46,17 +42,14 @@ content:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+  field_tags:
+    type: entity_reference_autocomplete_tags
+    weight: 3
+    settings: {  }
     third_party_settings: {  }
-  created:
-    type: datetime_timestamp
-    weight: 10
+  path:
+    type: path
+    weight: 30
     settings: {  }
     third_party_settings: {  }
   promote:
@@ -71,15 +64,19 @@ content:
       display_label: true
     weight: 16
     third_party_settings: {  }
-  comment:
-    type: comment_default
-    weight: 20
-    settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-  path:
-    type: path
-    weight: 30
-    settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
 hidden: {  }
-third_party_settings: {  }

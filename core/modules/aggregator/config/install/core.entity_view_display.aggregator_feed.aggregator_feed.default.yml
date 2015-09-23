@@ -1,31 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - aggregator
 id: aggregator_feed.aggregator_feed.default
 targetEntityType: aggregator_feed
 bundle: aggregator_feed
 mode: default
-status: true
 content:
-  items:
-    weight: 0
   checked:
     type: timestamp_ago
     weight: 1
     settings: {  }
     third_party_settings: {  }
     label: inline
-  image:
-    weight: 2
   description:
     weight: 3
+  feed_icon:
+    weight: 5
+  image:
+    weight: 2
+  items:
+    weight: 0
   link:
     type: uri_link
     weight: 4
     settings: {  }
     third_party_settings: {  }
     label: inline
-  feed_icon:
-    weight: 5
 hidden:
   more_link: true
-dependencies:
-  module:
-    - aggregator

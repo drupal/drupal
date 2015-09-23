@@ -1,15 +1,17 @@
-id: bartik_local_actions
-theme: bartik
-weight: -20
-status: true
 langcode: en
-region: content
-plugin: local_actions_block
-settings:
-  id: local_actions_block
-  label: Primary admin actions
-  label_display: '0'
+status: true
 dependencies:
   theme:
     - bartik
+id: bartik_local_actions
+theme: bartik
+region: content
+weight: -20
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
 visibility: {  }

@@ -1,9 +1,10 @@
-id: node_make_unsticky_action
-label: 'Make content unsticky'
-status: true
 langcode: en
-type: node
-plugin: node_make_unsticky_action
+status: true
 dependencies:
   module:
     - node
+id: node_make_unsticky_action
+label: 'Make content unsticky'
+type: node
+plugin: node_make_unsticky_action
+configuration: {  }

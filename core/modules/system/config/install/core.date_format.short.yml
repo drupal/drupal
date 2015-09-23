@@ -1,6 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
 id: short
 label: 'Default short date'
-status: true
-langcode: en
 locked: false
 pattern: 'm/d/Y - H:i'

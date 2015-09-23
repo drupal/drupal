@@ -1,8 +1,9 @@
-id: taxonomy_term.full
-label: 'Taxonomy term page'
+langcode: en
 status: true
-cache: true
-targetEntityType: taxonomy_term
 dependencies:
   module:
     - taxonomy
+id: taxonomy_term.full
+label: 'Taxonomy term page'
+targetEntityType: taxonomy_term
+cache: true

@@ -16,13 +16,6 @@ targetEntityType: node
 bundle: forum
 mode: teaser
 content:
-  taxonomy_forums:
-    type: entity_reference_label
-    weight: 10
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
   body:
     label: hidden
     type: text_summary_or_trimmed
@@ -32,7 +25,12 @@ content:
     third_party_settings: {  }
   links:
     weight: 101
+  taxonomy_forums:
+    type: entity_reference_label
+    weight: 10
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
 hidden:
-  langcode: true
   comment_forum: true
-third_party_settings: {  }

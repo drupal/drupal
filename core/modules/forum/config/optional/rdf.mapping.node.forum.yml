@@ -1,3 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.forum
+  module:
+    - node
 id: node.forum
 targetEntityType: node
 bundle: forum
@@ -23,16 +30,11 @@ fieldMappings:
   uid:
     properties:
       - 'schema:author'
-    mapping_type: 'rel'
+    mapping_type: rel
   comment_count:
     properties:
       - 'schema:interactionCount'
     datatype_callback:
       callable: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
       arguments:
-        interaction_type: 'UserComments'
-dependencies:
-  config:
-    - node.type.forum
-  module:
-    - node
+        interaction_type: UserComments

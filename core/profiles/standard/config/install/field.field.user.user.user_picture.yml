@@ -1,12 +1,19 @@
-id: user.user.user_picture
-status: true
 langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.user_picture
+  module:
+    - image
+    - user
+id: user.user.user_picture
+field_name: user_picture
 entity_type: user
 bundle: user
-field_name: user_picture
 label: Picture
 description: 'Your virtual face or picture.'
 required: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -25,7 +32,6 @@ settings:
     height: null
   alt_field_required: false
   title_field_required: false
+  handler: 'default:node'
+  handler_settings: {  }
 field_type: image
-dependencies:
-  config:
-    - field.storage.user.user_picture

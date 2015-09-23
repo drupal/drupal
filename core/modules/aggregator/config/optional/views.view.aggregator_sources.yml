@@ -141,6 +141,8 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       cacheable: false
   feed_1:
     display_plugin: feed
@@ -398,6 +400,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - user.permissions
       cacheable: false
   page_1:
     display_plugin: page
@@ -418,4 +421,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       cacheable: false

@@ -1,9 +1,10 @@
-id: comment_unpublish_action
-label: 'Unpublish comment'
-status: true
 langcode: en
-type: comment
-plugin: comment_unpublish_action
+status: true
 dependencies:
   module:
     - comment
+id: comment_unpublish_action
+label: 'Unpublish comment'
+type: comment
+plugin: comment_unpublish_action
+configuration: {  }

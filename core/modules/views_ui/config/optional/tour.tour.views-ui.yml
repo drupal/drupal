@@ -1,10 +1,16 @@
-id: views-ui
-module: views_ui
-label: 'View edit page'
 langcode: en
+status: true
+dependencies:
+  module:
+    - views_ui
+id: views-ui
+label: 'View edit page'
+module: views_ui
 routes:
-  - route_name: entity.view.edit_form
-  - route_name: entity.view.edit_display_form
+  -
+    route_name: entity.view.edit_form
+  -
+    route_name: entity.view.edit_display_form
 tips:
   views-main:
     id: views-main
@@ -80,12 +86,9 @@ tips:
   views-ui-preview:
     id: views-ui-preview
     plugin: text
-    label: 'Preview'
+    label: Preview
     body: 'Show a preview of the view output.'
     weight: 10
     location: left
     attributes:
       data-id: preview-submit
-dependencies:
-  module:
-    - views_ui

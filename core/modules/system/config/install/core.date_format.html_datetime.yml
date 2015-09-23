@@ -1,6 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
 id: html_datetime
 label: 'HTML Datetime'
-status: true
-langcode: en
 locked: true
 pattern: 'Y-m-d\TH:i:sO'

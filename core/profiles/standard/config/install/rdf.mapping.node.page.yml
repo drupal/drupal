@@ -1,3 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.page
+  module:
+    - node
 id: node.page
 targetEntityType: node
 bundle: page
@@ -23,16 +30,11 @@ fieldMappings:
   uid:
     properties:
       - 'schema:author'
-    mapping_type: 'rel'
+    mapping_type: rel
   comment_count:
     properties:
       - 'schema:interactionCount'
     datatype_callback:
       callable: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
       arguments:
-        interaction_type: 'UserComments'
-dependencies:
-  config:
-    - node.type.page
-  module:
-    - node
+        interaction_type: UserComments

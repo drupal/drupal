@@ -1,9 +1,10 @@
-id: node_unpublish_action
-label: 'Unpublish content'
-status: true
 langcode: en
-type: node
-plugin: node_unpublish_action
+status: true
 dependencies:
   module:
     - node
+id: node_unpublish_action
+label: 'Unpublish content'
+type: node
+plugin: node_unpublish_action
+configuration: {  }

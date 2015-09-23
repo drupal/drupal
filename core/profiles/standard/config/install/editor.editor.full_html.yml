@@ -1,3 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - ckeditor
 format: full_html
 editor: ckeditor
 settings:
@@ -12,7 +19,7 @@ settings:
             - Strike
             - Superscript
             - Subscript
-            - -
+            - '-'
             - RemoveFormat
         -
           name: Linking
@@ -51,10 +58,3 @@ image_upload:
   max_dimensions:
     width: 0
     height: 0
-status: true
-langcode: en
-dependencies:
-  config:
-    - filter.format.full_html
-  module:
-    - ckeditor

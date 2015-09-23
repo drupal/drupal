@@ -1,15 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  theme:
+    - stark
 id: stark_local_tasks
 theme: stark
-weight: -20
-status: true
-langcode: en
 region: content
+weight: -20
+provider: null
 plugin: local_tasks_block
 settings:
   id: local_tasks_block
   label: Tabs
+  provider: core
   label_display: '0'
-dependencies:
-  theme:
-    - stark
+  primary: true
+  secondary: true
 visibility: {  }

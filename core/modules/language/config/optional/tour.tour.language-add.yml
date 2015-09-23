@@ -1,7 +1,9 @@
-id: language-add
-module: language
-label: 'Adding languages'
 langcode: en
+status: true
+dependencies: {  }
+id: language-add
+label: 'Adding languages'
+module: language
 routes:
   - route_name: language.add
 tips:

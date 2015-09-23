@@ -10,7 +10,6 @@ dependencies:
   module:
     - comment
     - image
-    - taxonomy
     - text
     - user
 id: node.article.default
@@ -18,18 +17,25 @@ targetEntityType: node
 bundle: article
 mode: default
 content:
+  body:
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    label: hidden
+  comment:
+    label: above
+    type: comment_default
+    weight: 20
+    settings:
+      pager_id: 0
+    third_party_settings: {  }
   field_image:
     type: image
     weight: -1
     settings:
       image_style: large
       image_link: ''
-    third_party_settings: {  }
-    label: hidden
-  body:
-    type: text_default
-    weight: 0
-    settings: {  }
     third_party_settings: {  }
     label: hidden
   field_tags:
@@ -49,7 +55,5 @@ content:
   links:
     weight: 100
 hidden:
-  langcode: true
   field_image: true
   field_tags: true
-third_party_settings: {  }
