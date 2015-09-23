@@ -297,6 +297,32 @@ class EntityReferenceAdminTest extends WebTestBase {
     );
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
     $this->assertLink($node1->getTitle());
+
+    // Tests adding default values to autocomplete widgets.
+    Vocabulary::create(array('vid' => 'tags', 'name' => 'tags'))->save();
+    $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', 'tags');
+    $field_path = 'node.' . $this->type . '.field_' . $taxonomy_term_field_name;
+    $this->drupalGet($bundle_path . '/fields/' . $field_path . '/storage');
+    $edit = [
+      'cardinality' => -1,
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->drupalGet($bundle_path . '/fields/' . $field_path);
+    $term_name = $this->randomString();
+    $edit = [
+      // This must be set before new entities will be auto-created.
+      'settings[handler_settings][auto_create]' => 1,
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalGet($bundle_path . '/fields/' . $field_path);
+    $edit = [
+      // A term that doesn't yet exist.
+      'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    // The term should now exist.
+    $term = taxonomy_term_load_multiple_by_name($term_name, 'tags')[1];
+    $this->assertIdentical(1, count($term), 'Taxonomy term was auto created when set as field default.');
   }
 
   /**
