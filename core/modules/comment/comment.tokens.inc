@@ -154,7 +154,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? Xss::filter($comment->getSubject()) : $comment->getSubject();
+          $replacements[$original] = $sanitize ? Html::escape($comment->getSubject()) : $comment->getSubject();
           break;
 
         case 'body':
@@ -183,14 +183,14 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           if ($comment->getOwnerId()) {
             $bubbleable_metadata->addCacheableDependency($comment->getOwner());
           }
-          $replacements[$original] = $sanitize ? Xss::filter($name) : $name;
+          $replacements[$original] = $sanitize ? Html::escape($name) : $name;
           break;
 
         case 'parent':
           if ($comment->hasParentComment()) {
             $parent = $comment->getParentComment();
             $bubbleable_metadata->addCacheableDependency($parent);
-            $replacements[$original] = $sanitize ? Xss::filter($parent->getSubject()) : $parent->getSubject();
+            $replacements[$original] = $sanitize ? Html::escape($parent->getSubject()) : $parent->getSubject();
           }
           break;
 
@@ -210,7 +210,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           $entity = $comment->getCommentedEntity();
           $bubbleable_metadata->addCacheableDependency($entity);
           $title = $entity->label();
-          $replacements[$original] = $sanitize ? Xss::filter($title) : $title;
+          $replacements[$original] = $sanitize ? Html::escape($title) : $title;
           break;
       }
     }

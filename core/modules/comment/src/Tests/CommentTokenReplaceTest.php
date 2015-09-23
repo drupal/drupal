@@ -54,10 +54,10 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
     $tests['[comment:hostname]'] = Html::escape($comment->getHostname());
-    $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
+    $tests['[comment:author]'] = Html::escape($comment->getAuthorName());
     $tests['[comment:mail]'] = Html::escape($this->adminUser->getEmail());
     $tests['[comment:homepage]'] = UrlHelper::filterBadProtocol($comment->getHomepage());
-    $tests['[comment:title]'] = Xss::filter($comment->getSubject());
+    $tests['[comment:title]'] = Html::escape($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:langcode]'] = Html::escape($comment->language()->getId());
     $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
@@ -140,7 +140,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $comment->setOwnerId(0)->setAuthorName($author_name);
     $input = '[comment:author]';
     $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId()));
-    $this->assertEqual($output, Xss::filter($author_name), format_string('Sanitized comment author token %token replaced.', array('%token' => $input)));
+    $this->assertEqual($output, Html::escape($author_name), format_string('Sanitized comment author token %token replaced.', array('%token' => $input)));
     $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
     $this->assertEqual($output, $author_name, format_string('Unsanitized comment author token %token replaced.', array('%token' => $input)));
 
