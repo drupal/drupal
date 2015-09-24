@@ -117,7 +117,7 @@ class ContactController extends ControllerBase {
     ));
 
     $form = $this->entityFormBuilder()->getForm($message);
-    $form['#title'] = $this->t('Contact @username', array('@username' => $user->getUsername()));
+    $form['#title'] = $this->t('Contact @username', array('@username' => $user->getDisplayName()));
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
   }

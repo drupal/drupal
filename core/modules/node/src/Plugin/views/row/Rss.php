@@ -121,7 +121,7 @@ class Rss extends RssPluginBase {
       ),
       array(
         'key' => 'dc:creator',
-        'value' => $node->getOwner()->getUsername(),
+        'value' => $node->getOwner()->getDisplayName(),
       ),
       array(
         'key' => 'guid',

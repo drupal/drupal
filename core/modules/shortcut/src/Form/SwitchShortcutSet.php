@@ -207,7 +207,7 @@ class SwitchShortcutSet extends FormBase {
       /* @var \Drupal\shortcut\Entity\ShortcutSet $set */
       $set = $this->shortcutSetStorage->load($form_state->getValue('set'));
       $replacements = array(
-        '%user' => $this->user->label(),
+        '%user' => $this->user->getDisplayName(),
         '%set_name' => $set->label(),
       );
       drupal_set_message($account_is_user ? $this->t('You are now using the %set_name shortcut set.', $replacements) : $this->t('%user is now using the %set_name shortcut set.', $replacements));

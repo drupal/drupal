@@ -26,8 +26,11 @@ class UserTokenReplaceTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language');
+  public static $modules = array('language', 'user_hooks_test');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     ConfigurableLanguage::createFromLangcode('de')->save();
@@ -44,6 +47,8 @@ class UserTokenReplaceTest extends WebTestBase {
       'language' => $language_interface,
     );
 
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
+
     // Create two users and log them in one after another.
     $user1 = $this->drupalCreateUser(array());
     $user2 = $this->drupalCreateUser(array());
@@ -57,7 +62,9 @@ class UserTokenReplaceTest extends WebTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[user:uid]'] = $account->id();
-    $tests['[user:name]'] = Html::escape(user_format_name($account));
+    $tests['[user:name]'] = Html::escape($account->getAccountName());
+    $tests['[user:account-name]'] = Html::escape($account->getAccountName());
+    $tests['[user:display-name]'] = $account->getDisplayName();
     $tests['[user:mail]'] = Html::escape($account->getEmail());
     $tests['[user:url]'] = $account->url('canonical', $url_options);
     $tests['[user:edit-url]'] = $account->url('edit-form', $url_options);
@@ -65,12 +72,16 @@ class UserTokenReplaceTest extends WebTestBase {
     $tests['[user:last-login:short]'] = format_date($account->getLastLoginTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[user:created]'] = format_date($account->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[user:created:short]'] = format_date($account->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
-    $tests['[current-user:name]'] = Html::escape(user_format_name($global_account));
+    $tests['[current-user:name]'] = Html::escape($global_account->getAccountName());
+    $tests['[current-user:account-name]'] = Html::escape($global_account->getAccountName());
+    $tests['[current-user:display-name]'] = $global_account->getDisplayName();
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($account);
     $metadata_tests = [];
     $metadata_tests['[user:uid]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:name]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:account-name]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:display-name]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:mail]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:url]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:edit-url]'] = $base_bubbleable_metadata;
@@ -86,6 +97,8 @@ class UserTokenReplaceTest extends WebTestBase {
     $metadata_tests['[user:created]'] = $bubbleable_metadata;
     $metadata_tests['[user:created:short]'] = $bubbleable_metadata;
     $metadata_tests['[current-user:name]'] = $base_bubbleable_metadata->merge(BubbleableMetadata::createFromObject($global_account)->addCacheContexts(['user']));
+    $metadata_tests['[current-user:account-name]'] = $base_bubbleable_metadata->merge(BubbleableMetadata::createFromObject($global_account)->addCacheContexts(['user']));
+    $metadata_tests['[current-user:display-name]'] = $base_bubbleable_metadata->merge(BubbleableMetadata::createFromObject($global_account)->addCacheContexts(['user']));
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
@@ -101,14 +114,14 @@ class UserTokenReplaceTest extends WebTestBase {
     $anonymous_user = User::load(0);
     $tests = [];
     $tests['[user:uid]'] = t('not yet assigned');
-    $tests['[user:name]'] = Html::escape(user_format_name($anonymous_user));
+    $tests['[user:display-name]'] = $anonymous_user->getDisplayName();
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($anonymous_user);
     $metadata_tests = [];
     $metadata_tests['[user:uid]'] = $base_bubbleable_metadata;
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $bubbleable_metadata->addCacheableDependency(\Drupal::config('user.settings'));
-    $metadata_tests['[user:name]'] = $bubbleable_metadata;
+    $metadata_tests['[user:display-name]'] = $bubbleable_metadata;
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
@@ -119,9 +132,13 @@ class UserTokenReplaceTest extends WebTestBase {
 
     // Generate and test unsanitized tokens.
     $tests = [];
-    $tests['[user:name]'] = user_format_name($account);
+    $tests['[user:name]'] = $account->getAccountName();
+    $tests['[user:account-name]'] = $account->getAccountName();
+    $tests['[user:display-name]'] = $account->getDisplayName();
     $tests['[user:mail]'] = $account->getEmail();
-    $tests['[current-user:name]'] = user_format_name($global_account);
+    $tests['[current-user:account-name]'] = $global_account->getAccountname();
+    $tests['[current-user:name]'] = $global_account->getAccountName();
+    $tests['[current-user:display-name]'] = $global_account->getDisplayName();
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('user' => $account), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));

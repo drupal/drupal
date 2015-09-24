@@ -1961,7 +1961,7 @@ function hook_mail($key, &$message, $params) {
   $context = $params['context'];
   $variables = array(
     '%site_name' => \Drupal::config('system.site')->get('name'),
-    '%username' => user_format_name($account),
+    '%username' => $account->getDisplayName(),
   );
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];

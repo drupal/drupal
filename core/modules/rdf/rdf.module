@@ -378,7 +378,7 @@ function rdf_preprocess_user(&$variables) {
         '#attributes' => array(
           'about' => $account->url(),
           'property' => $name_mapping['properties'],
-          'content' => $account->getUsername(),
+          'content' => $account->getDisplayName(),
           'lang' => '',
         ),
       );

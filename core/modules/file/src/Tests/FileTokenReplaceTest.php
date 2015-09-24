@@ -56,7 +56,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:created:short]'] = format_date($file->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[file:changed]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:changed:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->getId());
-    $tests['[file:owner]'] = Html::escape(user_format_name($this->adminUser));
+    $tests['[file:owner]'] = Html::escape($this->adminUser->getDisplayName());
     $tests['[file:owner:uid]'] = $file->getOwnerId();
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($file);

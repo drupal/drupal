@@ -51,6 +51,12 @@ display:
         type: default
       row:
         type: fields
+      sorts:
+        uid:
+          id: uid
+          table: users
+          field: uid
+          plugin_id: standard
     display_plugin: default
     display_title: Master
     id: default

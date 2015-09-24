@@ -367,7 +367,7 @@ class UserCancelTest extends WebTestBase {
     $storage->resetCache(array($comment->id()));
     $test_comment = $storage->load($comment->id());
     $this->assertTrue(($test_comment->getOwnerId() == 0 && $test_comment->isPublished()), 'Comment of the user has been attributed to anonymous user.');
-    $this->assertEqual($test_comment->getAuthorName(), $anonymous_user->getUsername(), 'Comment of the user has been attributed to anonymous user name.');
+    $this->assertEqual($test_comment->getAuthorName(), $anonymous_user->getDisplayName(), 'Comment of the user has been attributed to anonymous user name.');
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");

@@ -314,7 +314,7 @@ function drupal_get_path($type, $name) {
  * names or link URLs into translated text. Variable substitution looks like
  * this:
  * @code
- * $text = t("@name's blog", array('@name' => user_format_name($account)));
+ * $text = t("@name's blog", array('@name' => $account->getDisplayName()));
  * @endcode
  * Basically, you can put variables like @name into your string, and t() will
  * substitute their sanitized values at translation time. (See the

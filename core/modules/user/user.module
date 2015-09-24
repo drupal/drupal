@@ -416,12 +416,12 @@ function user_preprocess_block(&$variables) {
  *   An unsanitized string with the username to display.
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\Session\AccountInterface::getUsername().
+ *   Use \Drupal\Core\Session\AccountInterface::getDisplayName().
  *
  * @todo Remove usage in https://www.drupal.org/node/2311219.
  */
 function user_format_name(AccountInterface $account) {
-  return $account->getUsername();
+  return $account->getDisplayName();
 }
 
 /**
@@ -469,7 +469,8 @@ function template_preprocess_username(&$variables) {
   // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
-  $name = $variables['name_raw'] = $account->getUsername();
+  $name  = $account->getDisplayName();
+  $variables['name_raw'] = $account->getUsername();
   if (Unicode::strlen($name) > 20) {
     $name = Unicode::truncate($name, 15, FALSE, TRUE);
     $variables['truncated'] = TRUE;
@@ -738,8 +739,8 @@ function _user_cancel($edit, $account, $method) {
       }
       $account->block();
       $account->save();
-      drupal_set_message(t('%name has been disabled.', array('%name' => $account->getUsername())));
-      $logger->notice('Blocked user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'));
+      drupal_set_message(t('%name has been disabled.', array('%name' => $account->getDisplayName())));
+      $logger->notice('Blocked user: %name %email.', array('%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>'));
       break;
 
     case 'user_cancel_reassign':
@@ -749,8 +750,8 @@ function _user_cancel($edit, $account, $method) {
         _user_mail_notify('status_canceled', $account);
       }
       $account->delete();
-      drupal_set_message(t('%name has been deleted.', array('%name' => $account->getUsername())));
-      $logger->notice('Deleted user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'));
+      drupal_set_message(t('%name has been deleted.', array('%name' => $account->getDisplayName())));
+      $logger->notice('Deleted user: %name %email.', array('%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>'));
       break;
   }
 
@@ -1362,7 +1363,7 @@ function user_toolbar() {
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',
-      '#title' => $user->getUsername(),
+      '#title' => $user->getDisplayName(),
       '#url' => Url::fromRoute('user.page'),
       '#attributes' => array(
         'title' => t('My account'),
@@ -1407,7 +1408,7 @@ function user_toolbar() {
 function user_logout() {
   $user = \Drupal::currentUser();
 
-  \Drupal::logger('user')->notice('Session closed for %name.', array('%name' => $user->getUsername()));
+  \Drupal::logger('user')->notice('Session closed for %name.', array('%name' => $user->getAccountName()));
 
   \Drupal::moduleHandler()->invokeAll('user_logout', array($user));
 

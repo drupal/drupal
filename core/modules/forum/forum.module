@@ -456,7 +456,7 @@ function template_preprocess_forums(&$variables) {
         }
         $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
           'uid' => $topic->getOwnerId(),
-          'name' => $topic->getOwner()->getUsername(),
+          'name' => $topic->getOwner()->getDisplayName(),
           'created' => $topic->getCreatedTime(),
         ));
         $variables['topics'][$id]->submitted = drupal_render($forum_submitted);

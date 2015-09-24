@@ -78,7 +78,7 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
       '#default_value' => $this->configuration['message'],
       '#required' => TRUE,
       '#rows' => '8',
-      '#description' => t('The message to be displayed to the current user. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
+      '#description' => t('The message to be displayed to the current user. You may include placeholders like [node:title], [user:account-name], [user:display-name] and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
     );
     return $form;
   }

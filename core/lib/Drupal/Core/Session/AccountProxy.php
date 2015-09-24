@@ -119,7 +119,21 @@ class AccountProxy implements AccountProxyInterface {
    * {@inheritdoc}
    */
   public function getUsername() {
-    return $this->getAccount()->getUsername();
+    return $this->getAccountName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAccountName() {
+    return $this->getAccount()->getAccountName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayName() {
+    return $this->getAccount()->getDisplayName();
   }
 
   /**

@@ -72,7 +72,7 @@ class UserNameFormatter extends FormatterBase {
         }
         else {
           $elements[$delta] = [
-            '#markup' => $user->getUsername(),
+            '#markup' => $user->getDisplayName(),
             '#cache' => [
               'tags' => $user->getCacheTags(),
             ],

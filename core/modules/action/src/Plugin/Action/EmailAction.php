@@ -185,7 +185,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
       '#default_value' => $this->configuration['message'],
       '#cols' => '80',
       '#rows' => '20',
-      '#description' => t('The message that should be sent. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
+      '#description' => t('The message that should be sent. You may include placeholders like [node:title], [user:account-name], [user:display-name] and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
     );
     return $form;
   }

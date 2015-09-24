@@ -16,6 +16,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserEditedOwnAccountTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('user_form_test');
+
   function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.

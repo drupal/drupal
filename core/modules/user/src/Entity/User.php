@@ -362,7 +362,21 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getUsername() {
-    $name = $this->get('name')->value ?: \Drupal::config('user.settings')->get('anonymous');
+    return $this->getAccountName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAccountName() {
+    return $this->get('name')->value ?: '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayName() {
+    $name = $this->getAccountName() ?: \Drupal::config('user.settings')->get('anonymous');
     \Drupal::moduleHandler()->alter('user_format_name', $name, $this);
     return $name;
   }
@@ -411,7 +425,10 @@ class User extends ContentEntityBase implements UserInterface {
       $entity_type = $entity_manager->getDefinition('user');
       $class = $entity_type->getClass();
 
-      static::$anonymousUser = new $class(['uid' => [LanguageInterface::LANGCODE_DEFAULT => 0]], $entity_type->id());
+      static::$anonymousUser = new $class([
+        'uid' => [LanguageInterface::LANGCODE_DEFAULT => 0],
+        'name' => [LanguageInterface::LANGCODE_DEFAULT => ''],
+      ], $entity_type->id());
     }
     return clone static::$anonymousUser;
   }

@@ -30,8 +30,16 @@ function user_token_info() {
     'description' => t("The unique ID of the user account."),
   );
   $user['name'] = array(
-    'name' => t("Name"),
+    'name' => t("Deprecated: User Name"),
+    'description' => t("Deprecated: Use account-name or display-name instead."),
+  );
+  $user['account-name'] = array(
+    'name' => t("Account Name"),
     'description' => t("The login name of the user account."),
+  );
+  $user['display-name'] = array(
+    'name' => t("Display Name"),
+    'description' => t("The display name of the user account."),
   );
   $user['mail'] = array(
     'name' => t("Email"),
@@ -92,12 +100,20 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $replacements[$original] = $account->id() ?: t('not yet assigned');
           break;
 
-        case 'name':
-          $name = user_format_name($account);
+        case 'display-name':
+          $replacements[$original] = $account->getDisplayName();
           if ($account->isAnonymous()) {
             $bubbleable_metadata->addCacheableDependency(\Drupal::config('user.settings'));
           }
-          $replacements[$original] = $sanitize ? Html::escape($name) : $name;
+          break;
+
+        case 'name':
+        case 'account-name':
+          $display_name = $account->getAccountName();
+          $replacements[$original] = $sanitize ? Html::escape($display_name) : $display_name;
+          if ($account->isAnonymous()) {
+            $bubbleable_metadata->addCacheableDependency(\Drupal::config('user.settings'));
+          }
           break;
 
         case 'mail':

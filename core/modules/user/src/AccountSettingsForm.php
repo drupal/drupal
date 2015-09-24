@@ -201,7 +201,7 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     // These email tokens are shared for all settings, so just define
     // the list once to help ensure they stay in sync.
-    $email_token_help = $this->t('Available variables are: [site:name], [site:url], [user:name], [user:mail], [site:login-url], [site:url-brief], [user:edit-url], [user:one-time-login-url], [user:cancel-url].');
+    $email_token_help = $this->t('Available variables are: [site:name], [site:url], [user:display-name], [user:account-name], [user:mail], [site:login-url], [site:url-brief], [user:edit-url], [user:one-time-login-url], [user:cancel-url].');
 
     $form['email_admin_created'] = array(
       '#type' => 'details',

@@ -126,7 +126,7 @@ function contact_mail($key, &$message, $params) {
     '!subject' => $contact_message->getSubject(),
     '!form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
     '!form-url' => \Drupal::url('<current>', [], ['absolute' => TRUE, 'language' => $language]),
-    '!sender-name' => user_format_name($sender),
+    '!sender-name' => $sender->getDisplayName(),
   );
   if ($sender->isAuthenticated()) {
     $variables['!sender-url'] = $sender->url('canonical', array('absolute' => TRUE, 'language' => $language));
@@ -154,7 +154,7 @@ function contact_mail($key, &$message, $params) {
     case 'user_mail':
     case 'user_copy':
       $variables += array(
-        '!recipient-name' => user_format_name($params['recipient']),
+        '!recipient-name' => $params['recipient']->getDisplayName(),
         '!recipient-edit-url' => $params['recipient']->url('edit-form', array('absolute' => TRUE, 'language' => $language)),
       );
       $message['subject'] .= t('[!site-name] !subject', $variables, $options);
