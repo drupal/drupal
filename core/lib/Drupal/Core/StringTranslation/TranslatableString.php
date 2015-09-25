@@ -140,9 +140,6 @@ class TranslatableString implements SafeStringInterface {
     }
 
     // Handle any replacements.
-    // @todo https://www.drupal.org/node/2509218 Note that the argument
-    //   replacement is not stored so that different sanitization strategies can
-    //   be used in different contexts.
     if ($args = $this->getArguments()) {
       return $this->placeholderFormat($this->translatableString, $args);
     }
