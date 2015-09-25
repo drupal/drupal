@@ -1480,7 +1480,7 @@ function template_preprocess_field(&$variables, $hook) {
   // readers.
   $variables['label'] = $element['#title'];
 
-  $variables['multiple'] = $element['#items']->getFieldDefinition()->getFieldStorageDefinition()->isMultiple();
+  $variables['multiple'] = $element['#is_multiple'];
 
   static $default_attributes;
   if (!isset($default_attributes)) {
@@ -1488,7 +1488,7 @@ function template_preprocess_field(&$variables, $hook) {
   }
 
   // Merge attributes when a single-value field has a hidden label.
-  if ($element['#label_display'] == 'hidden' && !$variables['multiple'] && is_object($element['#items'][0])) {
+  if ($element['#label_display'] == 'hidden' && !$variables['multiple']) {
     $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], (array) $element['#items'][0]->_attributes);
   }
 
