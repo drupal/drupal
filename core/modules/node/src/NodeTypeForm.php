@@ -96,7 +96,7 @@ class NodeTypeForm extends EntityForm {
       '#title' => t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->getDescription(),
-      '#description' => t('Describe this content type. The text will be displayed on the <em>Add content</em> page.'),
+      '#description' => t('This text will be displayed on the <em>Add new content</em> page.'),
     );
 
     $form['additional_settings'] = array(
