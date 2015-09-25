@@ -68,56 +68,6 @@ class TwigEnvironment extends \Twig_Environment {
   }
 
   /**
-   * Implements Twig_Environment::loadTemplate().
-   *
-   * We need to overwrite this function to integrate with drupal_php_storage().
-   *
-   * This is a straight copy from loadTemplate() changed to use
-   * drupal_php_storage().
-   *
-   * @param string $name
-   *   The template name or the string which should be rendered as template.
-   * @param int $index
-   *   The index if it is an embedded template.
-   *
-   * @return \Twig_TemplateInterface
-   *   A template instance representing the given template name.
-   *
-   * @throws \Twig_Error_Loader
-   *   When the template cannot be found.
-   * @throws \Twig_Error_Syntax
-   *   When an error occurred during compilation.
-   */
-  public function loadTemplate($name, $index = NULL) {
-    $cls = $this->getTemplateClass($name, $index);
-
-    if (isset($this->loadedTemplates[$cls])) {
-      return $this->loadedTemplates[$cls];
-    }
-
-    if (!class_exists($cls, FALSE)) {
-      $key = $this->cache->generateKey($name, $cls);
-
-      if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
-        $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
-      }
-
-      $this->cache->load($key);
-
-      if (!class_exists($cls, FALSE)) {
-        $compiled_source = $this->compileSource($this->loader->getSource($name), $name);
-        eval('?' . '>' . $compiled_source);
-      }
-    }
-
-    if (!$this->runtimeInitialized) {
-        $this->initRuntime();
-    }
-
-    return $this->loadedTemplates[$cls] = new $cls($this);
-  }
-
-  /**
    * Gets the template class associated with the given string.
    *
    * @param string $name

@@ -16,7 +16,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.22.1';
+    const VERSION = '1.22.2';
 
     protected $charset;
     protected $loader;
@@ -375,15 +375,20 @@ class Twig_Environment
                 $key = $this->cache->generateKey($name, $cls);
             }
 
-            if (!$this->cache->has($key) || ($this->isAutoReload() && !$this->isTemplateFresh($name, $this->cache->getTimestamp($key)))) {
-                if ($this->bcWriteCacheFile) {
-                    $this->writeCacheFile($key, $this->compileSource($this->getLoader()->getSource($name), $name));
-                } else {
-                    $this->cache->write($key, $this->compileSource($this->getLoader()->getSource($name), $name));
-                }
+            if (!$this->isAutoReload() || $this->isTemplateFresh($name, $this->cache->getTimestamp($key))) {
+                $this->cache->load($key);
             }
 
-            $this->cache->load($key);
+            if (!class_exists($cls, false)) {
+                $content = $this->compileSource($this->getLoader()->getSource($name), $name);
+                if ($this->bcWriteCacheFile) {
+                    $this->writeCacheFile($key, $content);
+                } else {
+                    $this->cache->write($key, $content);
+                }
+
+                eval('?>'.$content);
+            }
         }
 
         if (!$this->runtimeInitialized) {

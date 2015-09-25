@@ -81,13 +81,6 @@ class TwigPhpStorageCache implements \Twig_CacheInterface {
   /**
    * {@inheritdoc}
    */
-  public function has($key) {
-    return $this->storage()->exists($key);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function load($key) {
     $this->storage()->load($key);
   }
