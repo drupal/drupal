@@ -79,7 +79,9 @@ class HtmlTest extends UnitTestCase {
       // replaced.
       array('__cssidentifier', '-1cssidentifier', array()),
       // Verify that an identifier starting with two hyphens is replaced.
-      array('__cssidentifier', '--cssidentifier', array())
+      array('__cssidentifier', '--cssidentifier', array()),
+      // Verify that passing double underscores as a filter is processed.
+      array('_cssidentifier', '__cssidentifier',  array('__' => '_')),
     );
   }
 
