@@ -27,6 +27,7 @@ class TestPageDisplayVariantSubscriber implements EventSubscriberInterface {
   public function onSelectPageDisplayVariant(PageDisplayVariantSelectionEvent $event) {
     $event->setPluginId('display_variant_test');
     $event->setPluginConfiguration(['required_configuration' => 'A very important, required value.']);
+    $event->addCacheTags(['custom_cache_tag']);
 
     $context = new Context(new ContextDefinition('string', NULL, TRUE));
     $context->setContextValue('Explicitly passed in context.');

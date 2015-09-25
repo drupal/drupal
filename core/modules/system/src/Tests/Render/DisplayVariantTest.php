@@ -33,6 +33,7 @@ class DisplayVariantTest extends WebTestBase {
     $this->drupalGet('<front>');
     $this->assertRaw('A very important, required value.');
     $this->assertRaw('Explicitly passed in context.');
+    $this->assertCacheTag('custom_cache_tag');
   }
 
 }

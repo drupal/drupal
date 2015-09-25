@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -17,11 +19,14 @@ use Symfony\Component\EventDispatcher\Event;
  * information along to the selected variant:
  * - self::setPluginConfiguration()
  * - self::setContexts()
+ * - self::addCacheableDependency()
  *
  * @see \Drupal\Core\Render\RenderEvents::SELECT_PAGE_DISPLAY_VARIANT
  * @see \Drupal\Core\Render\MainContent\HtmlRenderer
  */
-class PageDisplayVariantSelectionEvent extends Event {
+class PageDisplayVariantSelectionEvent extends Event implements RefinableCacheableDependencyInterface {
+
+  use RefinableCacheableDependencyTrait;
 
   /**
    * The selected page display variant plugin ID.

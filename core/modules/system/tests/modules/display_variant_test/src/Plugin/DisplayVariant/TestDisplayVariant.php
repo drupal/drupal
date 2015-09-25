@@ -7,6 +7,7 @@
 
 namespace Drupal\display_variant_test\Plugin\DisplayVariant;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Display\ContextAwareVariantInterface;
@@ -86,6 +87,9 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
     $build['content']['default'] = [
       '#markup' => $config['required_configuration'] . ' ' . $contexts['context']->getContextValue(),
     ];
+
+    CacheableMetadata::createFromObject($this)->applyTo($build);
+
     return $build;
   }
 

@@ -236,6 +236,7 @@ class HtmlRenderer implements MainContentRendererInterface {
       }
       $page_display
         ->setMainContent($main_content)
+        ->addCacheableDependency($event)
         ->setConfiguration($event->getPluginConfiguration());
       // Some display variants need to be passed an array of contexts with
       // values because they can't get all their contexts globally. For example,
