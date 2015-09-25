@@ -12,6 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Display\ContextAwareVariantInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
@@ -236,6 +237,14 @@ class HtmlRenderer implements MainContentRendererInterface {
       $page_display
         ->setMainContent($main_content)
         ->setConfiguration($event->getPluginConfiguration());
+      // Some display variants need to be passed an array of contexts with
+      // values because they can't get all their contexts globally. For example,
+      // in Page Manager, you can create a Page which has a specific static
+      // context (e.g. a context that refers to the Node with nid 6), if any
+      // such contexts were added to the $event, pass them to the $page_display.
+      if ($page_display instanceof ContextAwareVariantInterface) {
+        $page_display->setContexts($event->getContexts());
+      }
 
       // Generate a #type => page render array using the page display variant,
       // the page display will build the content for the various page regions.

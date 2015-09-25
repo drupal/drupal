@@ -32,6 +32,7 @@ class DisplayVariantTest extends WebTestBase {
     // error page here.
     $this->drupalGet('<front>');
     $this->assertRaw('A very important, required value.');
+    $this->assertRaw('Explicitly passed in context.');
   }
 
 }

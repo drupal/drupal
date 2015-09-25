@@ -7,6 +7,8 @@
 
 namespace Drupal\display_variant_test\EventSubscriber;
 
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Render\RenderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -25,6 +27,10 @@ class TestPageDisplayVariantSubscriber implements EventSubscriberInterface {
   public function onSelectPageDisplayVariant(PageDisplayVariantSelectionEvent $event) {
     $event->setPluginId('display_variant_test');
     $event->setPluginConfiguration(['required_configuration' => 'A very important, required value.']);
+
+    $context = new Context(new ContextDefinition('string', NULL, TRUE));
+    $context->setContextValue('Explicitly passed in context.');
+    $event->setContexts(['context' => $context]);
   }
 
   /**
