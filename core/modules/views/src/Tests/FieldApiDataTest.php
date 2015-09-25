@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\Views\FieldTestBase;
 
 /**
@@ -26,8 +28,18 @@ class FieldApiDataTest extends FieldTestBase {
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'page',
+      'label' => 'The giraffe" label'
     );
     entity_create('field_config', $field)->save();
+
+    // Attach the same field to a different bundle with a different label.
+    $this->drupalCreateContentType(['type' => 'article']);
+    FieldConfig::create([
+      'field_name' => $field_names[0],
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'label' => 'The giraffe2" label'
+    ])->save();
 
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {
@@ -86,6 +98,12 @@ class FieldApiDataTest extends FieldTestBase {
     $this->assertTrue($data[$current_table][$field_storage->getName()]['field']['click sortable'], 'String field is click sortable.');
     // Click sort should only be on the primary field.
     $this->assertTrue(empty($data[$revision_table][$field_storage->getName()]['field']['click sortable']), 'Non-primary fields are not click sortable');
+
+    $this->assertTrue($data[$current_table][$field_storage->getName()]['help'] instanceof SafeStringInterface);
+    $this->assertEqual($data[$current_table][$field_storage->getName()]['help'], 'Appears in: page, article. Also known as: Content: The giraffe2&quot; label');
+
+    $this->assertTrue($data[$current_table][$field_storage->getName() . '_value']['help'] instanceof SafeStringInterface);
+    $this->assertEqual($data[$current_table][$field_storage->getName() . '_value']['help'], 'Appears in: page, article. Also known as: Content: The giraffe&quot; label (field_name_0)');
   }
 
 }

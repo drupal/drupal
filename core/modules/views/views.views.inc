@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Render\SafeString;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\system\ActionConfigEntityInterface;
@@ -449,7 +450,16 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     }
     if ($aliases) {
       $data[$table_alias][$field_alias]['aliases'] = $aliases;
-      $data[$table_alias][$field_alias]['help'] .= ' ' . t('Also known as: !also.', array('!also' => implode(', ', $also_known)));
+      // The $also_known variable contains markup that is HTML escaped and that
+      // loses safeness when imploded. The help text is used in #description
+      // and therefore XSS admin filtered by default. Escaped HTML is not
+      // altered by XSS filtering, therefore it is safe to just concatenate the
+      // strings. Afterwards we mark the entire string as safe, so it won't be
+      // escaped, no matter where it is used.
+      // Considering the dual use of this help data (both as metadata and as
+      // help text), other patterns such as use of #markup would not be correct
+      // here.
+      $data[$table_alias][$field_alias]['help'] = SafeString::create($data[$table_alias][$field_alias]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
     }
 
     $keys = array_keys($field_columns);
@@ -550,7 +560,16 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
       }
       if ($aliases) {
         $data[$table_alias][$column_real_name]['aliases'] = $aliases;
-        $data[$table_alias][$column_real_name]['help'] .= ' ' . t('Also known as: !also.', array('!also' => implode(', ', $also_known)));
+        // The $also_known variable contains markup that is HTML escaped and
+        // that loses safeness when imploded. The help text is used in
+        // #description and therefore XSS admin filtered by default. Escaped
+        // HTML is not altered by XSS filtering, therefore it is safe to just
+        // concatenate the strings. Afterwards we mark the entire string as
+        // safe, so it won't be escaped, no matter where it is used.
+        // Considering the dual use of this help data (both as metadata and as
+        // help text), other patterns such as use of #markup would not be
+        // correct here.
+        $data[$table_alias][$column_real_name]['help'] = SafeString::create($data[$table_alias][$column_real_name]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
       }
 
       $data[$table_alias][$column_real_name]['argument'] = array(
