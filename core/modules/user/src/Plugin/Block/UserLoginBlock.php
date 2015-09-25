@@ -112,7 +112,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     }
     $items['request_password'] = \Drupal::l($this->t('Reset your password'), new Url('user.pass', array(), array(
       'attributes' => array(
-        'title' => $this->t('Send password reset instructions via e-mail.'),
+        'title' => $this->t('Send password reset instructions via email.'),
         'class' => array('request-password-link'),
       ),
     )));

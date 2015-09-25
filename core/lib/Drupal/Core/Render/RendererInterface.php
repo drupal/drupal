@@ -42,7 +42,7 @@ interface RendererInterface {
    *
    * Calls ::render() in such a way that placeholders are replaced.
    *
-   * Useful for e.g. rendering the values of tokens or e-mails, which need a
+   * Useful for e.g. rendering the values of tokens or emails, which need a
    * render array being turned into a string, but don't need any of the
    * bubbleable metadata (the attached assets the cache tags).
    *

@@ -103,10 +103,10 @@ class ContactController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Exception is thrown when user tries to access a contact form for a
-   *   user who does not have an e-mail address configured.
+   *   user who does not have an email address configured.
    */
   public function contactPersonalPage(UserInterface $user) {
-    // Do not continue if the user does not have an e-mail address configured.
+    // Do not continue if the user does not have an email address configured.
     if (!$user->getEmail()) {
       throw new NotFoundHttpException();
     }

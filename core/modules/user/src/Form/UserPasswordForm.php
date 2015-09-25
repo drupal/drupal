@@ -99,7 +99,7 @@ class UserPasswordForm extends FormBase {
     else {
       $form['mail'] = array(
         '#prefix' => '<p>',
-        '#markup' => $this->t('Password reset instructions will be sent to your registered e-mail address.'),
+        '#markup' => $this->t('Password reset instructions will be sent to your registered email address.'),
         '#suffix' => '</p>',
       );
       $form['name']['#default_value'] = $this->getRequest()->query->get('name');

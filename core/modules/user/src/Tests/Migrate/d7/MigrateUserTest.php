@@ -49,7 +49,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    * @param string $label
    *   The username.
    * @param string $mail
-   *   The user's e-mail address.
+   *   The user's email address.
    * @param int $access
    *   The last access time.
    * @param int $login
@@ -59,7 +59,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    * @param string $langcode
    *   The user account's language code.
    * @param string $init
-   *   The user's initial e-mail address.
+   *   The user's initial email address.
    * @param string[] $roles
    *   Role IDs the user account is expected to have.
    * @param bool $has_picture

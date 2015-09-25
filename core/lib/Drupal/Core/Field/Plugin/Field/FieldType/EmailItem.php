@@ -32,7 +32,7 @@ class EmailItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('email')
-      ->setLabel(t('E-mail'))
+      ->setLabel(t('Email'))
       ->setRequired(TRUE);
 
     return $properties;
