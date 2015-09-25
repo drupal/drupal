@@ -3,32 +3,32 @@ config.sync:
   base_route: config.sync
   title: 'Synchronize'
 
-config.full:
+config.import:
   route_name: config.import_full
-  title: 'Full Import/Export'
+  title: 'Import'
   base_route: config.sync
 
-config.single:
-  route_name: config.import_single
-  title: 'Single Import/Export'
+config.export:
+  route_name: config.export_full
+  title: 'Export'
   base_route: config.sync
 
 config.export_full:
   route_name: config.export_full
-  title: Export
-  parent_id: config.full
+  title: Full archive
+  parent_id: config.export
 
 config.import_full:
   route_name: config.import_full
-  title: Import
-  parent_id: config.full
+  title: Full archive
+  parent_id: config.import
 
 config.export_single:
   route_name: config.export_single
-  title: Export
-  parent_id: config.single
+  title: Single item
+  parent_id: config.export
 
 config.import_single:
   route_name: config.import_single
-  title: Import
-  parent_id: config.single
+  title: Single item
+  parent_id: config.import

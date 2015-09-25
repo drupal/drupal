@@ -35,11 +35,11 @@ class ConfigLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function getConfigAdminRoutes() {
     return array(
-      array('config.sync', array(array('config.sync', 'config.full', 'config.single'))),
-      array('config.export_full', array(array('config.sync', 'config.full', 'config.single'), array('config.export_full', 'config.import_full'))),
-      array('config.import_full', array(array('config.sync', 'config.full', 'config.single'), array('config.export_full', 'config.import_full'))),
-      array('config.export_single', array(array('config.sync', 'config.full', 'config.single'), array('config.export_single', 'config.import_single'))),
-      array('config.import_single', array(array('config.sync', 'config.full', 'config.single'), array('config.export_single', 'config.import_single'))),
+      array('config.sync', array(array('config.sync', 'config.import', 'config.export'))),
+      array('config.import_full', array(array('config.sync', 'config.import', 'config.export'), array('config.import_full', 'config.import_single'))),
+      array('config.import_single', array(array('config.sync', 'config.import', 'config.export'), array('config.import_full', 'config.import_single'))),
+      array('config.export_full', array(array('config.sync', 'config.import', 'config.export'), array('config.export_full', 'config.export_single'))),
+      array('config.export_single', array(array('config.sync', 'config.import', 'config.export'), array('config.export_full', 'config.export_single'))),
     );
   }
 
