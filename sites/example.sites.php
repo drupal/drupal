@@ -50,6 +50,6 @@
  * @endcode
  *
  * @see default.settings.php
- * @see conf_path()
+ * @see \Drupal\Core\DrupalKernel::getSitePath()
  * @see https://www.drupal.org/documentation/install/multi-site
  */

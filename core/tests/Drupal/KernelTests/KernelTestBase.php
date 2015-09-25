@@ -1071,7 +1071,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use the regular API method to retrieve it instead (e.g., Settings).", $name), E_USER_DEPRECATED);
       switch ($name) {
         case 'public_files_directory':
-          return Settings::get('file_public_path', conf_path() . '/files');
+          return Settings::get('file_public_path', \Drupal::service('site.path') . '/files');
 
         case 'private_files_directory':
           return $this->container->get('config.factory')->get('system.file')->get('path.private');
@@ -1080,7 +1080,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
           return file_directory_temp();
 
         case 'translation_files_directory':
-          return Settings::get('file_public_path', conf_path() . '/translations');
+          return Settings::get('file_public_path', \Drupal::service('site.path') . '/translations');
       }
     }
 
