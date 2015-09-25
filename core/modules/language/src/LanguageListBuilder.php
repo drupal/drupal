@@ -56,7 +56,7 @@ class LanguageListBuilder extends DraggableListBuilder {
   }
 
   /**
-   * Constructs a new EntityListController object.
+   * Constructs a new LanguageListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
