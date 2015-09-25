@@ -166,21 +166,57 @@ class BlockUiTest extends WebTestBase {
   }
 
   /**
-   * Tests the behavior of context-aware blocks.
+   * Tests the behavior of unsatisfied context-aware blocks.
    */
-  public function testContextAwareBlocks() {
+  public function testContextAwareUnsatisfiedBlocks() {
     $arguments = array(
-      ':ul_class' => 'block-list',
-      ':li_class' => 'test-context-aware',
-      ':href' => 'admin/structure/block/add/test_context_aware/classy',
-      ':text' => 'Test context-aware block',
+      ':category' => 'Block test',
+      ':href' => 'admin/structure/block/add/test_context_aware_unsatisfied/classy',
+      ':text' => 'Test context-aware unsatisfied block',
     );
 
     $this->drupalGet('admin/structure/block');
-    $elements = $this->xpath('//details[@id="edit-category-block-test"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->clickLinkPartialName('Place block');
+    $elements = $this->xpath('//tr[.//td/div[text()=:text] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]', $arguments);
     $this->assertTrue(empty($elements), 'The context-aware test block does not appear.');
+
+    $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware_unsatisfied');
+    $this->assertTrue(!empty($definition), 'The context-aware test block does not exist.');
+  }
+
+  /**
+   * Tests the behavior of context-aware blocks.
+   */
+  public function testContextAwareBlocks() {
+    $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getUsername() . '</div>';
+    $this->drupalGet('');
+    $this->assertNoText('Test context-aware block');
+    $this->assertNoRaw($expected_text);
+
+    $block_url = 'admin/structure/block/add/test_context_aware/classy';
+    $arguments = array(
+      ':title' => 'Test context-aware block',
+      ':category' => 'Block test',
+      ':href' => $block_url,
+    );
+    $pattern = '//tr[.//td/div[text()=:title] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]';
+
+    $this->drupalGet('admin/structure/block');
+    $this->clickLinkPartialName('Place block');
+    $elements = $this->xpath($pattern, $arguments);
+    $this->assertTrue(!empty($elements), 'The context-aware test block appears.');
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware');
     $this->assertTrue(!empty($definition), 'The context-aware test block exists.');
+
+    $edit = [
+      'region' => 'content',
+      'settings[context_mapping][user]' => '@block_test.multiple_static_context:user2',
+    ];
+    $this->drupalPostForm($block_url, $edit, 'Save block');
+
+    $this->drupalGet('');
+    $this->assertText('Test context-aware block');
+    $this->assertRaw($expected_text);
   }
 
   /**

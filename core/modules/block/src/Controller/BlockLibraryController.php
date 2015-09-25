@@ -12,6 +12,7 @@ use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Menu\LocalActionManagerInterface;
+use Drupal\Core\Plugin\Context\LazyContextRepository;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,6 +29,13 @@ class BlockLibraryController extends ControllerBase {
    * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
+
+  /**
+   * The context repository.
+   *
+   * @var \Drupal\Core\Plugin\Context\LazyContextRepository
+   */
+  protected $contextRepository;
 
   /**
    * The route match.
@@ -48,15 +56,18 @@ class BlockLibraryController extends ControllerBase {
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager.
+   * @param \Drupal\Core\Plugin\Context\LazyContextRepository $context_repository
+   *   The context repository.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    * @param \Drupal\Core\Menu\LocalActionManagerInterface $local_action_manager
    *   The local action manager.
    */
-  public function __construct(BlockManagerInterface $block_manager, RouteMatchInterface $route_match, LocalActionManagerInterface $local_action_manager) {
+  public function __construct(BlockManagerInterface $block_manager, LazyContextRepository $context_repository, RouteMatchInterface $route_match, LocalActionManagerInterface $local_action_manager) {
     $this->blockManager = $block_manager;
     $this->routeMatch = $route_match;
     $this->localActionManager = $local_action_manager;
+    $this->contextRepository = $context_repository;
   }
 
   /**
@@ -65,6 +76,7 @@ class BlockLibraryController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.block'),
+      $container->get('context.repository'),
       $container->get('current_route_match'),
       $container->get('plugin.manager.menu.local_action')
     );
@@ -95,7 +107,7 @@ class BlockLibraryController extends ControllerBase {
     ];
 
     // Only add blocks which work without any available context.
-    $definitions = $this->blockManager->getDefinitionsForContexts();
+    $definitions = $this->blockManager->getDefinitionsForContexts($this->contextRepository->getAvailableContexts());
     // Order by category, and then by admin label.
     $definitions = $this->blockManager->getSortedDefinitions($definitions);
 

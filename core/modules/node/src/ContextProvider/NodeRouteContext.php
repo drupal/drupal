@@ -13,11 +13,14 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Sets the current node as a context on node routes.
  */
 class NodeRouteContext implements ContextProviderInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The route match object.
@@ -63,7 +66,7 @@ class NodeRouteContext implements ContextProviderInterface {
    * {@inheritdoc}
    */
   public function getAvailableContexts() {
-    $context = new Context(new ContextDefinition('entity:node'));
+    $context = new Context(new ContextDefinition('entity:node', $this->t('Node from URL')));
     return ['node' => $context];
   }
 

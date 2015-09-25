@@ -307,6 +307,11 @@ block_settings:
     provider:
       type: string
       label: 'Provider'
+    context_mapping:
+      type: sequence
+      label: 'Context assignments'
+      sequence:
+        type: string
 
 condition.plugin:
   type: mapping

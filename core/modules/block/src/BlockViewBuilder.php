@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -138,6 +139,12 @@ class BlockViewBuilder extends EntityViewBuilder {
     $base_id = $plugin->getBaseId();
     $derivative_id = $plugin->getDerivativeId();
     $configuration = $plugin->getConfiguration();
+
+    // Inject runtime contexts.
+    if ($plugin instanceof ContextAwarePluginInterface) {
+      $contexts = \Drupal::service('context.repository')->getRuntimeContexts($plugin->getContextMapping());
+      \Drupal::service('context.handler')->applyContextMapping($plugin, $contexts);
+    }
 
     // Create the render array for the block as a whole.
     // @see template_preprocess_block().

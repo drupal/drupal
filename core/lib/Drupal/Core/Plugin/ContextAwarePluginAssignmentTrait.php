@@ -56,11 +56,12 @@ trait ContextAwarePluginAssignmentTrait {
       if (count($options) > 1) {
         $assignments = $plugin->getContextMapping();
         $element[$context_slot] = [
-          '#title' => $this->t('Select a @context value:', ['@context' => $context_slot]),
+          '#title' => $definition->getLabel() ?: $this->t('Select a @context value:', ['@context' => $context_slot]),
           '#type' => 'select',
           '#options' => $options,
           '#required' => $definition->isRequired(),
           '#default_value' => !empty($assignments[$context_slot]) ? $assignments[$context_slot] : '',
+          '#description' => $definition->getDescription(),
         ];
       }
     }

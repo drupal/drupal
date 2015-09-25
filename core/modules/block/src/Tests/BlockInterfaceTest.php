@@ -79,6 +79,7 @@ class BlockInterfaceTest extends KernelTestBase {
         '#default_value' => TRUE,
         '#return_value' => 'visible',
       ),
+      'context_mapping' => array(),
       'display_message' => array(
         '#type' => 'textfield',
         '#title' => t('Display message'),
