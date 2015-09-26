@@ -46,7 +46,7 @@ class PasswordItem extends StringItem {
     $entity = $this->getEntity();
 
     // Update the user password if it has changed.
-    if ($entity->isNew() || ($this->value && $this->value != $entity->original->{$this->getFieldDefinition()->getName()}->value)) {
+    if ($entity->isNew() || (strlen(trim($this->value)) > 0 && $this->value != $entity->original->{$this->getFieldDefinition()->getName()}->value)) {
       // Allow alternate password hashing schemes.
       $this->value = \Drupal::service('password')->hash(trim($this->value));
       // Abort if the hashing failed and returned FALSE.

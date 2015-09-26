@@ -102,7 +102,7 @@ class PasswordConfirm extends FormElement {
   public static function validatePasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
     $pass1 = trim($element['pass1']['#value']);
     $pass2 = trim($element['pass2']['#value']);
-    if (!empty($pass1) || !empty($pass2)) {
+    if (strlen($pass1) > 0 || strlen($pass2) > 0) {
       if (strcmp($pass1, $pass2)) {
         $form_state->setError($element, t('The specified passwords do not match.'));
       }

@@ -114,5 +114,19 @@ class UserCreateTest extends WebTestBase {
       $user = user_load_by_name($name);
       $this->assertEqual($user->isActive(), 'User is not blocked');
     }
+
+    // Test that the password '0' is considered a password.
+    // @see https://www.drupal.org/node/2563751.
+    $name = $this->randomMachineName();
+    $edit = array(
+      'name' => $name,
+      'mail' => $this->randomMachineName() . '@example.com',
+      'pass[pass1]' => 0,
+      'pass[pass2]' => 0,
+      'notify' => FALSE,
+    );
+    $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
+    $this->assertText("Created a new user account for $name. No email has been sent");
+    $this->assertNoText('Password field is required');
   }
 }

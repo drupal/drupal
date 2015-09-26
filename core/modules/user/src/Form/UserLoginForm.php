@@ -167,7 +167,7 @@ class UserLoginForm extends FormBase {
   public function validateAuthentication(array &$form, FormStateInterface $form_state) {
     $password = trim($form_state->getValue('pass'));
     $flood_config = $this->config('user.flood');
-    if (!$form_state->isValueEmpty('name') && !empty($password)) {
+    if (!$form_state->isValueEmpty('name') && strlen($password) > 0) {
       // Do not allow any login from the current user's IP if the limit has been
       // reached. Default is 50 failed attempts allowed in one hour. This is
       // independent of the per-user limit to catch attempts from one IP to log

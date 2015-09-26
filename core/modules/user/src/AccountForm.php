@@ -333,7 +333,8 @@ abstract class AccountForm extends ContentEntityForm {
     }
 
     // Set existing password if set in the form state.
-    if ($current_pass = $form_state->getValue('current_pass')) {
+    $current_pass = trim($form_state->getValue('current_pass'));
+    if (strlen($current_pass) > 0) {
       $account->setExistingPassword($current_pass);
     }
 

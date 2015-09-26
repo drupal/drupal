@@ -109,6 +109,24 @@ class UserEditTest extends WebTestBase {
   }
 
   /**
+   * Tests setting the password to "0".
+   *
+   * We discovered in https://www.drupal.org/node/2563751 that logging in with a
+   * password that is literally "0" was not possible. This test ensures that
+   * this regression can't happen again.
+   */
+  public function testUserWith0Password() {
+    $admin = $this->drupalCreateUser(['administer users']);
+    $this->drupalLogin($admin);
+    // Create a regular user.
+    $user1 = $this->drupalCreateUser([]);
+
+    $edit = ['pass[pass1]' => '0', 'pass[pass2]' => '0'];
+    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+  }
+
+  /**
    * Tests editing of a user account without an email address.
    */
   function testUserWithoutEmailEdit() {
