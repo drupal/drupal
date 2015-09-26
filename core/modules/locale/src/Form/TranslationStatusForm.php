@@ -90,7 +90,6 @@ class TranslationStatusForm extends FormBase {
         }
         $options[$langcode] = array(
           'title' => array(
-            'class' => array('label'),
             'data' => array(
               '#title' => $title,
               '#plain_text' => $title,

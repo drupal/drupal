@@ -81,12 +81,6 @@
 .expanded .locale-translation-update__wrapper {
   background: transparent url(../../../misc/menu-expanded.png) left .6em no-repeat;
 }
-
-#locale-translation-status-form .label {
-  color: #1d1d1d;
-  font-size: 1.15em;
-  font-weight: bold;
-}
 #locale-translation-status-form .description {
   cursor: pointer;
 }
