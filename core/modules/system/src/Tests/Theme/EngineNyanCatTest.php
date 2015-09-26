@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Theme\EnginePhpTemplateTest.
+ * Contains \Drupal\system\Tests\Theme\EngineNyanCatTest.
  */
 
 namespace Drupal\system\Tests\Theme;
@@ -10,11 +10,11 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests theme functions with PHPTemplate.
+ * Tests the multi theme engine support.
  *
  * @group Theme
  */
-class EnginePhpTemplateTest extends WebTestBase {
+class EngineNyanCatTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -25,7 +25,7 @@ class EnginePhpTemplateTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme_phptemplate'));
+    \Drupal::service('theme_handler')->install(array('test_theme_nyan_cat_engine'));
   }
 
   /**
@@ -33,10 +33,10 @@ class EnginePhpTemplateTest extends WebTestBase {
    */
   function testTemplateOverride() {
     $this->config('system.theme')
-      ->set('default', 'test_theme_phptemplate')
+      ->set('default', 'test_theme_nyan_cat_engine')
       ->save();
     $this->drupalGet('theme-test/template-test');
-    $this->assertText('Success: Template overridden with PHPTemplate theme.', 'Template overridden by PHPTemplate file.');
+    $this->assertText('Success: Template overridden with Nyan Cat theme. All of them', 'Template overridden by Nyan Cat file.');
   }
 
 }
