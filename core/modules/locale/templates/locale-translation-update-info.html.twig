@@ -47,7 +47,7 @@
           {{ 'Missing translations for:'|t }}
         {% endif %}
         {% if not_found %}
-          <ul class="item_list">
+          <ul>
             {% for update in not_found %}
               <li>{{ update.name }} ({{ update.version|default('no version'|t) }}). {{ update.info }}</li>
             {% endfor %}
