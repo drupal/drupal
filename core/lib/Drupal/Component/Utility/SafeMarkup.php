@@ -162,79 +162,41 @@ class SafeMarkup {
   /**
    * Formats a string for HTML display by replacing variable placeholders.
    *
-   * This method replaces variable placeholders in a string with the requested
-   * values and escapes the values so they can be safely displayed as HTML. It
-   * should be used on any unknown text that is intended to be printed to an
-   * HTML page (especially text that may have come from untrusted users, since
-   * in that case it prevents cross-site scripting and other security problems).
-   *
-   * This method is not intended for passing arbitrary user input into any
-   * HTML attribute value, as only URL attributes such as "src" and "href" are
-   * supported (using ":variable"). Never use this method on unsafe HTML
-   * attributes such as "on*" and "style" and take care when using this with
-   * unsupported attributes such as "title" or "alt" as this can lead to
-   * unexpected output.
-   *
-   * In most cases, you should use t() rather than calling this function
-   * directly, since it will translate the text (on non-English-only sites) in
-   * addition to formatting it.
-   *
    * @param string $string
-   *   A string containing placeholders. The string itself is not escaped, any
-   *   unsafe content must be in $args and inserted via placeholders.
+   *   A string containing placeholders. The string itself will not be escaped,
+   *   any unsafe content must be in $args and inserted via placeholders.
    * @param array $args
-   *   An associative array of replacements to make. Occurrences in $string of
-   *   any key in $args are replaced with the corresponding value, after
-   *   optional sanitization and formatting. The type of sanitization and
-   *   formatting depends on the first character of the key:
-   *   - @variable: Escaped to HTML using Html::escape() unless the value is
-   *     already HTML-safe. Use this as the default choice for anything
-   *     displayed on a page on the site, but not within HTML attributes.
-   *   - %variable: Escaped to HTML just like @variable, but also wrapped in
-   *     <em> tags, which makes the following HTML code:
-   *     @code
-   *       <em class="placeholder">text output here.</em>
-   *     @endcode
-   *     As with @variable, do not use this within HTML attributes.
-   *   - :variable: Escaped to HTML using Html::escape() and filtered for
-   *     dangerous protocols using UrlHelper::stripDangerousProtocols(). Use
-   *     this when passing in a URL, such as when using the "src" or "href"
-   *     attributes, ensuring the value is always wrapped in quotes:
-   *     - Secure: <a href=":variable">@variable</a>
-   *     - Insecure: <a href=:variable>@variable</a>
-   *     When ":variable" comes from arbitrary user input, the result is secure,
-   *     but not guaranteed to be a valid URL (which means the resulting output
-   *     could fail HTML validation). To guarantee a valid URL, use
-   *     Url::fromUri($user_input)->toString() (which either throws an exception
-   *     or returns a well-formed URL) before passing the result into a
-   *     ":variable" placeholder.
-   *   - !variable: Inserted as is, with no sanitization or formatting. Only
-   *     use this when the resulting string is being generated for one of:
-   *     - Non-HTML usage, such as a plain-text email.
-   *     - Non-direct HTML output, such as a plain-text variable that will be
-   *       printed as an HTML attribute value and therefore formatted with
-   *       self::checkPlain() as part of that.
-   *     - Some other special reason for suppressing sanitization.
+   *   An array with placeholder replacements, keyed by placeholder. See
+   *   \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat() for
+   *   additional information about placeholders.
    *
-   * @return string
-   *   The formatted string, which is marked as safe unless sanitization of an
-   *   unsafe argument was suppressed (see above).
+   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   *   The formatted string, which is an instance of SafeStringInterface unless
+   *   sanitization of an unsafe argument was suppressed (see above).
    *
    * @ingroup sanitization
    *
-   * @see t()
-   * @see \Drupal\Component\Utility\Html::escape()
-   * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
-   * @see \Drupal\Core\Url::fromUri()
+   * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
+   * @see \Drupal\Component\Utility\FormattableString
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Component\Utility\FormattableString.
    */
   public static function format($string, array $args) {
+    // If the string has arguments that start with '!' we consider it unsafe
+    // and return a string instead of an object for backward compatibility
+    // purposes.
+    // @todo https://www.drupal.org/node/2571695 remove this temporary
+    //   workaround.
     $safe = TRUE;
-    $output = static::placeholderFormat($string, $args, $safe);
-    if ($safe) {
-      static::$safeStrings[$output]['html'] = TRUE;
+    foreach ($args as $key => $value) {
+      if ($key[0] == '!' && !static::isSafe($value)) {
+        $safe = FALSE;
+      }
     }
-    return $output;
+    $safe_string = new FormattableString($string, $args);
 
+    return $safe ? $safe_string : (string) $safe_string;
   }
 
 }

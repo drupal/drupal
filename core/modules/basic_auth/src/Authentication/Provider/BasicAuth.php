@@ -135,7 +135,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     $challenge = SafeMarkup::format('Basic realm="@realm"', array(
       '@realm' => !empty($site_name) ? $site_name : 'Access restricted',
     ));
-    return new UnauthorizedHttpException($challenge, 'No authentication credentials provided.', $previous);
+    return new UnauthorizedHttpException((string) $challenge, 'No authentication credentials provided.', $previous);
   }
 
 }

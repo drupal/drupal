@@ -11,6 +11,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeArray;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Component\Utility\SafeStringInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Template\Attribute
@@ -30,6 +31,18 @@ class AttributeTest extends UnitTestCase {
     $attribute = new Attribute(['selected' => TRUE, 'checked' => FALSE]);
     $this->assertTrue($attribute['selected']->value());
     $this->assertFalse($attribute['checked']->value());
+
+    // Test that non-array values with name "class" are cast to array.
+    $attribute = new Attribute(array('class' => 'example-class'));
+    $this->assertTrue(isset($attribute['class']));
+    $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
+
+    // Test that safe string objects work correctly.
+    $safe_string = $this->prophesize(SafeStringInterface::class);
+    $safe_string->__toString()->willReturn('example-class');
+    $attribute = new Attribute(array('class' => $safe_string->reveal()));
+    $this->assertTrue(isset($attribute['class']));
+    $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
   }
 
   /**

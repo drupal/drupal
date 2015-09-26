@@ -63,18 +63,18 @@ class PluralTranslatableString extends TranslatableString {
    *   ease translation. Use @count in place of the item count, as in
    *   "@count new comments".
    * @param array $args
-   *   (optional) An associative array of replacements to make after
-   *   translation. Instances of any key in this array are replaced with the
-   *   corresponding value. Based on the first character of the key, the value
-   *   is escaped and/or themed. See
-   *   \Drupal\Component\Utility\SafeMarkup::format(). Note that you do not need
-   *   to include @count in this array; this replacement is done automatically
+   *   (optional) An array with placeholder replacements, keyed by placeholder.
+   *   See \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat() for
+   *   additional information about placeholders. Note that you do not need to
+   *   include @count in this array; this replacement is done automatically
    *   for the plural cases.
    * @param array $options
    *   (optional) An associative array of additional options. See t() for
    *   allowed keys.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   (optional) The string translation service.
+   *
+   * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
    */
   public function __construct($count, $singular, $plural, array $args = [], array $options = [], TranslationInterface $string_translation = NULL) {
     $this->count = $count;

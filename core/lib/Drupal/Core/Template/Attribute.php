@@ -111,11 +111,15 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface
     }
     // An array value or 'class' attribute name are forced to always be an
     // AttributeArray value for consistency.
-    if (is_array($value) || $name == 'class') {
+    if ($name == 'class' && !is_array($value)) {
+      // Cast the value to string in case it implements SafeStringInterface.
+      $value = [(string) $value];
+    }
+    if (is_array($value)) {
       // Cast the value to an array if the value was passed in as a string.
       // @todo Decide to fix all the broken instances of class as a string
       // in core or cast them.
-      $value = new AttributeArray($name, (array) $value);
+      $value = new AttributeArray($name, $value);
     }
     elseif (is_bool($value)) {
       $value = new AttributeBoolean($name, $value);
