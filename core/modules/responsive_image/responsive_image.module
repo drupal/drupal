@@ -475,3 +475,14 @@ function _responsive_image_image_style_url($style_name, $path) {
   }
   return file_create_url($path);
 }
+
+/**
+ * Implements hook_library_info_alter().
+ *
+ * Load responsive_image.js whenever ajax is added.
+ */
+function responsive_image_library_info_alter(array &$libraries, $module) {
+  if ($module === 'core' && isset($libraries['drupal.ajax'])) {
+    $libraries['drupal.ajax']['dependencies'][] = 'responsive_image/ajax';
+  }
+}
