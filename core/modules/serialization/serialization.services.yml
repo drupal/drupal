@@ -21,6 +21,10 @@ services:
     class: Drupal\serialization\Normalizer\ComplexDataNormalizer
     tags:
       - { name: normalizer }
+  serializer.normalizer.entity_reference_field_item:
+    class: Drupal\serialization\Normalizer\EntityReferenceFieldItemNormalizer
+    tags:
+      - { name: normalizer, priority: 10 }
   serializer.normalizer.list:
     class: Drupal\serialization\Normalizer\ListNormalizer
     tags:
