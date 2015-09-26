@@ -25,7 +25,7 @@ class ViewsFormMainForm implements FormInterface {
   public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = []) {
     $form['#prefix'] = '<div class="views-form">';
     $form['#suffix'] = '</div>';
-    $form['#theme'] = 'form';
+
     $form['#pre_render'][] = 'views_pre_render_views_form_views_form';
 
     // Add the output markup to the form array so that it's included when the form

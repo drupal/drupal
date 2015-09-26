@@ -676,10 +676,6 @@ function views_pre_render_views_form_views_form($element) {
   $output = str_replace($search, $replace, drupal_render($element['output']));
   $element['output'] = ['#markup' => ViewsRenderPipelineSafeString::create($output)];
 
-  // Sort, render and add remaining form fields.
-  $children = Element::children($element, TRUE);
-  $element['#children'] = drupal_render_children($element, $children);
-
   return $element;
 }
 
