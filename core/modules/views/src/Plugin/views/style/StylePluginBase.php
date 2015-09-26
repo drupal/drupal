@@ -684,7 +684,17 @@ abstract class StylePluginBase extends PluginBase {
             '#cache_properties' => $field_ids,
           ];
           $renderer->addCacheableDependency($data, $this->view->storage);
-          $renderer->renderPlain($data);
+          // Views may be rendered both inside and outside a render context:
+          // - HTML views are rendered inside a render context: then we want to
+          //   use ::render(), so that attachments and cacheability are bubbled.
+          // - non-HTML views are rendered outside a render context: then we
+          //   want to use ::renderPlain(), so that no bubbling happens
+          if ($renderer->hasRenderContext()) {
+            $renderer->render($data);
+          }
+          else {
+            $renderer->renderPlain($data);
+          }
 
           // Extract field output from the render array and post process it.
           $fields = $this->view->field;

@@ -32,6 +32,16 @@ class FieldDropButtonTest extends HandlerTestBase {
   public static $modules = array('node');
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access']);
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
    * Tests dropbutton field.
    */
   public function testDropbutton() {
@@ -48,6 +58,14 @@ class FieldDropButtonTest extends HandlerTestBase {
       $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => '/node/' . $node->id(), ':title' => t('Custom Text')));
       $this->assertEqual(count($result), 1, 'Just one custom link was found.');
     }
+
+    // Check if the dropbutton.js library is available.
+    $this->drupalGet('admin/content');
+    $this->assertRaw('dropbutton.js');
+    // Check if the dropbutton.js library is available on a cached page to
+    // ensure that bubbleable metadata is not lost in the views render workflow.
+    $this->drupalGet('admin/content');
+    $this->assertRaw('dropbutton.js');
   }
 
 }
