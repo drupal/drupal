@@ -370,7 +370,10 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     $item = $element['#value'];
     $item['fids'] = $element['fids']['#value'];
 
-    $element['#theme'] = 'file_widget';
+    // Prevent the file widget from overriding the image widget.
+    if (!isset($element['#theme'])) {
+      $element['#theme'] = 'file_widget';
+    }
 
     // Add the display field if enabled.
     if ($element['#display_field']) {
