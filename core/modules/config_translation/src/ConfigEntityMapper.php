@@ -117,6 +117,16 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   }
 
   /**
+   * Gets the entity instance for this mapper.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface $entity
+   *   The configuration entity.
+   */
+  public function getEntity() {
+    return $this->entity;
+  }
+
+    /**
    * Sets the entity instance for this mapper.
    *
    * This method can only be invoked when the concrete entity is known, that is

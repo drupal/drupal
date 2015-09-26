@@ -99,9 +99,9 @@ class ConfigEntityMapperTest extends UnitTestCase {
   }
 
   /**
-   * Tests ConfigEntityMapper::setEntity().
+   * Tests ConfigEntityMapper::setEntity() and ConfigEntityMapper::getEntity().
    */
-  public function testSetEntity() {
+  public function testEntityGetterAndSetter() {
     $this->entity
       ->expects($this->once())
       ->method('id')
@@ -119,8 +119,14 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->with('configurable_language')
       ->will($this->returnValue($entity_type));
 
+    // No entity is set.
+    $this->assertNull($this->configEntityMapper->getEntity());
+
     $result = $this->configEntityMapper->setEntity($this->entity);
     $this->assertTrue($result);
+
+    // Ensure that the getter provides the entity.
+    $this->assertEquals($this->entity, $this->configEntityMapper->getEntity());
 
     // Ensure that the configuration name was added to the mapper.
     $plugin_definition = $this->configEntityMapper->getPluginDefinition();
