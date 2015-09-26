@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Xss as UtilityXss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Render\ViewsRenderPipelineSafeString;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -118,7 +119,8 @@ class Boolean extends FieldPluginBase {
     }
 
     if ($this->options['type'] == 'custom') {
-      return $value ? UtilityXss::filterAdmin($this->options['type_custom_true']) : UtilityXss::filterAdmin($this->options['type_custom_false']);
+      $custom_value = $value ? $this->options['type_custom_true'] : $this->options['type_custom_false'];
+      return ViewsRenderPipelineSafeString::create(UtilityXss::filterAdmin($custom_value));
     }
     elseif (isset($this->formats[$this->options['type']])) {
       return $value ? $this->formats[$this->options['type']][0] : $this->formats[$this->options['type']][1];
