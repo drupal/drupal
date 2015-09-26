@@ -170,7 +170,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
       else {
         // A non-existent or NULL entity target id must not return any item in
         // the target entities set.
-        $this->assertFalse(isset($loaded_entities[$delta]));
+        $this->assertFalse(isset($entities[$delta]));
       }
     }
   }
