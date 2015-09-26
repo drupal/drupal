@@ -51,6 +51,10 @@ class StyleGridTest extends PluginTestBase {
       $this->assertGrid($view, $alignment, 2);
       $this->assertGrid($view, $alignment, 1);
     }
+
+    // Ensure styles are properly added for grid views.
+    $this->drupalGet('test-grid');
+    $this->assertRaw('views/css/views.module.css');
   }
 
   /**

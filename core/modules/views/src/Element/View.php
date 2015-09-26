@@ -51,6 +51,7 @@ class View extends RenderElement {
       $view = $element['#view'];
     }
 
+    $element += $view->element;
     $view->element = &$element;
     // Mark the element as being prerendered, so other code like
     // \Drupal\views\ViewExecutable::setCurrentPage knows that its no longer

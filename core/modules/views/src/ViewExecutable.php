@@ -403,7 +403,7 @@ class ViewExecutable implements \Serializable {
    */
   public $element = [
     '#attached' => [
-      'library' => [],
+      'library' => ['views/views.module'],
       'drupalSettings' => [],
     ],
     '#cache' => [],
@@ -456,9 +456,6 @@ class ViewExecutable implements \Serializable {
     $this->user = $user;
     $this->viewsData = $views_data;
     $this->routeProvider = $route_provider;
-
-    // Add the default css for a view.
-    $this->element['#attached']['library'][] = 'views/views.module';
   }
 
   /**

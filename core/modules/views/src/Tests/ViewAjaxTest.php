@@ -55,13 +55,12 @@ class ViewAjaxTest extends ViewTestBase {
     $data = Json::decode($response);
 
     $this->assertTrue(isset($data[0]['settings']['views']['ajaxViews']));
-    $this->assertEqual($data[1]['command'], 'add_css');
 
     // Ensure that the view insert command is part of the result.
-    $this->assertEqual($data[2]['command'], 'insert');
-    $this->assertTrue(strpos($data[2]['selector'], '.js-view-dom-id-') === 0);
+    $this->assertEqual($data[1]['command'], 'insert');
+    $this->assertTrue(strpos($data[1]['selector'], '.js-view-dom-id-') === 0);
 
-    $this->setRawContent($data[2]['data']);
+    $this->setRawContent($data[1]['data']);
     $result = $this->xpath('//div[contains(@class, "views-row")]');
     $this->assertEqual(count($result), 2, 'Ensure that two items are rendered in the HTML.');
   }
