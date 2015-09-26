@@ -58,6 +58,45 @@ display:
           plugin_id: field
           relationship: user_id
           alter: {}
+        created:
+          id: created
+          table: users_field_data
+          field: created
+          relationship: user_id
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'Y'
+            timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: field
+        created_1:
+          id: created_1
+          table: users_field_data
+          field: created
+          relationship: user_id
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'H:i:s'
+            timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: field
+        created_2:
+          id: created_2
+          table: users_field_data
+          field: created
+          relationship: user_id
+          type: timestamp
+          settings:
+            date_format: fallback
+            custom_date_format: ''
+            timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: field
       relationships:
         user_id:
           table: entity_test

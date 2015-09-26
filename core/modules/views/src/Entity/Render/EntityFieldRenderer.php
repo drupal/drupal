@@ -215,11 +215,13 @@ class EntityFieldRenderer extends RendererBase {
       $display_sets = [];
       foreach ($field_ids as $field_id) {
         $field = $this->view->field[$field_id];
+        $field_name = $field->definition['field_name'];
         $index = 0;
-        while (isset($display_sets[$index][$field->definition['field_name']])) {
+        while (isset($display_sets[$index]['field_names'][$field_name])) {
           $index++;
         }
-        $display_sets[$index][$field_id] = $field;
+        $display_sets[$index]['field_names'][$field_name] = $field;
+        $display_sets[$index]['field_ids'][$field_id] = $field;
       }
 
       // For each set of fields, build the output by bundle.
@@ -231,7 +233,7 @@ class EntityFieldRenderer extends RendererBase {
             'bundle' => $bundle,
             'status' => TRUE,
           ]);
-          foreach ($display_fields as $field_id => $field) {
+          foreach ($display_fields['field_ids'] as $field) {
             $display->setComponent($field->definition['field_name'], [
               'type' => $field->options['type'],
               'settings' => $field->options['settings'],
@@ -242,7 +244,7 @@ class EntityFieldRenderer extends RendererBase {
           // Collect the field render arrays and index them using our internal
           // row indexes and field IDs.
           foreach ($display_build as $row_index => $entity_build) {
-            foreach ($display_fields as $field_id => $field) {
+            foreach ($display_fields['field_ids'] as $field_id => $field) {
               $build[$row_index][$field_id] = !empty($entity_build[$field->definition['field_name']]) ? $entity_build[$field->definition['field_name']] : [];
             }
           }
