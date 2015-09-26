@@ -41,7 +41,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     'timezone',
     'url.query_args:_wrapper_format',
     'url.query_args.pagers:0',
-    'user'
+    'user.permissions',
+    'user.roles',
   ];
 
   /**
@@ -162,7 +163,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       );
       $edit = array(
-        'name' => $user->getUsername(),
+        'uid' => $user->getUsername() . '(' . $user->id() . ')',
         'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );

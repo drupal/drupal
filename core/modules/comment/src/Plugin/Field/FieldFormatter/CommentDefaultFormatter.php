@@ -190,16 +190,6 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
               $this->getFieldSetting('comment_type'),
             ]],
           ];
-
-          // @todo Remove this in https://www.drupal.org/node/2543334. Until
-          //   then, \Drupal\Core\Render\Renderer::hasPoorCacheability() isn't
-          //   integrated with cache context bubbling, so this duplicates the
-          //   contexts added by \Drupal\comment\CommentForm::form().
-          $output['comment_form']['#cache']['contexts'][] = 'user.permissions';
-          $output['comment_form']['#cache']['contexts'][] = 'user.roles:authenticated';
-          if ($this->currentUser->isAuthenticated()) {
-            $output['comment_form']['#cache']['contexts'][] = 'user';
-          }
         }
       }
 

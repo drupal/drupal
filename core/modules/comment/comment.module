@@ -565,26 +565,6 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
   $entity = $comment->getCommentedEntity();
 
   if (!$form_state->getErrors()) {
-    // Attach the user and time information.
-    $author_name = $comment->getAuthorName();
-    if (!empty($author_name)) {
-      $account = user_load_by_name($author_name);
-    }
-    elseif (\Drupal::currentUser()->isAuthenticated() && empty($comment->is_anonymous)) {
-      $account = \Drupal::currentUser();
-    }
-
-    if (!empty($account) && $account->isAuthenticated()) {
-      $comment->setOwner($account);
-      $comment->setAuthorName($account->getUsername());
-    }
-    elseif (empty($author_name)) {
-      $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
-    }
-
-    $created_time = !is_null($comment->getCreatedTime()) ? $comment->getCreatedTime() : REQUEST_TIME;
-    $comment->setCreatedTime($created_time);
-    $comment->changed->value = REQUEST_TIME;
     $comment->in_preview = TRUE;
     $comment_build = comment_view($comment);
     $comment_build['#weight'] = -100;

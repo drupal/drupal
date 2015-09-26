@@ -121,8 +121,11 @@ class CommentForm extends ContentEntityForm {
     }
 
     // Prepare default values for form elements.
+    $author = '';
     if ($is_admin) {
-      $author = $comment->getAuthorName();
+      if (!$comment->getOwnerId()) {
+        $author = $comment->getAuthorName();
+      }
       $status = $comment->getStatus();
       if (empty($comment_preview)) {
         $form['#title'] = $this->t('Edit comment %title', array(
@@ -131,12 +134,6 @@ class CommentForm extends ContentEntityForm {
       }
     }
     else {
-      if ($this->currentUser->isAuthenticated()) {
-        $author = $this->currentUser->getUsername();
-      }
-      else {
-        $author = ($comment->getAuthorName() ? $comment->getAuthorName() : '');
-      }
       $status = ($this->currentUser->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED);
     }
 
@@ -145,35 +142,46 @@ class CommentForm extends ContentEntityForm {
       $date = !empty($comment->date) ? $comment->date : DrupalDateTime::createFromTimestamp($comment->getCreatedTime());
     }
 
-    // Add the author name field depending on the current user.
+    // The uid field is only displayed when a user with the permission
+    // 'administer comments' is editing an existing comment from an
+    // authenticated user.
+    $owner = $comment->getOwner();
+    $form['author']['uid'] = [
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'user',
+      '#default_value' => $owner->isAnonymous() ? NULL : $owner,
+      // A comment can be made anonymous by leaving this field empty therefore
+      // there is no need to list them in the autocomplete.
+      '#selection_settings' => ['include_anonymous' => FALSE],
+      '#title' => $this->t('Authored by'),
+      '#description' => $this->t('Leave blank for %anonymous.', ['%anonymous' => $config->get('anonymous')]),
+      '#access' => $is_admin,
+    ];
+
+    // The name field is displayed when an anonymous user is adding a comment or
+    // when a user with the permission 'administer comments' is editing an
+    // existing comment from an anonymous user.
     $form['author']['name'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Your name'),
+      '#title' => $is_admin ? $this->t('Name for @anonymous', ['@anonymous' => $config->get('anonymous')]) : $this->t('Your name'),
       '#default_value' => $author,
       '#required' => ($this->currentUser->isAnonymous() && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
       '#maxlength' => 60,
+      '#access' => $this->currentUser->isAnonymous() || $is_admin,
       '#size' => 30,
+      '#attributes'=> [
+        'data-drupal-default-value' => $config->get('anonymous'),
+      ],
     );
+
     if ($is_admin) {
-      $form['author']['name']['#type'] = 'entity_autocomplete';
-      $form['author']['name']['#target_type'] = 'user';
-      $form['author']['name']['#selection_settings'] = ['include_anonymous' => FALSE];
-      $form['author']['name']['#process_default_value'] = FALSE;
-      // The user name is validated and processed in static::buildEntity() and
-      // static::validate().
-      $form['author']['name']['#element_validate'] = array();
-      $form['author']['name']['#title'] = $this->t('Authored by');
-      $form['author']['name']['#description'] = $this->t('Leave blank for %anonymous.', array('%anonymous' => $config->get('anonymous')));
-    }
-    elseif ($this->currentUser->isAuthenticated()) {
-      $form['author']['name']['#type'] = 'item';
-      $form['author']['name']['#value'] = $form['author']['name']['#default_value'];
-      $form['author']['name']['#theme'] = 'username';
-      $form['author']['name']['#account'] = $this->currentUser;
-      $form['author']['name']['#cache']['contexts'][] = 'user';
-    }
-    elseif($this->currentUser->isAnonymous()) {
-      $form['author']['name']['#attributes']['data-drupal-default-value'] = $config->get('anonymous');
+      // When editing a comment only display the name textfield if the uid field
+      // is empty.
+      $form['author']['name']['#states'] = [
+        'visible' => [
+          ':input[name="uid"]' => array('empty' => TRUE),
+        ],
+      ];
     }
 
     // Add author email and homepage fields depending on the current user.
@@ -263,22 +271,27 @@ class CommentForm extends ContentEntityForm {
     else {
       $comment->setCreatedTime(REQUEST_TIME);
     }
-    $author_name = $form_state->getValue('name');
-
-    if (!$this->currentUser->isAnonymous()) {
-      // Assign the owner based on the given user name - none means anonymous.
-      $accounts = $this->entityManager->getStorage('user')
-        ->loadByProperties(array('name' => $author_name));
-      $account = reset($accounts);
-      $uid = $account ? $account->id() : 0;
-      $comment->setOwnerId($uid);
+    // Empty author ID should revert to anonymous.
+    $author_id = $form_state->getValue('uid');
+    if ($comment->id() && $this->currentUser->hasPermission('administer comments')) {
+      // Admin can leave the author ID blank to revert to anonymous.
+      $author_id = $author_id ?: 0;
     }
-
-    // If the comment was posted by an anonymous user and no author name was
-    // required, use "Anonymous" by default.
-    if ($comment->getOwnerId() === 0 && (!isset($author_name) || $author_name === '')) {
-      $comment->setAuthorName($this->config('user.settings')->get('anonymous'));
+    if (!is_null($author_id)) {
+      if ($author_id === 0 && $form['author']['name']['#access']) {
+        // Use the author name value when the form has access to the element and
+        // the author ID is anonymous.
+        $comment->setAuthorName($form_state->getValue('name'));
+      }
+      else {
+        // Ensure the author name is not set.
+        $comment->setAuthorName(NULL);
+      }
     }
+    else {
+      $author_id = $this->currentUser->id();
+    }
+    $comment->setOwnerId($author_id);
 
     // Validate the comment's subject. If not specified, extract from comment
     // body.

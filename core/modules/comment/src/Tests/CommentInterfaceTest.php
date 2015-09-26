@@ -83,7 +83,7 @@ class CommentInterfaceTest extends CommentTestBase {
     )));
 
     // Test changing the comment author to "Anonymous".
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('name' => ''));
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('uid' => ''));
     $this->assertTrue($comment->getAuthorName() == t('Anonymous') && $comment->getOwnerId() == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
@@ -95,7 +95,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('name' => $this->webUser->getUsername()));
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('uid' => $this->webUser->getUsername() . ' (' . $this->webUser->id() . ')'));
     $this->assertTrue($comment->getAuthorName() == $this->webUser->getUsername() && $comment->getOwnerId() == $this->webUser->id(), 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();

@@ -101,6 +101,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('comment/' . $anonymous_comment3->id() . '/edit');
     $this->assertRaw($author_name, "The anonymous user's name is correct when editing the comment.");
+    $this->assertFieldByName('uid', '', 'The author field is empty (i.e. anonymous) when editing the comment.');
     $this->assertRaw($author_mail, "The anonymous user's email address is correct when editing the comment.");
 
     // Unpublish comment.
