@@ -115,7 +115,10 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    * Adds body and description fields to the block configuration form.
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $options = $this->entityManager->getViewModeOptions('block_content');
+    $uuid = $this->getDerivativeId();
+    $block = $this->entityManager->loadEntityByUuid('block_content', $uuid);
+    $options = $this->entityManager->getViewModeOptionsByBundle('block_content', $block->bundle());
+
     $form['view_mode'] = array(
       '#type' => 'select',
       '#options' => $options,

@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Tests;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
@@ -33,7 +34,8 @@ class EntityDisplayTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('node');
-    $this->installConfig(array('field', 'node'));
+    $this->installEntitySchema('user');
+    $this->installConfig(array('field', 'node', 'user'));
   }
 
   /**
@@ -452,6 +454,53 @@ class EntityDisplayTest extends KernelTestBase {
     $display->setComponent('kitten');
     $display->save();
     $this->assertFalse($cache->get('cid'));
+  }
+
+  /**
+   * Test getDisplayModeOptions().
+   */
+  public function testGetDisplayModeOptions() {
+    NodeType::create(array('type' => 'article'))->save();
+
+    EntityViewDisplay::create(array(
+      'targetEntityType' => 'node',
+      'bundle' => 'article',
+      'mode' => 'default',
+    ))->setStatus(TRUE)->save();
+
+    $display_teaser = EntityViewDisplay::create(array(
+      'targetEntityType' => 'node',
+      'bundle' => 'article',
+      'mode' => 'teaser',
+    ));
+    $display_teaser->save();
+
+    EntityFormDisplay::create(array(
+      'targetEntityType' => 'user',
+      'bundle' => 'user',
+      'mode' => 'default',
+    ))->setStatus(TRUE)->save();
+
+    $form_display_teaser = EntityFormDisplay::create(array(
+      'targetEntityType' => 'user',
+      'bundle' => 'user',
+      'mode' => 'register',
+    ));
+    $form_display_teaser->save();
+
+    // Test getViewModeOptionsByBundle().
+    $view_modes = \Drupal::entityManager()->getViewModeOptionsByBundle('node', 'article');
+    $this->assertEqual($view_modes, array('default' => 'Default'));
+    $display_teaser->setStatus(TRUE)->save();
+    $view_modes = \Drupal::entityManager()->getViewModeOptionsByBundle('node', 'article');
+    $this->assertEqual($view_modes, array('default' => 'Default', 'teaser' => 'Teaser'));
+
+    // Test getFormModeOptionsByBundle().
+    $form_modes = \Drupal::entityManager()->getFormModeOptionsByBundle('user', 'user');
+    $this->assertEqual($form_modes, array('default' => 'Default'));
+    $form_display_teaser->setStatus(TRUE)->save();
+    $form_modes = \Drupal::entityManager()->getFormModeOptionsByBundle('user', 'user');
+    $this->assertEqual($form_modes, array('default' => 'Default', 'register' => 'Register'));
   }
 
 }

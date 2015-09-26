@@ -432,26 +432,48 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
    *
    * @param string $entity_type_id
    *   The entity type whose view mode options should be returned.
-   * @param bool $include_disabled
-   *   Force to include disabled view modes. Defaults to FALSE.
    *
    * @return array
    *   An array of view mode labels, keyed by the display mode ID.
    */
-  public function getViewModeOptions($entity_type_id, $include_disabled = FALSE);
+  public function getViewModeOptions($entity_type_id);
 
   /**
    * Gets an array of form mode options.
    *
    * @param string $entity_type_id
    *   The entity type whose form mode options should be returned.
-   * @param bool $include_disabled
-   *   Force to include disabled form modes. Defaults to FALSE.
    *
    * @return array
    *   An array of form mode labels, keyed by the display mode ID.
    */
-  public function getFormModeOptions($entity_type_id, $include_disabled = FALSE);
+  public function getFormModeOptions($entity_type_id);
+
+  /**
+   * Returns an array of view mode options by bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type whose view mode options should be returned.
+   * @param string $bundle
+   *   The name of the bundle.
+   *
+   * @return array
+   *   An array of view mode labels, keyed by the display mode ID.
+   */
+  public function getViewModeOptionsByBundle($entity_type_id, $bundle);
+
+  /**
+   * Returns an array of form mode options by bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type whose form mode options should be returned.
+   * @param string $bundle
+   *   The name of the bundle.
+   *
+   * @return array
+   *   An array of form mode labels, keyed by the display mode ID.
+   */
+  public function getFormModeOptionsByBundle($entity_type_id, $bundle);
 
   /**
    * Loads an entity by UUID.

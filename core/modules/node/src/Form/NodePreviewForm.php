@@ -86,7 +86,11 @@ class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
       '#options' => array('attributes' => array('class' => array('node-preview-backlink'))) + $query_options,
     );
 
-    $view_mode_options = $this->getViewModeOptions($node);
+    $view_mode_options = $this->entityManager->getViewModeOptionsByBundle('node', $node->bundle());
+
+    // Unset view modes that are not used in the front end.
+    unset($view_mode_options['rss']);
+    unset($view_mode_options['search_index']);
 
     $form['uuid'] = array(
       '#type' => 'value',
@@ -122,48 +126,6 @@ class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
       'node_preview' => $form_state->getValue('uuid'),
       'view_mode_id' => $form_state->getValue('view_mode'),
     ));
-  }
-
-  /**
-   * Gets the list of available view modes for the current node.
-   *
-   * @param EntityInterface $node
-   *   The node being previewed.
-   *
-   * @return array
-   *   List of available view modes for the current node.
-   */
-  protected function getViewModeOptions(EntityInterface $node) {
-    $load_ids = array();
-    $view_mode_options = array();
-
-    // Load all the node's view modes.
-    $view_modes = $this->entityManager->getViewModes('node');
-
-    // Get the list of available view modes for the current node's bundle.
-    $ids = $this->configFactory->listAll('core.entity_view_display.node.' . $node->bundle());
-    foreach ($ids as $id) {
-      $config_id = str_replace('core.entity_view_display' . '.', '', $id);
-      $load_ids[] = $config_id;
-    }
-    $displays = entity_load_multiple('entity_view_display', $load_ids);
-
-    // Generate the display options array.
-    foreach ($displays as $display) {
-
-      $view_mode_name = $display->get('mode');
-
-      // Skip view modes that are not used in the front end.
-      if (in_array($view_mode_name, array('rss', 'search_index'))) {
-        continue;
-      }
-
-      if ($display->status()) {
-        $view_mode_options[$view_mode_name] = ($view_mode_name == 'default') ? t('Default') : $view_modes[$view_mode_name]['label'];
-      }
-    }
-
-    return $view_mode_options;
   }
 
 }

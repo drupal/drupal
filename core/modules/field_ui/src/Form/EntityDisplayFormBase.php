@@ -201,26 +201,23 @@ abstract class EntityDisplayFormBase extends EntityForm {
     // Custom display settings.
     if ($this->entity->getMode() == 'default') {
       // Only show the settings if there is at least one custom display mode.
-      if ($display_modes = $this->getDisplayModes()) {
+      $display_mode_options = $this->getDisplayModeOptions();
+      // Unset default option.
+      unset($display_mode_options['default']);
+      if ($display_mode_options) {
         $form['modes'] = array(
           '#type' => 'details',
           '#title' => $this->t('Custom display settings'),
         );
-        // Collect options and default values for the 'Custom display settings'
-        // checkboxes.
-        $options = array();
+        // Prepare default values for the 'Custom display settings' checkboxes.
         $default = array();
-        $display_statuses = $this->getDisplayStatuses();
-        foreach ($display_modes as $mode_name => $mode_info) {
-          $options[$mode_name] = $mode_info['label'];
-          if (!empty($display_statuses[$mode_name])) {
-            $default[] = $mode_name;
-          }
+        if ($display_statuses = array_filter($this->getDisplayStatuses())) {
+          $default = array_keys(array_intersect_key($display_mode_options, $display_statuses));
         }
         $form['modes']['display_modes_custom'] = array(
           '#type' => 'checkboxes',
           '#title' => $this->t('Use custom display settings for the following modes'),
-          '#options' => $options,
+          '#options' => $display_mode_options,
           '#default_value' => $default,
         );
       }
@@ -855,6 +852,14 @@ abstract class EntityDisplayFormBase extends EntityForm {
    *   An array of form or view mode info.
    */
   abstract protected function getDisplayModes();
+
+  /**
+   * Returns an array of form or view mode options.
+   *
+   * @return array
+   *   An array of form or view mode options.
+   */
+  abstract protected function getDisplayModeOptions();
 
   /**
    * Returns the region to which a row in the display overview belongs.

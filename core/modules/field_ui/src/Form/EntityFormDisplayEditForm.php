@@ -76,6 +76,13 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getDisplayModeOptions() {
+    return $this->entityManager->getFormModeOptions($this->entity->getTargetEntityTypeId());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getTableHeader() {
     return array(
       $this->t('Field'),
