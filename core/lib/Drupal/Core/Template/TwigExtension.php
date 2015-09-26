@@ -350,6 +350,9 @@ class TwigExtension extends \Twig_Extension {
    *
    * Replacement function for Twig's escape filter.
    *
+   * Note: This function should be kept in sync with
+   * theme_render_and_autoescape().
+   *
    * @param \Twig_Environment $env
    *   A Twig_Environment instance.
    * @param mixed $arg
@@ -364,6 +367,9 @@ class TwigExtension extends \Twig_Extension {
    *
    * @return string|null
    *   The escaped, rendered output, or NULL if there is no valid output.
+   *
+   * @todo Refactor this to keep it in sync with theme_render_and_autoescape()
+   *   in https://www.drupal.org/node/2575065
    */
   public function escapeFilter(\Twig_Environment $env, $arg, $strategy = 'html', $charset = NULL, $autoescape = FALSE) {
     // Check for a numeric zero int or float.

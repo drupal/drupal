@@ -70,7 +70,10 @@
  * hook_theme() implementations can also specify that a theme hook
  * implementation is a theme function, but that is uncommon. It is only used for
  * special cases, for performance reasons, because rendering using theme
- * functions is somewhat faster than theme templates.
+ * functions is somewhat faster than theme templates. Note that while Twig
+ * templates will auto-escape variables, theme functions must explicitly escape
+ * any variables by using theme_render_and_autoescape(). Failure to do so is
+ * likely to result in security vulnerabilities.
  *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
@@ -93,6 +96,9 @@
  * bartik_search_result() in the bartik.theme file, if the search_result hook
  * implementation was a function instead of a template). Normally, copying the
  * default function is again a good starting point for overriding its behavior.
+ * Again, note that theme functions (unlike templates) must explicitly escape
+ * variables using theme_render_and_autoescape() or risk security
+ * vulnerabilities.
  *
  * @section sec_preprocess_templates Preprocessing for Template Files
  * If the theme implementation is a template file, several functions are called
