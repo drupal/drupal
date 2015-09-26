@@ -226,7 +226,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    * @code
    *   // Add a constraint to the 'field_username' FieldItemList.
    *   // e.g. $node->field_username
-   *   $fields['field_username']->addConstraint('UserNameUnique', []);
+   *   $fields['field_username']->addConstraint('UniqueField');
    * @endcode
    *
    * If you wish to apply a constraint to a \Drupal\Core\Field\FieldItem instead

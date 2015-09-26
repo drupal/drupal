@@ -190,7 +190,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE)
-      ->addConstraint('BlockContentInfo', []);
+      ->addConstraint('UniqueField', []);
 
 
     $fields['type'] = BaseFieldDefinition::create('entity_reference')

@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint;
 
 /**
  * Supports validating feed titles.
@@ -17,15 +17,8 @@ use Symfony\Component\Validator\Constraint;
  *   label = @Translation("Feed title", context = "Validation")
  * )
  */
-class FeedTitleConstraint extends Constraint {
+class FeedTitleConstraint extends UniqueFieldConstraint {
 
   public $message = 'A feed named %value already exists. Enter a unique title.';
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validatedBy() {
-    return '\Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator';
-  }
 
 }

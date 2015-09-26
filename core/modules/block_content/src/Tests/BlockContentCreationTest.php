@@ -77,8 +77,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('A block with description %name already exists.', array(
-      '%name' => $edit['info[0][value]']
+    $this->assertRaw(format_string('A custom block with block description %value already exists.', array(
+      '%value' => $edit['info[0][value]']
     )));
     $this->assertResponse(200);
   }
@@ -156,8 +156,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('A block with description %name already exists.', array(
-      '%name' => $edit['info[0][value]']
+    $this->assertRaw(format_string('A custom block with block description %value already exists.', array(
+      '%value' => $edit['info[0][value]']
     )));
     $this->assertResponse(200);
   }

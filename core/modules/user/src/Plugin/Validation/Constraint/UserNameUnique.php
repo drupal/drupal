@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint;
 
 /**
  * Checks if a user name is unique on the site.
@@ -17,14 +17,8 @@ use Symfony\Component\Validator\Constraint;
  *   label = @Translation("User name unique", context = "Validation"),
  * )
  */
-class UserNameUnique extends Constraint {
+class UserNameUnique extends UniqueFieldConstraint {
 
   public $message = 'The username %value is already taken.';
 
-  /**
-   * {@inheritdoc}
-   */
-  public function validatedBy() {
-    return '\Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator';
-  }
 }
