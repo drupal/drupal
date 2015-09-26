@@ -49,19 +49,21 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   }
 
   /**
-   * Get a type link for a bundle.
-   *
-   * @param string $entity_type
-   *   The bundle's entity type.
-   * @param string $bundle
-   *   The name of the bundle.
-   * @param array $context
-   *   Context of normalizer/serializer.
-   *
-   * @return string
-   *   The URI that identifies this bundle.
+   * {@inheritdoc}
    */
   public function getTypeUri($entity_type, $bundle, $context = array()) {
+    // Per the interface documention of this method, the returned URI may
+    // optionally also serve as the URL of a documentation page about this
+    // bundle. However, the REST module does not currently implement such
+    // a documentation page. Therefore, we return a URI assembled relative to
+    // the site's base URL, which is sufficient to uniquely identify the site's
+    // entity type and bundle for use in hypermedia formats, but we do not
+    // take into account unclean URLs, language prefixing, or anything else
+    // that would be required for Drupal to be able to respond with content
+    // at this URL. If a module is installed that adds such content, but
+    // requires this URL to be different (e.g., include a language prefix),
+    // then the module must also override the TypeLinkManager class/service to
+    // return the desired URL.
     $uri = $this->getLinkDomain() . "/rest/type/$entity_type/$bundle";
     $this->moduleHandler->alter('rest_type_uri', $uri, $context);
     return $uri;
