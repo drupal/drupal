@@ -19,6 +19,7 @@ base:
       css/components/resize.module.css: { weight: -10 }
       css/components/sticky-header.module.css: { weight: -10 }
       css/components/tabledrag.module.css: { weight: -10 }
+      css/components/tablesort.module.css: { weight: -10 }
       css/components/tree-child.module.css: { weight: -10 }
 
 admin:

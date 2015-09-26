@@ -11,8 +11,18 @@
  * @ingroup themeable
  */
 #}
-{% if style == 'asc' -%}
-  <img src="{{ arrow_asc }}" width="13" height="13" alt="{{ 'sort ascending'|t }}" title="{{ 'sort ascending'|t }}" />
-{% else -%}
-  <img src="{{ arrow_desc }}" width="13" height="13" alt="{{ 'sort descending'|t }}" title="{{ 'sort descending'|t }}" />
-{% endif %}
+{%
+  set classes = [
+    'tablesort',
+    'tablesort--' ~ style,
+  ]
+%}
+<span{{ attributes.addClass(classes) }}>
+  <span class="visually-hidden">
+    {% if style == 'asc' -%}
+      {{ 'Sort ascending'|t }}
+    {% else -%}
+      {{ 'Sort descending'|t }}
+    {% endif %}
+  </span>
+</span>

@@ -41,6 +41,7 @@ global-styling:
       css/components/site-branding.css: {}
       css/components/site-footer.css: {}
       css/components/table.css: {}
+      css/components/tablesort-indicator.css: {}
       css/components/tabs.css: {}
       css/components/toolbar.css: {}
       css/components/featured-bottom.css: {}

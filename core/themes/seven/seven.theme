@@ -95,18 +95,6 @@ function seven_preprocess_admin_block_content(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for tablesort indicator templates.
- *
- * Uses Seven's image versions, so the arrows show up as black and not gray on
- * gray.
- */
-function seven_preprocess_tablesort_indicator(&$variables) {
-  $theme_path = drupal_get_path('theme', 'seven');
-  $variables['arrow_asc'] = file_create_url($theme_path . '/images/arrow-asc.png');
-  $variables['arrow_desc'] = file_create_url($theme_path . '/images/arrow-desc.png');
-}
-
-/**
  * Implements hook_preprocess_HOOK() for menu-local-action templates.
  */
 function seven_preprocess_menu_local_action(array &$variables) {

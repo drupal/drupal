@@ -1,0 +1,26 @@
+/**
+ * @file
+ * Tablesort indicator styles.
+ */
+
+.tablesort {
+  float: right; /* LTR */
+  margin-top: 5px;
+  width: 10px;
+  height: 10px;
+}
+[dir="rtl"] .tablesort {
+  float: left;
+}
+.tablesort--asc {
+  background-image: url(../../../../misc/icons/004875/twistie-down.svg);
+}
+a:hover .tablesort--asc {
+  background-image: url(../../../../misc/icons/008ee6/twistie-down.svg);
+}
+.tablesort--desc {
+  background-image: url(../../../../misc/icons/004875/twistie-up.svg);
+}
+a:hover .tablesort--desc {
+  background-image: url(../../../../misc/icons/008ee6/twistie-up.svg);
+}

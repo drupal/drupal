@@ -87,7 +87,7 @@ class FieldWebTest extends HandlerTestBase {
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEqual($ids, range(1, 5));
 
-    $this->clickLink(t('ID'));
+    $this->clickLink(t('ID Sort descending'));
     // Check that the output has the expected order (desc).
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEqual($ids, range(5, 1, -1));

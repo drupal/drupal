@@ -960,25 +960,6 @@ function template_preprocess_table(&$variables) {
 }
 
 /**
- * Prepares variables for tablesort indicator templates.
- *
- * Default template: tablesort-indicator.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - style: Set to either 'asc' or 'desc'. This determines which icon to show.
- */
-function template_preprocess_tablesort_indicator(&$variables) {
-  // Provide the image attributes for an ascending or descending image.
-  if ($variables['style'] == 'asc') {
-    $variables['arrow_asc'] = file_create_url('core/misc/arrow-asc.png');
-  }
-  else {
-    $variables['arrow_desc'] = file_create_url('core/misc/arrow-desc.png');
-  }
-}
-
-/**
  * Prepares variables for item list templates.
  *
  * Default template: item-list.html.twig.
