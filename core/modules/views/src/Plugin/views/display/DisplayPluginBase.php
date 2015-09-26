@@ -1454,7 +1454,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $form['css_class'] = array(
           '#type' => 'textfield',
           '#title' => $this->t('CSS class name(s)'),
-          '#description' => $this->t('Seperate multiples classes by spaces.'),
+          '#description' => $this->t('Separate multiple classes by spaces.'),
           '#default_value' => $this->getOption('css_class'),
         );
         break;
