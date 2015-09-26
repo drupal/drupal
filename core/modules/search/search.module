@@ -74,7 +74,7 @@ function search_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.search':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Search module provides the ability to set up search pages based on plugins provided by other modules. In Drupal core, there are two page-type plugins: the Content page type provides keyword searching for content managed by the Node module, and the Users page type provides keyword searching for registered users. Contributed modules may provide other page-type plugins. For more information, see <a href=":search-module">the online documentation for the Search module</a>.', array(':search-module' => 'https://www.drupal.org/documentation/modules/search')) . '</p>';
+      $output .= '<p>' . t('The Search module provides the ability to set up search pages based on plugins provided by other modules. In Drupal core, there are two page-type plugins: the Content page type provides keyword searching for content managed by the Node module, and the Users page type provides keyword searching for registered users. Contributed modules may provide other page-type plugins. For more information, see the <a href=":search-module">online documentation for the Search module</a>.', array(':search-module' => 'https://www.drupal.org/documentation/modules/search')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring search pages') . '</dt>';

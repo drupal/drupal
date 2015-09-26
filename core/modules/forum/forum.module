@@ -32,7 +32,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<li>' . t('Optional <em>containers</em>, used to group similar forums. Forums can be placed inside containers, and vice versa.').'</li>';
       $output .= '</ul>';
       $output .= '</p>';
-      $output .= '<p>' . t('For more information, see <a href=":forum">the online documentation for the Forum module</a>.', array(':forum' => 'https://www.drupal.org/documentation/modules/forum')) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":forum">online documentation for the Forum module</a>.', array(':forum' => 'https://www.drupal.org/documentation/modules/forum')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Setting up the forum structure') . '</dt>';

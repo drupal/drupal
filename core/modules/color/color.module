@@ -22,7 +22,7 @@ function color_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.color':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to change the color scheme (color of links, backgrounds, text, and other theme elements) of compatible themes. For more information, see <a href=":color_do">the online documentation for the Color module</a>.', array(':color_do' => 'https://www.drupal.org/documentation/modules/color')) . '</p>';
+      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to change the color scheme (color of links, backgrounds, text, and other theme elements) of compatible themes. For more information, see the <a href=":color_do">online documentation for the Color module</a>.', array(':color_do' => 'https://www.drupal.org/documentation/modules/color')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Changing colors') . '</dt>';

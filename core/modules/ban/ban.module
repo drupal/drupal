@@ -15,7 +15,7 @@ function ban_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.ban':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from individual IP addresses. For more information, see <a href=":url">the online documentation for the Ban module</a>.', array(':url' => 'https://www.drupal.org/documentation/modules/ban')) . '</p>';
+      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from individual IP addresses. For more information, see the <a href=":url">online documentation for the Ban module</a>.', array(':url' => 'https://www.drupal.org/documentation/modules/ban')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Banning IP addresses') . '</dt>';

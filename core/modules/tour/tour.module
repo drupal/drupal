@@ -16,7 +16,7 @@ function tour_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.tour':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t("The Tour module provides users with guided tours of the site interface. Each tour consists of several tips that highlight elements of the user interface, guide the user through a workflow, or explain key concepts of the website. For more information, see <a href=':tour'>the online documentation for the Tour module</a>.", array(':tour' => 'https://www.drupal.org/documentation/modules/tour')) . '</p>';
+      $output .= '<p>' . t("The Tour module provides users with guided tours of the site interface. Each tour consists of several tips that highlight elements of the user interface, guide the user through a workflow, or explain key concepts of the website. For more information, see the <a href=':tour'>online documentation for the Tour module</a>.", array(':tour' => 'https://www.drupal.org/documentation/modules/tour')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Viewing tours') . '</dt>';
