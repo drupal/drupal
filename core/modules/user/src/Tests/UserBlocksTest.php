@@ -39,6 +39,30 @@ class UserBlocksTest extends WebTestBase {
     $this->drupalLogout($this->adminUser);
   }
 
+   /**
+    * Tests that user login block is hidden from user/login.
+    */
+  function testUserLoginBlockVisibility() {
+    // Array keyed list where key being the URL address and value being expected
+    // visibility as boolean type.
+    $paths = [
+      'node' => TRUE,
+      'user/login' => FALSE,
+      'user/register' => TRUE,
+      'user/password' => TRUE,
+    ];
+    foreach ($paths as $path => $expected_visibility) {
+      $this->drupalGet($path);
+      $elements = $this->xpath('//div[contains(@class,"block-user-login-block") and @role="form"]');
+      if ($expected_visibility) {
+        $this->assertTrue(!empty($elements), 'User login block in path "' . $path . '" should be visible');
+     }
+      else {
+        $this->assertTrue(empty($elements), 'User login block in path "' . $path . '" should not be visible');
+      }
+    }
+  }
+
   /**
    * Test the user login block.
    */
