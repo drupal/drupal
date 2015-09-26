@@ -77,7 +77,7 @@ class HelpController extends ControllerBase {
     $column = array(
       '#type' => 'container',
       'links' => array('#theme' => 'item_list'),
-      '#attributes' => array('class' => array('layout-column', 'layout-column--quarter')),
+      '#attributes' => array('class' => array('layout-column', 'quarter')),
     );
     $output = array(
       '#prefix' => '<div class="clearfix">',
