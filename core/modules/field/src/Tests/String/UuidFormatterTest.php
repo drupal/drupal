@@ -46,13 +46,19 @@ class UuidFormatterTest extends KernelTestBase {
 
     $uuid_field = $entity->get('uuid');
 
+    // Verify default render.
     $render_array = $uuid_field->view([]);
-    $this->assertIdentical($render_array[0]['#markup'], $entity->uuid(), 'The rendered UUID matches the entity UUID.');
+    $this->assertIdentical($render_array[0]['#context']['value'], $entity->uuid(), 'The rendered UUID matches the entity UUID.');
+    $this->assertTrue(strpos($this->render($render_array), $entity->uuid()), 'The rendered UUID found.');
 
+    // Verify customized render.
     $render_array = $uuid_field->view(['settings' => ['link_to_entity' => TRUE]]);
     $this->assertIdentical($render_array[0]['#type'], 'link');
-    $this->assertIdentical($render_array[0]['#title']['#markup'], $entity->uuid());
+    $this->assertIdentical($render_array[0]['#title']['#context']['value'], $entity->uuid());
     $this->assertIdentical($render_array[0]['#url']->toString(), $entity->url());
+    $rendered = $this->render($render_array);
+    $this->assertTrue(strpos($rendered, $entity->uuid()), 'The rendered UUID found.');
+    $this->assertTrue(strpos($rendered, $entity->url()), 'The rendered entity URL found.');
   }
 
 }

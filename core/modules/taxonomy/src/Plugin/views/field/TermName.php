@@ -28,7 +28,8 @@ class TermName extends Field {
       foreach ($items as &$item) {
         // Replace spaces with hyphens.
         $name = $item['raw']->get('value')->getValue();
-        $item['rendered']['#markup'] = str_replace(' ', '-', $name);
+        // @todo Add link support https://www.drupal.org/node/2567745
+        $item['rendered']['#context']['value'] = str_replace(' ', '-', $name);
       }
     }
     return $items;

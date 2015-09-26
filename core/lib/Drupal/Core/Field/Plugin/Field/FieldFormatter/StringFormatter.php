@@ -7,9 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -137,7 +135,7 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
         ];
       }
       else {
-        $elements[$delta] = is_array($view_value) ? $view_value : ['#markup' => $view_value];
+        $elements[$delta] = $view_value;
       }
     }
     return $elements;
@@ -156,7 +154,9 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     // The text value has no text format assigned to it, so the user input
     // should equal the output, including newlines.
     return [
-      '#markup' => nl2br(Html::escape($item->value))
+      '#type' => 'inline_template',
+      '#template' => '{{ value|nl2br }}',
+      '#context' => ['value' => $item->value],
     ];
   }
 
