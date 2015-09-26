@@ -149,48 +149,59 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'Bold' => array(
         'label' => t('Bold'),
         'image_alternative' => $button('bold'),
+        'image_alternative_rtl' => $button('bold', 'rtl'),
       ),
       'Italic' => array(
         'label' => t('Italic'),
         'image_alternative' => $button('italic'),
+        'image_alternative_rtl' => $button('italic', 'rtl'),
       ),
       'Underline' => array(
         'label' => t('Underline'),
         'image_alternative' => $button('underline'),
+        'image_alternative_rtl' => $button('underline', 'rtl'),
       ),
       'Strike' => array(
         'label' => t('Strike-through'),
         'image_alternative' => $button('strike'),
+        'image_alternative_rtl' => $button('strike', 'rtl'),
       ),
       'Superscript' => array(
         'label' => t('Superscript'),
         'image_alternative' => $button('super script'),
+        'image_alternative_rtl' => $button('super script', 'rtl'),
       ),
       'Subscript' => array(
         'label' => t('Subscript'),
         'image_alternative' => $button('sub script'),
+        'image_alternative_rtl' => $button('sub script', 'rtl'),
       ),
       // "removeformat" plugin.
       'RemoveFormat' => array(
         'label' => t('Remove format'),
         'image_alternative' => $button('remove format'),
+        'image_alternative_rtl' => $button('remove format', 'rtl'),
       ),
       // "justify" plugin.
       'JustifyLeft' => array(
         'label' => t('Align left'),
         'image_alternative' => $button('justify left'),
+        'image_alternative_rtl' => $button('justify left', 'rtl'),
       ),
       'JustifyCenter' => array(
         'label' => t('Align center'),
         'image_alternative' => $button('justify center'),
+        'image_alternative_rtl' => $button('justify center', 'rtl'),
       ),
       'JustifyRight' => array(
         'label' => t('Align right'),
         'image_alternative' => $button('justify right'),
+        'image_alternative_rtl' => $button('justify right', 'rtl'),
       ),
       'JustifyBlock' => array(
         'label' => t('Justify'),
         'image_alternative' => $button('justify block'),
+        'image_alternative_rtl' => $button('justify block', 'rtl'),
       ),
       // "list" plugin.
       'BulletedList' => array(
@@ -229,11 +240,13 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'Blockquote' => array(
         'label' => t('Blockquote'),
         'image_alternative' => $button('blockquote'),
+        'image_alternative_rtl' => $button('blockquote', 'rtl'),
       ),
       // "horizontalrule" plugin
       'HorizontalRule' => array(
         'label' => t('Horizontal rule'),
         'image_alternative' => $button('horizontal rule'),
+        'image_alternative_rtl' => $button('horizontal rule', 'rtl'),
       ),
       // "clipboard" plugin.
       'Cut' => array(
@@ -267,6 +280,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'SpecialChar' => array(
         'label' => t('Character map'),
         'image_alternative' => $button('special char'),
+        'image_alternative_rtl' => $button('special char', 'rtl'),
       ),
       'Format' => array(
         'label' => t('HTML block format'),
@@ -282,6 +296,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'Table' => array(
         'label' => t('Table'),
         'image_alternative' => $button('table'),
+        'image_alternative_rtl' => $button('table', 'rtl'),
       ),
       // "showblocks" plugin.
       'ShowBlocks' => array(
@@ -293,11 +308,13 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'Source' => array(
         'label' => t('Source code'),
         'image_alternative' => $button('source'),
+        'image_alternative_rtl' => $button('source', 'rtl'),
       ),
       // "maximize" plugin.
       'Maximize' => array(
         'label' => t('Maximize'),
         'image_alternative' => $button('maximize'),
+        'image_alternative_rtl' => $button('maximize', 'rtl'),
       ),
       // No plugin, separator "button" for toolbar builder UI use only.
       '-' => array(
