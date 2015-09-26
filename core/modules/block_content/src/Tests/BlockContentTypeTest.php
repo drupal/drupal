@@ -110,7 +110,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $edit = array(
       'label' => 'Bar',
     );
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic', $edit, t('Save'));
+    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->assertTitle(format_string('Edit @type custom block type | Drupal', ['@type' => 'basic']));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     $this->drupalGet('block/add');

@@ -26,6 +26,13 @@ class BlockContentTypeForm extends EntityForm {
     /* @var \Drupal\block_content\BlockContentTypeInterface $block_type */
     $block_type = $this->entity;
 
+    if ($this->operation == 'add') {
+      $form['#title'] = $this->t('Add custom block type');
+    }
+    else {
+      $form['#title'] = $this->t('Edit %label custom block type', array('%label' => $block_type->label()));
+    }
+
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Label'),

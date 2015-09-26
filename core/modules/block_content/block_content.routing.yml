@@ -76,7 +76,6 @@ entity.block_content_type.edit_form:
   path: '/admin/structure/block/block-content/manage/{block_content_type}'
   defaults:
     _entity_form: 'block_content_type.edit'
-    _title: 'Edit'
   requirements:
     _entity_access: 'block_content_type.update'
 
