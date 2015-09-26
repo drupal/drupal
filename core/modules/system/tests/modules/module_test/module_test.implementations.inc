@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements hook_altered_test_hook()
+ * Implements hook_altered_test_hook().
  *
  * @see module_test_module_implements_alter()
  */
