@@ -12,12 +12,6 @@
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item {
   margin: 0;
-  /* Hide tab text. */
-  padding-left: 1.3333em; /* LTR */
-  text-indent: -9999px;
-}
-[dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item {
-  padding-right: 1.3333em;
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item.is-active {
   background-image:-webkit-linear-gradient(rgb(78,159,234) 0%, rgb(69,132,221) 100%);
