@@ -33,13 +33,13 @@
     padding-right: 10px;
     padding-left: 0;
   }
-  .layout-column.half {
+  .layout-column--half {
     width: 50%;
   }
-  .layout-column.quarter {
+  .layout-column--quarter {
     width: 25%;
   }
-  .layout-column.three-quarter {
+  .layout-column--three-quarter {
     width: 75%;
   }
 }
