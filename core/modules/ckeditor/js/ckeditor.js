@@ -36,12 +36,6 @@
       var label = $('label[for=' + element.getAttribute('id') + ']').html();
       format.editorSettings.title = Drupal.t("Rich Text Editor, !label field", {'!label': label});
 
-      // CKEditor initializes itself in a read-only state if the 'disabled'
-      // attribute is set. It does not respect the 'readonly' attribute,
-      // however, so we set the 'readOnly' configuration property manually in
-      // that case, for the CKEditor instance that's about to be created.
-      format.editorSettings.readOnly = element.hasAttribute('readonly');
-
       return !!CKEDITOR.replace(element, format.editorSettings);
     },
 
