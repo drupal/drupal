@@ -67,8 +67,8 @@ interface MailManagerInterface extends PluginManagerInterface {
    *           $message['send'] = FALSE;
    *           break;
    *         }
-   *         $message['subject'] = t('Notification from !site', $variables, $options);
-   *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, $options);
+   *         $message['subject'] = t('Notification from @site', $variables, $options);
+   *         $message['body'][] = t("Dear @username\n\nThere is new content available on the site.", $variables, $options);
    *         break;
    *     }
    *   }

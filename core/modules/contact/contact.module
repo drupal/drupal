@@ -122,17 +122,17 @@ function contact_mail($key, &$message, $params) {
   $language = \Drupal::languageManager()->getLanguage($message['langcode']);
 
   $variables = array(
-    '!site-name' => \Drupal::config('system.site')->get('name'),
-    '!subject' => $contact_message->getSubject(),
-    '!form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
-    '!form-url' => \Drupal::url('<current>', [], ['absolute' => TRUE, 'language' => $language]),
-    '!sender-name' => $sender->getDisplayName(),
+    '@site-name' => \Drupal::config('system.site')->get('name'),
+    '@subject' => $contact_message->getSubject(),
+    '@form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
+    '@form-url' => \Drupal::url('<current>', [], ['absolute' => TRUE, 'language' => $language]),
+    '@sender-name' => $sender->getDisplayName(),
   );
   if ($sender->isAuthenticated()) {
-    $variables['!sender-url'] = $sender->url('canonical', array('absolute' => TRUE, 'language' => $language));
+    $variables['@sender-url'] = $sender->url('canonical', array('absolute' => TRUE, 'language' => $language));
   }
   else {
-    $variables['!sender-url'] = $params['sender']->getEmail();
+    $variables['@sender-url'] = $params['sender']->getEmail();
   }
 
   $options = array('langcode' => $language->getId());
@@ -140,27 +140,27 @@ function contact_mail($key, &$message, $params) {
   switch ($key) {
     case 'page_mail':
     case 'page_copy':
-      $message['subject'] .= t('[!form] !subject', $variables, $options);
-      $message['body'][] = t("!sender-name (!sender-url) sent a message using the contact form at !form-url.", $variables, $options);
+      $message['subject'] .= t('[@form] @subject', $variables, $options);
+      $message['body'][] = t("@sender-name (@sender-url) sent a message using the contact form at @form-url.", $variables, $options);
       $build = entity_view($contact_message, 'mail', $language->getId());
       $message['body'][] = (string) \Drupal::service('renderer')->renderPlain($build);
       break;
 
     case 'page_autoreply':
-      $message['subject'] .= t('[!form] !subject', $variables, $options);
+      $message['subject'] .= t('[@form] @subject', $variables, $options);
       $message['body'][] = $params['contact_form']->getReply();
       break;
 
     case 'user_mail':
     case 'user_copy':
       $variables += array(
-        '!recipient-name' => $params['recipient']->getDisplayName(),
-        '!recipient-edit-url' => $params['recipient']->url('edit-form', array('absolute' => TRUE, 'language' => $language)),
+        '@recipient-name' => $params['recipient']->getDisplayName(),
+        '@recipient-edit-url' => $params['recipient']->url('edit-form', array('absolute' => TRUE, 'language' => $language)),
       );
-      $message['subject'] .= t('[!site-name] !subject', $variables, $options);
-      $message['body'][] = t('Hello !recipient-name,', $variables, $options);
-      $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form at !site-name.", $variables, $options);
-      $message['body'][] = t("If you don't want to receive such emails, you can change your settings at !recipient-edit-url.", $variables, $options);
+      $message['subject'] .= t('[@site-name] @subject', $variables, $options);
+      $message['body'][] = t('Hello @recipient-name,', $variables, $options);
+      $message['body'][] = t("@sender-name (@sender-url) has sent you a message via your contact form at @site-name.", $variables, $options);
+      $message['body'][] = t("If you don't want to receive such emails, you can change your settings at @recipient-edit-url.", $variables, $options);
       $build = entity_view($contact_message, 'mail', $language->getId());
       $message['body'][] = (string) \Drupal::service('renderer')->renderPlain($build);
       break;

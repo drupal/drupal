@@ -446,7 +446,7 @@ function update_fetch_data_finished($success, $results) {
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $language = \Drupal::languageManager()->getLanguage($langcode);
-  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => \Drupal::config('system.site')->get('name')), array('langcode' => $langcode));
+  $message['subject'] .= t('New release(s) available for @site_name', array('@site_name' => \Drupal::config('system.site')->get('name')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
   }
@@ -456,10 +456,10 @@ function update_mail($key, &$message, $params) {
   }
   $settings_url = \Drupal::url('update.settings', [], ['absolute' => TRUE]);
   if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
-    $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, !url.', array('!url' => $settings_url));
+    $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, @url.', array('@url' => $settings_url));
   }
   else {
-    $message['body'][] = t('Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, !url.', array('!url' => $settings_url));
+    $message['body'][] = t('Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, @url.', array('@url' => $settings_url));
   }
 }
 
@@ -628,9 +628,9 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   elseif (!$compatible_project) {
     $errors[] = \Drupal::translation()->formatPlural(
       count($incompatible),
-      '%archive_file contains a version of %names that is not compatible with Drupal !version.',
-      '%archive_file contains versions of modules or themes that are not compatible with Drupal !version: %names',
-      array('!version' => \Drupal::CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible))
+      '%archive_file contains a version of %names that is not compatible with Drupal @version.',
+      '%archive_file contains versions of modules or themes that are not compatible with Drupal @version: %names',
+      array('@version' => \Drupal::CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible))
     );
   }
 

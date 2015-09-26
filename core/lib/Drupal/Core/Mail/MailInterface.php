@@ -53,7 +53,8 @@ interface MailInterface {
    *     - User <user@example.com>
    *     - User <user@example.com>, Another User <anotheruser@example.com>
    *   - subject: Subject of the email to be sent. This must not contain any
-   *     newline characters, or the mail may not be sent properly.
+   *     newline characters, or the mail may not be sent properly. The subject
+   *     is converted to plain text by the mail plugin manager.
    *   - body: Message to be sent. Accepts both CRLF and LF line-endings.
    *     Email bodies must be wrapped. For smart plain text wrapping you can use
    *     \Drupal\Core\Mail\MailFormatHelper::wrapMail() .
