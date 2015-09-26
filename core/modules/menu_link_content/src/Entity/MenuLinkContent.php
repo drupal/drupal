@@ -261,9 +261,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('The text to be used for this link in the menu.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
-      ->setSettings(array(
-        'max_length' => 255,
-      ))
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',
@@ -279,9 +277,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setLabel(t('Description'))
       ->setDescription(t('Shown when hovering over the menu link.'))
       ->setTranslatable(TRUE)
-      ->setSettings(array(
-        'max_length' => 255,
-      ))
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',

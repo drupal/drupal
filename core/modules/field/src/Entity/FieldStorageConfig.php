@@ -565,7 +565,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function setSettings(array $settings) {
-    $this->settings = $settings;
+    $this->settings = $settings + $this->settings;
     return $this;
   }
 

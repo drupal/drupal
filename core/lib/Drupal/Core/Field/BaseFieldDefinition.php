@@ -146,16 +146,36 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * Sets field settings.
+   * {@inheritdoc}
    *
-   * @param array $settings
-   *   The value to set.
+   * Note that the method does not unset existing settings not specified in the
+   * incoming $settings array.
    *
-   * @return static
-   *   The object itself for chaining.
+   * For example:
+   * @code
+   *   // Given these are the default settings.
+   *   $field_definition->getSettings() === [
+   *     'fruit' => 'apple',
+   *     'season' => 'summer',
+   *   ];
+   *   // Change only the 'fruit' setting.
+   *   $field_definition->setSettings(['fruit' => 'banana']);
+   *   // The 'season' setting persists unchanged.
+   *   $field_definition->getSettings() === [
+   *     'fruit' => 'banana',
+   *     'season' => 'summer',
+   *   ];
+   * @endcode
+   *
+   * For clarity, it is preferred to use setSetting() if not all available
+   * settings are supplied.
    */
   public function setSettings(array $settings) {
-    $this->getItemDefinition()->setSettings($settings);
+    // Assign settings individiually, in order to keep the current values
+    // of settings not specified in $settings.
+    foreach ($settings as $setting_name => $setting) {
+      $this->getItemDefinition()->setSetting($setting_name, $setting);
+    }
     return $this;
   }
 
@@ -167,15 +187,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * Sets a field setting.
-   *
-   * @param string $setting_name
-   *   The field setting to set.
-   * @param mixed $value
-   *   The value to set.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setSetting($setting_name, $value) {
     $this->getItemDefinition()->setSetting($setting_name, $value);

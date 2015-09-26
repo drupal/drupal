@@ -30,7 +30,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    *
    * @var array
    */
-  public static $modules = array('filter', 'text', 'node', 'user');
+  public static $modules = array('filter', 'text', 'node', 'user', 'field_test');
 
   /**
    * @var string
@@ -688,10 +688,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
       ->save();
     $definition = BaseFieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
-      ->setSettings(array(
-        'target_type' => 'node',
-        'target_bundle' => 'article',
-      ));
+      ->setSetting('target_type', 'node')
+      ->setSetting('target_bundle', 'article');
     $reference_field = \Drupal::TypedDataManager()->create($definition);
     $reference = $reference_field->appendItem(array('entity' => $node))->get('entity');
     $violations = $reference->validate();

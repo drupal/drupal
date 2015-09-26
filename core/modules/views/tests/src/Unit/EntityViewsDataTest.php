@@ -485,7 +485,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $base_field_definitions = $this->setupBaseFields(EntityTestMul::baseFieldDefinitions($this->baseEntityType));
     $base_field_definitions['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel('entity test type')
-      ->setSettings(array('target_type' => 'entity_test_bundle'))
+      ->setSetting('target_type', 'entity_test_bundle')
       ->setTranslatable(TRUE);
     $base_field_definitions = $this->setupBaseFields($base_field_definitions);
     $user_base_field_definitions = [

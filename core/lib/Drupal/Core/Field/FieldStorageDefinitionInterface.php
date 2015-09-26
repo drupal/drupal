@@ -57,11 +57,15 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
   public function getType();
 
   /**
-   * Returns the field settings.
+   * Returns the storage settings.
    *
    * Each field type defines the settings that are meaningful for that type.
    * For example, a text field can define a 'max_length' setting, and an image
    * field can define a 'alt_field_required' setting.
+   *
+   * The method always returns an array of all available settings for this field
+   * type, possibly with the default values merged in if values have not been
+   * provided for all available settings.
    *
    * @return mixed[]
    *   An array of key/value pairs.
@@ -69,7 +73,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
   public function getSettings();
 
   /**
-   * Returns the value of a given field setting.
+   * Returns the value of a given storage setting.
    *
    * @param string $setting_name
    *   The setting name.

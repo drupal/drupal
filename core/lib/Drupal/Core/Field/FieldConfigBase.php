@@ -350,7 +350,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function setSettings(array $settings) {
-    $this->settings = $settings;
+    $this->settings = $settings + $this->settings;
     return $this;
   }
 

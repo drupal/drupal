@@ -55,7 +55,29 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
   public function setTranslatable($translatable);
 
   /**
-   * Sets field settings (overwrites existing settings).
+   * Sets field settings.
+   *
+   * Note that the method does not unset existing settings not specified in the
+   * incoming $settings array.
+   *
+   * For example:
+   * @code
+   *   // Given these are the default settings.
+   *   $field_definition->getSettings() === [
+   *     'fruit' => 'apple',
+   *     'season' => 'summer',
+   *   ];
+   *   // Change only the 'fruit' setting.
+   *   $field_definition->setSettings(['fruit' => 'banana']);
+   *   // The 'season' setting persists unchanged.
+   *   $field_definition->getSettings() === [
+   *     'fruit' => 'banana',
+   *     'season' => 'summer',
+   *   ];
+   * @endcode
+   *
+   * For clarity, it is preferred to use setSetting() if not all available
+   * settings are supplied.
    *
    * @param array $settings
    *   The array of field settings.
