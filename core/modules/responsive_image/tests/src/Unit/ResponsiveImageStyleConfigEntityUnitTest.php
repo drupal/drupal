@@ -252,6 +252,19 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
       'image_mapping' => 'medium',
     );
     $this->assertEquals($expected, $entity->getKeyedImageStyleMappings());
+
+    // Overwrite a mapping to ensure keyed mapping static cache is rebuilt.
+    $entity->addImageStyleMapping('test_breakpoint2', '2x', array(
+      'image_mapping_type' => 'image_style',
+      'image_mapping' => 'large',
+    ));
+    $expected['test_breakpoint2']['2x'] = array(
+      'breakpoint_id' => 'test_breakpoint2',
+      'multiplier' => '2x',
+      'image_mapping_type' => 'image_style',
+      'image_mapping' => 'large',
+    );
+    $this->assertEquals($expected, $entity->getKeyedImageStyleMappings());
   }
 
   /**
