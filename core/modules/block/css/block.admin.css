@@ -1,8 +1,9 @@
 /* Block listing page */
-.region-title .button {
+.region-title__action {
+  display: inline-block;
   margin-left: 1em; /* LTR */
 }
-[dir="rtl"] .region-title .button {
+[dir="rtl"] .region-title__action {
   margin-left: 0;
   margin-right: 1em;
 }
