@@ -11,6 +11,9 @@ process:
   entity_type: 'constants/entity_type'
   bundle: type
   field_name: 'constants/field_name'
+  label:
+    plugin: default_value
+    default_value: 'Sticky at the top of lists'
   'default_value/0/value': 'options/sticky'
 destination:
   plugin: entity:base_field_override
