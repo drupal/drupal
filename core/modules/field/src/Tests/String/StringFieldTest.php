@@ -22,7 +22,7 @@ class StringFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity_test', 'file');
 
   /**
    * A user without any special permissions.
