@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
+
 /**
  * Provides an interface for an entity type and its metadata.
  *
@@ -15,7 +17,7 @@ namespace Drupal\Core\Entity;
  * implemented to alter existing data and fill-in defaults. Module-specific
  * properties should be documented in the hook implementations defining them.
  */
-interface EntityTypeInterface {
+interface EntityTypeInterface extends PluginDefinitionInterface {
 
   /**
    * The maximum length of ID, in characters.
@@ -65,14 +67,6 @@ interface EntityTypeInterface {
    *   The name of the provider of this entity type.
    */
   public function getProvider();
-
-  /**
-   * Gets the name of the entity type class.
-   *
-   * @return string
-   *   The name of the entity type class.
-   */
-  public function getClass();
 
   /**
    * Gets the name of the original entity type class.
@@ -169,16 +163,6 @@ interface EntityTypeInterface {
    * @return bool
    */
   public function isPersistentlyCacheable();
-
-  /**
-   * Sets the name of the entity type class.
-   *
-   * @param string $class
-   *   The name of the entity type class.
-   *
-   * @return $this
-   */
-  public function setClass($class);
 
   /**
    * Determines if there is a handler for a given type.
