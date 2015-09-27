@@ -607,7 +607,8 @@
   $(document).on('state:required', function (e) {
     if (e.trigger) {
       if (e.value) {
-        var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.js-form-item, .js-form-wrapper').find('label');
+        var label = 'label' + (e.target.id ? '[for=' + e.target.id + ']' : '');
+        var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.js-form-item, .js-form-wrapper').find(label);
         // Avoids duplicate required markers on initialization.
         if (!$label.hasClass('js-form-required').length) {
           $label.addClass('js-form-required form-required');
