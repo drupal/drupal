@@ -679,6 +679,15 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form['#method'] = 'get';
     }
 
+    // GET forms should not use a CSRF token.
+    if (isset($form['#method']) && $form['#method'] === 'get') {
+      // Merges in a default, this means if you've explicitly set #token to the
+      // the $form_id on a GET form, which we don't recommend, it will work.
+      $form += [
+        '#token' => FALSE,
+      ];
+    }
+
     // Generate a new #build_id for this form, if none has been set already.
     // The form_build_id is used as key to cache a particular build of the form.
     // For multi-step forms, this allows the user to go back to an earlier

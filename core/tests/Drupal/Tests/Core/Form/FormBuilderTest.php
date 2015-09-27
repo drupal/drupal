@@ -773,7 +773,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @dataProvider providerTestFormTokenCacheability
    */
-  function testFormTokenCacheability($token, $is_authenticated, $expected_form_cacheability, $expected_token_cacheability) {
+  public function testFormTokenCacheability($token, $is_authenticated, $expected_form_cacheability, $expected_token_cacheability, $method) {
     $user = $this->prophesize(AccountProxyInterface::class);
     $user->isAuthenticated()
       ->willReturn($is_authenticated);
@@ -782,6 +782,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form_id = 'test_form_id';
     $form = $form_id();
+    $form['#method'] = $method;
 
     if (isset($token)) {
       $form['#token'] = $token;
@@ -797,7 +798,7 @@ class FormBuilderTest extends FormTestBase {
 
     $form_state = new FormState();
     $built_form = $this->formBuilder->buildForm($form_arg, $form_state);
-    if (!isset($expected_form_cacheability)) {
+    if (!isset($expected_form_cacheability) || ($method == 'get' && !is_string($token))) {
       $this->assertFalse(isset($built_form['#cache']));
     }
     else {
@@ -820,10 +821,12 @@ class FormBuilderTest extends FormTestBase {
    */
   function providerTestFormTokenCacheability() {
     return [
-      'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0]],
-      'token:false,authenticated:true' => [FALSE, TRUE, NULL, NULL],
-      'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL],
-      'token:false,authenticated:false' => [FALSE, FALSE, NULL, NULL],
+      'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0], 'post'],
+      'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL, 'post'],
+      'token:false,authenticated:false' => [FALSE, FALSE, NULL, NULL, 'post'],
+      'token:false,authenticated:true' => [FALSE, TRUE, NULL, NULL, 'post'],
+      'token:none,authenticated:false,method:get' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL, 'get'],
+      'token:test_form_id,authenticated:false,method:get' => ['test_form_id', TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0], 'get'],
     ];
   }
 

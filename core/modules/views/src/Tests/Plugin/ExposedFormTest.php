@@ -232,7 +232,6 @@ class ExposedFormTest extends ViewTestBase {
       'entity_test_view_grants',
       'theme',
       'url.query_args',
-      'user.roles:authenticated',
       'languages:language_content'
     ];
 

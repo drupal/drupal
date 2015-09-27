@@ -89,7 +89,6 @@ class SearchBlockForm extends FormBase {
 
     $route = 'search.view_' . $entity_id;
     $form['#action'] = $this->url($route);
-    $form['#token'] = FALSE;
     $form['#method'] = 'get';
 
     $form['keys'] = array(

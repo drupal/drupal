@@ -295,6 +295,18 @@ class FormTest extends WebTestBase {
   }
 
   /**
+   * CSRF tokens for GET forms should not be added by default.
+   */
+  public function testGetFormsCsrfToken() {
+    // We need to be logged in to have CSRF tokens.
+    $account = $this->createUser();
+    $this->drupalLogin($account);
+
+    $this->drupalGet(Url::fromRoute('form_test.get_form'));
+    $this->assertNoRaw('form_token');
+  }
+
+  /**
    * Tests validation for required textfield element without title.
    *
    * Submits a test form containing a textfield form element without title.
