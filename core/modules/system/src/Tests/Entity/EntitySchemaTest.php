@@ -139,4 +139,59 @@ class EntitySchemaTest extends EntityUnitTestBase  {
     }
   }
 
+  /**
+   * Tests fields from an uninstalled module are removed from the schema.
+   */
+  public function testCleanUpStorageDefinition() {
+    // Find all the entity types provided by the entity_test module and install
+    // the schema for them.
+    $entity_type_ids = [];
+    $entities = \Drupal::entityManager()->getDefinitions();
+    foreach ($entities as $entity_type_id => $definition) {
+      if ($definition->getProvider() == 'entity_test') {
+        $this->installEntitySchema($entity_type_id);
+        $entity_type_ids[] = $entity_type_id;
+      };
+    }
+
+    // Get a list of all the entities in the schema.
+    $key_value_store = \Drupal::keyValue('entity.storage_schema.sql');
+    $schema = $key_value_store->getAll();
+
+    // Count the storage definitions provided by the entity_test module, so that
+    // after uninstall we can be sure there were some to be deleted.
+    $entity_type_id_count = 0;
+
+    foreach (array_keys($schema) as $storage_definition_name) {
+      list($entity_type_id, ,) = explode('.', $storage_definition_name);
+      if (in_array($entity_type_id, $entity_type_ids)) {
+        $entity_type_id_count++;
+      }
+    }
+
+    // Ensure that there are storage definitions from the entity_test module.
+    $this->assertNotEqual($entity_type_id_count, 0, 'There are storage definitions provided by the entity_test module in the schema.');
+
+    // Uninstall the entity_test module.
+    $this->container->get('module_installer')->uninstall(array('entity_test'));
+
+    // Get a list of all the entities in the schema.
+    $key_value_store = \Drupal::keyValue('entity.storage_schema.sql');
+    $schema = $key_value_store->getAll();
+
+    // Count the storage definitions that come from entity types provided by
+    // the entity_test module.
+    $entity_type_id_count = 0;
+
+    foreach (array_keys($schema) as $storage_definition_name) {
+      list($entity_type_id, ,) = explode('.', $storage_definition_name);
+      if (in_array($entity_type_id, $entity_type_ids)) {
+        $entity_type_id_count++;
+      }
+    }
+
+    // Ensure that all storage definitions have been removed from the schema.
+    $this->assertEqual($entity_type_id_count, 0, 'After uninstalling entity_test module the schema should not contains fields from entities provided by the module.');
+  }
+
 }

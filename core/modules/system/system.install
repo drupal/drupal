@@ -1593,10 +1593,15 @@ function _system_update_create_block($name, $theme_name, array $values) {
 function system_update_8007() {
   $database = \Drupal::database();
   $database_schema = $database->schema();
+  $entity_types = \Drupal::entityManager()->getDefinitions();
 
   $schema = \Drupal::keyValue('entity.storage_schema.sql')->getAll();
   $schema_copy = $schema;
   foreach ($schema as $item_name => $item) {
+    list($entity_type_id, , ) = explode('.', $item_name);
+    if (!isset($entity_types[$entity_type_id])) {
+      continue;
+    }
     foreach ($item as $table_name => $table_schema) {
       foreach ($table_schema as $schema_key => $schema_data) {
         if ($schema_key == 'fields') {
@@ -1640,6 +1645,21 @@ function system_update_8007() {
     }
   }
   \Drupal::keyValue('entity.definitions.installed')->setMultiple($definitions_copy);
+}
+
+/**
+ * Purge field schema data for uninstalled entity types.
+ */
+function system_update_8008() {
+  $entity_types = \Drupal::entityManager()->getDefinitions();
+  /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $schema */
+  $schema = \Drupal::keyValue('entity.storage_schema.sql');
+  foreach ($schema->getAll() as $key => $item) {
+    list($entity_type_id, ,) = explode('.', $key);
+    if (!isset($entity_types[$entity_type_id])) {
+      $schema->delete($key);
+    }
+  }
 }
 
 /**
