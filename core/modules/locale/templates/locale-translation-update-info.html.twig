@@ -7,7 +7,7 @@
  *
  * Available variables:
  * - modules: A list of modules names that have available translation updates.
- * - available_updates: A list of available translation updates.
+ * - updates: A list of available translation updates.
  * - not_found: A list of modules missing translation updates.
  *
  * @see template_preprocess_locale_translation_update_info()
@@ -29,12 +29,12 @@
       {%- endtrans -%}
     </span>
   {% endif %}
-  {% if available_updates or not_found %}
+  {% if updates or not_found %}
     <div class="locale-translation-update__details">
-      {% if available_updates %}
+      {% if updates %}
         <ul>
-          {% for update in available_updates %}
-            <li>{{ update.name }} ({{ update.date }})</li>
+          {% for update in updates %}
+            <li>{{ update.name }} ({{ update.timestamp|format_date('html_date') }})</li>
           {% endfor %}
         </ul>
       {% endif %}
@@ -43,7 +43,7 @@
           Prefix the missing updates list if there is an available updates lists
           before it.
         #}
-        {% if available_updates %}
+        {% if updates %}
           {{ 'Missing translations for:'|t }}
         {% endif %}
         {% if not_found %}

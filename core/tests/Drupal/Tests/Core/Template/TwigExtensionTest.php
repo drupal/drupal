@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Template;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
 use Drupal\Tests\UnitTestCase;
@@ -101,6 +102,27 @@ class TwigExtensionTest extends UnitTestCase {
     $twig->addExtension($extension);
     $result = $twig->render('{{ active_theme() }}');
     $this->assertEquals('test_theme', $result);
+  }
+
+  /**
+   * Tests the format_date filter.
+   */
+  public function testFormatDate() {
+    $date_formatter = $this->getMockBuilder('\Drupal\Core\Datetime\DateFormatter')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $date_formatter->expects($this->exactly(2))
+      ->method('format')
+      ->willReturn('1978-11-19');
+    $renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
+    $extension = new TwigExtension($renderer);
+    $extension->setDateFormatter($date_formatter);
+
+    $loader = new StringLoader();
+    $twig = new \Twig_Environment($loader);
+    $twig->addExtension($extension);
+    $result = $twig->render('{{ time|format_date("html_date") }}');
+    $this->assertEquals($date_formatter->format('html_date'), $result);
   }
 
   /**

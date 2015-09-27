@@ -52,18 +52,8 @@ function locale_translation_manual_status() {
  * @see \Drupal\locale\Form\TranslationStatusForm
  */
 function template_preprocess_locale_translation_update_info(array &$variables) {
-  // Build output for available updates.
-  if (isset($variables['updates'])) {
-    $variables['available_updates'] = [];
-    if ($variables['updates']) {
-      foreach ($variables['updates'] as $update) {
-        $variables['modules'][] = $update['name'];
-        // Format date for Twig template.
-        $release = $update;
-        $release['date'] = \Drupal::service('date.formatter')->format($update['timestamp'], 'html_date');
-        $variables['available_updates'][] = $release;
-      }
-    }
+  foreach ($variables['updates'] as $update) {
+    $variables['modules'][] = $update['name'];
   }
 }
 
