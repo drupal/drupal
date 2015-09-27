@@ -157,15 +157,15 @@
       }
     }
 
-    // Bind event handlers.
-    $(document)
-      .on('click.toolbar', '.toolbar-box', toggleClickHandler)
-      .on('click.toolbar', '.toolbar-box a', linkClickHandler);
-
     // Return the jQuery object.
     return this.each(function (selector) {
       var $menu = $(this).once('toolbar-menu');
       if ($menu.length) {
+        // Bind event handlers.
+        $($menu)
+          .on('click.toolbar', '.toolbar-box', toggleClickHandler)
+          .on('click.toolbar', '.toolbar-box a', linkClickHandler);
+
         $menu.addClass('root');
         initItems($menu);
         markListLevels($menu);
