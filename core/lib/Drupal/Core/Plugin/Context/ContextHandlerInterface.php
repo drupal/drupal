@@ -68,7 +68,7 @@ interface ContextHandlerInterface {
    *
    * @param \Drupal\Core\Plugin\ContextAwarePluginInterface $plugin
    *   A plugin about to be evaluated.
-   * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
+   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts to set on the plugin. They will only be set if they
    *   match the plugin's context definitions.
    * @param array $mappings

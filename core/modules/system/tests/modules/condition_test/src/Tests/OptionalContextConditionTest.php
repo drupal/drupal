@@ -10,6 +10,7 @@ namespace Drupal\condition_test\Tests;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -58,6 +59,7 @@ class OptionalContextConditionTest extends KernelTestBase {
    * Tests with both contexts mapped to the same user.
    */
   protected function testContextAvailable() {
+    NodeType::create(['type' => 'example', 'name' => 'Example'])->save();
     /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
     $condition = \Drupal::service('plugin.manager.condition')
       ->createInstance('condition_test_optional_context')
@@ -66,7 +68,7 @@ class OptionalContextConditionTest extends KernelTestBase {
       ]);
     $definition = new ContextDefinition('entity:node');
     $node = Node::create(['type' => 'example']);
-    $contexts['node'] = (new Context($definition))->setContextValue($node);
+    $contexts['node'] = new Context($definition, $node);
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertFalse($condition->execute());
   }

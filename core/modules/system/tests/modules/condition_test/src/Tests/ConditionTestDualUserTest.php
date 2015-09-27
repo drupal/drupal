@@ -72,7 +72,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
         'user2' => 'anonymous',
       ]);
     $definition = new ContextDefinition('entity:user');
-    $contexts['anonymous'] = (new Context($definition))->setContextValue($this->anonymous);
+    $contexts['anonymous'] = new Context($definition, $this->anonymous);
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertTrue($condition->execute());
   }
@@ -89,8 +89,8 @@ class ConditionTestDualUserTest extends KernelTestBase {
         'user2' => 'authenticated',
       ]);
     $definition = new ContextDefinition('entity:user');
-    $contexts['anonymous'] = (new Context($definition))->setContextValue($this->anonymous);
-    $contexts['authenticated'] = (new Context($definition))->setContextValue($this->authenticated);
+    $contexts['anonymous'] = new Context($definition, $this->anonymous);
+    $contexts['authenticated'] = new Context($definition, $this->authenticated);
     \Drupal::service('context.handler')->applyContextMapping($condition, $contexts);
     $this->assertFalse($condition->execute());
   }

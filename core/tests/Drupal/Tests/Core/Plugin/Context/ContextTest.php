@@ -83,10 +83,8 @@ class ContextTest extends UnitTestCase {
       ->setMethods(array('getDefaultValue', 'getDataDefinition'))
       ->getMockForAbstractClass();
 
-    $context = new Context($this->contextDefinition);
-    $context->setTypedDataManager($this->typedDataManager);
     $typed_data = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
-    $context->setContextValue($typed_data);
+    $context = new Context($this->contextDefinition, $typed_data);
     $this->assertSame($typed_data, $context->getContextData());
   }
 
@@ -120,7 +118,7 @@ class ContextTest extends UnitTestCase {
       ->method('getCacheMaxAge')
       ->willReturn(60);
 
-    $context->setContextValue($cacheable_dependency);
+    $context = Context::createFromContext($context, $cacheable_dependency);
     $this->assertSame($cacheable_dependency, $context->getContextData());
     $this->assertEquals(['node:1'], $context->getCacheTags());
     $this->assertEquals(['route'], $context->getCacheContexts());

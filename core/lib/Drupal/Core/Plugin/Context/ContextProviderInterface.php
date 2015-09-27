@@ -32,8 +32,7 @@ interface ContextProviderInterface {
    *   $node = ...
    *
    *   // Set that specific node as the value of the 'node' context.
-   *   $context = new Context(new ContextDefinition('entity:node'));
-   *   $context->setContextValue($node);
+   *   $context = new Context(new ContextDefinition('entity:node'), $node);
    *   return ['node' => $context];
    * @endcode
    *

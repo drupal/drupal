@@ -41,17 +41,30 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    *   The plugin implementation definition.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    $context = array();
-    if (isset($configuration['context'])) {
-      $context = $configuration['context'];
-      unset($configuration['context']);
-    }
+    $context_configuration = isset($configuration['context']) ? $configuration['context'] : [];
+    unset($configuration['context']);
+
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    foreach ($context as $key => $value) {
+
+    $this->contexts = $this->createContextFromConfiguration($context_configuration);
+  }
+
+  /**
+   * Creates context objects from any context mappings in configuration.
+   *
+   * @param array $context_configuration
+   *   An associative array of context names and values.
+   *
+   * @return \Drupal\Component\Plugin\Context\ContextInterface[]
+   *   An array of context objects.
+   */
+  protected function createContextFromConfiguration(array $context_configuration) {
+    $contexts = [];
+    foreach ($context_configuration as $key => $value) {
       $context_definition = $this->getContextDefinition($key);
-      $this->context[$key] = new Context($context_definition);
-      $this->context[$key]->setContextValue($value);
+      $contexts[$key] = new Context($context_definition, $value);
     }
+    return $contexts;
   }
 
   /**
@@ -124,7 +137,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    * {@inheritdoc}
    */
   public function setContextValue($name, $value) {
-    $this->getContext($name)->setContextValue($value);
+    $this->context[$name] = new Context($this->getContextDefinition($name), $value);
     return $this;
   }
 

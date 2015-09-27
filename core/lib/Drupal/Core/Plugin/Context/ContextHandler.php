@@ -72,6 +72,7 @@ class ContextHandler implements ContextHandlerInterface {
    * {@inheritdoc}
    */
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = array()) {
+    /** @var $contexts \Drupal\Core\Plugin\Context\ContextInterface[] */
     $mappings += $plugin->getContextMapping();
     // Loop through each of the expected contexts.
 
@@ -94,7 +95,7 @@ class ContextHandler implements ContextHandlerInterface {
 
         // Pass the value to the plugin if there is one.
         if ($contexts[$context_id]->hasContextValue()) {
-          $plugin->setContextValue($plugin_context_id, $contexts[$context_id]->getContextValue());
+          $plugin->setContextValue($plugin_context_id, $contexts[$context_id]->getContextData());
         }
         elseif ($plugin_context_definition->isRequired()) {
           // Collect required contexts that exist but are missing a value.

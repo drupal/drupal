@@ -52,11 +52,9 @@ class MultipleStaticContext implements ContextProviderInterface {
   public function getRuntimeContexts(array $unqualified_context_ids) {
     $current_user = $this->userStorage->load($this->account->id());
 
-    $context1 = new Context(new ContextDefinition('entity:user', 'User 1'));
-    $context1->setContextValue($current_user);
+    $context1 = new Context(new ContextDefinition('entity:user', 'User 1'), $current_user);
 
-    $context2 = new Context(new ContextDefinition('entity:user', 'User 2'));
-    $context2->setContextValue($current_user);
+    $context2 = new Context(new ContextDefinition('entity:user', 'User 2'), $current_user);
 
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['user']);

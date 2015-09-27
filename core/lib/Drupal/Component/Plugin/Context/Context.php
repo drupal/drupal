@@ -31,20 +31,16 @@ class Context implements ContextInterface {
   protected $contextDefinition;
 
   /**
-   * Sets the contextDefinition for us without needing to call the setter.
+   * Create a context object.
    *
    * @param \Drupal\Component\Plugin\Context\ContextDefinitionInterface $context_definition
    *   The context definition.
+   * @param mixed|null $context_value
+   *   The value of the context.
    */
-  public function __construct(ContextDefinitionInterface $context_definition) {
+  public function __construct(ContextDefinitionInterface $context_definition, $context_value = NULL) {
     $this->contextDefinition = $context_definition;
-  }
-
-  /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::setContextValue().
-   */
-  public function setContextValue($value) {
-    $this->contextValue = $value;
+    $this->contextValue = $context_value;
   }
 
   /**
@@ -72,13 +68,6 @@ class Context implements ContextInterface {
    */
   public function hasContextValue() {
     return (bool) $this->contextValue || (bool) $this->getContextDefinition()->getDefaultValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContextDefinition(ContextDefinitionInterface $context_definition) {
-    $this->contextDefinition = $context_definition;
   }
 
   /**

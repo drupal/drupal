@@ -29,8 +29,7 @@ class TestPageDisplayVariantSubscriber implements EventSubscriberInterface {
     $event->setPluginConfiguration(['required_configuration' => 'A very important, required value.']);
     $event->addCacheTags(['custom_cache_tag']);
 
-    $context = new Context(new ContextDefinition('string', NULL, TRUE));
-    $context->setContextValue('Explicitly passed in context.');
+    $context = new Context(new ContextDefinition('string', NULL, TRUE), 'Explicitly passed in context.');
     $event->setContexts(['context' => $context]);
   }
 

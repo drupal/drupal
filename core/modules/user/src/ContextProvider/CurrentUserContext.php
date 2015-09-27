@@ -55,8 +55,7 @@ class CurrentUserContext implements ContextProviderInterface {
   public function getRuntimeContexts(array $unqualified_context_ids) {
     $current_user = $this->userStorage->load($this->account->id());
 
-    $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')));
-    $context->setContextValue($current_user);
+    $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')), $current_user);
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['user']);
     $context->addCacheableDependency($cacheability);

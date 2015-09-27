@@ -57,8 +57,7 @@ class CurrentLanguageContext implements ContextProviderInterface {
     $result = [];
     foreach ($language_types as $type_key) {
       if (isset($info[$type_key]['name'])) {
-        $context = new Context(new ContextDefinition('language', $info[$type_key]['name']));
-        $context->setContextValue($this->languageManager->getCurrentLanguage($type_key));
+        $context = new Context(new ContextDefinition('language', $info[$type_key]['name']), $this->languageManager->getCurrentLanguage($type_key));
 
         $cacheability = new CacheableMetadata();
         $cacheability->setCacheContexts(['languages:' . $type_key]);

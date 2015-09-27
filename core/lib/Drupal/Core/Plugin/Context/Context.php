@@ -43,11 +43,19 @@ class Context extends ComponentContext implements ContextInterface {
   protected $cacheabilityMetadata;
 
   /**
-   * {@inheritdoc}
+   * Create a context object.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context_definition
+   *   The context definition.
+   * @param mixed $context_value|NULL
+   *   The context value object.
    */
-  public function __construct(ContextDefinitionInterface $context_definition) {
-    parent::__construct($context_definition);
+  public function __construct(ContextDefinitionInterface $context_definition, $context_value = NULL) {
+    parent::__construct($context_definition, NULL);
     $this->cacheabilityMetadata = new CacheableMetadata();
+    if (!is_null($context_value)) {
+      $this->setContextValue($context_value);
+    }
   }
 
   /**
@@ -80,19 +88,22 @@ class Context extends ComponentContext implements ContextInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the context value.
+   *
+   * @param mixed $value
+   *   The value of this context, matching the context definition.
    */
-  public function setContextValue($value) {
+  protected function setContextValue($value) {
     // Add the value as a cacheable dependency only if implements the interface
     // to prevent it from disabling caching with a max-age 0.
     if ($value instanceof CacheableDependencyInterface) {
       $this->addCacheableDependency($value);
     }
     if ($value instanceof TypedDataInterface) {
-      return $this->setContextData($value);
+      $this->contextData = $value;
     }
     else {
-      return $this->setContextData($this->getTypedDataManager()->create($this->contextDefinition->getDataDefinition(), $value));
+      $this->contextData = $this->getTypedDataManager()->create($this->contextDefinition->getDataDefinition(), $value);
     }
   }
 
@@ -119,13 +130,6 @@ class Context extends ComponentContext implements ContextInterface {
     return $this->contextData;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function setContextData(TypedDataInterface $data) {
-    $this->contextData = $data;
-    return $this;
-  }
 
   /**
    * {@inheritdoc}
@@ -168,6 +172,18 @@ class Context extends ComponentContext implements ContextInterface {
    */
   public function getCacheMaxAge() {
     return $this->cacheabilityMetadata->getCacheMaxAge();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromContext(ContextInterface $old_context, $value) {
+    $context = new static($old_context->getContextDefinition(), $value);
+    $context->addCacheableDependency($old_context);
+    if (method_exists($old_context, 'getTypedDataManager')) {
+      $context->setTypedDataManager($old_context->getTypedDataManager());
+    }
+    return $context;
   }
 
 }

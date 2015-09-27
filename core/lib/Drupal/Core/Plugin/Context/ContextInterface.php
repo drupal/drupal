@@ -9,7 +9,6 @@ namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Interface for context.
@@ -17,21 +16,18 @@ use Drupal\Core\TypedData\TypedDataInterface;
 interface ContextInterface extends ComponentContextInterface, CacheableDependencyInterface {
 
   /**
+   * {@inheritdoc}
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
+   */
+  public function getContextDefinition();
+
+  /**
    * Gets the context value as typed data object.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
   public function getContextData();
-
-  /**
-   * Sets the context value as typed data object.
-   *
-   * @param \Drupal\Core\TypedData\TypedDataInterface $data
-   *   The context value as a typed data object.
-   *
-   * @return $this
-   */
-  public function setContextData(TypedDataInterface $data);
 
   /**
    * Adds a dependency on an object: merges its cacheability metadata.
@@ -50,5 +46,18 @@ interface ContextInterface extends ComponentContextInterface, CacheableDependenc
    * @see \Drupal\Core\Cache\CacheableMetadata::createFromObject()
    */
   public function addCacheableDependency($dependency);
+
+  /**
+   * Creates a new context with a different value.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface $old_context
+   *   The context object used to create a new object. Cacheability metadata
+   *   will be copied over.
+   * @param mixed $value
+   *   The value of the new context object.
+   *
+   * @return static
+   */
+  public static function createFromContext(ContextInterface $old_context, $value);
 
 }

@@ -30,6 +30,25 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
   /**
    * {@inheritdoc}
    *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
+   */
+  protected function createContextFromConfiguration(array $context_configuration) {
+    // This method is overridden so that it will use
+    // \Drupal\Core\Plugin\Context\Context instead.
+    $contexts = [];
+    foreach ($context_configuration as $key => $value) {
+      $context_definition = $this->getContextDefinition($key);
+      $contexts[$key] = new Context($context_definition, $value);
+    }
+    return $contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface
+   *   The context object.
+   *
    * This code is identical to the Component in order to pick up a different
    * Context class.
    */
@@ -50,6 +69,14 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
       throw new ContextException("Passed $name context must be an instance of \\Drupal\\Core\\Plugin\\Context\\ContextInterface");
     }
     parent::setContext($name, $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setContextValue($name, $value) {
+    $this->context[$name] = Context::createFromContext($this->getContext($name), $value);
+    return $this;
   }
 
   /**
@@ -82,6 +109,15 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
    */
   public function getContextDefinitions() {
     return parent::getContextDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
+   */
+  public function getContextDefinition($name) {
+    return parent::getContextDefinition($name);
   }
 
   /**
