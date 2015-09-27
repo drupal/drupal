@@ -103,7 +103,7 @@ class UserController extends ControllerBase {
         }
         else {
           // Invalid one-time link specifies an unknown user.
-          drupal_set_message($this->t('The one-time login link you clicked is invalid.'));
+          drupal_set_message($this->t('The one-time login link you clicked is invalid.'), 'error');
         }
         return $this->redirect('<front>');
       }
@@ -209,7 +209,7 @@ class UserController extends ControllerBase {
         return batch_process('');
       }
       else {
-        drupal_set_message(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
+        drupal_set_message(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'error');
         return $this->redirect('entity.user.cancel_form', ['user' => $user->id()], ['absolute' => TRUE]);
       }
     }
