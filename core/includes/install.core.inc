@@ -1878,7 +1878,7 @@ function install_check_translations($langcode, $server_pattern) {
         'title'       => t('Translations directory'),
         'value'       => t('The translations directory is not readable.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => t('The installer requires read permissions to %translations_directory at all times. If you are unsure how to grant file permissions, consult the <a href=":handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions')),
+        'description' => t('The installer requires read permissions to %translations_directory at all times. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', array('%translations_directory' => $translations_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions')),
       );
     }
     // If translations directory is not writable, throw an error.
@@ -1887,7 +1887,7 @@ function install_check_translations($langcode, $server_pattern) {
         'title'       => t('Translations directory'),
         'value'       => t('The translations directory is not writable.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => t('The installer requires write permissions to %translations_directory during the installation process. If you are unsure how to grant file permissions, consult the <a href=":handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions')),
+        'description' => t('The installer requires write permissions to %translations_directory during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', array('%translations_directory' => $translations_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions')),
       );
     }
     else {
@@ -2072,7 +2072,7 @@ function install_check_requirements($install_state) {
           'title' => $default_file_info['title'],
           'value' => t('The %file is not readable.', array('%file' => $default_file_info['title'])),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('@drupal requires read permissions to %file at all times. If you are unsure how to grant file permissions, consult the <a href=":handbook_url">online handbook</a>.', array(
+          'description' => t('@drupal requires read permissions to %file at all times. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', array(
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
               ':handbook_url' => 'https://www.drupal.org/server-permissions'
@@ -2085,7 +2085,7 @@ function install_check_requirements($install_state) {
           'title' => $default_file_info['title'],
           'value' => t('The %file is not writable.', array('%file' => $default_file_info['title'])),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, consult the <a href=":handbook_url">online handbook</a>.', array(
+          'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', array(
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
               ':handbook_url' => 'https://www.drupal.org/server-permissions'
@@ -2103,7 +2103,7 @@ function install_check_requirements($install_state) {
           'title' => $default_file_info['title'],
           'value' => t('The @file is owned by the web server.', array('@file' => $default_file_info['title'])),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('The @drupal installer failed to create a %file file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>. If you have problems with the file permissions on your server, consult the <a href=":handbook_url">online handbook</a>.', array(
+          'description' => t('The @drupal installer failed to create a %file file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', array(
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
               '%default_file' => $default_file,
