@@ -25,10 +25,8 @@
 {% block messages %}
   {% if message_list is not empty %}
     {{ attach_library('bartik/messages') }}
-    <div id="messages">
-      <div class="section clearfix">
-        {{ parent() }}
-      </div>
+    <div class="messages__wrapper layout-container">
+      {{ parent() }}
     </div>
   {% endif %}
 {% endblock messages %}

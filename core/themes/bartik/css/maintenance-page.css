@@ -17,8 +17,7 @@ body.maintenance-page {
 .maintenance-page #main-wrapper {
   min-height: inherit;
 }
-.maintenance-page #header,
-.maintenance-page #messages {
+.maintenance-page #header {
   width: auto;
 }
 .maintenance-page #main {
@@ -54,13 +53,6 @@ body.maintenance-page {
   line-height: 1em;
   margin-top: 0;
 }
-.maintenance-page #messages {
-  padding: 0;
-  margin-top: 30px;
-}
-.maintenance-page #messages div.messages {
-  margin: 0;
-}
 @media all and (min-width: 800px) {
   .maintenance-page #page-wrapper {
     width: 800px;
@@ -68,10 +60,6 @@ body.maintenance-page {
   .maintenance-page #header div.section,
   .maintenance-page #main {
     width: 700px;
-  }
-  .maintenance-page #messages div.section {
-    padding: 0;
-    width: auto;
   }
 }
 @media all and (min-width: 600px) { /* @TODO find the proper breakpoint */
