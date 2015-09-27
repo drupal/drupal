@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="drupal_core">
+  <description>Default PHP CodeSniffer configuration for Drupal core.</description>
+  <file>.</file>
+  <arg name="extensions" value="inc,info,install,module,php,profile,test,theme"/>
+
+  <!--Exclude third party code.-->
+  <exclude-pattern>./assets/vendor/*</exclude-pattern>
+  <exclude-pattern>./vendor/*</exclude-pattern>
+
+  <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
+  <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>
+
+  <!--Todo: remove this file. Ref. https://www.drupal.org/node/2575419-->
+  <exclude-pattern>./lib/Drupal/Core/Cache/Context/OriginalRequestCacheContext.php</exclude-pattern>
+
+  <!--Blacklist of coding standard rules that are not yet fixed. Ref. https://www.drupal.org/node/2571965-->
+  <rule ref="Drupal">
+    <exclude name="Drupal.Array.Array"/>
+    <exclude name="Drupal.Classes.ClassCreateInstance"/>
+    <exclude name="Drupal.Classes.ClassDeclaration"/>
+    <exclude name="Drupal.Classes.InterfaceName"/>
+    <exclude name="Drupal.Commenting.ClassComment"/>
+    <exclude name="Drupal.Commenting.DocComment"/>
+    <exclude name="Drupal.Commenting.DocCommentStar"/>
+    <exclude name="Drupal.Commenting.FileComment"/>
+    <exclude name="Drupal.Commenting.FunctionComment"/>
+    <exclude name="Drupal.Commenting.HookComment"/>
+    <exclude name="Drupal.Commenting.InlineComment"/>
+    <exclude name="Drupal.ControlStructures.ControlSignature"/>
+    <exclude name="Drupal.ControlStructures.ElseIf"/>
+    <exclude name="Drupal.ControlStructures.InlineControlStructure"/>
+    <exclude name="Drupal.Files.EndFileNewline"/>
+    <exclude name="Drupal.Files.LineLength"/>
+    <exclude name="Drupal.Formatting.MultiLineAssignment"/>
+    <exclude name="Drupal.Formatting.SpaceInlineIf"/>
+    <exclude name="Drupal.Formatting.SpaceUnaryOperator"/>
+    <exclude name="Drupal.Functions.FunctionDeclaration"/>
+    <exclude name="Drupal.NamingConventions.ValidClassName"/>
+    <exclude name="Drupal.NamingConventions.ValidFunctionName"/>
+    <exclude name="Drupal.NamingConventions.ValidGlobal"/>
+    <exclude name="Drupal.NamingConventions.ValidVariableName"/>
+    <exclude name="Drupal.Semantics.ConstantName"/>
+    <exclude name="Drupal.Semantics.FunctionAlias"/>
+    <exclude name="Drupal.Semantics.FunctionT"/>
+    <exclude name="Drupal.Semantics.RemoteAddress"/>
+    <exclude name="Drupal.Strings.UnnecessaryStringConcat"/>
+    <exclude name="Drupal.WhiteSpace.CloseBracketSpacing"/>
+    <exclude name="Drupal.WhiteSpace.Comma"/>
+    <exclude name="Drupal.WhiteSpace.EmptyLines"/>
+    <exclude name="Drupal.WhiteSpace.OpenBracketSpacing"/>
+    <exclude name="Drupal.WhiteSpace.OperatorSpacing"/>
+    <exclude name="Drupal.WhiteSpace.ScopeClosingBrace"/>
+    <exclude name="Drupal.WhiteSpace.ScopeIndent"/>
+    <exclude name="Generic.Formatting.SpaceAfterCast"/>
+    <exclude name="Generic.Functions.FunctionCallArgumentSpacing"/>
+    <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+    <exclude name="Generic.NamingConventions.ConstructorName"/>
+    <exclude name="Generic.PHP.UpperCaseConstant"/>
+    <exclude name="Internal.NoCodeFound"/>
+    <exclude name="PEAR.Functions.FunctionCallSignature"/>
+    <exclude name="PEAR.Functions.ValidDefaultValue"/>
+    <exclude name="PSR2.Classes.PropertyDeclaration"/>
+    <exclude name="Squiz.Arrays.ArrayBracketSpacing"/>
+    <exclude name="Squiz.Arrays.ArrayDeclaration"/>
+    <exclude name="Squiz.Classes.LowercaseClassKeywords"/>
+    <exclude name="Squiz.Commenting.DocCommentAlignment"/>
+    <exclude name="Squiz.Commenting.PostStatementComment"/>
+    <exclude name="Squiz.ControlStructures.ForEachLoopDeclaration"/>
+    <exclude name="Squiz.ControlStructures.ForLoopDeclaration"/>
+    <exclude name="Squiz.ControlStructures.SwitchDeclaration"/>
+    <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing"/>
+    <exclude name="Squiz.PHP.LowercasePHPFunctions"/>
+    <exclude name="Squiz.PHP.NonExecutableCode"/>
+    <exclude name="Squiz.Scope.MethodScope"/>
+    <exclude name="Squiz.Strings.ConcatenationSpacing"/>
+    <exclude name="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <exclude name="Squiz.WhiteSpace.SemicolonSpacing"/>
+    <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+  </rule>
+</ruleset>
