@@ -154,7 +154,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility['request_path']['id'] = 'request_path';
     $visibility['request_path']['negate'] = FALSE;
     $visibility['request_path']['pages'] = '/node';
-    $this->assertEntity('block_1', $visibility, 'right', 'bluemarine', -4);
+    $this->assertEntity('block_1', $visibility, 'sidebar_second', 'bluemarine', -4);
 
     $visibility = [];
     $this->assertEntity('block_2', $visibility, 'right', 'test_theme', -7);
