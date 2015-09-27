@@ -11,8 +11,8 @@ namespace Drupal\options\Tests;
  * Tests the Options field type formatters.
  *
  * @group options
- * @see \Drupal\options\Plugin\field\formatter\OptionsDefaultFormatter
- * @see \Drupal\options\Plugin\field\formatter\OptionsKeyFormatter
+ * @see \Drupal\options\Plugin\Field\FieldFormatter\OptionsDefaultFormatter
+ * @see \Drupal\options\Plugin\Field\FieldFormatter\OptionsKeyFormatter
  */
 class OptionsFormattersTest extends OptionsFieldUnitTestBase {
 
