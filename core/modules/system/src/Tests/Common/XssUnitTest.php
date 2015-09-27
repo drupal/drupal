@@ -40,8 +40,6 @@ class XssUnitTest extends KernelTestBase {
     $this->assertEqual($text, 'Escaped text: &lt;script&gt;', 't replaces and escapes string.');
     $text = t('Placeholder text: %value', array('%value' => '<script>'));
     $this->assertEqual($text, 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 't replaces, escapes and themes string.');
-    $text = t('Verbatim text: !value', array('!value' => '<script>'));
-    $this->assertEqual($text, 'Verbatim text: <script>', 't replaces verbatim string as-is.');
   }
 
   /**

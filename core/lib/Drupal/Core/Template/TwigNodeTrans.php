@@ -136,9 +136,6 @@ class TwigNodeTrans extends \Twig_Node {
           $argPrefix = '@';
           while ($args instanceof \Twig_Node_Expression_Filter) {
             switch ($args->getNode('filter')->getAttribute('value')) {
-              case 'passthrough':
-                $argPrefix = '!';
-                break;
               case 'placeholder':
                 $argPrefix = '%';
                 break;

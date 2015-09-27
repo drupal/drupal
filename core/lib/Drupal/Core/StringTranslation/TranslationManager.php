@@ -110,20 +110,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * {@inheritdoc}
    */
   public function translate($string, array $args = array(), array $options = array()) {
-    $safe = TRUE;
-    foreach (array_keys($args) as $arg_key) {
-      // If the string has arguments that start with '!' we consider it unsafe
-      // and return the translation as a string for backward compatibility
-      // purposes.
-      // @todo https://www.drupal.org/node/2570037 remove this temporary
-      // workaround.
-      if (0 === strpos($arg_key, '!') && !SafeMarkup::isSafe($args[$arg_key])) {
-        $safe = FALSE;
-        break;
-      }
-    }
-    $wrapper = new TranslatableString($string, $args, $options, $this);
-    return $safe ? $wrapper : (string) $wrapper;
+    return new TranslatableString($string, $args, $options, $this);
   }
 
   /**
@@ -161,20 +148,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * {@inheritdoc}
    */
   public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array()) {
-    $safe = TRUE;
-    foreach (array_keys($args) as $arg_key) {
-      // If the string has arguments that start with '!' we consider it unsafe
-      // and return the translation as a string for backward compatibility
-      // purposes.
-      // @todo https://www.drupal.org/node/2570037 remove this temporary
-      // workaround.
-      if (0 === strpos($arg_key, '!') && !SafeMarkup::isSafe($args[$arg_key])) {
-        $safe = FALSE;
-        break;
-      }
-    }
-    $plural = new PluralTranslatableString($count, $singular, $plural, $args, $options, $this);
-    return $safe ? $plural : (string) $plural;
+    return new PluralTranslatableString($count, $singular, $plural, $args, $options, $this);
   }
 
   /**

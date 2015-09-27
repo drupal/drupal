@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\field\Unit;
 
+use Drupal\simpletest\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -14,6 +15,8 @@ use Drupal\Tests\UnitTestCase;
  * @group field
  */
 class FieldUninstallValidatorTest extends UnitTestCase {
+
+  use AssertHelperTrait;
 
   /**
    * @var \Drupal\field\FieldUninstallValidator|\PHPUnit_Framework_MockObject_MockObject
@@ -43,7 +46,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
     $module = $this->randomMachineName();
     $expected = [];
     $reasons = $this->fieldUninstallValidator->validate($module);
-    $this->assertSame($expected, $reasons);
+    $this->assertSame($expected, $this->castSafeStrings($reasons));
   }
 
   /**
@@ -63,7 +66,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
     $module = $this->randomMachineName();
     $expected = ['Fields pending deletion'];
     $reasons = $this->fieldUninstallValidator->validate($module);
-    $this->assertSame($expected, $reasons);
+    $this->assertSame($expected, $this->castSafeStrings($reasons));
   }
 
   /**
@@ -83,7 +86,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
     $module = $this->randomMachineName();
     $expected = ['Fields type(s) in use'];
     $reasons = $this->fieldUninstallValidator->validate($module);
-    $this->assertSame($expected, $reasons);
+    $this->assertSame($expected, $this->castSafeStrings($reasons));
   }
 
 }

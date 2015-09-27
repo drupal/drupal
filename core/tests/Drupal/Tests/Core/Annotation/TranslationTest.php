@@ -66,9 +66,9 @@ class TranslationTest extends UnitTestCase {
     $random_html_entity = '&' . $random;
     $data[] = array(
       array(
-        'value' => 'Foo !bar @baz %qux',
+        'value' => 'Foo @bar @baz %qux',
         'arguments' => array(
-          '!bar' => $random,
+          '@bar' => $random,
           '@baz' => $random_html_entity,
           '%qux' => $random_html_entity,
         ),

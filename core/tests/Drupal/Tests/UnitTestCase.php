@@ -221,10 +221,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     $translation->expects($this->any())
       ->method('translate')
       ->willReturnCallback(function ($string, array $args = array(), array $options = array()) use ($translation) {
-        $wrapper = new TranslatableString($string, $args, $options, $translation);
-        // Pretend everything is not safe.
-        // @todo https://www.drupal.org/node/2570037 return the wrapper instead.
-        return (string) $wrapper;
+        return new TranslatableString($string, $args, $options, $translation);
       });
     $translation->expects($this->any())
       ->method('translateString')

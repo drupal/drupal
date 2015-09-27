@@ -140,7 +140,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetTitle() {
     $result = $this->configNamesMapper->getTitle();
-    $this->assertSame($this->pluginDefinition['title'], $result);
+    $this->assertSame($this->pluginDefinition['title'], (string) $result);
   }
 
   /**
@@ -397,7 +397,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetTypeLabel() {
     $result = $this->configNamesMapper->getTypeLabel();
-    $this->assertSame($this->pluginDefinition['title'], $result);
+    $this->assertSame($this->pluginDefinition['title'], (string) $result);
   }
 
   /**
@@ -624,7 +624,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetTypeName() {
     $result = $this->configNamesMapper->getTypeName();
-    $this->assertSame('Settings', $result);
+    $this->assertSame('Settings', (string) $result);
   }
 
   /**

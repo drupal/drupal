@@ -33,7 +33,7 @@ interface TranslationInterface {
    *      what is used to display the page.
    *   - 'context': The context the source string belongs to.
    *
-   * @return string|\Drupal\Core\StringTranslation\TranslatableString
+   * @return \Drupal\Core\StringTranslation\TranslatableString
    *   The translated string.
    *
    * @see \Drupal\Component\Utility\SafeMarkup::format()

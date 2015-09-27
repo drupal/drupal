@@ -139,17 +139,12 @@ class TwigTransTest extends WebTestBase {
     );
 
     $this->assertRaw(
-      'PAS-THRU: &"<>',
-      '{{ token|passthrough }} was successfully translated and prefixed with "!".'
-    );
-
-    $this->assertRaw(
       'PLAYSHOLDR: <em class="placeholder">&amp;&quot;&lt;&gt;</em>',
       '{{ token|placeholder }} was successfully translated and prefixed with "%".'
     );
 
     $this->assertRaw(
-      'DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;. LETS PAS TEH BAD TEXT THRU: &"<>.',
+      'DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;.',
       '{{ complex.tokens }} were successfully translated with appropriate prefixes.'
     );
 
@@ -253,14 +248,11 @@ msgstr[1] "O HAI @count STARZZZZ"
 msgid "Escaped: @string"
 msgstr "ESCAPEE: @string"
 
-msgid "Pass-through: !string"
-msgstr "PAS-THRU: !string"
-
 msgid "Placeholder: %string"
 msgstr "PLAYSHOLDR: %string"
 
-msgid "This @token.name has a length of: @count. It contains: %token.numbers and @token.bad_text. Lets pass the bad text through: !token.bad_text."
-msgstr "DIS @token.name HAZ LENGTH OV: @count. IT CONTAYNZ: %token.numbers AN @token.bad_text. LETS PAS TEH BAD TEXT THRU: !token.bad_text."
+msgid "This @token.name has a length of: @count. It contains: %token.numbers and @token.bad_text."
+msgstr "DIS @token.name HAZ LENGTH OV: @count. IT CONTAYNZ: %token.numbers AN @token.bad_text."
 
 msgctxt "Lolspeak"
 msgid "I have context."

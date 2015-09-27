@@ -8,7 +8,6 @@
 namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Utility\PlaceholderTrait;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * A class to hold plural translatable strings.
@@ -107,21 +106,9 @@ class PluralTranslatableString extends TranslatableString {
    *   A PluralTranslatableString object.
    */
   public static function createFromTranslatedString($count, $translated_string, array $args = [], array $options = []) {
-    $safe = TRUE;
-    foreach (array_keys($args) as $arg_key) {
-      // If the string has arguments that start with '!' we consider it unsafe
-      // and return the translation as a string for backward compatibility
-      // purposes.
-      // @todo https://www.drupal.org/node/2570037 remove this temporary
-      // workaround.
-      if (0 === strpos($arg_key, '!') && !SafeMarkup::isSafe($args[$arg_key])) {
-        $safe = FALSE;
-        break;
-      }
-    }
     $plural = new static($count, '', '', $args, $options);
     $plural->translatedString = $translated_string;
-    return $safe ? $plural : (string) $plural;
+    return $plural;
   }
 
   /**

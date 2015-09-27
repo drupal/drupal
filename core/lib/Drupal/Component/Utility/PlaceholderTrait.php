@@ -50,15 +50,6 @@ trait PlaceholderTrait {
    *     Url::fromUri($user_input)->toString() (which either throws an exception
    *     or returns a well-formed URL) before passing the result into a
    *     ":variable" placeholder.
-   *   - !variable: Inserted as is, with no sanitization or formatting. Only
-   *     use this when the resulting string is being generated for one of:
-   *     - Non-HTML usage, such as a plain-text email.
-   *     - Non-direct HTML output, such as a plain-text variable that will be
-   *       printed as an HTML attribute value and therefore formatted with
-   *       self::checkPlain() as part of that.
-   *     - Some other special reason for suppressing sanitization.
-   * @param bool &$safe
-   *   A boolean indicating whether the string is safe or not (optional).
    *
    * @return string
    *   The string with the placeholders replaced.
@@ -72,24 +63,13 @@ trait PlaceholderTrait {
    * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
    * @see \Drupal\Core\Url::fromUri()
    */
-  protected static function placeholderFormat($string, array $args, &$safe = TRUE) {
+  protected static function placeholderFormat($string, array $args) {
     // Transform arguments before inserting them.
     foreach ($args as $key => $value) {
       switch ($key[0]) {
         case '@':
           // Escaped only.
-          if (!SafeMarkup::isSafe($value)) {
-            $args[$key] = Html::escape($value);
-          }
-          break;
-
-        case '%':
-        default:
-          // Escaped and placeholder.
-          if (!SafeMarkup::isSafe($value)) {
-            $value = Html::escape($value);
-          }
-          $args[$key] = '<em class="placeholder">' . $value . '</em>';
+          $args[$key] = static::placeholderEscape($value);
           break;
 
         case ':':
@@ -100,14 +80,28 @@ trait PlaceholderTrait {
           $args[$key] = Html::escape(UrlHelper::stripDangerousProtocols($value));
           break;
 
-        case '!':
-          // Pass-through.
-          if (!SafeMarkup::isSafe($value)) {
-            $safe = FALSE;
-          }
+        case '%':
+        default:
+          // Escaped and placeholder.
+          $args[$key] = '<em class="placeholder">' . static::placeholderEscape($value) . '</em>';
+          break;
       }
     }
+
     return strtr($string, $args);
+  }
+
+  /**
+   * Escapes a placeholder replacement value if needed.
+   *
+   * @param string|\Drupal\Component\Utility\SafeStringInterface $value
+   *   A placeholder replacement value.
+   *
+   * @return string
+   *   The properly escaped replacement value.
+   */
+  protected static function placeholderEscape($value) {
+    return SafeMarkup::isSafe($value) ? (string) $value : Html::escape($value);
   }
 
 }

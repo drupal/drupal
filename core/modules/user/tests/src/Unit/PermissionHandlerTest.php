@@ -8,6 +8,9 @@
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\StringTranslation\PluralTranslatableString;
+use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
 use org\bovigo\vfs\vfsStream;
@@ -40,7 +43,7 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * The mocked string translation.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Tests\user\Unit\TestTranslationManager
    */
   protected $stringTranslation;
 
@@ -57,7 +60,7 @@ class PermissionHandlerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->stringTranslation = $this->getStringTranslationStub();
+    $this->stringTranslation = new TestTranslationManager();
     $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
   }
 
@@ -404,6 +407,34 @@ class TestPermissionCallbacks {
         'restrict access' => TRUE,
       ),
     );
+  }
+
+}
+
+/**
+ * Implements a translation manager in tests.
+ */
+class TestTranslationManager implements TranslationInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function translate($string, array $args = array(), array $options = array()) {
+    return new TranslatableString($string, $args, $options, $this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function translateString(TranslatableString $translated_string) {
+    return $translated_string->getUntranslatedString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array()) {
+    return new PluralTranslatableString($count, $singular, $plural, $args, $options, $this);
   }
 
 }

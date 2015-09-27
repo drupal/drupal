@@ -183,20 +183,7 @@ class SafeMarkup {
    *   Use \Drupal\Component\Utility\FormattableString.
    */
   public static function format($string, array $args) {
-    // If the string has arguments that start with '!' we consider it unsafe
-    // and return a string instead of an object for backward compatibility
-    // purposes.
-    // @todo https://www.drupal.org/node/2571695 remove this temporary
-    //   workaround.
-    $safe = TRUE;
-    foreach ($args as $key => $value) {
-      if ($key[0] == '!' && !static::isSafe($value)) {
-        $safe = FALSE;
-      }
-    }
-    $safe_string = new FormattableString($string, $args);
-
-    return $safe ? $safe_string : (string) $safe_string;
+    return new FormattableString($string, $args);
   }
 
 }

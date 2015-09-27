@@ -231,8 +231,6 @@ class SafeMarkupTest extends UnitTestCase {
     $tests[] = array('Escaped text: @value', array('@value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE);
     $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'SafeMarkup::format replaces, escapes and themes string.', TRUE);
     $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE);
-    $tests[] = array('Verbatim text: !value', array('!value' => '<script>'), 'Verbatim text: <script>', 'SafeMarkup::format replaces verbatim string as-is.', FALSE);
-    $tests[] = array('Verbatim text: !value', array('!value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Verbatim text: <span>Safe HTML</span>', 'SafeMarkup::format replaces verbatim string as-is.', TRUE);
 
     $tests['javascript-protocol-url'] = ['Simple text <a href=":url">giraffe</a>', [':url' => 'javascript://example.com?foo&bar'], 'Simple text <a href="//example.com?foo&amp;bar">giraffe</a>', 'Support for filtering bad protocols', TRUE];
     $tests['external-url'] = ['Simple text <a href=":url">giraffe</a>', [':url' => 'http://example.com?foo&bar'], 'Simple text <a href="http://example.com?foo&amp;bar">giraffe</a>', 'Support for filtering bad protocols', TRUE];
