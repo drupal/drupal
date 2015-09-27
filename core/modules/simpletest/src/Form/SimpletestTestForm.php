@@ -62,6 +62,17 @@ class SimpletestTestForm extends FormBase {
       '#tableselect' => TRUE,
       '#button_type' => 'primary',
     );
+    $form['clean'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Clean test environment'),
+      '#description' => $this->t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
+      '#weight' => 200,
+    );
+    $form['clean']['op'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Clean environment'),
+      '#submit' => array('simpletest_clean_environment'),
+    );
 
     // Do not needlessly re-execute a full test discovery if the user input
     // already contains an explicit list of test classes to run.
@@ -186,18 +197,6 @@ class SimpletestTestForm extends FormBase {
         );
       }
     }
-
-    $form['clean'] = array(
-      '#type' => 'fieldset',
-      '#title' => $this->t('Clean test environment'),
-      '#description' => $this->t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
-      '#weight' => 200,
-    );
-    $form['clean']['op'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Clean environment'),
-      '#submit' => array('simpletest_clean_environment'),
-    );
 
     return $form;
   }
