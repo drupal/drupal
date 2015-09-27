@@ -46,6 +46,7 @@ class LanguageAddForm extends LanguageFormBase {
     $form['predefined_submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add language'),
+      '#name' => 'add_language',
       '#limit_validation_errors' => array(array('predefined_langcode'), array('predefined_submit')),
       '#states' => array(
         'invisible' => array(
@@ -76,6 +77,7 @@ class LanguageAddForm extends LanguageFormBase {
     $form['custom_language']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add custom language'),
+      '#name' => 'add_custom_language',
       '#validate' => array('::validateCustom'),
       '#submit' => array('::submitForm', '::save'),
     );
