@@ -162,7 +162,7 @@
       var $menu = $(this).once('toolbar-menu');
       if ($menu.length) {
         // Bind event handlers.
-        $($menu)
+        $menu
           .on('click.toolbar', '.toolbar-box', toggleClickHandler)
           .on('click.toolbar', '.toolbar-box a', linkClickHandler);
 
