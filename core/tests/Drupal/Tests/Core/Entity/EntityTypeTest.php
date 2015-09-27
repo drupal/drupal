@@ -9,6 +9,8 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -281,6 +283,44 @@ class EntityTypeTest extends UnitTestCase {
     $id = $this->randomMachineName(32);
     $entity_type = $this->setUpEntityType(array('id' => $id));
     $this->assertEquals($id, $entity_type->id());
+  }
+
+  /**
+   * @covers ::getLabel
+   */
+  public function testGetLabel() {
+    $translatable_label = new TranslatableString($this->randomMachineName());
+    $entity_type = $this->setUpEntityType(array('label' => $translatable_label));
+    $this->assertSame($translatable_label, $entity_type->getLabel());
+
+    $label = $this->randomMachineName();
+    $entity_type = $this->setUpEntityType(array('label' => $label));
+    $this->assertSame($label, $entity_type->getLabel());
+  }
+
+  /**
+   * @covers ::getGroupLabel
+   */
+  public function testGetGroupLabel() {
+    $translatable_group_label = new TranslatableString($this->randomMachineName());
+    $entity_type = $this->setUpEntityType(array('group_label' => $translatable_group_label));
+    $this->assertSame($translatable_group_label, $entity_type->getGroupLabel());
+
+    $default_label = $this->randomMachineName();
+    $entity_type = $this->setUpEntityType(array('group_label' => $default_label));
+    $this->assertSame($default_label, $entity_type->getGroupLabel());
+
+    $default_label = new TranslatableString('Other', array(), array('context' => 'Entity type group'));
+    $entity_type = $this->setUpEntityType([]);
+
+    $string_translation = $this->getMock(TranslationInterface::class);
+    $string_translation->expects($this->atLeastOnce())
+      ->method('translate')
+      ->with('Other', array(), array('context' => 'Entity type group'))
+      ->willReturn($default_label);
+    $entity_type->setStringTranslation($string_translation);
+
+    $this->assertSame($default_label, $entity_type->getGroupLabel());
   }
 
   /**

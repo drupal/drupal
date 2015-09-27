@@ -83,7 +83,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
       // The label does not need sanitizing since it is used as an optgroup
       // which is only supported by select elements and auto-escaped.
       $bundle_label = $bundles[$bundle]['label'];
-      $return[$bundle_label] = $entity_ids;
+      $return[(string) $bundle_label] = $entity_ids;
     }
 
     return count($return) == 1 ? reset($return) : $return;
