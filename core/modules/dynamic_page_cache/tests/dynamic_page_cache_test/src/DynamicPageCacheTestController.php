@@ -9,13 +9,17 @@ namespace Drupal\dynamic_page_cache_test;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheableResponse;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller routines for dynamic_page_cache_test routes.
  */
 class DynamicPageCacheTestController {
+
+  use StringTranslationTrait;
 
   /**
    * A route returning a Response object.
@@ -57,15 +61,18 @@ class DynamicPageCacheTestController {
   /**
    * A route returning a render array (with cache contexts, so cacheable).
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
    * @return array
    *   A render array.
    *
    * @see html()
    */
-  public function htmlWithCacheContexts() {
+  public function htmlWithCacheContexts(Request $request) {
     $build = $this->html();
     $build['dynamic_part'] = [
-      '#markup' => SafeMarkup::format('Hello there, %animal.', ['%animal' => \Drupal::requestStack()->getCurrentRequest()->query->get('animal')]),
+      '#markup' => $this->t('Hello there, %animal.', ['%animal' => $request->query->get('animal')]),
       '#cache' => [
         'contexts' => [
           'url.query_args:animal',
@@ -105,7 +112,7 @@ class DynamicPageCacheTestController {
   public function htmlUncacheableContexts() {
     $build = $this->html();
     $build['very_dynamic_part'] = [
-      '#markup' => 'Drupal cannot handle the awesomeness of llamas.',
+      '#markup' => $this->t('@username cannot handle the awesomeness of llamas.', ['@username' => \Drupal::currentUser()->getDisplayName()]),
       '#cache' => [
         'contexts' => [
           'user',
@@ -116,7 +123,7 @@ class DynamicPageCacheTestController {
   }
 
   /**
-   * A route returning a render array (with max-age=0, so uncacheable)
+   * A route returning a render array (with a cache tag preventing caching).
    *
    * @return array
    *   A render array.

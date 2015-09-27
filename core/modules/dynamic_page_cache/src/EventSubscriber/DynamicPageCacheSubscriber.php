@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Returns cached responses as early and avoiding as much work as possible.
  *
- * Dynamic Page Cache is able to cache so much because it exploits cache
+ * Dynamic Page Cache is able to cache so much because it utilizes cache
  * contexts: the cache contexts that are present capture the variations of every
  * component of the page. That, combined with the fact that cacheability
  * metadata is bubbled, means that the cache contexts at the page level
@@ -159,7 +159,8 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
 
     // Dynamic Page Cache only works with cacheable responses. It does not work
     // with plain Response objects. (Dynamic Page Cache needs to be able to
-    // access and modify the cacheability metadata associated with the response.)
+    // access and modify the cacheability metadata associated with the
+    // response.)
     if (!$response instanceof CacheableResponseInterface) {
       return;
     }
@@ -221,7 +222,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    * bubbling to the response level: while rendering, the Renderer checks every
    * subtree to see if meets the auto-placeholdering conditions. If it does, it
    * is automatically placeholdered, and consequently the cacheability metadata
-   * of the placeholdered content does not bubble up to the response level. 
+   * of the placeholdered content does not bubble up to the response level.
    *
    * @param \Drupal\Core\Cache\CacheableResponseInterface
    *   The response whose cacheability to analyze.
@@ -313,10 +314,10 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     $events = [];
 
     // Run after AuthenticationSubscriber (necessary for the 'user' cache
-    // context) and MaintenanceModeSubscriber (Dynamic Page Cache should not be
-    // polluted by maintenance mode-specific behavior), but before
-    // ContentControllerSubscriber (updates _controller, but that is a no-op
-    // when Dynamic Page Cache runs).
+    // context; priority 300) and MaintenanceModeSubscriber (Dynamic Page Cache
+    // should not be polluted by maintenance mode-specific behavior; priority
+    // 30), but before ContentControllerSubscriber (updates _controller, but
+    // that is a no-op when Dynamic Page Cache runs; priority 25).
     $events[KernelEvents::REQUEST][] = ['onRouteMatch', 27];
 
     // Run before HtmlResponseSubscriber::onRespond(), which has priority 0.
