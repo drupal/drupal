@@ -50,6 +50,7 @@ function statistics_node_view(array &$build, EntityInterface $node, EntityViewDi
  */
 function statistics_node_links_alter(array &$node_links, NodeInterface $entity, array &$context) {
   if ($context['view_mode'] != 'rss') {
+    $node_links['#cache']['contexts'][] = 'user.permissions';
     if (\Drupal::currentUser()->hasPermission('view post access counter')) {
       $statistics = statistics_get($entity->id());
       if ($statistics) {
@@ -60,6 +61,7 @@ function statistics_node_links_alter(array &$node_links, NodeInterface $entity, 
           '#attributes' => array('class' => array('links', 'inline')),
         );
       }
+      $node_links['#cache']['max-age'] = \Drupal::config('statistics.settings')->get('display_max_age');
     }
   }
 }

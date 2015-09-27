@@ -47,6 +47,9 @@ class StatisticsAdminTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Set the max age to 0 to simplify testing.
+    $this->config('statistics.settings')->set('display_max_age', 0)->save();
+
     // Create Basic page node type.
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
@@ -89,6 +92,16 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $this->testNode->id());
     $this->client->post($stats_path, array('form_params' => $post));
     $this->assertText('2 views', 'Node is viewed 2 times.');
+
+    // Increase the max age to test that nodes are no longer immediately
+    // updated, visit the node once more to populate the cache.
+    $this->config('statistics.settings')->set('display_max_age', 3600)->save();
+    $this->drupalGet('node/' . $this->testNode->id());
+    $this->assertText('3 views', 'Node is viewed 3 times.');
+
+    $this->client->post($stats_path, array('form_params' => $post));
+    $this->drupalGet('node/' . $this->testNode->id());
+    $this->assertText('3 views', 'Views counter was not updated.');
   }
 
   /**

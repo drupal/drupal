@@ -41,7 +41,6 @@ class NodeViewBuilder extends EntityViewBuilder {
             $langcode,
             !empty($entity->in_preview),
           ]],
-          '#create_placeholder' => TRUE,
         );
       }
 
