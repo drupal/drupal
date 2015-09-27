@@ -406,17 +406,17 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected function getDatabaseConnectionInfo() {
     // If the test is run with argument dburl then use it.
     $db_url = getenv('SIMPLETEST_DB');
-    if (!empty($db_url)) {
+    if (empty($db_url)) {
+      $this->markTestSkipped('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable to run PHPUnit based functional tests outside of run-tests.sh. See https://www.drupal.org/node/2116263#skipped-tests for more information.');
+    }
+    else {
       $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root);
       Database::addConnectionInfo('default', 'default', $database);
     }
 
     // Clone the current connection and replace the current prefix.
     $connection_info = Database::getConnectionInfo('default');
-    if (is_null($connection_info)) {
-      throw new \InvalidArgumentException('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable, like "sqlite://localhost//tmp/test.sqlite", to run PHPUnit based functional tests outside of run-tests.sh.');
-    }
-    else {
+    if (!empty($connection_info)) {
       Database::renameConnection('default', 'simpletest_original_default');
       foreach ($connection_info as $target => $value) {
         // Replace the full table prefix definition to ensure that no table
