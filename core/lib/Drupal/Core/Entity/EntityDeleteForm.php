@@ -34,7 +34,7 @@ class EntityDeleteForm extends EntityConfirmFormBase {
     if (!($entity instanceof ConfigEntityInterface)) {
       return $form;
     }
-    $this->addDependencyListsToForm($form, $entity->getConfigDependencyKey(), [$entity->getConfigDependencyName()], $this->getConfigManager(), $this->entityManager);
+    $this->addDependencyListsToForm($form, $entity->getConfigDependencyKey(), $this->getConfigNamesToDelete($entity), $this->getConfigManager(), $this->entityManager);
 
     return $form;
   }
@@ -47,6 +47,19 @@ class EntityDeleteForm extends EntityConfirmFormBase {
    */
   protected function getConfigManager() {
     return \Drupal::service('config.manager');
+  }
+
+  /**
+   * Returns config names to delete for the deletion confirmation form.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity
+   *   The entity being deleted.
+   *
+   * @return string[]
+   *   A list of configuration names that will be deleted by this form.
+   */
+  protected function getConfigNamesToDelete(ConfigEntityInterface $entity) {
+    return [$entity->getConfigDependencyName()];
   }
 
 }
