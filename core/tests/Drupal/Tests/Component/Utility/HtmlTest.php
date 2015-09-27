@@ -312,4 +312,17 @@ class HtmlTest extends UnitTestCase {
     $this->assertSame('&lt;em&gt;répété&lt;/em&gt;', $escaped);
   }
 
+  /**
+   * Tests Html::serialize().
+   *
+   * Resolves an issue by where an empty DOMDocument object sent to serialization would
+   * cause errors in getElementsByTagName() in the serialization function.
+   *
+   * @covers ::serialize
+   */
+  public function testSerialize() {
+    $document = new \DOMDocument();
+    $result = Html::serialize($document);
+    $this->assertSame('', $result);
+  }
 }

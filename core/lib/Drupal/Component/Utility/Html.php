@@ -292,14 +292,16 @@ EOD;
     $body_node = $document->getElementsByTagName('body')->item(0);
     $html = '';
 
-    foreach ($body_node->getElementsByTagName('script') as $node) {
-      static::escapeCdataElement($node);
-    }
-    foreach ($body_node->getElementsByTagName('style') as $node) {
-      static::escapeCdataElement($node, '/*', '*/');
-    }
-    foreach ($body_node->childNodes as $node) {
-      $html .= $document->saveXML($node);
+    if ($body_node !== NULL) {
+      foreach ($body_node->getElementsByTagName('script') as $node) {
+        static::escapeCdataElement($node);
+      }
+      foreach ($body_node->getElementsByTagName('style') as $node) {
+        static::escapeCdataElement($node, '/*', '*/');
+      }
+      foreach ($body_node->childNodes as $node) {
+        $html .= $document->saveXML($node);
+      }
     }
     return $html;
   }
