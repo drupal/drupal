@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SafeStringInterface;
 
 /**
@@ -52,7 +54,18 @@ use Drupal\Component\Utility\SafeStringInterface;
  *  // Produces <a href="alert(&quot;xss&quot;);">
  * @endcode
  *
+ * The attribute values are considered plain text and are treated as such. If a
+ * safe HTML string is detected, it is converted to plain text with
+ * PlainTextOutput::renderFromHtml() before being escaped. For example:
+ * @code
+ *   $value = t('Highlight the @tag tag', ['@tag' => '<em>']);
+ *   $attributes = new Attribute(['value' => $value]);
+ *   echo '<input' . $attributes . '>';
+ *   // Produces <input value="Highlight the &lt;em&gt; tag">
+ * @endcode
+ *
  * @see \Drupal\Component\Utility\Html::escape()
+ * @see \Drupal\Component\Utility\PlainTextOutput::renderFromHtml()
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
  */
 class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface {
@@ -125,7 +138,13 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface
       $value = new AttributeBoolean($name, $value);
     }
     // As a development aid, we allow the value to be a safe string object.
-    elseif (!is_object($value) || $value instanceof SafeStringInterface) {
+    elseif (SafeMarkup::isSafe($value)) {
+      // Attributes are not supposed to display HTML markup, so we just convert
+      // the value to plain text.
+      $value = PlainTextOutput::renderFromHtml($value);
+      $value = new AttributeString($name, $value);
+    }
+    elseif (!is_object($value)) {
       $value = new AttributeString($name, $value);
     }
     return $value;

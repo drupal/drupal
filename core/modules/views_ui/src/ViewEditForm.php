@@ -8,23 +8,20 @@
 namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Datetime\DateFormatter;
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Url;
 use Drupal\user\SharedTempStoreFactory;
 use Drupal\views\Views;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Form controller for the Views edit form.
@@ -402,7 +399,7 @@ class ViewEditForm extends ViewFormBase {
         if (!$is_enabled) {
           $build['top']['actions']['enable'] = array(
             '#type' => 'submit',
-            '#value' => $this->t('Enable !display_title', array('!display_title' => $display_title)),
+            '#value' => $this->t('Enable @display_title', ['@display_title' => $display_title]),
             '#limit_validation_errors' => array(),
             '#submit' => array('::submitDisplayEnable', '::submitDelayDestination'),
             '#prefix' => '<li class="enable">',
@@ -424,7 +421,7 @@ class ViewEditForm extends ViewFormBase {
             }
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
-              '#title' => $this->t('View !display_title', array('!display_title' => $display_title)),
+              '#title' => $this->t('View @display_title', ['@display_title' => $display_title]),
               '#options' => array('alt' => array($this->t("Go to the real page for this display"))),
               '#url' => $url,
               '#prefix' => '<li class="view">',
@@ -435,7 +432,7 @@ class ViewEditForm extends ViewFormBase {
         if (!$is_default) {
           $build['top']['actions']['duplicate'] = array(
             '#type' => 'submit',
-            '#value' => $this->t('Duplicate !display_title', array('!display_title' => $display_title)),
+            '#value' => $this->t('Duplicate @display_title', ['@display_title' => $display_title]),
             '#limit_validation_errors' => array(),
             '#submit' => array('::submitDisplayDuplicate', '::submitDelayDestination'),
             '#prefix' => '<li class="duplicate">',
@@ -445,7 +442,7 @@ class ViewEditForm extends ViewFormBase {
         // Always allow a display to be deleted.
         $build['top']['actions']['delete'] = array(
           '#type' => 'submit',
-          '#value' => $this->t('Delete !display_title', array('!display_title' => $display_title)),
+          '#value' => $this->t('Delete @display_title', ['@display_title' => $display_title]),
           '#limit_validation_errors' => array(),
           '#submit' => array('::submitDisplayDelete', '::submitDelayDestination'),
           '#prefix' => '<li class="delete">',
@@ -459,7 +456,7 @@ class ViewEditForm extends ViewFormBase {
 
           $build['top']['actions']['duplicate_as'][$type] = array(
             '#type' => 'submit',
-            '#value' => $this->t('Duplicate as !type', array('!type' => $label)),
+            '#value' => $this->t('Duplicate as @type', ['@type' => $label]),
             '#limit_validation_errors' => array(),
             '#submit' => array('::submitDuplicateDisplayAsType', '::submitDelayDestination'),
             '#prefix' => '<li class="duplicate">',
@@ -470,7 +467,7 @@ class ViewEditForm extends ViewFormBase {
       else {
         $build['top']['actions']['undo_delete'] = array(
           '#type' => 'submit',
-          '#value' => $this->t('Undo delete of !display_title', array('!display_title' => $display_title)),
+          '#value' => $this->t('Undo delete of @display_title', ['@display_title' => $display_title]),
           '#limit_validation_errors' => array(),
           '#submit' => array('::submitDisplayUndoDelete', '::submitDelayDestination'),
           '#prefix' => '<li class="undo-delete">',
@@ -480,7 +477,7 @@ class ViewEditForm extends ViewFormBase {
       if ($is_enabled) {
         $build['top']['actions']['disable'] = array(
           '#type' => 'submit',
-          '#value' => $this->t('Disable !display_title', array('!display_title' => $display_title)),
+          '#value' => $this->t('Disable @display_title', ['@display_title' => $display_title]),
           '#limit_validation_errors' => array(),
           '#submit' => array('::submitDisplayDisable', '::submitDelayDestination'),
           '#prefix' => '<li class="disable">',

@@ -1316,7 +1316,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // long as $form['#name'] puts the value at the top level of the tree of
     // \Drupal::request()->request data.
     $input = $form_state->getUserInput();
-    if (isset($input[$element['#name']]) && $input[$element['#name']] == $element['#value']) {
+    // The input value attribute is treated as CDATA by browsers. This means
+    // that they replace character entities with characters. Therefore, we need
+    // to decode the value in $element['#value']. For more details see
+    // http://www.w3.org/TR/html401/types.html#type-cdata.
+    if (isset($input[$element['#name']]) && $input[$element['#name']] == Html::decodeEntities($element['#value'])) {
       return TRUE;
     }
     // When image buttons are clicked, browsers do NOT pass the form element

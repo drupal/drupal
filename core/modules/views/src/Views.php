@@ -155,7 +155,7 @@ class Views {
       }
 
       if (empty($plugin['no_ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
-        $plugins[$id] = (string) $plugin['title'];
+        $plugins[$id] = $plugin['title'];
       }
     }
 

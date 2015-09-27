@@ -9,9 +9,9 @@ namespace Drupal\views_ui\Tests;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
-
-use Drupal\views\Views;
 use Drupal\Core\Template\Attribute;
+use Drupal\views\Entity\View;
+use Drupal\views\Views;
 
 /**
  * Tests the display UI.
@@ -215,6 +215,35 @@ class DisplayTest extends UITestBase {
   }
 
   /**
+   * Ensures that no XSS is possible for buttons.
+   */
+  public function testDisplayTitleInButtonsXss() {
+    $xss_markup = '"><script>alert(123)</script>';
+    $view = $this->randomView();
+    $view = View::load($view['id']);
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+
+    foreach ([$xss_markup, '&quot;><script>alert(123)</script>'] as $input) {
+      $display =& $view->getDisplay('page_1');
+      $display['display_title'] = $input;
+      $view->save();
+
+      $this->drupalGet("admin/structure/views/view/{$view->id()}");
+      $escaped = views_ui_truncate($input, 25);
+      $this->assertEscaped($escaped);
+      $this->assertNoRaw($xss_markup);
+
+      $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
+      $this->assertEscaped("View $escaped");
+      $this->assertNoRaw("View $xss_markup");
+      $this->assertEscaped("Duplicate $escaped");
+      $this->assertNoRaw("Duplicate $xss_markup");
+      $this->assertEscaped("Delete $escaped");
+      $this->assertNoRaw("Delete $xss_markup");
+    }
+  }
+
+  /**
    * Tests the action links on the edit display UI.
    */
   public function testActionLinks() {
@@ -244,4 +273,5 @@ class DisplayTest extends UITestBase {
     $this->assertEscaped($display_title);
     $this->assertNoRaw($display_title);
   }
+
 }

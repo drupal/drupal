@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\Core\Template;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeArray;
 use Drupal\Core\Template\AttributeString;
@@ -351,6 +353,27 @@ class AttributeTest extends UnitTestCase {
     $this->assertNoID('example-id2', $html);
 
     $this->assertTrue(strpos($html, 'enabled') !== FALSE);
+  }
+
+  /**
+   * @covers ::createAttributeValue
+   * @dataProvider providerTestAttributeValues
+   */
+  public function testAttributeValues(array $attributes, $expected) {
+    $this->assertEquals($expected, (new Attribute($attributes))->__toString());
+  }
+
+  public function providerTestAttributeValues() {
+    $data = [];
+
+    $string = '"> <script>alert(123)</script>"';
+    $data['safe-object-xss1'] = [['title' => SafeString::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
+    $data['non-safe-object-xss1'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
+    $string = '&quot;><script>alert(123)</script>';
+    $data['safe-object-xss2'] = [['title' => SafeString::create($string)], ' title="&quot;&gt;alert(123)"'];
+    $data['non-safe-object-xss2'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
+
+    return $data;
   }
 
   /**

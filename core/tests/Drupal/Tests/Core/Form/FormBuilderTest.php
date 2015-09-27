@@ -7,9 +7,10 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Access\AccessResultForbidden;
+use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Form\FormBuilder;
@@ -19,11 +20,10 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\Core\Cache\Context\CacheContextsManager;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormBuilder
@@ -304,6 +304,53 @@ class FormBuilderTest extends FormTestBase {
     $this->assertFormElement($expected_form, $form, 'test');
     $this->assertSame($form_id, $form_state->getBuildInfo()['form_id']);
     $this->assertArrayHasKey('#id', $form);
+  }
+
+  /**
+   * Tests whether the triggering element is properly identified.
+   *
+   * @param string $element_value
+   *   The input element "#value" value.
+   * @param string $input_value
+   *   The corresponding submitted input value.
+   *
+   * @covers ::buildForm
+   *
+   * @dataProvider providerTestBuildFormWithTriggeringElement
+   */
+  public function testBuildFormWithTriggeringElement($element_value, $input_value) {
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
+
+    $expected_form['actions']['other_submit'] = [
+      '#type' => 'submit',
+      '#value' => $element_value,
+    ];
+
+    $form_arg = $this->getMockForm($form_id, $expected_form, 2);
+    $form_state = new FormState();
+    $form_state->setProcessInput();
+    $form_state->setUserInput(['form_id' => $form_id, 'op' => $input_value]);
+    $this->request->setMethod('POST');
+    $this->formBuilder->buildForm($form_arg, $form_state);
+
+    $this->assertEquals($expected_form['actions']['other_submit']['#value'], $form_state->getTriggeringElement()['#value']);
+  }
+
+  /**
+   * Data provider for ::testBuildFormWithTriggeringElement().
+   */
+  public function providerTestBuildFormWithTriggeringElement() {
+    $plain_text = 'Other submit value';
+    $markup = 'Other submit <input> value';
+    return [
+      'plain-text' => [$plain_text, $plain_text],
+      'markup' => [$markup, $markup],
+      // Note: The input is always decoded, see
+      // \Drupal\Core\Form\FormBuilder::buttonWasClicked, so we do not need to
+      // escape the input.
+      'escaped-markup' => [Html::escape($markup), $markup],
+    ];
   }
 
   /**
