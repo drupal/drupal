@@ -428,7 +428,7 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  */
 function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
   // Add an item to the end of the breadcrumb.
-  $breadcrumb->addLink(Drupal::l(t('Text'), 'example_route_name'));
+  $breadcrumb->addLink(\Drupal\Core\Link::createFromRoute(t('Text'), 'example_route_name'));
 }
 
 /**
