@@ -29,6 +29,24 @@ use Symfony\Component\Routing\Route;
 
 /**
  * The base plugin to handle access control.
+ *
+ * Access plugins are responsible for controlling a user's access to the view.
+ * Views includes plugins for checking user roles and individual permissions.
+ *
+ * To define an access control plugin, extend this base class. Your access
+ * plugin should have an annotation that includes the plugin's metadata, for
+ * example:
+ * @Plugin(
+ *   id = "denyall",
+ *   title = @Translation("No Access"),
+ *   help = @Translation("Will not be accessible.")
+ * )
+ * The definition should include the following keys:
+ * - id: The unique identifier of your access plugin.
+ * - title: The human-readable name for your access plugin.
+ * - help: A short help message for your plugin.
+ *
+ * @see \Drupal\views\Plugin\ViewsPluginManager
  */
 abstract class AccessPluginBase extends PluginBase {
 
