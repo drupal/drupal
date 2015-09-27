@@ -169,9 +169,9 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
-    $files = $this->getEntitiesToView($items);
+    $files = $this->getEntitiesToView($items, $langcode);
 
     // Early opt-out if the field is empty.
     if (empty($files)) {

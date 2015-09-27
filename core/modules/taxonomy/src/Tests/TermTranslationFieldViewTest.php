@@ -50,7 +50,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
     $this->enableTranslation();
     $this->setUpTerm();
-    $this->setUpTermReferenceField(TRUE);
+    $this->setUpTermReferenceField();
     $this->setUpNode();
   }
 

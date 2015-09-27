@@ -36,24 +36,25 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    *
    * @param \Drupal\Core\Field\EntityReferenceFieldItemListInterface $items
    *   The item list.
+   * @param string $langcode
+   *   The language code of the referenced entities to display.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   The array of referenced entities to display, keyed by delta.
    *
    * @see ::prepareView()
    */
-  protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items) {
+  protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
     $entities = array();
 
-    $parent_entity_langcode = $items->getEntity()->language()->getId();
     foreach ($items as $delta => $item) {
       // Ignore items where no entity could be loaded in prepareView().
       if (!empty($item->_loaded)) {
         $entity = $item->entity;
 
         // Set the entity in the correct language for display.
-        if ($entity instanceof TranslatableInterface && $entity->hasTranslation($parent_entity_langcode)) {
-          $entity = $entity->getTranslation($parent_entity_langcode);
+        if ($entity instanceof TranslatableInterface) {
+          $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
         }
 
         $access = $this->checkAccess($entity);
@@ -76,8 +77,8 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * @see ::prepareView()
    * @see ::getEntitiestoView()
    */
-  public function view(FieldItemListInterface $items) {
-    $elements = parent::view($items);
+  public function view(FieldItemListInterface $items, $langcode = NULL) {
+    $elements = parent::view($items, $langcode);
 
     $field_level_access_cacheability = new CacheableMetadata();
 

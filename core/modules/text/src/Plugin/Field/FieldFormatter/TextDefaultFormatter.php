@@ -31,7 +31,7 @@ class TextDefaultFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
 
     // The ProcessedText element already handles cache context & tag bubbling.

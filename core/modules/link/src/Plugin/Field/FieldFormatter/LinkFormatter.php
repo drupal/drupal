@@ -176,7 +176,7 @@ class LinkFormatter extends FormatterBase implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = array();
     $entity = $items->getEntity();
     $settings = $this->getSettings();

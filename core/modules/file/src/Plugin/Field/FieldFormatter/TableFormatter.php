@@ -25,10 +25,10 @@ class TableFormatter extends FileFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
 
-    if ($files = $this->getEntitiesToView($items)) {
+    if ($files = $this->getEntitiesToView($items, $langcode)) {
       $header = array(t('Attachment'), t('Size'));
       $rows = array();
       foreach ($files as $delta => $file) {

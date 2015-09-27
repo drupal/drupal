@@ -10,6 +10,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -119,11 +120,11 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $view_mode = $this->getSetting('view_mode');
     $elements = array();
 
-    foreach ($this->getEntitiesToView($items) as $delta => $entity) {
+    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       // Protect ourselves from recursive rendering.
       static $depth = 0;
       $depth++;

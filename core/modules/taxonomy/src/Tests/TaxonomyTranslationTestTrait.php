@@ -83,7 +83,7 @@ trait TaxonomyTranslationTestTrait {
    *   (optional) If TRUE, create a translatable term reference field. Defaults
    *   to FALSE.
    */
-  protected function setUpTermReferenceField($translatable = FALSE) {
+  protected function setUpTermReferenceField() {
     $handler_settings = array(
       'target_bundles' => array(
         $this->vocabulary->id() => $this->vocabulary->id(),
@@ -92,7 +92,7 @@ trait TaxonomyTranslationTestTrait {
     );
     $this->createEntityReferenceField('node', 'article', $this->termFieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $field_storage = FieldStorageConfig::loadByName('node', $this->termFieldName);
-    $field_storage->setTranslatable($translatable);
+    $field_storage->setTranslatable(FALSE);
     $field_storage->save();
 
     entity_get_form_display('node', 'article', 'default')

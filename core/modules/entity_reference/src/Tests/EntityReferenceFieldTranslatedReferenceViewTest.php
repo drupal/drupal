@@ -17,6 +17,14 @@ use Drupal\simpletest\WebTestBase;
  * @group entity_reference
  */
 class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
+
+  /**
+   * Flag indicating whether the field is translatable.
+   *
+   * @var bool
+   */
+  protected $translatable = TRUE;
+
   /**
    * The langcode of the source language.
    *
@@ -188,7 +196,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
       'entity_type' => $this->testEntityTypeName,
       'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'translatable' => TRUE,
+      'translatable' => $this->translatable,
       'settings' => array(
         'allowed_values' => array(
           array(

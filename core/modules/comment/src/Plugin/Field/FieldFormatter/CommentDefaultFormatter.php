@@ -137,7 +137,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
     $output = array();
 

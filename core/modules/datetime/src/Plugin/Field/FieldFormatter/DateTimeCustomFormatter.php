@@ -36,7 +36,7 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
 
     foreach ($items as $delta => $item) {

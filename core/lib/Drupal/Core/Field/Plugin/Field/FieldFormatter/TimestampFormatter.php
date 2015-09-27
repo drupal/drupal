@@ -165,7 +165,7 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
 
     $date_format = $this->getSetting('date_format');

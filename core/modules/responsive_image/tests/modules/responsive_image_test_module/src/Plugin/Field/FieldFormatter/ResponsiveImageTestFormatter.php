@@ -26,8 +26,8 @@ class ResponsiveImageTestFormatter extends ResponsiveImageFormatter {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
-    $elements = parent::viewElements($items);
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    $elements = parent::viewElements($items, $langcode);
     // Unset #item_attributes to test that the theme function can handle that.
     foreach ($elements as &$element) {
       if (isset($element['#item_attributes'])) {

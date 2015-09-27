@@ -249,7 +249,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
           $items = $grouped_items[$id];
           /** @var \Drupal\Core\Access\AccessResultInterface $field_access */
           $field_access = $items->access('view', NULL, TRUE);
-          $build_list[$id][$name] = $field_access->isAllowed() ? $formatter->view($items) : [];
+          $build_list[$id][$name] = $field_access->isAllowed() ? $formatter->view($items, $entity->language()->getId()) : [];
           // Apply the field access cacheability metadata to the render array.
           $this->renderer->addCacheableDependency($build_list[$id][$name], $field_access);
         }
