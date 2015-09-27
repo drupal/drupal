@@ -82,6 +82,10 @@ class ConfigExportUITest extends WebTestBase {
     $file_contents = file_get_contents(file_directory_temp() . '/' . 'system.maintenance.yml');
     $exported = Yaml::decode($file_contents);
     $this->assertNotIdentical($exported['message'], 'Foo');
+
+    // Check the single export form doesn't have "form-required" elements.
+    $this->drupalGet('admin/config/development/configuration/single/export');
+    $this->assertNoRaw('js-form-required form-required', 'No form required fields are found.');
   }
 
 }

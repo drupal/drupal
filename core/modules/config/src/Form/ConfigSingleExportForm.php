@@ -105,7 +105,6 @@ class ConfigSingleExportForm extends FormBase {
       '#type' => 'select',
       '#options' => $this->findConfiguration($default_type),
       '#default_value' => $config_name,
-      '#required' => TRUE,
       '#prefix' => '<div id="edit-config-type-wrapper">',
       '#suffix' => '</div>',
       '#ajax' => array(
@@ -118,7 +117,6 @@ class ConfigSingleExportForm extends FormBase {
       '#title' => $this->t('Here is your configuration:'),
       '#type' => 'textarea',
       '#rows' => 24,
-      '#required' => TRUE,
       '#prefix' => '<div id="edit-export-wrapper">',
       '#suffix' => '</div>',
     );
