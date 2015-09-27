@@ -1051,17 +1051,6 @@ function user_user_role_delete(RoleInterface $role) {
  *   value.
  */
 function user_roles($membersonly = FALSE, $permission = NULL) {
-  $user_roles = &drupal_static(__FUNCTION__);
-
-  // Do not cache roles for specific permissions. This data is not requested
-  // frequently enough to justify the additional memory use.
-  if (empty($permission)) {
-    $cid = $membersonly ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID;
-    if (isset($user_roles[$cid])) {
-      return $user_roles[$cid];
-    }
-  }
-
   $roles = Role::loadMultiple();
   if ($membersonly) {
     unset($roles[RoleInterface::ANONYMOUS_ID]);
@@ -1071,10 +1060,6 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     $roles = array_filter($roles, function ($role) use ($permission) {
       return $role->hasPermission($permission);
     });
-  }
-
-  if (empty($permission)) {
-    $user_roles[$cid] = $roles;
   }
 
   return $roles;
