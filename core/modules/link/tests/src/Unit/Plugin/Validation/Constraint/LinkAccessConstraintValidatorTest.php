@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\link\Plugin\Validation\Constraint\LinkAccessConstraintValidatorTest.
  */
 
-namespace Drupal\Tests\link\Plugin\Validation\Constraint;
+namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
 use Drupal\Core\Url;
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraint;

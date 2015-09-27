@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidatorTest.
  */
 
-namespace Drupal\Tests\link\Plugin\Validation\Constraint;
+namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
