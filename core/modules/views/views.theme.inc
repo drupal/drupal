@@ -148,6 +148,7 @@ function template_preprocess_views_view_fields(&$variables) {
       if ($object->label) {
         // Add a colon in a label suffix.
         if ($object->handler->options['element_label_colon']) {
+          $object->label_suffix = ': ';
           $object->has_label_colon = TRUE;
         }
 
@@ -162,6 +163,7 @@ function template_preprocess_views_view_fields(&$variables) {
             $attributes['class'][] = 'views-label-' . $object->class;
           }
 
+          // Set up field label.
           $element_label_class = $object->handler->elementLabelClasses($row->index);
           if ($element_label_class) {
             $attributes['class'][] = $element_label_class;
@@ -174,61 +176,6 @@ function template_preprocess_views_view_fields(&$variables) {
     }
   }
 
-}
-
-/**
- * Returns HTML for multiple views fields.
- *
- * @param $variables
- *   An associative array containing:
- *   - fields: An array of field objects. Each field object contains:
- *     - separator: A string that separates the fields.
- *     - wrapper_suffix: A string added to the beginning of the fields.
- *     - label_html: An HTML string that labels the fields.
- *     - content: The fields.
- *     - wrapper_suffix: A string added to the end of the fields.
- *
- * @see template_preprocess_views_view_fields()
- *
- * @ingroup themeable
- */
-function theme_views_view_fields($variables) {
-  $fields = $variables['fields'];
-  $output = '';
-
-  foreach ($fields as $field) {
-    if (!empty($field->separator)) {
-      $output .= $field->separator;
-    }
-    $wrapper_element = Html::escape($field->wrapper_element);
-    if ($wrapper_element) {
-      $output .= '<' . $wrapper_element . $field->wrapper_attributes . '>';
-      if (isset($field->label_element) && !empty($field->label_element)) {
-        $label_element = Html::escape($field->label_element);
-        $output .= '<' . $label_element . $field->label_attributes . '>';
-      }
-      $output .= Html::escape($field->label);
-      if ($field->has_label_colon) {
-        $output .= ': ';
-      }
-      if (isset($label_element)) {
-        $output .= '</' . $label_element . '>';
-      }
-    }
-    $element_type = Html::escape($field->element_type);
-    if ($element_type) {
-      $output .= '<' . $element_type . $field->element_attributes . '>';
-    }
-    $output .= $field->content;
-    if ($element_type) {
-      $output .= '</' . $element_type . '>';
-    }
-    if ($wrapper_element) {
-      $output .= '</' . $wrapper_element . '>';
-    }
-  }
-
-  return $output;
 }
 
 /**
