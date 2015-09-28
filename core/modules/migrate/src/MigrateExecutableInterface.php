@@ -17,6 +17,11 @@ interface MigrateExecutableInterface {
   public function import();
 
   /**
+   * Performs a rollback operation - remove previously-imported items.
+   */
+  public function rollback();
+
+  /**
    * Processes a row.
    *
    * @param \Drupal\migrate\Row $row

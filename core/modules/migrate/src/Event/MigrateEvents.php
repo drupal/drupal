@@ -15,6 +15,8 @@ namespace Drupal\migrate\Event;
  * @see \Drupal\migrate\Event\MigrateImportEvent
  * @see \Drupal\migrate\Event\MigratePreRowSaveEvent
  * @see \Drupal\migrate\Event\MigratePostRowSaveEvent
+ * @see \Drupal\migrate\Event\MigrateRollbackEvent
+ * @see \Drupal\migrate\Event\MigrateRowDeleteEvent
  */
 final class MigrateEvents {
 
@@ -107,5 +109,65 @@ final class MigrateEvents {
    * @var string
    */
   const POST_ROW_SAVE = 'migrate.post_row_save';
+
+  /**
+   * Name of the event fired when beginning a migration rollback operation.
+   *
+   * This event allows modules to perform an action whenever a migration
+   * rollback operation is about to begin. The event listener method receives a
+   * \Drupal\migrate\Event\MigrateRollbackEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\migrate\Event\MigrateRollbackEvent
+   *
+   * @var string
+   */
+  const PRE_ROLLBACK = 'migrate.pre_rollback';
+
+  /**
+   * Name of the event fired when finishing a migration rollback operation.
+   *
+   * This event allows modules to perform an action whenever a migration
+   * rollback operation is completing. The event listener method receives a
+   * \Drupal\migrate\Event\MigrateRollbackEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\migrate\Event\MigrateRollbackEvent
+   *
+   * @var string
+   */
+  const POST_ROLLBACK = 'migrate.post_rollback';
+
+  /**
+   * Name of the event fired when about to delete a single item.
+   *
+   * This event allows modules to perform an action whenever a specific item
+   * is about to be deleted by the destination plugin. The event listener method
+   * receives a \Drupal\migrate\Event\MigrateRowDeleteEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\migrate\Event\MigrateRowDeleteEvent
+   *
+   * @var string
+   */
+  const PRE_ROW_DELETE = 'migrate.pre_row_delete';
+
+  /**
+   * Name of the event fired just after a single item has been deleted.
+   *
+   * This event allows modules to perform an action whenever a specific item
+   * has been deleted by the destination plugin. The event listener method
+   * receives a \Drupal\migrate\Event\MigrateRowDeleteEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\migrate\Event\MigrateRowDeleteEvent
+   *
+   * @var string
+   */
+  const POST_ROW_DELETE = 'migrate.post_row_delete';
 
 }

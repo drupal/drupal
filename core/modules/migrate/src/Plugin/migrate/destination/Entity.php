@@ -58,6 +58,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->storage = $storage;
     $this->bundles = $bundles;
+    $this->supportsRollback = TRUE;
   }
 
   /**
@@ -161,6 +162,17 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    */
   protected function getKey($key) {
     return $this->storage->getEntityType()->getKey($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rollback(array $destination_identifier) {
+    // Delete the specified entity from Drupal if it exists.
+    $entity = $this->storage->load(reset($destination_identifier));
+    if ($entity) {
+      $entity->delete();
+    }
   }
 
   /**

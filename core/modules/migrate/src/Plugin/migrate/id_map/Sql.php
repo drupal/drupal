@@ -806,6 +806,22 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
+   * @inheritdoc
+   */
+  public function currentDestination() {
+    if ($this->valid()) {
+      $result = array();
+      foreach ($this->destinationIdFields() as $field_name) {
+        $result[$field_name] = $this->currentRow[$field_name];
+      }
+      return $result;
+    }
+    else {
+      return NULL;
+    }
+  }
+
+  /**
    * Implementation of Iterator::next().
    *
    * This is called at the bottom of the loop implicitly, as well as explicitly

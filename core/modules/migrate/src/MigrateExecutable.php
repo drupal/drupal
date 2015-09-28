@@ -14,6 +14,8 @@ use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\Event\MigratePreRowSaveEvent;
+use Drupal\migrate\Event\MigrateRollbackEvent;
+use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -75,15 +77,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @var array
    */
   protected $counts = array();
-
-  /**
-   * The maximum number of items to pass in a single call during a rollback.
-   *
-   * For use in bulkRollback(). Can be overridden in derived class constructor.
-   *
-   * @var int
-   */
-  protected $rollbackBatchSize = 50;
 
   /**
    * The object currently being constructed.
@@ -309,6 +302,64 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $this->migration->setMigrationResult($return);
     $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration));
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rollback() {
+    // Only begin the rollback operation if the migration is currently idle.
+    if ($this->migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
+      $this->message->display($this->t('Migration @id is busy with another operation: @status', ['@id' => $this->migration->id(), '@status' => $this->t($this->migration->getStatusLabel())]), 'error');
+      return MigrationInterface::RESULT_FAILED;
+    }
+
+    // Announce that rollback is about to happen.
+    $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROLLBACK, new MigrateRollbackEvent($this->migration));
+
+    // Optimistically assume things are going to work out; if not, $return will be
+    // updated to some other status.
+    $return = MigrationInterface::RESULT_COMPLETED;
+
+    $this->migration->setStatus(MigrationInterface::STATUS_ROLLING_BACK);
+    $id_map = $this->migration->getIdMap();
+    $destination = $this->migration->getDestinationPlugin();
+
+    // Loop through each row in the map, and try to roll it back.
+    foreach ($id_map as $serialized_key => $map_row) {
+      $destination_key = $id_map->currentDestination();
+      if ($destination_key) {
+        $this->getEventDispatcher()
+          ->dispatch(MigrateEvents::PRE_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+        $destination->rollback($destination_key);
+        $this->getEventDispatcher()
+          ->dispatch(MigrateEvents::POST_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+        // We're now done with this row, so remove it from the map.
+        $id_map->delete(unserialize($serialized_key));
+      }
+
+      // Check for memory exhaustion.
+      if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
+        break;
+      }
+
+      // If anyone has requested we stop, return the requested result.
+      if ($this->migration->getStatus() == MigrationInterface::STATUS_STOPPING) {
+        $return = $this->migration->getMigrationResult();
+        break;
+      }
+    }
+    // If rollback completed successfully, reset the high water mark.
+    if ($return == MigrationInterface::RESULT_COMPLETED) {
+      $this->migration->saveHighWater(NULL);
+    }
+
+    // Notify modules that rollback attempt was complete.
+    $this->migration->setMigrationResult($return);
+    $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROLLBACK, new MigrateRollbackEvent($this->migration));
+    $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
+
     return $return;
   }
 

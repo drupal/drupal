@@ -27,6 +27,13 @@ use Drupal\migrate\Plugin\RequirementsInterface;
 abstract class DestinationBase extends PluginBase implements MigrateDestinationInterface, RequirementsInterface {
 
   /**
+   * Indicates whether the destination can be rolled back.
+   *
+   * @var bool
+   */
+  protected $supportsRollback = FALSE;
+
+  /**
    * The migration.
    *
    * @var \Drupal\migrate\Entity\MigrationInterface
@@ -62,8 +69,14 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
   /**
    * {@inheritdoc}
    */
-  public function rollbackMultiple(array $destination_identifiers) {
+  public function rollback(array $destination_identifier) {
     // By default we do nothing.
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsRollback() {
+    return $this->supportsRollback;
+  }
 }

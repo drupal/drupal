@@ -210,7 +210,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
   public function lookupSourceID(array $destination_id_values);
 
   /**
-   * Looks up the destination identifier.
+   * Looks up the destination identifier corresponding to a source key.
    *
    * Given a (possibly multi-field) source identifier value, return the
    * (possibly multi-field) destination identifier value it is mapped to.
@@ -222,6 +222,14 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   The destination identifier values of the record, or NULL on failure.
    */
   public function lookupDestinationId(array $source_id_values);
+
+  /**
+   * Looks up the destination identifier currently being iterated.
+   *
+   * @return array
+   *   The destination identifier values of the record, or NULL on failure.
+   */
+  public function currentDestination();
 
   /**
    * Removes any persistent storage used by this map.
