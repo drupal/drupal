@@ -132,7 +132,7 @@ class RenderWebTest extends WebTestBase {
       ),
     );
     $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', array(
-      ':href' => \Drupal::urlGenerator()->generateFromPath('common-test/destination', ['absolute' => TRUE]),
+      ':href' =>  URL::fromRoute('common_test.destination')->setAbsolute()->toString(),
       ':title' => $element['#title'],
     ));
 

@@ -82,14 +82,14 @@ class UrlAlterFunctionalTest extends WebTestBase {
    *   A string with the original path that is run through generateFrommPath().
    * @param $final
    *   A string with the expected result after generateFrommPath().
+   *
    * @return
    *   TRUE if $original was correctly altered to $final, FALSE otherwise.
    */
   protected function assertUrlOutboundAlter($original, $final) {
     // Test outbound altering.
-    $result = $this->container->get('url_generator')->generateFromPath(ltrim($original, '/'));
-    $final = Url::fromUri('internal:' . $final)->toString();
-    $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $result = $this->container->get('path_processor_manager')->processOutbound($original);
+    return $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 
   /**
@@ -99,12 +99,13 @@ class UrlAlterFunctionalTest extends WebTestBase {
    *   The original path before it has been altered by inbound URL processing.
    * @param $final
    *   A string with the expected result.
+   *
    * @return
    *   TRUE if $original was correctly altered to $final, FALSE otherwise.
    */
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
     $result = $this->container->get('path.alias_manager')->getPathByAlias($original);
-    $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    return $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 }
