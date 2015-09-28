@@ -192,7 +192,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       // Make sure we replace any previous messages for this item with any
       // new ones.
       if ($save_to_map) {
-        $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED);
+        $this->idMap->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED);
         $this->currentRow = NULL;
         $this->currentSourceIds = NULL;
       }
