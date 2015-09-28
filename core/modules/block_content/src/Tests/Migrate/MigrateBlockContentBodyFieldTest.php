@@ -29,8 +29,10 @@ class MigrateBlockContentBodyFieldTest extends MigrateDrupal7TestBase {
     parent::setUp();
     $this->installConfig(['block_content']);
     $this->installEntitySchema('block_content');
-    $this->executeMigration('block_content_type');
-    $this->executeMigration('block_content_body_field');
+    $this->executeMigrations([
+      'block_content_type',
+      'block_content_body_field',
+    ]);
   }
 
   /**

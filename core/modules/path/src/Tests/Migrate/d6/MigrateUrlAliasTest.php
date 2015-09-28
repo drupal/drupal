@@ -7,22 +7,20 @@
 
 namespace Drupal\path\Tests\Migrate\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
- * Url alias migration.
+ * URL alias migration.
  *
  * @group migrate_drupal_6
  */
 class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = array('path');
 
@@ -39,7 +37,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
    * Test the url alias migration.
    */
   public function testUrlAlias() {
-    $migration = entity_load('migration', 'd6_url_alias');
+    $id_map = Migration::load('d6_url_alias')->getIdMap();
     // Test that the field exists.
     $conditions = array(
       'source' => '/node/1',
@@ -48,7 +46,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     );
     $path = \Drupal::service('path.alias_storage')->load($conditions);
     $this->assertNotNull($path, "Path alias for node/1 successfully loaded.");
-    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array($path['pid'])), array('1'), "Test IdMap");
+    $this->assertIdentical($id_map->lookupDestinationID(array($path['pid'])), array('1'), "Test IdMap");
     $conditions = array(
       'source' => '/node/2',
       'alias' => '/alias-two',
@@ -64,12 +62,14 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
       ->condition('src', 'node/2')
       ->execute();
 
-    db_update($migration->getIdMap()->mapTableName())
+    \Drupal::database()
+      ->update($id_map->mapTableName())
       ->fields(array('source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE))
       ->execute();
-    $migration = entity_load_unchanged('migration', 'd6_url_alias');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $migration = \Drupal::entityManager()
+      ->getStorage('migration')
+      ->loadUnchanged('d6_url_alias');
+    $this->executeMigration($migration);
 
     $path = \Drupal::service('path.alias_storage')->load(array('pid' => $path['pid']));
     $this->assertIdentical('/new-url-alias', $path['alias']);

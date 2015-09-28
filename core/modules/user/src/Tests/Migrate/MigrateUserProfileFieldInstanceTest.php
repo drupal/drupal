@@ -17,22 +17,20 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('field', 'link', 'options', 'datetime', 'text');
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['field'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    // Add some id mappings for the dependant migrations.
-    $id_mappings = array(
-      'user_profile_field' => array(
-        array(array(1), array('user', 'profile_color')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-    $this->createFields();
-    $this->executeMigration('user_profile_field_instance');
+    $this->executeMigrations([
+      'user_profile_field',
+      'user_profile_field_instance',
+    ]);
   }
 
   /**
@@ -78,29 +76,6 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load('user.user.profile_love_migrations');
     $this->assertIdentical('I love migrations', $field->label());
     $this->assertIdentical("If you check this box, you love migrations.", $field->getDescription());
-  }
-
-  /**
-   * Helper to create fields.
-   */
-  protected function createFields() {
-    $fields = array(
-      'profile_color' => 'text',
-      'profile_biography' => 'text_long',
-      'profile_sell_address' => 'boolean',
-      'profile_sold_to' => 'list_string',
-      'profile_bands' => 'text',
-      'profile_blog' => 'link',
-      'profile_birthdate' => 'datetime',
-      'profile_love_migrations' => 'boolean',
-    );
-    foreach ($fields as $name => $type) {
-      entity_create('field_storage_config', array(
-        'field_name' => $name,
-        'entity_type' => 'user',
-        'type' => $type,
-      ))->save();
-    }
   }
 
 }

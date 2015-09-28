@@ -14,8 +14,6 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class ProfileValuesBuilderTest extends MigrateDrupal6TestBase {
 
-  public static $modules = ['migrate', 'migrate_drupal', 'user'];
-
   /**
    * Tests that profile fields are merged into the d6_profile_values migration's
    * process pipeline by the d6_profile_values builder.

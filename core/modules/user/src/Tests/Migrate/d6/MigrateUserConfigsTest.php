@@ -24,8 +24,7 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_user_mail');
-    $this->executeMigration('d6_user_settings');
+    $this->executeMigrations(['d6_user_mail', 'd6_user_settings']);
   }
 
   /**

@@ -17,9 +17,7 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 class MigrateUrlAliasTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = ['path'];
 

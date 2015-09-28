@@ -20,13 +20,6 @@ class MigrateNodeConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {

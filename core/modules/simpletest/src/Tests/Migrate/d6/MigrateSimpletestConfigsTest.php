@@ -20,9 +20,7 @@ class MigrateSimpletestConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = array('simpletest');
 
@@ -31,7 +29,6 @@ class MigrateSimpletestConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-
     $this->installConfig(['simpletest']);
     $this->executeMigration('d6_simpletest_settings');
   }

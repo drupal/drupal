@@ -18,15 +18,17 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
  */
 class MigrateUserPictureFieldInstanceTest extends MigrateDrupal7TestBase {
 
-  static $modules = array('image', 'file');
+  public static $modules = ['image', 'file'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('user_picture_field');
-    $this->executeMigration('user_picture_field_instance');
+    $this->executeMigrations([
+      'user_picture_field',
+      'user_picture_field_instance',
+    ]);
   }
 
   /**

@@ -18,7 +18,7 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
  */
 class MigrateUserPictureFieldTest extends MigrateDrupal7TestBase {
 
-  static $modules = array('image', 'file');
+  public static $modules = ['image', 'file'];
 
   /**
    * {@inheritdoc}

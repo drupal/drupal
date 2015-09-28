@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\NodeType;
 
@@ -19,18 +20,11 @@ use Drupal\node\Entity\NodeType;
 class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'text', 'filter');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('node'));
+    $this->installConfig(['node']);
     $this->executeMigration('d6_node_type');
   }
 
@@ -38,14 +32,14 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
    * Tests Drupal 6 node type to Drupal 8 migration.
    */
   public function testNodeType() {
-    $migration = entity_load('migration', 'd6_node_type');
+    $id_map = Migration::load('d6_node_type')->getIdMap();
     // Test the test_page content type.
     $node_type_page = NodeType::load('test_page');
     $this->assertIdentical('test_page', $node_type_page->id(), 'Node type test_page loaded');
     $this->assertIdentical(TRUE, $node_type_page->displaySubmitted());
     $this->assertIdentical(FALSE, $node_type_page->isNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_page->getPreviewMode());
-    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array('test_page')), array('test_page'));
+    $this->assertIdentical($id_map->lookupDestinationID(array('test_page')), array('test_page'));
 
     // Test we have a body field.
     $field = FieldConfig::loadByName('node', 'test_page', 'body');
@@ -58,7 +52,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(TRUE, $node_type_story->displaySubmitted());
     $this->assertIdentical(FALSE, $node_type_story->isNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_story->getPreviewMode());
-    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array('test_story')), array('test_story'));
+    $this->assertIdentical($id_map->lookupDestinationID(array('test_story')), array('test_story'));
 
     // Test we don't have a body field.
     $field = FieldConfig::loadByName('node', 'test_story', 'body');
@@ -71,7 +65,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(TRUE, $node_type_event->displaySubmitted());
     $this->assertIdentical(TRUE, $node_type_event->isNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_event->getPreviewMode());
-    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array('test_event')), array('test_event'));
+    $this->assertIdentical($id_map->lookupDestinationID(array('test_event')), array('test_event'));
 
     // Test we have a body field.
     $field = FieldConfig::loadByName('node', 'test_event', 'body');

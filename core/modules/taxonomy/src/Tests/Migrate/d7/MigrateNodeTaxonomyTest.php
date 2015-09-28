@@ -62,11 +62,13 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
       'bundle' => 'article',
     ))->save();
 
-    $this->executeMigration('d7_taxonomy_vocabulary');
-    $this->executeMigration('d7_taxonomy_term');
-    $this->executeMigration('d7_user_role');
-    $this->executeMigration('d7_user');
-    $this->executeMigration('d7_node__article');
+    $this->executeMigrations([
+      'd7_taxonomy_vocabulary',
+      'd7_taxonomy_term',
+      'd7_user_role',
+      'd7_user',
+      'd7_node__article',
+    ]);
   }
 
   /**

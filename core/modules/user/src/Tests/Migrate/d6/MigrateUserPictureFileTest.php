@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests\Migrate\d6;
 
 use Drupal\file\Entity\File;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -18,13 +19,6 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('file');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -33,7 +27,7 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('file');
 
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = entity_load('migration', 'd6_user_picture_file');
+    $migration = Migration::load('d6_user_picture_file');
     $source = $migration->get('source');
     $source['site_path'] = 'core/modules/simpletest';
     $migration->set('source', $source);
@@ -45,7 +39,7 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
    */
   public function testUserPictures() {
     $file_ids = array();
-    foreach (entity_load('migration', 'd6_user_picture_file')->getIdMap() as $destination_ids) {
+    foreach ($this->migration->getIdMap() as $destination_ids) {
       $file_ids[] = reset($destination_ids);
     }
     $files = File::loadMultiple($file_ids);

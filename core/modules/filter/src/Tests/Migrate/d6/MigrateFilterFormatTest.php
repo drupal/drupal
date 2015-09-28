@@ -20,13 +20,15 @@ class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  static $modules = array('filter');
+  protected function setUp() {
+    parent::setUp();
+    $this->executeMigration('d6_filter_format');
+  }
 
   /**
    * Tests the Drupal 6 filter format to Drupal 8 migration.
    */
   public function testFilterFormat() {
-    $this->executeMigration('d6_filter_format');
     $filter_format = FilterFormat::load('filtered_html');
 
     // Check filter status.

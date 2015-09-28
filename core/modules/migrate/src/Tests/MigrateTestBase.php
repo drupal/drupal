@@ -187,6 +187,17 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   }
 
   /**
+   * Executes a set of migrations in dependency order.
+   *
+   * @param string[] $ids
+   *   Array of migration IDs, in any order.
+   */
+  protected function executeMigrations(array $ids) {
+    $migrations = Migration::loadMultiple($ids);
+    array_walk($migrations, [$this, 'executeMigration']);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function display($message, $type = 'status') {

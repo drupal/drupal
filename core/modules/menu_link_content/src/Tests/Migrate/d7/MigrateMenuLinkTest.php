@@ -20,9 +20,7 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = array('link', 'menu_ui', 'menu_link_content');
 

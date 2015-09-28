@@ -19,10 +19,16 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
   use CommentTestTrait;
 
-  // Directly testing that comments' entity_id is populated upon importing is
-  // not straightforward, but RDF module serves as an implicit test -
-  // its hook_comment_storage_load() references a stubbed comment.
-  static $modules = ['node', 'comment', 'text', 'filter', 'rdf'];
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = [
+    'comment',
+    // Directly testing that a stub comment's entity_id is populated upon
+    // importing is not straightforward, but RDF module serves as an implicit
+    // test - its hook_comment_storage_load() references a stubbed comment.
+    'rdf',
+  ];
 
   /**
    * {@inheritdoc}
@@ -34,38 +40,20 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('system', ['router']);
-    $this->installConfig(['node', 'comment']);
+    $this->installConfig(['comment']);
 
     // The entity.node.canonical route must exist when the RDF hook is called.
     $this->container->get('router.builder')->rebuild();
 
-    entity_create('node_type', array('type' => 'page'))->save();
-    entity_create('node_type', array('type' => 'story'))->save();
-    $this->addDefaultCommentField('node', 'story');
-    $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
-      'id' => 'comment_no_subject',
-      'label' => 'comment_no_subject',
-      'target_entity_type_id' => 'node',
-    ))->save();
-    \Drupal::service('comment.manager')->addBodyField('comment_no_subject');
-
-    $node = entity_create('node', array(
-      'type' => 'story',
-      'nid' => 1,
-      'title' => $this->randomString(),
-    ));
-    $node->enforceIsNew();
-    $node->save();
-    $id_mappings = array(
-      'd6_filter_format' => array(array(array(1), array('filtered_html'))),
-      'd6_node:*' => array(array(array(1), array(1))),
-      'd6_user' => array(array(array(0), array(0))),
-      'd6_comment_type' => array(array(array('comment'), array('comment_no_subject'))),
-      'd6_comment_entity_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
-      'd6_comment_entity_form_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
-    );
-    $this->prepareMigrations($id_mappings);
-    $this->executeMigration('d6_comment');
+    $this->migrateContent();
+    $this->executeMigrations([
+      'd6_comment_type',
+      'd6_comment_field',
+      'd6_comment_field_instance',
+      'd6_comment_entity_display',
+      'd6_comment_entity_form_display',
+      'd6_comment',
+    ]);
   }
 
   /**

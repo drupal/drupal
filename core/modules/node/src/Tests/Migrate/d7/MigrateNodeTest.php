@@ -44,13 +44,15 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->installSchema('node', ['node_access']);
     $this->installSchema('system', ['sequences']);
 
-    $this->executeMigration('d7_user_role');
-    $this->executeMigration('d7_user');
-    $this->executeMigration('d7_node_type');
-    $this->executeMigration('d7_comment_type');
-    $this->executeMigration('d7_field');
-    $this->executeMigration('d7_field_instance');
-    $this->executeMigration('d7_node__test_content_type');
+    $this->executeMigrations([
+      'd7_user_role',
+      'd7_user',
+      'd7_node_type',
+      'd7_comment_type',
+      'd7_field',
+      'd7_field_instance',
+      'd7_node__test_content_type',
+    ]);
   }
 
   /**

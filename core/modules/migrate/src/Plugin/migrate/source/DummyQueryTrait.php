@@ -16,7 +16,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 trait DummyQueryTrait {
 
   /**
-   * @return \Drupal\Core\Database\Query\SelectInterface
+   * {@inheritdoc}
    */
   public function query() {
     // Pass an arbritrary table name - the query should never be executed anyway.
@@ -24,6 +24,13 @@ trait DummyQueryTrait {
       ->range(0, 1);
     $query->addExpression('1');
     return $query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function count() {
+    return 1;
   }
 
 }

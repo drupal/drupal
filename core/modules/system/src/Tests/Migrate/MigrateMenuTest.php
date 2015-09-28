@@ -47,7 +47,9 @@ EOT;
       ->execute();
 
     $migration = Migration::load('menu');
-    db_truncate($migration->getIdMap()->mapTableName())->execute();
+    \Drupal::database()
+        ->truncate($migration->getIdMap()->mapTableName())
+        ->execute();
     $this->executeMigration($migration);
 
     $navigation_menu = Menu::load('navigation');

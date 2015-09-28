@@ -18,13 +18,6 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateFieldTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('field', 'telephone', 'link', 'file', 'image', 'datetime', 'node', 'options', 'text');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -101,7 +94,6 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     // Text field with a single checkbox.
     $field_storage = FieldStorageConfig::load('node.field_test_text_single_checkbox');
     $this->assertIdentical("boolean", $field_storage->getType(),  t('Field type is @fieldtype. It should be boolean.', array('@fieldtype' => $field_storage->getType())));
-
   }
 
 }

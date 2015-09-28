@@ -20,13 +20,6 @@ class MigrateFileConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('file');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {

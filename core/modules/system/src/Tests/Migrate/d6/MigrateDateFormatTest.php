@@ -7,7 +7,8 @@
 
 namespace Drupal\system\Tests\Migrate\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
@@ -30,13 +31,13 @@ class MigrateDateFormatTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 date formats to Drupal 8 migration.
    */
   public function testDateFormats() {
-    $short_date_format = entity_load('date_format', 'short');
+    $short_date_format = DateFormat::load('short');
     $this->assertIdentical('\S\H\O\R\T m/d/Y - H:i', $short_date_format->getPattern());
 
-    $medium_date_format = entity_load('date_format', 'medium');
+    $medium_date_format = DateFormat::load('medium');
     $this->assertIdentical('\M\E\D\I\U\M D, m/d/Y - H:i', $medium_date_format->getPattern());
 
-    $long_date_format = entity_load('date_format', 'long');
+    $long_date_format = DateFormat::load('long');
     $this->assertIdentical('\L\O\N\G l, F j, Y - H:i', $long_date_format->getPattern());
 
     // Test that we can re-import using the EntityDateFormat destination.
@@ -45,12 +46,17 @@ class MigrateDateFormatTest extends MigrateDrupal6TestBase {
       ->fields(array('value' => serialize('\S\H\O\R\T d/m/Y - H:i')))
       ->condition('name', 'date_format_short')
       ->execute();
-    db_truncate(entity_load('migration', 'd6_date_formats')->getIdMap()->mapTableName())->execute();
-    $migration = entity_load_unchanged('migration', 'd6_date_formats');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
 
-    $short_date_format = entity_load('date_format', 'short');
+    \Drupal::database()
+      ->truncate(Migration::load('d6_date_formats')->getIdMap()->mapTableName())
+      ->execute();
+
+    $migration = \Drupal::entityManager()
+      ->getStorage('migration')
+      ->loadUnchanged('d6_date_formats');
+    $this->executeMigration($migration);
+
+    $short_date_format = DateFormat::load('short');
     $this->assertIdentical('\S\H\O\R\T d/m/Y - H:i', $short_date_format->getPattern());
 
   }

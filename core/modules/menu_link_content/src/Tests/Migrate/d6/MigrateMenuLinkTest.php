@@ -18,11 +18,9 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = array('link', 'menu_ui', 'menu_link_content');
+  public static $modules = array('menu_ui', 'menu_link_content');
 
   /**
    * {@inheritdoc}
@@ -31,8 +29,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     parent::setUp();
     $this->installSchema('system', ['router']);
     $this->installEntitySchema('menu_link_content');
-    $this->executeMigration('menu');
-    $this->executeMigration('d6_menu_links');
+    $this->executeMigrations(['menu', 'd6_menu_links']);
   }
 
   /**

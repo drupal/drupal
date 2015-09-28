@@ -19,19 +19,11 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateUserRoleTest extends MigrateDrupal6TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
-   */
-  static $modules = array('filter', 'node');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_filter_format');
-    $this->executeMigration('d6_user_role');
+    $this->executeMigrations(['d6_filter_format', 'd6_user_role']);
   }
 
   /**

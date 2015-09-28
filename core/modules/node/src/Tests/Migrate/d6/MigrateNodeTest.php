@@ -23,14 +23,10 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    // Each node type is imported separately. In this test, we're asserting
-    // on story and test_planet nodes.
-    $this->executeMigration('d6_node__test_planet');
-    $this->executeMigration('d6_node__story');
+    $this->executeMigrations(['d6_node:*']);
 
     // This is required for the second import below.
     \Drupal::database()->truncate(Migration::load('d6_node__story')->getIdMap()->mapTableName())->execute();
-    $this->standalone = TRUE;
   }
 
   /**
@@ -57,11 +53,6 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     // This is empty on the first revision.
     $this->assertIdentical(NULL, $node_revision->revision_log->value);
 
-    // It is pointless to run the second half from MigrateDrupal6Test.
-    if (empty($this->standalone)) {
-      return;
-    }
-
     // Test that we can re-import using the EntityContentBase destination.
     $connection = Database::getConnection('default', 'migrate');
     $connection->update('node_revisions')
@@ -83,10 +74,6 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     // Test a multi-column fields are correctly upgraded.
     $this->assertIdentical('test', $node->body->value);
     $this->assertIdentical('full_html', $node->body->format);
-
-    $node = Node::load(3);
-    // Test that format = 0 from source maps to filtered_html.
-    $this->assertIdentical('filtered_html', $node->body->format);
   }
 
 }

@@ -39,15 +39,6 @@ class UserPictureInstance extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function count() {
-    // This source provides a single row, corresponding to a single picture
-    // field to be added to the user entity.
-    return 1;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fields() {
     return array(
       'file_directory' => 'The directory to store images..',

@@ -20,11 +20,9 @@ class MigrateActionConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = array('action');
+  public static $modules = ['action'];
 
   /**
    * {@inheritdoc}

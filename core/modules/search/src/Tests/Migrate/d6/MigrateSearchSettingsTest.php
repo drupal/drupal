@@ -20,11 +20,9 @@ class MigrateSearchSettingsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = array('search');
+  public static $modules = ['search'];
 
   /**
    * {@inheritdoc}

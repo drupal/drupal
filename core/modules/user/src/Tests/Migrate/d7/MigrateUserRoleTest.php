@@ -20,13 +20,6 @@ use Drupal\user\RoleInterface;
 class MigrateUserRoleTest extends MigrateDrupal7TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
-   */
-  static $modules = array('user');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {

@@ -7,7 +7,9 @@
 
 namespace Drupal\field\Tests\Migrate\d6;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -18,53 +20,11 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'field', 'datetime', 'image', 'text', 'link', 'file', 'telephone');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    $this->installConfig(['node']);
-
-    entity_create('node_type', array('type' => 'test_page'))->save();
-    entity_create('node_type', array('type' => 'story'))->save();
-    // Create the node preview view mode.
-    EntityViewMode::create(array('id' => 'node.preview', 'targetEntityType' => 'node'))->save();
-
-    // Add some id mappings for the dependant migrations.
-    $id_mappings = array(
-      'd6_view_modes' => array(
-        array(array(1), array('node', 'preview')),
-        array(array(4), array('node', 'rss')),
-        array(array('teaser'), array('node', 'teaser')),
-        array(array('full'), array('node', 'full')),
-      ),
-      'd6_field_instance' => array(
-        array(array('fieldname', 'page'), array('node', 'fieldname', 'page')),
-      ),
-      'd6_field' => array(
-        array(array('field_test'), array('node', 'field_test')),
-        array(array('field_test_two'), array('node', 'field_test_two')),
-        array(array('field_test_three'), array('node', 'field_test_three')),
-        array(array('field_test_email'), array('node', 'field_test_email')),
-        array(array('field_test_link'), array('node', 'field_test_link')),
-        array(array('field_test_filefield'), array('node', 'field_test_filefield')),
-        array(array('field_test_imagefield'), array('node', 'field_test_imagefield')),
-        array(array('field_test_phone'), array('node', 'field_test_phone')),
-        array(array('field_test_date'), array('node', 'field_test_date')),
-        array(array('field_test_datestamp'), array('node', 'field_test_datestamp')),
-        array(array('field_test_datetime'), array('node', 'field_test_datetime')),
-        array(array('field_test_exclude_unset'), array('node', 'field_test_exclude_unset')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-    $this->executeMigration('d6_field_formatter_settings');
+    $this->migrateFields();
   }
 
   /**
@@ -82,23 +42,23 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     );
 
     // Can we load any entity display.
-    $display = entity_load('entity_view_display', 'node.story.teaser');
+    $display = EntityViewDisplay::load('node.story.teaser');
     $this->assertIdentical($expected, $display->getComponent($field_name));
 
     // Test migrate worked with multiple bundles.
-    $display = entity_load('entity_view_display', 'node.test_page.teaser');
+    $display = EntityViewDisplay::load('node.test_page.teaser');
     $expected['weight'] = 35;
     $this->assertIdentical($expected, $display->getComponent($field_name));
 
     // Test RSS because that has been converted from 4 to rss.
-    $display = entity_load('entity_view_display', 'node.story.rss');
+    $display = EntityViewDisplay::load('node.story.rss');
     $expected['weight'] = 1;
     $this->assertIdentical($expected, $display->getComponent($field_name));
 
     // Test the default format with text_default which comes from a static map.
     $expected['type'] = 'text_default';
     $expected['settings'] = array();
-    $display = entity_load('entity_view_display', 'node.story.default');
+    $display = EntityViewDisplay::load('node.story.default');
     $this->assertIdentical($expected, $display->getComponent($field_name));
 
     // Check that we can migrate multiple fields.
@@ -150,7 +110,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical($expected, $component);
     $expected['settings']['url_only'] = FALSE;
     $expected['settings']['url_plain'] = FALSE;
-    $display = entity_load('entity_view_display', 'node.story.teaser');
+    $display = EntityViewDisplay::load('node.story.teaser');
     $component = $display->getComponent('field_test_link');
     $this->assertIdentical($expected, $component);
 
@@ -160,7 +120,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_filefield');
     $this->assertIdentical($expected, $component);
-    $display = entity_load('entity_view_display', 'node.story.default');
+    $display = EntityViewDisplay::load('node.story.default');
     $expected['type'] = 'file_url_plain';
     $component = $display->getComponent('field_test_filefield');
     $this->assertIdentical($expected, $component);
@@ -171,7 +131,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = array('image_style' => '', 'image_link' => '');
     $component = $display->getComponent('field_test_imagefield');
     $this->assertIdentical($expected, $component);
-    $display = entity_load('entity_view_display', 'node.story.teaser');
+    $display = EntityViewDisplay::load('node.story.teaser');
     $expected['settings']['image_link'] = 'file';
     $component = $display->getComponent('field_test_imagefield');
     $this->assertIdentical($expected, $component);
@@ -190,7 +150,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = array('format_type' => 'fallback') + $defaults;
     $component = $display->getComponent('field_test_date');
     $this->assertIdentical($expected, $component);
-    $display = entity_load('entity_view_display', 'node.story.default');
+    $display = EntityViewDisplay::load('node.story.default');
     $expected['settings']['format_type'] = 'long';
     $component = $display->getComponent('field_test_date');
     $this->assertIdentical($expected, $component);
@@ -200,7 +160,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings']['format_type'] = 'fallback';
     $component = $display->getComponent('field_test_datestamp');
     $this->assertIdentical($expected, $component);
-    $display = entity_load('entity_view_display', 'node.story.teaser');
+    $display = EntityViewDisplay::load('node.story.teaser');
     $expected['settings'] = array('format_type' => 'medium') + $defaults;
     $component = $display->getComponent('field_test_datestamp');
     $this->assertIdentical($expected, $component);
@@ -210,19 +170,19 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = array('format_type' => 'short') + $defaults;
     $component = $display->getComponent('field_test_datetime');
     $this->assertIdentical($expected, $component);
-    $display = entity_load('entity_view_display', 'node.story.default');
+    $display = EntityViewDisplay::load('node.story.default');
     $expected['settings']['format_type'] = 'fallback';
     $component = $display->getComponent('field_test_datetime');
     $this->assertIdentical($expected, $component);
 
     // Test a date field with a random format which should be mapped
     // to datetime_default.
-    $display = entity_load('entity_view_display', 'node.story.rss');
+    $display = EntityViewDisplay::load('node.story.rss');
     $expected['settings']['format_type'] = 'fallback';
     $component = $display->getComponent('field_test_datetime');
     $this->assertIdentical($expected, $component);
     // Test that our Id map has the correct data.
-    $this->assertIdentical(array('node', 'story', 'teaser', 'field_test'), entity_load('migration', 'd6_field_formatter_settings')->getIdMap()->lookupDestinationID(array('story', 'teaser', 'node', 'field_test')));
+    $this->assertIdentical(array('node', 'story', 'teaser', 'field_test'), Migration::load('d6_field_formatter_settings')->getIdMap()->lookupDestinationID(array('story', 'teaser', 'node', 'field_test')));
   }
 
 }

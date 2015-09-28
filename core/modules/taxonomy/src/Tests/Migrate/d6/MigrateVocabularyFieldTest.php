@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -18,33 +19,16 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $modules = array('node', 'taxonomy', 'field', 'text', 'entity_reference');
+  public static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    // Add some id mappings for the dependant migrations.
-    $id_mappings = array(
-      'd6_taxonomy_vocabulary' => array(
-        array(array(4), array('tags')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-
-    entity_create('taxonomy_vocabulary', array(
-      'name' => 'Test Vocabulary',
-      'description' => 'Test Vocabulary',
-      'vid' => 'test_vocab',
-    ))->save();
-
-    $this->executeMigration('d6_vocabulary_field');
+    $this->migrateTaxonomy();
   }
 
   /**
@@ -59,7 +43,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
     $settings = $field_storage->getSettings();
     $this->assertIdentical('taxonomy_term', $settings['target_type'], "Target type is correct.");
 
-    $this->assertIdentical(array('node', 'tags'), entity_load('migration', 'd6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
+    $this->assertIdentical(array('node', 'tags'), Migration::load('d6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
   }
 
 }

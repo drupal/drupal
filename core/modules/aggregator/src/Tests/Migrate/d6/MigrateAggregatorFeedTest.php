@@ -17,7 +17,10 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('aggregator');
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

@@ -151,10 +151,12 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
       ->condition('field_name', 'body')
       ->execute();
 
-    $this->executeMigration('d7_field');
-    $this->executeMigration('d7_field_instance');
-    $this->executeMigration('d7_view_modes');
-    $this->executeMigration('d7_field_formatter_settings');
+    $this->executeMigrations([
+      'd7_field',
+      'd7_field_instance',
+      'd7_view_modes',
+      'd7_field_formatter_settings',
+    ]);
   }
 
   /**

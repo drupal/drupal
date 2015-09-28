@@ -20,11 +20,9 @@ use Drupal\user\UserInterface;
 class MigrateUserTest extends MigrateDrupal7TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $modules = array('file', 'image', 'user');
+  public static $modules = ['file', 'image'];
 
   /**
    * {@inheritdoc}
@@ -34,11 +32,12 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
 
     // Prepare to migrate user pictures as well.
     $this->installEntitySchema('file');
-    $this->executeMigration('user_picture_field');
-    $this->executeMigration('user_picture_field_instance');
-
-    $this->executeMigration('d7_user_role');
-    $this->executeMigration('d7_user');
+    $this->executeMigrations([
+      'user_picture_field',
+      'user_picture_field_instance',
+      'd7_user_role',
+      'd7_user',
+    ]);
   }
 
   /**

@@ -18,49 +18,23 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateBlockTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $modules = array(
+  public static $modules = [
     'block',
     'views',
     'comment',
     'menu_ui',
     'block_content',
-    'node',
-  );
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+    $this->installConfig(['block_content']);
     $this->installEntitySchema('block_content');
-
-    $entities = array(
-      entity_create('menu', array('id' => 'primary-links')),
-      entity_create('menu', array('id' => 'secondary-links')),
-      entity_create('block_content', array('id' => 1, 'type' => 'basic', 'info' => $this->randomMachineName(8))),
-      entity_create('block_content', array('id' => 2, 'type' => 'basic', 'info' => $this->randomMachineName(8))),
-    );
-    foreach ($entities as $entity) {
-      $entity->enforceIsNew(TRUE);
-      $entity->save();
-    }
-    $this->prepareMigrations(array(
-      'd6_custom_block' => array(
-        array(array(1), array(1)),
-        array(array(2), array(2)),
-      ),
-      'menu' => array(
-        array(array('menu1'), array('menu')),
-      ),
-      'd6_user_role' => array(
-        array(array(2), array('authenticated')),
-        array(array(3), array('migrate_test_role_1')),
-      ),
-    ));
 
     // Set Bartik and Seven as the default public and admin theme.
     $config = $this->config('system.theme');
@@ -69,9 +43,17 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $config->save();
 
     // Install one of D8's test themes.
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
 
-    $this->executeMigration('d6_block');
+    $this->executeMigrations([
+      'd6_filter_format',
+      'block_content_type',
+      'block_content_body_field',
+      'd6_custom_block',
+      'menu',
+      'd6_user_role',
+      'd6_block',
+    ]);
   }
 
   /**

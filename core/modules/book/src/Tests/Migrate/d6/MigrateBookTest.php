@@ -17,39 +17,19 @@ use Drupal\node\Entity\Node;
  */
 class MigrateBookTest extends MigrateDrupal6TestBase {
 
-  public static $modules = array('book', 'system', 'node', 'field', 'text', 'entity_reference', 'user');
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['book'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    $this->installEntitySchema('node');
-    $this->installSchema('book', array('book'));
-    $this->installSchema('node', array('node_access'));
-
-    // Create a default bogus mapping for all variants of d6_node.
-    $id_mappings = array(
-      'd6_node:*' => array(
-        array(
-          array(0),
-          array(0),
-        ),
-      ),
-    );
-    for ($i = 4; $i <= 8; $i++) {
-      $entity = entity_create('node', array(
-        'type' => 'story',
-        'title' => "Node $i",
-        'nid' => $i,
-        'status' => TRUE,
-      ));
-      $entity->enforceIsNew();
-      $entity->save();
-      $id_mappings['d6_node__story'][] = array(array($i), array($i));
-    }
-    $this->prepareMigrations($id_mappings);
+    $this->installSchema('book', ['book']);
+    $this->installSchema('node', ['node_access']);
+    $this->migrateContent();
     $this->executeMigration('d6_book');
   }
 

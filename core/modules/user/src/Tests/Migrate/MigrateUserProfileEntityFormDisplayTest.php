@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests\Migrate;
 
-use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -17,81 +17,23 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('link', 'options', 'datetime', 'text');
-
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    // Create some fields so the data gets stored.
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_color',
-      'type' => 'text',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_biography',
-      'type' => 'text_long',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_sell_address',
-      'type' => 'boolean',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_sold_to',
-      'type' => 'list_string',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_bands',
-      'type' => 'text',
-      'cardinality' => -1,
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_blog',
-      'type' => 'link',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_birthdate',
-      'type' => 'datetime',
-    ))->save();
-    entity_create('field_storage_config', array(
-      'entity_type' => 'user',
-      'field_name' => 'profile_love_migrations',
-      'type' => 'boolean',
-    ))->save();
-
-    $field_data = Database::getConnection('default', 'migrate')
-      ->select('profile_fields', 'u')
-      ->fields('u')
-      ->execute()
-      ->fetchAll();
-    foreach ($field_data as $field) {
-      entity_create('field_config', array(
-        'label' => $field->title,
-        'description' => '',
-        'field_name' => $field->name,
-        'entity_type' => 'user',
-        'bundle' => 'user',
-        'required' => 1,
-      ))->save();
-    }
-
-    $this->executeMigration('user_profile_entity_form_display');
+    $this->executeMigrations([
+      'user_profile_field',
+      'user_profile_field_instance',
+      'user_profile_entity_form_display',
+    ]);
   }
 
   /**
    * Tests migration of user profile fields.
    */
   public function testUserProfileEntityFormDisplay() {
-    $display = entity_get_form_display('user', 'user', 'default');
+    $display = EntityFormDisplay::load('user.user.default');
 
     // Test a text field.
     $component = $display->getComponent('profile_color');

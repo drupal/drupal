@@ -20,26 +20,16 @@ class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = array('contact');
+  public static $modules = ['contact'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    // Add some id mappings for the dependent migrations.
-    $id_mappings = array(
-      'd6_contact_category' => array(
-        array(array(1), array('website_feedback')),
-        array(array(2), array('some_other_category')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-    $this->executeMigration('d6_contact_settings');
+    $this->executeMigrations(['d6_contact_category', 'd6_contact_settings']);
   }
 
   /**

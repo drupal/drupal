@@ -48,3 +48,6 @@ process:
       4: true # PROFILE_HIDDEN
 destination:
   plugin: component_entity_form_display
+migration_dependencies:
+  required:
+    - user_profile_field_instance

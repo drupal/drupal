@@ -19,9 +19,7 @@ use Drupal\taxonomy\VocabularyInterface;
 class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = array('taxonomy');
 

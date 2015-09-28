@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests\Migrate;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -17,27 +18,22 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  static $modules = array('link', 'options', 'datetime', 'text');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('user_profile_field');
-    $this->executeMigration('user_profile_field_instance');
-    $this->executeMigration('user_profile_entity_display');
+    $this->executeMigrations([
+      'user_profile_field',
+      'user_profile_field_instance',
+      'user_profile_entity_display',
+    ]);
   }
 
   /**
    * Tests migration of user profile fields.
    */
   public function testUserProfileFields() {
-    $display = entity_get_display('user', 'user', 'default');
+    $display = EntityViewDisplay::load('user.user.default');
 
     // Test a text field.
     $component = $display->getComponent('profile_color');

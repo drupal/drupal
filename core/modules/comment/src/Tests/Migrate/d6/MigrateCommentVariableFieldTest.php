@@ -17,31 +17,19 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateCommentVariableFieldTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('comment', 'node');
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['comment'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    foreach (array('page', 'story', 'test') as $type) {
-      entity_create('node_type', array('type' => $type))->save();
-    }
-    foreach (['comment', 'comment_no_subject'] as $comment_type) {
-      entity_create('comment_type', array(
-        'id' => $comment_type,
-        'target_entity_type_id' => 'node',
-      ))
-      ->save();
-    }
-    // Add some id mappings for the dependant migrations.
-    $id_mappings = array(
-      'd6_comment_type' => array(
-        array(array('comment'), array('comment_no_subject')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-    $this->executeMigration('d6_comment_field');
+    $this->installConfig(['comment']);
+    $this->migrateContentTypes();
+    $this->executeMigrations(['d6_comment_type', 'd6_comment_field']);
   }
 
   /**

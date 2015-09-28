@@ -32,9 +32,11 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
 
-    $this->executeMigration('d7_filter_format');
-    $this->executeMigration('d7_user_role');
-    $this->executeMigration('d7_user');
+    $this->executeMigrations([
+      'd7_filter_format',
+      'd7_user_role',
+      'd7_user',
+    ]);
     // The test database doesn't include uid 1, so we'll need to create it.
     User::create(array(
       'uid' => 1,
@@ -49,9 +51,11 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
         array(array(0), array(0)),
       ),
     ));
-    $this->executeMigration('d7_node__test_content_type');
-    $this->executeMigration('d7_comment_type');
-    $this->executeMigration('d7_comment');
+    $this->executeMigrations([
+      'd7_node__test_content_type',
+      'd7_comment_type',
+      'd7_comment',
+    ]);
   }
 
   /**

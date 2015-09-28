@@ -16,8 +16,6 @@ use Drupal\migrate\Entity\Migration;
  */
 class MigrateNodeBuilderTest extends MigrateDrupal6TestBase {
 
-  public static $modules = ['migrate', 'migrate_drupal', 'node'];
-
   /**
    * @var MigrationInterface[]
    */

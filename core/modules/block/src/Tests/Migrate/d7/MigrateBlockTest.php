@@ -18,10 +18,8 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
  */
 class MigrateBlockTest extends MigrateDrupal7TestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
+ /**
+   * {@inheritdoc}
    */
   static $modules = [
     'block',
@@ -52,12 +50,14 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     // Install one of D8's test themes.
     \Drupal::service('theme_handler')->install(['bartik']);
 
-    $this->executeMigration('d7_filter_format');
-    $this->executeMigration('d7_user_role');
-    $this->executeMigration('block_content_type');
-    $this->executeMigration('block_content_body_field');
-    $this->executeMigration('d7_custom_block');
-    $this->executeMigration('d7_block');
+    $this->executeMigrations([
+      'd7_filter_format',
+      'd7_user_role',
+      'block_content_type',
+      'block_content_body_field',
+      'd7_custom_block',
+      'd7_block',
+    ]);
   }
 
   /**

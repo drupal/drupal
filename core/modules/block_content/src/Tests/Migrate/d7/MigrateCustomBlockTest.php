@@ -32,10 +32,12 @@ class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
     $this->installConfig(static::$modules);
     $this->installEntitySchema('block_content');
 
-    $this->executeMigration('d7_filter_format');
-    $this->executeMigration('block_content_type');
-    $this->executeMigration('block_content_body_field');
-    $this->executeMigration('d7_custom_block');
+    $this->executeMigrations([
+      'd7_filter_format',
+      'block_content_type',
+      'block_content_body_field',
+      'd7_custom_block',
+    ]);
   }
 
   /**

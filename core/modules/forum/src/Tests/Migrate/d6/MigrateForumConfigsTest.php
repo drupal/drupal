@@ -20,9 +20,7 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = array('comment', 'forum', 'taxonomy');
 
@@ -31,11 +29,7 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->prepareMigrations(array(
-      'd6_taxonomy_vocabulary' => array(
-        array(array(1), array('vocabulary_1_i_0_')),
-      )
-    ));
+    $this->executeMigration('d6_taxonomy_vocabulary');
     $this->executeMigration('d6_forum_settings');
   }
 

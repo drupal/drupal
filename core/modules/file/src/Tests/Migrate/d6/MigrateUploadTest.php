@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests\Migrate\d6;
 
+use Drupal\file\Entity\File;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
 /**
@@ -14,22 +16,42 @@ use Drupal\node\Entity\Node;
  *
  * @group migrate_drupal_6
  */
-class MigrateUploadTest extends MigrateUploadBase {
+class MigrateUploadTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $id_mappings = array(
-      'd6_node:*' => array(
-        array(
-          array(0),
-          array(0),
-        ),
-      ),
-    );
+
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('node');
+    $this->installSchema('file', ['file_usage']);
+    $this->installSchema('node', ['node_access']);
+
+    $id_mappings = array('d6_file' => array());
+    // Create new file entities.
+    for ($i = 1; $i <= 3; $i++) {
+      $file = File::create(array(
+        'fid' => $i,
+        'uid' => 1,
+        'filename' => 'druplicon.txt',
+        'uri' => "public://druplicon-$i.txt",
+        'filemime' => 'text/plain',
+        'created' => 1,
+        'changed' => 1,
+        'status' => FILE_STATUS_PERMANENT,
+      ));
+      $file->enforceIsNew();
+      file_put_contents($file->getFileUri(), 'hello world');
+
+      // Save it, inserting a new record.
+      $file->save();
+      $id_mappings['d6_file'][] = array(array($i), array($i));
+    }
     $this->prepareMigrations($id_mappings);
+
+    $this->migrateContent();
     $this->executeMigration('d6_upload');
   }
 
@@ -37,9 +59,11 @@ class MigrateUploadTest extends MigrateUploadBase {
    * Test upload migration from Drupal 6 to Drupal 8.
    */
   function testUpload() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
-    $node_storage->resetCache(array(1, 2));
-    $nodes = Node::loadMultiple(array(1, 2));
+    $this->container->get('entity.manager')
+      ->getStorage('node')
+      ->resetCache([1, 2]);
+
+    $nodes = Node::loadMultiple([1, 2]);
     $node = $nodes[1];
     $this->assertIdentical(1, count($node->upload));
     $this->assertIdentical('1', $node->upload[0]->target_id);

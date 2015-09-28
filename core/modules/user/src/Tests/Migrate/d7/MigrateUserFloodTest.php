@@ -17,13 +17,6 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 class MigrateUserFloodTest extends MigrateDrupal7TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
-   */
-  static $modules = array('system');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {

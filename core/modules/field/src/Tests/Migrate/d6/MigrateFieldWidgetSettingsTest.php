@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\Migrate\d6;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -17,51 +18,11 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array(
-    'field',
-    'telephone',
-    'link',
-    'file',
-    'image',
-    'datetime',
-    'node',
-    'text',
-  );
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    entity_create('node_type', array('type' => 'test_page'))->save();
-    entity_create('node_type', array('type' => 'story'))->save();
-
-    // Add some id mappings for the dependant migrations.
-    $id_mappings = array(
-      'd6_field_instance' => array(
-        array(array('fieldname', 'page'), array('node', 'fieldname', 'page')),
-      ),
-      'd6_field' => array(
-        array(array('field_test'), array('node', 'field_test')),
-        array(array('field_test_two'), array('node', 'field_test_two')),
-        array(array('field_test_three'), array('node', 'field_test_three')),
-        array(array('field_test_email'), array('node', 'field_test_email')),
-        array(array('field_test_link'), array('node', 'field_test_link')),
-        array(array('field_test_filefield'), array('node', 'field_test_filefield')),
-        array(array('field_test_imagefield'), array('node', 'field_test_imagefield')),
-        array(array('field_test_phone'), array('node', 'field_test_phone')),
-        array(array('field_test_date'), array('node', 'field_test_date')),
-        array(array('field_test_datestamp'), array('node', 'field_test_datestamp')),
-        array(array('field_test_datetime'), array('node', 'field_test_datetime')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-    $this->executeMigration('d6_field_instance_widget_settings');
+    $this->migrateFields();
   }
 
   /**
@@ -69,7 +30,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testWidgetSettings() {
     // Test the config can be loaded.
-    $form_display = entity_load('entity_form_display', 'node.story.default');
+    $form_display = EntityFormDisplay::load('node.story.default');
     $this->assertIdentical(FALSE, is_null($form_display), "Form display node.story.default loaded with config.");
 
     // Text field.
@@ -138,7 +99,6 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     $component = $form_display->getComponent('field_test_datetime');
     $expected['weight'] = 12;
     $this->assertIdentical($expected, $component);
-
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\Component\Utility\Random;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Tests\MigrateDumpAlterInterface;
 use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
@@ -29,13 +30,6 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
   protected static $tempFilename;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('file');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -45,12 +39,11 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->installConfig(['file']);
 
     /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
-    $migration = entity_load('migration', 'd6_file');
+    $migration = Migration::load('d6_file');
     $source = $migration->get('source');
     $source['site_path'] = 'core/modules/simpletest';
     $migration->set('source', $source);
     $this->executeMigration($migration);
-    $this->standalone = TRUE;
   }
 
   /**
@@ -65,13 +58,10 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->assertIdentical('image/png', $file->getMimeType());
     $this->assertIdentical("1", $file->getOwnerId());
 
-    // It is pointless to run the second half from MigrateDrupal6Test.
-    if (empty($this->standalone)) {
-      return;
-    }
-
     // Test that we can re-import and also test with file_directory_path set.
-    db_truncate(entity_load('migration', 'd6_file')->getIdMap()->mapTableName())->execute();
+    \Drupal::database()
+      ->truncate(Migration::load('d6_file')->getIdMap()->mapTableName())
+      ->execute();
 
     // Update the file_directory_path.
     Database::getConnection('default', 'migrate')
@@ -85,7 +75,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->condition('name', 'file_directory_temp')
       ->execute();
 
-    $migration = entity_load_unchanged('migration', 'd6_file');
+    $migration = \Drupal::entityManager()->getStorage('migration')->loadUnchanged('d6_file');
     $this->executeMigration($migration);
 
     $file = File::load(2);

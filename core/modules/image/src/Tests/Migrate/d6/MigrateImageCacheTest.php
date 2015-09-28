@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateImageCacheTest.
+ * Contains \Drupal\image\Tests\Migrate\d6\MigrateImageCacheTest.
  */
 
 namespace Drupal\image\Tests\Migrate\d6;
@@ -22,25 +22,17 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateImageCacheTest extends MigrateDrupal6TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('image');
-
-  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
-    $this->prepareMigrations(array(
-      'd6_imagecache_presets' => [],
-    ));
     $this->installConfig(['image']);
   }
 
   /**
    * Override parent to setup migration prior to run.
+   *
+   * @deprecated
    */
   public function testSourcePlugin() {
     $this->executeMigration('d6_imagecache_presets');

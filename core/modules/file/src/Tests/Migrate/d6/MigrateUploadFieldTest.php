@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -18,18 +19,11 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateUploadFieldTest extends MigrateDrupal6TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
-   */
-  static $modules = array('file', 'node');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_upload_field');
+    $this->migrateFields();
   }
 
   /**
@@ -38,7 +32,7 @@ class MigrateUploadFieldTest extends MigrateDrupal6TestBase {
   public function testUpload() {
     $field_storage = FieldStorageConfig::load('node.upload');
     $this->assertIdentical('node.upload', $field_storage->id());
-    $this->assertIdentical(array('node', 'upload'), entity_load('migration', 'd6_upload_field')->getIdMap()->lookupDestinationID(array('')));
+    $this->assertIdentical(array('node', 'upload'), Migration::load('d6_upload_field')->getIdMap()->lookupDestinationID(array('')));
   }
 
 }

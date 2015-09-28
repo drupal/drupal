@@ -20,11 +20,9 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = array('book', 'system', 'node', 'field', 'text', 'entity_reference');
+  public static $modules = ['book'];
 
   /**
    * {@inheritdoc}

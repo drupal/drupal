@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\Core\Database\Database;
 use Drupal\migrate\Entity\Migration;
 
 /**
@@ -22,24 +21,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    $id_mappings = array(
-      'd6_node:*' => array(
-        array(array(1), array(1)),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-
-    // Create our users for the node authors.
-    $query = Database::getConnection('default', 'migrate')->query('SELECT * FROM {users} WHERE uid NOT IN (0, 1)');
-    while(($row = $query->fetchAssoc()) !== FALSE) {
-      $user = entity_create('user', $row);
-      $user->enforceIsNew();
-      $user->save();
-    }
-
-    $migrations = Migration::loadMultiple(['d6_node_revision:*']);
-    array_walk($migrations, [$this, 'executeMigration']);
+    $this->executeMigrations(['d6_node:*', 'd6_node_revision:*']);
   }
 
   /**

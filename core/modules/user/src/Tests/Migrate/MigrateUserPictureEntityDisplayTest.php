@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests\Migrate;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
@@ -17,11 +18,9 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 class MigrateUserPictureEntityDisplayTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $modules = array('file', 'image');
+  public static $modules = ['file', 'image'];
 
   /**
    * {@inheritdoc}
@@ -29,16 +28,18 @@ class MigrateUserPictureEntityDisplayTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('file');
-    $this->executeMigration('user_picture_field');
-    $this->executeMigration('user_picture_field_instance');
-    $this->executeMigration('user_picture_entity_display');
+    $this->executeMigrations([
+      'user_picture_field',
+      'user_picture_field_instance',
+      'user_picture_entity_display',
+    ]);
   }
 
   /**
    * Tests the Drupal 7 user picture to Drupal 8 entity display migration.
    */
   public function testUserPictureEntityDisplay() {
-    $component = entity_get_display('user', 'user', 'default')->getComponent('user_picture');
+    $component = EntityViewDisplay::load('user.user.default')->getComponent('user_picture');
     $this->assertIdentical('image', $component['type']);
     $this->assertIdentical('', $component['settings']['image_style']);
     $this->assertIdentical('content', $component['settings']['image_link']);

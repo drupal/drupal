@@ -18,7 +18,7 @@ use Drupal\taxonomy\TermInterface;
  */
 class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
-  static $modules = array('taxonomy', 'text');
+  public static $modules = array('taxonomy', 'text');
 
   /**
    * {@inheritdoc}
@@ -26,8 +26,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('taxonomy_term');
-    $this->executeMigration('d7_taxonomy_vocabulary');
-    $this->executeMigration('d7_taxonomy_term');
+    $this->executeMigrations(['d7_taxonomy_vocabulary', 'd7_taxonomy_term']);
   }
 
   /**

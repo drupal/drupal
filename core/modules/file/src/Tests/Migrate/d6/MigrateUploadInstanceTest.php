@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -18,40 +19,11 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
 
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
-   */
-  static $modules = array('file', 'node');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    // Add some node mappings to get past checkRequirements().
-    $id_mappings = array(
-      'd6_upload_field' => array(
-        array(array(1), array('node', 'upload')),
-      ),
-      'd6_node_type' => array(
-        array(array('page'), array('page')),
-        array(array('story'), array('story')),
-      ),
-    );
-    $this->prepareMigrations($id_mappings);
-
-    foreach (array('page', 'story') as $type) {
-      entity_create('node_type', array('type' => $type))->save();
-    }
-    entity_create('field_storage_config', array(
-      'entity_type' => 'node',
-      'field_name' => 'upload',
-      'type' => 'file',
-      'translatable' => '0',
-    ))->save();
-
-    $this->executeMigration('d6_upload_field_instance');
+    $this->migrateFields();
   }
 
   /**
@@ -72,7 +44,7 @@ class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load('node.article.upload');
     $this->assertTrue(is_null($field));
 
-    $this->assertIdentical(array('node', 'page', 'upload'), entity_load('migration', 'd6_upload_field_instance')->getIdMap()->lookupDestinationID(array('page')));
+    $this->assertIdentical(array('node', 'page', 'upload'), Migration::load('d6_upload_field_instance')->getIdMap()->lookupDestinationID(array('page')));
   }
 
 }
