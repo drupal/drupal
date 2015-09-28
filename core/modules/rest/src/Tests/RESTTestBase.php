@@ -389,6 +389,7 @@ abstract class RESTTestBase extends WebTestBase {
     $node->set('promote', NULL);
     $node->set('sticky', NULL);
     $node->set('revision_timestamp', NULL);
+    $node->set('revision_log', NULL);
     $node->set('uid', NULL);
 
     return $node;

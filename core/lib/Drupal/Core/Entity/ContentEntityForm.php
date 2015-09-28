@@ -65,6 +65,15 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+    // Update the changed timestamp of the entity.
+    $this->updateChangedTime($this->entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildEntity(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
@@ -266,6 +275,20 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     if ($this->isDefaultFormLangcode($form_state)) {
       $langcode = $entity->language()->getId();
       $form_state->set('langcode', $langcode);
+    }
+  }
+
+  /**
+   * Updates the changed time of the entity.
+   *
+   * Applies only if the entity implements the EntityChangedInterface.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity updated with the submitted values.
+   */
+  public function updateChangedTime(EntityInterface $entity) {
+    if ($entity->getEntityType()->isSubclassOf(EntityChangedInterface::class)) {
+      $entity->setChangedTime(REQUEST_TIME);
     }
   }
 

@@ -46,12 +46,4 @@ class EntityTestConstraints extends EntityTest implements EntityChangedInterface
 
     return $fields;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
 }

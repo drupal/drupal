@@ -479,6 +479,13 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if (isset($form['actions']['delete'])) {
       $form['actions']['delete']['#submit'][] = array($this, 'entityFormDelete');
     }
+
+    // Handle entity form submission before the entity has been saved.
+    foreach (Element::children($form['actions']) as $action) {
+      if (isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] == 'submit') {
+        array_unshift($form['actions'][$action]['#submit'], [$this, 'entityFormSubmit']);
+      }
+    }
   }
 
   /**
@@ -579,7 +586,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $metadata->setAuthor(!empty($values['uid']) ? User::load($values['uid']) : User::load(0));
     $metadata->setPublished(!empty($values['status']));
     $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME);
-    $metadata->setChangedTime(REQUEST_TIME);
 
     $source_langcode = $this->getSourceLangcode($form_state);
     if ($source_langcode) {
@@ -608,6 +614,30 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       if (!empty($translation['created']) && strtotime($translation['created']) === FALSE) {
         $form_state->setErrorByName('content_translation][created', t('You have to specify a valid translation authoring date.'));
       }
+    }
+  }
+
+  /**
+   * Form submission handler for ContentTranslationHandler::entityFormAlter().
+   *
+   * Updates metadata fields, which should be updated only after the validation
+   * has run and before the entity is saved.
+   */
+  function entityFormSubmit($form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
+    $form_object = $form_state->getFormObject();
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $form_object->getEntity();
+
+    // ContentEntityForm::submit will update the changed timestamp on submit
+    // after the entity has been validated, so that it does not break the
+    // EntityChanged constraint validator. The content translation metadata
+    // field for the changed timestamp  does not have such a constraint defined
+    // at the moment, but it is correct to update it's value in a submission
+    // handler as well and have the same logic like in the Form API.
+    if ($entity->hasField('content_translation_changed')) {
+      $metadata = $this->manager->getTranslationMetadata($entity);
+      $metadata->setChangedTime(REQUEST_TIME);
     }
   }
 

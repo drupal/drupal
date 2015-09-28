@@ -234,13 +234,6 @@ class Node extends ContentEntityBase implements NodeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isPromoted() {
     return (bool) $this->get('promote')->value;
   }
@@ -498,6 +491,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDescription(t('Briefly describe the changes you have made.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
+      ->setDefaultValue('')
       ->setDisplayOptions('form', array(
         'type' => 'string_textarea',
         'weight' => 25,

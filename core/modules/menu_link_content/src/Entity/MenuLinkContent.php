@@ -135,13 +135,6 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPluginDefinition() {
     $definition = array();
     $definition['class'] = 'Drupal\menu_link_content\Plugin\Menu\MenuLinkContent';

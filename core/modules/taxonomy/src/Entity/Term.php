@@ -190,13 +190,6 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDescription() {
     return $this->get('description')->value;
   }

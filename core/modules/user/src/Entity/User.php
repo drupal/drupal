@@ -392,13 +392,6 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setExistingPassword($password) {
     $this->get('pass')->existing = $password;
   }

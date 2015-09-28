@@ -72,12 +72,4 @@ class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterfa
     sleep(1);
     parent::save();
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
 }

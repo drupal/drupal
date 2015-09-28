@@ -530,13 +530,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     if (empty($values['comment_type']) && !empty($values['field_name']) && !empty($values['entity_type'])) {
       $field_storage = FieldStorageConfig::loadByName($values['entity_type'], $values['field_name']);

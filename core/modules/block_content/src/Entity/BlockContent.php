@@ -222,13 +222,6 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getRevisionLog() {
     return $this->get('revision_log')->value;
   }
