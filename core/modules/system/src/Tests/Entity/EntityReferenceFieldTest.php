@@ -238,16 +238,15 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     });
     $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
       $entity->user_id[0]->get('entity')->setValue($user);
-      $entity->user_id[0]->get('target_id')->setValue(-1);
     });
     $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
-      $entity->user_id->setValue(array('entity' => $user, 'target_id' => -1));
+      $entity->user_id->setValue(array('entity' => $user, 'target_id' => NULL));
     });
     try {
       $message = 'Setting both the entity and an invalid target_id property fails.';
       $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
         $user->save();
-        $entity->user_id->setValue(array('entity' => $user, 'target_id' => -1));
+        $entity->user_id->setValue(array('entity' => $user, 'target_id' => $this->generateRandomEntityId()));
       });
       $this->fail($message);
     }
@@ -273,16 +272,15 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     });
     $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
       $entity->user_role[0]->get('entity')->setValue($role);
-      $entity->user_role[0]->get('target_id')->setValue(-1);
     });
     $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
-      $entity->user_role->setValue(array('entity' => $role, 'target_id' => -1));
+      $entity->user_role->setValue(array('entity' => $role, 'target_id' => NULL));
     });
     try {
       $message = 'Setting both the entity and an invalid target_id property fails.';
       $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
         $role->save();
-        $entity->user_role->setValue(array('entity' => $role, 'target_id' => -1));
+        $entity->user_role->setValue(array('entity' => $role, 'target_id' => $this->generateRandomEntityId(TRUE)));
       });
       $this->fail($message);
     }

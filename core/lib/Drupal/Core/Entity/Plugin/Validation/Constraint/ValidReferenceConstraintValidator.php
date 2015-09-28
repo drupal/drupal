@@ -19,8 +19,16 @@ class ValidReferenceConstraintValidator extends ConstraintValidator {
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
-    /* @var \Drupal\Core\Field\FieldItemInterface $value */
+    /** @var \Drupal\Core\Field\FieldItemInterface $value */
+    /** @var ValidReferenceConstraint $constraint */
     if (!isset($value)) {
+      return;
+    }
+    // We don't use a regular NotNull constraint for the target_id property as
+    // a NULL value is valid if the entity property contains an unsaved entity.
+    // @see \Drupal\Core\TypedData\DataReferenceTargetDefinition::getConstraints
+    if (!$value->isEmpty() && $value->target_id === NULL && !$value->entity->isNew()) {
+      $this->context->addViolation($constraint->nullMessage);
       return;
     }
     $id = $value->get('target_id')->getValue();

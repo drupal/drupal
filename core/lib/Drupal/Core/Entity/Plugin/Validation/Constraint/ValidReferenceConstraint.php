@@ -28,4 +28,11 @@ class ValidReferenceConstraint extends Constraint {
    */
   public $message = 'The referenced entity (%type: %id) does not exist.';
 
+  /**
+   * Validation message when the target_id is empty.
+   *
+   * @var string
+   */
+  public $nullMessage = 'This value should not be null.';
+
 }
