@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\migrate\Plugin\migrate\destination\Config.
@@ -78,7 +79,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       }
     }
     $this->config->save();
-    return TRUE;
+    return [$this->config->getName()];
   }
 
   /**
@@ -92,7 +93,8 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    * {@inheritdoc}
    */
   public function getIds() {
-    return array();
+    $ids['config_name']['type'] = 'string';
+    return $ids;
   }
 
   /**

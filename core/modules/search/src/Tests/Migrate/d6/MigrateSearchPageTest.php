@@ -55,13 +55,15 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
       ->condition('name', 'node_rank_comments')
       ->execute();
 
+    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $migration = \Drupal::entityManager()
       ->getStorage('migration')
       ->loadUnchanged('d6_search_page');
+    // Indicate we're rerunning a migration that's already run.
+    $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);
 
-    $search_page = SearchPage::load($id);
-    $configuration = $search_page->getPlugin()->getConfiguration();
+    $configuration = SearchPage::load($id)->getPlugin()->getConfiguration();
     $this->assertIdentical(4, $configuration['rankings']['comments']);
   }
 

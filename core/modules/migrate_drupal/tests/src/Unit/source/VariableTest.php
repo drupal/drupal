@@ -32,6 +32,7 @@ class VariableTest extends MigrateSqlSourceTestCase {
 
   protected $expectedResults = array(
     array(
+      'id' => 'foo',
       'foo' => 1,
       'bar' => FALSE,
     ),

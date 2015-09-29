@@ -122,6 +122,13 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   }
 
   /**
+   * Test the source defines a valid ID.
+   */
+  public function testSourceId() {
+    $this->assertNotEmpty($this->source->getIds());
+  }
+
+  /**
    * @param \Drupal\migrate\Row $row
    * @param string $key
    * @return mixed

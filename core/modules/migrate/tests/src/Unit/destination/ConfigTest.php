@@ -37,6 +37,9 @@ class ConfigTest extends UnitTestCase {
     }
     $config->expects($this->once())
       ->method('save');
+    $config->expects($this->once())
+      ->method('getName')
+      ->willReturn('d8_config');
     $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())
       ->method('getEditable')
@@ -49,7 +52,8 @@ class ConfigTest extends UnitTestCase {
       ->method('getRawDestination')
       ->will($this->returnValue($source));
     $destination = new Config(array('config_name' => 'd8_config'), 'd8_config', array('pluginId' => 'd8_config'), $migration, $config_factory);
-    $destination->import($row);
+    $destination_id = $destination->import($row);
+    $this->assertEquals($destination_id, ['d8_config']);
   }
 
 }

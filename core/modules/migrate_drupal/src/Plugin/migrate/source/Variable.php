@@ -53,7 +53,10 @@ class Variable extends DrupalSqlBase {
    *   Only those values are returned that are actually in the database.
    */
   protected function values() {
-    return array_map('unserialize', $this->prepareQuery()->execute()->fetchAllKeyed());
+    // Create an ID field so we can record migration in the map table.
+    // Arbitrarily, use the first variable name.
+    $values['id'] = reset($this->variables);
+    return $values + array_map('unserialize', $this->prepareQuery()->execute()->fetchAllKeyed());
   }
 
   /**
@@ -84,7 +87,8 @@ class Variable extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    return array();
+    $ids['id']['type'] = 'string';
+    return $ids;
   }
 
 }
