@@ -10,28 +10,36 @@ namespace Drupal\Component\Utility;
 /**
  * Formats a string for HTML display by replacing variable placeholders.
  *
- * When cast to a string it replaces variable placeholders in the string with
- * the arguments passed in during construction and escapes the values so they
- * can be safely displayed as HTML. It should be used on any unknown text that
- * is intended to be printed to an HTML page (especially text that may have come
- * from untrusted users, since in that case it prevents cross-site scripting and
- * other security problems).
- *
- * This class is not intended for passing arbitrary user input into any HTML
- * attribute value, as only URL attributes such as "src" and "href" are
- * supported (using ":variable"). Never use this method on unsafe HTML
- * attributes such as "on*" and "style" and take care when using this with
- * unsupported attributes such as "title" or "alt" as this can lead to
- * unexpected output.
+ * When cast to a string, this object replaces variable placeholders in the
+ * string with the arguments passed in during construction and escapes the
+ * values so they can be safely displayed as HTML. See the documentation of
+ * \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat() for
+ * details on the supported placeholders and how to use them securely. Incorrect
+ * use of this class can result in security vulnerabilities.
  *
  * In most cases, you should use TranslatableString or PluralTranslatableString
  * rather than this object, since they will translate the text (on
- * non-English-only sites) in addition to formatting it.
+ * non-English-only sites) in addition to formatting it. Variables concatenated
+ * without the insertion of language-specific words or punctuation are some
+ * examples where translation is not applicable and using this class directly
+ * directly is appropriate.
+ *
+ * This class is designed for formatting messages that are mostly text, not as
+ * an HTML template language. As such, $string passed to the constructor should
+ * contain minimal HTML.
+ *
+ * The result of casting this object to a string should not be used within the
+ * "<" and ">" of an HTML tag, such as in HTML attribute values. This would be a
+ * security risk.
+ *
+ * To build HTML that cannot meet these restrictions, use an HTML template
+ * language such as Twig, rather than this class.
  *
  * @ingroup sanitization
  *
  * @see \Drupal\Core\StringTranslation\TranslatableString
  * @see \Drupal\Core\StringTranslation\PluralTranslatableString
+ * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
  */
 class FormattableString implements SafeStringInterface {
 
