@@ -4,7 +4,7 @@
  */
 
 .contextual-region {
-  position: relative;
+  position: inherit;
 }
 .contextual .trigger:focus {
   /* Override the .focusable position: static */
