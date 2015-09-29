@@ -1,14 +1,14 @@
-id: d6_aggregator_item
+id: d7_aggregator_item
 label: Aggregator items
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
   plugin: aggregator_item
 process:
   iid: iid
   fid:
     plugin: migration
-    migration: d6_aggregator_feed
+    migration: d7_aggregator_feed
     source: fid
   title: title
   link: link
@@ -20,4 +20,4 @@ destination:
   plugin: entity:aggregator_item
 migration_dependencies:
   required:
-    - d6_aggregator_feed
+    - d7_aggregator_feed

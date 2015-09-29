@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Plugin\migrate\source\d6\AggregatorItem.
+ * Contains \Drupal\aggregator\Plugin\migrate\source\AggregatorItem.
  */
 
-namespace Drupal\aggregator\Plugin\migrate\source\d6;
+namespace Drupal\aggregator\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal 6 aggregator item source from database.
+ * Drupal aggregator item source from database.
  *
  * @MigrateSource(
- *   id = "d6_aggregator_item",
+ *   id = "aggregator_item",
  *   source_provider = "aggregator"
  * )
  */
@@ -23,11 +23,9 @@ class AggregatorItem extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('aggregator_item', 'ai')
-      ->fields('ai', array('iid', 'fid', 'title', 'link', 'author',
-        'description', 'timestamp', 'guid'))
+    return $this->select('aggregator_item', 'ai')
+      ->fields('ai')
       ->orderBy('iid');
-    return $query;
   }
 
   /**

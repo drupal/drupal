@@ -116,8 +116,22 @@ class AggregatorFeed extends DrupalDumpBase {
       'modified',
       'block',
     ))
-    ->execute();
+    ->values(array(
+      'fid' => '1',
+      'title' => 'Know Your Meme',
+      'url' => 'http://knowyourmeme.com/newsfeed.rss',
+      'refresh' => '900',
+      'checked' => '1387659487',
+      'queued' => '0',
+      'link' => 'http://knowyourmeme.com',
+      'description' => 'New items added to the News Feed',
+      'image' => 'http://b.thumbs.redditmedia.com/harEHsUUZVajabtC.png',
+      'hash' => '1c1e3b6c10ce02f226882aca11709051bba61df2b8eac17ceec5bf74048f1954',
+      'etag' => '"213cc1365b96c310e92053c5551f0504"',
+      'modified' => '0',
+      'block' => '5',
+    ))->execute();
   }
 
 }
-#8e8447ae5f187d54c5849399ea7f0983
+#82e906f4d10bd7d1d4bab524e946df94

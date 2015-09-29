@@ -1,7 +1,7 @@
-id: d6_aggregator_feed
+id: d7_aggregator_feed
 label: Aggregator feeds
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
   plugin: aggregator_feed
 process:
@@ -10,6 +10,7 @@ process:
   url: url
   refresh: refresh
   checked: checked
+  queued: queued
   link: link
   description: description
   image: image

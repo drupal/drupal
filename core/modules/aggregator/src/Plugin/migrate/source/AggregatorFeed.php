@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Plugin\migrate\source\d6\AggregatorFeed.
+ * Contains \Drupal\aggregator\Plugin\migrate\source\AggregatorFeed.
  */
 
-namespace Drupal\aggregator\Plugin\migrate\source\d6;
+namespace Drupal\aggregator\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal 6 feed source from database.
+ * Drupal feed source from database.
  *
  * @MigrateSource(
- *   id = "d6_aggregator_feed",
+ *   id = "aggregator_feed",
  *   source_provider = "aggregator"
  * )
  */
@@ -23,30 +23,15 @@ class AggregatorFeed extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('aggregator_feed', 'af')
-      ->fields('af', array(
-        'fid',
-        'title',
-        'url',
-        'refresh',
-        'checked',
-        'link',
-        'description',
-        'image',
-        'etag',
-        'modified',
-        'block',
-      ));
-
-    $query->orderBy('fid');
-    return $query;
+    return $this->select('aggregator_feed', 'af')
+      ->fields('af');
   }
 
   /**
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    $fields = array(
       'fid' => $this->t('The feed ID.'),
       'title' => $this->t('Title of the feed.'),
       'url' => $this->t('URL to the feed.'),
@@ -59,6 +44,10 @@ class AggregatorFeed extends DrupalSqlBase {
       'modified' => $this->t('When the feed was last modified.'),
       'block' => $this->t("Number of items to display in the feed's block."),
     );
+    if ($this->getModuleSchemaVersion('system') >= 7000) {
+      $fields['queued'] = $this->t('Time when this feed was queued for refresh, 0 if not queued.');
+    }
+    return $fields;
   }
 
   /**

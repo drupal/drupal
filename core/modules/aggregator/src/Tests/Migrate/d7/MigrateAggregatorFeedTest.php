@@ -2,25 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Tests\Migrate\d6\MigrateAggregatorFeedTest.
+ * Contains \Drupal\aggregator\Tests\Migrate\d7\MigrateAggregatorFeedTest.
  */
 
-namespace Drupal\aggregator\Tests\Migrate\d6;
+namespace Drupal\aggregator\Tests\Migrate\d7;
 
 use Drupal\aggregator\Entity\Feed;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
- * Tests migration of aggregator feeds.
+ * Test migration to aggregator_feed entities.
  *
- * @group migrate_drupal_6
+ * @group aggregator
  */
-class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
+class MigrateAggregatorFeedTest extends MigrateDrupal7TestBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['aggregator'];
+  public static $modules = array('aggregator');
 
   /**
    * {@inheritdoc}
@@ -28,7 +25,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('aggregator_feed');
-    $this->executeMigration('d6_aggregator_feed');
+    $this->executeMigration('d7_aggregator_feed');
   }
 
   /**
@@ -36,7 +33,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
    */
   public function testAggregatorFeedImport() {
     /** @var \Drupal\aggregator\Entity\Feed $feed */
-    $feed = Feed::load(5);
+    $feed = Feed::load(1);
     $this->assertIdentical('Know Your Meme', $feed->title->value);
     $this->assertIdentical('en', $feed->language()->getId());
     $this->assertIdentical('http://knowyourmeme.com/newsfeed.rss', $feed->url->value);
@@ -49,4 +46,5 @@ class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('"213cc1365b96c310e92053c5551f0504"', $feed->etag->value);
     $this->assertIdentical('0', $feed->modified->value);
   }
+
 }

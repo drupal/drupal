@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6\AggregatorFeedTest.
+ * Contains \Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d7\AggregatorFeedTest.
  */
 
-namespace Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d6;
+namespace Drupal\Tests\aggregator\Unit\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
- * Tests D6 aggregator feed source plugin.
+ * Tests D7 aggregator feed source plugin.
  *
  * @group aggregator
  */
@@ -21,7 +21,7 @@ class AggregatorFeedTest extends MigrateSqlSourceTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
     'source' => array(
-      'plugin' => 'd6_aggregator_feed',
+      'plugin' => 'd7_aggregator_feed',
     ),
   );
 
@@ -32,6 +32,7 @@ class AggregatorFeedTest extends MigrateSqlSourceTestCase {
       'url' => 'http://example.com/feed.rss',
       'refresh' => 900,
       'checked' => 0,
+      'queued' => 0,
       'link' => 'http://example.com',
       'description' => 'A vague description',
       'image' => '',
@@ -45,6 +46,7 @@ class AggregatorFeedTest extends MigrateSqlSourceTestCase {
       'url' => 'http://example.net/news.rss',
       'refresh' => 1800,
       'checked' => 0,
+      'queued' => 0,
       'link' => 'http://example.net',
       'description' => 'An even more vague description',
       'image' => '',
@@ -55,8 +57,8 @@ class AggregatorFeedTest extends MigrateSqlSourceTestCase {
   );
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   protected function setUp() {
     $this->databaseContents['aggregator_feed'] = $this->expectedResults;
     parent::setUp();
