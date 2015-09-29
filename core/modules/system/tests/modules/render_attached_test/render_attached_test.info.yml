@@ -1,0 +1,8 @@
+name: 'Rendering #attached test'
+type: module
+description: 'Support module for HtmlResponseAttachmentsTest.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - block

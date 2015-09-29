@@ -1,0 +1,55 @@
+render_attached.teapot:
+  path: '/render_attached_test/teapot'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::teapotHeaderStatus'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.header:
+  path: '/render_attached_test/header'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::header'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.head:
+  path: '/render_attached_test/head'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::head'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.feed_single:
+  path: '/render_attached_test/feed'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::feed'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.teapot_dpa:
+  path: '/render_attached_test/teapot_dpa'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::teapotHeaderStatusDpa'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.header_dpa:
+  path: '/render_attached_test/header_dpa'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::headerDpa'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.head_dpa:
+  path: '/render_attached_test/head_dpa'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::headDpa'
+  requirements:
+    _access: 'TRUE'
+
+render_attached.feed_single_dpa:
+  path: '/render_attached_test/feed_dpa'
+  defaults:
+    _controller: '\Drupal\render_attached_test\Controller\TestController::feedDpa'
+  requirements:
+    _access: 'TRUE'
