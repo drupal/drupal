@@ -19,7 +19,6 @@ use Drupal\Component\Utility\ToStringTrait;
  * This is useful for using translation in very low level subsystems like entity
  * definition and stream wrappers.
  *
- * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
  * @see \Drupal\Core\StringTranslation\TranslationManager::translate()
  * @see \Drupal\Core\StringTranslation\TranslationManager::translateString()
  * @see \Drupal\Core\Annotation\Translation
