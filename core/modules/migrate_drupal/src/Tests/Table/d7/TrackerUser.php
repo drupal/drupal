@@ -63,11 +63,11 @@ class TrackerUser extends DrupalDumpBase {
     ))
     ->values(array(
       'nid' => '1',
-      'uid' => '1',
+      'uid' => '2',
       'published' => '1',
       'changed' => '1421727536',
     ))->execute();
   }
 
 }
-#6fb17f49221d202409a1298360628d70
+#6439575c8ff5b85c7c87030634bf6b63
