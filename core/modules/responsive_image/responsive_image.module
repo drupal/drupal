@@ -178,18 +178,38 @@ function template_preprocess_responsive_image(&$variables) {
       $variables['sources'][] = responsive_image_build_source_attributes($image, $variables, $breakpoints[$breakpoint_id], $multipliers);
     }
   }
-  // Prepare the fallback image. Use srcset in the fallback image to avoid
-  // unnecessary preloading of images in older browsers. See
-  // http://scottjehl.github.io/picturefill/#using-picture and
-  // http://scottjehl.github.io/picturefill/#gotchas for more information.
-  $variables['img_element'] = array(
-    '#theme' => 'image',
-    '#srcset' => array(
-      array(
-        'uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
+
+  if (isset($variables['sources']) && count($variables['sources']) === 1 && !isset($variables['sources'][0]['media'])) {
+    // There is only one source tag with an empty media attribute. This means
+    // we can output an image tag with the srcset attribute in stead of a
+    // picture tag.
+    $variables['output_image_tag'] = TRUE;
+    foreach ($variables['sources'][0] as $attribute => $value) {
+      if ($attribute != 'type') {
+        $variables['attributes'][$attribute] = $value;
+      }
+    }
+    $variables['img_element'] = array(
+      '#theme' => 'image',
+      '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
+    );
+  }
+  else {
+    $variables['output_image_tag'] = FALSE;
+    // Prepare the fallback image. Use srcset in the fallback image to avoid
+    // unnecessary preloading of images in older browsers. See
+    // http://scottjehl.github.io/picturefill/#using-picture and
+    // http://scottjehl.github.io/picturefill/#gotchas for more information.
+    $variables['img_element'] = array(
+      '#theme' => 'image',
+      '#srcset' => array(
+        array(
+          'uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
+        ),
       ),
-    ),
-  );
+    );
+  }
+
   if (isset($variables['attributes'])) {
     if (isset($variables['attributes']['alt'])) {
       $variables['img_element']['#alt'] = $variables['attributes']['alt'];

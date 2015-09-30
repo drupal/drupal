@@ -244,6 +244,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
 
+    $this->removeWhiteSpace();
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
     // Verify that the image can be downloaded.
     $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
@@ -399,6 +400,52 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
+   * Tests responsive image formatter on node display with one source.
+   */
+  public function testResponsiveImageFieldFormattersOneSource() {
+    $this->responsiveImgStyle
+      // Test the output of an empty media query.
+      ->addImageStyleMapping('responsive_image_test_module.empty', '1x', array(
+        'image_mapping_type' => 'image_style',
+        'image_mapping' => 'medium',
+      ))
+      ->addImageStyleMapping('responsive_image_test_module.empty', '2x', array(
+          'image_mapping_type' => 'image_style',
+          'image_mapping' => 'large',
+        ))
+      ->save();
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    $this->createImageField($field_name, 'article', array('uri_scheme' => 'public'));
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
+    $node_storage->resetCache(array($nid));
+
+    // Use the responsive image formatter linked to file formatter.
+    $display_options = array(
+      'type' => 'responsive_image',
+      'settings' => array(
+        'image_link' => '',
+        'responsive_image_style' => 'style_one',
+      ),
+    );
+    $display = entity_get_display('node', 'article', 'default');
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    // View the node.
+    $this->drupalGet('node/' . $nid);
+
+    // Assert the media attribute is present if it has a value.
+    $large_style = ImageStyle::load('large');
+    $medium_style = ImageStyle::load('medium');
+    $node = $node_storage->load($nid);
+    $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
+    $this->assertRaw('<img srcset="' . $medium_style->buildUrl($image_uri) . ' 1x, ' . $large_style->buildUrl($image_uri) . ' 2x"');
+  }
+
+  /**
    * Tests responsive image formatters linked to the file or node.
    *
    * @param string $link_type
@@ -451,6 +498,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);
+    $this->removeWhiteSpace();
     switch ($link_type) {
       case 'file':
         // Make sure the link to the file is present.
