@@ -1440,6 +1440,7 @@ function system_update_8005() {
         ] + $tabs_default_settings;
         _system_update_create_block($name, $theme_name, $values);
 
+        $name = 'block.block.seven_secondary_local_tasks';
         $values = [
           'region' => 'pre_content',
           'id' => 'seven_secondary_local_tasks',
@@ -1782,6 +1783,28 @@ function system_update_8010() {
   }
 
   return $message;
+}
+
+/**
+ * Add secondary local tasks block to Seven (fixes system_update_8005).
+ */
+function system_update_8011() {
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+  $theme_name = 'seven';
+  $name = 'block.block.seven_secondary_local_tasks';
+  $values = [
+      'plugin' => 'local_tasks_block',
+      'region' => 'pre_content',
+      'id' => 'seven_secondary_local_tasks',
+      'settings.label' => 'Secondary tabs',
+      'settings.label_display' => 0,
+      'settings.primary' => FALSE,
+      'settings.secondary' => TRUE,
+      'visibility' => [],
+      'weight' => 0,
+      'langcode' => $langcode,
+    ];
+  _system_update_create_block($name, $theme_name, $values);
 }
 
 /**
