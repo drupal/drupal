@@ -19,7 +19,6 @@ settings:
   target_type: file
   display_field: false
   display_default: false
-  target_bundle: null
 module: image
 locked: false
 cardinality: 1

@@ -83,7 +83,6 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
       // storages so we end up with the default value for this setting.
       'handler' => 'default:node',
       'handler_settings' => array(),
-      'target_bundle' => NULL,
     );
     $field_settings = $field->getSettings();
     ksort($expected);

@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field module.
+ */
+
+/**
+ * Removes the stale 'target_bundle' storage setting on entity_reference fields.
+ */
+function field_update_8001() {
+  $config = \Drupal::configFactory();
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+  $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+
+  // Iterate on all fields storage.
+  foreach ($config->listAll('field.storage.') as $field_id) {
+    $field_storage = $config->getEditable($field_id);
+    $class = $field_type_manager->getPluginClass($field_storage->get('type'));
+
+    // Deal only with entity reference fields and descendants.
+    if ($class == $item_class || is_subclass_of($class, $item_class)) {
+      // Remove 'target_bundle' from settings.
+      $field_storage->clear('settings.target_bundle')->save(TRUE);
+    }
+  }
+}

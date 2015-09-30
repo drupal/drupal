@@ -355,9 +355,6 @@ base_entity_reference_field_settings:
     target_type:
       type: string
       label: 'Type of item to reference'
-    target_bundle:
-      type: string
-      label: 'Bundle of item to reference'
 
 field_config_base:
   type: config_entity

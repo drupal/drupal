@@ -33,17 +33,6 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
   /**
    * {@inheritdoc}
    */
-  public static function defaultStorageSettings() {
-    $settings = parent::defaultStorageSettings();
-    // The target bundle is handled by the 'target_bundles' property in the
-    // 'handler_settings' instance setting.
-    unset($settings['target_bundle']);
-    return $settings;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPossibleValues(AccountInterface $account = NULL) {
     return $this->getSettableValues($account);
   }

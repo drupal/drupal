@@ -689,9 +689,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $definition = BaseFieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
       ->setSetting('target_type', 'node')
-      ->setSetting('target_bundle', 'article');
+      ->setSetting('handler_settings', ['target_bundles' => ['article' => 'article']]);
     $reference_field = \Drupal::TypedDataManager()->create($definition);
-    $reference = $reference_field->appendItem(array('entity' => $node))->get('entity');
+    $reference = $reference_field->appendItem(array('entity' => $node));
     $violations = $reference->validate();
     $this->assertEqual($violations->count(), 1);
 

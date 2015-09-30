@@ -45,7 +45,6 @@ class EntityReferenceItem extends FieldItemBase {
   public static function defaultStorageSettings() {
     return array(
       'target_type' => \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user',
-      'target_bundle' => NULL,
     ) + parent::defaultStorageSettings();
   }
 
@@ -93,16 +92,11 @@ class EntityReferenceItem extends FieldItemBase {
       ->setComputed(TRUE)
       ->setReadOnly(FALSE)
       ->setTargetDefinition(EntityDataDefinition::create($settings['target_type']))
+      // We can add a constraint for the target entity type. The list of
+      // referenceable bundles is a field setting, so the corresponding
+      // constraint is added dynamically in ::getConstraints().
       ->addConstraint('EntityType', $settings['target_type']);
 
-    if (isset($settings['target_bundle'])) {
-      $properties['entity']->addConstraint('Bundle', $settings['target_bundle']);
-      // Set any further bundle constraints on the target definition as well,
-      // such that it can derive more special data types if possible. For
-      // example, "entity:node:page" instead of "entity:node".
-      $properties['entity']->getTargetDefinition()
-        ->addConstraint('Bundle', $settings['target_bundle']);
-    }
     return $properties;
   }
 
@@ -149,6 +143,28 @@ class EntityReferenceItem extends FieldItemBase {
     );
 
     return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraints = parent::getConstraints();
+    list($current_handler) = explode(':', $this->getSetting('handler'), 2);
+    if ($current_handler === 'default') {
+      $handler_settings = $this->getSetting('handler_settings');
+      if (!empty($handler_settings['target_bundles'])) {
+        $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+        $constraints[] = $constraint_manager->create('ComplexData', [
+          'entity' => [
+            'Bundle' => [
+              'bundle' => $handler_settings['target_bundles'],
+            ],
+          ],
+        ]);
+      }
+    }
+    return $constraints;
   }
 
   /**
