@@ -20,5 +20,6 @@ return array(
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib'),
     'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib'),
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib'),
+    'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
     'Behat\\Mink\\Driver' => array($vendorDir . '/behat/mink-browserkit-driver/src'),
 );

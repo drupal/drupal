@@ -51,3 +51,4 @@
 *.png     -text diff
 *.phar    -text diff
 *.exe     -text diff
+*.ttf     -text diff

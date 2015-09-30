@@ -68,14 +68,14 @@ class HtaccessTest extends WebTestBase {
       $file_paths["$path/access_test.$file_ext"] = 403;
     }
 
-    // Tests the .htaccess file in core/vendor and created by a Composer script.
+    // Tests the .htaccess file in vendor and created by a Composer script.
     // Try and access a non PHP file in the vendor directory.
     // @see Drupal\\Core\\Composer\\Composer::ensureHtaccess
-    $file_paths['core/vendor/composer/installed.json'] = 403;
+    $file_paths['vendor/composer/installed.json'] = 403;
 
     // Tests the rewrite conditions and rule that denies access to php files.
     $file_paths['core/lib/Drupal.php'] = 403;
-    $file_paths['core/vendor/autoload.php'] = 403;
+    $file_paths['vendor/autoload.php'] = 403;
     $file_paths['autoload.php'] = 403;
 
     // Test extensions that should be permitted.

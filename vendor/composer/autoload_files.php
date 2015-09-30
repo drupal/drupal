@@ -9,5 +9,5 @@ return array(
     $vendorDir . '/guzzlehttp/promises/src/functions_include.php',
     $vendorDir . '/guzzlehttp/psr7/src/functions_include.php',
     $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
-    $baseDir . '/lib/Drupal.php',
+    $baseDir . '/core/lib/Drupal.php',
 );

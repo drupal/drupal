@@ -2455,12 +2455,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/ClassLoader.git",
+            "url": "https://github.com/symfony/class-loader.git",
             "reference": "d957ea6295d7016e20d7eff33a6c1deef819c0d4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/d957ea6295d7016e20d7eff33a6c1deef819c0d4",
+            "url": "https://api.github.com/repos/symfony/class-loader/zipball/d957ea6295d7016e20d7eff33a6c1deef819c0d4",
             "reference": "d957ea6295d7016e20d7eff33a6c1deef819c0d4",
             "shasum": ""
         },
@@ -2507,12 +2507,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Console.git",
+            "url": "https://github.com/symfony/console.git",
             "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Console/zipball/9ff9032151186bd66ecee727d728f1319f52d1d8",
+            "url": "https://api.github.com/repos/symfony/console/zipball/9ff9032151186bd66ecee727d728f1319f52d1d8",
             "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8",
             "shasum": ""
         },
@@ -2566,12 +2566,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/CssSelector.git",
+            "url": "https://github.com/symfony/css-selector.git",
             "reference": "ffb5f3b8a75f8d1b9801e74dc6789a0751a670ad"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/CssSelector/zipball/ffb5f3b8a75f8d1b9801e74dc6789a0751a670ad",
+            "url": "https://api.github.com/repos/symfony/css-selector/zipball/ffb5f3b8a75f8d1b9801e74dc6789a0751a670ad",
             "reference": "ffb5f3b8a75f8d1b9801e74dc6789a0751a670ad",
             "shasum": ""
         },
@@ -2621,12 +2621,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/DependencyInjection.git",
+            "url": "https://github.com/symfony/dependency-injection.git",
             "reference": "c0a3a97b9450d77cd8eff81c5825efb3624c255b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/c0a3a97b9450d77cd8eff81c5825efb3624c255b",
+            "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/c0a3a97b9450d77cd8eff81c5825efb3624c255b",
             "reference": "c0a3a97b9450d77cd8eff81c5825efb3624c255b",
             "shasum": ""
         },
@@ -2683,12 +2683,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Debug.git",
+            "url": "https://github.com/symfony/debug.git",
             "reference": "726bf9651d29f53243281d0b6418cfaa5e318281"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Debug/zipball/726bf9651d29f53243281d0b6418cfaa5e318281",
+            "url": "https://api.github.com/repos/symfony/debug/zipball/726bf9651d29f53243281d0b6418cfaa5e318281",
             "reference": "726bf9651d29f53243281d0b6418cfaa5e318281",
             "shasum": ""
         },
@@ -2740,12 +2740,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/HttpFoundation.git",
+            "url": "https://github.com/symfony/http-foundation.git",
             "reference": "7253c2041652353e71560bbd300d6256d170ddaf"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/7253c2041652353e71560bbd300d6256d170ddaf",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/7253c2041652353e71560bbd300d6256d170ddaf",
             "reference": "7253c2041652353e71560bbd300d6256d170ddaf",
             "shasum": ""
         },
@@ -2795,12 +2795,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/EventDispatcher.git",
+            "url": "https://github.com/symfony/event-dispatcher.git",
             "reference": "b58c916f1db03a611b72dd702564f30ad8fe83fa"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/b58c916f1db03a611b72dd702564f30ad8fe83fa",
+            "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b58c916f1db03a611b72dd702564f30ad8fe83fa",
             "reference": "b58c916f1db03a611b72dd702564f30ad8fe83fa",
             "shasum": ""
         },
@@ -2855,12 +2855,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/HttpKernel.git",
+            "url": "https://github.com/symfony/http-kernel.git",
             "reference": "fd9c7af92c9e3ade1327cc3af10b17731eebc4a7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/fd9c7af92c9e3ade1327cc3af10b17731eebc4a7",
+            "url": "https://api.github.com/repos/symfony/http-kernel/zipball/fd9c7af92c9e3ade1327cc3af10b17731eebc4a7",
             "reference": "fd9c7af92c9e3ade1327cc3af10b17731eebc4a7",
             "shasum": ""
         },
@@ -3247,12 +3247,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/DomCrawler.git",
+            "url": "https://github.com/symfony/dom-crawler.git",
             "reference": "2a161e4ee2b2f33d4153be58df4f6f2a5506936e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/DomCrawler/zipball/2a161e4ee2b2f33d4153be58df4f6f2a5506936e",
+            "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/2a161e4ee2b2f33d4153be58df4f6f2a5506936e",
             "reference": "2a161e4ee2b2f33d4153be58df4f6f2a5506936e",
             "shasum": ""
         },
@@ -3302,12 +3302,12 @@
         "version_normalized": "2.7.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/BrowserKit.git",
+            "url": "https://github.com/symfony/browser-kit.git",
             "reference": "277a2457776d4cc25706fbdd9d1e4ab2dac884e4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/BrowserKit/zipball/277a2457776d4cc25706fbdd9d1e4ab2dac884e4",
+            "url": "https://api.github.com/repos/symfony/browser-kit/zipball/277a2457776d4cc25706fbdd9d1e4ab2dac884e4",
             "reference": "277a2457776d4cc25706fbdd9d1e4ab2dac884e4",
             "shasum": ""
         },
@@ -3477,6 +3477,155 @@
         "homepage": "http://twig.sensiolabs.org",
         "keywords": [
             "templating"
+        ]
+    },
+    {
+        "name": "wikimedia/composer-merge-plugin",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wikimedia/composer-merge-plugin.git",
+            "reference": "47bb3388cfeae41a38087ac8465a7d08fa92ea2e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/47bb3388cfeae41a38087ac8465a7d08fa92ea2e",
+            "reference": "47bb3388cfeae41a38087ac8465a7d08fa92ea2e",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "jakub-onderka/php-parallel-lint": "~0.8",
+            "phpspec/prophecy-phpunit": "~1.0",
+            "phpunit/phpunit": "~4.0",
+            "squizlabs/php_codesniffer": "~2.1.0"
+        },
+        "time": "2015-09-22 21:14:25",
+        "type": "composer-plugin",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3.x-dev"
+            },
+            "class": "Wikimedia\\Composer\\MergePlugin"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Wikimedia\\Composer\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bryan Davis",
+                "email": "bd808@wikimedia.org"
+            }
+        ],
+        "description": "Composer plugin to merge multiple composer.json files"
+    },
+    {
+        "name": "composer/installers",
+        "version": "v1.0.21",
+        "version_normalized": "1.0.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/composer/installers.git",
+            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/composer/installers/zipball/d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+            "shasum": ""
+        },
+        "replace": {
+            "roundcube/plugin-installer": "*",
+            "shama/baton": "*"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "phpunit/phpunit": "4.1.*"
+        },
+        "time": "2015-02-18 17:17:01",
+        "type": "composer-installer",
+        "extra": {
+            "class": "Composer\\Installers\\Installer",
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Composer\\Installers\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kyle Robinson Young",
+                "email": "kyle@dontkry.com",
+                "homepage": "https://github.com/shama"
+            }
+        ],
+        "description": "A multi-framework Composer library installer",
+        "homepage": "http://composer.github.com/installers/",
+        "keywords": [
+            "Craft",
+            "Dolibarr",
+            "Hurad",
+            "MODX Evo",
+            "OXID",
+            "SMF",
+            "Thelia",
+            "WolfCMS",
+            "agl",
+            "aimeos",
+            "annotatecms",
+            "bitrix",
+            "cakephp",
+            "chef",
+            "codeigniter",
+            "concrete5",
+            "croogo",
+            "dokuwiki",
+            "drupal",
+            "elgg",
+            "fuelphp",
+            "grav",
+            "installer",
+            "joomla",
+            "kohana",
+            "laravel",
+            "lithium",
+            "magento",
+            "mako",
+            "mediawiki",
+            "modulework",
+            "moodle",
+            "phpbb",
+            "piwik",
+            "ppi",
+            "puppet",
+            "roundcube",
+            "shopware",
+            "silverstripe",
+            "symfony",
+            "typo3",
+            "wordpress",
+            "zend",
+            "zikula"
         ]
     }
 ]
