@@ -8,9 +8,12 @@
 namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Sources whose data may be fetched via DBTNG.
@@ -21,7 +24,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  * is present, it is used as a database connection information array to define
  * the connection.
  */
-abstract class SqlBase extends SourcePluginBase {
+abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * @var \Drupal\Core\Database\Query\SelectInterface
@@ -34,10 +37,31 @@ abstract class SqlBase extends SourcePluginBase {
   protected $database;
 
   /**
+   * State service for retrieving database info.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+    $this->state = $state;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('state')
+    );
   }
 
   /**
@@ -58,24 +82,49 @@ abstract class SqlBase extends SourcePluginBase {
    */
   public function getDatabase() {
     if (!isset($this->database)) {
-      if (isset($this->configuration['target'])) {
-        $target = $this->configuration['target'];
+      // See if the database info is in state - if not, fallback to
+      // configuration.
+      if (isset($this->configuration['database_state_key'])) {
+        $this->database = $this->setUpDatabase($this->state->get($this->configuration['database_state_key']));
       }
       else {
-        $target = 'default';
+        $this->database = $this->setUpDatabase($this->configuration);
       }
-      if (isset($this->configuration['key'])) {
-        $key = $this->configuration['key'];
-      }
-      else {
-        $key = 'migrate';
-      }
-      if (isset($this->configuration['database'])) {
-        Database::addConnectionInfo($key, $target, $this->configuration['database']);
-      }
-      $this->database = Database::getConnection($target, $key);
     }
     return $this->database;
+  }
+
+  /**
+   * Get a connection to the referenced database, adding the connection if
+   * necessary.
+   *
+   * @param array $database_info
+   *   Configuration for the source database connection. The keys are:
+   *    'key' - The database connection key.
+   *    'target' - The database connection target.
+   *    'database' - Database configuration array as accepted by
+   *      Database::addConnectionInfo.
+   *
+   * @return \Drupal\Core\Database\Connection
+   *   The connection to use for this plugin's queries.
+   */
+  protected function setUpDatabase(array $database_info) {
+    if (isset($database_info['key'])) {
+      $key = $database_info['key'];
+    }
+    else {
+      $key = 'migrate';
+    }
+    if (isset($database_info['target'])) {
+      $target = $database_info['target'];
+    }
+    else {
+      $target = 'default';
+    }
+    if (isset($database_info['database'])) {
+      Database::addConnectionInfo($key, $target, $database_info['database']);
+    }
+    return Database::getConnection($target, $key);
   }
 
   /**

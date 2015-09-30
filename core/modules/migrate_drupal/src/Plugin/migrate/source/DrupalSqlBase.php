@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
@@ -51,8 +52,8 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityManagerInterface $entity_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state);
     $this->entityManager = $entity_manager;
   }
 
@@ -89,6 +90,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
       $plugin_id,
       $plugin_definition,
       $migration,
+      $container->get('state'),
       $container->get('entity.manager')
     );
   }

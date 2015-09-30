@@ -24,6 +24,7 @@ class SqlBaseTest extends MigrateTestBase {
     $sql_base = new TestSqlBase();
 
     // Check the default values.
+    $sql_base->setConfiguration([]);
     $this->assertIdentical($sql_base->getDatabase()->getTarget(), 'default');
     $this->assertIdentical($sql_base->getDatabase()->getKey(), 'migrate');
 
@@ -52,6 +53,35 @@ class SqlBaseTest extends MigrateTestBase {
     // Validate the connection has been created with the right values.
     $this->assertIdentical(Database::getConnectionInfo($key)[$target], $database);
 
+    // Now, test this all works when using state to store db info.
+    $target = 'test_state_db_target';
+    $key = 'test_state_migrate_connection';
+    $config = ['target' => $target, 'key' => $key];
+    $database_state_key = 'migrate_sql_base_test';
+    \Drupal::state()->set($database_state_key, $config);
+    $sql_base->setConfiguration(['database_state_key' => $database_state_key]);
+    Database::addConnectionInfo($key, $target, Database::getConnectionInfo('default')['default']);
+
+    // Validate we've injected our custom key and target.
+    $this->assertIdentical($sql_base->getDatabase()->getTarget(), $target);
+    $this->assertIdentical($sql_base->getDatabase()->getKey(), $key);
+
+    // Now test we can have SqlBase create the connection from an info array.
+    $sql_base = new TestSqlBase();
+
+    $target = 'test_state_db_target2';
+    $key = 'test_state_migrate_connection2';
+    $database = Database::getConnectionInfo('default')['default'];
+    $config = ['target' => $target, 'key' => $key, 'database' => $database];
+    $database_state_key = 'migrate_sql_base_test2';
+    \Drupal::state()->set($database_state_key, $config);
+    $sql_base->setConfiguration(['database_state_key' => $database_state_key]);
+
+    // Call getDatabase() to get the connection defined.
+    $sql_base->getDatabase();
+
+    // Validate the connection has been created with the right values.
+    $this->assertIdentical(Database::getConnectionInfo($key)[$target], $database);
   }
 
 }
@@ -68,7 +98,9 @@ class TestSqlBase extends SqlBase {
   /**
    * Override the constructor so we can create one easily.
    */
-  public function __construct() {}
+  public function __construct() {
+    $this->state = \Drupal::state();
+  }
 
   /**
    * Get the database without caching it.
