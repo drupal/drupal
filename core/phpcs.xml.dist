@@ -11,9 +11,6 @@
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
   <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>
 
-  <!--Todo: remove this file. Ref. https://www.drupal.org/node/2575419-->
-  <exclude-pattern>./lib/Drupal/Core/Cache/Context/OriginalRequestCacheContext.php</exclude-pattern>
-
   <!--Blacklist of coding standard rules that are not yet fixed. Ref. https://www.drupal.org/node/2571965-->
   <rule ref="Drupal">
     <exclude name="Drupal.Array.Array"/>
