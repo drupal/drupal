@@ -8,8 +8,6 @@
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -428,8 +426,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function getRowBySource(array $source_id_values) {
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
               ->fields('map');
-    foreach ($this->sourceIdFields() as $source_id) {
-      $query = $query->condition("map.$source_id", array_shift($source_id_values), '=');
+    foreach ($this->sourceIdFields() as $field_name => $source_id) {
+      $query->condition("map.$source_id", $source_id_values[$field_name], '=');
     }
     $result = $query->execute();
     return $result->fetchAssoc();
@@ -441,8 +439,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function getRowByDestination(array $destination_id_values) {
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
               ->fields('map');
-    foreach ($this->destinationIdFields() as $destination_id) {
-      $query = $query->condition("map.$destination_id", array_shift($destination_id_values), '=');
+    foreach ($this->destinationIdFields() as $field_name => $destination_id) {
+      $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
     $result = $query->execute();
     return $result->fetchAssoc();
@@ -467,28 +465,36 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function lookupSourceID(array $destination_id) {
-    $query = $this->getDatabase()->select($this->mapTableName(), 'map')
-              ->fields('map', $this->sourceIdFields());
-    foreach ($this->destinationIdFields() as $key_name) {
-      $query = $query->condition("map.$key_name", array_shift($destination_id), '=');
+  public function lookupSourceID(array $destination_id_values) {
+    $source_id_fields = $this->sourceIdFields();
+    $query = $this->getDatabase()->select($this->mapTableName(), 'map');
+    foreach ($source_id_fields as $source_field_name => $idmap_field_name) {
+      $query->addField('map', $idmap_field_name, $source_field_name);
+    }
+    foreach ($this->destinationIdFields() as $field_name => $destination_id) {
+      $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
     $result = $query->execute();
-    $source_id = $result->fetchAssoc();
-    return array_values($source_id ?: array());
+    return $result->fetchAssoc() ?: [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function lookupDestinationId(array $source_id) {
-    if (empty($source_id)) {
+  public function lookupDestinationId(array $source_id_values) {
+    if (empty($source_id_values)) {
       return array();
     }
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
               ->fields('map', $this->destinationIdFields());
-    foreach ($this->sourceIdFields() as $key_name) {
-      $query = $query->condition("map.$key_name", array_shift($source_id), '=');
+
+    // When looking up the destination ID we require an array with both the
+    // source key and value, e.g. ['nid' => 41]. However, the Migration process
+    // plugin doesn't currently have a way to get the source key so we presume
+    // the values have been passed through in the correct order.
+    $have_keys = !isset($source_id_values[0]);
+    foreach ($this->sourceIdFields() as $field_name => $source_id) {
+      $query->condition("map.$source_id", $have_keys ? $source_id_values[$field_name] : array_shift($source_id_values), '=');
     }
     $result = $query->execute();
     $destination_id = $result->fetchAssoc();
@@ -544,13 +550,12 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function saveMessage(array $source_id_values, $message, $level = MigrationInterface::MESSAGE_ERROR) {
-    $count = 1;
-    foreach ($source_id_values as $id_value) {
-      $fields['sourceid' . $count++] = $id_value;
+    foreach ($this->sourceIdFields() as $field_name => $source_id) {
       // If any key value is not set, we can't save.
-      if (!isset($id_value)) {
+      if (!isset($source_id_values[$field_name])) {
         return;
       }
+      $fields[$source_id] = $source_id_values[$field_name];
     }
     $fields['level'] = $level;
     $fields['message'] = $message;
@@ -565,10 +570,12 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function getMessageIterator(array $source_id_values = [], $level = NULL) {
     $query = $this->getDatabase()->select($this->messageTableName(), 'msg')
       ->fields('msg');
-    $count = 1;
-    foreach ($source_id_values as $id_value) {
-      $query->condition('sourceid' . $count++, $id_value);
+    foreach ($this->sourceIdFields() as $field_name => $source_id) {
+      if (isset($source_id_values[$field_name])) {
+        $query->condition($source_id, $source_id_values[$field_name]);
+      }
     }
+
     if ($level) {
       $query->condition('level', $level);
     }
@@ -655,13 +662,11 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $map_query = $this->getDatabase()->delete($this->mapTableName());
     }
     $message_query = $this->getDatabase()->delete($this->messageTableName());
-    $count = 1;
-    foreach ($source_id_values as $id_value) {
+    foreach ($this->sourceIdFields() as $field_name => $source_id) {
       if (!$messages_only) {
-        $map_query->condition('sourceid' . $count, $id_value);
+        $map_query->condition($source_id, $source_id_values[$field_name]);
       }
-      $message_query->condition('sourceid' . $count, $id_value);
-      $count++;
+      $message_query->condition($source_id, $source_id_values[$field_name]);
     }
 
     if (!$messages_only) {
@@ -675,22 +680,20 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function deleteDestination(array $destination_id) {
+  public function deleteDestination(array $destination_id_values) {
     $map_query = $this->getDatabase()->delete($this->mapTableName());
     $message_query = $this->getDatabase()->delete($this->messageTableName());
-    $source_id = $this->lookupSourceID($destination_id);
-    if (!empty($source_id)) {
-      $count = 1;
-      foreach ($destination_id as $key_value) {
-        $map_query->condition('destid' . $count, $key_value);
-        $count++;
+    $source_id_values = $this->lookupSourceID($destination_id_values);
+    if (!empty($source_id_values)) {
+      foreach ($this->destinationIdFields() as $field_name => $destination_id) {
+        $map_query->condition($destination_id, $destination_id_values[$field_name]);
       }
       // Notify anyone listening of the map row we're about to delete.
-      $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id));
+      $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id_values));
       $map_query->execute();
       $count = 1;
-      foreach ($source_id as $key_value) {
-        $message_query->condition('sourceid' . $count, $key_value);
+      foreach ($this->sourceIdFields() as $field_name => $source_id) {
+        $message_query->condition($source_id, $source_id_values[$field_name]);
         $count++;
       }
       $message_query->execute();
@@ -700,54 +703,18 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function setUpdate(array $source_id) {
-    if (empty($source_id)) {
+  public function setUpdate(array $source_id_values) {
+    if (empty($source_id_values)) {
       throw new MigrateException('No source identifiers provided to update.');
     }
     $query = $this->getDatabase()
       ->update($this->mapTableName())
       ->fields(array('source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE));
-    $count = 1;
-    foreach ($source_id as $key_value) {
-      $query->condition('sourceid' . $count++, $key_value);
+
+    foreach ($this->sourceIdFields() as $field_name => $source_id) {
+      $query->condition($source_id, $source_id_values[$field_name]);
     }
     $query->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteBulk(array $source_id_values) {
-    // If we have a single-column key, we can shortcut it.
-    if (count($this->migration->getSourcePlugin()->getIds()) == 1) {
-      $sourceids = array();
-      foreach ($source_id_values as $source_id) {
-        // Notify anyone listening of the map rows we're about to delete.
-        $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id));
-        $sourceids[] = $source_id;
-      }
-      $this->getDatabase()->delete($this->mapTableName())
-        ->condition('sourceid1', $sourceids, 'IN')
-        ->execute();
-      $this->getDatabase()->delete($this->messageTableName())
-        ->condition('sourceid1', $sourceids, 'IN')
-        ->execute();
-    }
-    else {
-      foreach ($source_id_values as $source_id) {
-        // Notify anyone listening of the map rows we're deleting.
-        $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id));
-        $map_query = $this->getDatabase()->delete($this->mapTableName());
-        $message_query = $this->getDatabase()->delete($this->messageTableName());
-        $count = 1;
-        foreach ($source_id as $key_value) {
-          $map_query->condition('sourceid' . $count, $key_value);
-          $message_query->condition('sourceid' . $count++, $key_value);
-        }
-        $map_query->execute();
-        $message_query->execute();
-      }
-    }
   }
 
   /**
@@ -811,8 +778,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function currentDestination() {
     if ($this->valid()) {
       $result = array();
-      foreach ($this->destinationIdFields() as $field_name) {
-        $result[$field_name] = $this->currentRow[$field_name];
+      foreach ($this->destinationIdFields() as $destination_field_name => $idmap_field_name) {
+        $result[$destination_field_name] = $this->currentRow[$idmap_field_name];
       }
       return $result;
     }

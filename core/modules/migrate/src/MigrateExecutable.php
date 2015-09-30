@@ -327,7 +327,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $destination = $this->migration->getDestinationPlugin();
 
     // Loop through each row in the map, and try to roll it back.
-    foreach ($id_map as $serialized_key => $map_row) {
+    foreach ($id_map as $map_row) {
       $destination_key = $id_map->currentDestination();
       if ($destination_key) {
         $this->getEventDispatcher()
@@ -336,7 +336,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->getEventDispatcher()
           ->dispatch(MigrateEvents::POST_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
         // We're now done with this row, so remove it from the map.
-        $id_map->delete(unserialize($serialized_key));
+        $id_map->deleteDestination($destination_key);
       }
 
       // Check for memory exhaustion.

@@ -63,10 +63,10 @@ class MigrateSkipRowTest extends KernelTestBase {
 
     $id_map_plugin = $migration->getIdMap();
     // The first row is recorded in the map as ignored.
-    $map_row = $id_map_plugin->getRowBySource([1]);
+    $map_row = $id_map_plugin->getRowBySource(['id' => 1]);
     $this->assertEqual(MigrateIdMapInterface::STATUS_IGNORED, $map_row['source_row_status']);
     // The second row is not recorded in the map.
-    $map_row = $id_map_plugin->getRowBySource([2]);
+    $map_row = $id_map_plugin->getRowBySource(['id' => 2]);
     $this->assertFalse($map_row);
 
   }

@@ -57,7 +57,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Saves a message related to a source record in the migration message table.
    *
    * @param array $source_id_values
-   *   The source identifier values of the record in error.
+   *   The source identifier keyed values of the record, e.g. ['nid' => 5].
    * @param string $message
    *   The message to record.
    * @param int $level
@@ -69,7 +69,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Retrieves an iterator over messages relate to source records.
    *
    * @param array $source_id_values
-   *   (optional) The source identifier values of a specific record to retrieve.
+   *   (optional) The source identifier keyed values of the record, e.g. ['nid' => 5].
    *   If empty, all messages are retrieved.
    * @param int $level
    *   (optional) Message severity. If NULL, retrieve messages of all severities.
@@ -134,7 +134,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Deletes the map and message entries for a given source record.
    *
    * @param array $source_id_values
-   *   The source identifier values of the record to delete.
+   *   The source identifier keyed values of the record, e.g. ['nid' => 5].
    * @param bool $messages_only
    *   TRUE to only delete the migrate messages.
    */
@@ -144,18 +144,9 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Deletes the map and message table entries for a given destination row.
    *
    * @param array $destination_id_values
-   *   The destination identifier values we should do the deletes for.
+   *   The destination identifier key value pairs we should do the deletes for.
    */
   public function deleteDestination(array $destination_id_values);
-
-  /**
-   * Deletes the map and message entries for a set of given source records.
-   *
-   * @param array $source_id_values
-   *   The identifier values of the sources we should do the deletes for. Each
-   *   array member is an array of identifier values for one source row.
-   */
-  public function deleteBulk(array $source_id_values);
 
   /**
    * Clears all messages from the map.
@@ -166,7 +157,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Retrieves a row from the map table based on source identifier values.
    *
    * @param array $source_id_values
-   *   The source identifier values of the record to retrieve.
+   *   The source identifier keyed values of the record, e.g. ['nid' => 5].
    *
    * @return array
    *   The raw row data as an associative array.
@@ -177,7 +168,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Retrieves a row by the destination identifiers.
    *
    * @param array $destination_id_values
-   *   The destination identifier values of the record to retrieve.
+   *   The destination identifier keyed values of the record, e.g. ['nid' => 5].
    *
    * @return array
    *   The row(s) of data.
@@ -202,10 +193,11 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * (possibly multi-field) source identifier value mapped to it.
    *
    * @param array $destination_id_values
-   *   The destination identifier values of the record.
+   *   The destination identifier keyed values of the record, e.g. ['nid' => 5].
    *
    * @return array
-   *   The source identifier values of the record, or NULL on failure.
+   *   The source identifier keyed values of the record, e.g. ['nid' => 5], or
+   *   an empty array on failure.
    */
   public function lookupSourceID(array $destination_id_values);
 
@@ -216,7 +208,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * (possibly multi-field) destination identifier value it is mapped to.
    *
    * @param array $source_id_values
-   *   The source identifier values of the record.
+   *   The source identifier keyed values of the record, e.g. ['nid' => 5].
    *
    * @return array
    *   The destination identifier values of the record, or NULL on failure.

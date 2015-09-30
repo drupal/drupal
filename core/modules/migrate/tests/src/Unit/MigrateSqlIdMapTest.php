@@ -191,7 +191,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
 
     // Insert 4 message for later delete.
     foreach ($expected_results as $key => $expected_result) {
-      $id_map->saveMessage([$key], $message);
+      $id_map->saveMessage(['source_id_property' => $key], $message);
     }
 
     // Truncate and check that 4 messages were deleted.
@@ -240,7 +240,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
 
     // Assert the row matches its original source.
     $source_id = $expected_results[MigrateIdMapInterface::STATUS_NEEDS_UPDATE]['sourceid1'];
-    $test_row = $id_map->getRowBySource([$source_id]);
+    $test_row = $id_map->getRowBySource(['source_id_property' => $source_id]);
     // $row_needing_update is an array of objects returned from the database,
     // but $test_row is an array, so the cast is necessary.
     $this->assertSame($test_row, (array) $row_needing_update[0]);
@@ -268,7 +268,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     foreach ($expected_results as $key => $expected_result) {
       $count = $id_map->messageCount();
       $this->assertEquals($expected_result, $count);
-      $id_map->saveMessage([$key], $message);
+      $id_map->saveMessage(['source_id_property' => $key], $message);
     }
   }
 
@@ -286,7 +286,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $id_map = $this->getIdMap();
 
     foreach ($expected_results as $key => $expected_result) {
-      $id_map->saveMessage([$key], $message, $expected_result['level']);
+      $id_map->saveMessage(['source_id_property' => $key], $message, $expected_result['level']);
     }
 
     foreach ($id_map->getMessageIterator() as $message_row) {
@@ -297,8 +297,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
 
     // Insert with default level.
     $message_default = 'Hello world default.';
-    $id_map->saveMessage([5], $message_default);
-    $messages = $id_map->getMessageIterator([5]);
+    $id_map->saveMessage(['source_id_property' => 5], $message_default);
+    $messages = $id_map->getMessageIterator(['source_id_property' => 5]);
     $count = 0;
     foreach ($messages as $key => $message_row) {
       $count = 1;
@@ -334,11 +334,11 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       'destid1' => 'destination_id_value_2',
     ] + $this->idMapDefaults();
     $this->saveMap($row);
-    $source_id_values = [$row['sourceid1'], $row['sourceid2']];
+    $source_id_values = ['source_id_property' => $row['sourceid1'], 'sourceid2' => $row['sourceid2']];
     $id_map = $this->getIdMap();
     $result_row = $id_map->getRowBySource($source_id_values);
     $this->assertSame($row, $result_row);
-    $source_id_values = ['missing_value_1', 'missing_value_2'];
+    $source_id_values = ['source_id_property' => 'missing_value_1', 'sourceid2' => 'missing_value_2'];
     $result_row = $id_map->getRowBySource($source_id_values);
     $this->assertFalse($result_row);
   }
@@ -416,12 +416,12 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       'destid1' => 'destination_id_value_2',
     ] + $this->idMapDefaults();
     $this->saveMap($row);
-    $dest_id_values = [$row['destid1']];
+    $dest_id_values = ['destination_id_property' => $row['destid1']];
     $id_map = $this->getIdMap();
     $result_row = $id_map->getRowByDestination($dest_id_values);
     $this->assertSame($row, $result_row);
     // This value does not exist.
-    $dest_id_values = ['invalid_destination_id_property'];
+    $dest_id_values = ['destination_id_property' => 'invalid_destination_id_property'];
     $id_map = $this->getIdMap();
     $result_row = $id_map->getRowByDestination($dest_id_values);
     $this->assertFalse($result_row);
@@ -463,15 +463,15 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $expected_result = [];
     for ($i = 1; $i <= $num_source_fields; $i++) {
       $row["sourceid$i"] = "source_id_value_$i";
-      $expected_result[] = "source_id_value_$i";
+      $expected_result["source_id_property_$i"] = "source_id_value_$i";
       $this->sourceIds["source_id_property_$i"] = [];
     }
     $destination_id_values = [];
     $nonexistent_id_values = [];
     for ($i = 1; $i <= $num_destination_fields; $i++) {
       $row["destid$i"] = "destination_id_value_$i";
-      $destination_id_values[] = "destination_id_value_$i";
-      $nonexistent_id_values[] = "nonexistent_destination_id_value_$i";
+      $destination_id_values["destination_id_property_$i"] = "destination_id_value_$i";
+      $nonexistent_id_values["destination_id_property_$i"] = "nonexistent_destination_id_value_$i";
       $this->destinationIds["destination_id_property_$i"] = [];
     }
     $this->saveMap($row);
@@ -662,7 +662,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->queryResultTest($this->getIdMapContents(), $expected_results);
     // Mark each row as STATUS_NEEDS_UPDATE.
     foreach ($row_statuses as $status) {
-      $id_map->setUpdate(['source_value_' . $status]);
+      $id_map->setUpdate(['source_id_property' => 'source_value_' . $status]);
     }
     // Update expected results.
     foreach ($expected_results as $key => $value) {
@@ -737,7 +737,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $message_table_name = $id_map->messageTableName();
     $row = new Row(['source_id_property' => 'source_value'], ['source_id_property' => []]);
     $id_map->saveIdMapping($row, ['destination_id_property' => 2]);
-    $id_map->saveMessage(['source_value'], 'A message');
+    $id_map->saveMessage(['source_id_property' => 'source_value'], 'A message');
     $this->assertTrue($this->database->schema()->tableExists($map_table_name),
                       "$map_table_name exists");
     $this->assertTrue($this->database->schema()->tableExists($message_table_name),

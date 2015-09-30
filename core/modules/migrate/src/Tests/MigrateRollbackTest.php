@@ -75,7 +75,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       /** @var Vocabulary $vocabulary */
       $vocabulary = Vocabulary::load($row['id']);
       $this->assertTrue($vocabulary);
-      $map_row = $vocabulary_id_map->getRowBySource([$row['id']]);
+      $map_row = $vocabulary_id_map->getRowBySource(['id' => $row['id']]);
       $this->assertNotNull($map_row['destid1']);
     }
 
@@ -116,7 +116,7 @@ class MigrateRollbackTest extends MigrateTestBase {
       /** @var Term $term */
       $term = Term::load($row['id']);
       $this->assertTrue($term);
-      $map_row = $term_id_map->getRowBySource([$row['id']]);
+      $map_row = $term_id_map->getRowBySource(['id' => $row['id']]);
       $this->assertNotNull($map_row['destid1']);
     }
 
@@ -125,14 +125,14 @@ class MigrateRollbackTest extends MigrateTestBase {
     foreach ($term_data_rows as $row) {
       $term = Term::load($row['id']);
       $this->assertNull($term);
-      $map_row = $term_id_map->getRowBySource([$row['id']]);
+      $map_row = $term_id_map->getRowBySource(['id' => $row['id']]);
       $this->assertFalse($map_row);
     }
     $vocabulary_executable->rollback();
     foreach ($vocabulary_data_rows as $row) {
       $term = Vocabulary::load($row['id']);
       $this->assertNull($term);
-      $map_row = $vocabulary_id_map->getRowBySource([$row['id']]);
+      $map_row = $vocabulary_id_map->getRowBySource(['id' => $row['id']]);
       $this->assertFalse($map_row);
     }
 
