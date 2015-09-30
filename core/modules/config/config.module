@@ -33,27 +33,27 @@ function config_help($route_name, RouteMatchInterface $route_match) {
 
     case 'config.sync':
       $output = '';
-      $output .= '<p>' . t('Import configuration that is placed in your staging directory. All changes, deletions, renames, and additions are listed below.') . '</p>';
+      $output .= '<p>' . t('Compare the configuration uploaded to your staging directory with the active configuration before completing the import.') . '</p>';
       return $output;
 
     case 'config.export_full':
       $output = '';
-      $output .= '<p>' . t('The full export page can be used to export the full configuration of this site, and download it as a gzipped tar file.') . '</p>';
+      $output .= '<p>' . t('Export and download the full configuration of this site as a gzipped tar file.') . '</p>';
       return $output;
 
     case 'config.import_full':
       $output = '';
-      $output .= '<p>' . t('The full import page can be used to import a full set of configuration for this site by uploading a gzipped or bzipped tar file consisting of all configuration YAML files. The results will be placed in a the staging directory, so they can be compared in the Synchronize tab. There the import can be finalized.') . '</p>';
+      $output .= '<p>' . t('Upload a full site configuration archive to the staging directory. It can then be compared and imported on the Synchronize page.') . '</p>';
       return $output;
 
     case 'config.export_single':
       $output = '';
-      $output .= '<p>' . t('The single export page can be used to display a single configuration item in a YAML structure.') . '</p>';
+      $output .= '<p>' . t('Choose a configuration item to display its YAML structure.') . '</p>';
       return $output;
 
     case 'config.import_single':
       $output = '';
-      $output .= '<p>' . t('The single import page can be used to import a single configuration item by pasting a YAML structure into the text field.') . '</p>';
+      $output .= '<p>' . t('Import a single configuration item by pasting its YAML structure into the text field.') . '</p>';
       return $output;
   }
 }

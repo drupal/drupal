@@ -143,8 +143,8 @@ class ConfigController implements ContainerInjectionInterface {
     $build['diff'] = array(
       '#type' => 'table',
       '#header' => array(
-        array('data' => t('Old'), 'colspan' => '2'),
-        array('data' => t('New'), 'colspan' => '2'),
+        array('data' => t('Active'), 'colspan' => '2'),
+        array('data' => t('Staged'), 'colspan' => '2'),
       ),
       '#rows' => $this->diffFormatter->format($diff),
     );
