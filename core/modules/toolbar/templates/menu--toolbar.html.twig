@@ -11,6 +11,11 @@
  *   - title: The menu link title.
  *   - url: The menu link url, instance of \Drupal\Core\Url
  *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
  *
  * @ingroup themeable
  */
@@ -31,14 +36,22 @@
     {% else %}
       <ul class="toolbar-menu">
     {% endif %}
-      {% for item in items %}
-        <li{{ item.attributes }}>
-          {{ link(item.title, item.url) }}
-          {% if item.below %}
-            {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
-          {% endif %}
-        </li>
-      {% endfor %}
+    {% for item in items %}
+      {%
+        set classes = [
+          'menu-item',
+          item.is_expanded ? 'menu-item--expanded',
+          item.is_collapsed ? 'menu-item--collapsed',
+          item.in_active_trail ? 'menu-item--active-trail',
+        ]
+      %}
+      <li{{ item.attributes.addClass(classes) }}>
+        {{ link(item.title, item.url) }}
+        {% if item.below %}
+          {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+        {% endif %}
+      </li>
+    {% endfor %}
     </ul>
   {% endif %}
 {% endmacro %}

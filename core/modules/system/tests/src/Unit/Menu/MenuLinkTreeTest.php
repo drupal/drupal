@@ -140,14 +140,29 @@ class MenuLinkTreeTest extends UnitTestCase {
       ]
     ];
 
-    $get_built_element = function(MenuLinkTreeElement $element, array $classes) {
-      return [
-        'attributes' => new Attribute(['class' => array_merge(['menu-item'], $classes)]),
+    $get_built_element = function(MenuLinkTreeElement $element) {
+      $return = [
+        'attributes' => new Attribute(),
         'title' => $element->link->getTitle(),
         'url' => new Url($element->link->getRouteName(), $element->link->getRouteParameters(), ['set_active_class' => TRUE]),
         'below' => [],
         'original_link' => $element->link,
+        'is_expanded' => FALSE,
+        'is_collapsed' => FALSE,
+        'in_active_trail' => FALSE,
       ];
+
+      if ($element->hasChildren && !empty($element->subtree)) {
+        $return['is_expanded'] = TRUE;
+      }
+      elseif ($element->hasChildren) {
+        $return['is_collapsed'] = TRUE;
+      }
+      if ($element->inActiveTrail) {
+        $return['in_active_trail'] = TRUE;
+      }
+
+      return $return;
     };
 
     // The three access scenarios described in this method's documentation.
@@ -195,7 +210,7 @@ class MenuLinkTreeTest extends UnitTestCase {
         $tree[0]->access = $access;
         if ($access === NULL || $access->isAllowed()) {
           $expected_build = $base_expected_build;
-          $expected_build['#items']['test.example1'] = $get_built_element($tree[0], []);
+          $expected_build['#items']['test.example1'] = $get_built_element($tree[0]);
         }
         else {
           $expected_build = $base_expected_build_empty;
@@ -217,9 +232,9 @@ class MenuLinkTreeTest extends UnitTestCase {
         $tree[0]->access = $access;
         $expected_build = $base_expected_build;
         if ($access === NULL || $access->isAllowed()) {
-          $expected_build['#items']['test.example1'] = $get_built_element($tree[0], []);
+          $expected_build['#items']['test.example1'] = $get_built_element($tree[0]);
         }
-        $expected_build['#items']['test.example2'] = $get_built_element($tree[1], []);
+        $expected_build['#items']['test.example2'] = $get_built_element($tree[1]);
         $expected_build['#cache']['contexts'] = array_merge($expected_build['#cache']['contexts'], $access_cache_contexts, $links[0]->getCacheContexts(), $links[1]->getCacheContexts());
         $data[] = [
           'description' => "Single-level tree; access=$i; link=$j.",
@@ -245,13 +260,13 @@ class MenuLinkTreeTest extends UnitTestCase {
         ];
         $tree[0]->subtree[0]->subtree[0]->access = $access;
         $expected_build = $base_expected_build;
-        $expected_build['#items']['test.roota'] = $get_built_element($tree[0], ['menu-item--expanded']);
-        $expected_build['#items']['test.roota']['below']['test.parentc'] = $get_built_element($tree[0]->subtree[0], ['menu-item--expanded']);
+        $expected_build['#items']['test.roota'] = $get_built_element($tree[0]);
+        $expected_build['#items']['test.roota']['below']['test.parentc'] = $get_built_element($tree[0]->subtree[0]);
         if ($access === NULL || $access->isAllowed()) {
-          $expected_build['#items']['test.roota']['below']['test.parentc']['below']['test.example1'] = $get_built_element($tree[0]->subtree[0]->subtree[0], []);
+          $expected_build['#items']['test.roota']['below']['test.parentc']['below']['test.example1'] = $get_built_element($tree[0]->subtree[0]->subtree[0]);
         }
-        $expected_build['#items']['test.rootb'] = $get_built_element($tree[1], ['menu-item--expanded']);
-        $expected_build['#items']['test.rootb']['below']['test.example2'] = $get_built_element($tree[1]->subtree[0], []);
+        $expected_build['#items']['test.rootb'] = $get_built_element($tree[1]);
+        $expected_build['#items']['test.rootb']['below']['test.example2'] = $get_built_element($tree[1]->subtree[0]);
         $expected_build['#cache']['contexts'] = array_merge($expected_build['#cache']['contexts'], $access_cache_contexts, $links[0]->getCacheContexts(), $links[1]->getCacheContexts());
         $data[] = [
           'description' => "Multi-level tree; access=$i; link=$j.",
