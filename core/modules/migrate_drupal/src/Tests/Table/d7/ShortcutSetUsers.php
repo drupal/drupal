@@ -45,8 +45,11 @@ class ShortcutSetUsers extends DrupalDumpBase {
       'uid',
       'set_name',
     ))
-    ->execute();
+    ->values(array(
+      'uid' => '2',
+      'set_name' => 'shortcut-set-2',
+    ))->execute();
   }
 
 }
-#56b71631616c8eae6cc71b0ae443426a
+#ee87e7f17ab09f7cdf72e64b5a66aca2

@@ -47,8 +47,11 @@ class ShortcutSet extends DrupalDumpBase {
     ->values(array(
       'set_name' => 'shortcut-set-1',
       'title' => 'Default',
+    ))->values(array(
+      'set_name' => 'shortcut-set-2',
+      'title' => 'Alternative shortcut set',
     ))->execute();
   }
 
 }
-#b3fff732e065eff0eff212928ce45a0c
+#65b4e1b8c85fc2c4232ce4bdb50a15ab
