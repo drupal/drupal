@@ -1704,7 +1704,7 @@ function system_update_8009() {
 /**
  * Place page title blocks in every theme.
  */
-function system_update_8009() {
+function system_update_8010() {
   // When block module is not installed, there is nothing that could be done
   // except showing a warning.
   if (!\Drupal::moduleHandler()->moduleExists('block')) {
