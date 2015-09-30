@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Database\Query\SelectInterface;
+
 /**
  * Base class for Migrate module source unit tests.
  */
@@ -112,6 +114,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    * Test the source returns the same rows as expected.
    */
   public function testRetrieval() {
+    $this->assertInstanceOf(SelectInterface::class, $this->source->query());
     $this->queryResultTest($this->source, $this->expectedResults);
   }
 
@@ -119,7 +122,9 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    * Test the source returns the row count expected.
    */
   public function testSourceCount() {
-    $this->assertEquals($this->source->count(), $this->expectedCount);
+    $count = $this->source->count();
+    $this->assertTrue(is_numeric($count));
+    $this->assertEquals($count, $this->expectedCount);
   }
 
   /**

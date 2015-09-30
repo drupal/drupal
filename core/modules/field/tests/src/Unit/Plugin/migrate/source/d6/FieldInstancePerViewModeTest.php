@@ -16,13 +16,9 @@ use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
  */
 class FieldInstancePerViewModeTest extends MigrateSqlSourceTestCase {
 
-  // The plugin system is not working during unit testing so the source plugin
-  // class needs to be manually specified.
   const PLUGIN_CLASS = 'Drupal\field\Plugin\migrate\source\d6\FieldInstancePerViewMode';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
-    // The ID of the entity, can be any string.
     'id' => 'view_mode_test',
     'source' => array(
       'plugin' => 'd6_field_instance_per_view_mode',
@@ -75,7 +71,6 @@ class FieldInstancePerViewModeTest extends MigrateSqlSourceTestCase {
       'widget_settings' => array(),
     ),
   );
-
 
   /**
    * {@inheritdoc}

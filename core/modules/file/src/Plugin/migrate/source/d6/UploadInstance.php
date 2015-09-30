@@ -26,19 +26,23 @@ class UploadInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() {
-    $prefix = 'upload';
-    $node_types = $this->getDatabase()->query('SELECT type FROM {node_type}')->fetchCol();
-    foreach ($node_types as $node_type) {
-      $variables[] = $prefix . '_' . $node_type;
-    }
+    $node_types = $this->select('node_type', 'nt')
+      ->fields('nt', ['type'])
+      ->execute()
+      ->fetchCol();
+    $variables = array_map(function($type) { return 'upload_' . $type; }, $node_types);
 
     $max_filesize = $this->variableGet('upload_uploadsize_default', 1);
     $max_filesize = $max_filesize ? $max_filesize . 'MB' : '';
     $file_extensions = $this->variableGet('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
     $return = array();
-    $values = $this->getDatabase()->query('SELECT name, value FROM {variable} WHERE name IN ( :name[] )', array(':name[]' => $variables))->fetchAllKeyed();
+    $values = $this->select('variable', 'v')
+      ->fields('v', ['name', 'value'])
+      ->condition('name', $variables, 'IN')
+      ->execute()
+      ->fetchAllKeyed();
     foreach ($node_types as $node_type) {
-      $name = $prefix . '_' . $node_type;
+      $name = 'upload_' . $node_type;
       if (isset($values[$name])) {
         $enabled = unserialize($values[$name]);
         if ($enabled) {

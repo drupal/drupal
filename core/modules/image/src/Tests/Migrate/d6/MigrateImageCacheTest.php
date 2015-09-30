@@ -30,16 +30,6 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Override parent to setup migration prior to run.
-   *
-   * @deprecated
-   */
-  public function testSourcePlugin() {
-    $this->executeMigration('d6_imagecache_presets');
-    parent::testSourcePlugin();
-  }
-
-  /**
    * Test basic passing migrations.
    */
   public function testPassingMigration() {

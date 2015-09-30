@@ -41,14 +41,21 @@ class CommentVariable extends DrupalSqlBase {
   protected function getCommentVariables() {
     $comment_prefixes = array_keys($this->commentPrefixes());
     $variables = array();
-    $node_types = $this->getDatabase()->query('SELECT type FROM {node_type}')->fetchCol();
+    $node_types = $this->select('node_type', 'nt')
+      ->fields('nt', ['type'])
+      ->execute()
+      ->fetchCol();
     foreach ($node_types as $node_type) {
       foreach ($comment_prefixes as $prefix) {
         $variables[] = $prefix . '_' . $node_type;
       }
     }
     $return = array();
-    $values = $this->getDatabase()->query('SELECT name, value FROM {variable} WHERE name IN ( :name[] )', array(':name[]' => $variables))->fetchAllKeyed();
+    $values = $this->select('variable', 'v')
+      ->fields('v', ['name', 'value'])
+      ->condition('name', $variables, 'IN')
+      ->execute()
+      ->fetchAllKeyed();
     foreach ($node_types as $node_type) {
       foreach ($comment_prefixes as $prefix) {
         $name = $prefix . '_' . $node_type;

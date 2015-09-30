@@ -20,7 +20,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  */
 class TermNode extends DrupalSqlBase {
 
-    /**
+  /**
    * The join options between the node and the term node table.
    */
   const JOIN = 'tn.vid = n.vid';
@@ -30,7 +30,6 @@ class TermNode extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('term_node', 'tn')
-      // @todo: working, but not is there support for distinct() in FakeSelect?
       ->distinct()
       ->fields('tn', array('nid', 'vid'))
       ->fields('n', array('type'));
@@ -38,7 +37,6 @@ class TermNode extends DrupalSqlBase {
     $query->innerJoin('term_data', 'td', 'td.tid = tn.tid AND td.vid = :vid', array(':vid' => $this->configuration['vid']));
     $query->innerJoin('node', 'n', static::JOIN);
     return $query;
-
   }
 
   /**

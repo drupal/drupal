@@ -18,9 +18,7 @@ class FileTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\file\Plugin\migrate\source\d6\File';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
-    // The ID of the entity, can be any string.
     'id' => 'test',
     'source' => array(
       'plugin' => 'd6_file',

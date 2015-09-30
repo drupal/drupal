@@ -16,16 +16,10 @@ use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
  */
 class RoleTest extends MigrateSqlSourceTestCase {
 
-  // The plugin system is not working during unit testing so the source plugin
-  // class needs to be manually specified.
   const PLUGIN_CLASS = 'Drupal\user\Plugin\migrate\source\d6\Role';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
-    // The ID of the entity, can be any string.
     'id' => 'test',
-    // This needs to be the identifier of the actual key: cid for comment, nid
-    // for node and so on.
     'source' => array(
       'plugin' => 'd6_user_role',
     ),

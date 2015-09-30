@@ -25,9 +25,6 @@ class ProfileFieldTest extends MigrateSqlSourceTestCase {
     ],
   ];
 
-  // We need to set up the database contents; it's easier to do that below.
-  // These are sample result queries.
-  // @todo Add multiple cases.
   protected $expectedResults = [
     [
       'fid' => 1,
