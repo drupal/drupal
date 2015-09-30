@@ -34,7 +34,9 @@ process:
             - filter_url
             - filter_htmlcorrector
             - filter_html_escape
-      settings: settings
+      settings:
+        plugin: filter_settings
+        source: settings
       status:
         plugin: default_value
         default_value: true

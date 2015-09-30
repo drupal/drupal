@@ -45,7 +45,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
-            'allowed_html' => '<img> <a>',
+            'allowed_html' => '<img src testattribute> <a>',
           ),
         ),
         'filter_autop' => array(

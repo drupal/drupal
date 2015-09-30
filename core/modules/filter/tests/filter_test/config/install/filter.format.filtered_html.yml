@@ -12,4 +12,4 @@ filters:
     provider: filter
     status: true
     settings:
-      allowed_html: '<p> <br> <strong> <a>'
+      allowed_html: '<p> <br> <strong> <a href hreflang>'

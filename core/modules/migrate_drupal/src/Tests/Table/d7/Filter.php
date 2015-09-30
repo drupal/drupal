@@ -119,7 +119,7 @@ class Filter extends DrupalDumpBase {
       'name' => 'filter_html',
       'weight' => '1',
       'status' => '1',
-      'settings' => 'a:3:{s:12:"allowed_html";s:22:"<div> <span> <ul> <li>";s:16:"filter_html_help";i:1;s:20:"filter_html_nofollow";i:0;}',
+      'settings' => 'a:3:{s:12:"allowed_html";s:37:"<div> <span> <ul> <li> <ol> <a> <img>";s:16:"filter_html_help";i:1;s:20:"filter_html_nofollow";i:0;}',
     ))->values(array(
       'format' => 'filtered_html',
       'module' => 'filter',
@@ -257,4 +257,5 @@ class Filter extends DrupalDumpBase {
   }
 
 }
-#7f8ea668d5deed8ce2d6c782dad2bcd5
+
+#e0bd772d07df589752fa9372705aaa9d

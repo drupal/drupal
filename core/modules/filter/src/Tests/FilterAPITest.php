@@ -108,7 +108,15 @@ class FilterAPITest extends EntityUnitTestBase {
     $filtered_html_format = entity_load('filter_format', 'filtered_html');
     $this->assertIdentical(
       $filtered_html_format->getHtmlRestrictions(),
-      array('allowed' => array('p' => TRUE, 'br' => TRUE, 'strong' => TRUE, 'a' => TRUE, '*' => array('style' => FALSE, 'on*' => FALSE))),
+      array(
+        'allowed' => array(
+          'p' => FALSE,
+          'br' => FALSE,
+          'strong' => FALSE,
+          'a' => array('href' => TRUE, 'hreflang' => TRUE),
+          '*' => array('style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => array('ltr' => TRUE, 'rtl' => TRUE)),
+        ),
+      ),
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the filtered_html format.'
     );
     $this->assertIdentical(
@@ -164,7 +172,7 @@ class FilterAPITest extends EntityUnitTestBase {
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
-            'allowed_html' => '<p> <br> <a> <strong>',
+            'allowed_html' => '<p> <br> <a href> <strong>',
           ),
         ),
         'filter_test_restrict_tags_and_attributes' => array(
@@ -185,7 +193,14 @@ class FilterAPITest extends EntityUnitTestBase {
     $very_restricted_html_format->save();
     $this->assertIdentical(
       $very_restricted_html_format->getHtmlRestrictions(),
-      array('allowed' => array('p' => TRUE, 'br' => FALSE, 'a' => array('href' => TRUE), '*' => array('style' => FALSE, 'on*' => FALSE))),
+      array(
+        'allowed' => array(
+          'p' => FALSE,
+          'br' => FALSE,
+          'a' => array('href' => TRUE),
+          '*' => array('style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => array('ltr' => TRUE, 'rtl' => TRUE)),
+        ),
+      ),
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the very_restricted_html format.'
     );
     $this->assertIdentical(

@@ -68,7 +68,7 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\filter\FilterFormatInterface $format */
     $format = FilterFormat::load('filtered_html');
     $config = $format->filters('filter_html')->getConfiguration();
-    $this->assertIdentical('<div> <span> <ul> <li>', $config['settings']['allowed_html']);
+    $this->assertIdentical('<div> <span> <ul type> <li> <ol start type> <a href hreflang> <img src alt height width>', $config['settings']['allowed_html']);
     $config = $format->filters('filter_url')->getConfiguration();
     $this->assertIdentical(128, $config['settings']['filter_url_length']);
 

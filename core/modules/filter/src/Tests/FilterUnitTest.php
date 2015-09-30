@@ -9,6 +9,7 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\filter\Entity\FilterFormat;
@@ -190,7 +191,7 @@ class FilterUnitTest extends KernelTestBase {
     $html_filter = $this->filters['filter_html'];
     $html_filter->setConfiguration(array(
       'settings' => array(
-        'allowed_html' => '<img>',
+        'allowed_html' => '<img src data-align data-caption>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
       )
@@ -399,7 +400,7 @@ class FilterUnitTest extends KernelTestBase {
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration(array(
       'settings' => array(
-        'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
+        'allowed_html' => '<a> <p> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
       )
@@ -407,41 +408,78 @@ class FilterUnitTest extends KernelTestBase {
 
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
-    $f = _filter_html('<script />', $filter);
-    $this->assertNoNormalized($f, 'script', 'HTML filter should always remove script tags.');
+    $f = (string) $filter->process('<script />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '', 'HTML filter should remove script tags.');
 
-    $f = _filter_html('<iframe />', $filter);
-    $this->assertNoNormalized($f, 'iframe', 'HTML filter should always remove iframe tags.');
+    $f = (string) $filter->process('<iframe />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '', 'HTML filter should remove iframe tags.');
 
-    $f = _filter_html('<object />', $filter);
-    $this->assertNoNormalized($f, 'object', 'HTML filter should always remove object tags.');
+    $f = (string) $filter->process('<object />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '', 'HTML filter should remove object tags.');
 
-    $f = _filter_html('<style />', $filter);
-    $this->assertNoNormalized($f, 'style', 'HTML filter should always remove style tags.');
+    $f = (string) $filter->process('<style />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '', 'HTML filter should remove style tags.');
 
     // Some tags make CSRF attacks easier, let the user take the risk herself.
-    $f = _filter_html('<img />', $filter);
-    $this->assertNoNormalized($f, 'img', 'HTML filter should remove img tags on default.');
+    $f = (string) $filter->process('<img />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '', 'HTML filter should remove img tags by default.');
 
-    $f = _filter_html('<input />', $filter);
-    $this->assertNoNormalized($f, 'img', 'HTML filter should remove input tags on default.');
+    $f = (string) $filter->process('<input />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '', 'HTML filter should remove input tags by default.');
 
     // Filtering content of some attributes is infeasible, these shouldn't be
     // allowed too.
-    $f = _filter_html('<p style="display: none;" />', $filter);
-    $this->assertNoNormalized($f, 'style', 'HTML filter should remove style attribute on default.');
+    $f = (string) $filter->process('<p style="display: none;" />', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNoNormalized($f, 'style', 'HTML filter should remove style attributes.');
+    $this->assertIdentical($f, '<p></p>');
 
-    $f = _filter_html('<p onerror="alert(0);" />', $filter);
-    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove on* attributes on default.');
+    $f = (string) $filter->process('<p onerror="alert(0);"></p>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove on* attributes.');
+    $this->assertIdentical($f, '<p></p>');
 
-    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);
-    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes on default.');
+    $f = (string) $filter->process('<code onerror>&nbsp;</code>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes.');
+    // Note - this string has a decoded &nbsp; character.
+    $this->assertIdentical($f, '<code> </code>');
 
-    $f = _filter_html('<br>', $filter);
-    $this->assertNormalized($f, '<br>', 'HTML filter should allow line breaks.');
+    $f = (string) $filter->process('<br>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNormalized($f, '<br />', 'HTML filter should allow line breaks.');
 
-    $f = _filter_html('<br />', $filter);
+    $f = (string) $filter->process('<br />', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, '<br />', 'HTML filter should allow self-closing line breaks.');
+
+    // All attributes of whitelisted tags are stripped by default.
+    $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNormalized($f, '<a>link</a>', 'HTML filter should remove attributes that are not explicitly allowed.');
+
+    // Now whitelist the "llama" attribute on <a>.
+    $filter->setConfiguration(array(
+      'settings' => array(
+        'allowed_html' => '<a href llama> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 0,
+      )
+    ));
+    $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNormalized($f, '<a llama="awesome">link</a>', 'HTML filter keeps explicitly allowed attributes, and removes attributes that are not explicitly allowed.');
+
+    // Restrict the whitelisted "llama" attribute on <a> to only allow the value
+    // "majestical", or "epic".
+    $filter->setConfiguration(array(
+      'settings' => array(
+        'allowed_html' => '<a href llama="majestical epic"> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 0,
+      )
+    ));
+    $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '<a>link</a>', 'HTML filter removes allowed attributes that do not have an explicitly allowed value.');
+    $f = (string) $filter->process('<a kitten="cute" llama="majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '<a llama="majestical">link</a>', 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
+    $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNormalized($f, '<a>link</a>', 'HTML filter removes allowed attributes that have a not explicitly allowed value.');
+    $f = (string) $filter->process('<a href="/beautiful-animals" kitten="cute" llama="epic majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertIdentical($f, '<a href="/beautiful-animals" llama="epic majestical">link</a>', 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
   }
 
   /**
@@ -452,7 +490,7 @@ class FilterUnitTest extends KernelTestBase {
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration(array(
       'settings' => array(
-        'allowed_html' => '<a>',
+        'allowed_html' => '<a href>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 1,
       )
@@ -460,19 +498,19 @@ class FilterUnitTest extends KernelTestBase {
 
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
-    $f = _filter_html('<a href="http://www.example.com/">text</a>', $filter);
+    $f = (string) $filter->process('<a href="http://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent -- no evasion.');
 
-    $f = _filter_html('<A href="http://www.example.com/">text</a>', $filter);
+    $f = (string) $filter->process('<A href="http://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- capital A.');
 
-    $f = _filter_html("<a/href=\"http://www.example.com/\">text</a>", $filter);
+    $f = (string) $filter->process("<a/href=\"http://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- non whitespace character after tag name.');
 
-    $f = _filter_html("<\0a\0 href=\"http://www.example.com/\">text</a>", $filter);
+    $f = (string) $filter->process("<\0a\0 href=\"http://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- some nulls.');
 
-    $f = _filter_html('<a href="http://www.example.com/" rel="follow">text</a>', $filter);
+    $f = (string) $filter->process('<a href="http://www.example.com/" rel="follow">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNoNormalized($f, 'rel="follow"', 'Spam deterrent evasion -- with rel set - rel="follow" removed.');
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- with rel set - rel="nofollow" added.');
   }

@@ -13,7 +13,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterFormatInterface;
 
 /**
@@ -449,25 +448,6 @@ function template_preprocess_filter_tips(&$variables) {
  * @{
  * Filters implemented by the Filter module.
  */
-
-/**
- * Provides filtering of input into accepted HTML.
- */
-function _filter_html($text, $filter) {
-  $allowed_tags = preg_split('/\s+|<|>/', $filter->settings['allowed_html'], -1, PREG_SPLIT_NO_EMPTY);
-  $text = Xss::filter($text, $allowed_tags);
-
-  if ($filter->settings['filter_html_nofollow']) {
-    $html_dom = Html::load($text);
-    $links = $html_dom->getElementsByTagName('a');
-    foreach ($links as $link) {
-      $link->setAttribute('rel', 'nofollow');
-    }
-    $text = Html::serialize($html_dom);
-  }
-
-  return trim($text);
-}
 
 /**
  * Converts text into hyperlinks automatically.

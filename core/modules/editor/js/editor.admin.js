@@ -821,17 +821,32 @@
    * @see Drupal.FilterStatus
    */
   Drupal.FilterHTMLRule = function () {
-    return {
-      // Allow or forbid tags.
+    // Allow or forbid tags.
+    this.tags = [];
+    this.allow = null;
+
+    // Apply restrictions to properties set on tags.
+    this.restrictedTags = {
       tags: [],
-      allow: null,
-      // Apply restrictions to properties set on tags.
-      restrictedTags: {
-        tags: [],
-        allowed: {attributes: [], styles: [], classes: []},
-        forbidden: {attributes: [], styles: [], classes: []}
-      }
+      allowed: {attributes: [], styles: [], classes: []},
+      forbidden: {attributes: [], styles: [], classes: []}
     };
+
+    return this;
+  };
+
+  Drupal.FilterHTMLRule.prototype.clone = function () {
+    var clone = new Drupal.FilterHTMLRule();
+    clone.tags = this.tags.slice(0);
+    clone.allow = this.allow;
+    clone.restrictedTags.tags = this.restrictedTags.tags.slice(0);
+    clone.restrictedTags.allowed.attributes = this.restrictedTags.allowed.attributes.slice(0);
+    clone.restrictedTags.allowed.styles = this.restrictedTags.allowed.styles.slice(0);
+    clone.restrictedTags.allowed.classes = this.restrictedTags.allowed.classes.slice(0);
+    clone.restrictedTags.forbidden.attributes = this.restrictedTags.forbidden.attributes.slice(0);
+    clone.restrictedTags.forbidden.styles = this.restrictedTags.forbidden.styles.slice(0);
+    clone.restrictedTags.forbidden.classes = this.restrictedTags.forbidden.classes.slice(0);
+    return clone;
   };
 
   /**

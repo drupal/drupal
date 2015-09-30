@@ -19,7 +19,9 @@ process:
         source: name
         map:
           php_code: filter_null
-      settings: settings
+      settings:
+        plugin: filter_settings
+        source: settings
       status:
         plugin: default_value
         default_value: true

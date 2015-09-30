@@ -221,6 +221,11 @@
       // the feature that was just added or removed. Not every feature has
       // such metadata.
       var featureName = this.model.get('buttonsToFeatures')[button.toLowerCase()];
+      // Features without an associated command do not have a 'feature name' by
+      // default, so we use the lowercased button name instead.
+      if (!featureName) {
+        featureName = button.toLowerCase();
+      }
       var featuresMetadata = this.model.get('featuresMetadata');
       if (!featuresMetadata[featureName]) {
         featuresMetadata[featureName] = new Drupal.EditorFeature(featureName);
@@ -301,7 +306,6 @@
     broadcastConfigurationChanges: function ($ckeditorToolbar) {
       var view = this;
       var hiddenEditorConfig = this.model.get('hiddenEditorConfig');
-      var featuresMetadata = this.model.get('featuresMetadata');
       var getFeatureForButton = this.getFeatureForButton.bind(this);
       var getCKEditorFeatures = this.getCKEditorFeatures.bind(this);
       $ckeditorToolbar
@@ -335,6 +339,7 @@
           getCKEditorFeatures(hiddenEditorConfig, function (features) {
             // Trigger a standardized text editor configuration event for each
             // feature that was modified by the configuration changes.
+            var featuresMetadata = view.model.get('featuresMetadata');
             for (var name in features) {
               if (features.hasOwnProperty(name)) {
                 var feature = features[name];

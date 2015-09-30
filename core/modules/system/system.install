@@ -1663,5 +1663,44 @@ function system_update_8008() {
 }
 
 /**
+ * Add allowed attributes to existing html filters.
+ */
+function system_update_8009() {
+  $default_mapping = [
+    '<a>' => '<a href hreflang>',
+    '<blockquote>' => '<blockquote cite>',
+    '<ol>' => '<ol start type>',
+    '<ul>' => '<ul type>',
+    '<img>' => '<img src alt height width>',
+    '<h2>' => '<h2 id>',
+    '<h3>' => '<h3 id>',
+    '<h4>' => '<h4 id>',
+    '<h5>' => '<h5 id>',
+    '<h6>' => '<h6 id>',
+  ];
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('filter.format') as $name) {
+    $allowed_html_mapping = $default_mapping;
+    $config = $config_factory->getEditable($name);
+    // The image alignment filter needs the data-align attribute.
+    $align_enabled = $config->get('filters.filter_align.status');
+    if ($align_enabled) {
+      $allowed_html_mapping['<img>'] = str_replace('>', ' data-align>', $allowed_html_mapping['<img>']);
+    }
+    // The image caption filter needs the data-caption attribute.
+    $caption_enabled = $config->get('filters.filter_caption.status');
+    if ($caption_enabled) {
+      $allowed_html_mapping['<img>'] = str_replace('>', ' data-caption>', $allowed_html_mapping['<img>']);
+    }
+    $allowed_html = $config->get('filters.filter_html.settings.allowed_html');
+    if (!empty($allowed_html)) {
+      $allowed_html = strtr($allowed_html, $allowed_html_mapping);
+      $config->set('filters.filter_html.settings.allowed_html', $allowed_html);
+      $config->save();
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */

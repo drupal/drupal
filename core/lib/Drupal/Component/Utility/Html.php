@@ -262,9 +262,9 @@ class Html {
 <body>!html</body>
 </html>
 EOD;
-    // PHP's \DOMDocument serialization adds straw whitespace in case the markup
-    // of the wrapping document contains newlines, so ensure to remove all
-    // newlines before injecting the actual HTML body to process.
+    // PHP's \DOMDocument serialization adds extra whitespace when the markup
+    // of the wrapping document contains newlines, so ensure we remove all
+    // newlines before injecting the actual HTML body to be processed.
     $document = strtr($document, array("\n" => '', '!html' => $html));
 
     $dom = new \DOMDocument();

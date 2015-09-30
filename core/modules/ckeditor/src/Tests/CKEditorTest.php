@@ -54,7 +54,7 @@ class CKEditorTest extends KernelTestBase {
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
-            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
+            'allowed_html' => '<h2 id> <h3> <h4> <h5> <h6> <p> <br> <strong> <a href hreflang>',
           )
         ),
       ),
@@ -96,6 +96,7 @@ class CKEditorTest extends KernelTestBase {
     );
     $expected_config = $this->castSafeStrings($expected_config);
     ksort($expected_config);
+    ksort($expected_config['allowedContent']);
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for default configuration.');
 
     // Customize the configuration: add button, have two contextually enabled
@@ -122,12 +123,13 @@ class CKEditorTest extends KernelTestBase {
     // Change the allowed HTML tags; the "allowedContent" and "format_tags"
     // settings for CKEditor should automatically be updated as well.
     $format = $editor->getFilterFormat();
-    $format->filters('filter_html')->settings['allowed_html'] .= '<pre> <h3>';
+    $format->filters('filter_html')->settings['allowed_html'] .= '<pre> <h1>';
     $format->save();
 
-    $expected_config['allowedContent']['pre'] = array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE);
-    $expected_config['allowedContent']['h3'] = array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE);
-    $expected_config['format_tags'] = 'p;h2;h3;h4;h5;h6;pre';
+    $expected_config['allowedContent']['pre'] = array('attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE);
+    $expected_config['allowedContent']['h1'] = array('attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE);
+    $expected_config['format_tags'] = 'p;h1;h2;h3;h4;h5;h6;pre';
+    ksort($expected_config['allowedContent']);
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
     // Disable the filter_html filter: allow *all *tags.
@@ -179,14 +181,17 @@ class CKEditorTest extends KernelTestBase {
       ),
       'a' => array(
         'attributes' => 'href,rel,class,target',
+        'styles' => FALSE,
         'classes' => 'external',
       ),
       'span' => array(
         'attributes' => 'class,property,rel,style',
         'styles' => 'font-size',
+        'classes' => FALSE,
       ),
       '*' => array(
         'attributes' => 'class,data-*',
+        'styles' => FALSE,
         'classes' => 'is-a-hipster-llama,and-more',
       ),
       'del' => array(
@@ -206,6 +211,8 @@ class CKEditorTest extends KernelTestBase {
     );
     $expected_config['format_tags'] = 'p';
     ksort($expected_config);
+    ksort($expected_config['allowedContent']);
+    ksort($expected_config['disallowedContent']);
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
   }
 
@@ -421,17 +428,18 @@ class CKEditorTest extends KernelTestBase {
   }
 
   protected function getDefaultAllowedContentConfig() {
-    return array(
-      'h2' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'h3' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'h4' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'h5' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'h6' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'p' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'br' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'strong' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-      'a' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
-    );
+    return [
+      'h2' => ['attributes' => 'id', 'styles' => FALSE, 'classes' => FALSE],
+      'h3' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'h4' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'h5' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'h6' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'p' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'br' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'strong' => ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE],
+      'a' => ['attributes' => 'href,hreflang', 'styles' => FALSE, 'classes' => FALSE],
+      '*' => ['attributes' => 'lang,dir', 'styles' => FALSE, 'classes' => FALSE],
+    ];
   }
 
   protected function getDefaultDisallowedContentConfig() {

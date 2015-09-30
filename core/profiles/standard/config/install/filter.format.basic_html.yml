@@ -15,7 +15,7 @@ filters:
     status: true
     weight: -10
     settings:
-      allowed_html: '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <h2> <h3> <h4> <h5> <h6> <p> <br> <span> <img>'
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br> <span> <img src alt height width data-entity-type data-entity-uuid data-align data-caption>'
       filter_html_help: false
       filter_html_nofollow: false
   filter_align:
@@ -35,12 +35,6 @@ filters:
     provider: filter
     status: true
     weight: 9
-    settings: {  }
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: 10
     settings: {  }
   editor_file_reference:
     id: editor_file_reference

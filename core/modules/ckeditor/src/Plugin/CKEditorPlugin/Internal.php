@@ -516,6 +516,13 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
         }
         // Tell CKEditor the tag is allowed, along with some tags.
         elseif (is_array($attributes)) {
+          // Set defaults (these will be overridden below if more specific
+          // values are present).
+          $allowed[$tag] = array(
+            'attributes' => FALSE,
+            'styles' => FALSE,
+            'classes' => FALSE,
+          );
           // Configure allowed attributes, allowed "style" attribute values and
           // allowed "class" attribute values.
           // CKEditor only allows specific values for the "class" and "style"
@@ -579,6 +586,9 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           }
         }
       }
+
+      ksort($allowed);
+      ksort($disallowed);
 
       return array($allowed, $disallowed);
     }
