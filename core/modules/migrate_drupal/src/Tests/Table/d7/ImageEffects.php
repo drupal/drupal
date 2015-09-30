@@ -64,8 +64,44 @@ class ImageEffects extends DrupalDumpBase {
       'name',
       'data',
     ))
-    ->execute();
+    ->values(array(
+      'ieid' => '3',
+      'isid' => '1',
+      'weight' => '1',
+      'name' => 'image_scale_and_crop',
+      'data' => 'a:2:{s:5:"width";s:2:"55";s:6:"height";s:2:"55";}',
+    ))->values(array(
+      'ieid' => '4',
+      'isid' => '1',
+      'weight' => '2',
+      'name' => 'image_desaturate',
+      'data' => 'a:0:{}',
+    ))->values(array(
+      'ieid' => '5',
+      'isid' => '2',
+      'weight' => '1',
+      'name' => 'image_resize',
+      'data' => 'a:2:{s:5:"width";s:2:"55";s:6:"height";s:3:"100";}',
+    ))->values(array(
+      'ieid' => '6',
+      'isid' => '2',
+      'weight' => '2',
+      'name' => 'image_rotate',
+      'data' => 'a:3:{s:7:"degrees";s:2:"45";s:7:"bgcolor";s:7:"#FFFFFF";s:6:"random";i:0;}',
+    ))->values(array(
+      'ieid' => '7',
+      'isid' => '3',
+      'weight' => '1',
+      'name' => 'image_scale',
+      'data' => 'a:3:{s:5:"width";s:3:"150";s:6:"height";s:0:"";s:7:"upscale";i:0;}',
+    ))->values(array(
+      'ieid' => '8',
+      'isid' => '3',
+      'weight' => '2',
+      'name' => 'image_crop',
+      'data' => 'a:3:{s:5:"width";s:2:"50";s:6:"height";s:2:"50";s:6:"anchor";s:8:"left-top";}',
+    ))->execute();
   }
 
 }
-#02b95b18fd065377d10d2eb5db756894
+#5e2aa799db43de19b84994816b4a426b

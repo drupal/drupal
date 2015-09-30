@@ -50,8 +50,20 @@ class ImageStyles extends DrupalDumpBase {
       'name',
       'label',
     ))
-    ->execute();
+    ->values(array(
+      'isid' => '1',
+      'name' => 'custom_image_style_1',
+      'label' => 'Custom image style 1',
+    ))->values(array(
+      'isid' => '2',
+      'name' => 'custom_image_style_2',
+      'label' => 'Custom image style 2',
+    ))->values(array(
+      'isid' => '3',
+      'name' => 'custom_image_style_3',
+      'label' => 'Custom image style 3',
+    ))->execute();
   }
 
 }
-#64077dfb27e8f49e53f6d40a40b6d36d
+#ace52192be7a9ef33a60e4202b6f33f4
