@@ -40,6 +40,13 @@ class ConvertTokens extends ProcessPluginBase {
       '!password' => '',
     );
 
+    // Given that our source is a database column that could hold a NULL
+    // value, sometimes that filters down to here. str_replace() cannot
+    // handle NULLs as the subject, so we reset to an empty string.
+    if (is_null($value)) {
+      $value = '';
+    }
+
     if (is_string($value)) {
       return str_replace(array_keys($tokens), $tokens, $value);
     }
