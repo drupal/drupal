@@ -100,6 +100,17 @@ class ResponsiveImageStyleForm extends EntityForm {
       '#options' => $this->breakpointManager->getGroups(),
       '#required' => TRUE,
       '#description' => $description,
+      '#ajax' => array(
+        'callback' => '::breakpointMappingFormAjax',
+        'wrapper' => 'responsive-image-style-breakpoints-wrapper',
+      ),
+    );
+
+    $form['keyed_styles'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'id' => 'responsive-image-style-breakpoints-wrapper',
+      ),
     );
 
     // By default, breakpoints are ordered from smallest weight to largest:
@@ -189,6 +200,13 @@ class ResponsiveImageStyleForm extends EntityForm {
     $form['#tree'] = TRUE;
 
     return parent::form($form, $form_state, $responsive_image_style);
+  }
+
+  /**
+   * Get the form for mapping breakpoints to image styles.
+   */
+  public function breakpointMappingFormAjax($form, FormStateInterface $form_state) {
+    return $form['keyed_styles'];
   }
 
   /**
