@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Classy theme.
+ */
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function classy_library_info_alter(&$libraries, $extension) {
+  if ($extension == 'user' && isset($libraries['drupal.user'])) {
+    // @todo Replace with https://www.drupal.org/node/2497667 when possible.
+    $library_discovery = \Drupal::service('library.discovery');
+    $library = $library_discovery->getLibraryByName('classy', 'user');
+    foreach ($library['css'] as $css) {
+      $libraries['drupal.user']['css']['component'][base_path() . $css['data']] = [];
+    }
+  }
+  if ($extension == 'core' && isset($libraries['drupal.dropbutton'])) {
+    $libraries['drupal.dropbutton']['dependencies'][] = 'classy/dropbutton';
+  }
+  if ($extension == 'core' && isset($libraries['drupal.dialog'])) {
+    $libraries['drupal.dialog']['dependencies'][] = 'classy/dialog';
+  }
+}

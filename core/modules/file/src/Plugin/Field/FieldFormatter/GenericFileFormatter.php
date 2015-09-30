@@ -47,11 +47,6 @@ class GenericFileFormatter extends FileFormatterBase {
         unset($item->_attributes);
       }
     }
-    if (!empty($elements)) {
-      $elements['#attached'] = array(
-        'library' => array('file/drupal.file.formatter.generic'),
-      );
-    }
 
     return $elements;
   }

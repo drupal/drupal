@@ -8,7 +8,7 @@
   margin: 0.5em;
 }
 .forum__icon {
-  background-image: url(../icons/forum-icons.png);
+  background-image: url(../../images/icons/forum-icons.png);
   background-repeat: no-repeat;
   float: left; /* LTR */
   height: 24px;

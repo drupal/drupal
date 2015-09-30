@@ -31,6 +31,30 @@ book-navigation:
     component:
       css/components/book-navigation.css: {}
 
+dialog:
+  version: VERSION
+  css:
+    component:
+      css/components/dialog.css: { weight: -10 }
+
+dropbutton:
+  version: VERSION
+  css:
+    component:
+      css/components/dropbutton.css: { weight: -10 }
+
+file:
+  version: VERSION
+  css:
+    component:
+      css/components/file.css: { weight: -10 }
+
+forum:
+  version: VERSION
+  css:
+    component:
+      css/components/forum.css: { weight: -10 }
+
 indented:
   version: VERSION
   css:
@@ -60,3 +84,9 @@ search-results:
   css:
     component:
       css/components/search-results.css: {}
+
+user:
+  version: VERSION
+  css:
+    component:
+      css/components/user.css: { weight: -10 }

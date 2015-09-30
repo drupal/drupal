@@ -161,9 +161,6 @@ drupal.dialog:
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
     misc/dialog/dialog.jquery-ui.js: {}
-  css:
-    theme:
-      misc/dialog.theme.css: {}
   dependencies:
     - core/jquery
     - core/drupal
@@ -199,8 +196,6 @@ drupal.dropbutton:
   css:
     component:
       misc/dropbutton/dropbutton.css: {}
-    theme:
-      misc/dropbutton/dropbutton.theme.css: {}
   dependencies:
     - core/jquery
     - core/drupal

@@ -1,5 +1,0 @@
-forum.index:
-  version: VERSION
-  css:
-    component:
-      css/forum.theme.css: {}

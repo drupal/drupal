@@ -92,4 +92,4 @@ seven.drupal.dialog:
   version: VERSION
   css:
     theme:
-      css/components/dialog.theme.css: {}
+      css/components/dialog.css: {}
