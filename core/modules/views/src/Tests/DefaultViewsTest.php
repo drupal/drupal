@@ -47,6 +47,8 @@ class DefaultViewsTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->drupalPlaceBlock('page_title_block');
+
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

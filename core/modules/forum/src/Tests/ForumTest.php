@@ -83,6 +83,7 @@ class ForumTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('page_title_block');
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser(array(

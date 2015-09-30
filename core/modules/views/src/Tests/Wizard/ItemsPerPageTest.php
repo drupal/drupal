@@ -15,6 +15,12 @@ namespace Drupal\views\Tests\Wizard;
  */
 class ItemsPerPageTest extends WizardTestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Tests the number of items per page.
    */

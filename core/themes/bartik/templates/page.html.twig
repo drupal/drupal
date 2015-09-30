@@ -27,11 +27,6 @@
  *   slogan has been disabled in theme settings.
 
  * Page content (in order of occurrence in the default page.html.twig):
- * - title_prefix: Additional output populated by modules, intended to be
- *   displayed in front of the main title tag that appears in the template.
- * - title: The page title, for use in the actual content.
- * - title_suffix: Additional output populated by modules, intended to be
- *   displayed after the main title tag that appears in the template.
  * - node: Fully loaded node, if there is an automatically-loaded node
  *   associated with the page and the node ID is the second argument in the
  *   page's path (e.g. node/12345 and node/12345/revisions, but not
@@ -90,13 +85,6 @@
         <main id="content" class="column main-content js-quickedit-main-content" role="main">
           <section class="section">
             <a id="main-content" tabindex="-1"></a>
-            {{ title_prefix }}
-            {% if title %}
-              <h1 class="title page-title">
-                {{ title }}
-              </h1>
-            {% endif %}
-            {{ title_suffix }}
             {{ page.content }}
           </section>
         </main>

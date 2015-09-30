@@ -38,6 +38,18 @@ function template_preprocess_views_view(&$variables) {
     $variables['attributes']['class'][] = $variables['css_class'];
   }
 
+  // contextual_preprocess() only works on render elements, and since this theme
+  // hook is not for a render element, contextual_preprocess() falls back to the
+  // first argument and checks if that is a render element. The first element is
+  // view_array. However, view_array does not get set anywhere, but since we do
+  // have access to the View object, we can also access the View object's
+  // element, which is a render element that does have #contextual_links set if
+  // the display supports it. Doing this allows contextual_preprocess() to
+  // access this theme hook's render element, and therefore allows this template
+  // to have contextual links.
+  // @see views_theme()
+  $variables['view_array'] = $variables['view']->element;
+
   // Attachments are always updated with the outer view, never by themselves,
   // so they do not have dom ids.
   if (empty($view->is_attachment)) {

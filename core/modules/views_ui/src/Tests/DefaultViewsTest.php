@@ -25,6 +25,13 @@ class DefaultViewsTest extends UITestBase {
    */
   public static $testViews = array('test_view_status', 'test_page_display_menu', 'test_page_display_arguments');
 
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Tests default views.
    */

@@ -39,7 +39,7 @@ function bartik_preprocess_html(&$variables) {
 /**
  * Implements hook_preprocess_HOOK() for page templates.
  */
-function bartik_preprocess_page(&$variables) {
+function bartik_preprocess_page_title(&$variables) {
   // Since the title and the shortcut link are both block level elements,
   // positioning them next to each other is much simpler with a wrapper div.
   if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {

@@ -69,6 +69,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
     }
     $this->localeStorage = $this->container->get('locale.storage');
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('page_title_block');
   }
 
   /**

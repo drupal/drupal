@@ -28,6 +28,15 @@ class HandlerTest extends UITestBase {
   public static $testViews = array('test_view_empty', 'test_view_broken', 'node');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
+  /**
    * Overrides \Drupal\views\Tests\ViewTestBase::schemaDefinition().
    *
    * Adds a uid column to test the relationships.
@@ -191,7 +200,7 @@ class HandlerTest extends UITestBase {
       $this->assertIdentical((string) $result[0], $text, 'Ensure the broken handler text was found.');
 
       $this->drupalGet($href);
-      $result = $this->xpath('//h1');
+      $result = $this->xpath('//h1[@class="page-title"]');
       $this->assertTrue(strpos((string) $result[0], $text) !== FALSE, 'Ensure the broken handler text was found.');
 
       $original_configuration = [

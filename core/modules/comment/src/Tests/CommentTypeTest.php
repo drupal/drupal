@@ -43,6 +43,9 @@ class CommentTypeTest extends CommentTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }
 

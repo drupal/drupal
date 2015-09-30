@@ -30,6 +30,7 @@ class EntityDisplayModeTest extends WebTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_actions_block');
+    $this->drupalPlaceBlock('page_title_block');
   }
 
   /**

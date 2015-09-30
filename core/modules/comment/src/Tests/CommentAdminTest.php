@@ -15,6 +15,13 @@ use Drupal\user\RoleInterface;
  * @group comment
  */
 class CommentAdminTest extends CommentTestBase {
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Test comment approval functionality through admin/content/comment.
    */

@@ -34,6 +34,8 @@ class DisabledDisplayTest extends PluginTestBase {
 
     $this->enableViewsTestModule();
 
+    $this->drupalPlaceBlock('page_title_block');
+
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
   }
@@ -58,7 +60,7 @@ class DisabledDisplayTest extends PluginTestBase {
 
     // Enabled page display should return content.
     $this->drupalGet('test-disabled-display');
-    $result = $this->xpath('//h1');
+    $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual($result[0], 'test_disabled_display', 'The enabled page_1 display is accessible.');
 
     // Disabled page view should 404.
@@ -77,7 +79,7 @@ class DisabledDisplayTest extends PluginTestBase {
 
     // Check that the originally disabled page_2 display is now enabled.
     $this->drupalGet('test-disabled-display-2');
-    $result = $this->xpath('//h1');
+    $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual($result[0], 'test_disabled_display', 'The enabled page_2 display is accessible.');
 
     // Disable each disabled display and save the view.

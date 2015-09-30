@@ -36,6 +36,8 @@ class PageTitleTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
+    $this->drupalPlaceBlock('page_title_block');
+
     $this->contentUser = $this->drupalCreateUser(array('create page content', 'access content', 'administer themes', 'administer site configuration', 'link to any page'));
     $this->drupalLogin($this->contentUser);
   }
@@ -105,14 +107,14 @@ class PageTitleTest extends WebTestBase {
     $this->drupalGet('test-render-title');
 
     $this->assertTitle('Foo | Drupal');
-    $result = $this->xpath('//h1');
+    $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Foo', (string) $result[0]);
 
     // Test forms
     $this->drupalGet('form-test/object-builder');
 
     $this->assertTitle('Test dynamic title | Drupal');
-    $result = $this->xpath('//h1');
+    $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Test dynamic title', (string) $result[0]);
 
     // Set some custom translated strings.
@@ -125,14 +127,14 @@ class PageTitleTest extends WebTestBase {
     $this->drupalGet('test-page-static-title');
 
     $this->assertTitle('Static title translated | Drupal');
-    $result = $this->xpath('//h1');
+    $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Static title translated', (string) $result[0]);
 
     // Test the dynamic '_title_callback' route option.
     $this->drupalGet('test-page-dynamic-title');
 
     $this->assertTitle('Dynamic title | Drupal');
-    $result = $this->xpath('//h1');
+    $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Dynamic title', (string) $result[0]);
 
     // Ensure that titles are cacheable and are escaped normally if the

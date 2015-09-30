@@ -193,11 +193,18 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   If the selected display variant does not implement PageVariantInterface.
    */
   protected function prepare(array $main_content, Request $request, RouteMatchInterface $route_match) {
+    // Determine the title: use the title provided by the main content if any,
+    // otherwise get it from the routing information.
+    $get_title = function (array $main_content) use ($request, $route_match) {
+      return isset($main_content['#title']) ? $main_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    };
+
     // If the _controller result already is #type => page,
     // we have no work to do: The "main content" already is an entire "page"
     // (see html.html.twig).
     if (isset($main_content['#type']) && $main_content['#type'] === 'page') {
       $page = $main_content;
+      $title = $get_title($page);
     }
     // Otherwise, render it as the main content of a #type => page, by selecting
     // page display variant to do that and building that page display variant.
@@ -229,6 +236,8 @@ class HtmlRenderer implements MainContentRendererInterface {
         ];
       }
 
+      $title = $get_title($main_content);
+
       // Instantiate the page display, and give it the main content.
       $page_display = $this->displayVariantManager->createInstance($variant_id);
       if (!$page_display instanceof PageVariantInterface) {
@@ -236,6 +245,7 @@ class HtmlRenderer implements MainContentRendererInterface {
       }
       $page_display
         ->setMainContent($main_content)
+        ->setTitle($title)
         ->addCacheableDependency($event)
         ->setConfiguration($event->getPluginConfiguration());
       // Some display variants need to be passed an array of contexts with
@@ -267,10 +277,6 @@ class HtmlRenderer implements MainContentRendererInterface {
 
     // Allow hooks to add attachments to $page['#attached'].
     $this->invokePageAttachmentHooks($page);
-
-    // Determine the title: use the title provided by the main content if any,
-    // otherwise get it from the routing information.
-    $title = isset($main_content['#title']) ? $main_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     return [$page, $title];
   }

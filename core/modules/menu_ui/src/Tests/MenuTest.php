@@ -70,6 +70,8 @@ class MenuTest extends MenuWebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->drupalPlaceBlock('page_title_block');
+
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
     // Create users.

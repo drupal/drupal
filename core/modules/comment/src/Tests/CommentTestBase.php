@@ -191,14 +191,22 @@ abstract class CommentTestBase extends WebTestBase {
    */
   function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
-      $regex = '!' . ($reply ? '<div class="indented">(.*?)' : '');
-      $regex .= '<a id="comment-' . $comment->id() . '"(.*?)';
-      $regex .= $comment->getSubject() . '(.*?)';
-      $regex .= $comment->comment_body->value . '(.*?)';
-      $regex .= ($reply ? '</article>\s</div>(.*?)' : '');
-      $regex .= '!s';
+      $comment_element = $this->cssSelect('.comment-wrapper ' . ($reply ? '.indented ' : '') . '#comment-' . $comment->id() . ' ~ article');
+      if (empty($comment_element)) {
+        return FALSE;
+      }
 
-      return (boolean) preg_match($regex, $this->getRawContent());
+      $comment_title = $comment_element[0]->xpath('div/h3/a');
+      if (empty($comment_title) || ((string)$comment_title[0]) !== $comment->getSubject()) {
+        return FALSE;
+      }
+
+      $comment_body = $comment_element[0]->xpath('div/div/p');
+      if (empty($comment_body) || ((string)$comment_body[0]) !== $comment->comment_body->value) {
+        return FALSE;
+      }
+
+      return TRUE;
     }
     else {
       return FALSE;

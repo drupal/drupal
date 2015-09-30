@@ -19,6 +19,12 @@ use Drupal\views\Views;
  */
 class BasicTest extends WizardTestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   function testViewsWizardAndListing() {
     $this->drupalCreateContentType(array('type' => 'article'));
     $this->drupalCreateContentType(array('type' => 'page'));

@@ -71,6 +71,8 @@ class FilterFormatAccessTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->drupalPlaceBlock('page_title_block');
+
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create a user who can administer text formats, but does not have

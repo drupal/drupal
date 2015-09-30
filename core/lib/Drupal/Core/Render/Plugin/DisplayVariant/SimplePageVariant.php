@@ -28,6 +28,13 @@ class SimplePageVariant extends VariantBase implements PageVariantInterface {
   protected $mainContent;
 
   /**
+   * The page title: a string (plain title) or a render array (formatted title).
+   *
+   * @var string|array
+   */
+  protected $title = '';
+
+  /**
    * {@inheritdoc}
    */
   public function setMainContent(array $main_content) {
@@ -38,14 +45,27 @@ class SimplePageVariant extends VariantBase implements PageVariantInterface {
   /**
    * {@inheritdoc}
    */
+  public function setTitle($title) {
+    $this->title = $title;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $build = [
       'content' => [
-        'main_content' => $this->mainContent,
         'messages' => [
           '#type' => 'status_messages',
           '#weight' => -1000,
         ],
+        'page_title' => [
+          '#type' => 'page_title',
+          '#title' => $this->title,
+          '#weight' => -900,
+        ],
+        'main_content' => ['#weight' => -800] + $this->mainContent,
       ],
     ];
     return $build;

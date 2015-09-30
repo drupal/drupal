@@ -67,10 +67,13 @@ class SiteMaintenanceTest extends WebTestBase {
     // Logout and verify that offline message is displayed.
     $this->drupalLogout();
     $this->drupalGet('');
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
     $this->assertText($offline_message);
     $this->drupalGet('node');
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
     $this->assertText($offline_message);
     $this->drupalGet('user/register');
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
     $this->assertText($offline_message);
 
     // Verify that user is able to log in.
@@ -103,6 +106,7 @@ class SiteMaintenanceTest extends WebTestBase {
     // Logout and verify that custom site offline message is displayed.
     $this->drupalLogout();
     $this->drupalGet('');
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
     $this->assertRaw($offline_message, 'Found the site offline message.');
 
     // Verify that custom site offline message is not displayed on user/password.
@@ -121,5 +125,14 @@ class SiteMaintenanceTest extends WebTestBase {
     // Log in with temporary login link.
     $this->drupalPostForm($path, array(), t('Log in'));
     $this->assertText($user_message);
+
+    // Regression test to check if title displays in Bartik on maintenance page.
+    \Drupal::service('theme_handler')->install(array('bartik'));
+    \Drupal::service('theme_handler')->setDefault('bartik');
+
+    // Logout and verify that offline message is displayed in Bartik.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]);
   }
 }

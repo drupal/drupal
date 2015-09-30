@@ -39,6 +39,7 @@ class SearchPageTextTest extends SearchTestBase {
     // Create user.
     $this->searchingUser = $this->drupalCreateUser(array('search content', 'access user profiles', 'use advanced search'));
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('page_title_block');
   }
 
   /**

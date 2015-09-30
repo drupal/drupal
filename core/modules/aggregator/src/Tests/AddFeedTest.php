@@ -14,6 +14,13 @@ use Drupal\Component\Utility\Html;
  * @group aggregator
  */
 class AddFeedTest extends AggregatorTestBase {
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Creates and ensures that a feed is unique, checks source, and deletes feed.
    */

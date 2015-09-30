@@ -14,6 +14,12 @@ namespace Drupal\views_ui\Tests;
  */
 class OverrideDisplaysTest extends UITestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Tests that displays can be overridden via the UI.
    */

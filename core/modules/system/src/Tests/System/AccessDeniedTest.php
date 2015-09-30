@@ -30,6 +30,8 @@ class AccessDeniedTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->drupalPlaceBlock('page_title_block');
+
     // Create an administrative user.
     $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer site configuration', 'link to any page', 'administer blocks']);
 

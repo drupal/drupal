@@ -44,6 +44,7 @@ class MenuRouterTest extends WebTestBase {
 
     $this->drupalPlaceBlock('system_menu_block:tools');
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('page_title_block');
   }
 
   /**

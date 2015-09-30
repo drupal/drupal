@@ -35,6 +35,7 @@ class MenuNodeTest extends WebTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('system_menu_block:main');
+    $this->drupalPlaceBlock('page_title_block');
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

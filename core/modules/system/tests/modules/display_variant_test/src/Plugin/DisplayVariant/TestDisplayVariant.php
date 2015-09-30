@@ -30,6 +30,13 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
   protected $mainContent = [];
 
   /**
+   * The page title: a string (plain title) or a render array (formatted title).
+   *
+   * @var string|array
+   */
+  protected $title = '';
+
+  /**
    * An array of collected contexts.
    *
    * This is only used on runtime, and is not stored.
@@ -66,6 +73,14 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
    */
   public function setMainContent(array $main_content) {
     $this->mainContent = $main_content;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTitle($title) {
+    $this->title = $title;
     return $this;
   }
 

@@ -59,6 +59,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Enable the search block.
     $this->drupalPlaceBlock('search_form_block');
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('page_title_block');
   }
 
   /**

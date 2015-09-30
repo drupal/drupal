@@ -180,6 +180,8 @@ class DisplayTest extends UITestBase {
     $view->enable()->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
 
+    // When no "main content" block is placed, we find a contextual link
+    // placeholder for editing just the view.
     $this->drupalGet('test-display');
     $id = 'entity.view.edit_form:view=test_display:location=page&name=test_display&display_id=page_1&langcode=en';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
@@ -192,6 +194,15 @@ class DisplayTest extends UITestBase {
     $this->assertResponse(200);
     $json = Json::decode($response);
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1">Edit view</a></li></ul>');
+
+    // When a "main content" is placed, we still find a contextual link
+    // placeholder for editing just the view (not the main content block).
+    // @see system_block_view_system_main_block_alter()
+    $this->drupalPlaceBlock('system_main_block', ['id' => 'main_content']);
+    $this->drupalGet('test-display');
+    $id = 'entity.view.edit_form:view=test_display:location=page&name=test_display&display_id=page_1&langcode=en';
+    // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
+    $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
   /**

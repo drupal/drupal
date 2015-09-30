@@ -298,9 +298,9 @@ function shortcut_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page templates.
+ * Implements hook_preprocess_HOOK() for page title templates.
  */
-function shortcut_preprocess_page(&$variables) {
+function shortcut_preprocess_page_title(&$variables) {
   // Only display the shortcut link if the user has the ability to edit
   // shortcuts and if the page's actual content is being shown (for example,
   // we do not want to display it on "access denied" or "page not found"
@@ -309,9 +309,12 @@ function shortcut_preprocess_page(&$variables) {
     $link = Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath();
     $route_match = \Drupal::routeMatch();
 
+    // Replicate template_preprocess_html()'s processing to get the title in
+    // string form, so we can set the default name for the shortcut.
+    $name = render($variables['title']);
     $query = array(
       'link' => $link,
-      'name' => $variables['title'],
+      'name' => $name,
     );
 
     $shortcut_set = shortcut_current_displayed_set();

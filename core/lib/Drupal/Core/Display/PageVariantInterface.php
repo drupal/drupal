@@ -36,4 +36,15 @@ interface PageVariantInterface extends VariantInterface {
    */
   public function setMainContent(array $main_content);
 
+  /**
+   * Sets the title for the page being rendered.
+   *
+   * @param string|array $title
+   *   The page title: either a string for plain titles or a render array for
+   *   formatted titles.
+   *
+   * @return $this
+   */
+  public function setTitle($title);
+
 }

@@ -206,7 +206,8 @@ class ViewsBlockTest extends UnitTestCase {
 }
 
 namespace {
-  // @todo replace views_add_contextual_links()
+  // @todo https://www.drupal.org/node/2571679 replace
+  // views_add_contextual_links().
   if (!function_exists('views_add_contextual_links')) {
     function views_add_contextual_links() {
     }

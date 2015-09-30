@@ -27,6 +27,15 @@ class ShortcutLinksTest extends ShortcutTestBase {
   public static $modules = array('router_test', 'views', 'block');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
+  /**
    * Tests that creating a shortcut works properly.
    */
   public function testShortcutLinkAdd() {

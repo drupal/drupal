@@ -23,6 +23,12 @@ class AggregatorRenderingTest extends AggregatorTestBase {
    */
   public static $modules = array('block', 'test_page_test');
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Adds a feed block to the page and checks its links.
    */

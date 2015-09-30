@@ -17,6 +17,12 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  */
 class DisplayPathTest extends UITestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * {@inheritdoc}
    */

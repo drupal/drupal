@@ -14,6 +14,12 @@ namespace Drupal\views\Tests\Wizard;
  */
 class SortingTest extends WizardTestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Tests the sorting functionality.
    */

@@ -1470,16 +1470,16 @@ function system_update_8005() {
 
       default:
         $custom_themes_installed = TRUE;
-        $name = sprintf('block.block.%s_local_actions', $theme_name);
+        $name = 'block.block.' . $theme_name . '_local_actions';
         $values = [
-          'id' => sprintf('%s_local_actions', $theme_name),
+          'id' => $theme_name . '_local_actions',
           'weight' => -10,
         ] + $local_actions_default_settings;
         _system_update_create_block($name, $theme_name, $values);
 
         $name = sprintf('block.block.%s_local_tasks', $theme_name);
         $values = [
-          'id' => sprintf('%s_local_tasks', $theme_name),
+          'id' => $theme_name . '_local_tasks',
           'weight' => -20,
         ] + $tabs_default_settings;
         _system_update_create_block($name, $theme_name, $values);
@@ -1699,6 +1699,89 @@ function system_update_8009() {
       $config->save();
     }
   }
+}
+
+/**
+ * Place page title blocks in every theme.
+ */
+function system_update_8009() {
+  // When block module is not installed, there is nothing that could be done
+  // except showing a warning.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return t('Block module is not enabled. The page title has been converted to a block, but default page title markup will still display at the top of the main content area.');
+  }
+
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $custom_themes_installed = FALSE;
+  $message = NULL;
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+
+  $page_title_default_settings = [
+    'plugin' => 'page_title_block',
+    'region' => 'content',
+    'settings.label' => 'Page title',
+    'settings.label_display' => 0,
+    'visibility' => [],
+    'weight' => -50,
+    'langcode' => $langcode,
+  ];
+  foreach ($theme_handler->listInfo() as $theme) {
+    $theme_name = $theme->getName();
+    switch ($theme_name) {
+      case 'bartik':
+        $name = 'block.block.bartik_page_title';
+        $values = [
+          'id' => 'bartik_page_title',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'stark':
+        $name = 'block.block.stark_page_title';
+        $values = [
+          'id' => 'stark_page_title',
+          'region' => 'content',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'seven':
+        $name = 'block.block.seven_page_title';
+        $values = [
+          'id' => 'seven_page_title',
+          'region' => 'header',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'classy':
+        $name = 'block.block.classy_page_title';
+        $values = [
+          'id' => 'classy_page_title',
+          'region' => 'content',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      default:
+        $custom_themes_installed = TRUE;
+        $name = sprintf('block.block.%s_page_title', $theme_name);
+        $values = [
+          'id' => sprintf('%s_page_title', $theme_name),
+          'region' => 'content',
+          'weight' => '-50',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+    }
+  }
+
+  if ($custom_themes_installed) {
+    $message = t('Because your site has custom theme(s) installed, we have placed the page title block in the content region. Please manually review the block configuration and remove the page title variables from your page templates.');
+  }
+
+  return $message;
 }
 
 /**

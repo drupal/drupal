@@ -1342,9 +1342,6 @@ function template_preprocess_html(&$variables) {
 function template_preprocess_page(&$variables) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-  // Move some variables to the top level for themer convenience and template cleanliness.
-  $variables['title'] = $variables['page']['#title'];
-
   foreach (\Drupal::theme()->getActiveTheme()->getRegions() as $region) {
     if (!isset($variables['page'][$region])) {
       $variables['page'][$region] = array();
@@ -1465,6 +1462,10 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['logo'] = theme_get_setting('logo.url');
   $variables['site_name'] = $site_config->get('name');
   $variables['site_slogan'] = $site_config->get('slogan');
+
+  // Maintenance page and install page need page title in variable because there
+  // are no blocks.
+  $variables['title'] = $variables['page']['#title'];
 }
 
 /**
@@ -1706,6 +1707,9 @@ function drupal_common_theme() {
     ),
     'page' => array(
       'render element' => 'page',
+    ),
+    'page_title' => array(
+      'variables' => array('title' => NULL),
     ),
     'region' => array(
       'render element' => 'elements',

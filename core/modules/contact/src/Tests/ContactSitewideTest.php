@@ -40,6 +40,7 @@ class ContactSitewideTest extends WebTestBase {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('local_actions_block');
+    $this->drupalPlaceBlock('page_title_block');
   }
 
   /**

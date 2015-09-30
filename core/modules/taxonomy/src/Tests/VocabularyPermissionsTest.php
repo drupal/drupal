@@ -14,6 +14,12 @@ namespace Drupal\taxonomy\Tests;
  */
 class VocabularyPermissionsTest extends TaxonomyTestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Create, edit and delete a taxonomy term via the user interface.
    */

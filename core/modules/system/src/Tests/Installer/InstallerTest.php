@@ -40,6 +40,41 @@ class InstallerTest extends InstallerTestBase {
     // metatags as expected to the first page of the installer.
     $this->assertRaw('core/themes/seven/css/components/buttons.css');
     $this->assertRaw('<meta charset="utf-8" />');
+
+    // Assert that the expected title is present.
+    $this->assertEqual('Choose language', $this->cssSelect('main h1')[0]);
+
     parent::setUpLanguage();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpProfile() {
+    // Assert that the expected title is present.
+    $this->assertEqual('Select an installation profile', $this->cssSelect('main h1')[0]);
+
+    parent::setUpProfile();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpSettings() {
+    // Assert that the expected title is present.
+    $this->assertEqual('Database configuration', $this->cssSelect('main h1')[0]);
+
+    parent::setUpSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpSite() {
+    // Assert that the expected title is present.
+    $this->assertEqual('Configure site', $this->cssSelect('main h1')[0]);
+
+    parent::setUpSite();
+  }
+
 }

@@ -17,6 +17,12 @@ use Drupal\Component\Utility\Unicode;
  */
 class PageEditTest extends BlockContentTestBase {
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Checks block edit functionality.
    */

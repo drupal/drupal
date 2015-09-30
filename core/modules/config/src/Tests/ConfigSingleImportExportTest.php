@@ -28,6 +28,12 @@ class ConfigSingleImportExportTest extends WebTestBase {
     'config_test'
   ];
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   /**
    * Tests importing a single configuration file.
    */

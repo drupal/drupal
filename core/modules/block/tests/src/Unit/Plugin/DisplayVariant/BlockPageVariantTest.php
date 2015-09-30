@@ -74,28 +74,32 @@ class BlockPageVariantTest extends UnitTestCase {
   public function providerBuild() {
     $blocks_config = array(
       'block1' => array(
-        // region, is main content block, is messages block
-        'top', FALSE, FALSE,
+        // region, is main content block, is messages block, is title block
+        'top', FALSE, FALSE, FALSE,
       ),
       // Test multiple blocks in the same region.
       'block2' => array(
-        'bottom', FALSE, FALSE,
+        'bottom', FALSE, FALSE, FALSE,
       ),
       'block3' => array(
-        'bottom', FALSE, FALSE,
+        'bottom', FALSE, FALSE, FALSE,
       ),
       // Test a block implementing MainContentBlockPluginInterface.
       'block4' => array(
-        'center', TRUE, FALSE,
+        'center', TRUE, FALSE, FALSE,
       ),
       // Test a block implementing MessagesBlockPluginInterface.
       'block5' => array(
-        'center', FALSE, TRUE,
+        'center', FALSE, TRUE, FALSE,
+      ),
+      // Test a block implementing TitleBlockPluginInterface.
+      'block6' => array(
+        'center', FALSE, FALSE, TRUE,
       ),
     );
 
     $test_cases = [];
-    $test_cases[] = [$blocks_config, 5,
+    $test_cases[] = [$blocks_config, 6,
       [
         '#cache' => [
           'tags' => [
@@ -113,6 +117,7 @@ class BlockPageVariantTest extends UnitTestCase {
         'center' => [
           'block4' => [],
           'block5' => [],
+          'block6' => [],
           '#sorted' => TRUE,
         ],
         'bottom' => [
@@ -123,7 +128,7 @@ class BlockPageVariantTest extends UnitTestCase {
       ],
     ];
     unset($blocks_config['block5']);
-    $test_cases[] = [$blocks_config, 4,
+    $test_cases[] = [$blocks_config, 5,
       [
         '#cache' => [
           'tags' => [
@@ -139,6 +144,7 @@ class BlockPageVariantTest extends UnitTestCase {
         ],
         'center' => [
           'block4' => [],
+          'block6' => [],
           '#sorted' => TRUE,
         ],
         'bottom' => [
@@ -157,6 +163,7 @@ class BlockPageVariantTest extends UnitTestCase {
       ],
     ];
     unset($blocks_config['block4']);
+    unset($blocks_config['block6']);
     $test_cases[] = [$blocks_config, 3,
       [
         '#cache' => [
@@ -205,6 +212,7 @@ class BlockPageVariantTest extends UnitTestCase {
     $block_plugin = $this->getMock('Drupal\Core\Block\BlockPluginInterface');
     $main_content_block_plugin = $this->getMock('Drupal\Core\Block\MainContentBlockPluginInterface');
     $messages_block_plugin = $this->getMock('Drupal\Core\Block\MessagesBlockPluginInterface');
+    $title_block_plugin = $this->getMock('Drupal\Core\Block\TitleBlockPluginInterface');
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
       $block->expects($this->any())
@@ -212,7 +220,7 @@ class BlockPageVariantTest extends UnitTestCase {
         ->willReturn([]);
       $block->expects($this->atLeastOnce())
         ->method('getPlugin')
-        ->willReturn($block_config[1] ? $main_content_block_plugin : ($block_config[2] ? $messages_block_plugin : $block_plugin));
+        ->willReturn($block_config[1] ? $main_content_block_plugin : ($block_config[2] ? $messages_block_plugin : ($block_config[3] ? $title_block_plugin : $block_plugin)));
       $blocks[$block_config[0]][$block_id] = $block;
     }
     $this->blockViewBuilder->expects($this->exactly($visible_block_count))

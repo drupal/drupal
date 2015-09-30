@@ -8,6 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Core\Block\MainContentBlockPluginInterface;
+use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -100,12 +101,13 @@ class BlockViewBuilder extends EntityViewBuilder {
           'tags' => $cache_tags,
           'max-age' => $plugin->getCacheMaxAge(),
         ],
+        '#weight' => $entity->getWeight(),
       );
 
       // Allow altering of cacheability metadata or setting #create_placeholder.
       $this->moduleHandler->alter(['block_build', "block_build_" . $plugin->getBaseId()], $build[$entity_id], $plugin);
 
-      if ($plugin instanceof MainContentBlockPluginInterface) {
+      if ($plugin instanceof MainContentBlockPluginInterface || $plugin instanceof TitleBlockPluginInterface) {
         // Immediately build a #pre_render-able block, since this block cannot
         // be built lazily.
         $build[$entity_id] += static::buildPreRenderableBlock($entity, $this->moduleHandler());

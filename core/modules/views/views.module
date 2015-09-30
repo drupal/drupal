@@ -302,39 +302,6 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
- */
-function views_preprocess_html(&$variables) {
-  if (!\Drupal::moduleHandler()->moduleExists('contextual')) {
-    return;
-  }
-
-  // If the main content of this page contains a view, attach its contextual
-  // links to the overall page array. This allows them to be rendered directly
-  // next to the page title.
-  if ($render_array = Page::getPageRenderArray()) {
-    views_add_contextual_links($variables['page'], 'page', $render_array['#display_id'], $render_array);
-  }
-
-  // If the page contains a view as its main content, contextual links may have
-  // been attached to the page as a whole; for example, by
-  // views_page_display_pre_render().
-  // This allows them to be associated with the page and rendered by default
-  // next to the page title (which we want). However, it also causes the
-  // Contextual Links module to treat the wrapper for the entire page (i.e.,
-  // the <body> tag) as the HTML element that these contextual links are
-  // associated with. This we don't want; for better visual highlighting, we
-  // prefer a smaller region to be chosen. The region we prefer differs from
-  // theme to theme and depends on the details of the theme's markup in
-  // page.html.twig, so we can only find it using JavaScript. We therefore
-  // remove the "contextual-region" class from the <body> tag here and add
-  // JavaScript that will insert it back in the correct place.
-  if (!empty($variables['page']['#views_contextual_links'])) {
-    $variables['attributes']['data-views-page-contextual-id'] = _contextual_links_to_id($variables['page']['#contextual_links']);
-  }
-}
-
-/**
  * Adds contextual links associated with a view display to a renderable array.
  *
  * This function should be called when a view is being rendered in a particular
@@ -470,9 +437,6 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
           // user that may use contextual links, attach Views' contextual links
           // JavaScript.
           $render_element['#cache']['contexts'][] = 'user.permissions';
-          if ($location === 'page' && $render_element['#type'] === 'page' && \Drupal::currentUser()->hasPermission('access contextual links')) {
-            $render_element['#attached']['library'][] = 'views/views.contextual-links';
-          }
         }
       }
     }
