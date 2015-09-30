@@ -8,6 +8,7 @@
 namespace Drupal\config_translation;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -205,6 +206,16 @@ interface ConfigMapperInterface {
   public function getLangcode();
 
   /**
+   * Sets the original language code.
+   *
+   * @param string $langcode
+   *   The langcode.
+   *
+   * @return $this
+   */
+  public function setLangcode($langcode);
+
+  /**
    * Returns the name of the type of data the mapper encapsulates.
    *
    * @return string
@@ -267,10 +278,10 @@ interface ConfigMapperInterface {
    *
    * @todo Replace $request with RouteMatch https://www.drupal.org/node/2295255.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   Page request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    */
-  public function populateFromRequest(Request $request);
+  public function populateFromRouteMatch(RouteMatchInterface $route_match);
 
   /**
    * Returns the name of the contextual link group to add contextual links to.

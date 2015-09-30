@@ -11,6 +11,7 @@ use Drupal\config_translation\ConfigNamesMapper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -239,9 +240,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::getAddRouteParameters().
    */
   public function testGetAddRouteParameters() {
-    $request = Request::create('');
-    $request->attributes->set('langcode', 'xx');
-    $this->configNamesMapper->populateFromRequest($request);
+    $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
+    $this->configNamesMapper->populateFromRouteMatch($route_match);
 
     $expected = array('langcode' => 'xx');
     $result = $this->configNamesMapper->getAddRouteParameters();
@@ -278,9 +278,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::getEditRouteParameters().
    */
   public function testGetEditRouteParameters() {
-    $request = Request::create('');
-    $request->attributes->set('langcode', 'xx');
-    $this->configNamesMapper->populateFromRequest($request);
+    $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
+    $this->configNamesMapper->populateFromRouteMatch($route_match);
 
     $expected = array('langcode' => 'xx');
     $result = $this->configNamesMapper->getEditRouteParameters();
@@ -317,9 +316,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::getDeleteRouteParameters().
    */
   public function testGetDeleteRouteParameters() {
-    $request = Request::create('');
-    $request->attributes->set('langcode', 'xx');
-    $this->configNamesMapper->populateFromRequest($request);
+    $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
+    $this->configNamesMapper->populateFromRouteMatch($route_match);
 
     $expected = array('langcode' => 'xx');    $result = $this->configNamesMapper->getDeleteRouteParameters();
     $this->assertSame($expected, $result);
@@ -370,25 +368,25 @@ class ConfigNamesMapperTest extends UnitTestCase {
   }
 
   /**
-   * Tests ConfigNamesMapper::populateFromRequest().
+   * Tests ConfigNamesMapper::populateFromRouteMatch().
    */
-  public function testPopulateFromRequest() {
+  public function testPopulateFromRouteMatch() {
     // Make sure the language code is not set initially.
     $this->assertSame(NULL, $this->configNamesMapper->getInternalLangcode());
 
     // Test that an empty request does not set the language code.
-    $request = Request::create('');
-    $this->configNamesMapper->populateFromRequest($request);
+    $route_match = new RouteMatch('example', new Route('/test/{langcode}'));
+    $this->configNamesMapper->populateFromRouteMatch($route_match);
     $this->assertSame(NULL, $this->configNamesMapper->getInternalLangcode());
 
     // Test that a request with a 'langcode' attribute sets the language code.
-    $request->attributes->set('langcode', 'xx');
-    $this->configNamesMapper->populateFromRequest($request);
+    $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
+    $this->configNamesMapper->populateFromRouteMatch($route_match);
     $this->assertSame('xx', $this->configNamesMapper->getInternalLangcode());
 
     // Test that the language code gets unset with the wrong request.
-    $request->attributes->remove('langcode');
-    $this->configNamesMapper->populateFromRequest($request);
+    $route_match = new RouteMatch('example', new Route('/test/{langcode}'));
+    $this->configNamesMapper->populateFromRouteMatch($route_match);
     $this->assertSame(NULL, $this->configNamesMapper->getInternalLangcode());
   }
 

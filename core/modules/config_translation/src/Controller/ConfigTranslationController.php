@@ -13,6 +13,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -122,7 +123,7 @@ class ConfigTranslationController extends ControllerBase {
   public function itemPage(Request $request, RouteMatchInterface $route_match, $plugin_id) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($plugin_id);
-    $mapper->populateFromRequest($request);
+    $mapper->populateFromRouteMatch($route_match);
 
     $page = array();
     $page['#title'] = $this->t('Translations for %label', array('%label' => $mapper->getTitle()));
@@ -140,7 +141,7 @@ class ConfigTranslationController extends ControllerBase {
     }
 
     // We create a fake request object to pass into
-    // ConfigMapperInterface::populateFromRequest() for the different languages.
+    // ConfigMapperInterface::populateFromRouteMatch() for the different languages.
     // Creating a separate request for each language and route is neither easily
     // possible nor performant.
     $fake_request = $request->duplicate();
@@ -155,8 +156,9 @@ class ConfigTranslationController extends ControllerBase {
       // This is needed because
       // ConfigMapperInterface::getAddRouteParameters(), for example,
       // needs to return the correct language code for each table row.
-      $fake_request->attributes->set('langcode', $langcode);
-      $mapper->populateFromRequest($fake_request);
+      $fake_route_match = RouteMatch::createFromRequest($fake_request);
+      $mapper->populateFromRouteMatch($fake_route_match);
+      $mapper->setLangcode($langcode);
 
       // Prepare the language name and the operations depending on whether this
       // is the original language or not.

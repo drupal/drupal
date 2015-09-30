@@ -13,12 +13,12 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -110,9 +110,9 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   /**
    * {@inheritdoc}
    */
-  public function populateFromRequest(Request $request) {
-    parent::populateFromRequest($request);
-    $entity = $request->attributes->get($this->entityType);
+  public function populateFromRouteMatch(RouteMatchInterface $route_match) {
+    parent::populateFromRouteMatch($route_match);
+    $entity = $route_match->getParameter($this->entityType);
     $this->setEntity($entity);
   }
 

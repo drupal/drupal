@@ -13,13 +13,13 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -371,13 +371,8 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function populateFromRequest(Request $request) {
-    if ($request->attributes->has('langcode')) {
-      $this->langcode = $request->attributes->get('langcode');
-    }
-    else {
-      $this->langcode = NULL;
-    }
+  public function populateFromRouteMatch(RouteMatchInterface $route_match) {
+    $this->langcode = $route_match->getParameter('langcode');
   }
 
   /**
@@ -405,6 +400,14 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
     }
 
     return reset($langcodes);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLangcode($langcode) {
+    $this->langcode = $langcode;
+    return $this;
   }
 
   /**

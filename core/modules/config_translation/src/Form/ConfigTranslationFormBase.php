@@ -9,6 +9,7 @@ namespace Drupal\config_translation\Form;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
@@ -16,7 +17,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -132,10 +132,10 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    *   Throws an exception if the language code provided as a query parameter in
    *   the request does not match an active language.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL, $plugin_id = NULL, $langcode = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, RouteMatchInterface $route_match = NULL, $plugin_id = NULL, $langcode = NULL) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($plugin_id);
-    $mapper->populateFromRequest($request);
+    $mapper->populateFromRouteMatch($route_match);
 
     $language = $this->languageManager->getLanguage($langcode);
     if (!$language) {
