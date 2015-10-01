@@ -180,13 +180,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   protected $itemDefinition;
 
   /**
-   * Flag indicating whether the bundle name can be renamed or not.
-   *
-   * @var bool
-   */
-  protected $bundleRenameAllowed = FALSE;
-
-  /**
    * Array of constraint options keyed by constraint plugin ID.
    *
    * @var array
@@ -456,7 +449,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     $properties = get_object_vars($this);
-    unset($properties['fieldStorage'], $properties['itemDefinition'], $properties['bundleRenameAllowed'], $properties['original']);
+    unset($properties['fieldStorage'], $properties['itemDefinition'], $properties['original']);
     return array_keys($properties);
   }
 
@@ -526,13 +519,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
         ->setSettings($this->getSettings());
     }
     return $this->itemDefinition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function allowBundleRename() {
-    $this->bundleRenameAllowed = TRUE;
   }
 
   /**

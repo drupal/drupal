@@ -1370,31 +1370,6 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function onBundleRename($bundle_old, $bundle_new, $entity_type_id) {
-    $this->clearCachedBundles();
-    // Notify the entity storage.
-    $storage = $this->getStorage($entity_type_id);
-    if ($storage instanceof EntityBundleListenerInterface) {
-      $storage->onBundleRename($bundle_old, $bundle_new, $entity_type_id);
-    }
-
-    // Rename existing base field bundle overrides.
-    $overrides = $this->getStorage('base_field_override')->loadByProperties(array('entity_type' => $entity_type_id, 'bundle' => $bundle_old));
-    foreach ($overrides as $override) {
-      $override->set('id', $entity_type_id . '.' . $bundle_new . '.' . $override->getName());
-      $override->set('bundle', $bundle_new);
-      $override->allowBundleRename();
-      $override->save();
-    }
-
-    // Invoke hook_entity_bundle_rename() hook.
-    $this->moduleHandler->invokeAll('entity_bundle_rename', array($entity_type_id, $bundle_old, $bundle_new));
-    $this->clearCachedFieldDefinitions();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function onBundleDelete($bundle, $entity_type_id) {
     $this->clearCachedBundles();
     // Notify the entity storage.

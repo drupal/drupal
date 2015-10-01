@@ -7,13 +7,13 @@
 
 namespace Drupal\shortcut;
 
-use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the shortcut set entity edit forms.
  */
-class ShortcutSetForm extends EntityForm {
+class ShortcutSetForm extends BundleEntityFormBase {
 
   /**
    * {@inheritdoc}
@@ -38,14 +38,13 @@ class ShortcutSetForm extends EntityForm {
         'replace' => '-',
       ),
       '#default_value' => $entity->id(),
-      '#disabled' => !$entity->isNew(),
       // This id could be used for menu name.
       '#maxlength' => 23,
     );
 
     $form['actions']['submit']['#value'] = t('Create new set');
 
-    return $form;
+    return $this->protectBundleIdElement($form);
   }
 
   /**

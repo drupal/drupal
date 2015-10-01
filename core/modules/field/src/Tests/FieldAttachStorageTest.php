@@ -275,9 +275,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test entity_bundle_create() and entity_bundle_rename().
+   * Test entity_bundle_create().
    */
-  function testEntityCreateRenameBundle() {
+  function testEntityCreateBundle() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
@@ -298,20 +298,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     // Verify the field data is present on load.
     $entity = $this->entitySaveReload($entity);
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, "Data is retrieved for the new bundle");
-
-    // Rename the bundle.
-    $new_bundle = 'test_bundle_' . Unicode::strtolower($this->randomMachineName());
-    entity_test_rename_bundle($this->fieldTestData->field_definition['bundle'], $new_bundle, $entity_type);
-
-    // Check that the field definition has been updated.
-    $this->fieldTestData->field = FieldConfig::loadByName($entity_type, $new_bundle, $this->fieldTestData->field_name);
-    $this->assertIdentical($this->fieldTestData->field->getTargetBundle(), $new_bundle, "Bundle name has been updated in the field.");
-
-    // Verify the field data is present on load.
-    $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
-    $controller->resetCache();
-    $entity = $controller->load($entity->id());
-    $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, "Bundle name has been updated in the field storage");
   }
 
   /**

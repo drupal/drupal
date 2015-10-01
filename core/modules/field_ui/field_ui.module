@@ -108,15 +108,6 @@ function field_ui_entity_bundle_create($entity_type, $bundle) {
 }
 
 /**
- * Implements hook_entity_bundle_rename().
- */
-function field_ui_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
-  // When a bundle is renamed, the menu needs to be rebuilt to add our
-  // menu item tabs.
-  \Drupal::service('router.builder')->setRebuildNeeded();
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Adds a button 'Save and manage fields' to the 'Create content type' form.

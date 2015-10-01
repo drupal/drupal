@@ -470,35 +470,6 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   }
 
   /**
-   * Tests reacting to a bundle being renamed.
-   */
-  function testFieldSqlStorageBundleRename() {
-    $entity_type = $bundle = 'entity_test_rev';
-    $field_name = $this->fieldStorage->getName();
-
-    // Create an entity.
-    $value = mt_rand(1, 127);
-    $entity = entity_create($entity_type, array(
-      'type' => $bundle,
-      $field_name => $value,
-    ));
-    $entity->save();
-
-    // Rename the bundle.
-    $bundle_new = $bundle . '_renamed';
-    entity_test_rename_bundle($bundle, $bundle_new, $entity_type);
-
-    // Check that the 'bundle' column has been updated in storage.
-    $row = db_select($this->table, 't')
-      ->fields('t', array('bundle', $field_name . '_value'))
-      ->condition('entity_id', $entity->id())
-      ->execute()
-      ->fetch();
-    $this->assertEqual($row->bundle, $bundle_new);
-    $this->assertEqual($row->{$field_name . '_value'}, $value);
-  }
-
-  /**
    * Tests table name generation.
    */
   public function testTableNames() {

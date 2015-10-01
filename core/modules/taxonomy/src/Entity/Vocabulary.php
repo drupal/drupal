@@ -125,48 +125,6 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    if ($update && $this->getOriginalId() != $this->id() && !$this->isSyncing()) {
-      // Reflect machine name changes in the definitions of existing 'taxonomy'
-      // fields.
-      $field_ids = array();
-      $field_map = \Drupal::entityManager()->getFieldMapByFieldType('entity_reference');
-      foreach ($field_map as $entity_type => $field_storages) {
-        foreach ($field_storages as $field_storage => $info) {
-          $field_ids[] = $entity_type . '.' . $field_storage;
-        }
-      }
-
-      $field_storages = \Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple($field_ids);
-      $taxonomy_fields = array_filter($field_storages, function ($field_storage) {
-        return $field_storage->getType() == 'entity_reference' && $field_storage->getSetting('target_type') == 'taxonomy_term';
-      });
-
-      foreach ($taxonomy_fields as $field_storage) {
-        $update_storage = FALSE;
-
-        $allowed_values = $field_storage->getSetting('allowed_values');
-        foreach ($allowed_values as &$value) {
-          if ($value['vocabulary'] == $this->getOriginalId()) {
-            $value['vocabulary'] = $this->id();
-            $update_storage = TRUE;
-          }
-        }
-        $field_storage->setSetting('allowed_values', $allowed_values);
-
-        if ($update_storage) {
-          $field_storage->save();
-        }
-      }
-    }
-    $storage->resetCache($update ? array($this->getOriginalId()) : array());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     parent::preDelete($storage, $entities);
 

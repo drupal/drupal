@@ -591,19 +591,6 @@ class ManageFieldsTest extends WebTestBase {
   }
 
   /**
-   * Tests renaming a bundle.
-   */
-  function testRenameBundle() {
-    $type2 = strtolower($this->randomMachineName(8)) . '_test';
-
-    $options = array(
-      'type' => $type2,
-    );
-    $this->drupalPostForm('admin/structure/types/manage/' . $this->contentType, $options, t('Save content type'));
-    $this->manageFieldsPage($type2);
-  }
-
-  /**
    * Tests that a duplicate field name is caught by validation.
    */
   function testDuplicateFieldName() {

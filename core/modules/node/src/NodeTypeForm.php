@@ -7,18 +7,17 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for node type forms.
  */
-class NodeTypeForm extends EntityForm {
+class NodeTypeForm extends BundleEntityFormBase {
 
   /**
    * The entity manager.
@@ -31,7 +30,7 @@ class NodeTypeForm extends EntityForm {
    * Constructs the NodeTypeForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager
+   *   The entity manager.
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
@@ -148,7 +147,8 @@ class NodeTypeForm extends EntityForm {
     // Prepare workflow options to be used for 'checkboxes' form element.
     $keys = array_keys(array_filter($workflow_options));
     $workflow_options = array_combine($keys, $keys);
-    $form['workflow']['options'] = array('#type' => 'checkboxes',
+    $form['workflow']['options'] = array(
+      '#type' => 'checkboxes',
       '#title' => t('Default options'),
       '#default_value' => $workflow_options,
       '#options' => array(
@@ -187,7 +187,8 @@ class NodeTypeForm extends EntityForm {
       '#default_value' => $type->displaySubmitted(),
       '#description' => t('Author username and publish date will be displayed.'),
     );
-    return $form;
+
+    return $this->protectBundleIdElement($form);
   }
 
   /**
@@ -247,7 +248,7 @@ class NodeTypeForm extends EntityForm {
     // @todo Make it possible to get default values without an entity.
     //   https://www.drupal.org/node/2318187
     $node = $this->entityManager->getStorage('node')->create(array('type' => $type->id()));
-    foreach (array('status', 'promote', 'sticky')  as $field_name) {
+    foreach (array('status', 'promote', 'sticky') as $field_name) {
       $value = (bool) $form_state->getValue(['options', $field_name]);
       if ($node->$field_name->value != $value) {
         $fields[$field_name]->getConfig($type->id())->setDefaultValue($value)->save();

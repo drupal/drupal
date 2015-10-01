@@ -7,18 +7,17 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\taxonomy\VocabularyStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for vocabulary edit forms.
  */
-class VocabularyForm extends EntityForm {
+class VocabularyForm extends BundleEntityFormBase {
 
   /**
    * The vocabulary storage.
@@ -112,7 +111,8 @@ class VocabularyForm extends EntityForm {
       '#value' => '0',
     );
 
-    return parent::form($form, $form_state, $vocabulary);
+    $form = parent::form($form, $form_state);
+    return $this->protectBundleIdElement($form);
   }
 
   /**
@@ -147,14 +147,14 @@ class VocabularyForm extends EntityForm {
   /**
    * Determines if the vocabulary already exists.
    *
-   * @param string $id
-   *   The vocabulary ID
+   * @param string $vid
+   *   The vocabulary ID.
    *
    * @return bool
    *   TRUE if the vocabulary exists, FALSE otherwise.
    */
-  public function exists($id) {
-    $action = $this->vocabularyStorage->load($id);
+  public function exists($vid) {
+    $action = $this->vocabularyStorage->load($vid);
     return !empty($action);
   }
 

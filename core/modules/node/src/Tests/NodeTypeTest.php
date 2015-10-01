@@ -99,10 +99,9 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw('Foo', 'New title label was displayed.');
     $this->assertNoRaw('Title', 'Old title label was not displayed.');
 
-    // Change the name, machine name and description.
+    // Change the name and the description.
     $edit = array(
       'name' => 'Bar',
-      'type' => 'bar',
       'description' => 'Lorem ipsum.',
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
@@ -111,16 +110,15 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->assertRaw('Lorem ipsum', 'New description was displayed.');
     $this->clickLink('Bar');
-    $this->assertUrl(\Drupal::url('node.add', ['node_type' => 'bar'], ['absolute' => TRUE]), [], 'New machine name was used in URL.');
     $this->assertRaw('Foo', 'Title field was found.');
     $this->assertRaw('Body', 'Body field was found.');
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/types/manage/bar/fields/node.bar.body/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.body/delete', array(), t('Delete'));
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/types/manage/bar', array(), t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', array(), t('Save content type'));
     // Check that the body field doesn't exist.
-    $this->drupalGet('node/add/bar');
+    $this->drupalGet('node/add/page');
     $this->assertNoRaw('Body', 'Body field was not found.');
   }
 

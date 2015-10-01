@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -18,31 +17,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
  * annotation to specify for which entity type they are providing bundles for.
  */
 abstract class ConfigEntityBundleBase extends ConfigEntityBase {
-
-  /**
-   * Renames displays when a bundle is renamed.
-   */
-  protected function renameDisplays() {
-    // Rename entity displays.
-    if ($this->getOriginalId() !== $this->id()) {
-      foreach ($this->loadDisplays('entity_view_display') as $display) {
-        $new_id = $this->getEntityType()->getBundleOf() . '.' . $this->id() . '.' . $display->getMode();
-        $display->set('id', $new_id);
-        $display->setTargetBundle($this->id());
-        $display->save();
-      }
-    }
-
-    // Rename entity form displays.
-    if ($this->getOriginalId() !== $this->id()) {
-      foreach ($this->loadDisplays('entity_form_display') as $form_display) {
-        $new_id = $this->getEntityType()->getBundleOf() . '.' . $this->id() . '.' . $form_display->getMode();
-        $form_display->set('id', $new_id);
-        $form_display->setTargetBundle($this->id());
-        $form_display->save();
-      }
-    }
-  }
 
   /**
    * Deletes display if a bundle is deleted.
@@ -80,12 +54,6 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
       }
       // Entity bundle field definitions may depend on bundle settings.
       $entity_manager->clearCachedFieldDefinitions();
-
-      if ($this->getOriginalId() != $this->id()) {
-        // If the entity was renamed, update the displays.
-        $this->renameDisplays();
-        $entity_manager->onBundleRename($this->getOriginalId(), $this->id(), $bundle_of);
-      }
     }
   }
 
@@ -98,6 +66,33 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
     foreach ($entities as $entity) {
       $entity->deleteDisplays();
       \Drupal::entityManager()->onBundleDelete($entity->id(), $entity->getEntityType()->getBundleOf());
+    }
+  }
+
+  /**
+   * Acts on an entity before the presave hook is invoked.
+   *
+   * Used before the entity is saved and before invoking the presave hook.
+   *
+   * Ensure that config entities which are bundles of other entities cannot have
+   * their ID changed.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage object.
+   *
+   * @throws \Drupal\Core\Config\ConfigNameException
+   *   Thrown when attempting to rename a bundle entity.
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    // Only handle renames, not creations.
+    if (!$this->isNew() && $this->getOriginalId() !== $this->id()) {
+      $bundle_type = $this->getEntityType();
+      $bundle_of = $bundle_type->getBundleOf();
+      if (!empty($bundle_of)) {
+        throw new ConfigNameException("The machine name of the '{$bundle_type->getLabel()}' bundle cannot be changed.");
+      }
     }
   }
 

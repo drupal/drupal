@@ -171,26 +171,6 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
 }
 
 /**
- * Renames a bundle for entity_test entities.
- *
- * @param string $bundle_old
- *   The machine-readable name of the bundle to rename.
- * @param string $bundle_new
- *   The new machine-readable name of the bundle.
- * @param string $entity_type
- *   (optional) The entity type for which the bundle is renamed. Defaults to
- *   'entity_test'.
- */
-function entity_test_rename_bundle($bundle_old, $bundle_new, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
-  $bundles[$bundle_new] = $bundles[$bundle_old];
-  unset($bundles[$bundle_old]);
-  \Drupal::state()->set($entity_type . '.bundles', $bundles);
-
-  \Drupal::entityManager()->onBundleRename($bundle_old, $bundle_new, $entity_type);
-}
-
-/**
  * Deletes a bundle for entity_test entities.
  *
  * @param string $bundle

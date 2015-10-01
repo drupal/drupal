@@ -163,8 +163,7 @@ class BaseFieldOverride extends FieldConfigBase {
    * {@inheritdoc}
    *
    * @throws \Drupal\Core\Field\FieldException
-   *   If the bundle is being changed and
-   *   BaseFieldOverride::allowBundleRename() has not been called.
+   *   If the bundle is being changed.
    */
   public function preSave(EntityStorageInterface $storage) {
     // Filter out unknown settings and make sure all settings are present, so
@@ -189,7 +188,7 @@ class BaseFieldOverride extends FieldConfigBase {
       if ($this->entity_type != $this->original->entity_type) {
         throw new FieldException("Cannot change the entity_type of an existing base field bundle override (entity type:{$this->entity_type}, bundle:{$this->original->bundle}, field name: {$this->field_name})");
       }
-      if ($this->bundle != $this->original->bundle && empty($this->bundleRenameAllowed)) {
+      if ($this->bundle != $this->original->bundle) {
         throw new FieldException("Cannot change the bundle of an existing base field bundle override (entity type:{$this->entity_type}, bundle:{$this->original->bundle}, field name: {$this->field_name})");
       }
       $previous_definition = $this->original;

@@ -7,7 +7,7 @@
 
 namespace Drupal\block_content;
 
-use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -15,7 +15,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
 /**
  * Base form for category edit forms.
  */
-class BlockContentTypeForm extends EntityForm {
+class BlockContentTypeForm extends BundleEntityFormBase {
 
   /**
    * {@inheritdoc}
@@ -48,7 +48,6 @@ class BlockContentTypeForm extends EntityForm {
         'exists' => '\Drupal\block_content\Entity\BlockContentType::load',
       ),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
-      '#disabled' => !$block_type->isNew(),
     );
 
     $form['description'] = array(
@@ -62,7 +61,7 @@ class BlockContentTypeForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $block_type->shouldCreateNewRevision(),
-      '#description' => t('Create a new revision by default for this block type.')
+      '#description' => t('Create a new revision by default for this block type.'),
     );
 
     if ($this->moduleHandler->moduleExists('language')) {
@@ -91,7 +90,7 @@ class BlockContentTypeForm extends EntityForm {
       '#value' => t('Save'),
     );
 
-    return $form;
+    return $this->protectBundleIdElement($form);
   }
 
   /**

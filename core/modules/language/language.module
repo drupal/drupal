@@ -218,15 +218,6 @@ function language_configuration_element_submit(&$form, FormStateInterface $form_
 }
 
 /**
- * Implements hook_entity_bundle_rename().
- */
-function language_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) {
-  ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle_old)
-    ->setTargetBundle($bundle_new)
-    ->save();
-}
-
-/**
  * Implements hook_entity_bundle_delete().
  */
 function language_entity_bundle_delete($entity_type_id, $bundle) {

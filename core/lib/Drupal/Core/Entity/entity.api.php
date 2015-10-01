@@ -139,8 +139,8 @@ use Drupal\node\Entity\NodeType;
  * - Field configuration preSave(): hook_field_storage_config_update_forbid()
  * - Node postSave(): hook_node_access_records() and
  *   hook_node_access_records_alter()
- * - Config entities that are acting as entity bundles, in postSave():
- *   hook_entity_bundle_create() or hook_entity_bundle_rename() as appropriate
+ * - Config entities that are acting as entity bundles in postSave():
+ *   hook_entity_bundle_create()
  * - Comment: hook_comment_publish() and hook_comment_unpublish() as
  *   appropriate.
  *
@@ -350,6 +350,7 @@ use Drupal\node\Entity\NodeType;
  *   'bundle_entity_type' on the \Drupal\node\Entity\Node class. Also, the
  *   bundle config entity type annotation must have a 'bundle_of' entry,
  *   giving the machine name of the entity type it is acting as a bundle for.
+ *   These machine names are considered permanent, they may not be renamed.
  * - Additional annotations can be seen on entity class examples such as
  *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
  *   (configuration). These annotations are documented on
@@ -738,31 +739,6 @@ function hook_entity_bundle_create($entity_type_id, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
   // Field UI menu item tabs.
   \Drupal::service('router.builder')->setRebuildNeeded();
-}
-
-/**
- * Act on entity_bundle_rename().
- *
- * This hook is invoked after the operation has been performed.
- *
- * @param string $entity_type_id
- *   The entity type to which the bundle is bound.
- * @param string $bundle_old
- *   The previous name of the bundle.
- * @param string $bundle_new
- *   The new name of the bundle.
- *
- * @see entity_crud
- */
-function hook_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) {
-  // Update the settings associated with the bundle in my_module.settings.
-  $config = \Drupal::config('my_module.settings');
-  $bundle_settings = $config->get('bundle_settings');
-  if (isset($bundle_settings[$entity_type_id][$bundle_old])) {
-    $bundle_settings[$entity_type_id][$bundle_new] = $bundle_settings[$entity_type_id][$bundle_old];
-    unset($bundle_settings[$entity_type_id][$bundle_old]);
-    $config->set('bundle_settings', $bundle_settings);
-  }
 }
 
 /**

@@ -300,9 +300,9 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests renaming and deleting a bundle.
+   * Tests deleting a bundle.
    */
-  public function testRenameDeleteBundle() {
+  public function testDeleteBundle() {
     // Create a node bundle, display and form display object.
     $type = NodeType::create(array('type' => 'article'));
     $type->save();
@@ -310,44 +310,11 @@ class EntityDisplayTest extends KernelTestBase {
     entity_get_display('node', 'article', 'default')->save();
     entity_get_form_display('node', 'article', 'default')->save();
 
-    // Rename the article bundle and assert the entity display is renamed.
-    $type->old_type = 'article';
-    $type->set('type', 'article_rename');
-    $type->save();
-    $old_display = entity_load('entity_view_display', 'node.article.default');
-    $this->assertFalse((bool) $old_display);
-    $old_form_display = entity_load('entity_form_display', 'node.article.default');
-    $this->assertFalse((bool) $old_form_display);
-    $new_display = entity_load('entity_view_display', 'node.article_rename.default');
-    $this->assertEqual('article_rename', $new_display->getTargetBundle());
-    $this->assertEqual('node.article_rename.default', $new_display->id());
-    $new_form_display = entity_load('entity_form_display', 'node.article_rename.default');
-    $this->assertEqual('article_rename', $new_form_display->getTargetBundle());
-    $this->assertEqual('node.article_rename.default', $new_form_display->id());
-
-    $expected_view_dependencies = array(
-      'config' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
-      'module' => array('entity_test', 'text', 'user')
-    );
-    // Check that the display has dependencies on the bundle, fields and the
-    // modules that provide the formatters.
-    $dependencies = $new_display->calculateDependencies();
-    $this->assertEqual($expected_view_dependencies, $dependencies);
-
-    // Check that the form display has dependencies on the bundle, fields and
-    // the modules that provide the formatters.
-    $dependencies = $new_form_display->calculateDependencies();
-    $expected_form_dependencies = array(
-      'config' => array('field.field.node.article_rename.body', 'node.type.article_rename'),
-      'module' => array('text')
-    );
-    $this->assertEqual($expected_form_dependencies, $dependencies);
-
     // Delete the bundle.
     $type->delete();
-    $display = entity_load('entity_view_display', 'node.article_rename.default');
+    $display = entity_load('entity_view_display', 'node.article.default');
     $this->assertFalse((bool) $display);
-    $form_display = entity_load('entity_form_display', 'node.article_rename.default');
+    $form_display = entity_load('entity_form_display', 'node.article.default');
     $this->assertFalse((bool) $form_display);
   }
 

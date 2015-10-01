@@ -282,13 +282,4 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    */
   public function setConstraints(array $constraints);
 
-  /**
-   * Allows a bundle to be renamed.
-   *
-   * Renaming a bundle on the instance is allowed when an entity's bundle
-   * is renamed and when field_entity_bundle_rename() does internal
-   * housekeeping.
-   */
-  public function allowBundleRename();
-
 }
