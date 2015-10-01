@@ -7,10 +7,12 @@
 
 namespace Drupal\Tests\Core\Utility;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Utility\Token;
 use Drupal\Tests\UnitTestCase;
 
@@ -260,6 +262,41 @@ class TokenTest extends UnitTestCase {
       ->with(['token_info']);
 
     $this->token->resetInfo();
+  }
+
+  /**
+   * @covers ::replace
+   * @dataProvider providerTestReplaceEscaping
+   */
+  public function testReplaceEscaping($string, array $tokens, $expected) {
+    $this->moduleHandler->expects($this->any())
+      ->method('invokeAll')
+      ->willReturnCallback(function ($type, $args) {
+        return $args[2]['tokens'];
+      });
+
+    $result = $this->token->replace($string, ['tokens' => $tokens]);
+    $this->assertInternalType('string', $result);
+    $this->assertEquals($expected, $result);
+  }
+
+  public function providerTestReplaceEscaping() {
+    $data = [];
+
+    // No tokens. The first argument to Token::replace() should not be escaped.
+    $data['no-tokens'] = ['muh', [], 'muh'];
+    $data['html-in-string'] = ['<h1>Giraffe</h1>', [], '<h1>Giraffe</h1>'];
+    $data['html-in-string-quote'] = ['<h1>Giraffe"</h1>', [], '<h1>Giraffe"</h1>'];
+
+    $data['simple-placeholder-with-plain-text'] = ['<h1>[token:meh]</h1>', ['[token:meh]' => 'Giraffe"'], '<h1>' . Html::escape('Giraffe"') . '</h1>'];
+
+    $data['simple-placeholder-with-safe-html'] = [
+      '<h1>[token:meh]</h1>',
+      ['[token:meh]' => SafeString::create('<em>Emphasized</em>')],
+      '<h1><em>Emphasized</em></h1>',
+    ];
+
+    return $data;
   }
 
 }

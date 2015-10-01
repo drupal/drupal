@@ -5,7 +5,6 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -951,7 +950,6 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
   else {
     $langcode = NULL;
   }
-  $sanitize = !empty($options['sanitize']);
 
   $replacements = array();
 
@@ -968,15 +966,15 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
 
         // Essential file data
         case 'name':
-          $replacements[$original] = $sanitize ? Html::escape($file->getFilename()) : $file->getFilename();
+          $replacements[$original] = $file->getFilename();
           break;
 
         case 'path':
-          $replacements[$original] = $sanitize ? Html::escape($file->getFileUri()) : $file->getFileUri();
+          $replacements[$original] = $file->getFileUri();
           break;
 
         case 'mime':
-          $replacements[$original] = $sanitize ? Html::escape($file->getMimeType()) : $file->getMimeType();
+          $replacements[$original] = $file->getMimeType();
           break;
 
         case 'size':
@@ -984,7 +982,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'url':
-          $replacements[$original] = $sanitize ? Html::escape(file_create_url($file->getFileUri())) : file_create_url($file->getFileUri());
+          $replacements[$original] = file_create_url($file->getFileUri());
           break;
 
         // These tokens are default variations on the chained tokens handled below.
@@ -1004,7 +1002,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $owner = $file->getOwner();
           $bubbleable_metadata->addCacheableDependency($owner);
           $name = $owner->label();
-          $replacements[$original] = $sanitize ? Html::escape($name) : $name;
+          $replacements[$original] = $name;
           break;
       }
     }
