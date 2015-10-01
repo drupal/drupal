@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Component\Utility\FormattableString;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
@@ -55,11 +56,11 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
       'tnid' => 0,
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(array('value' => $this->randomMachineName(32), 'summary' => $this->randomMachineName(16), 'format' => 'plain_text')),
+      'body' => [['value' => 'Regular NODE body for the test.', 'summary' => 'Fancy NODE summary.', 'format' => 'plain_text']],
     ));
     $node->save();
 
-    // Generate and test sanitized tokens.
+    // Generate and test tokens.
     $tests = array();
     $tests['[node:nid]'] = $node->id();
     $tests['[node:vid]'] = $node->getRevisionId();
@@ -68,12 +69,12 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     $tests['[node:title]'] = Html::escape($node->getTitle());
     $tests['[node:body]'] = $node->body->processed;
     $tests['[node:summary]'] = $node->body->summary_processed;
-    $tests['[node:langcode]'] = Html::escape($node->language()->getId());
+    $tests['[node:langcode]'] = $node->language()->getId();
     $tests['[node:url]'] = $node->url('canonical', $url_options);
     $tests['[node:edit-url]'] = $node->url('edit-form', $url_options);
-    $tests['[node:author]'] = Html::escape($account->getUsername());
+    $tests['[node:author]'] = $account->getUsername();
     $tests['[node:author:uid]'] = $node->getOwnerId();
-    $tests['[node:author:name]'] = Html::escape($account->getUsername());
+    $tests['[node:author:name]'] = $account->getUsername();
     $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), array('langcode' => $this->interfaceLanguage->getId()));
     $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), array('langcode' => $this->interfaceLanguage->getId()));
 
@@ -104,20 +105,8 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->getId()), $bubbleable_metadata);
-      $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Node token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
-    }
-
-    // Generate and test unsanitized tokens.
-    $tests['[node:title]'] = $node->getTitle();
-    $tests['[node:body]'] = $node->body->value;
-    $tests['[node:summary]'] = $node->body->summary;
-    $tests['[node:langcode]'] = $node->language()->getId();
-    $tests['[node:author:name]'] = $account->getUsername();
-
-    foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->getId(), 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
 
     // Repeat for a node without a summary.
@@ -125,11 +114,11 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
       'type' => 'article',
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(array('value' => $this->randomMachineName(32), 'format' => 'plain_text')),
+      'body' => [['value' => 'A string that looks random like TR5c2I', 'format' => 'plain_text']],
     ));
     $node->save();
 
-    // Generate and test sanitized token - use full body as expected value.
+    // Generate and test token - use full body as expected value.
     $tests = array();
     $tests['[node:summary]'] = $node->body->processed;
 
@@ -138,15 +127,7 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, array('node' => $node), array('language' => $this->interfaceLanguage));
-      $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced for node without a summary.', array('%token' => $input)));
-    }
-
-    // Generate and test unsanitized tokens.
-    $tests['[node:summary]'] = $node->body->value;
-
-    foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array('node' => $node), array('language' => $this->interfaceLanguage, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced for node without a summary.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, new FormattableString('Node token %token replaced for node without a summary.', ['%token' => $input]));
     }
   }
 

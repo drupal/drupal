@@ -7,8 +7,6 @@
  * This file handles tokens for the global 'site' and 'date' tokens.
  */
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\BubbleableMetadata;
 
@@ -100,8 +98,6 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
   else {
     $langcode = NULL;
   }
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = array();
 
   if ($type == 'site') {
@@ -111,14 +107,17 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
           $config = \Drupal::config('system.site');
           $bubbleable_metadata->addCacheableDependency($config);
           $site_name = $config->get('name');
-          $replacements[$original] = $sanitize ? Html::escape($site_name) : $site_name;
+          $replacements[$original] = $site_name;
           break;
 
         case 'slogan':
           $config = \Drupal::config('system.site');
           $bubbleable_metadata->addCacheableDependency($config);
           $slogan = $config->get('slogan');
-          $replacements[$original] = $sanitize ? Xss::filterAdmin($slogan) : $slogan;
+          $build = [
+            '#markup' => $slogan,
+          ];
+          $replacements[$original] = \Drupal::service('renderer')->renderPlain($build);
           break;
 
         case 'mail':
@@ -178,7 +177,7 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
           break;
 
         case 'raw':
-          $replacements[$original] = $sanitize ? Html::escape($date) : $date;
+          $replacements[$original] = $date;
           break;
       }
     }

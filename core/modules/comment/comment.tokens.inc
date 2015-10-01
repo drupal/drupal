@@ -5,9 +5,7 @@
  * Builds placeholder replacement tokens for comment-related data.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\BubbleableMetadata;
 
@@ -119,8 +117,6 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
   else {
     $langcode = NULL;
   }
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = array();
 
   if ($type == 'comment' && !empty($data['comment'])) {
@@ -136,7 +132,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
 
         // Poster identity information for comments.
         case 'hostname':
-          $replacements[$original] = $sanitize ? Html::escape($comment->getHostname()) : $comment->getHostname();
+          $replacements[$original] = $comment->getHostname();
           break;
 
         case 'mail':
@@ -146,23 +142,25 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           if ($comment->getOwnerId()) {
             $bubbleable_metadata->addCacheableDependency($comment->getOwner());
           }
-          $replacements[$original] = $sanitize ? Html::escape($mail) : $mail;
+          $replacements[$original] = $mail;
           break;
 
         case 'homepage':
-          $replacements[$original] = $sanitize ? UrlHelper::filterBadProtocol($comment->getHomepage()) : $comment->getHomepage();
+          $replacements[$original] = UrlHelper::stripDangerousProtocols($comment->getHomepage());
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? Html::escape($comment->getSubject()) : $comment->getSubject();
+          $replacements[$original] = $comment->getSubject();
           break;
 
         case 'body':
-          $replacements[$original] = $sanitize ? $comment->comment_body->processed : $comment->comment_body->value;
+          // "processed" returns a \Drupal\Component\Utility\SafeStringInterface
+          // via check_markup().
+          $replacements[$original] = $comment->comment_body->processed;
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? Html::escape($comment->language()->getId()) : $comment->language()->getId();
+          $replacements[$original] = $comment->language()->getId();
           break;
 
         // Comment related URLs.
@@ -183,14 +181,14 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           if ($comment->getOwnerId()) {
             $bubbleable_metadata->addCacheableDependency($comment->getOwner());
           }
-          $replacements[$original] = $sanitize ? Html::escape($name) : $name;
+          $replacements[$original] = $name;
           break;
 
         case 'parent':
           if ($comment->hasParentComment()) {
             $parent = $comment->getParentComment();
             $bubbleable_metadata->addCacheableDependency($parent);
-            $replacements[$original] = $sanitize ? Html::escape($parent->getSubject()) : $parent->getSubject();
+            $replacements[$original] = $parent->getSubject();
           }
           break;
 
@@ -210,7 +208,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           $entity = $comment->getCommentedEntity();
           $bubbleable_metadata->addCacheableDependency($entity);
           $title = $entity->label();
-          $replacements[$original] = $sanitize ? Html::escape($title) : $title;
+          $replacements[$original] = $title;
           break;
       }
     }

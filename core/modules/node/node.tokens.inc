@@ -5,7 +5,6 @@
  * Builds placeholder replacement tokens for node-related data.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -96,8 +95,6 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
   else {
     $langcode = LanguageInterface::LANGCODE_DEFAULT;
   }
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node'])) {
@@ -116,16 +113,16 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'type':
-          $replacements[$original] = $sanitize ? Html::escape($node->getType()) : $node->getType();
+          $replacements[$original] = $node->getType();
           break;
 
         case 'type-name':
           $type_name = node_get_type_label($node);
-          $replacements[$original] = $sanitize ? Html::escape($type_name) : $type_name;
+          $replacements[$original] = $type_name;
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? Html::escape($node->getTitle()) : $node->getTitle();
+          $replacements[$original] = $node->getTitle();
           break;
 
         case 'body':
@@ -133,14 +130,13 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $translation = \Drupal::entityManager()->getTranslationFromContext($node, $langcode, array('operation' => 'node_tokens'));
           if ($translation->hasField('body') && ($items = $translation->get('body')) && !$items->isEmpty()) {
             $item = $items[0];
-            $field_definition = \Drupal::entityManager()->getFieldDefinitions('node', $node->bundle())['body'];
             // If the summary was requested and is not empty, use it.
             if ($name == 'summary' && !empty($item->summary)) {
-              $output = $sanitize ? $item->summary_processed : $item->summary;
+              $output = $item->summary_processed;
             }
             // Attempt to provide a suitable version of the 'body' field.
             else {
-              $output = $sanitize ? $item->processed : $item->value;
+              $output = $item->processed;
               // A summary was requested.
               if ($name == 'summary') {
                 // Generate an optionally trimmed summary of the body field.
@@ -159,12 +155,14 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
                 $output = text_summary($output, $item->format, $length);
               }
             }
+            // "processed" returns a
+            // \Drupal\Component\Utility\SafeStringInterface via check_markup().
             $replacements[$original] = $output;
           }
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? Html::escape($node->language()->getId()) : $node->language()->getId();
+          $replacements[$original] = $node->language()->getId();
           break;
 
         case 'url':
@@ -179,7 +177,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : User::load(0);
           $bubbleable_metadata->addCacheableDependency($account);
-          $replacements[$original] = $sanitize ? Html::escape($account->label()) : $account->label();
+          $replacements[$original] = $account->label();
           break;
 
         case 'created':
