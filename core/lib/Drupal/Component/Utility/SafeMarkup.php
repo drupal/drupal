@@ -31,7 +31,6 @@ namespace Drupal\Component\Utility;
  * @see theme_render
  */
 class SafeMarkup {
-  use PlaceholderTrait;
 
   /**
    * The list of safe strings.
@@ -167,7 +166,7 @@ class SafeMarkup {
    *   any unsafe content must be in $args and inserted via placeholders.
    * @param array $args
    *   An array with placeholder replacements, keyed by placeholder. See
-   *   \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat() for
+   *   \Drupal\Component\Utility\FormattableString::placeholderFormat() for
    *   additional information about placeholders.
    *
    * @return string|\Drupal\Component\Utility\SafeStringInterface
@@ -176,7 +175,7 @@ class SafeMarkup {
    *
    * @ingroup sanitization
    *
-   * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
+   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
    * @see \Drupal\Component\Utility\FormattableString
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.

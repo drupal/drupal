@@ -7,13 +7,10 @@
 
 namespace Drupal\Core\StringTranslation;
 
-use Drupal\Component\Utility\PlaceholderTrait;
-
 /**
  * A class to hold plural translatable strings.
  */
 class PluralTranslatableString extends TranslatableString {
-  use PlaceholderTrait;
 
   /**
    * The delimiter used to split plural strings.
@@ -63,7 +60,7 @@ class PluralTranslatableString extends TranslatableString {
    *   "@count new comments".
    * @param array $args
    *   (optional) An array with placeholder replacements, keyed by placeholder.
-   *   See \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat() for
+   *   See \Drupal\Component\Utility\FormattableString::placeholderFormat() for
    *   additional information about placeholders. Note that you do not need to
    *   include @count in this array; this replacement is done automatically
    *   for the plural cases.
@@ -73,7 +70,7 @@ class PluralTranslatableString extends TranslatableString {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   (optional) The string translation service.
    *
-   * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
+   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
    */
   public function __construct($count, $singular, $plural, array $args = [], array $options = [], TranslationInterface $string_translation = NULL) {
     $this->count = $count;

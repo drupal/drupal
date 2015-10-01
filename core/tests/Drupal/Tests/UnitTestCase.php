@@ -12,7 +12,6 @@ use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Component\Utility\PlaceholderTrait;
 use Drupal\Core\StringTranslation\TranslatableString;
 use Drupal\Core\StringTranslation\PluralTranslatableString;
 
@@ -23,8 +22,6 @@ use Drupal\Core\StringTranslation\PluralTranslatableString;
  * @ingroup testing
  */
 abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
-
-  use PlaceholderTrait;
 
   /**
    * The random generator.

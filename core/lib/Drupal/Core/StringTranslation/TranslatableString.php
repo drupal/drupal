@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\StringTranslation;
 
-use Drupal\Component\Utility\PlaceholderTrait;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Utility\FormattableString;
 use Drupal\Component\Utility\ToStringTrait;
 
 /**
@@ -19,14 +18,13 @@ use Drupal\Component\Utility\ToStringTrait;
  * This is useful for using translation in very low level subsystems like entity
  * definition and stream wrappers.
  *
- * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
+ * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
  * @see \Drupal\Core\StringTranslation\TranslationManager::translate()
  * @see \Drupal\Core\StringTranslation\TranslationManager::translateString()
  * @see \Drupal\Core\Annotation\Translation
  */
-class TranslatableString implements SafeStringInterface {
+class TranslatableString extends FormattableString {
 
-  use PlaceholderTrait;
   use ToStringTrait;
 
   /**
@@ -42,13 +40,6 @@ class TranslatableString implements SafeStringInterface {
    * @var string
    */
   protected $translatableString;
-
-  /**
-   * The translation arguments.
-   *
-   * @var array
-   */
-  protected $arguments;
 
   /**
    * The translation options.
@@ -74,14 +65,14 @@ class TranslatableString implements SafeStringInterface {
    *   The string that is to be translated.
    * @param array $arguments
    *   (optional) An array with placeholder replacements, keyed by placeholder.
-   *   See \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat() for
+   *   See \Drupal\Component\Utility\FormattableString::placeholderFormat() for
    *   additional information about placeholders.
    * @param array $options
    *   (optional) An array of additional options.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   (optional) The string translation service.
    *
-   * @see \Drupal\Component\Utility\PlaceholderTrait::placeholderFormat()
+   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
    */
   public function __construct($string, array $arguments = array(), array $options = array(), TranslationInterface $string_translation = NULL) {
     $this->string = $string;
@@ -156,16 +147,6 @@ class TranslatableString implements SafeStringInterface {
    */
   public function __sleep() {
     return array('string', 'arguments', 'options');
-  }
-
-  /**
-   * Returns a representation of the object for use in JSON serialization.
-   *
-   * @return string
-   *   The safe string content.
-   */
-  public function jsonSerialize() {
-    return $this->__toString();
   }
 
   /**
