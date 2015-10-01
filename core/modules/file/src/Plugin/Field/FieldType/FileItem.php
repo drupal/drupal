@@ -261,7 +261,8 @@ class FileItem extends EntityReferenceItem {
    *   An array of token objects to pass to token_replace().
    *
    * @return string
-   *   An unsanitized file directory URI with tokens replaced.
+   *   An unsanitized file directory URI with tokens replaced. The result of
+   *   the token replacement is then converted to plain text and returned.
    *
    * @see token_replace()
    */
@@ -272,10 +273,6 @@ class FileItem extends EntityReferenceItem {
     // Replace tokens. As the tokens might contain HTML we convert it to plain
     // text.
     $destination = PlainTextOutput::renderFromHtml(\Drupal::token()->replace($destination, $data));
-
-    // @todo Is any valid URI always safe output? If not, handle invalid URIs
-    //   here, and certainly do not return them, see
-    //   https://www.drupal.org/node/2578193.
     return $settings['uri_scheme'] . '://' . $destination;
   }
 
