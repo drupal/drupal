@@ -1262,14 +1262,14 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'default' => '',
         ),
         'title' => array(
-          'description' => 'The serialized title for the link. May be a TranslatableString.',
+          'description' => 'The serialized title for the link. May be a TranslatableMarkup.',
           'type' => 'blob',
           'size' => 'big',
           'not null' => FALSE,
           'serialize' => TRUE,
         ),
         'description' => array(
-          'description' => 'The serialized description of this link - used for admin pages and title attribute. May be a TranslatableString.',
+          'description' => 'The serialized description of this link - used for admin pages and title attribute. May be a TranslatableMarkup.',
           'type' => 'blob',
           'size' => 'big',
           'not null' => FALSE,

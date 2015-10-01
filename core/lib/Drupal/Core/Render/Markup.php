@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Render\SafeString.
+ * Contains \Drupal\Core\Render\Markup.
  */
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Utility\SafeStringInterface;
-use Drupal\Component\Utility\SafeStringTrait;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
 
 /**
  * Defines an object that passes safe strings through the render system.
@@ -25,6 +25,6 @@ use Drupal\Component\Utility\SafeStringTrait;
  * @see \Twig_Markup
  * @see \Drupal\Component\Utility\SafeMarkup
  */
-final class SafeString implements SafeStringInterface, \Countable {
-  use SafeStringTrait;
+final class Markup implements MarkupInterface, \Countable {
+  use MarkupTrait;
 }

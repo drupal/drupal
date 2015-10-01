@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\Core\Render\RenderContext;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\views\Plugin\views\PluginBase;
 
@@ -34,7 +34,7 @@ class PluginBaseTest extends KernelTestBase {
    */
   public function testViewsTokenReplace() {
     $text = '{{ langcode__value }} means {{ langcode }}';
-    $tokens = ['{{ langcode }}' => SafeString::create('English'), '{{ langcode__value }}' => 'en'];
+    $tokens = ['{{ langcode }}' => Markup::create('English'), '{{ langcode__value }}' => 'en'];
 
     $result = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($text, $tokens) {
       return $this->testPluginBase->viewsTokenReplace($text, $tokens);

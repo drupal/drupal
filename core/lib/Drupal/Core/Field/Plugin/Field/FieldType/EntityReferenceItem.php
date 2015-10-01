@@ -13,7 +13,7 @@ use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
 
@@ -75,19 +75,19 @@ class EntityReferenceItem extends FieldItemBase {
 
     if ($target_id_data_type === 'integer') {
       $target_id_definition = DataReferenceTargetDefinition::create('integer')
-        ->setLabel(new TranslatableString('@label ID', ['@label' => $target_type_info->getLabel()]))
+        ->setLabel(new TranslatableMarkup('@label ID', ['@label' => $target_type_info->getLabel()]))
         ->setSetting('unsigned', TRUE);
     }
     else {
       $target_id_definition = DataReferenceTargetDefinition::create('string')
-        ->setLabel(new TranslatableString('@label ID', ['@label' => $target_type_info->getLabel()]));
+        ->setLabel(new TranslatableMarkup('@label ID', ['@label' => $target_type_info->getLabel()]));
     }
     $target_id_definition->setRequired(TRUE);
     $properties['target_id'] = $target_id_definition;
 
     $properties['entity'] = DataReferenceDefinition::create('entity')
       ->setLabel($target_type_info->getLabel())
-      ->setDescription(new TranslatableString('The referenced entity'))
+      ->setDescription(new TranslatableMarkup('The referenced entity'))
       // The entity object is computed out of the entity ID.
       ->setComputed(TRUE)
       ->setReadOnly(FALSE)

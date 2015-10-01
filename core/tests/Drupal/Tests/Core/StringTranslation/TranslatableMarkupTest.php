@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\StringTranslation\TranslatableStringTest.
+ * Contains \Drupal\Tests\Core\StringTranslation\TranslatableMarkupTest.
  */
 
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the TranslatableString class.
+ * Tests the TranslatableMarkup class.
  *
- * @coversDefaultClass \Drupal\Core\StringTranslation\TranslatableString
+ * @coversDefaultClass \Drupal\Core\StringTranslation\TranslatableMarkup
  * @group StringTranslation
  */
-class TranslatableStringTest extends UnitTestCase {
+class TranslatableMarkupTest extends UnitTestCase {
 
   /**
    * The error message of the last error in the error handler.
@@ -59,7 +59,7 @@ class TranslatableStringTest extends UnitTestCase {
     $translation = $this->getMock(TranslationInterface::class);
 
     $string = 'May I have an exception please?';
-    $text = $this->getMockBuilder(TranslatableString::class)
+    $text = $this->getMockBuilder(TranslatableMarkup::class)
       ->setConstructorArgs([$string, [], [], $translation])
       ->setMethods(['_die'])
       ->getMock();
@@ -82,7 +82,7 @@ class TranslatableStringTest extends UnitTestCase {
     restore_error_handler();
 
     $this->assertEquals(E_USER_ERROR, $this->lastErrorNumber);
-    $this->assertRegExp('/Exception thrown while calling __toString on a .*Mock_TranslatableString_.* object in .*TranslatableStringTest.php on line [0-9]+: Yes you may./', $this->lastErrorMessage);
+    $this->assertRegExp('/Exception thrown while calling __toString on a .*Mock_TranslatableMarkup_.* object in .*TranslatableMarkupTest.php on line [0-9]+: Yes you may./', $this->lastErrorMessage);
   }
 
 }

@@ -75,7 +75,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    *   The type of sanitization needed. If not provided,
    *   \Drupal\Component\Utility\Html::escape() is used.
    *
-   * @return \Drupal\views\Render\ViewsRenderPipelineSafeString
+   * @return \Drupal\views\Render\ViewsRenderPipelineMarkup
    *   Returns the safe value.
    */
   public function sanitizeValue($value, $type = NULL);

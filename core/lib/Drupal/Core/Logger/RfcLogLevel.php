@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Logger;
 
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @defgroup logging_severity_levels Logging severity levels
@@ -96,14 +96,14 @@ class RfcLogLevel {
   public static function getLevels() {
     if (!static::$levels) {
       static::$levels = [
-        static::EMERGENCY => new TranslatableString('Emergency'),
-        static::ALERT => new TranslatableString('Alert'),
-        static::CRITICAL => new TranslatableString('Critical'),
-        static::ERROR => new TranslatableString('Error'),
-        static::WARNING => new TranslatableString('Warning'),
-        static::NOTICE => new TranslatableString('Notice'),
-        static::INFO => new TranslatableString('Info'),
-        static::DEBUG => new TranslatableString('Debug'),
+        static::EMERGENCY => new TranslatableMarkup('Emergency'),
+        static::ALERT => new TranslatableMarkup('Alert'),
+        static::CRITICAL => new TranslatableMarkup('Critical'),
+        static::ERROR => new TranslatableMarkup('Error'),
+        static::WARNING => new TranslatableMarkup('Warning'),
+        static::NOTICE => new TranslatableMarkup('Notice'),
+        static::INFO => new TranslatableMarkup('Info'),
+        static::DEBUG => new TranslatableMarkup('Debug'),
       ];
     }
 

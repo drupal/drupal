@@ -37,14 +37,14 @@ class DrupalSetMessageTest extends WebTestBase {
     $this->assertUniqueText('Non Duplicated message');
     $this->assertNoUniqueText('Duplicated message');
 
-    // Ensure SafeString objects are rendered as expected.
-    $this->assertRaw('SafeString with <em>markup!</em>');
-    $this->assertUniqueText('SafeString with markup!');
+    // Ensure Markup objects are rendered as expected.
+    $this->assertRaw('Markup with <em>markup!</em>');
+    $this->assertUniqueText('Markup with markup!');
     $this->assertRaw('SafeString2 with <em>markup!</em>');
 
     // Ensure when the same message is of different types it is not duplicated.
-    $this->assertUniqueText('Non duplicate SafeString / string.');
-    $this->assertNoUniqueText('Duplicate SafeString / string.');
+    $this->assertUniqueText('Non duplicate Markup / string.');
+    $this->assertNoUniqueText('Duplicate Markup / string.');
 
     // Ensure that strings that are not marked as safe are escaped.
     $this->assertEscaped('<em>This<span>markup will be</span> escaped</em>.');

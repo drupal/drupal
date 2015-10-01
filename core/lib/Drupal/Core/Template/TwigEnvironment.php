@@ -9,7 +9,7 @@ namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 
 /**
  * A class that defines a Twig environment for Drupal.
@@ -107,15 +107,15 @@ class TwigEnvironment extends \Twig_Environment {
    * @param array $context
    *   An array of parameters to pass to the template.
    *
-   * @return \Drupal\Component\Utility\SafeStringInterface|string
-   *   The rendered inline template as a SafeString object.
+   * @return \Drupal\Component\Render\MarkupInterface|string
+   *   The rendered inline template as a Markup object.
    *
    * @see \Drupal\Core\Template\Loader\StringLoader::exists()
    */
   public function renderInline($template_string, array $context = array()) {
     // Prefix all inline templates with a special comment.
     $template_string = '{# inline_template_start #}' . $template_string;
-    return SafeString::create($this->loadTemplate($template_string, NULL)->render($context));
+    return Markup::create($this->loadTemplate($template_string, NULL)->render($context));
   }
 
 }

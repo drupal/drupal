@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableString;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\views\ResultRow;
 
 /**
@@ -175,7 +175,7 @@ class NumericField extends FieldPluginBase {
     // If we should format as plural, take the (possibly) translated plural
     // setting and format with the current language.
     if (!empty($this->options['format_plural'])) {
-      $value = PluralTranslatableString::createFromTranslatedString($value, $this->options['format_plural_string']);
+      $value = PluralTranslatableMarkup::createFromTranslatedString($value, $this->options['format_plural_string']);
     }
 
     return $this->sanitizeValue($this->options['prefix'], 'xss')

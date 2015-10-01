@@ -5,7 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;

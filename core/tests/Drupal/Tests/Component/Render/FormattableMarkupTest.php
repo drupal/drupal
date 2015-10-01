@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Utility\FormattableStringTest.
+ * Contains \Drupal\Tests\Component\Render\FormattableMarkupTest.
  */
 
-namespace Drupal\Tests\Component\Utility;
+namespace Drupal\Tests\Component\Render;
 
-use Drupal\Component\Utility\FormattableString;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the TranslatableString class.
+ * Tests the TranslatableMarkup class.
  *
- * @coversDefaultClass \Drupal\Component\Utility\FormattableString
+ * @coversDefaultClass \Drupal\Component\Render\FormattableMarkup
  * @group utility
  */
-class FormattableStringTest extends UnitTestCase {
+class FormattableMarkupTest extends UnitTestCase {
 
   /**
    * @covers ::__toString
@@ -24,7 +24,7 @@ class FormattableStringTest extends UnitTestCase {
    */
   public function testToString() {
     $string = 'Can I please have a @replacement';
-    $formattable_string = new FormattableString($string, ['@replacement' => 'kitten']);
+    $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
     $text = (string) $formattable_string;
     $this->assertEquals('Can I please have a kitten', $text);
     $text = $formattable_string->jsonSerialize();
@@ -36,7 +36,7 @@ class FormattableStringTest extends UnitTestCase {
    */
   public function testCount() {
     $string = 'Can I please have a @replacement';
-    $formattable_string = new FormattableString($string, ['@replacement' => 'kitten']);
+    $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
     $this->assertEquals(strlen($string), $formattable_string->count());
   }
 

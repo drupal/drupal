@@ -23,7 +23,7 @@ use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
-use Drupal\views\Render\ViewsRenderPipelineSafeString;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
 use Drupal\field\FieldConfigInterface;
 
@@ -638,7 +638,7 @@ function views_pre_render_views_form_views_form($element) {
 
   // Apply substitutions to the rendered output.
   $output = str_replace($search, $replace, drupal_render($element['output']));
-  $element['output'] = ['#markup' => ViewsRenderPipelineSafeString::create($output)];
+  $element['output'] = ['#markup' => ViewsRenderPipelineMarkup::create($output)];
 
   return $element;
 }

@@ -2,17 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Utility\SafeStringTrait.
+ * Contains \Drupal\Component\Render\MarkupTrait.
  */
 
-namespace Drupal\Component\Utility;
+namespace Drupal\Component\Render;
+
+use Drupal\Component\Utility\Unicode;
 
 /**
- * Implements SafeStringInterface and Countable for rendered objects.
+ * Implements MarkupInterface and Countable for rendered objects.
  *
- * @see \Drupal\Component\Utility\SafeStringInterface
+ * @see \Drupal\Component\Render\MarkupInterface
  */
-trait SafeStringTrait {
+trait MarkupTrait {
 
   /**
    * The safe string.
@@ -22,20 +24,20 @@ trait SafeStringTrait {
   protected $string;
 
   /**
-   * Creates a SafeString object if necessary.
+   * Creates a Markup object if necessary.
    *
    * If $string is equal to a blank string then it is not necessary to create a
-   * SafeString object. If $string is an object that implements
-   * SafeStringInterface it is returned unchanged.
+   * Markup object. If $string is an object that implements MarkupInterface it
+   * is returned unchanged.
    *
    * @param mixed $string
    *   The string to mark as safe. This value will be cast to a string.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   A safe string.
    */
   public static function create($string) {
-    if ($string instanceof SafeStringInterface) {
+    if ($string instanceof MarkupInterface) {
       return $string;
     }
     $string = (string) $string;
@@ -48,7 +50,7 @@ trait SafeStringTrait {
   }
 
   /**
-   * Returns the string version of the SafeString object.
+   * Returns the string version of the Markup object.
    *
    * @return string
    *   The safe string content.

@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\simpletest\Unit;
 
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\simpletest\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
@@ -27,7 +27,7 @@ class AssertHelperTraitTest extends UnitTestCase {
   }
 
   public function providerCastSafeStrings() {
-    $safe_string = SafeString::create('test safe string');
+    $safe_string = Markup::create('test safe string');
     return [
       ['test simple string', 'test simple string'],
       [['test simple array', 'test simple array'], ['test simple array', 'test simple array']],

@@ -7,11 +7,11 @@
 
 namespace Drupal\Tests\Core\Utility {
 
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
@@ -357,11 +357,11 @@ class LinkGeneratorTest extends UnitTestCase {
     ), $result);
 
     // Test that safe HTML is output inside the anchor tag unescaped. The
-    // SafeString::create() call is an intentional unit test for the interaction
-    // between SafeStringInterface and the LinkGenerator.
+    // Markup::create() call is an intentional unit test for the interaction
+    // between MarkupInterface and the LinkGenerator.
     $url = new Url('test_route_5', array());
     $url->setUrlGenerator($this->urlGenerator);
-    $result = $this->linkGenerator->generate(SafeString::create('<em>HTML output</em>'), $url);
+    $result = $this->linkGenerator->generate(Markup::create('<em>HTML output</em>'), $url);
     $this->assertLink(array(
       'attributes' => array('href' => '/test-route-5'),
       'child' => array(
@@ -499,12 +499,12 @@ class LinkGeneratorTest extends UnitTestCase {
    *   An associative array of link properties, with the following keys:
    *   - attributes: optional array of HTML attributes that should be present.
    *   - content: optional link content.
-   * @param \Drupal\Component\Utility\SafeStringInterface $html
+   * @param \Drupal\Component\Render\MarkupInterface $html
    *   The HTML to check.
    * @param int $count
    *   How many times the link should be present in the HTML. Defaults to 1.
    */
-  public static function assertLink(array $properties, SafeStringInterface $html, $count = 1) {
+  public static function assertLink(array $properties, MarkupInterface $html, $count = 1) {
     // Provide default values.
     $properties += array('attributes' => array());
 

@@ -10,7 +10,7 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -65,8 +65,8 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
       'int (scalar) cast to string' => [111, '111'],
       'float (scalar) cast to string' => [2.10, '2.10'],
       '> is escaped' => ['>', '&gt;'],
-      'SafeString EM tag is unchanged' => [SafeString::create('<em>hi</em>'), '<em>hi</em>'],
-      'SafeString SCRIPT tag is unchanged' => [SafeString::create('<script>alert("hi");</script>'), '<script>alert("hi");</script>'],
+      'Markup EM tag is unchanged' => [Markup::create('<em>hi</em>'), '<em>hi</em>'],
+      'Markup SCRIPT tag is unchanged' => [Markup::create('<script>alert("hi");</script>'), '<script>alert("hi");</script>'],
       'EM tag in string is escaped' => ['<em>hi</em>', Html::escape('<em>hi</em>')],
       'type link render array is rendered' => [['#type' => 'link', '#title' => 'Text', '#url' => '<none>'], '<a href="">Text</a>'],
       'type markup with EM tags is rendered' => [['#markup' => '<em>hi</em>'], '<em>hi</em>'],

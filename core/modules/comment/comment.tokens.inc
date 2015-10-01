@@ -154,8 +154,8 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
           break;
 
         case 'body':
-          // "processed" returns a \Drupal\Component\Utility\SafeStringInterface
-          // via check_markup().
+          // "processed" returns a \Drupal\Component\Render\MarkupInterface via
+          // check_markup().
           $replacements[$original] = $comment->comment_body->processed;
           break;
 

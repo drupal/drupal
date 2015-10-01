@@ -22,10 +22,10 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,7 @@ use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
-use Drupal\Core\StringTranslation\PluralTranslatableString;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -144,10 +144,10 @@ const JS_THEME = 100;
  * The delimiter used to split plural strings.
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\StringTranslation\PluralTranslatableString::DELIMITER
+ *   Use \Drupal\Core\StringTranslation\PluralTranslatableMarkup::DELIMITER
  *   instead.
  */
-const LOCALE_PLURAL_DELIMITER = PluralTranslatableString::DELIMITER;
+const LOCALE_PLURAL_DELIMITER = PluralTranslatableMarkup::DELIMITER;
 
 /**
  * Prepares a 'destination' URL query parameter for use with url().
@@ -262,7 +262,7 @@ function check_url($uri) {
  *   Optional language code to translate to a language other than what is used
  *   to display the page.
  *
- * @return \Drupal\Core\StringTranslation\TranslatableString
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
@@ -284,21 +284,21 @@ function format_size($size, $langcode = NULL) {
     $options = ['langcode' => $langcode];
     switch ($unit) {
       case 'KB':
-        return new TranslatableString('@size KB', $args, $options);
+        return new TranslatableMarkup('@size KB', $args, $options);
       case 'MB':
-        return new TranslatableString('@size MB', $args, $options);
+        return new TranslatableMarkup('@size MB', $args, $options);
       case 'GB':
-        return new TranslatableString('@size GB', $args, $options);
+        return new TranslatableMarkup('@size GB', $args, $options);
       case 'TB':
-        return new TranslatableString('@size TB', $args, $options);
+        return new TranslatableMarkup('@size TB', $args, $options);
       case 'PB':
-        return new TranslatableString('@size PB', $args, $options);
+        return new TranslatableMarkup('@size PB', $args, $options);
       case 'EB':
-        return new TranslatableString('@size EB', $args, $options);
+        return new TranslatableMarkup('@size EB', $args, $options);
       case 'ZB':
-        return new TranslatableString('@size ZB', $args, $options);
+        return new TranslatableMarkup('@size ZB', $args, $options);
       case 'YB':
-        return new TranslatableString('@size YB', $args, $options);
+        return new TranslatableMarkup('@size YB', $args, $options);
     }
   }
 }
@@ -967,7 +967,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  *   can be passed in to save another run of
  *   \Drupal\Core\Render\Element::children().
  *
- * @return string|\Drupal\Component\Utility\SafeStringInterface
+ * @return string|\Drupal\Component\Render\MarkupInterface
  *   The rendered HTML of all children of the element.
  *
  * @see drupal_render()
@@ -982,7 +982,7 @@ function drupal_render_children(&$element, $children_keys = NULL) {
       $output .= drupal_render($element[$key]);
     }
   }
-  return SafeString::create($output);
+  return Markup::create($output);
 }
 
 /**

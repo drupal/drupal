@@ -19,7 +19,7 @@ class ContextualLinkDefault extends PluginBase implements ContextualLinkInterfac
    * {@inheritdoc}
    */
   public function getTitle(Request $request = NULL) {
-    // The title from YAML file discovery may be a TranslatableString object.
+    // The title from YAML file discovery may be a TranslatableMarkup object.
     return (string) $this->pluginDefinition['title'];
   }
 

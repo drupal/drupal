@@ -143,9 +143,9 @@ interface AccountInterface {
    *
    * @see hook_user_format_name_alter()
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   Either a string that will be auto-escaped on output or a
-   *   SafeStringInterface object that is already HTML escaped. Either is safe
+   *   MarkupInterface object that is already HTML escaped. Either is safe
    *   to be printed within HTML fragments.
    */
   public function getDisplayName();

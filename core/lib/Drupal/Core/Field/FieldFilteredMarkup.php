@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Field\FieldFilteredString.
+ * Contains \Drupal\Core\Field\FieldFilteredMarkup.
  */
 
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeStringInterface;
-use Drupal\Component\Utility\SafeStringTrait;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 
@@ -23,18 +23,18 @@ use Drupal\Component\Utility\Xss;
  *   This object is marked as internal because it should only be used by the
  *   Field module and field-related plugins.
  *
- * @see \Drupal\Core\Render\SafeString
+ * @see \Drupal\Core\Render\Markup
  */
-final class FieldFilteredString implements SafeStringInterface, \Countable {
-  use SafeStringTrait;
+final class FieldFilteredMarkup implements MarkupInterface, \Countable {
+  use MarkupTrait;
 
   /**
-   * Overrides \Drupal\Component\Utility\SafeStringTrait::create().
+   * Overrides \Drupal\Component\Render\MarkupTrait::create().
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   A safe string filtered with the allowed tag list and normalized.
    *
-   * @see \Drupal\Core\Field\FieldFilteredString::allowedTags()
+   * @see \Drupal\Core\Field\FieldFilteredMarkup::allowedTags()
    * @see \Drupal\Component\Utility\Xss::filter()
    * @see \Drupal\Component\Utility\Html::normalize()
    */

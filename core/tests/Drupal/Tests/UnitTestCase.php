@@ -12,8 +12,8 @@ use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\TranslatableString;
-use Drupal\Core\StringTranslation\PluralTranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 
 /**
@@ -218,17 +218,17 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     $translation->expects($this->any())
       ->method('translate')
       ->willReturnCallback(function ($string, array $args = array(), array $options = array()) use ($translation) {
-        return new TranslatableString($string, $args, $options, $translation);
+        return new TranslatableMarkup($string, $args, $options, $translation);
       });
     $translation->expects($this->any())
       ->method('translateString')
-      ->willReturnCallback(function (TranslatableString $wrapper) {
+      ->willReturnCallback(function (TranslatableMarkup $wrapper) {
         return $wrapper->getUntranslatedString();
       });
     $translation->expects($this->any())
       ->method('formatPlural')
       ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) use ($translation) {
-        $wrapper = new PluralTranslatableString($count, $singular, $plural, $args, $options, $translation);
+        $wrapper = new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $translation);
         return $wrapper;
       });
     return $translation;

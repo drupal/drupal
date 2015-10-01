@@ -110,8 +110,8 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'description':
-          // "processed" returns a \Drupal\Component\Utility\SafeStringInterface
-          // via check_markup().
+          // "processed" returns a \Drupal\Component\Render\MarkupInterface via
+          // check_markup().
           $replacements[$original] = $term->description->processed;
           break;
 

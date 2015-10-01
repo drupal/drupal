@@ -286,7 +286,7 @@ function filter_fallback_format() {
  *   FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be
  *   skipped.
  *
- * @return \Drupal\Component\Utility\SafeStringInterface
+ * @return \Drupal\Component\Render\MarkupInterface
  *   The filtered text.
  *
  * @see filter_process_text()

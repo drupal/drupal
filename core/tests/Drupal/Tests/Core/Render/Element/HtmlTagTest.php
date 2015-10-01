@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Render\Element;
 
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element\HtmlTag;
 
@@ -86,7 +86,7 @@ class HtmlTagTest extends UnitTestCase {
     // Ensure that #value is not filtered if it is marked as safe.
     $element = array(
       '#tag' => 'p',
-      '#value' => SafeString::create('<script>value</script>'),
+      '#value' => Markup::create('<script>value</script>'),
     );
     $tags[] = array($element, "<p><script>value</script></p>\n");
 
@@ -106,8 +106,8 @@ class HtmlTagTest extends UnitTestCase {
    */
   public function testPreRenderConditionalComments($element, $expected, $set_safe = FALSE) {
     if ($set_safe) {
-      $element['#prefix'] = SafeString::create($element['#prefix']);
-      $element['#suffix'] = SafeString::create($element['#suffix']);
+      $element['#prefix'] = Markup::create($element['#prefix']);
+      $element['#suffix'] = Markup::create($element['#suffix']);
     }
     $this->assertEquals($expected, HtmlTag::preRenderConditionalComments($element));
   }

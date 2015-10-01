@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 
 /**
  * Collects, sanitizes, and renders HTML attributes.
@@ -65,10 +65,10 @@ use Drupal\Component\Utility\SafeStringInterface;
  * @endcode
  *
  * @see \Drupal\Component\Utility\Html::escape()
- * @see \Drupal\Component\Utility\PlainTextOutput::renderFromHtml()
+ * @see \Drupal\Component\Render\PlainTextOutput::renderFromHtml()
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
  */
-class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface {
+class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
 
   /**
    * Stores the attribute data.
@@ -125,7 +125,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, SafeStringInterface
     // An array value or 'class' attribute name are forced to always be an
     // AttributeArray value for consistency.
     if ($name == 'class' && !is_array($value)) {
-      // Cast the value to string in case it implements SafeStringInterface.
+      // Cast the value to string in case it implements MarkupInterface.
       $value = [(string) $value];
     }
     if (is_array($value)) {

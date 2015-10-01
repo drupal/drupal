@@ -8,7 +8,7 @@
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;

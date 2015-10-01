@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\Normalizer\SafeStringNormalizer.
+ * Contains \Drupal\serialization\Normalizer\MarkupNormalizer.
  */
 
 namespace Drupal\serialization\Normalizer;
 
 /**
- * Normalizes SafeStringInterface objects into a string.
+ * Normalizes MarkupInterface objects into a string.
  */
-class SafeStringNormalizer extends NormalizerBase {
+class MarkupNormalizer extends NormalizerBase {
 
   /**
    * The interface or class that this Normalizer supports.
    *
    * @var array
    */
-  protected $supportedInterfaceOrClass = array('Drupal\Component\Utility\SafeStringInterface');
+  protected $supportedInterfaceOrClass = array('Drupal\Component\Render\MarkupInterface');
 
   /**
    * {@inheritdoc}

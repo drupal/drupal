@@ -7,7 +7,7 @@
 
 namespace Drupal\simpletest;
 
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SafeMarkup;
@@ -361,7 +361,7 @@ abstract class TestBase {
    * @param $status
    *   Can be 'pass', 'fail', 'exception', 'debug'.
    *   TRUE is a synonym for 'pass', FALSE for 'fail'.
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -379,7 +379,7 @@ abstract class TestBase {
    *   is the caller function itself.
    */
   protected function assert($status, $message = '', $group = 'Other', array $caller = NULL) {
-    if ($message instanceof SafeStringInterface) {
+    if ($message instanceof MarkupInterface) {
       $message = (string) $message;
     }
     // Convert boolean status to string status.
@@ -659,7 +659,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertEqual($first, $second, $message = '', $group = 'Other') {
-    // Cast objects implementing SafeStringInterface to string instead of
+    // Cast objects implementing MarkupInterface to string instead of
     // relying on PHP casting them to string depending on what they are being
     // comparing with.
     $first = $this->castSafeStrings($first);
@@ -694,7 +694,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotEqual($first, $second, $message = '', $group = 'Other') {
-    // Cast objects implementing SafeStringInterface to string instead of
+    // Cast objects implementing MarkupInterface to string instead of
     // relying on PHP casting them to string depending on what they are being
     // comparing with.
     $first = $this->castSafeStrings($first);

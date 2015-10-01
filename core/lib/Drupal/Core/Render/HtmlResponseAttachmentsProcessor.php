@@ -237,7 +237,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected function renderPlaceholders(HtmlResponse $response) {
     $build = [
-      '#markup' => SafeString::create($response->getContent()),
+      '#markup' => Markup::create($response->getContent()),
       '#attached' => $response->getAttachments(),
     ];
     // RendererInterface::renderRoot() renders the $build render array and

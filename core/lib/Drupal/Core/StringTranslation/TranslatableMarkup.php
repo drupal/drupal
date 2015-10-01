@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\Core\StringTranslation\TranslatableString.
+ * Contains \Drupal\Core\StringTranslation\TranslatableMarkup.
  */
 
 namespace Drupal\Core\StringTranslation;
 
-use Drupal\Component\Utility\FormattableString;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\ToStringTrait;
 
 /**
- * Provides translatable string class.
+ * Provides translatable markup class.
  *
- * This class delays translating strings until rendering them.
+ * This class delays translation until rendering.
  *
  * This is useful for using translation in very low level subsystems like entity
  * definition and stream wrappers.
  *
- * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
+ * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
  * @see \Drupal\Core\StringTranslation\TranslationManager::translate()
  * @see \Drupal\Core\StringTranslation\TranslationManager::translateString()
  * @see \Drupal\Core\Annotation\Translation
  */
-class TranslatableString extends FormattableString {
+class TranslatableMarkup extends FormattableMarkup {
 
   use ToStringTrait;
 
@@ -35,11 +35,11 @@ class TranslatableString extends FormattableString {
   protected $string;
 
   /**
-   * The translated string without placeholder replacements.
+   * The translated markup without placeholder replacements.
    *
    * @var string
    */
-  protected $translatableString;
+  protected $translatedMarkup;
 
   /**
    * The translation options.
@@ -65,14 +65,14 @@ class TranslatableString extends FormattableString {
    *   The string that is to be translated.
    * @param array $arguments
    *   (optional) An array with placeholder replacements, keyed by placeholder.
-   *   See \Drupal\Component\Utility\FormattableString::placeholderFormat() for
+   *   See \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
    *   additional information about placeholders.
    * @param array $options
    *   (optional) An array of additional options.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   (optional) The string translation service.
    *
-   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
+   * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
   public function __construct($string, array $arguments = array(), array $options = array(), TranslationInterface $string_translation = NULL) {
     $this->string = $string;
@@ -131,15 +131,15 @@ class TranslatableString extends FormattableString {
    *   The translated string.
    */
   public function render() {
-    if (!isset($this->translatableString)) {
-      $this->translatableString = $this->getStringTranslation()->translateString($this);
+    if (!isset($this->translatedMarkup)) {
+      $this->translatedMarkup = $this->getStringTranslation()->translateString($this);
     }
 
     // Handle any replacements.
     if ($args = $this->getArguments()) {
-      return $this->placeholderFormat($this->translatableString, $args);
+      return $this->placeholderFormat($this->translatedMarkup, $args);
     }
-    return $this->translatableString;
+    return $this->translatedMarkup;
   }
 
   /**

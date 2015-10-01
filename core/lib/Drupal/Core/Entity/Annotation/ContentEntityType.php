@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\Core\Entity\Annotation;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a content entity type annotation object.
@@ -37,7 +37,7 @@ class ContentEntityType extends EntityType {
    * {@inheritdoc}
    */
   public function get() {
-    $this->definition['group_label'] = new TranslatableString('Content', array(), array('context' => 'Entity type group'));
+    $this->definition['group_label'] = new TranslatableMarkup('Content', array(), array('context' => 'Entity type group'));
 
     return parent::get();
   }

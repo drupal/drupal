@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Component\Utility\FormattableString;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
@@ -127,7 +127,7 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, array('node' => $node), array('language' => $this->interfaceLanguage));
-      $this->assertEqual($output, $expected, new FormattableString('Node token %token replaced for node without a summary.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, new FormattableMarkup('Node token %token replaced for node without a summary.', ['%token' => $input]));
     }
   }
 

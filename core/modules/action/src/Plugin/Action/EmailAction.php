@@ -7,7 +7,7 @@
 
 namespace Drupal\action\Plugin\Action;
 
-use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\EntityManagerInterface;

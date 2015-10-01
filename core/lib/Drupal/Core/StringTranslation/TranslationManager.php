@@ -110,13 +110,13 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * {@inheritdoc}
    */
   public function translate($string, array $args = array(), array $options = array()) {
-    return new TranslatableString($string, $args, $options, $this);
+    return new TranslatableMarkup($string, $args, $options, $this);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function translateString(TranslatableString $translated_string) {
+  public function translateString(TranslatableMarkup $translated_string) {
     return $this->doTranslate($translated_string->getUntranslatedString(), $translated_string->getOptions());
   }
 
@@ -148,7 +148,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * {@inheritdoc}
    */
   public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array()) {
-    return new PluralTranslatableString($count, $singular, $plural, $args, $options, $this);
+    return new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $this);
   }
 
   /**

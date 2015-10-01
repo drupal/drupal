@@ -339,10 +339,10 @@ class RenderCache implements RenderCacheInterface {
     // the cache entry size.
     if (!empty($elements['#cache_properties']) && is_array($elements['#cache_properties'])) {
       $data['#cache_properties'] = $elements['#cache_properties'];
-      // Ensure that any safe strings are a SafeString object.
+      // Ensure that any safe strings are a Markup object.
       foreach (Element::properties(array_flip($elements['#cache_properties'])) as $cache_property) {
         if (isset($elements[$cache_property]) && is_scalar($elements[$cache_property]) && SafeMarkup::isSafe($elements[$cache_property])) {
-          $elements[$cache_property] = SafeString::create($elements[$cache_property]);
+          $elements[$cache_property] = Markup::create($elements[$cache_property]);
         }
       }
 
@@ -355,13 +355,13 @@ class RenderCache implements RenderCacheInterface {
         // Cache only cacheable children's markup.
         foreach ($cacheable_children as $key) {
           // We can assume that #markup is safe at this point.
-          $cacheable_items[$key] = ['#markup' => SafeString::create($cacheable_items[$key]['#markup'])];
+          $cacheable_items[$key] = ['#markup' => Markup::create($cacheable_items[$key]['#markup'])];
         }
       }
       $data += $cacheable_items;
     }
 
-    $data['#markup'] = SafeString::create($data['#markup']);
+    $data['#markup'] = Markup::create($data['#markup']);
     return $data;
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Note: not to be confused with \Drupal\Core\Link, which is for passing around
  *   ungenerated links (typically link text + route name + route parameters).
  */
-class GeneratedLink extends BubbleableMetadata implements SafeStringInterface {
+class GeneratedLink extends BubbleableMetadata implements MarkupInterface {
 
   /**
    * The HTML string value containing a link.

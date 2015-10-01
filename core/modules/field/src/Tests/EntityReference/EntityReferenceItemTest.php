@@ -10,7 +10,7 @@ namespace Drupal\field\Tests\EntityReference;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
@@ -114,7 +114,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test_taxonomy_term->entity->uuid(), $this->term->uuid());
     // Verify that the label for the target ID property definition is correct.
     $label = $entity->field_test_taxonomy_term->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinition('target_id')->getLabel();
-    $this->assertTrue($label instanceof TranslatableString);
+    $this->assertTrue($label instanceof TranslatableMarkup);
     $this->assertEqual($label->render(), 'Taxonomy term ID');
 
     // Change the name of the term via the reference.
@@ -185,7 +185,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertEqual($this->entityStringId->id(), $storage->load($entity->id())->field_test_entity_test_string_id->target_id);
     // Verify that the label for the target ID property definition is correct.
     $label = $entity->field_test_taxonomy_term->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinition('target_id')->getLabel();
-    $this->assertTrue($label instanceof TranslatableString);
+    $this->assertTrue($label instanceof TranslatableMarkup);
     $this->assertEqual($label->render(), 'Taxonomy term ID');
   }
 

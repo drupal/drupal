@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -98,10 +98,10 @@ class ViewsBlock implements ContainerDeriverInterface {
             }
             else {
               // Allow translators to control the punctuation. Plugin
-              // definitions get cached, so use TranslatableString() instead of
+              // definitions get cached, so use TranslatableMarkup() instead of
               // t() to avoid double escaping when $admin_label is rendered
               // during requests that use the cached definition.
-              $admin_label = new TranslatableString('@view: @display', ['@view' => $view->label(), '@display' => $display->display['display_title']]);
+              $admin_label = new TranslatableMarkup('@view: @display', ['@view' => $view->label(), '@display' => $display->display['display_title']]);
             }
           }
 

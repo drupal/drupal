@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\AllowedTagsXssTrait;
-use Drupal\Core\Field\FieldFilteredString;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -75,7 +75,7 @@ class ListString extends StringArgument {
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
       $value = $this->allowed_values[$value];
     }
-    return FieldFilteredString::create($this->caseTransform($value, $this->options['case']));
+    return FieldFilteredMarkup::create($this->caseTransform($value, $this->options['case']));
   }
 
 }

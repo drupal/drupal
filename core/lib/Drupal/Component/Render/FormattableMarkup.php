@@ -2,10 +2,15 @@
 
 /**
  * @file
- * Contains Drupal\Component\Utility\FormattableString.
+ * Contains Drupal\Component\Render\FormattableMarkup.
  */
 
-namespace Drupal\Component\Utility;
+namespace Drupal\Component\Render;
+
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Formats a string for HTML display by replacing variable placeholders.
@@ -13,11 +18,11 @@ namespace Drupal\Component\Utility;
  * When cast to a string, this object replaces variable placeholders in the
  * string with the arguments passed in during construction and escapes the
  * values so they can be safely displayed as HTML. See the documentation of
- * \Drupal\Component\Utility\FormattableString::placeholderFormat() for
- * details on the supported placeholders and how to use them securely. Incorrect
- * use of this class can result in security vulnerabilities.
+ * \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for details
+ * on the supported placeholders and how to use them securely. Incorrect use of
+ * this class can result in security vulnerabilities.
  *
- * In most cases, you should use TranslatableString or PluralTranslatableString
+ * In most cases, you should use TranslatableMarkup or PluralTranslatableMarkup
  * rather than this object, since they will translate the text (on
  * non-English-only sites) in addition to formatting it. Variables concatenated
  * without the insertion of language-specific words or punctuation are some
@@ -56,11 +61,11 @@ namespace Drupal\Component\Utility;
  *
  * @ingroup sanitization
  *
- * @see \Drupal\Core\StringTranslation\TranslatableString
- * @see \Drupal\Core\StringTranslation\PluralTranslatableString
- * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
+ * @see \Drupal\Core\StringTranslation\TranslatableMarkup
+ * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup
+ * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
  */
-class FormattableString implements SafeStringInterface {
+class FormattableMarkup implements MarkupInterface {
 
   /**
    * The arguments to replace placeholders with.
@@ -75,12 +80,12 @@ class FormattableString implements SafeStringInterface {
    * @param string $string
    *   A string containing placeholders. The string itself will not be escaped,
    *   any unsafe content must be in $args and inserted via placeholders.
-   * @param array $args
+   * @param array $arguments
    *   An array with placeholder replacements, keyed by placeholder. See
-   *   \Drupal\Component\Utility\FormattableString::placeholderFormat() for
+   *   \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
    *   additional information about placeholders.
    *
-   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
+   * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
   public function __construct($string, array $arguments) {
     $this->string = (string) $string;
@@ -125,17 +130,17 @@ class FormattableString implements SafeStringInterface {
    *   An associative array of replacements. Each array key should be the same
    *   as a placeholder in $string. The corresponding value should be a string
    *   or an object that implements
-   *   \Drupal\Component\Utility\SafeStringInterface. The value replaces the
+   *   \Drupal\Component\Render\MarkupInterface. The value replaces the
    *   placeholder in $string. Sanitization and formatting will be done before
    *   replacement. The type of sanitization and formatting depends on the first
    *   character of the key:
    *   - @variable: When the placeholder replacement value is:
    *     - A string, the replaced value in the returned string will be sanitized
    *       using \Drupal\Component\Utility\Html::escape().
-   *     - A SafeStringInterface object, the replaced value in the returned
-   *       string will not be sanitized.
-   *     - A SafeStringInterface object cast to a string, the replaced value in
-   *       the returned string be forcibly sanitized using
+   *     - A MarkupInterface object, the replaced value in the returned string
+   *       will not be sanitized.
+   *     - A MarkupInterface object cast to a string, the replaced value in the
+   *       returned string be forcibly sanitized using
    *       \Drupal\Component\Utility\Html::escape().
    *       @code
    *         $this->placeholderFormat('This will force HTML-escaping of the replacement value: @text', ['@text' => (string) $safe_string_interface_object));
@@ -180,8 +185,8 @@ class FormattableString implements SafeStringInterface {
    *
    * @ingroup sanitization
    *
-   * @see \Drupal\Core\StringTranslation\TranslatableString
-   * @see \Drupal\Core\StringTranslation\PluralTranslatableString
+   * @see \Drupal\Core\StringTranslation\TranslatableMarkup
+   * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup
    * @see \Drupal\Component\Utility\Html::escape()
    * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
    * @see \Drupal\Core\Url::fromUri()
@@ -192,8 +197,8 @@ class FormattableString implements SafeStringInterface {
       switch ($key[0]) {
         case '@':
           // Escape if the value is not an object from a class that implements
-          // \Drupal\Component\Utility\SafeStringInterface, for example strings
-          // will be escaped.
+          // \Drupal\Component\Render\MarkupInterface, for example strings will
+          // be escaped.
           // \Drupal\Component\Utility\SafeMarkup\SafeMarkup::isSafe() may
           // return TRUE for content that is safe within HTML fragments, but not
           // within other contexts, so this placeholder type must not be used
@@ -210,7 +215,7 @@ class FormattableString implements SafeStringInterface {
           // attribute to be encoded. If a caller wants to pass a value that is
           // extracted from HTML and therefore is already HTML encoded, it must
           // invoke
-          // \Drupal\Component\Utility\OutputStrategyInterface::renderFromHtml()
+          // \Drupal\Component\Render\OutputStrategyInterface::renderFromHtml()
           // on it prior to passing it in as a placeholder value of this type.
           // @todo Add some advice and stronger warnings.
           //   https://www.drupal.org/node/2569041.
@@ -235,7 +240,7 @@ class FormattableString implements SafeStringInterface {
   /**
    * Escapes a placeholder replacement value if needed.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $value
+   * @param string|\Drupal\Component\Render\MarkupInterface $value
    *   A placeholder replacement value.
    *
    * @return string

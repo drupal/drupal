@@ -9,7 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -29,10 +29,10 @@ class PasswordItem extends StringItem {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(new TranslatableString('The hashed password'))
+      ->setLabel(new TranslatableMarkup('The hashed password'))
       ->setSetting('case_sensitive', TRUE);
     $properties['existing'] = DataDefinition::create('string')
-      ->setLabel(new TranslatableString('Existing password'));
+      ->setLabel(new TranslatableMarkup('Existing password'));
 
     return $properties;
   }

@@ -10,7 +10,7 @@ namespace Drupal\Tests\Core\Render\Element;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element\Tableselect;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
@@ -68,7 +68,7 @@ class TableSelectTest extends UnitTestCase {
 
     Tableselect::processTableselect($element, $form_state, $complete_form);
 
-    $this->assertEquals(new TranslatableString('Update @title', ['@title' => 'Static title']), $element[0]['#title']);
+    $this->assertEquals(new TranslatableMarkup('Update @title', ['@title' => 'Static title']), $element[0]['#title']);
   }
 
 }

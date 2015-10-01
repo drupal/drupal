@@ -8,12 +8,12 @@
 namespace Drupal\Tests\Core\Template;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeArray;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Template\Attribute
@@ -40,7 +40,7 @@ class AttributeTest extends UnitTestCase {
     $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
 
     // Test that safe string objects work correctly.
-    $safe_string = $this->prophesize(SafeStringInterface::class);
+    $safe_string = $this->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn('example-class');
     $attribute = new Attribute(array('class' => $safe_string->reveal()));
     $this->assertTrue(isset($attribute['class']));
@@ -367,10 +367,10 @@ class AttributeTest extends UnitTestCase {
     $data = [];
 
     $string = '"> <script>alert(123)</script>"';
-    $data['safe-object-xss1'] = [['title' => SafeString::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
+    $data['safe-object-xss1'] = [['title' => Markup::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
     $data['non-safe-object-xss1'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
     $string = '&quot;><script>alert(123)</script>';
-    $data['safe-object-xss2'] = [['title' => SafeString::create($string)], ' title="&quot;&gt;alert(123)"'];
+    $data['safe-object-xss2'] = [['title' => Markup::create($string)], ' title="&quot;&gt;alert(123)"'];
     $data['non-safe-object-xss2'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
 
     return $data;

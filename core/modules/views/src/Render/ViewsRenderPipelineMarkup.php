@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\views\Render\ViewsRenderPipelineSafeString.
+ * Contains \Drupal\views\Render\ViewsRenderPipelineMarkup.
  */
 
 namespace Drupal\views\Render;
 
-use Drupal\Component\Utility\SafeStringInterface;
-use Drupal\Component\Utility\SafeStringTrait;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
 
 /**
  * Defines an object that passes safe strings through the Views render system.
@@ -21,8 +21,8 @@ use Drupal\Component\Utility\SafeStringTrait;
  *   This object is marked as internal because it should only be used in the
  *   Views render pipeline.
  *
- * @see \Drupal\Core\Render\SafeString
+ * @see \Drupal\Core\Render\Markup
  */
-final class ViewsRenderPipelineSafeString implements SafeStringInterface, \Countable {
-  use SafeStringTrait;
+final class ViewsRenderPipelineMarkup implements MarkupInterface, \Countable {
+  use MarkupTrait;
 }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Utility\OutputStrategyInterface.
+ * Contains \Drupal\Component\Render\OutputStrategyInterface.
  */
 
-namespace Drupal\Component\Utility;
+namespace Drupal\Component\Render;
 
 /**
  * Provides an output strategy that formats HTML strings for a given context.

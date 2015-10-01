@@ -9,7 +9,7 @@ namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\Routing\Route;
@@ -71,7 +71,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     $tree_element = reset($menu_tree);
     $this->assertEqual('route_name_2', $tree_element->link->getRouteName());
     $title = $tree_element->link->getTitle();
-    $this->assertFalse($title instanceof TranslatableString);
+    $this->assertFalse($title instanceof TranslatableMarkup);
     $this->assertIdentical('<script>alert("Welcome to the discovered jungle!")</script>', $title);
     $this->assertFalse(SafeMarkup::isSafe($title));
 

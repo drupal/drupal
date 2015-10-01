@@ -14,7 +14,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface;
-use Drupal\views\Render\ViewsRenderPipelineSafeString;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -335,7 +335,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
       // executed by an HTML agent.
       // @todo Decide how to support non-HTML in the render API in
       //   https://www.drupal.org/node/2501313.
-      $build['#markup'] = ViewsRenderPipelineSafeString::create($build['#markup']);
+      $build['#markup'] = ViewsRenderPipelineMarkup::create($build['#markup']);
     }
 
     parent::applyDisplayCachablityMetadata($build);

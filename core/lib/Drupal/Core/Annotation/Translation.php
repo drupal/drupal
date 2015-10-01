@@ -8,7 +8,7 @@
 namespace Drupal\Core\Annotation;
 
 use Drupal\Component\Annotation\AnnotationBase;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @defgroup plugin_translatable Annotation for translatable text
@@ -60,7 +60,7 @@ class Translation extends AnnotationBase {
   /**
    * The string translation object.
    *
-   * @var \Drupal\Core\StringTranslation\TranslatableString
+   * @var \Drupal\Core\StringTranslation\TranslatableMarkup
    */
   protected $translation;
 
@@ -86,7 +86,7 @@ class Translation extends AnnotationBase {
         'context' => $values['context'],
       );
     }
-    $this->translation = new TranslatableString($string, $arguments, $options);
+    $this->translation = new TranslatableMarkup($string, $arguments, $options);
   }
 
   /**

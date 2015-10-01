@@ -8,7 +8,7 @@
 namespace Drupal\Core\Language;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -84,13 +84,13 @@ class LanguageManager implements LanguageManagerInterface {
   public function getDefinedLanguageTypesInfo() {
     $this->definedLanguageTypesInfo = array(
       LanguageInterface::TYPE_INTERFACE => array(
-        'name' => new TranslatableString('Interface text'),
-        'description' => new TranslatableString('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
+        'name' => new TranslatableMarkup('Interface text'),
+        'description' => new TranslatableMarkup('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_CONTENT => array(
-        'name' => new TranslatableString('Content'),
-        'description' => new TranslatableString('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+        'name' => new TranslatableMarkup('Content'),
+        'description' => new TranslatableMarkup('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_URL => array(
@@ -162,15 +162,15 @@ class LanguageManager implements LanguageManagerInterface {
    */
   public function getLanguageName($langcode) {
     if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      return new TranslatableString('None');
+      return new TranslatableMarkup('None');
     }
     if ($language = $this->getLanguage($langcode)) {
       return $language->getName();
     }
     if (empty($langcode)) {
-      return new TranslatableString('Unknown');
+      return new TranslatableMarkup('Unknown');
     }
-    return new TranslatableString('Unknown (@langcode)', array('@langcode' => $langcode));
+    return new TranslatableMarkup('Unknown (@langcode)', array('@langcode' => $langcode));
   }
 
   /**
@@ -185,16 +185,16 @@ class LanguageManager implements LanguageManagerInterface {
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     // This is called very early while initializing the language system. Prevent
-    // early t() calls by using the TranslatableString.
+    // early t() calls by using the TranslatableMarkup.
     $languages[LanguageInterface::LANGCODE_NOT_SPECIFIED] = new Language(array(
       'id' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'name' => new TranslatableString('Not specified'),
+      'name' => new TranslatableMarkup('Not specified'),
       'weight' => ++$weight,
     ) + $locked_language);
 
     $languages[LanguageInterface::LANGCODE_NOT_APPLICABLE] = new Language(array(
       'id' => LanguageInterface::LANGCODE_NOT_APPLICABLE,
-      'name' => new TranslatableString('Not applicable'),
+      'name' => new TranslatableMarkup('Not applicable'),
       'weight' => ++$weight,
     ) + $locked_language);
 
@@ -383,7 +383,7 @@ class LanguageManager implements LanguageManagerInterface {
       $default = new Language(
         array(
           'id' => $defaultLanguage->getId(),
-          'name' => new TranslatableString("Site's default language (@lang_name)",
+          'name' => new TranslatableMarkup("Site's default language (@lang_name)",
             array('@lang_name' => $defaultLanguage->getName())),
           'direction' => $defaultLanguage->getDirection(),
           'weight' => $defaultLanguage->getWeight(),

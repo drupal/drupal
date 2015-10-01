@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Render\ViewsRenderPipelineSafeString;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
 use Drupal\views\Views;
@@ -236,7 +236,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
         $value = Html::escape($value);
         break;
     }
-    return ViewsRenderPipelineSafeString::create($value);
+    return ViewsRenderPipelineMarkup::create($value);
   }
 
   /**

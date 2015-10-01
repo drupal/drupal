@@ -8,8 +8,8 @@
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\StringTranslation\PluralTranslatableString;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
@@ -420,13 +420,13 @@ class TestTranslationManager implements TranslationInterface {
    * {@inheritdoc}
    */
   public function translate($string, array $args = array(), array $options = array()) {
-    return new TranslatableString($string, $args, $options, $this);
+    return new TranslatableMarkup($string, $args, $options, $this);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function translateString(TranslatableString $translated_string) {
+  public function translateString(TranslatableMarkup $translated_string) {
     return $translated_string->getUntranslatedString();
   }
 
@@ -434,7 +434,7 @@ class TestTranslationManager implements TranslationInterface {
    * {@inheritdoc}
    */
   public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array()) {
-    return new PluralTranslatableString($count, $singular, $plural, $args, $options, $this);
+    return new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $this);
   }
 
 }

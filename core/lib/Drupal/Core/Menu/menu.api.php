@@ -235,10 +235,10 @@
  *   The value corresponding to each machine name key is an associative array
  *   that may contain the following key-value pairs:
  *   - title: (required) The title of the menu link. If this should be
- *     translated, create a \Drupal\Core\StringTranslation\TranslatableString
+ *     translated, create a \Drupal\Core\StringTranslation\TranslatableMarkup
  *     object.
  *   - description: The description of the link. If this should be
- *     translated, create a \Drupal\Core\StringTranslation\TranslatableString
+ *     translated, create a \Drupal\Core\StringTranslation\TranslatableMarkup
  *     object.
  *   - route_name: (optional) The route name to be used to build the path.
  *     Either the route_name or url element must be provided.
@@ -264,13 +264,13 @@
 function hook_menu_links_discovered_alter(&$links) {
   // Change the weight and title of the user.logout link.
   $links['user.logout']['weight'] = -10;
-  $links['user.logout']['title'] = new \Drupal\Core\StringTranslation\TranslatableString('Logout');
+  $links['user.logout']['title'] = new \Drupal\Core\StringTranslation\TranslatableMarkup('Logout');
   // Conditionally add an additional link with a title that's not translated.
   if (\Drupal::moduleHandler()->moduleExists('search')) {
     $links['menu.api.search'] = array(
       'title' => \Drupal::config('system.site')->get('name'),
       'route_name' => 'menu.api.search',
-      'description' => new \Drupal\Core\StringTranslation\TranslatableString('View popular search phrases for this site.'),
+      'description' => new \Drupal\Core\StringTranslation\TranslatableMarkup('View popular search phrases for this site.'),
       'parent' => 'system.admin_reports',
     );
   }

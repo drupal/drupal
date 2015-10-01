@@ -12,7 +12,7 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\Token;
 use Drupal\Tests\UnitTestCase;
 
@@ -292,7 +292,7 @@ class TokenTest extends UnitTestCase {
 
     $data['simple-placeholder-with-safe-html'] = [
       '<h1>[token:meh]</h1>',
-      ['[token:meh]' => SafeString::create('<em>Emphasized</em>')],
+      ['[token:meh]' => Markup::create('<em>Emphasized</em>')],
       '<h1><em>Emphasized</em></h1>',
     ];
 

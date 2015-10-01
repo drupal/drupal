@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Mail;
 
-use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;

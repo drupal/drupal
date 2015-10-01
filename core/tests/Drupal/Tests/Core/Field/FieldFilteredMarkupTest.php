@@ -2,30 +2,30 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Field\FieldFilteredStringTest.
+ * Contains \Drupal\Tests\Core\Field\FieldFilteredMarkupTest.
  */
 
 namespace Drupal\Tests\Core\Field;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Field\FieldFilteredString;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Component\Render\MarkupInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\Field\FieldFilteredString
+ * @coversDefaultClass \Drupal\Core\Field\FieldFilteredMarkup
  * @group Field
  */
-class FieldFilteredStringTest extends UnitTestCase {
+class FieldFilteredMarkupTest extends UnitTestCase {
 
   /**
    * @covers ::create
    * @dataProvider providerTestCreate
    */
   public function testCreate($string, $expected, $instance_of_check) {
-    $filtered_string = FieldFilteredString::create($string);
+    $filtered_string = FieldFilteredMarkup::create($string);
 
     if ($instance_of_check) {
-      $this->assertInstanceOf(FieldFilteredString::class, $filtered_string);
+      $this->assertInstanceOf(FieldFilteredMarkup::class, $filtered_string);
     }
     $this->assertSame($expected, (string) $filtered_string);
   }
@@ -44,7 +44,7 @@ class FieldFilteredStringTest extends UnitTestCase {
     $data[] = ['<em>teststring', '<em>teststring</em>', TRUE];
 
     // Even safe strings will be escaped.
-    $safe_string = $this->prophesize(SafeStringInterface::class);
+    $safe_string = $this->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn('<script>teststring</script>');
     $data[] = [$safe_string->reveal(), 'teststring', TRUE];
 
@@ -57,7 +57,7 @@ class FieldFilteredStringTest extends UnitTestCase {
   public function testdisplayAllowedTags() {
     $expected = '<a> <b> <big> <code> <del> <em> <i> <ins> <pre> <q> <small> <span> <strong> <sub> <sup> <tt> <ol> <ul> <li> <p> <br> <img>';
 
-    $this->assertSame($expected, FieldFilteredString::displayAllowedTags());
+    $this->assertSame($expected, FieldFilteredMarkup::displayAllowedTags());
   }
 
 }

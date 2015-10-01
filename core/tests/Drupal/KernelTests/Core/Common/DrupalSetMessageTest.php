@@ -21,7 +21,7 @@ class DrupalSetMessageTest extends KernelTestBase {
   public function testDrupalSetMessage() {
     drupal_set_message(t('A message: @foo', ['@foo' => 'bar']));
     $messages = drupal_get_messages();
-    $this->assertInstanceOf('Drupal\Core\Render\SafeString', $messages['status'][0]);
+    $this->assertInstanceOf('Drupal\Core\Render\Markup', $messages['status'][0]);
     $this->assertEquals('A message: bar', (string) $messages['status'][0]);
   }
 

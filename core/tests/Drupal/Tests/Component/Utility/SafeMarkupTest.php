@@ -8,8 +8,8 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
-use Drupal\Component\Utility\SafeStringTrait;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\UnitTestCase;
 
@@ -115,7 +115,7 @@ class SafeMarkupTest extends UnitTestCase {
    * @covers ::isSafe
    */
   public function testIsSafe() {
-    $safe_string = $this->getMock('\Drupal\Component\Utility\SafeStringInterface');
+    $safe_string = $this->getMock('\Drupal\Component\Render\MarkupInterface');
     $this->assertTrue(SafeMarkup::isSafe($safe_string));
     $string_object = new SafeMarkupTestString('test');
     $this->assertFalse(SafeMarkup::isSafe($string_object));
@@ -216,7 +216,7 @@ class SafeMarkupTest extends UnitTestCase {
     $this->assertEquals($expected_is_safe, SafeMarkup::isSafe($result), 'SafeMarkup::format correctly sets the result as safe or not safe.');
 
     foreach ($args as $arg) {
-      $this->assertSame($arg instanceof SafeMarkupTestSafeString, SafeMarkup::isSafe($arg));
+      $this->assertSame($arg instanceof SafeMarkupTestMarkup, SafeMarkup::isSafe($arg));
     }
   }
 
@@ -228,9 +228,9 @@ class SafeMarkupTest extends UnitTestCase {
   function providerFormat() {
     $tests[] = array('Simple text', array(), 'Simple text', 'SafeMarkup::format leaves simple text alone.', TRUE);
     $tests[] = array('Escaped text: @value', array('@value' => '<script>'), 'Escaped text: &lt;script&gt;', 'SafeMarkup::format replaces and escapes string.', TRUE);
-    $tests[] = array('Escaped text: @value', array('@value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE);
+    $tests[] = array('Escaped text: @value', array('@value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE);
     $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'SafeMarkup::format replaces, escapes and themes string.', TRUE);
-    $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkupTestSafeString::create('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE);
+    $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE);
 
     $tests['javascript-protocol-url'] = ['Simple text <a href=":url">giraffe</a>', [':url' => 'javascript://example.com?foo&bar'], 'Simple text <a href="//example.com?foo&amp;bar">giraffe</a>', 'Support for filtering bad protocols', TRUE];
     $tests['external-url'] = ['Simple text <a href=":url">giraffe</a>', [':url' => 'http://example.com?foo&bar'], 'Simple text <a href="http://example.com?foo&amp;bar">giraffe</a>', 'Support for filtering bad protocols', TRUE];
@@ -268,9 +268,9 @@ class SafeMarkupTestString {
 /**
  * Marks text as safe.
  *
- * SafeMarkupTestSafeString is used to mark text as safe because
+ * SafeMarkupTestMarkup is used to mark text as safe because
  * SafeMarkup::$safeStrings is a global static that affects all tests.
  */
-class SafeMarkupTestSafeString implements SafeStringInterface {
-  use SafeStringTrait;
+class SafeMarkupTestMarkup implements MarkupInterface {
+  use MarkupTrait;
 }

@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Implements hook_help().
@@ -252,8 +252,8 @@ function content_translation_views_data_alter(array &$data) {
  */
 function content_translation_menu_links_discovered_alter(array &$links) {
   // Clarify where translation settings are located.
-  $links['language.content_settings_page']['title'] = new TranslatableString('Content language and translation');
-  $links['language.content_settings_page']['description'] = new TranslatableString('Configure language and translation support for content.');
+  $links['language.content_settings_page']['title'] = new TranslatableMarkup('Content language and translation');
+  $links['language.content_settings_page']['description'] = new TranslatableMarkup('Configure language and translation support for content.');
 }
 
 /**

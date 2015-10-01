@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\ContextualLinkDefault;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +71,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
    */
   public function testGetTitle() {
     $title = 'Example';
-    $this->pluginDefinition['title'] = (new TranslatableString($title, [], [], $this->stringTranslation));
+    $this->pluginDefinition['title'] = (new TranslatableMarkup($title, [], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
@@ -86,7 +86,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
    */
   public function testGetTitleWithContext() {
     $title = 'Example';
-    $this->pluginDefinition['title'] = (new TranslatableString($title, array(), array('context' => 'context'), $this->stringTranslation));
+    $this->pluginDefinition['title'] = (new TranslatableMarkup($title, array(), array('context' => 'context'), $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
@@ -101,7 +101,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
    */
   public function testGetTitleWithTitleArguments() {
     $title = 'Example @test';
-    $this->pluginDefinition['title'] = (new TranslatableString($title, array('@test' => 'value'), [], $this->stringTranslation));
+    $this->pluginDefinition['title'] = (new TranslatableMarkup($title, array('@test' => 'value'), [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])

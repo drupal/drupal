@@ -1,10 +1,12 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Component\Utility\PlainTextOutput.
+ * Contains \Drupal\Component\Render\PlainTextOutput.
  */
 
-namespace Drupal\Component\Utility;
+namespace Drupal\Component\Render;
+
+use Drupal\Component\Utility\Html;
 
 /**
  * Provides an output strategy for transforming HTML into simple plain text.

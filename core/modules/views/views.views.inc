@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\system\ActionConfigEntityInterface;
@@ -459,7 +459,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
       // Considering the dual use of this help data (both as metadata and as
       // help text), other patterns such as use of #markup would not be correct
       // here.
-      $data[$table_alias][$field_alias]['help'] = SafeString::create($data[$table_alias][$field_alias]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+      $data[$table_alias][$field_alias]['help'] = Markup::create($data[$table_alias][$field_alias]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
     }
 
     $keys = array_keys($field_columns);
@@ -569,7 +569,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         // Considering the dual use of this help data (both as metadata and as
         // help text), other patterns such as use of #markup would not be
         // correct here.
-        $data[$table_alias][$column_real_name]['help'] = SafeString::create($data[$table_alias][$column_real_name]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+        $data[$table_alias][$column_real_name]['help'] = Markup::create($data[$table_alias][$column_real_name]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
       }
 
       $data[$table_alias][$column_real_name]['argument'] = array(

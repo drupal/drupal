@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
@@ -278,7 +278,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
   }
 
   /**
-   * Casts any objects that implement SafeStringInterface to string.
+   * Casts any objects that implement MarkupInterface to string.
    *
    * @param mixed $data
    *   The configuration data.
@@ -287,12 +287,12 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   The data with any safe strings cast to string.
    */
   protected function castSafeStrings($data) {
-    if ($data instanceof SafeStringInterface) {
+    if ($data instanceof MarkupInterface) {
       $data = (string) $data;
     }
     else if (is_array($data)) {
       array_walk_recursive($data, function (&$value) {
-        if ($value instanceof SafeStringInterface) {
+        if ($value instanceof MarkupInterface) {
           $value = (string) $value;
         }
       });

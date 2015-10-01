@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Component\Utility\SafeStringInterface;
-use Drupal\Core\Render\SafeString;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -319,7 +319,7 @@ class ThemeManager implements ThemeManagerInterface {
         // Theme functions do not render via the theme engine, so the output is
         // not autoescaped. However, we can only presume that the theme function
         // has been written correctly and that the markup is safe.
-        $output = SafeString::create($info['function']($variables));
+        $output = Markup::create($info['function']($variables));
       }
     }
     else {
@@ -389,7 +389,7 @@ class ThemeManager implements ThemeManagerInterface {
       $output = $render_function($template_file, $variables);
     }
 
-    return ($output instanceof SafeStringInterface) ? $output : (string) $output;
+    return ($output instanceof MarkupInterface) ? $output : (string) $output;
   }
 
   /**

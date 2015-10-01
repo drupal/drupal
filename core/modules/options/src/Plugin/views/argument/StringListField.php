@@ -8,7 +8,7 @@
 namespace Drupal\options\Plugin\views\argument;
 
 use Drupal\Core\Field\AllowedTagsXssTrait;
-use Drupal\Core\Field\FieldFilteredString;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
@@ -83,7 +83,7 @@ class StringListField extends StringArgument {
     if (isset($this->allowedValues[$value]) && !empty($this->options['summary']['human'])) {
       $value = $this->allowedValues[$value];
     }
-    return FieldFilteredString::create($this->caseTransform($value, $this->options['case']));
+    return FieldFilteredMarkup::create($this->caseTransform($value, $this->options['case']));
   }
 
 }

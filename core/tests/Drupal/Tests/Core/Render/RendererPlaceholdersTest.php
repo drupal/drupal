@@ -10,7 +10,7 @@ namespace Drupal\Tests\Core\Render;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -70,10 +70,10 @@ class RendererPlaceholdersTest extends RendererTestBase {
         $token_render_array['#cache']['keys'] = $cache_keys;
       }
       $token = hash('crc32b', serialize($token_render_array));
-      // \Drupal\Core\Render\SafeString::create() is necessary as the render
+      // \Drupal\Core\Render\Markup::create() is necessary as the render
       // system would mangle this markup. As this is exactly what happens at
       // runtime this is a valid use-case.
-      return SafeString::create('<drupal-render-placeholder callback="Drupal\Tests\Core\Render\PlaceholdersTest::callback" arguments="' . '0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>');
+      return Markup::create('<drupal-render-placeholder callback="Drupal\Tests\Core\Render\PlaceholdersTest::callback" arguments="' . '0=' . $args[0] . '" token="' . $token . '"></drupal-render-placeholder>');
     };
 
     $extract_placeholder_render_array = function ($placeholder_render_array) {
@@ -852,7 +852,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     ]];
 
     $result = $this->renderer->renderRoot($element);
-    $this->assertInstanceOf('\Drupal\Core\Render\SafeString', $result);
+    $this->assertInstanceOf('\Drupal\Core\Render\Markup', $result);
     $this->assertEquals('<p>This is a rendered placeholder!</p>', (string) $result);
   }
 

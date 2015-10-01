@@ -178,7 +178,7 @@ trait AssertContentTrait {
   protected function buildXPathQuery($xpath, array $args = array()) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
-      // Cast SafeStringInterface objects to string.
+      // Cast MarkupInterface objects to string.
       if (is_object($value)) {
         $value = (string) $value;
       }
@@ -285,7 +285,7 @@ trait AssertContentTrait {
    *
    * An optional link index may be passed.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $label
+   * @param string|\Drupal\Component\Render\MarkupInterface $label
    *   Text between the anchor tags.
    * @param int $index
    *   Link position counting from zero.
@@ -303,7 +303,7 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
-    // Cast SafeStringInterface objects to string.
+    // Cast MarkupInterface objects to string.
     $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ? $message : strtr('Link with label %label found.', array('%label' => $label)));
@@ -313,7 +313,7 @@ trait AssertContentTrait {
   /**
    * Passes if a link with the specified label is not found.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $label
+   * @param string|\Drupal\Component\Render\MarkupInterface $label
    *   Text between the anchor tags.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -330,7 +330,7 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLink($label, $message = '', $group = 'Other') {
-    // Cast SafeStringInterface objects to string.
+    // Cast MarkupInterface objects to string.
     $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ? $message : SafeMarkup::format('Link with label %label not found.', array('%label' => $label)));
@@ -621,7 +621,7 @@ trait AssertContentTrait {
    * through a web browser. In other words the HTML has been filtered out of
    * the contents.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $text
+   * @param string|\Drupal\Component\Render\MarkupInterface $text
    *   Plain text to look for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -648,7 +648,7 @@ trait AssertContentTrait {
    * through a web browser. In other words the HTML has been filtered out of
    * the contents.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $text
+   * @param string|\Drupal\Component\Render\MarkupInterface $text
    *   Plain text to look for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -673,7 +673,7 @@ trait AssertContentTrait {
    *
    * It is not recommended to call this function directly.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $text
+   * @param string|\Drupal\Component\Render\MarkupInterface $text
    *   Plain text to look for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -693,7 +693,7 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertUniqueTextHelper($text, $message = '', $group = 'Other', $be_unique = FALSE) {
-    // Cast SafeStringInterface objects to string.
+    // Cast MarkupInterface objects to string.
     $text = (string) $text;
     if (!$message) {
       $message = '"' . $text . '"' . ($be_unique ? ' found only once' : ' found more than once');
@@ -877,7 +877,7 @@ trait AssertContentTrait {
     $renderer = \Drupal::service('renderer');
 
     // The string cast is necessary because theme functions return
-    // SafeStringInterface objects. This means we can assert that $expected
+    // MarkupInterface objects. This means we can assert that $expected
     // matches the theme output without having to worry about 0 == ''.
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function() use ($callback, $variables) {
       return \Drupal::theme()->render($callback, $variables);
@@ -1116,12 +1116,12 @@ trait AssertContentTrait {
    *
    * @param string $id
    *   ID of field to assert.
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $value
+   * @param string|\Drupal\Component\Render\MarkupInterface $value
    *   (optional) Value for the field to assert. You may pass in NULL to skip
    *   checking the value, while still checking that the field exists.
    *   However, the default value ('') asserts that the field value is an empty
    *   string.
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $message
+   * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
@@ -1136,7 +1136,7 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertFieldById($id, $value = '', $message = '', $group = 'Browser') {
-    // Cast SafeStringInterface objects to string.
+    // Cast MarkupInterface objects to string.
     if (isset($value)) {
       $value = (string) $value;
     }

@@ -155,8 +155,8 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
                 $output = text_summary($output, $item->format, $length);
               }
             }
-            // "processed" returns a
-            // \Drupal\Component\Utility\SafeStringInterface via check_markup().
+            // "processed" returns a \Drupal\Component\Render\MarkupInterface
+            // via check_markup().
             $replacements[$original] = $output;
           }
           break;

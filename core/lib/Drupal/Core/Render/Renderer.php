@@ -187,7 +187,7 @@ class Renderer implements RendererInterface {
 
     // Replace the placeholder with its rendered markup, and merge its
     // bubbleable metadata with the main elements'.
-    $elements['#markup'] = SafeString::create(str_replace($placeholder, $markup, $elements['#markup']));
+    $elements['#markup'] = Markup::create(str_replace($placeholder, $markup, $elements['#markup']));
     $elements = $this->mergeBubbleableMetadata($elements, $placeholder_elements);
 
     // Remove the placeholder that we've just rendered.
@@ -292,7 +292,7 @@ class Renderer implements RendererInterface {
         }
         // Mark the element markup as safe if is it a string.
         if (is_string($elements['#markup'])) {
-          $elements['#markup'] = SafeString::create($elements['#markup']);
+          $elements['#markup'] = Markup::create($elements['#markup']);
         }
         // The render cache item contains all the bubbleable rendering metadata
         // for the subtree.
@@ -466,7 +466,7 @@ class Renderer implements RendererInterface {
       foreach ($children as $key) {
         $elements['#children'] .= $this->doRender($elements[$key]);
       }
-      $elements['#children'] = SafeString::create($elements['#children']);
+      $elements['#children'] = Markup::create($elements['#children']);
     }
 
     // If #theme is not implemented and the element has raw #markup as a
@@ -477,7 +477,7 @@ class Renderer implements RendererInterface {
     // required. Eventually #theme_wrappers will expect both #markup and
     // #children to be a single string as #children.
     if (!$theme_is_implemented && isset($elements['#markup'])) {
-      $elements['#children'] = SafeString::create($elements['#markup'] . $elements['#children']);
+      $elements['#children'] = Markup::create($elements['#markup'] . $elements['#children']);
     }
 
     // Let the theme functions in #theme_wrappers add markup around the rendered
@@ -530,7 +530,7 @@ class Renderer implements RendererInterface {
     $prefix = isset($elements['#prefix']) ? $this->xssFilterAdminIfUnsafe($elements['#prefix']) : '';
     $suffix = isset($elements['#suffix']) ? $this->xssFilterAdminIfUnsafe($elements['#suffix']) : '';
 
-    $elements['#markup'] = SafeString::create($prefix . $elements['#children'] . $suffix);
+    $elements['#markup'] = Markup::create($prefix . $elements['#children'] . $suffix);
 
     // We've rendered this element (and its subtree!), now update the context.
     $context->update($elements);
@@ -685,18 +685,18 @@ class Renderer implements RendererInterface {
    * Note: This method only filters if $string is not marked safe already. This
    * ensures that HTML intended for display is not filtered.
    *
-   * @param string|\Drupal\Core\Render\SafeString $string
+   * @param string|\Drupal\Core\Render\Markup $string
    *   A string.
    *
-   * @return \Drupal\Core\Render\SafeString
-   *   The escaped string wrapped in a SafeString object. If
+   * @return \Drupal\Core\Render\Markup
+   *   The escaped string wrapped in a Markup object. If
    *   SafeMarkup::isSafe($string) returns TRUE, it won't be escaped again.
    */
   protected function xssFilterAdminIfUnsafe($string) {
     if (!SafeMarkup::isSafe($string)) {
       $string = Xss::filterAdmin($string);
     }
-    return SafeString::create($string);
+    return Markup::create($string);
   }
 
   /**
@@ -717,8 +717,8 @@ class Renderer implements RendererInterface {
    * @param array $elements
    *   A render array with #markup set.
    *
-   * @return \Drupal\Component\Utility\SafeStringInterface|string
-   *   The escaped markup wrapped in a SafeString object. If
+   * @return \Drupal\Component\Render\MarkupInterface|string
+   *   The escaped markup wrapped in a Markup object. If
    *   SafeMarkup::isSafe($elements['#markup']) returns TRUE, it won't be
    *   escaped or filtered again.
    *
@@ -732,12 +732,12 @@ class Renderer implements RendererInterface {
     }
 
     if (!empty($elements['#plain_text'])) {
-      $elements['#markup'] = SafeString::create(Html::escape($elements['#plain_text']));
+      $elements['#markup'] = Markup::create(Html::escape($elements['#plain_text']));
     }
     elseif (!SafeMarkup::isSafe($elements['#markup'])) {
       // The default behaviour is to XSS filter using the admin tag list.
       $tags = isset($elements['#allowed_tags']) ? $elements['#allowed_tags'] : Xss::getAdminTagList();
-      $elements['#markup'] = SafeString::create(Xss::filter($elements['#markup'], $tags));
+      $elements['#markup'] = Markup::create(Xss::filter($elements['#markup'], $tags));
     }
 
     return $elements;

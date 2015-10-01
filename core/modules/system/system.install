@@ -1236,7 +1236,7 @@ function system_update_8001(&$sandbox = NULL) {
         $schema->changeField('menu_tree', $name, 'system_update_8001_' . $name, $spec);
       }
       $spec = array(
-        'description' => 'The title for the link. May be a serialized TranslatableString.',
+        'description' => 'The title for the link. May be a serialized TranslatableMarkup.',
         'type' => 'blob',
         'size' => 'big',
         'not null' => FALSE,

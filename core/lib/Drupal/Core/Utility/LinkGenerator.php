@@ -10,7 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Link;
@@ -114,7 +114,7 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     // Ensure that query values are strings.
     array_walk($variables['options']['query'], function(&$value) {
-      if ($value instanceof SafeStringInterface) {
+      if ($value instanceof MarkupInterface) {
         $value = (string) $value;
       }
     });

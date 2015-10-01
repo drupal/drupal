@@ -33,7 +33,7 @@ interface TranslationInterface {
    *      what is used to display the page.
    *   - 'context': The context the source string belongs to.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableString
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The translated string.
    *
    * @see \Drupal\Component\Utility\SafeMarkup::format()
@@ -41,15 +41,15 @@ interface TranslationInterface {
   public function translate($string, array $args = array(), array $options = array());
 
   /**
-   * Translates a TranslatableString object to a string.
+   * Translates a TranslatableMarkup object to a string.
    *
-   * @param \Drupal\Core\StringTranslation\TranslatableString $translated_string
-   *   A TranslatableString object.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $translated_string
+   *   A TranslatableMarkup object.
    *
    * @return string
    *   The translated string.
    */
-  public function translateString(TranslatableString $translated_string);
+  public function translateString(TranslatableMarkup $translated_string);
 
   /**
    * Formats a string containing a count of items.
@@ -57,7 +57,7 @@ interface TranslationInterface {
    * This function ensures that the string is pluralized correctly. Since
    * TranslationInterface::translate() is called by this function, make sure not
    * to pass already-localized strings to it. See
-   * PluralTranslatableString::createFromTranslatedString() for that.
+   * PluralTranslatableMarkup::createFromTranslatedString() for that.
    *
    * For example:
    * @code
@@ -92,13 +92,13 @@ interface TranslationInterface {
    * @param array $options
    *   An associative array of additional options. See t() for allowed keys.
    *
-   * @return \Drupal\Core\StringTranslation\PluralTranslatableString
+   * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup
    *   A translated string.
    *
    * @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
    * @see t()
    * @see \Drupal\Component\Utility\SafeMarkup::format()
-   * @see \Drupal\Core\StringTranslation\PluralTranslatableString::createFromTranslatedString()
+   * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup::createFromTranslatedString()
    */
   public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array());
 

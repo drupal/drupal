@@ -9,7 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldFilteredString;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -191,7 +191,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   protected function sanitizeLabel(&$label) {
     // Allow a limited set of HTML tags.
-    $label = FieldFilteredString::create($label);
+    $label = FieldFilteredMarkup::create($label);
   }
 
   /**

@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -20,7 +20,7 @@ use Drupal\Core\Render\Renderer;
 use Drupal\Core\Url as CoreUrl;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Render\ViewsRenderPipelineSafeString;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
@@ -1177,7 +1177,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $this->last_render = $value;
     }
 
-    // String cast is necessary to test emptiness of SafeStringInterface
+    // String cast is necessary to test emptiness of MarkupInterface
     // objects.
     if (empty((string) $this->last_render)) {
       if ($this->isValueEmpty($this->last_render, $this->options['empty_zero'], FALSE)) {
@@ -1196,8 +1196,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE) {
-    // Convert SafeStringInterface to a string for checking.
-    if ($value instanceof SafeStringInterface) {
+    // Convert MarkupInterface to a string for checking.
+    if ($value instanceof MarkupInterface) {
       $value = (string) $value;
     }
     if (!isset($value)) {
@@ -1251,7 +1251,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // If we got here then $alter contains the value of "No results text"
       // and so there is nothing left to do.
       if ($value_is_safe) {
-        $value = ViewsRenderPipelineSafeString::create($value);
+        $value = ViewsRenderPipelineMarkup::create($value);
       }
       return $value;
     }
@@ -1293,7 +1293,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // Preserve whether or not the string is safe. Since $suffix comes from
     // \Drupal::l(), it is safe to append.
     if ($value_is_safe) {
-      $value = ViewsRenderPipelineSafeString::create($value . $suffix);
+      $value = ViewsRenderPipelineMarkup::create($value . $suffix);
     }
     $this->last_render_text = $value;
 
@@ -1308,7 +1308,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // \Drupal::l(), it is safe to append. Use SafeMarkup::isSafe() here because
     // renderAsLink() can return both safe and unsafe values.
     if (SafeMarkup::isSafe($value)) {
-      return ViewsRenderPipelineSafeString::create($value . $suffix);
+      return ViewsRenderPipelineMarkup::create($value . $suffix);
     }
     else {
       // If the string is not already marked safe, it is still OK to return it

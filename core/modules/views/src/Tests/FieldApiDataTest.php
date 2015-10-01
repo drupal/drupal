@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\Views\FieldTestBase;
 
@@ -99,10 +99,10 @@ class FieldApiDataTest extends FieldTestBase {
     // Click sort should only be on the primary field.
     $this->assertTrue(empty($data[$revision_table][$field_storage->getName()]['field']['click sortable']), 'Non-primary fields are not click sortable');
 
-    $this->assertTrue($data[$current_table][$field_storage->getName()]['help'] instanceof SafeStringInterface);
+    $this->assertTrue($data[$current_table][$field_storage->getName()]['help'] instanceof MarkupInterface);
     $this->assertEqual($data[$current_table][$field_storage->getName()]['help'], 'Appears in: page, article. Also known as: Content: The giraffe2&quot; label');
 
-    $this->assertTrue($data[$current_table][$field_storage->getName() . '_value']['help'] instanceof SafeStringInterface);
+    $this->assertTrue($data[$current_table][$field_storage->getName() . '_value']['help'] instanceof MarkupInterface);
     $this->assertEqual($data[$current_table][$field_storage->getName() . '_value']['help'], 'Appears in: page, article. Also known as: Content: The giraffe&quot; label (field_name_0)');
   }
 

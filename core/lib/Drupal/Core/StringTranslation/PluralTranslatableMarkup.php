@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\StringTranslation\PluralTranslatableString.
+ * Contains \Drupal\Core\StringTranslation\PluralTranslatableMarkup.
  */
 
 namespace Drupal\Core\StringTranslation;
 
 /**
- * A class to hold plural translatable strings.
+ * A class to hold plural translatable markup.
  */
-class PluralTranslatableString extends TranslatableString {
+class PluralTranslatableMarkup extends TranslatableMarkup {
 
   /**
    * The delimiter used to split plural strings.
@@ -43,7 +43,7 @@ class PluralTranslatableString extends TranslatableString {
   protected static $localeEnabled;
 
   /**
-   * Constructs a new PluralTranslatableString object.
+   * Constructs a new PluralTranslatableMarkup object.
    *
    * Parses values passed into this class through the format_plural() function
    * in Drupal and handles an optional context for the string.
@@ -60,7 +60,7 @@ class PluralTranslatableString extends TranslatableString {
    *   "@count new comments".
    * @param array $args
    *   (optional) An array with placeholder replacements, keyed by placeholder.
-   *   See \Drupal\Component\Utility\FormattableString::placeholderFormat() for
+   *   See \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
    *   additional information about placeholders. Note that you do not need to
    *   include @count in this array; this replacement is done automatically
    *   for the plural cases.
@@ -70,7 +70,7 @@ class PluralTranslatableString extends TranslatableString {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   (optional) The string translation service.
    *
-   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
+   * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
   public function __construct($count, $singular, $plural, array $args = [], array $options = [], TranslationInterface $string_translation = NULL) {
     $this->count = $count;
@@ -79,7 +79,7 @@ class PluralTranslatableString extends TranslatableString {
   }
 
   /**
-   * Constructs a new class instance from an already translated string.
+   * Constructs a new class instance from already translated markup.
    *
    * This method ensures that the string is pluralized correctly. As opposed
    * to the __construct() method, this method is designed to be invoked with
@@ -99,8 +99,8 @@ class PluralTranslatableString extends TranslatableString {
    * @param array $options
    *   An associative array of additional options. See t() for allowed keys.
    *
-   * @return \Drupal\Core\StringTranslation\PluralTranslatableString
-   *   A PluralTranslatableString object.
+   * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup
+   *   A PluralTranslatableMarkup object.
    */
   public static function createFromTranslatedString($count, $translated_string, array $args = [], array $options = []) {
     $plural = new static($count, '', '', $args, $options);

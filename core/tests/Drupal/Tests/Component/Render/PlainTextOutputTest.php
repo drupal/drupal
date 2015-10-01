@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Utility\PlainTextOutputTest.
+ * Contains \Drupal\Tests\Component\Render\PlainTextOutputTest.
  */
 
-namespace Drupal\Tests\Component\Utility;
+namespace Drupal\Tests\Component\Render;
 
-use Drupal\Component\Utility\PlainTextOutput;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\PlainTextOutput
+ * @coversDefaultClass \Drupal\Component\Render\PlainTextOutput
  * @group Utility
  */
 class PlainTextOutputTest extends UnitTestCase {
@@ -52,12 +52,12 @@ class PlainTextOutputTest extends UnitTestCase {
     $string = 'The &lt;em&gt; tag makes your text look like <em>"this"</em>.';
     $data['escaped-html-with-quotes'] = [$expected, $string];
 
-    $safe_string = $this->prophesize(SafeStringInterface::class);
+    $safe_string = $this->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn('<em>"this"</em>');
     $safe_string = $safe_string->reveal();
     $data['escaped-html-with-quotes-and-placeholders'] = [$expected, 'The @tag tag makes your text look like @result.', ['@tag' =>'<em>', '@result' => $safe_string]];
 
-    $safe_string = $this->prophesize(SafeStringInterface::class);
+    $safe_string = $this->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn($string);
     $safe_string = $safe_string->reveal();
     $data['safe-string'] = [$expected, $safe_string];

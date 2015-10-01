@@ -93,7 +93,7 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
 
     // Build the placeholder element to return.
     $placeholder_element = [];
-    $placeholder_element['#markup'] = SafeString::create($placeholder_markup);
+    $placeholder_element['#markup'] = Markup::create($placeholder_markup);
     $placeholder_element['#attached']['placeholders'][$placeholder_markup] = $placeholder_render_array;
     return $placeholder_element;
   }

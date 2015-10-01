@@ -14,7 +14,7 @@ use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
-use Drupal\views\Render\ViewsRenderPipelineSafeString;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -718,7 +718,7 @@ abstract class StylePluginBase extends PluginBase {
             foreach ($this->rendered_fields[$index] as &$rendered_field) {
               // Placeholders and rendered fields have been processed by the
               // render system and are therefore safe.
-              $rendered_field = ViewsRenderPipelineSafeString::create(str_replace($placeholders, $values, $rendered_field));
+              $rendered_field = ViewsRenderPipelineMarkup::create(str_replace($placeholders, $values, $rendered_field));
             }
           }
         }
@@ -755,7 +755,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param string $field
    *   The ID of the field.
    *
-   * @return \Drupal\Component\Utility\SafeStringInterface|null
+   * @return \Drupal\Component\Render\MarkupInterface|null
    *   The output of the field, or NULL if it was empty.
    */
   public function getField($index, $field) {

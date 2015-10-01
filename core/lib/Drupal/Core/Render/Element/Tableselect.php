@@ -10,7 +10,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html as HtmlUtility;
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a form element for a table with radios or checkboxes in left column.
@@ -220,7 +220,7 @@ class Tableselect extends Table {
             $title = '';
             if (isset($element['#options'][$key]['title']) && is_array($element['#options'][$key]['title'])) {
               if (!empty($element['#options'][$key]['title']['data']['#title'])) {
-                $title = new TranslatableString('Update @title', array(
+                $title = new TranslatableMarkup('Update @title', array(
                   '@title' => $element['#options'][$key]['title']['data']['#title'],
                 ));
               }

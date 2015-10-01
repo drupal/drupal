@@ -10,9 +10,9 @@ namespace Drupal\Core\Field;
  * Useful methods when dealing with displaying allowed tags.
  *
  * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
- *   \Drupal\Core\Field\FieldFilteredString instead.
+ *   \Drupal\Core\Field\FieldFilteredMarkup instead.
  *
- * @see \Drupal\Core\Field\FieldFilteredString
+ * @see \Drupal\Core\Field\FieldFilteredMarkup
  */
 trait AllowedTagsXssTrait {
 
@@ -34,21 +34,21 @@ trait AllowedTagsXssTrait {
    *   valid UTF-8.
    */
   public function fieldFilterXss($string) {
-   return FieldFilteredString::create($string);
+   return FieldFilteredMarkup::create($string);
   }
 
   /**
    * Returns a list of tags allowed by AllowedTagsXssTrait::fieldFilterXss().
    */
   public function allowedTags() {
-    return FieldFilteredString::allowedTags();
+    return FieldFilteredMarkup::allowedTags();
   }
 
   /**
    * Returns a human-readable list of allowed tags for display in help texts.
    */
   public function displayAllowedTags() {
-    return FieldFilteredString::displayAllowedTags();
+    return FieldFilteredMarkup::displayAllowedTags();
   }
 
 }

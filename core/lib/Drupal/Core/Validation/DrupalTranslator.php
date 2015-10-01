@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Validation;
 
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 
 /**
  * Translates strings using Drupal's translation system.
@@ -77,8 +77,8 @@ class DrupalTranslator implements TranslatorInterface {
     foreach ($parameters as $key => $value) {
       // We allow the values in the parameters to be safe string objects. This
       // can be useful when we want to use parameter values that are
-      // TranslatableStrings.
-      if ($value instanceof SafeStringInterface) {
+      // TranslatableMarkup.
+      if ($value instanceof MarkupInterface) {
         $value = (string) $value;
       }
       if (is_object($value)) {

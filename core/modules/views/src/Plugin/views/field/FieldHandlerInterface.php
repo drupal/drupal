@@ -167,9 +167,9 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   The values retrieved from a single row of a view's query result.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   The rendered output. If the output is safe it will be wrapped in an
-   *   object that implements SafeStringInterface. If it is empty or unsafe it
+   *   object that implements MarkupInterface. If it is empty or unsafe it
    *   will be a string.
    *
    */
@@ -204,9 +204,9 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   The values retrieved from a single row of a view's query result.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   The advanced rendered output. If the output is safe it will be wrapped in
-   *   an object that implements SafeStringInterface. If it is empty or unsafe
+   *   an object that implements MarkupInterface. If it is empty or unsafe
    *   it will be a string.
    *
    */
@@ -240,9 +240,9 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
    *     - html: Make sure that the html is correct.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   The rendered output. If the output is safe it will be wrapped in an
-   *   object that implements SafeStringInterface. If it is empty or unsafe it
+   *   object that implements MarkupInterface. If it is empty or unsafe it
    *   will be a string.
    */
   public function renderText($alter);
@@ -268,10 +268,10 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   Holds single row of a view's result set.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
+   * @return string|\Drupal\Component\Render\MarkupInterface
    *   Returns rendered output of the given theme implementation. If the output
    *   is safe it will be wrapped in an object that implements
-   *   SafeStringInterface. If it is empty or unsafe it will be a string.
+   *   MarkupInterface. If it is empty or unsafe it will be a string.
    */
   function theme(ResultRow $values);
 

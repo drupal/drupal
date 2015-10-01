@@ -12,7 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
- * Tests the TranslatableString class.
+ * Tests the TranslatableMarkup class.
  *
  * @group StringTranslation
  */
@@ -36,7 +36,7 @@ class TranslationStringTest extends KernelTestBase {
   }
 
   /**
-   * Tests that TranslatableString objects can be compared.
+   * Tests that TranslatableMarkup objects can be compared.
    */
   public function testComparison() {
     $this->rebootAndPrepareSettings();

@@ -14,7 +14,7 @@ namespace Drupal\Core\Template;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -404,7 +404,7 @@ class TwigExtension extends \Twig_Extension {
     }
 
     // Keep Twig_Markup objects intact to support autoescaping.
-    if ($autoescape && ($arg instanceOf \Twig_Markup || $arg instanceOf SafeStringInterface)) {
+    if ($autoescape && ($arg instanceOf \Twig_Markup || $arg instanceOf MarkupInterface)) {
       return $arg;
     }
 

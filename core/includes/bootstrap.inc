@@ -13,7 +13,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
@@ -403,7 +403,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
  * @endcode
  *
- * @param string|\Drupal\Component\Utility\SafeStringInterface $message
+ * @param string|\Drupal\Component\Render\MarkupInterface $message
  *   (optional) The translated message to be displayed to the user. For
  *   consistency with other messages, it should begin with a capital letter and
  *   end with a period.
@@ -450,13 +450,13 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
       $_SESSION['messages'][$type] = array();
     }
 
-    // Convert strings which are safe to the simplest SafeString objects.
-    if (!($message instanceof SafeString) && SafeMarkup::isSafe($message)) {
-      $message = SafeString::create((string) $message);
+    // Convert strings which are safe to the simplest Markup objects.
+    if (!($message instanceof Markup) && SafeMarkup::isSafe($message)) {
+      $message = Markup::create((string) $message);
     }
 
     // Do not use strict type checking so that equivalent string and
-    // SafeStringInterface objects are detected.
+    // MarkupInterface objects are detected.
     if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
       $_SESSION['messages'][$type][] = $message;
     }

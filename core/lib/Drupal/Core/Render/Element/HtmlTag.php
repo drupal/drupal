@@ -9,7 +9,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Render\SafeString;
+use Drupal\Core\Render\Markup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
@@ -85,7 +85,7 @@ class HtmlTag extends RenderElement {
     if (!empty($element['#noscript'])) {
       $markup = "<noscript>$markup</noscript>";
     }
-    $element['#markup'] = SafeString::create($markup);
+    $element['#markup'] = Markup::create($markup);
     return $element;
   }
 
@@ -166,13 +166,13 @@ class HtmlTag extends RenderElement {
     // filtered if they are unsafe. Thus, all these strings are safe.
     if (!$browsers['!IE']) {
       // "downlevel-hidden".
-      $element['#prefix'] = SafeString::create("\n<!--[if $expression]>\n" . $prefix);
-      $element['#suffix'] = SafeString::create($suffix . "<![endif]-->\n");
+      $element['#prefix'] = Markup::create("\n<!--[if $expression]>\n" . $prefix);
+      $element['#suffix'] = Markup::create($suffix . "<![endif]-->\n");
     }
     else {
       // "downlevel-revealed".
-      $element['#prefix'] = SafeString::create("\n<!--[if $expression]><!-->\n" . $prefix);
-      $element['#suffix'] = SafeString::create($suffix . "<!--<![endif]-->\n");
+      $element['#prefix'] = Markup::create("\n<!--[if $expression]><!-->\n" . $prefix);
+      $element['#suffix'] = Markup::create($suffix . "<!--<![endif]-->\n");
     }
 
     return $element;

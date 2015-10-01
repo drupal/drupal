@@ -7,6 +7,9 @@
 
 namespace Drupal\Component\Utility;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Render\MarkupInterface;
+
 /**
  * Manages known safe strings for rendering at the theme layer.
  *
@@ -47,7 +50,7 @@ class SafeMarkup {
   /**
    * Checks if a string is safe to output.
    *
-   * @param string|\Drupal\Component\Utility\SafeStringInterface $string
+   * @param string|\Drupal\Component\Render\MarkupInterface $string
    *   The content to be checked.
    * @param string $strategy
    *   The escaping strategy. Defaults to 'html'. Two escaping strategies are
@@ -64,7 +67,7 @@ class SafeMarkup {
   public static function isSafe($string, $strategy = 'html') {
     // Do the instanceof checks first to save unnecessarily casting the object
     // to a string.
-    return $string instanceOf SafeStringInterface || isset(static::$safeStrings[(string) $string][$strategy]) ||
+    return $string instanceOf MarkupInterface || isset(static::$safeStrings[(string) $string][$strategy]) ||
       isset(static::$safeStrings[(string) $string]['all']);
   }
 
@@ -166,23 +169,23 @@ class SafeMarkup {
    *   any unsafe content must be in $args and inserted via placeholders.
    * @param array $args
    *   An array with placeholder replacements, keyed by placeholder. See
-   *   \Drupal\Component\Utility\FormattableString::placeholderFormat() for
+   *   \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
    *   additional information about placeholders.
    *
-   * @return string|\Drupal\Component\Utility\SafeStringInterface
-   *   The formatted string, which is an instance of SafeStringInterface unless
+   * @return string|\Drupal\Component\Render\MarkupInterface
+   *   The formatted string, which is an instance of MarkupInterface unless
    *   sanitization of an unsafe argument was suppressed (see above).
    *
    * @ingroup sanitization
    *
-   * @see \Drupal\Component\Utility\FormattableString::placeholderFormat()
-   * @see \Drupal\Component\Utility\FormattableString
+   * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
+   * @see \Drupal\Component\Render\FormattableMarkup
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
-   *   Use \Drupal\Component\Utility\FormattableString.
+   *   Use \Drupal\Component\Render\FormattableMarkup.
    */
   public static function format($string, array $args) {
-    return new FormattableString($string, $args);
+    return new FormattableMarkup($string, $args);
   }
 
 }

@@ -126,7 +126,7 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
-   * Tests the escaping of objects implementing SafeStringInterface.
+   * Tests the escaping of objects implementing MarkupInterface.
    *
    * @covers ::escapeFilter
    */
@@ -141,11 +141,11 @@ class TwigExtensionTest extends UnitTestCase {
     $twig_extension = new TwigExtension($renderer);
 
     // By default, TwigExtension will attempt to cast objects to strings.
-    // Ensure objects that implement SafeStringInterface are unchanged.
-    $safe_string = $this->getMock('\Drupal\Component\Utility\SafeStringInterface');
+    // Ensure objects that implement MarkupInterface are unchanged.
+    $safe_string = $this->getMock('\Drupal\Component\Render\MarkupInterface');
     $this->assertSame($safe_string, $twig_extension->escapeFilter($twig, $safe_string, 'html', 'UTF-8', TRUE));
 
-    // Ensure objects that do not implement SafeStringInterface are escaped.
+    // Ensure objects that do not implement MarkupInterface are escaped.
     $string_object = new TwigExtensionTestString("<script>alert('here');</script>");
     $this->assertSame('&lt;script&gt;alert(&#039;here&#039;);&lt;/script&gt;', $twig_extension->escapeFilter($twig, $string_object, 'html', 'UTF-8', TRUE));
   }

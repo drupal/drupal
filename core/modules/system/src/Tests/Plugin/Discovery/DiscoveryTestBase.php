@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Plugin\Discovery;
 
-use Drupal\Core\StringTranslation\TranslatableString;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -77,7 +77,7 @@ abstract class DiscoveryTestBase extends KernelTestBase {
    */
   protected function assertDefinitionIdentical(array $definition, array $expected_definition) {
     $func = function (&$item){
-      if ($item instanceof TranslatableString) {
+      if ($item instanceof TranslatableMarkup) {
         $item = (string) $item;
       }
     };

@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\SafeStringInterface;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
 
@@ -76,7 +76,7 @@ class TranslationManagerTest extends UnitTestCase {
    */
   public function testTranslatePlaceholder($string, array $args = array(), $expected_string) {
     $actual = $this->translationManager->translate($string, $args);
-    $this->assertInstanceOf(SafeStringInterface::class, $actual);
+    $this->assertInstanceOf(MarkupInterface::class, $actual);
     $this->assertEquals($expected_string, (string) $actual);
   }
 

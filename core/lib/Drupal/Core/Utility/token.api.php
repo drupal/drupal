@@ -65,7 +65,7 @@ use Drupal\user\Entity\User;
  * @return array
  *   An associative array of replacement values, keyed by the raw [type:token]
  *   strings from the original text. The returned values must be either plain
- *   text strings, or an object implementing SafeStringInterface if they are
+ *   text strings, or an object implementing MarkupInterface if they are
  *   HTML-formatted.
  *
  * @see hook_token_info()
