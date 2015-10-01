@@ -5,6 +5,7 @@
  * Hooks related to the Token system.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\user\Entity\User;
 
 /**
@@ -64,9 +65,7 @@ use Drupal\user\Entity\User;
  *
  * @return array
  *   An associative array of replacement values, keyed by the raw [type:token]
- *   strings from the original text. The returned values must be either plain
- *   text strings, or an object implementing SafeStringInterface if they are
- *   HTML-formatted.
+ *   strings from the original text.
  *
  * @see hook_token_info()
  * @see hook_tokens_alter()
@@ -82,6 +81,8 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
   else {
     $langcode = NULL;
   }
+  $sanitize = !empty($options['sanitize']);
+
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node'])) {
@@ -96,7 +97,7 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
           break;
 
         case 'title':
-          $replacements[$original] = $node->getTitle();
+          $replacements[$original] = $sanitize ? Html::escape($node->getTitle()) : $node->getTitle();
           break;
 
         case 'edit-url':
@@ -106,7 +107,7 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
         // Default values for the chained tokens handled below.
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : User::load(0);
-          $replacements[$original] = $account->label();
+          $replacements[$original] = $sanitize ? Html::escape($account->label()) : $account->label();
           $bubbleable_metadata->addCacheableDependency($account);
           break;
 

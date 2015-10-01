@@ -162,9 +162,7 @@ class Entity extends TokenizeAreaPluginBase {
       // @todo Use a method to check for tokens in
       //   https://www.drupal.org/node/2396607.
       if (strpos($this->options['target'], '{{') !== FALSE) {
-        // We cast as we need the integer/string value provided by the
-        // ::tokenizeValue() call.
-        $target_id = (string) $this->tokenizeValue($this->options['target']);
+        $target_id = $this->tokenizeValue($this->options['target']);
         if ($entity = $this->entityManager->getStorage($this->entityType)->load($target_id)) {
           $target_entity = $entity;
         }

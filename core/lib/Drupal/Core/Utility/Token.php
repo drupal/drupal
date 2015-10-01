@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -143,9 +141,7 @@ class Token {
    * Replaces all tokens in a given string with appropriate values.
    *
    * @param string $text
-   *   An HTML string containing replaceable tokens. The caller is responsible
-   *   for calling \Drupal\Component\Utility\Html::escape() in case the $text
-   *   was plain text.
+   *   A string potentially containing replaceable tokens.
    * @param array $data
    *   (optional) An array of keyed objects. For simple replacement scenarios
    *   'node', 'user', and others are common keys, with an accompanying node or
@@ -158,9 +154,18 @@ class Token {
    *   - langcode: A language code to be used when generating locale-sensitive
    *     tokens.
    *   - callback: A callback function that will be used to post-process the
-   *     array of token replacements after they are generated.
+   *     array of token replacements after they are generated. For example, a
+   *     module using tokens in a text-only email might provide a callback to
+   *     strip HTML entities from token values before they are inserted into the
+   *     final text.
    *   - clear: A boolean flag indicating that tokens should be removed from the
    *     final text if no replacement value can be generated.
+   *   - sanitize: A boolean flag indicating that tokens should be sanitized for
+   *     display to a web browser. Defaults to TRUE. Developers who set this
+   *     option to FALSE assume responsibility for running
+   *     \Drupal\Component\Utility\Xss::filter(),
+   *     \Drupal\Component\Utility\Html::escape() or other appropriate scrubbing
+   *     functions before displaying data to users.
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata|null
    *   (optional) An object to which static::generate() and the hooks and
    *   functions that it invokes will add their required bubbleable metadata.
@@ -180,13 +185,7 @@ class Token {
    *   Renderer's currently active render context.
    *
    * @return string
-   *   The token result is the entered HTML text with tokens replaced. The
-   *   caller is responsible for choosing the right escaping / sanitization. If
-   *   the result is intended to be used as plain text, the usage of
-   *   PlainTextOutput::renderFromHtml() is recommended. If the result is just
-   *   printed as part of a template relying on Twig autoescaping is possible,
-   *   otherwise for example the result can be put into #markup, in which case
-   *   it would be sanitized by Xss::filterAdmin().
+   *   Text with tokens replaced.
    */
   public function replace($text, array $data = array(), array $options = array(), BubbleableMetadata $bubbleable_metadata = NULL) {
     $text_tokens = $this->scan($text);
@@ -203,11 +202,6 @@ class Token {
       if (!empty($options['clear'])) {
         $replacements += array_fill_keys($tokens, '');
       }
-    }
-
-    // Escape the tokens, unless they are explicitly markup.
-    foreach ($replacements as $token => $value) {
-      $replacements[$token] = SafeMarkup::isSafe($value) ? $value : Html::escape($value);
     }
 
     // Optionally alter the list of replacement values.
@@ -288,6 +282,11 @@ class Token {
    *     array of token replacements after they are generated. Can be used when
    *     modules require special formatting of token text, for example URL
    *     encoding or truncation to a specific length.
+   *   - sanitize: A boolean flag indicating that tokens should be sanitized for
+   *     display to a web browser. Developers who set this option to FALSE assume
+   *     responsibility for running \Drupal\Component\Utility\Xss::filter(),
+   *     \Drupal\Component\Utility\Html::escape() or other appropriate scrubbing
+   *     functions before displaying data to users.
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
    *    The bubbleable metadata. This is passed to the token replacement
    *    implementations so that they can attach their metadata.
@@ -301,6 +300,8 @@ class Token {
    * @see hook_tokens_alter()
    */
   public function generate($type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+    $options += array('sanitize' => TRUE);
+
     foreach ($data as $object) {
       if ($object instanceof CacheableDependencyInterface || $object instanceof AttachmentsInterface) {
         $bubbleable_metadata->addCacheableDependency($object);

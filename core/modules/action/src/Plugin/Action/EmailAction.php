@@ -7,7 +7,6 @@
 
 namespace Drupal\action\Plugin\Action;
 
-use Drupal\Component\Utility\PlainTextOutput;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -128,7 +127,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
       $this->configuration['node'] = $entity;
     }
 
-    $recipient = PlainTextOutput::renderFromHtml($this->token->replace($this->configuration['recipient'], $this->configuration));
+    $recipient = $this->token->replace($this->configuration['recipient'], $this->configuration);
 
     // If the recipient is a registered user with a language preference, use
     // the recipient's preferred language. Otherwise, use the system default

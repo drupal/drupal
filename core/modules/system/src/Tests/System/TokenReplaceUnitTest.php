@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Component\Utility\FormattableString;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -104,7 +103,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
       ->save();
 
 
-    // Generate and test tokens.
+    // Generate and test sanitized tokens.
     $tests = array();
     $tests['[site:name]'] = Html::escape($config->get('name'));
     $tests['[site:slogan]'] = $safe_slogan;
@@ -130,9 +129,29 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->getId()), $bubbleable_metadata);
-      $this->assertEqual($output, $expected, new FormattableString('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, format_string('Sanitized system site information token %token replaced.', array('%token' => $input)));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
+
+    // Generate and test unsanitized tokens.
+    $tests['[site:name]'] = $config->get('name');
+    $tests['[site:slogan]'] = $config->get('slogan');
+
+    foreach ($tests as $input => $expected) {
+      $output = $this->tokenService->replace($input, array(), array('langcode' => $this->interfaceLanguage->getId(), 'sanitize' => FALSE), $bubbleable_metadata);
+      $this->assertEqual($output, $expected, format_string('Unsanitized system site information token %token replaced.', array('%token' => $input)));
+    }
+
+    // Check that the results of Token::generate are sanitized properly. This
+    // does NOT test the cleanliness of every token -- just that the $sanitize
+    // flag is being passed properly through the call stack and being handled
+    // correctly by a 'known' token, [site:slogan].
+    $raw_tokens = array('slogan' => '[site:slogan]');
+    $generated = $this->tokenService->generate('site', $raw_tokens, [], [], $bubbleable_metadata);
+    $this->assertEqual($generated['[site:slogan]'], $safe_slogan, 'Token sanitized.');
+
+    $generated = $this->tokenService->generate('site', $raw_tokens, array(), array('sanitize' => FALSE), $bubbleable_metadata);
+    $this->assertEqual($generated['[site:slogan]'], $slogan, 'Unsanitized token generated properly.');
   }
 
   /**

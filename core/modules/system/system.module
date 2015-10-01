@@ -5,7 +5,6 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-use Drupal\Component\Utility\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;
@@ -1291,7 +1290,7 @@ function system_mail($key, &$message, $params) {
 
   $context = $params['context'];
 
-  $subject = PlainTextOutput::renderFromHtml($token_service->replace($context['subject'], $context));
+  $subject = $token_service->replace($context['subject'], $context);
   $body = $token_service->replace($context['message'], $context);
 
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);

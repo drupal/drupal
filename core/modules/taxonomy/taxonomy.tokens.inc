@@ -5,6 +5,8 @@
  * Builds placeholder replacement tokens for taxonomy terms and vocabularies.
  */
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -95,6 +97,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
   $token_service = \Drupal::token();
 
   $replacements = array();
+  $sanitize = !empty($options['sanitize']);
   $taxonomy_storage = \Drupal::entityManager()->getStorage('taxonomy_term');
   if ($type == 'term' && !empty($data['term'])) {
     $term = $data['term'];
@@ -106,13 +109,11 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'name':
-          $replacements[$original] = $term->getName();
+          $replacements[$original] = $sanitize ? Html::escape($term->getName()) : $term->getName();
           break;
 
         case 'description':
-          // "processed" returns a \Drupal\Component\Utility\SafeStringInterface
-          // via check_markup().
-          $replacements[$original] = $term->description->processed;
+          $replacements[$original] = $sanitize ? $term->description->processed : $term->getDescription();
           break;
 
         case 'url':
@@ -130,14 +131,14 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
         case 'vocabulary':
           $vocabulary = Vocabulary::load($term->bundle());
           $bubbleable_metadata->addCacheableDependency($vocabulary);
-          $replacements[$original] = $vocabulary->label();
+          $replacements[$original] = Html::escape($vocabulary->label());
           break;
 
         case 'parent':
           if ($parents = $taxonomy_storage->loadParents($term->id())) {
             $parent = array_pop($parents);
             $bubbleable_metadata->addCacheableDependency($parent);
-            $replacements[$original] = $parent->getName();
+            $replacements[$original] = Html::escape($parent->getName());
           }
           break;
       }
@@ -164,12 +165,11 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'name':
-          $replacements[$original] = $vocabulary->label();
+          $replacements[$original] = $sanitize ? Html::escape($vocabulary->label()) : $vocabulary->label();
           break;
 
         case 'description':
-          $build = ['#markup' => $vocabulary->getDescription()];
-          $replacements[$original] = \Drupal::service('renderer')->renderPlain($build);
+          $replacements[$original] = $sanitize ? Xss::filter($vocabulary->getDescription()) : $vocabulary->getDescription();
           break;
 
         case 'term-count':

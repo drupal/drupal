@@ -7,11 +7,11 @@
 
 namespace Drupal\action\Plugin\Action;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,32 +33,19 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
   protected $token;
 
   /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a MessageAction object.
-   *
-   * @param \Drupal\Core\Utility\Token $token
-   *   The token replacement service.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;
-    $this->renderer = $renderer;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('token'), $container->get('renderer'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('token'));
   }
 
   /**
@@ -68,12 +55,8 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
     if (empty($this->configuration['node'])) {
       $this->configuration['node'] = $entity;
     }
-    $message = $this->token->replace($this->configuration['message'], $this->configuration);
-    $build = [
-      '#markup' => $message,
-    ];
-
-    drupal_set_message($this->renderer->renderPlain($build));
+    $message = $this->token->replace(Xss::filterAdmin($this->configuration['message']), $this->configuration);
+    drupal_set_message($message);
   }
 
   /**
