@@ -153,9 +153,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     foreach ($id_mappings as $migration_id => $data) {
       // Use loadMultiple() here in order to load all variants.
       foreach (Migration::loadMultiple([$migration_id]) as $migration) {
-        // Mark the dependent migrations as complete.
-        $migration->setMigrationResult(MigrationInterface::RESULT_COMPLETED);
-
         $id_map = $migration->getIdMap();
         $id_map->setMessage($this);
         $source_ids = $migration->getSourcePlugin()->getIds();

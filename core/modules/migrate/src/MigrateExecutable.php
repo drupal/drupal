@@ -283,7 +283,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
       // If anyone has requested we stop, return the requested result.
       if ($this->migration->getStatus() == MigrationInterface::STATUS_STOPPING) {
-        $return = $this->migration->getMigrationResult();
+        $return = $this->migration->getInterruptionResult();
+        $this->migration->clearInterruptionResult();
         break;
       }
 
@@ -299,7 +300,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
       }
     }
 
-    $this->migration->setMigrationResult($return);
     $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration));
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
     return $return;
@@ -346,7 +346,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
       // If anyone has requested we stop, return the requested result.
       if ($this->migration->getStatus() == MigrationInterface::STATUS_STOPPING) {
-        $return = $this->migration->getMigrationResult();
+        $return = $this->migration->getInterruptionResult();
+        $this->migration->clearInterruptionResult();
         break;
       }
     }
@@ -356,7 +357,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
 
     // Notify modules that rollback attempt was complete.
-    $this->migration->setMigrationResult($return);
     $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROLLBACK, new MigrateRollbackEvent($this->migration));
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
 

@@ -8,6 +8,7 @@
 namespace Drupal\file\Tests\Migrate\d6;
 
 use Drupal\file\Entity\File;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
@@ -52,7 +53,11 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
     $this->prepareMigrations($id_mappings);
 
     $this->migrateContent();
-    $this->executeMigration('d6_upload');
+    // Since we are only testing a subset of the file migration, do not check
+    // that the full file migration has been run.
+    $migration = Migration::load('d6_upload');
+    $migration->set('requirements', []);
+    $this->executeMigration($migration);
   }
 
   /**

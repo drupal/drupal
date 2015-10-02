@@ -387,7 +387,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
     $missing_migrations = array_diff($this->requirements, array_keys($required_migrations));
     // Check if the dependencies are in good shape.
     foreach ($required_migrations as $migration_id => $required_migration) {
-      if (!$required_migration->isComplete()) {
+      if (!$required_migration->allRowsProcessed()) {
         $missing_migrations[] = $migration_id;
       }
     }
@@ -439,15 +439,15 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
-  public function setMigrationResult($result) {
-    \Drupal::keyValue('migrate_result')->set($this->id(), $result);
+  public function getInterruptionResult() {
+    return \Drupal::keyValue('migrate_interruption_result')->get($this->id(), static::RESULT_INCOMPLETE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMigrationResult() {
-    return \Drupal::keyValue('migrate_result')->get($this->id(), static::RESULT_INCOMPLETE);
+  public function clearInterruptionResult() {
+    \Drupal::keyValue('migrate_interruption_result')->delete($this->id());
   }
 
   /**
@@ -455,14 +455,24 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    */
   public function interruptMigration($result) {
     $this->setStatus(MigrationInterface::STATUS_STOPPING);
-    $this->setMigrationResult($result);
+    \Drupal::keyValue('migrate_interruption_result')->set($this->id(), $result);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isComplete() {
-    return $this->getMigrationResult() === static::RESULT_COMPLETED;
+  public function allRowsProcessed() {
+    $source_count = $this->getSourcePlugin()->count();
+    // If the source is uncountable, we have no way of knowing if it's
+    // complete, so stipulate that it is.
+    if ($source_count < 0) {
+      return TRUE;
+    }
+    $processed_count = $this->getIdMap()->processedCount();
+    // We don't use == because in some circumstances (like unresolved stubs
+    // being created), the processed count may be higher than the available
+    // source rows.
+    return $source_count <= $processed_count;
   }
 
   /**

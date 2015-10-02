@@ -159,12 +159,12 @@ interface MigrationInterface extends ConfigEntityInterface {
   public function saveHighWater($high_water);
 
   /**
-   * Check if this migration is complete.
+   * Check if all source rows from this migration have been processed.
    *
    * @return bool
    *   TRUE if this migration is complete otherwise FALSE.
    */
-  public function isComplete();
+  public function allRowsProcessed();
 
   /**
    * Set the current migration status.
@@ -191,20 +191,17 @@ interface MigrationInterface extends ConfigEntityInterface {
   public function getStatusLabel();
 
   /**
-   * Set the migration result.
-   *
-   * @param int $result
-   *   One of the RESULT_* constants.
-   */
-  public function setMigrationResult($result);
-
-  /**
-   * Get the current migration result.
+   * Get the result to return upon interruption.
    *
    * @return int
-   *   The current migration result. Defaults to RESULT_INCOMPLETE.
+   *   The current interruption result. Defaults to RESULT_INCOMPLETE.
    */
-  public function getMigrationResult();
+  public function getInterruptionResult();
+
+  /**
+   * Clears the result to return upon interruption.
+   */
+  public function clearInterruptionResult();
 
   /**
    * Signal that the migration should be interrupted with the specified result

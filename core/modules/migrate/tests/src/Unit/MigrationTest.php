@@ -96,13 +96,13 @@ class MigrationTest extends UnitTestCase {
     $migration_d = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
 
     $migration_b->expects($this->once())
-      ->method('isComplete')
+      ->method('allRowsProcessed')
       ->willReturn(TRUE);
     $migration_c->expects($this->once())
-      ->method('isComplete')
+      ->method('allRowsProcessed')
       ->willReturn(FALSE);
     $migration_d->expects($this->once())
-      ->method('isComplete')
+      ->method('allRowsProcessed')
       ->willReturn(TRUE);
 
     $migration_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
