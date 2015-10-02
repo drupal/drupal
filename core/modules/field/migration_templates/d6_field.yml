@@ -130,7 +130,6 @@ process:
     source:
       - '@type'
       - global_settings
-      - widget_settings
 
 destination:
   plugin: md_entity:field_storage_config

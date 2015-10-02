@@ -115,11 +115,6 @@ class ContentTypeStory extends DrupalDumpBase {
           'precision' => '10',
           'scale' => '0',
         ),
-        'field_test_text_single_checkbox_value' => array(
-          'type' => 'text',
-          'not null' => FALSE,
-          'length' => 100,
-        ),
         'field_test_integer_selectlist_value' => array(
           'type' => 'int',
           'not null' => FALSE,
@@ -192,7 +187,6 @@ class ContentTypeStory extends DrupalDumpBase {
       'field_test_filefield_list',
       'field_test_filefield_data',
       'field_test_four_value',
-      'field_test_text_single_checkbox_value',
       'field_test_integer_selectlist_value',
       'field_test_float_single_checkbox_value',
       'field_test_decimal_radio_buttons_value',
@@ -221,7 +215,6 @@ class ContentTypeStory extends DrupalDumpBase {
       'field_test_filefield_list' => '1',
       'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}',
       'field_test_four_value' => NULL,
-      'field_test_text_single_checkbox_value' => '0',
       'field_test_integer_selectlist_value' => '3412',
       'field_test_float_single_checkbox_value' => '3',
       'field_test_decimal_radio_buttons_value' => NULL,
@@ -249,7 +242,6 @@ class ContentTypeStory extends DrupalDumpBase {
       'field_test_filefield_list' => NULL,
       'field_test_filefield_data' => NULL,
       'field_test_four_value' => NULL,
-      'field_test_text_single_checkbox_value' => NULL,
       'field_test_integer_selectlist_value' => NULL,
       'field_test_float_single_checkbox_value' => NULL,
       'field_test_decimal_radio_buttons_value' => NULL,
@@ -277,7 +269,6 @@ class ContentTypeStory extends DrupalDumpBase {
       'field_test_filefield_list' => NULL,
       'field_test_filefield_data' => NULL,
       'field_test_four_value' => NULL,
-      'field_test_text_single_checkbox_value' => NULL,
       'field_test_integer_selectlist_value' => NULL,
       'field_test_float_single_checkbox_value' => NULL,
       'field_test_decimal_radio_buttons_value' => NULL,
@@ -305,7 +296,6 @@ class ContentTypeStory extends DrupalDumpBase {
       'field_test_filefield_list' => NULL,
       'field_test_filefield_data' => NULL,
       'field_test_four_value' => NULL,
-      'field_test_text_single_checkbox_value' => NULL,
       'field_test_integer_selectlist_value' => NULL,
       'field_test_float_single_checkbox_value' => NULL,
       'field_test_decimal_radio_buttons_value' => NULL,
@@ -319,4 +309,4 @@ class ContentTypeStory extends DrupalDumpBase {
   }
 
 }
-#e355803b63e8cbefe404f59e30bbf793
+#91ccaaf5513eb0c3922e6a0d1022b0c4

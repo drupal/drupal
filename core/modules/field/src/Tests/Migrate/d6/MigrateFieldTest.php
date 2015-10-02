@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
@@ -94,6 +95,19 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     // Text field with a single checkbox.
     $field_storage = FieldStorageConfig::load('node.field_test_text_single_checkbox');
     $this->assertIdentical("boolean", $field_storage->getType(),  t('Field type is @fieldtype. It should be boolean.', array('@fieldtype' => $field_storage->getType())));
+
+    // Validate that the source count and processed count match up.
+    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    $migration = Migration::load('d6_field');
+    $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
+
+    // Check that we've reported on a conflict in widget_types.
+    $messages = [];
+    foreach ($migration->getIdMap()->getMessageIterator() as $message_row) {
+      $messages[] = $message_row->message;
+    }
+    $this->assertIdentical(count($messages), 1);
+    $this->assertIdentical($messages[0], 'Widget types optionwidgets_onoff, text_textfield are used in Drupal 6 field instances: widget type optionwidgets_onoff applied to the Drupal 8 base field');
   }
 
 }

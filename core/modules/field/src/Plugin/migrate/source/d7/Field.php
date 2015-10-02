@@ -24,6 +24,7 @@ class Field extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('field_config', 'fc')
+      ->distinct()
       ->fields('fc')
       ->fields('fci', array('entity_type'))
       ->condition('fc.active', 1)

@@ -80,7 +80,7 @@ class ContentNodeField extends DrupalDumpBase {
         'locked' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '11',
+          'length' => '4',
           'default' => '0',
         ),
       ),
@@ -291,7 +291,7 @@ class ContentNodeField extends DrupalDumpBase {
       'global_settings' => "a:4:{s:15:\"text_processing\";s:1:\"0\";s:10:\"max_length\";s:0:\"\";s:14:\"allowed_values\";s:18:\"0|Hello\r\n1|Goodbye\";s:18:\"allowed_values_php\";s:0:\"\";}",
       'required' => '0',
       'multiple' => '0',
-      'db_storage' => '1',
+      'db_storage' => '0',
       'module' => 'text',
       'db_columns' => 'a:1:{s:5:"value";a:5:{s:4:"type";s:4:"text";s:4:"size";s:3:"big";s:8:"not null";b:0;s:8:"sortable";b:1;s:5:"views";b:1;}}',
       'active' => '1',
@@ -322,4 +322,4 @@ class ContentNodeField extends DrupalDumpBase {
   }
 
 }
-#e1fbb3a444896287af59cd6395555fbf
+#aacab7ae9503014a764572f877dd3f6f

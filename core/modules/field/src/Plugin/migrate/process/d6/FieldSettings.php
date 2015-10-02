@@ -26,8 +26,8 @@ class FieldSettings extends ProcessPluginBase {
    * Get the field default/mapped settings.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($field_type, $global_settings, $widget_settings) = $value;
-    return $this->getSettings($field_type, $global_settings, $widget_settings);
+    list($field_type, $global_settings) = $value;
+    return $this->getSettings($field_type, $global_settings);
   }
 
   /**
@@ -37,13 +37,11 @@ class FieldSettings extends ProcessPluginBase {
    *   The field type.
    * @param array $global_settings
    *   The field settings.
-   * @param array $widget_settings
-   *   The widget settings needed for some settings.
    *
    * @return array
    *   A valid array of settings.
    */
-  public function getSettings($field_type, $global_settings, $widget_settings) {
+  public function getSettings($field_type, $global_settings) {
     $max_length = isset($global_settings['max_length']) ? $global_settings['max_length'] : '';
     $max_length = empty($max_length) ? 255 : $max_length;
     if (isset($global_settings['allowed_values'])) {

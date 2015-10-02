@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests\Migrate\d7;
 
 use Drupal\comment\CommentTypeInterface;
 use Drupal\comment\Entity\CommentType;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 
 /**
@@ -58,6 +59,11 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment_node_book', 'Book page comment');
     $this->assertEntity('comment_node_forum', 'Forum topic comment');
     $this->assertEntity('comment_node_test_content_type', 'Test content type comment');
+
+    // Validate that the source count and processed count match up.
+    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    $migration = Migration::load('d7_comment_type');
+    $this->assertIdentical($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
   }
 
 }
