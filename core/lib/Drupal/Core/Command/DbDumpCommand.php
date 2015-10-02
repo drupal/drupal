@@ -9,9 +9,8 @@ namespace Drupal\Core\Command;
 
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -30,21 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @see \Drupal\Core\Command\DbDumpApplication
  */
-class DbDumpCommand extends Command {
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection $connection
-   */
-  protected $connection;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
+class DbDumpCommand extends DbCommandBase {
 
   /**
    * An array of table patterns to exclude completely.
@@ -56,80 +41,77 @@ class DbDumpCommand extends Command {
   protected $excludeTables = ['simpletest.+'];
 
   /**
-   * Table patterns for which to only dump the schema, no data.
-   *
-   * @var array
-   */
-  protected $schemaOnly = ['cache.*', 'sessions', 'watchdog'];
-
-  /**
-   * Construct the database dump command.
-   *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection to use.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to use.
-   */
-  function __construct(Connection $connection, ModuleHandlerInterface $module_handler) {
-    // Check this is MySQL.
-    if ($connection->databaseType() !== 'mysql') {
-      throw new \RuntimeException('This script can only be used with MySQL database backends.');
-    }
-
-    $this->connection = $connection;
-    $this->moduleHandler = $module_handler;
-    parent::__construct();
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function configure() {
     $this->setName('dump-database-d8-mysql')
-      ->setDescription('Dump the current database to a generation script');
+      ->setDescription('Dump the current database to a generation script')
+      ->addOption('schema-only', NULL, InputOption::VALUE_OPTIONAL, 'A comma separated list of tables to only export the schema without data.', 'cache.*,sessions,watchdog');
+    parent::configure();
   }
 
   /**
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
+    $connection = $this->getDatabaseConnection($input);
+
     // If not explicitly set, disable ANSI which will break generated php.
     if ($input->hasParameterOption(['--ansi']) !== TRUE) {
       $output->setDecorated(FALSE);
     }
 
-    $output->writeln($this->generateScript(), OutputInterface::OUTPUT_RAW);
+    $schema_tables = $input->getOption('schema-only');
+    $schema_tables = explode(',', $schema_tables);
+
+    $output->writeln($this->generateScript($connection, $schema_tables), OutputInterface::OUTPUT_RAW);
   }
 
   /**
    * Generates the database script.
    *
-   * @return string
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
+   * @param array $schema_only
+   *   Table patterns for which to only dump the schema, no data.
+   * @return string The PHP script.
    *   The PHP script.
    */
-  protected function generateScript() {
+  protected function generateScript(Connection $connection, array $schema_only = []) {
     $tables = '';
-    foreach ($this->getTables() as $table) {
-      $schema = $this->getTableSchema($table);
-      $data = $this->getTableData($table);
+
+    $schema_only_patterns = [];
+    foreach ($schema_only as $match) {
+      $schema_only_patterns[] = '/^' . $match . '$/';
+    }
+
+    foreach ($this->getTables($connection) as $table) {
+      $schema = $this->getTableSchema($connection, $table);
+      // Check for schema only.
+      if (empty($schema_only_patterns) || preg_replace($schema_only_patterns, '', $table)) {
+        $data = $this->getTableData($connection, $table);
+      }
+      else {
+        $data = [];
+      }
       $tables .= $this->getTableScript($table, $schema, $data);
     }
     $script = $this->getTemplate();
     // Substitute in the tables.
     $script = str_replace('{{TABLES}}', trim($tables), $script);
-    // Modules.
-    $script = str_replace('{{MODULES}}', $this->getModulesScript(), $script);
     return trim($script);
   }
 
   /**
    * Returns a list of tables, not including those set to be excluded.
    *
-   * @return array
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
+   * @return array An array of table names.
    *   An array of table names.
    */
-  protected function getTables() {
-    $tables = array_values($this->connection->schema()->findTables('%'));
+  protected function getTables(Connection $connection) {
+    $tables = array_values($connection->schema()->findTables('%'));
 
     foreach ($tables as $key => $table) {
       // Remove any explicitly excluded tables.
@@ -146,6 +128,8 @@ class DbDumpCommand extends Command {
   /**
    * Returns a schema array for a given table.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $table
    *   The table name.
    *
@@ -154,14 +138,19 @@ class DbDumpCommand extends Command {
    *
    * @todo This implementation is hard-coded for MySQL.
    */
-  protected function getTableSchema($table) {
-    $query = $this->connection->query("SHOW FULL COLUMNS FROM {" . $table . "}");
+  protected function getTableSchema(Connection $connection, $table) {
+    // Check this is MySQL.
+    if ($connection->databaseType() !== 'mysql') {
+      throw new \RuntimeException('This script can only be used with MySQL database backends.');
+    }
+
+    $query = $connection->query("SHOW FULL COLUMNS FROM {" . $table . "}");
     $definition = [];
     while (($row = $query->fetchAssoc()) !== FALSE) {
       $name = $row['Field'];
       // Parse out the field type and meta information.
       preg_match('@([a-z]+)(?:\((\d+)(?:,(\d+))?\))?\s*(unsigned)?@', $row['Type'], $matches);
-      $type  = $this->fieldTypeMap($matches[1]);
+      $type  = $this->fieldTypeMap($connection, $matches[1]);
       if ($row['Extra'] === 'auto_increment') {
         // If this is an auto increment, then the type is 'serial'.
         $type = 'serial';
@@ -170,7 +159,7 @@ class DbDumpCommand extends Command {
         'type' => $type,
         'not null' => $row['Null'] === 'NO',
       ];
-      if ($size = $this->fieldSizeMap($matches[1])) {
+      if ($size = $this->fieldSizeMap($connection, $matches[1])) {
         $definition['fields'][$name]['size'] = $size;
       }
       if (isset($matches[2]) && $type === 'numeric') {
@@ -216,10 +205,10 @@ class DbDumpCommand extends Command {
     }
 
     // Set primary key, unique keys, and indexes.
-    $this->getTableIndexes($table, $definition);
+    $this->getTableIndexes($connection, $table, $definition);
 
     // Set table collation.
-    $this->getTableCollation($table, $definition);
+    $this->getTableCollation($connection, $table, $definition);
 
     return $definition;
   }
@@ -227,15 +216,17 @@ class DbDumpCommand extends Command {
   /**
    * Adds primary key, unique keys, and index information to the schema.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $table
    *   The table to find indexes for.
    * @param array &$definition
    *   The schema definition to modify.
    */
-  protected function getTableIndexes($table, &$definition) {
+  protected function getTableIndexes(Connection $connection, $table, &$definition) {
     // Note, this query doesn't support ordering, so that is worked around
     // below by keying the array on Seq_in_index.
-    $query = $this->connection->query("SHOW INDEX FROM {" . $table . "}");
+    $query = $connection->query("SHOW INDEX FROM {" . $table . "}");
     while (($row = $query->fetchAssoc()) !== FALSE) {
       $index_name = $row['Key_name'];
       $column = $row['Column_name'];
@@ -262,13 +253,15 @@ class DbDumpCommand extends Command {
   /**
    * Set the table collation.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $table
    *   The table to find indexes for.
    * @param array &$definition
    *   The schema definition to modify.
    */
-  protected function getTableCollation($table, &$definition) {
-    $query = $this->connection->query("SHOW TABLE STATUS LIKE '{" . $table . "}'");
+  protected function getTableCollation(Connection $connection, $table, &$definition) {
+    $query = $connection->query("SHOW TABLE STATUS LIKE '{" . $table . "}'");
     $data = $query->fetchAssoc();
 
     // Set `mysql_character_set`. This will be ignored by other backends.
@@ -280,21 +273,17 @@ class DbDumpCommand extends Command {
    *
    * If a table is set to be schema only, and empty array is returned.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $table
    *   The table to query.
    *
    * @return array
    *   The data from the table as an array.
    */
-  protected function getTableData($table) {
-    // Check for schema only.
-    foreach ($this->schemaOnly as $schema_only) {
-      if (preg_match('/^' . $schema_only . '$/', $table)) {
-        return [];
-      }
-    }
-    $order = $this->getFieldOrder($table);
-    $query = $this->connection->query("SELECT * FROM {" . $table . "} " . $order );
+  protected function getTableData(Connection $connection, $table) {
+    $order = $this->getFieldOrder($connection, $table);
+    $query = $connection->query("SELECT * FROM {" . $table . "} " . $order);
     $results = [];
     while (($row = $query->fetchAssoc()) !== FALSE) {
       $results[] = $row;
@@ -305,6 +294,8 @@ class DbDumpCommand extends Command {
   /**
    * Given a database field type, return a Drupal type.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $type
    *   The MySQL field type.
    *
@@ -312,9 +303,9 @@ class DbDumpCommand extends Command {
    *   The Drupal schema field type. If there is no mapping, the original field
    *   type is returned.
    */
-  protected function fieldTypeMap($type) {
+  protected function fieldTypeMap(Connection $connection, $type) {
     // Convert everything to lowercase.
-    $map = array_map('strtolower', $this->connection->schema()->getFieldTypeMap());
+    $map = array_map('strtolower', $connection->schema()->getFieldTypeMap());
     $map = array_flip($map);
 
     // The MySql map contains type:size. Remove the size part.
@@ -324,15 +315,17 @@ class DbDumpCommand extends Command {
   /**
    * Given a database field type, return a Drupal size.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $type
    *   The MySQL field type.
    *
    * @return string
    *   The Drupal schema field size.
    */
-  protected function fieldSizeMap($type) {
+  protected function fieldSizeMap(Connection $connection, $type) {
     // Convert everything to lowercase.
-    $map = array_map('strtolower', $this->connection->schema()->getFieldTypeMap());
+    $map = array_map('strtolower', $connection->schema()->getFieldTypeMap());
     $map = array_flip($map);
 
     $schema_type = explode(':', $map[$type])[0];
@@ -346,24 +339,26 @@ class DbDumpCommand extends Command {
   /**
    * Gets field ordering for a given table.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $table
    *   The table name.
    *
    * @return string
    *   The order string to append to the query.
    */
-  protected function getFieldOrder($table) {
+  protected function getFieldOrder(Connection $connection, $table) {
     // @todo this is MySQL only since there are no Database API functions for
     // table column data.
     // @todo this code is duplicated in `core/scripts/migrate-db.sh`.
-    $connection_info = $this->connection->getConnectionOptions();
+    $connection_info = $connection->getConnectionOptions();
     // Order by primary keys.
     $order = '';
     $query = "SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS`
     WHERE (`TABLE_SCHEMA` = '" . $connection_info['database'] . "')
     AND (`TABLE_NAME` = '{" . $table . "}') AND (`COLUMN_KEY` = 'PRI')
     ORDER BY COLUMN_NAME";
-    $results = $this->connection->query($query);
+    $results = $connection->query($query);
     while (($row = $results->fetchAssoc()) !== FALSE) {
       $order .= $row['COLUMN_NAME'] . ', ';
     }
@@ -384,12 +379,9 @@ class DbDumpCommand extends Command {
 <?php
 /**
  * @file
- * Filled installation of Drupal 8.0, for test purposes.
+ * A database agnostic dump for testing purposes.
  *
- * This file was generated by the dump-database-d8.php script, from an
- * installation of Drupal 8. It has the following modules installed:
- *
-{{MODULES}}
+ * This file was generated by the Drupal 8.0 db-tools.php script.
  */
 
 use Drupal\Core\Database\Database;
@@ -429,22 +421,6 @@ ENDOFSCRIPT;
         . "->execute();\n\n";
     }
     return $output;
-  }
-
-  /**
-   * List of modules enabled for insertion into the script docblock.
-   *
-   * @return string
-   *   The formatted list of enabled modules.
-   */
-  protected function getModulesScript() {
-    $output = '';
-    $modules = $this->moduleHandler->getModuleList();
-    ksort($modules);
-    foreach ($modules as $module => $filename) {
-      $output .= " *  - $module\n";
-    }
-    return rtrim($output, "\n");
   }
 
 }

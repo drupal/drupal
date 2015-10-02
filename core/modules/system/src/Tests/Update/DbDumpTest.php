@@ -151,20 +151,10 @@ class DbDumpTest extends KernelTestBase {
       return;
     }
 
-    $application = new DbDumpApplication(Database::getConnection(), $this->container->get('module_handler'));
+    $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
     $command_tester->execute([]);
-
-    // The enabled modules should be present in the docblock.
-    $modules = static::$modules;
-    asort($modules);
-    $pattern = preg_quote(implode("\n *  - ", $modules));
-    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'Module list is contained in the docblock of the script.');
-
-    // A module that is not enabled should not be listed.
-    $pattern = preg_quote(" *  - telephone");
-    $this->assertFalse(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'Disabled modules do not appear in the docblock of the script.');
 
     // Tables that are schema-only should not have data exported.
     $pattern = preg_quote("\$connection->insert('sessions')");
@@ -195,7 +185,7 @@ class DbDumpTest extends KernelTestBase {
     }
 
     // Generate the script.
-    $application = new DbDumpApplication(Database::getConnection(), $this->container->get('module_handler'));
+    $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
     $command_tester->execute([]);
