@@ -36,18 +36,6 @@ class RendererTest extends RendererTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    // Reset the static list of SafeStrings to prevent bleeding between tests.
-    $reflected_class = new \ReflectionClass('\Drupal\Component\Utility\SafeMarkup');
-    $reflected_property = $reflected_class->getProperty('safeStrings');
-    $reflected_property->setAccessible(true);
-    $reflected_property->setValue([]);
-  }
-
-  /**
    * @covers ::render
    * @covers ::doRender
    *

@@ -31,6 +31,9 @@ namespace Drupal\Component\Render;
  * @see \Drupal\Component\Render\FormattableMarkup
  * @see \Drupal\Core\StringTranslation\TranslatableMarkup
  * @see \Drupal\views\Render\ViewsRenderPipelineMarkup
+ * @see twig_render_template()
+ * @see sanitization
+ * @see theme_render
  */
 interface MarkupInterface extends \JsonSerializable {
 

@@ -40,7 +40,7 @@ class DrupalSetMessageTest extends WebTestBase {
     // Ensure Markup objects are rendered as expected.
     $this->assertRaw('Markup with <em>markup!</em>');
     $this->assertUniqueText('Markup with markup!');
-    $this->assertRaw('SafeString2 with <em>markup!</em>');
+    $this->assertRaw('Markup2 with <em>markup!</em>');
 
     // Ensure when the same message is of different types it is not duplicated.
     $this->assertUniqueText('Non duplicate Markup / string.');

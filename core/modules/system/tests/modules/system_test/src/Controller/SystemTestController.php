@@ -119,7 +119,7 @@ class SystemTestController extends ControllerBase {
     // Test duplicate Markup messages.
     drupal_set_message(Markup::create('Markup with <em>markup!</em>'));
     // Ensure that multiple Markup messages work.
-    drupal_set_message(Markup::create('SafeString2 with <em>markup!</em>'));
+    drupal_set_message(Markup::create('Markup2 with <em>markup!</em>'));
 
     // Test mixing of types.
     drupal_set_message(Markup::create('Non duplicate Markup / string.'));

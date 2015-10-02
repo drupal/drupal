@@ -51,12 +51,6 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     FileCacheFactory::setConfiguration(['default' => ['class' => '\Drupal\Component\FileCache\NullFileCache']]);
 
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
-
-    // Reset the static list of SafeStrings to prevent bleeding between tests.
-    $reflected_class = new \ReflectionClass('\Drupal\Component\Utility\SafeMarkup');
-    $reflected_property = $reflected_class->getProperty('safeStrings');
-    $reflected_property->setAccessible(true);
-    $reflected_property->setValue([]);
   }
 
   /**

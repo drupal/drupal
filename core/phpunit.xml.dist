@@ -46,8 +46,6 @@
   <listeners>
     <listener class="\Drupal\Tests\Listeners\DrupalStandardsListener">
     </listener>
-    <listener class="\Drupal\Tests\Listeners\SafeMarkupSideEffects">
-    </listener>
   </listeners>
   <!-- Filter for coverage reports. -->
   <filter>

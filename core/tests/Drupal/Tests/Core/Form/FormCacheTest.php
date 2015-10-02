@@ -322,34 +322,6 @@ class FormCacheTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadCachedFormState
-   */
-  public function testLoadCachedFormStateWithSafeStrings() {
-    $this->assertEmpty(SafeMarkup::getAll());
-    $form_build_id = 'the_form_build_id';
-    $form_state = new FormState();
-    $cached_form = ['#cache_token' => NULL];
-
-    $this->formCacheStore->expects($this->once())
-      ->method('get')
-      ->with($form_build_id)
-      ->willReturn($cached_form);
-    $this->account->expects($this->once())
-      ->method('isAnonymous')
-      ->willReturn(TRUE);
-
-    $cached_form_state = ['build_info' => ['safe_strings' => [
-      'a_safe_string' => ['html' => TRUE],
-    ]]];
-    $this->formStateCacheStore->expects($this->once())
-      ->method('get')
-      ->with($form_build_id)
-      ->willReturn($cached_form_state);
-
-    $this->formCache->getCache($form_build_id, $form_state);
-  }
-
-  /**
    * @covers ::setCache
    */
   public function testSetCacheWithForm() {
@@ -364,7 +336,6 @@ class FormCacheTest extends UnitTestCase {
       ->with($form_build_id, $form, $this->isType('int'));
 
     $form_state_data = $form_state->getCacheableArray();
-    $form_state_data['build_info']['safe_strings'] = [];
     $this->formStateCacheStore->expects($this->once())
       ->method('setWithExpire')
       ->with($form_build_id, $form_state_data, $this->isType('int'));
@@ -384,7 +355,6 @@ class FormCacheTest extends UnitTestCase {
       ->method('setWithExpire');
 
     $form_state_data = $form_state->getCacheableArray();
-    $form_state_data['build_info']['safe_strings'] = [];
     $this->formStateCacheStore->expects($this->once())
       ->method('setWithExpire')
       ->with($form_build_id, $form_state_data, $this->isType('int'));
@@ -408,7 +378,6 @@ class FormCacheTest extends UnitTestCase {
       ->with($form_build_id, $form_data, $this->isType('int'));
 
     $form_state_data = $form_state->getCacheableArray();
-    $form_state_data['build_info']['safe_strings'] = [];
     $this->formStateCacheStore->expects($this->once())
       ->method('setWithExpire')
       ->with($form_build_id, $form_state_data, $this->isType('int'));
@@ -419,34 +388,6 @@ class FormCacheTest extends UnitTestCase {
     $this->account->expects($this->once())
       ->method('isAuthenticated')
       ->willReturn(TRUE);
-
-    $this->formCache->setCache($form_build_id, $form, $form_state);
-  }
-
-  /**
-   * @covers ::setCache
-   */
-  public function testSetCacheWithSafeStrings() {
-    SafeMarkup::setMultiple([
-      'a_safe_string' => ['html' => TRUE],
-    ]);
-    $form_build_id = 'the_form_build_id';
-    $form = [
-      '#form_id' => 'the_form_id'
-    ];
-    $form_state = new FormState();
-
-    $this->formCacheStore->expects($this->once())
-      ->method('setWithExpire')
-      ->with($form_build_id, $form, $this->isType('int'));
-
-    $form_state_data = $form_state->getCacheableArray();
-    $form_state_data['build_info']['safe_strings'] = [
-      'a_safe_string' => ['html' => TRUE],
-    ];
-    $this->formStateCacheStore->expects($this->once())
-      ->method('setWithExpire')
-      ->with($form_build_id, $form_state_data, $this->isType('int'));
 
     $this->formCache->setCache($form_build_id, $form, $form_state);
   }

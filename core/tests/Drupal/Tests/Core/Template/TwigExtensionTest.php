@@ -7,9 +7,9 @@
 
 namespace Drupal\Tests\Core\Template;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
@@ -161,14 +161,14 @@ class TwigExtensionTest extends UnitTestCase {
     $twig_extension = new TwigExtension($renderer);
     $twig_environment = $this->prophesize(TwigEnvironment::class)->reveal();
 
-
     // Simulate t().
-    $string = '<em>will be markup</em>';
-    SafeMarkup::setMultiple([$string => ['html' => TRUE]]);
+    $markup = $this->prophesize(TranslatableMarkup::class);
+    $markup->__toString()->willReturn('<em>will be markup</em>');
+    $markup = $markup->reveal();
 
     $items = [
       '<em>will be escaped</em>',
-      $string,
+      $markup,
       ['#markup' => '<strong>will be rendered</strong>']
     ];
     $result = $twig_extension->safeJoin($twig_environment, $items, '<br/>');

@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\HtmlEscapedText;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -207,7 +207,7 @@ class Token {
 
     // Escape the tokens, unless they are explicitly markup.
     foreach ($replacements as $token => $value) {
-      $replacements[$token] = SafeMarkup::isSafe($value) ? $value : Html::escape($value);
+      $replacements[$token] = $value instanceof MarkupInterface ? $value : new HtmlEscapedText($value);
     }
 
     // Optionally alter the list of replacement values.

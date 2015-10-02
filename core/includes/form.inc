@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
@@ -701,8 +700,6 @@ function template_preprocess_form_element_label(&$variables) {
  *   - css: Array of paths to CSS files to be used on the progress page.
  *   - url_options: options passed to url() when constructing redirect URLs for
  *     the batch.
- *   - safe_strings: Internal use only. Used to store and retrieve strings
- *     marked as safe between requests.
  *   - progressive: A Boolean that indicates whether or not the batch needs to
  *     run progressively. TRUE indicates that the batch will run in more than
  *     one run. FALSE (default) indicates that the batch will finish in a single
@@ -853,11 +850,6 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
         $batch['destination'] = $request->query->get('destination');
         $request->query->remove('destination');
       }
-
-      // Store safe strings.
-      // @todo Ensure we are not storing an excessively large string list in:
-      //   https://www.drupal.org/node/2295823
-      $batch['safe_strings'] = SafeMarkup::getAll();
 
       // Store the batch.
       \Drupal::service('batch.storage')->create($batch);

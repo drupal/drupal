@@ -54,12 +54,14 @@ class ProcessingTest extends WebTestBase {
     // Batch 0: no operation.
     $edit = array('batch' => 'batch_0');
     $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_0'), 'Batch with no operation performed successfully.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 1: several simple operations.
     $edit = array('batch' => 'batch_1');
     $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch with simple operations performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -67,6 +69,7 @@ class ProcessingTest extends WebTestBase {
     // Batch 2: one multistep operation.
     $edit = array('batch' => 'batch_2');
     $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch with multistep operation performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -74,6 +77,7 @@ class ProcessingTest extends WebTestBase {
     // Batch 3: simple + multistep combined.
     $edit = array('batch' => 'batch_3');
     $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_3'), 'Batch with simple and multistep operations performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_3'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -81,6 +85,7 @@ class ProcessingTest extends WebTestBase {
     // Batch 4: nested batch.
     $edit = array('batch' => 'batch_4');
     $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_4'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -91,6 +96,7 @@ class ProcessingTest extends WebTestBase {
    */
   function testBatchFormMultistep() {
     $this->drupalGet('batch-test/multistep');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertText('step 1', 'Form is displayed in step 1.');
 
     // First step triggers batch 1.
@@ -98,12 +104,14 @@ class ProcessingTest extends WebTestBase {
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 1 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('step 2', 'Form is displayed in step 2.');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
 
     // Second step triggers batch 2.
     $this->drupalPostForm(NULL, array(), 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
+    $this->assertNoEscaped('<', 'No escaped markup is present.');
   }
 
   /**
