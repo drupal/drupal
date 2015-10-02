@@ -89,6 +89,13 @@ class FileSystemForm extends ConfigFormBase {
       '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web. This must be changed in settings.php'),
     );
 
+    $form['file_public_base_url'] = array(
+      '#type' => 'item',
+      '#title' => t('Public file base URL'),
+      '#markup' => PublicStream::baseUrl(),
+      '#description' => t('The base URL that will be used for public file URLs. This can be changed in settings.php'),
+    );
+
     $form['file_private_path'] = array(
       '#type' => 'item',
       '#title' => t('Private file system path'),

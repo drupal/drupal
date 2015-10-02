@@ -53,7 +53,29 @@ class PublicStream extends LocalStream {
    */
   public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
-    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . UrlHelper::encodePath($path);
+    return static::baseUrl() . '/' . UrlHelper::encodePath($path);
+  }
+
+  /**
+   * Finds and returns the base URL for public://.
+   *
+   * Defaults to the current site's base URL plus directory path.
+   *
+   * Note that this static method is used by \Drupal\system\Form\FileSystemForm
+   * so you should alter that form or substitute a different form if you change
+   * the class providing the stream_wrapper.public service.
+   *
+   * @return string
+   *   The external base URL for public://
+   */
+  public static function baseUrl() {
+    $settings_base_url = Settings::get('file_public_base_url', '');
+    if ($settings_base_url) {
+       return (string) $settings_base_url;
+    }
+    else {
+      return $GLOBALS['base_url'] . '/' . static::basePath();
+    }
   }
 
   /**
@@ -62,6 +84,10 @@ class PublicStream extends LocalStream {
    * If we have a setting for the public:// scheme's path, we use that.
    * Otherwise we build a reasonable default based on the site.path service if
    * it's available, or a default behavior based on the request.
+   *
+   * Note that this static method is used by \Drupal\system\Form\FileSystemForm
+   * so you should alter that form or substitute a different form if you change
+   * the class providing the stream_wrapper.public service.
    *
    * The site path is injectable from the site.path service:
    * @code

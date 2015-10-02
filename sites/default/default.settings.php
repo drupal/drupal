@@ -454,6 +454,19 @@ if ($settings['hash_salt']) {
 # $settings['file_chmod_file'] = 0664;
 
 /**
+ * Public file base URL:
+ *
+ * An alternative base URL to be used for serving public files. This must
+ * include any leading directory path.
+ *
+ * A different value from the domain used by Drupal to be used for accessing
+ * public files. This can be used for a simple CDN integration, or to improve
+ * security by serving user-uploaded files from a different domain or subdomain
+ * pointing to the same server. Do not include a trailing slash.
+ */
+# $settings['file_public_base_url'] = 'http://downloads.example.com/files';
+
+/**
  * Public file path:
  *
  * A local file system path where public files will be stored. This directory
