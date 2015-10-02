@@ -50,7 +50,7 @@ class BanMiddleware implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     $ip = $request->getClientIp();
     if ($this->banIpManager->isBanned($ip)) {
-      return new Response(SafeMarkup::format('Sorry @ip has been banned', ['@ip' => $ip]), 403);
+      return new Response(SafeMarkup::format('@ip has been banned', ['@ip' => $ip]), 403);
     }
     return $this->httpKernel->handle($request, $type, $catch);
   }

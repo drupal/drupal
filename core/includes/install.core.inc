@@ -1314,7 +1314,7 @@ function install_select_language(&$install_state) {
         return;
       }
       else {
-        throw new InstallerException(t('Sorry, you must select a language to continue the installation.'));
+        throw new InstallerException(t('You must select a language to continue the installation.'));
       }
     }
   }

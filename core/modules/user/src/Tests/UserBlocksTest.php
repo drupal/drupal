@@ -74,7 +74,7 @@ class UserBlocksTest extends WebTestBase {
     $this->drupalPostForm('node', $edit, t('Log in'));
     $this->assertRaw('1 error has been found:');
     $this->assertRaw('<a href="#edit-name">Username</a>');
-    $this->assertText(t('Sorry, unrecognized username or password.'));
+    $this->assertText(t('Unrecognized username or password.'));
 
     // Create a user with some permission that anonymous users lack.
     $user = $this->drupalCreateUser(array('administer permissions'));

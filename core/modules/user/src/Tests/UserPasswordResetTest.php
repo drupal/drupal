@@ -79,7 +79,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $edit = array('name' => $this->randomMachineName(32));
     $this->drupalPostForm(NULL, $edit, t('Submit'));
 
-    $this->assertText(t('Sorry, @name is not recognized as a username or an email address.', array('@name' => $edit['name'])), 'Validation error message shown when trying to request password for invalid account.');
+    $this->assertText(t('@name is not recognized as a username or an email address.', array('@name' => $edit['name'])), 'Validation error message shown when trying to request password for invalid account.');
     $this->assertEqual(count($this->drupalGetMails(array('id' => 'user_password_reset'))), 0, 'No email was sent when requesting a password for an invalid account.');
 
     // Reset the password by username via the password reset page.
@@ -220,7 +220,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
       'pass' => $this->randomMachineName(),
     );
     $this->drupalPostForm('user/login', $edit, t('Log in'));
-    $this->assertRaw(t('Sorry, unrecognized username or password. <a href=":password">Have you forgotten your password?</a>',
+    $this->assertRaw(t('Unrecognized username or password. <a href=":password">Have you forgotten your password?</a>',
       array(':password' => \Drupal::url('user.pass', [], array('query' => array('name' => $edit['name']))))));
     unset($edit['pass']);
     $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));

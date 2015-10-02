@@ -223,7 +223,7 @@ class ExceptionHandler
     {
         switch ($exception->getStatusCode()) {
             case 404:
-                $title = 'Sorry, the page you are looking for could not be found.';
+                $title = 'The page you are looking for could not be found.';
                 break;
             default:
                 $title = 'Whoops, looks like something went wrong.';

@@ -125,7 +125,7 @@
           // Show a modal to inform the user of the network error.
           var fieldLabel = Drupal.quickedit.metadata.get(fieldID, 'label');
           var message = Drupal.t('Could not load the form for <q>@field-label</q>, either due to a website problem or a network connection problem.<br>Please try again.', {'@field-label': fieldLabel});
-          Drupal.quickedit.util.networkErrorModal(Drupal.t('Sorry!'), message);
+          Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
 
           // Change the state back to "candidate", to allow the user to start
           // in-place editing of the field again.
