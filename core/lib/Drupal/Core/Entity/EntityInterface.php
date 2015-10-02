@@ -240,10 +240,19 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   /**
    * Acts on an entity before the presave hook is invoked.
    *
-   * Used before the entity is saved and before invoking the presave hook.
+   * Used before the entity is saved and before invoking the presave hook. Note
+   * that in case of translatable content entities this callback is only fired
+   * on their current translation. It is up to the developer to iterate
+   * over all translations if needed. This is different from its counterpart in
+   * the Field API, FieldItemListInterface::preSave(), which is fired on all
+   * field translations automatically.
+   * @todo Adjust existing implementations and the documentation according to
+   *   https://www.drupal.org/node/2577609 to have a consistent API.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.
+   *
+   * @see \Drupal\Core\Field\FieldItemListInterface::preSave()
    */
   public function preSave(EntityStorageInterface $storage);
 
@@ -251,7 +260,9 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * Acts on a saved entity before the insert or update hook is invoked.
    *
    * Used after the entity is saved, but before invoking the insert or update
-   * hook.
+   * hook. Note that in case of translatable content entities this callback is
+   * only fired on their current translation. It is up to the developer to
+   * iterate over all translations if needed.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.

@@ -91,10 +91,15 @@ class Node extends ContentEntityBase implements NodeInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    // If no owner has been set explicitly, make the anonymous user the owner.
-    if (!$this->getOwner()) {
-      $this->setOwnerId(0);
+    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
+      $translation = $this->getTranslation($langcode);
+
+      // If no owner has been set explicitly, make the anonymous user the owner.
+      if (!$translation->getOwner()) {
+        $translation->setOwnerId(0);
+      }
     }
+
     // If no revision author has been set explicitly, make the node owner the
     // revision author.
     if (!$this->getRevisionAuthor()) {
