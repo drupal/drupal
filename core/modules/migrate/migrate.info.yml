@@ -4,4 +4,3 @@ description: 'Handles migrations'
 package: Core (Experimental)
 version: VERSION
 core: 8.x
-;configure: admin/structure/migrate
