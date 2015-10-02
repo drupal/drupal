@@ -1,7 +1,8 @@
-id: d6_search_page
+id: search_page
 label: Search page configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:
@@ -20,6 +21,6 @@ process:
   path: 'constants/path'
   plugin: 'constants/plugin'
   'configuration/rankings':
-    plugin: d6_search_configuration_rankings
+    plugin: search_configuration_rankings
 destination:
   plugin: entity:search_page

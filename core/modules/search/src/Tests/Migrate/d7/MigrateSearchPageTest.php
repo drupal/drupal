@@ -2,26 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\search\Tests\Migrate\d6\MigrateSearchPageTest.
+ * Contains \Drupal\search\Tests\Migrate\d7\MigrateSearchPageTest.
  */
 
-namespace Drupal\search\Tests\Migrate\d6;
+namespace Drupal\search\Tests\Migrate\d7;
 
 use Drupal\Core\Database\Database;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 use Drupal\search\Entity\SearchPage;
 
 /**
  * Upgrade search rank settings to search.page.*.yml.
  *
- * @group migrate_drupal_6
+ * @group migrate_drupal_7
  */
-class MigrateSearchPageTest extends MigrateDrupal6TestBase {
+class MigrateSearchPageTest extends MigrateDrupal7TestBase {
 
   /**
+   * The modules to be enabled during the test.
+   *
    * {@inheritdoc}
    */
-  public static $modules = ['search'];
+  public static $modules = array('node', 'search');
 
   /**
    * {@inheritdoc}
@@ -32,7 +34,7 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests Drupal 6 search settings to Drupal 8 search page entity migration.
+   * Tests Drupal 7 search ranking to Drupal 8 search page entity migration.
    */
   public function testSearchPage() {
     $id = 'node_search';
@@ -40,14 +42,14 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
     $search_page = SearchPage::load($id);
     $this->assertIdentical($id, $search_page->id());
     $configuration = $search_page->getPlugin()->getConfiguration();
-    $this->assertIdentical($configuration['rankings'], array(
-      'comments' => 5,
+    $expected_rankings = array(
+      'comments' => 0,
       'promote' => 0,
-      'recent' => 0,
       'relevance' => 2,
-      'sticky' => 8,
-      'views' => 1,
-    ));
+      'sticky' => 0,
+      'views' => 0,
+    );
+    $this->assertIdentical($expected_rankings, $configuration['rankings']);
     $this->assertIdentical('node', $search_page->getPath());
 
     // Test that we can re-import using the EntitySearchPage destination.
