@@ -8,6 +8,8 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\builder\d6;
 
 use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\migrate_drupal\Plugin\migrate\builder\CckBuilder;
 
 /**
@@ -28,8 +30,20 @@ class CckMigration extends CckBuilder {
   public function buildMigrations(array $template) {
     $migration = Migration::create($template);
 
+    $source_plugin = $migration->getSourcePlugin();
+    // The source plugin will throw RequirementsException if CCK is not enabled,
+    // in which case there is nothing else for us to do.
+    if ($source_plugin instanceof RequirementsInterface) {
+      try {
+        $source_plugin->checkRequirements();
+      }
+      catch (RequirementsException $e) {
+        return [$migration];
+      }
+    }
+
     // Loop through every field that will be migrated.
-    foreach ($migration->getSourcePlugin() as $field) {
+    foreach ($source_plugin as $field) {
       $field_type = $field->getSourceProperty('type');
 
       // Each field type should only be processed once.

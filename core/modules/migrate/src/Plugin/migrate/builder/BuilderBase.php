@@ -24,7 +24,7 @@ abstract class BuilderBase extends PluginBase implements MigrateBuilderInterface
    * @param array $configuration
    *   (optional) Additional configuration for the plugin.
    *
-   * @return \Drupal\migrate\Plugin\MigrateSourceInterface
+   * @return \Drupal\migrate\Plugin\MigrateSourceInterface|\Drupal\migrate\Plugin\RequirementsInterface
    *   The fully initialized source plugin.
    */
   protected function getSourcePlugin($plugin_id, array $configuration = []) {

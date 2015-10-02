@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\migrate\builder\d6;
 
 use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate_drupal\Plugin\migrate\builder\CckBuilder;
 
 /**
@@ -23,9 +24,17 @@ class Node extends CckBuilder {
 
     // Read all CCK field instance definitions in the source database.
     $fields = array();
-    foreach ($this->getSourcePlugin('d6_field_instance', $template['source']) as $field) {
-      $info = $field->getSource();
-      $fields[$info['type_name']][$info['field_name']] = $info;
+    $source_plugin = $this->getSourcePlugin('d6_field_instance', $template['source']);
+    try {
+      $source_plugin->checkRequirements();
+
+      foreach ($source_plugin as $field) {
+        $info = $field->getSource();
+        $fields[$info['type_name']][$info['field_name']] = $info;
+      }
+    }
+    catch (RequirementsException $e) {
+      // Don't do anything; $fields will be empty.
     }
 
     foreach ($this->getSourcePlugin('d6_node_type', $template['source']) as $row) {
