@@ -468,7 +468,8 @@ display:
         - url
         - url.query_args
         - user.permissions
-      cacheable: false
+      max-age: 0
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
@@ -492,4 +493,5 @@ display:
         - url
         - url.query_args
         - user.permissions
-      cacheable: false
+      max-age: 0
+      tags: {  }

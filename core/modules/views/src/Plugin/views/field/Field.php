@@ -8,6 +8,8 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -22,7 +24,6 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Entity\Render\EntityFieldRenderer;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -37,7 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("field")
  */
-class Field extends FieldPluginBase implements CacheablePluginInterface, MultiItemsFieldHandlerInterface {
+class Field extends FieldPluginBase implements CacheableDependencyInterface, MultiItemsFieldHandlerInterface {
   use FieldAPIHandlerTrait;
 
   /**
@@ -961,8 +962,8 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return FALSE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**
@@ -970,6 +971,18 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    */
   public function getCacheContexts() {
     return $this->getEntityFieldRenderer()->getCacheContexts();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $field_definition = $this->getFieldDefinition();
+    $field_storage_definition = $this->getFieldStorageDefinition();
+    return Cache::mergeTags(
+      $field_definition instanceof CacheableDependencyInterface ? $field_definition->getCacheTags() : [],
+      $field_storage_definition instanceof CacheableDependencyInterface ? $field_storage_definition->getCacheTags() : []
+    );
   }
 
   /**

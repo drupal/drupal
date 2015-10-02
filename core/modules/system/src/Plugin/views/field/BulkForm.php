@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Plugin\views\field;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
@@ -15,7 +16,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait;
@@ -29,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("bulk_form")
  */
-class BulkForm extends FieldPluginBase implements CacheablePluginInterface {
+class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
   use RedirectDestinationTrait;
   use UncacheableFieldHandlerTrait;
@@ -114,10 +114,10 @@ class BulkForm extends FieldPluginBase implements CacheablePluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
+  public function getCacheMaxAge() {
     // @todo Consider making the bulk operation form cacheable. See
     //   https://www.drupal.org/node/2503009.
-    return FALSE;
+    return 0;
   }
 
   /**
@@ -125,6 +125,13 @@ class BulkForm extends FieldPluginBase implements CacheablePluginInterface {
    */
   public function getCacheContexts() {
     return $this->languageManager->isMultilingual() ? $this->getEntityTranslationRenderer()->getCacheContexts() : [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return [];
   }
 
   /**

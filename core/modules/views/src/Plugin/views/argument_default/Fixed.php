@@ -7,8 +7,9 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 
 /**
  * The fixed argument default handler.
@@ -20,7 +21,7 @@ use Drupal\views\Plugin\CacheablePluginInterface;
  *   title = @Translation("Fixed")
  * )
  */
-class Fixed extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
+class Fixed extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -48,8 +49,8 @@ class Fixed extends ArgumentDefaultPluginBase implements CacheablePluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**

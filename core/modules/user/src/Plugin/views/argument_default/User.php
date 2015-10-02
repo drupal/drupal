@@ -7,9 +7,10 @@
 
 namespace Drupal\user\Plugin\views\argument_default;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ use Drupal\node\NodeInterface;
  *   title = @Translation("User ID from route context")
  * )
  */
-class User extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
+class User extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**
    * The route match.
@@ -108,8 +109,8 @@ class User extends ArgumentDefaultPluginBase implements CacheablePluginInterface
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**

@@ -8,9 +8,10 @@
 namespace Drupal\user\Plugin\views\access;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\RoleStorageInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -27,7 +28,7 @@ use Drupal\Core\Session\AccountInterface;
  *   help = @Translation("Access will be granted to users with any of the specified roles.")
  * )
  */
-class Role extends AccessPluginBase implements CacheablePluginInterface {
+class Role extends AccessPluginBase implements CacheableDependencyInterface {
 
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
@@ -149,8 +150,8 @@ class Role extends AccessPluginBase implements CacheablePluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**
@@ -158,6 +159,13 @@ class Role extends AccessPluginBase implements CacheablePluginInterface {
    */
   public function getCacheContexts() {
     return ['user.roles'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return [];
   }
 
 }

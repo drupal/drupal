@@ -1,8 +1,11 @@
 langcode: en
 status: false
 dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
   module:
     - node
+    - user
 id: archive
 label: Archive
 module: node
@@ -174,7 +177,8 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: -1
+      tags: {  }
   block_1:
     id: block_1
     display_title: Block
@@ -212,7 +216,8 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: -1
+      tags: {  }
   page_1:
     id: page_1
     display_title: Page
@@ -231,4 +236,5 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: -1
+      tags: {  }

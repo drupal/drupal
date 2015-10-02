@@ -7,8 +7,9 @@
 
 namespace Drupal\node\Plugin\views\argument_default;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   title = @Translation("Content ID from URL")
  * )
  */
-class Node extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
+class Node extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**
    * The route match.
@@ -75,8 +76,8 @@ class Node extends ArgumentDefaultPluginBase implements CacheablePluginInterface
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**

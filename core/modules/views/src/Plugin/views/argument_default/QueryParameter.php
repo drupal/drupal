@@ -7,8 +7,9 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 
 /**
  * A query parameter argument default handler.
@@ -20,7 +21,7 @@ use Drupal\views\Plugin\CacheablePluginInterface;
  *   title = @Translation("Query parameter")
  * )
  */
-class QueryParameter extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
+class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**
    * {@inheritdoc}
@@ -87,8 +88,8 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheablePlugi
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**

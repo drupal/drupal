@@ -85,7 +85,18 @@ class GlossaryTest extends ViewTestBase {
       ],
       [
         'config:views.view.glossary',
+        // Listed for letter 'a'
         'node:' . $nodes_by_char['a'][0]->id(), 'node:' . $nodes_by_char['a'][1]->id(), 'node:' . $nodes_by_char['a'][2]->id(),
+        // Link for letter 'd'.
+        'node:1',
+        // Link for letter 'p'.
+        'node:16',
+        // Link for letter 'r'.
+        'node:2',
+        // Link for letter 'l'.
+        'node:21',
+        // Link for letter 'u'.
+        'node:6',
         'node_list',
         'user:0',
         'user_list',

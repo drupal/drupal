@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
 use Drupal\views\ResultRow;
@@ -211,7 +212,7 @@ abstract class CachePluginBase extends PluginBase {
         'items_per_page' => $this->view->getItemsPerPage(),
         'offset' => $this->view->getOffset(),
       ];
-      $key_data += \Drupal::service('cache_contexts_manager')->convertTokensToKeys($this->displayHandler->getCacheMetadata()['contexts'])->getKeys();
+      $key_data += \Drupal::service('cache_contexts_manager')->convertTokensToKeys($this->displayHandler->getCacheMetadata()->getCacheContexts())->getKeys();
 
       $this->resultsKey = $this->view->storage->id() . ':' . $this->displayHandler->display['id'] . ':results:' . hash('sha256', serialize($key_data));
     }
@@ -288,12 +289,10 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * Alters the cache metadata of a display upon saving a view.
    *
-   * @param bool $is_cacheable
-   *   Whether the display is cacheable.
-   * @param string[] $cache_contexts
-   *   The cache contexts the display varies by.
+   * @param \Drupal\Core\Cache\CacheableMetadata $cache_metadata
+   *   The cache metadata.
    */
-  public function alterCacheMetadata(&$is_cacheable, array &$cache_contexts) {
+  public function alterCacheMetadata(CacheableMetadata $cache_metadata) {
   }
 
   /**

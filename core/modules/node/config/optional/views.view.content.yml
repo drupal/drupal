@@ -568,7 +568,8 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: 0
+      tags: {  }
   page_1:
     display_options:
       path: admin/content/node
@@ -599,4 +600,5 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: 0
+      tags: {  }

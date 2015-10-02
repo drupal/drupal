@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
@@ -19,7 +20,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Url;
 use Drupal\views\Form\ViewsForm;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
@@ -2149,9 +2149,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $cache = $this->getPlugin('cache');
 
     (new CacheableMetadata())
-      ->setCacheTags($this->view->getCacheTags())
+      ->setCacheTags(Cache::mergeTags($this->view->getCacheTags(), isset($this->display['cache_metadata']['tags']) ? $this->display['cache_metadata']['tags'] : []))
       ->setCacheContexts(isset($this->display['cache_metadata']['contexts']) ? $this->display['cache_metadata']['contexts'] : [])
-      ->setCacheMaxAge($cache->getCacheMaxAge())
+      ->setCacheMaxAge(Cache::mergeMaxAges($cache->getCacheMaxAge(), isset($this->display['cache_metadata']['max-age']) ? $this->display['cache_metadata']['max-age'] : Cache::PERMANENT))
       ->merge(CacheableMetadata::createFromRenderArray($element))
       ->applyTo($element);
   }
@@ -2271,18 +2271,13 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * {@inheritdoc}
    */
   public function calculateCacheMetadata () {
-    $is_cacheable = TRUE;
-    $cache_contexts = [];
+    $cache_metadata = new CacheableMetadata();
 
     // Iterate over ordinary views plugins.
     foreach (Views::getPluginTypes('plugin') as $plugin_type) {
       $plugin = $this->getPlugin($plugin_type);
-      if ($plugin instanceof CacheablePluginInterface) {
-        $cache_contexts = array_merge($cache_contexts, $plugin->getCacheContexts());
-        $is_cacheable &= $plugin->isCacheable();
-      }
-      else {
-        $is_cacheable = FALSE;
+      if ($plugin instanceof CacheableDependencyInterface) {
+        $cache_metadata = $cache_metadata->merge(CacheableMetadata::createFromObject($plugin));
       }
     }
 
@@ -2291,19 +2286,18 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     foreach (array_keys(Views::getHandlerTypes()) as $handler_type) {
       $handlers = $this->getHandlers($handler_type);
       foreach ($handlers as $handler) {
-        if ($handler instanceof CacheablePluginInterface) {
-          $cache_contexts = array_merge($cache_contexts, $handler->getCacheContexts());
-          $is_cacheable &= $handler->isCacheable();
+        if ($handler instanceof CacheableDependencyInterface) {
+          $cache_metadata = $cache_metadata->merge(CacheableMetadata::createFromObject($handler));
         }
       }
     }
 
     /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache_plugin */
     if ($cache_plugin = $this->getPlugin('cache')) {
-      $cache_plugin->alterCacheMetadata($is_cacheable, $cache_contexts);
+      $cache_plugin->alterCacheMetadata($cache_metadata);
     }
 
-    return [(bool) $is_cacheable, $cache_contexts];
+    return $cache_metadata;
   }
 
   /**
@@ -2311,9 +2305,18 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   public function getCacheMetadata() {
     if (!isset($this->display['cache_metadata'])) {
-      list($this->display['cache_metadata']['cacheable'], $this->display['cache_metadata']['contexts']) = $this->calculateCacheMetadata();
+      $cache_metadata = $this->calculateCacheMetadata();
+      $this->display['cache_metadata']['max-age'] = $cache_metadata->getCacheMaxAge();
+      $this->display['cache_metadata']['contexts'] = $cache_metadata->getCacheContexts();
+      $this->display['cache_metadata']['tags'] = $cache_metadata->getCacheTags();
     }
-    return $this->display['cache_metadata'];
+    else {
+      $cache_metadata = (new CacheableMetadata())
+        ->setCacheMaxAge($this->display['cache_metadata']['max-age'])
+        ->setCacheContexts($this->display['cache_metadata']['contexts'])
+        ->setCacheTags($this->display['cache_metadata']['tags']);
+    }
+    return $cache_metadata;
   }
 
   /**

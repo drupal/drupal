@@ -133,7 +133,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-      cacheable: false
+      max-age: 0
   page_1:
     display_plugin: page
     id: page_1
@@ -146,4 +146,4 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-      cacheable: false
+      max-age: 0

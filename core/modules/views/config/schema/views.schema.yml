@@ -118,15 +118,23 @@ views.view.*:
             type: mapping
             label: 'Cache metadata'
             mapping:
-              cacheable:
-                type: boolean
-                label: 'Cacheable'
+              max-age:
+                type: integer
+                label: 'Cache maximum age'
               contexts:
                 type: sequence
                 label: 'Cache contexts'
                 sequence:
                   type: string
-
+              tags:
+                type: sequence
+                label: 'Cache tags'
+                sequence:
+                  type: string
+              # Deprecated.
+              cacheable:
+                type: boolean
+                label: 'Cacheable'
 views_block:
   type: block_settings
   label: 'View block'

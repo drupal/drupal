@@ -311,8 +311,9 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *
    * Cache metadata is set per view and per display, and ends up being stored in
    * the view's configuration. This allows Views to determine very efficiently:
-   * - whether a view is cacheable at all
-   * - what the cache key for a given view should be
+   * - the max-age
+   * - the cache contexts
+   * - the cache tags
    *
    * In other words: this allows us to do the (expensive) work of initializing
    * Views plugins and handlers to determine their effect on the cacheability of
@@ -327,7 +328,10 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       $display =& $this->getDisplay($display_id);
       $executable->setDisplay($display_id);
 
-      list($display['cache_metadata']['cacheable'], $display['cache_metadata']['contexts']) = $executable->getDisplay()->calculateCacheMetadata();
+      $cache_metadata = $executable->getDisplay()->calculateCacheMetadata();
+      $display['cache_metadata']['max-age'] = $cache_metadata->getCacheMaxAge();
+      $display['cache_metadata']['contexts'] = $cache_metadata->getCacheContexts();
+      $display['cache_metadata']['tags'] = $cache_metadata->getCacheTags();
       // Always include at least the 'languages:' context as there will most
       // probably be translatable strings in the view output.
       $display['cache_metadata']['contexts'] = Cache::mergeContexts($display['cache_metadata']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE]);

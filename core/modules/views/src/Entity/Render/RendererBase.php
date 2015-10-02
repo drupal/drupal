@@ -7,9 +7,10 @@
 
 namespace Drupal\views\Entity\Render;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -17,7 +18,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Defines a base class for entity renderers.
  */
-abstract class RendererBase implements CacheablePluginInterface {
+abstract class RendererBase implements CacheableDependencyInterface {
 
   /**
    * The view executable wrapping the view storage entity.
@@ -66,14 +67,21 @@ abstract class RendererBase implements CacheablePluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCacheContexts() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
     return [];
   }
 

@@ -8,8 +8,8 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -37,7 +37,7 @@ use Drupal\views\Views;
 /**
  * Base plugin class for Views queries.
  */
-abstract class QueryPluginBase extends PluginBase implements CacheablePluginInterface {
+abstract class QueryPluginBase extends PluginBase implements CacheableDependencyInterface {
 
   /**
    * A pager plugin that should be provided by the display.
@@ -320,9 +320,8 @@ abstract class QueryPluginBase extends PluginBase implements CacheablePluginInte
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    // This plugin can't really determine that.
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**
@@ -343,13 +342,6 @@ abstract class QueryPluginBase extends PluginBase implements CacheablePluginInte
    */
   public function getCacheTags() {
     return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    return Cache::PERMANENT;
   }
 
 }

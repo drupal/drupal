@@ -7,13 +7,14 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\CacheablePluginInterface;
 
 /**
  * A common base class for sql based pager.
  */
-abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterface {
+abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInterface {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -374,8 +375,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**
@@ -385,6 +386,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterfa
     // The rendered link needs to play well with any other query parameter used
     // on the page, like other pagers and exposed filter.
     return ['url.query_args'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return [];
   }
 
 }

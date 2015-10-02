@@ -102,9 +102,9 @@ class HistoryUserTimestamp extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
+  public function getCacheMaxAge() {
     // This filter depends on the current time and therefore is never cacheable.
-    return FALSE;
+    return 0;
   }
 
 }

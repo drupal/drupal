@@ -174,7 +174,7 @@ display:
     cache_metadata:
       contexts:
         - language
-      cacheable: false
+      max-age: 0
   page_1:
     display_plugin: page
     id: page_1
@@ -186,4 +186,4 @@ display:
     cache_metadata:
       contexts:
         - language
-      cacheable: false
+      max-age: 0

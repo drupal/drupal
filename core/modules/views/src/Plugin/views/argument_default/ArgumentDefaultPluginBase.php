@@ -102,6 +102,13 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return [];
+  }
+
 }
 
 /**

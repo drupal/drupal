@@ -174,7 +174,7 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-      cacheable: false
+      max-age: 0
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -198,7 +198,7 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-      cacheable: false
+      max-age: 0
   page_1:
     display_plugin: page
     id: page_1
@@ -213,4 +213,4 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-      cacheable: false
+      max-age: 0

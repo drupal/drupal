@@ -296,7 +296,8 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: 0
+      tags: {  }
   block_1:
     display_plugin: block
     id: block_1
@@ -311,4 +312,5 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: 0
+      tags: {  }

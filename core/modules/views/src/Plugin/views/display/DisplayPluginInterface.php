@@ -429,20 +429,16 @@ interface DisplayPluginInterface {
   /**
    * Calculates the display's cache metadata by inspecting each handler/plugin.
    *
-   * @return array
-   *   Returns an array:
-   *   - first value: (boolean) Whether the display is cacheable.
-   *   - second value: (string[]) The cache contexts the display varies by.
+   * @return \Drupal\Core\Cache\CacheableMetadata
+   *   The cache metadata.
    */
   public function calculateCacheMetadata();
 
   /**
    * Gets the cache metadata.
    *
-   * @return array
-   *   Returns an array:
-   *   - first value: (boolean) Whether the display is cacheable.
-   *   - second value: (string[]) The cache contexts the display varies by.
+   * @return \Drupal\Core\Cache\CacheableMetadata
+   *   The cache metadata.
    */
   public function getCacheMetadata();
 

@@ -165,7 +165,7 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: 0
   page_1:
     display_plugin: page
     id: page_1
@@ -255,4 +255,4 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      max-age: 0
