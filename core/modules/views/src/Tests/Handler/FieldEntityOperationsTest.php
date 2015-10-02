@@ -9,6 +9,8 @@ namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\EntityOperations handler.
@@ -29,30 +31,62 @@ class FieldEntityOperationsTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('node', 'language');
+
+  function setUp() {
+    parent::setUp();
+
+    // Create Article content type.
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+  }
 
   /**
    * Tests entity operations field.
    */
   public function testEntityOperations() {
-    // Create some test entities.
+    // Add languages and refresh the container so the entity manager will have
+    // fresh data.
+    ConfigurableLanguage::createFromLangcode('hu')->save();
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    $this->rebuildContainer();
+
+    // Create some test entities. Every other entity is Hungarian while all
+    // have a Spanish translation.
+    $entities = array();
     for ($i = 0; $i < 5; $i++) {
-      EntityTest::create(array(
-        'name' => $this->randomString(),
-      ))->save();
+      $entity = Node::create([
+        'title' => $this->randomString(),
+        'type' => 'article',
+        'langcode' => $i % 2 === 0 ? 'hu' : 'en',
+      ]);
+      $entity->save();
+      $translation = $entity->addTranslation('es');
+      $translation->set('title', $entity->getTitle() . ' in Spanish');
+      $translation->save();
+      $entities[$i] = $entity;
     }
-    $entities = EntityTest::loadMultiple();
 
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer entity_test content'));
-    $this->drupalLogin($admin_user);
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer nodes', 'bypass node access'));
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('test-entity-operations');
-
+    /** @var $entity \Drupal\entity_test\Entity\EntityTest */
     foreach ($entities as $entity) {
-      $operations = \Drupal::entityManager()->getListBuilder('entity_test')->getOperations($entity);
-      foreach ($operations as $operation) {
-        $expected_destination = Url::fromUri('internal:/test-entity-operations')->toString();
-        $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => $operation['url']->toString() . '?destination=' . $expected_destination, ':title' => $operation['title']));
-        $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', array('@operation' => $operation['title'])));
+      /** @var \Drupal\Core\Language\LanguageInterface $language */
+      foreach ($entity->getTranslationLanguages() as $language) {
+        $entity = $entity->getTranslation($language->getId());
+        $operations = \Drupal::entityManager()->getListBuilder('node')->getOperations($entity);
+        $this->assertTrue(count($operations) > 0, 'There are operations.');
+        foreach ($operations as $operation) {
+          $expected_destination = Url::fromUri('internal:/test-entity-operations')->toString();
+          $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[@href=:path and text()=:title]', array(':path' => $operation['url']->toString() . '?destination=' . $expected_destination, ':title' => $operation['title']));
+          $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', array('@operation' => $operation['title'])));
+          // Entities which were created in Hungarian should link to the Hungarian
+          // edit form, others to the English one (which has no path prefix here).
+          $base_path = \Drupal::request()->getBasePath();
+          $parts = explode('/', str_replace($base_path, '', $operation['url']->toString()));
+          $expected_prefix = ($language->getId() != 'en' ? $language->getId() : 'node');
+          $this->assertEqual($parts[1], $expected_prefix, 'Entity operation links to the correct language for the entity.');
+        }
       }
     }
   }

@@ -386,6 +386,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function urlInfo($rel = 'edit-form', array $options = []) {
+    // Unless language was already provided, avoid setting an explicit language.
+    $options += ['language' => NULL];
     return parent::urlInfo($rel, $options);
   }
 

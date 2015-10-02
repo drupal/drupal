@@ -25,6 +25,13 @@ class EntityOperationsUnitTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $languageManager;
+
+  /**
    * The plugin under test.
    *
    * @var \Drupal\views\Plugin\views\field\EntityOperations
@@ -38,13 +45,14 @@ class EntityOperationsUnitTest extends UnitTestCase {
    */
   public function setUp() {
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
 
     $configuration = array();
     $plugin_id = $this->randomMachineName();
     $plugin_definition = array(
       'title' => $this->randomMachineName(),
     );
-    $this->plugin = new EntityOperations($configuration, $plugin_id, $plugin_definition, $this->entityManager);
+    $this->plugin = new EntityOperations($configuration, $plugin_id, $plugin_definition, $this->entityManager, $this->languageManager);
 
     $redirect_service = $this->getMock('Drupal\Core\Routing\RedirectDestinationInterface');
     $redirect_service->expects($this->any())

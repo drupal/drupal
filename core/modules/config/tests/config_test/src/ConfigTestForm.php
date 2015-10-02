@@ -10,6 +10,7 @@ namespace Drupal\config_test;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -124,6 +125,13 @@ class ConfigTestForm extends EntityForm {
       ),
       '#default_value' => $entity->get('size_value'),
       '#access' => !empty($size),
+    );
+
+    $form['langcode'] = array(
+      '#type' => 'language_select',
+      '#title' => t('Language'),
+      '#languages' => LanguageInterface::STATE_ALL,
+      '#default_value' => $entity->language()->getId(),
     );
 
     $form['actions'] = array('#type' => 'actions');
