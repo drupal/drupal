@@ -332,7 +332,7 @@ class Table extends FormElement {
    * @return array
    *
    * @see template_preprocess_table()
-   * @see drupal_process_attached()
+   * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see drupal_attach_tabledrag()
    */
   public static function preRenderTable($element) {

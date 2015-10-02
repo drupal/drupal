@@ -209,7 +209,7 @@ interface RendererInterface {
    *     drupal_process_states().
    *   - If this element has #attached defined then any required libraries,
    *     JavaScript, CSS, or other custom data are added to the current page by
-   *     drupal_process_attached().
+   *     \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments().
    *   - If this element has an array of #theme_wrappers defined and
    *     #render_children is not set, #children is then re-rendered by passing
    *     the element in its current state to ThemeManagerInterface::render()
@@ -316,7 +316,7 @@ interface RendererInterface {
    * @see \Drupal\Core\Render\ElementInfoManagerInterface::getInfo()
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see drupal_process_states()
-   * @see drupal_process_attached()
+   * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see ::renderRoot()
    */
   public function render(&$elements, $is_root_call = FALSE);

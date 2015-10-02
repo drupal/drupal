@@ -59,40 +59,6 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
     // Repeat for the cache.
     $this->drupalGet('/render_attached_test/head');
     $this->assertHeader('X-Drupal-Cache', 'HIT');
-
-    // Now repeat all of the preceding using drupal_process_attached().
-    // Test ['#attached']['http_header] = ['Status', $code].
-    $this->drupalGet('/render_attached_test/teapot_dpa');
-    $this->assertResponse(418);
-    $this->assertHeader('X-Drupal-Cache', 'MISS');
-    // Repeat for the cache.
-    $this->drupalGet('/render_attached_test/teapot_dpa');
-    $this->assertResponse(418);
-    $this->assertHeader('X-Drupal-Cache', 'HIT');
-
-    // Test ['#attached']['http_header'] with various replacement rules.
-    $this->drupalGet('/render_attached_test/header_dpa');
-    $this->assertHeader('X-Drupal-Cache', 'MISS');
-    $this->assertTeapotHeaders();
-    // Repeat for the cache.
-    $this->drupalGet('/render_attached_test/header_dpa');
-    $this->assertHeader('X-Drupal-Cache', 'HIT');
-
-    // Test ['#attached']['feed'].
-    $this->drupalGet('/render_attached_test/feed_dpa');
-    $this->assertHeader('X-Drupal-Cache', 'MISS');
-    $this->assertFeed();
-    // Repeat for the cache.
-    $this->drupalGet('/render_attached_test/feed_dpa');
-    $this->assertHeader('X-Drupal-Cache', 'HIT');
-
-    // Test ['#attached']['html_head'].
-    $this->drupalGet('/render_attached_test/head_dpa');
-    $this->assertHeader('X-Drupal-Cache', 'MISS');
-    $this->assertHead();
-    // Repeat for the cache.
-    $this->drupalGet('/render_attached_test/head_dpa');
-    $this->assertHeader('X-Drupal-Cache', 'HIT');
   }
 
   /**
@@ -100,12 +66,12 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
    */
   public function testRenderCachedBlock() {
     // Make sure our test block is visible.
-    $this->drupalPlaceBlock('drupal_process_attached_block', ['region' => 'content']);
+    $this->drupalPlaceBlock('attached_rendering_block', ['region' => 'content']);
 
     // Get the front page, which should now have our visible block.
     $this->drupalGet('');
     // Make sure our block is visible.
-    $this->assertText('Headers handled by drupal_process_attached().');
+    $this->assertText('Markup from attached_rendering_block.');
     // Test that all our attached items are present.
     $this->assertFeed();
     $this->assertHead();
@@ -115,7 +81,7 @@ class HtmlResponseAttachmentsTest extends WebTestBase {
     // Reload the page, to test caching.
     $this->drupalGet('');
     // Make sure our block is visible.
-    $this->assertText('Headers handled by drupal_process_attached().');
+    $this->assertText('Markup from attached_rendering_block.');
     // The header should be present again.
     $this->assertHeader('X-Test-Teapot', 'Teapot Mode Active');
   }
