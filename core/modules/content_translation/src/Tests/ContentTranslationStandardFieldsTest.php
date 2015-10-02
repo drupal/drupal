@@ -77,4 +77,13 @@ class ContentTranslationStandardFieldsTest extends WebTestBase {
     $this->assertFieldByXPath("//input[@id='edit-settings-user-user-fields-user-picture' and @checked='checked']");
   }
 
+  /**
+   * Test that revision_log is not translatable.
+   */
+  public function testRevisionLogNotTranslatable() {
+    $path = 'admin/config/regional/content-language';
+    $this->drupalGet($path);
+    $this->assertNoFieldByXPath("//input[@id='edit-settings-node-article-fields-revision-log']");
+  }
+
 }

@@ -490,7 +490,6 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Revision log message'))
       ->setDescription(t('Briefly describe the changes you have made.'))
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE)
       ->setDefaultValue('')
       ->setDisplayOptions('form', array(
         'type' => 'string_textarea',
