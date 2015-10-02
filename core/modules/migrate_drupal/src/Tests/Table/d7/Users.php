@@ -141,6 +141,23 @@ class Users extends DrupalDumpBase {
       'data',
     ))
     ->values(array(
+      'uid' => '1',
+      'name' => 'root',
+      'pass' => '$S$D/HVkgCg1Hvi7DN5KVSgNl.2C5g8W6oe/OoIRMUlyjkmPugQRhoB',
+      'mail' => '',
+      'theme' => '',
+      'signature' => '',
+      'signature_format' => NULL,
+      'created' => '0',
+      'access' => '0',
+      'login' => '0',
+      'status' => '1',
+      'timezone' => NULL,
+      'language' => '',
+      'picture' => '0',
+      'init' => '',
+      'data' => 'a:1:{s:7:"contact";i:1;}',
+    ))->values(array(
       'uid' => '2',
       'name' => 'Odo',
       'pass' => '$S$DZ4P7zZOh92vgrgZDBbv8Pu6lQB337OJ1wsOy21602G4A5F7.M9K',
@@ -161,4 +178,4 @@ class Users extends DrupalDumpBase {
   }
 
 }
-#b33078324746c718e26c067131e97dcd
+#b8a27fc07ad0e18e5fded43f9d54e4f2

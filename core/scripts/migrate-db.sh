@@ -391,7 +391,7 @@ function _db_field_type_map($sql_type) {
  */
 function _db_get_query($table) {
   $queries = array(
-    'users' => 'SELECT * FROM {users} WHERE uid NOT IN (0,1)',
+    'users' => 'SELECT * FROM {users} WHERE uid > 0',
     // Volatile state variables should always be ignored. We don't want to
     // exclude all cache_* variables, since that would exclude cache_lifetime,
     // which is configuration, not state.

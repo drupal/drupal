@@ -189,6 +189,30 @@ class Users extends DrupalDumpBase {
       'timezone_id',
     ))
     ->values(array(
+      'uid' => '1',
+      'name' => 'root',
+      'pass' => '63a9f0ea7bb98050796b649e85481845',
+      'mail' => 'root@localhost',
+      'mode' => '0',
+      'sort' => '0',
+      'threshold' => '0',
+      'theme' => '',
+      'signature' => '',
+      'signature_format' => '0',
+      'created' => '0',
+      'access' => '0',
+      'login' => '0',
+      'status' => '1',
+      'timezone' => NULL,
+      'language' => '',
+      'picture' => '',
+      'init' => 'root@localhost',
+      'data' => 'b:0;',
+      'timezone_name' => '',
+      'pass_plain' => 'root',
+      'expected_timezone' => NULL,
+      'timezone_id' => '0',
+    ))->values(array(
       'uid' => '2',
       'name' => 'john.doe',
       'pass' => '671cc45b3e2c6eb751d6a554dc5a5fe7',
@@ -312,4 +336,4 @@ class Users extends DrupalDumpBase {
   }
 
 }
-#4a42570fa3c819b0b84e9552d689e2e7
+#6ff3b7f189bd1bb9d19aab0cd19e2f31

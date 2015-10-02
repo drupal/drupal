@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests\Migrate\d6;
 
+use Drupal\migrate\Entity\Migration;
 use Drupal\user\Entity\User;
 use Drupal\file\Entity\File;
 use Drupal\Core\Database\Database;
@@ -67,6 +68,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
     $users = Database::getConnection('default', 'migrate')
       ->select('users', 'u')
       ->fields('u')
+      ->condition('uid', 1, '>')
       ->execute()
       ->fetchAll();
 
@@ -79,9 +81,9 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
         ->execute()
         ->fetchCol();
       $roles = array(RoleInterface::AUTHENTICATED_ID);
-      $migration_role = entity_load('migration', 'd6_user_role');
+      $id_map = Migration::load('d6_user_role')->getIdMap();
       foreach ($rids as $rid) {
-        $role = $migration_role->getIdMap()->lookupDestinationId(array($rid));
+        $role = $id_map->lookupDestinationId(array($rid));
         $roles[] = reset($role);
       }
 
