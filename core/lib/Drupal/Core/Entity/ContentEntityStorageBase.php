@@ -336,7 +336,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
         $this->invokeHook('translation_insert', $entity->getTranslation($langcode));
       }
       elseif (!isset($translations[$langcode]) && isset($original_translations[$langcode])) {
-        $this->invokeHook('translation_delete', $entity->getTranslation($langcode));
+        $this->invokeHook('translation_delete', $entity->original->getTranslation($langcode));
       }
     }
   }

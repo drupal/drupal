@@ -57,4 +57,39 @@ class EntityRevisionTranslationTest extends EntityUnitTestBase {
     $this->assertTrue($this->reloadEntity($entity)->getRevisionId() > $old_rev_id, 'The entity from the storage has a newer revision id.');
   }
 
+  /**
+   * Tests if the translation object has the right revision id after new revision.
+   */
+  public function testRevertRevisionAfterTranslation() {
+    $user = $this->createUser();
+    $storage = $this->entityManager->getStorage('entity_test_mulrev');
+
+    // Create a test entity.
+    $entity = EntityTestMulRev::create([
+      'name' => $this->randomString(),
+      'user_id' => $user->id(),
+      'language' => 'en',
+    ]);
+    $entity->save();
+    $old_rev_id = $entity->getRevisionId();
+
+    $translation = $entity->addTranslation('de');
+    $translation->setNewRevision();
+    $translation->save();
+
+    $entity = $this->reloadEntity($entity);
+
+    $this->assertTrue($entity->hasTranslation('de'));
+
+    $entity = $storage->loadRevision($old_rev_id);
+
+    $entity->setNewRevision();
+    $entity->isDefaultRevision(TRUE);
+    $entity->save();
+
+    $entity = $this->reloadEntity($entity);
+
+    $this->assertFalse($entity->hasTranslation('de'));
+  }
+
 }
