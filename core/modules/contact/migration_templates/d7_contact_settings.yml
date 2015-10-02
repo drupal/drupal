@@ -1,15 +1,15 @@
-id: d6_contact_settings
+id: d7_contact_settings
 label: Contact configuration
 migration_tags:
-  - Drupal 6
+  - Drupal 7
 source:
   plugin: contact_settings
   variables:
     - contact_default_status
-    - contact_hourly_threshold
+    - contact_threshold_limit
 process:
   user_default_enabled: contact_default_status
-  'flood/limit': contact_hourly_threshold
+  'flood/limit': contact_threshold_limit
   default_form:
     plugin: migration
     migration: contact_category
@@ -20,3 +20,9 @@ destination:
 migration_dependencies:
   required:
     - contact_category
+dependencies:
+  config:
+    - migrate.migration.contact_category
+  module:
+    - contact
+    - migrate_drupal

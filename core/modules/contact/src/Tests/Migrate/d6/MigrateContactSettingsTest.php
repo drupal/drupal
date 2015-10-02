@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Tests\Migrate\d6\MigrateContactConfigsTest.
+ * Contains \Drupal\contact\Tests\Migrate\d6\MigrateContactSettingsTest.
  */
 
 namespace Drupal\contact\Tests\Migrate\d6;
@@ -15,7 +15,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  *
  * @group migrate_drupal_6
  */
-class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
+class MigrateContactSettingsTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 
@@ -29,7 +29,7 @@ class MigrateContactConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigrations(['d6_contact_category', 'd6_contact_settings']);
+    $this->executeMigrations(['contact_category', 'd6_contact_settings']);
   }
 
   /**

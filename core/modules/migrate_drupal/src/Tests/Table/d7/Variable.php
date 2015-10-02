@@ -236,6 +236,12 @@ class Variable extends DrupalDumpBase {
       'name' => 'contact_default_status',
       'value' => 'i:1;',
     ))->values(array(
+      'name' => 'contact_threshold_limit',
+      'value' => 'i:33;',
+    ))->values(array(
+      'name' => 'contact_threshold_window',
+      'value' => 'i:7200;',
+    ))->values(array(
       'name' => 'cron_key',
       'value' => 's:43:"_vWFj-dRR2rNoHDwl7N__J9uZNutDcLz3w4tlPJzRAM";',
     ))->values(array(
@@ -707,4 +713,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#d20a0a7f31645aba285f0ce7505c80a5
+#465b732a50eca616b7ccc915e28f076f

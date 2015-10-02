@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Plugin\migrate\source\d6\ContactCategory.
+ * Contains \Drupal\contact\Plugin\migrate\source\ContactCategory.
  */
 
-namespace Drupal\contact\Plugin\migrate\source\d6;
+namespace Drupal\contact\Plugin\migrate\source;
 
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal 6 contact category source from database.
+ * Contact category source from database.
  *
  * @MigrateSource(
- *   id = "d6_contact_category",
+ *   id = "contact_category",
  *   source_provider = "contact"
  * )
  */

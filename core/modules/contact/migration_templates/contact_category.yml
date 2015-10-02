@@ -1,9 +1,10 @@
-id: d6_contact_category
+id: contact_category
 label: Contact category configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
-  plugin: d6_contact_category
+  plugin: contact_category
 process:
   id:
     -

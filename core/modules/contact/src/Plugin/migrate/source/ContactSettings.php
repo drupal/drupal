@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Plugin\migrate\source\d6\ContactSettings.
+ * Contains \Drupal\contact\Plugin\migrate\source\ContactSettings.
  */
 
-namespace Drupal\contact\Plugin\migrate\source\d6;
+namespace Drupal\contact\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
 /**
  * @MigrateSource(
- *   id = "d6_contact_settings",
+ *   id = "contact_settings",
  *   source_provider = "contact"
  * )
  */
@@ -22,11 +22,11 @@ class ContactSettings extends Variable {
    */
   protected function initializeIterator() {
     $default_category = $this->select('contact', 'c')
-      ->fields('c', array('cid'))
+      ->fields('c', ['cid'])
       ->condition('selected', 1)
       ->execute()
       ->fetchField();
-    return new \ArrayIterator(array($this->values() + array('default_category' => $default_category)));
+    return new \ArrayIterator([$this->values() + ['default_category' => $default_category]]);
   }
 
 }

@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\contact\Unit\Plugin\migrate\source\d6;
 
-use Drupal\contact\Plugin\migrate\source\d6\ContactSettings;
+use Drupal\contact\Plugin\migrate\source\ContactSettings;
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**

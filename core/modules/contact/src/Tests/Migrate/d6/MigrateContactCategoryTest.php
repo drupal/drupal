@@ -27,7 +27,7 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executeMigration('d6_contact_category');
+    $this->executeMigration('contact_category');
   }
 
   /**
