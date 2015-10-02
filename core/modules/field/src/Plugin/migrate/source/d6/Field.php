@@ -76,7 +76,6 @@ class Field extends DrupalSqlBase {
       ->orderBy('widget_type')
       ->execute()
       ->fetchCol();
-    assert(count($widget_types) > 0);
     // Arbitrarily use the first widget_type - if there are multiples, let the
     // migrator know.
     $row->setSourceProperty('widget_type', $widget_types[0]);
