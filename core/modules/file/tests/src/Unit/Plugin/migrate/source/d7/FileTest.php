@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\source\d7;
 
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\file\Plugin\migrate\source\d7\File;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
@@ -20,12 +21,19 @@ class FileTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\Tests\file\Unit\Plugin\migrate\source\d7\TestFile';
 
-  // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
-    // The ID of the entity, can be any string.
     'id' => 'test',
     'source' => array(
       'plugin' => 'd7_file',
+      // Used by testFilteringByScheme().
+      'scheme' => array(
+        'public',
+        'private',
+      ),
+    ),
+    'destination' => array(
+      'plugin' => 'entity:file',
+      'source_base_path' => '/path/to/files',
     ),
   );
 
@@ -82,6 +90,25 @@ class FileTest extends MigrateSqlSourceTestCase {
     $this->source->prepareRow($row);
     $this->assertEquals('/tmp/camelot/lancelot.gif',
       $row->getSourceProperty('filepath'));
+  }
+
+  /**
+   * Tests that it's possible to filter files by scheme.
+   */
+  public function testFilteringByScheme() {
+    $query_conditions = $this->source->query()->conditions();
+    $scheme_condition = end($query_conditions);
+
+    $this->assertInstanceOf(ConditionInterface::class, $scheme_condition['field']);
+    $conditions = $scheme_condition['field']->conditions();
+
+    $this->assertSame('uri', $conditions[0]['field']);
+    $this->assertSame('LIKE', $conditions[0]['operator']);
+    $this->assertSame('public://%', $conditions[0]['value']);
+
+    $this->assertSame('uri', $conditions[1]['field']);
+    $this->assertSame('LIKE', $conditions[1]['operator']);
+    $this->assertSame('private://%', $conditions[1]['value']);
   }
 
 }
