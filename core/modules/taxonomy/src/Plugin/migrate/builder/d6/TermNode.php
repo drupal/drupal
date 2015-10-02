@@ -78,11 +78,10 @@ class TermNode extends BuilderBase implements ContainerFactoryPluginInterface {
     // Only process the destination ID properties.
     $process = array_intersect_key($template['process'], $migration->getDestinationPlugin()->getIds());
 
-    foreach ($migration->getSourcePlugin()->getIterator() as $source_row) {
-      $row = new Row($source_row, $source_row);
+    foreach ($migration->getSourcePlugin() as $source_row) {
       // Process the row to generate the expected destination ID.
-      $executable->processRow($row, $process);
-      $map[$row->getSourceProperty('vid')] = $row->getDestinationProperty('vid');
+      $executable->processRow($source_row, $process);
+      $map[$source_row->getSourceProperty('vid')] = $source_row->getDestinationProperty('vid');
     }
 
     return $map;

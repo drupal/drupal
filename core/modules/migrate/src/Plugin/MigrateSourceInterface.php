@@ -31,17 +31,6 @@ interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspection
   public function fields();
 
   /**
-   * Returns the iterator that will yield the row arrays to be processed.
-   *
-   * @return \Iterator
-   *   The iterator object.
-   *
-   * @throws \Exception
-   *   Cannot obtain a valid iterator.
-   */
-  public function getIterator();
-
-  /**
    * Add additional data to the row.
    *
    * @param \Drupal\Migrate\Row $row

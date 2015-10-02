@@ -213,7 +213,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *
    * @return \Iterator
    */
-  public function getIterator() {
+  protected function getIterator() {
     if (!isset($this->iterator)) {
       $this->iterator = $this->initializeIterator();
     }
