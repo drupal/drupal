@@ -189,6 +189,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
               $field_name,
               $this->getFieldSetting('comment_type'),
             ]],
+            '#create_placeholder' => TRUE,
           ];
         }
       }
