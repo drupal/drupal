@@ -422,7 +422,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
       'Changed flag of German translation is set when changing the German translation.'
     );
 
-    $french = $entity->getTranslation('fr');
+    $french = $entity->addTranslation('fr');
 
     $entity->setNewRevision();
     $entity->save();

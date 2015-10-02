@@ -70,7 +70,7 @@ class FieldEntityTranslationTest extends ViewTestBase {
     ]);
     $node->save();
 
-    $translation = $node->getTranslation('es');
+    $translation = $node->addTranslation('es');
     $translation->title->value = 'example ES';
     $translation->sticky->value = true;
     $translation->save();

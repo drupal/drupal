@@ -54,7 +54,9 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
       // Get the file IDs attached to the field before this update.
       $field_name = $this->getFieldDefinition()->getName();
       $original_ids = array();
-      $original_items = $entity->original->getTranslation($this->getLangcode())->$field_name;
+      $langcode = $this->getLangcode();
+      $original = $entity->original;
+      $original_items = $original->hasTranslation($langcode) ? $original->getTranslation($langcode)->{$field_name} : $original->{$field_name};
       foreach ($original_items as $item) {
         $original_ids[] = $item->target_id;
       }

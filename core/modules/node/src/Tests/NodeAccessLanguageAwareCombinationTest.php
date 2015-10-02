@@ -110,7 +110,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'field_private' => array(array('value' => 0)),
       'private' => FALSE,
     ));
-    $translation = $node->getTranslation('ca');
+    $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
@@ -121,7 +121,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'field_private' => array(array('value' => 0)),
       'private' => TRUE,
     ));
-    $translation = $node->getTranslation('ca');
+    $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
@@ -132,7 +132,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'field_private' => array(array('value' => 1)),
       'private' => FALSE,
     ));
-    $translation = $node->getTranslation('ca');
+    $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
@@ -143,7 +143,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'field_private' => array(array('value' => 0)),
       'private' => FALSE,
     ));
-    $translation = $node->getTranslation('ca');
+    $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
@@ -154,7 +154,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'field_private' => array(array('value' => 1)),
       'private' => FALSE,
     ));
-    $translation = $node->getTranslation('ca');
+    $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
@@ -165,7 +165,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'field_private' => array(array('value' => 1)),
       'private' => TRUE,
     ));
-    $translation = $node->getTranslation('ca');
+    $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();

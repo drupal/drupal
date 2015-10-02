@@ -137,7 +137,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
     ));
     $entity->save();
 
-    $translation = $entity->getTranslation('bar');
+    $translation = $entity->addTranslation('bar');
     $this->assertEntityAccess(array(
       'view' => TRUE,
     ), $translation);

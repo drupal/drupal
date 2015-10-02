@@ -7,7 +7,6 @@
 
 namespace Drupal\quickedit\Tests;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\quickedit\EditorSelector;
 
 /**
@@ -43,7 +42,7 @@ class EditorSelectionTest extends QuickEditTestBase {
    */
   protected function getSelectedEditor($entity_id, $field_name, $view_mode = 'default') {
     $entity = entity_load('entity_test', $entity_id, TRUE);
-    $items = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED)->get($field_name);
+    $items = $entity->get($field_name);
     $options = entity_get_display('entity_test', 'entity_test', $view_mode)->getComponent($field_name);
     return $this->editorSelector->getEditor($options['type'], $items);
   }

@@ -130,7 +130,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       ));
       // Make sure the name is set for every language that we might create.
       foreach (array('tr', 'pl') as $langcode) {
-        $entity->getTranslation($langcode)->name = $this->randomMachineName();
+        $entity->addTranslation($langcode)->name = $this->randomMachineName();
       }
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {

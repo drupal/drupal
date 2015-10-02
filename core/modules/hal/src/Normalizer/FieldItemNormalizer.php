@@ -107,7 +107,8 @@ class FieldItemNormalizer extends NormalizerBase {
     unset($items[$delta]);
 
     // Instead, create a new item for the entity in the requested language.
-    $entity_translation = $item->getEntity()->getTranslation($langcode);
+    $entity = $item->getEntity();
+    $entity_translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
     $field_name = $item->getFieldDefinition()->getName();
     return $entity_translation->get($field_name)->appendItem();
   }

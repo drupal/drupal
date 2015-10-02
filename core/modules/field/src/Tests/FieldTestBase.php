@@ -46,11 +46,11 @@ abstract class FieldTestBase extends WebTestBase {
    *   The array of expected values.
    * @param $langcode
    *   (Optional) The language code for the values. Defaults to
-   *   \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED.
+   *   \Drupal\Core\Language\LanguageInterface::LANGCODE_DEFAULT.
    * @param $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
-  function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value') {
+  function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value') {
     // Re-load the entity to make sure we have the latest changes.
     \Drupal::entityManager()->getStorage($entity->getEntityTypeId())->resetCache(array($entity->id()));
     $e = entity_load($entity->getEntityTypeId(), $entity->id());

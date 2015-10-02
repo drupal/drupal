@@ -160,7 +160,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     // items will be one less than the original values to check that only the
     // translated ones will be preserved. In fact we want the same fids and
     // items order for both languages.
-    $translation = $entity->getTranslation($langcode);
+    $translation = $entity->addTranslation($langcode);
     for ($delta = 0; $delta < $this->cardinality - 1; $delta++) {
       // Simulate a field reordering: items are shifted of one position ahead.
       // The modulo operator ensures we start from the beginning after reaching

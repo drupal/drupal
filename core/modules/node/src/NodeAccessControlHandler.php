@@ -100,7 +100,8 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected function checkAccess(EntityInterface $node, $operation, $langcode, AccountInterface $account) {
     /** @var \Drupal\node\NodeInterface $node */
     /** @var \Drupal\node\NodeInterface $translation */
-    $translation = $node->getTranslation($langcode);
+    $translation = $node->hasTranslation($langcode) ? $node->getTranslation($langcode) : $node;
+
     // Fetch information from the node object if possible.
     $status = $translation->isPublished();
     $uid = $translation->getOwnerId();

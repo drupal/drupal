@@ -124,7 +124,8 @@ class TranslationTest extends FieldUnitTestBase {
     $entity->langcode->value = reset($available_langcodes);
     foreach ($available_langcodes as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
-      $entity->getTranslation($langcode)->{$this->fieldName}->setValue($field_translations[$langcode]);
+      $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
+      $translation->{$this->fieldName}->setValue($field_translations[$langcode]);
     }
 
     // Save and reload the field translations.
@@ -160,7 +161,8 @@ class TranslationTest extends FieldUnitTestBase {
     $entity = entity_create($entity_type_id, $values);
     foreach ($translation_langcodes as $langcode) {
       $values[$this->fieldName][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
-      $entity->getTranslation($langcode, FALSE)->{$this->fieldName}->setValue($values[$this->fieldName][$langcode]);
+      $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
+      $translation->{$this->fieldName}->setValue($values[$this->fieldName][$langcode]);
     }
 
     $field_langcodes = array_keys($entity->getTranslationLanguages());
@@ -178,8 +180,9 @@ class TranslationTest extends FieldUnitTestBase {
       $entity = entity_create($entity_type_id, $values);
       foreach ($translation_langcodes as $langcode) {
         $values[$this->fieldName][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
-        $entity->getTranslation($langcode)->{$this->fieldName}->setValue($values[$this->fieldName][$langcode]);
-        $entity->getTranslation($langcode)->{$field_name_default}->setValue($empty_items);
+        $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
+        $translation->{$this->fieldName}->setValue($values[$this->fieldName][$langcode]);
+        $translation->{$field_name_default}->setValue($empty_items);
         $values[$field_name_default][$langcode] = $empty_items;
       }
 
