@@ -37,6 +37,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
+    'session',
     'theme',
     'timezone',
     'url.query_args:_wrapper_format',

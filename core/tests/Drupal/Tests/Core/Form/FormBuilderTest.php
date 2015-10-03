@@ -783,10 +783,7 @@ class FormBuilderTest extends FormTestBase {
         ->willReturnArgument(0);
       $this->csrfToken->expects($this->atLeastOnce())
         ->method('validate')
-        ->will($this->returnValueMap([
-          [$form_token, $form_id, $valid_token],
-          [$form_id, $form_id, $valid_token],
-        ]));
+        ->willReturn($valid_token);
     }
 
     $current_user = $this->prophesize(AccountInterface::class);

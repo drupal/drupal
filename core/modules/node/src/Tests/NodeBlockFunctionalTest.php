@@ -148,7 +148,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route']);
     $this->drupalGet('node/add/article');
     $this->assertText($label, 'Block was displayed on the node/add/article page.');
-    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.path', 'url.query_args', 'user', 'route']);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'session', 'theme', 'url.path', 'url.query_args', 'user', 'route']);
     $this->drupalGet('node/' . $node1->id());
     $this->assertText($label, 'Block was displayed on the node/N when node is of type article.');
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route', 'timezone']);

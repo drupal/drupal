@@ -26,6 +26,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
+    'session',
     'theme',
     'route',
     'timezone',

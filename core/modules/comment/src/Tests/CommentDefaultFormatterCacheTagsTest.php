@@ -11,6 +11,9 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Session\UserSession;
 use Drupal\comment\CommentInterface;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Tests the bubbling up of comment cache tags when using the Comment list
@@ -34,6 +37,16 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $session = new Session();
+
+    $request = Request::create('/');
+    $request->setSession($session);
+
+    /** @var RequestStack $stack */
+    $stack = $this->container->get('request_stack');
+    $stack->pop();
+    $stack->push($request);
 
     // Set the current user to one that can access comments. Specifically, this
     // user does not have access to the 'administer comments' permission, to

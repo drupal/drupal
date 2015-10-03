@@ -652,6 +652,27 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   }
 
   /**
+   * #lazy_builder callback; renders form CSRF token.
+   *
+   * @param string $placeholder
+   *  A string containing a placeholder, matching the value of the form's
+   *  #token.
+   *
+   * @return array
+   *   A renderable array containing the CSRF token.
+   */
+  public function renderFormTokenPlaceholder($placeholder) {
+    return [
+      '#markup' => $this->csrfToken->get($placeholder),
+      '#cache' => [
+        'contexts' => [
+          'session',
+        ],
+      ],
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function prepareForm($form_id, &$form, FormStateInterface &$form_state) {
@@ -725,15 +746,29 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form['#cache']['contexts'][] = 'user.roles:authenticated';
       if ($user && $user->isAuthenticated()) {
         // Generate a public token based on the form id.
-        $form['#token'] = $form_id;
+        // Generates a placeholder based on the form ID.
+        $placeholder = 'form_token_placeholder_' . hash('crc32b', $form_id);
+        $form['#token'] = $placeholder;
+
         $form['form_token'] = array(
           '#id' => Html::getUniqueId('edit-' . $form_id . '-form-token'),
           '#type' => 'token',
-          '#default_value' => $this->csrfToken->get($form['#token']),
+          '#default_value' => $placeholder,
           // Form processing and validation requires this value, so ensure the
           // submitted form value appears literally, regardless of custom #tree
           // and #parents being set elsewhere.
           '#parents' => array('form_token'),
+          // Instead of setting an actual CSRF token, we've set the placeholder
+          // in form_token's #default_value and #placeholder. These will be
+          // replaced at the very last moment. This ensures forms with a CSRF
+          // token don't have poor cacheability.
+          '#attached' => [
+            'placeholders' => [
+              $placeholder => [
+                '#lazy_builder' => ['form_builder:renderFormTokenPlaceholder', [$placeholder]]
+              ]
+            ]
+          ],
           '#cache' => [
             'max-age' => 0,
           ],
