@@ -3039,6 +3039,11 @@ function user_role_delete($role) {
     $role = user_role_load_by_name($role);
   }
 
+  // If this is the administrator role, delete the user_admin_role variable.
+  if ($role->rid == variable_get('user_admin_role')) {
+    variable_del('user_admin_role');
+  }
+
   db_delete('role')
     ->condition('rid', $role->rid)
     ->execute();

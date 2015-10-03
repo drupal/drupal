@@ -2095,12 +2095,16 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
     $this->assertFalse(user_role_load_by_name($old_name), 'The role can no longer be retrieved from the database using its old name.');
     $this->assertTrue(is_object(user_role_load_by_name($role_name)), 'The role can be retrieved from the database using its new name.');
 
-    // Test deleting a role.
+    // Test deleting the default administrator role.
+    $role_name = 'administrator';
+    $role = user_role_load_by_name($role_name);
     $this->drupalPost("admin/people/permissions/roles/edit/{$role->rid}", NULL, t('Delete role'));
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertText(t('The role has been deleted.'), 'The role has been deleted');
     $this->assertNoLinkByHref("admin/people/permissions/roles/edit/{$role->rid}", 'Role edit link removed.');
     $this->assertFalse(user_role_load_by_name($role_name), 'A deleted role can no longer be loaded.');
+    // Make sure this role is no longer configured as the administrator role.
+    $this->assertNull(variable_get('user_admin_role'), 'The administrator role is no longer configured as the administrator role.');
 
     // Make sure that the system-defined roles cannot be edited via the user
     // interface.
