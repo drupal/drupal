@@ -21,14 +21,6 @@ use Drupal\simpletest\KernelTestBase;
 abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageInterface {
 
   /**
-   * The file path(s) to the dumped database(s) to load into the child site.
-   *
-   * @var array
-   */
-  public $databaseDumpFiles = array();
-
-
-  /**
    * TRUE to collect messages instead of displaying them.
    *
    * @var bool
@@ -52,6 +44,13 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected $migration;
 
+  /**
+   * The source database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $sourceDatabase;
+
   public static $modules = array('migrate');
 
   /**
@@ -60,6 +59,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   protected function setUp() {
     parent::setUp();
     $this->createMigrationConnection();
+    $this->sourceDatabase = Database::getConnection('default', 'migrate');
   }
 
   /**
@@ -116,28 +116,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     $original_connection_info = Database::getConnectionInfo('simpletest_original_migrate');
     if ($original_connection_info) {
       Database::renameConnection('simpletest_original_migrate', 'migrate');
-    }
-  }
-
-  /**
-   * Load Drupal 6 database dumps to be used.
-   *
-   * @param array $files
-   *   An array of files.
-   * @param string $method
-   *   The name of the method in the dump class to use. Defaults to load.
-   */
-  protected function loadDumps(array $files, $method = 'load') {
-    // Load the database from the portable PHP dump.
-    // The files may be gzipped.
-    foreach ($files as $file) {
-      if (substr($file, -3) == '.gz') {
-        $file = "compress.zlib://$file";
-        require $file;
-      }
-      preg_match('/^namespace (.*);$/m', file_get_contents($file), $matches);
-      $class = $matches[1] . '\\' . basename($file, '.php');
-      (new $class(Database::getConnection('default', 'migrate')))->$method();
     }
   }
 
