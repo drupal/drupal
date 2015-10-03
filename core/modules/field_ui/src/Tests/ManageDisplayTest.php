@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\NodeType;
@@ -168,12 +169,26 @@ class ManageDisplayTest extends WebTestBase {
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
 
-    // Uninstall the module providing third party settings and ensure the button
-    // is no longer there.
+    // When a module providing third-party settings to a formatter (or widget)
+    // is uninstalled, the formatter remains enabled but the provided settings,
+    // together with the corresponding form elements, are removed from the
+    // display component.
     \Drupal::service('module_installer')->uninstall(array('field_third_party_test'));
+
+    // Ensure the button is still there after the module has been disabled.
     $this->drupalGet($manage_display);
     $this->assertResponse(200);
-    $this->assertNoFieldByName('field_test_settings_edit');
+    $this->assertFieldByName('field_test_settings_edit');
+
+    // Ensure that third-party form elements are not present anymore.
+    $this->drupalPostAjaxForm(NULL, array(), 'field_test_settings_edit');
+    $fieldname = 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]';
+    $this->assertNoField($fieldname);
+
+    // Ensure that third-party settings were removed from the formatter.
+    $display = EntityViewDisplay::load("node.{$this->type}.default");
+    $component = $display->getComponent('field_test');
+    $this->assertFalse(array_key_exists('field_third_party_test', $component['third_party_settings']));
   }
 
   /**

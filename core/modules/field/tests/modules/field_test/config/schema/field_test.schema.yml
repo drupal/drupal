@@ -40,6 +40,12 @@ field.widget.settings.test_field_widget:
     test_widget_setting:
       type: string
       label: 'Test setting'
+    role:
+      type: string
+      label: 'A referenced role'
+    role2:
+      type: string
+      label: 'A 2nd referenced role'
 
 field.widget.settings.test_field_widget_multiple:
   type: mapping
@@ -48,6 +54,14 @@ field.widget.settings.test_field_widget_multiple:
     test_widget_setting_multiple:
       type: string
       label: 'Test setting'
+
+field.widget.third_party.color:
+  type: mapping
+  label: 'Field test entity display color module third party settings'
+  mapping:
+    foo:
+      type: string
+      label: 'Foo setting'
 
 field.storage_settings.test_field:
   type: mapping

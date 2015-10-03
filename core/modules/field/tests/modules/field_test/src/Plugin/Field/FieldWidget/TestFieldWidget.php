@@ -34,6 +34,8 @@ class TestFieldWidget extends WidgetBase {
   public static function defaultSettings() {
     return array(
       'test_widget_setting' => 'dummy test string',
+      'role' => 'anonymous',
+      'role2' => 'anonymous',
     ) + parent::defaultSettings();
   }
 
@@ -76,6 +78,44 @@ class TestFieldWidget extends WidgetBase {
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     return $element['value'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    foreach (['role', 'role2'] as $setting) {
+      if (!empty($role_id = $this->getSetting($setting))) {
+        // Create a dependency on the role config entity referenced in settings.
+        $dependencies['config'][] = "user.role.$role_id";
+      }
+    }
+
+    return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = parent::onDependencyRemoval($dependencies);
+
+    // Only the setting 'role' is resolved here. When the dependency related to
+    // this setting is removed, is expected that the widget component will be
+    // update accordingly in the display entity. The 'role2' setting is
+    // deliberately left out from being updated. When the dependency
+    // corresponding to this setting is removed, is expected that the widget
+    // component will be disabled in the display entity.
+    if (!empty($role_id = $this->getSetting('role'))) {
+      if (!empty($dependencies['config']["user.role.$role_id"])) {
+        $this->setSetting('role', 'anonymous');
+        $changed = TRUE;
+      }
+    }
+
+    return $changed;
   }
 
 }

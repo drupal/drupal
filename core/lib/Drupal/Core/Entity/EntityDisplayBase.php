@@ -428,16 +428,85 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       }
     }
     foreach ($this->getComponents() as $name => $component) {
-      if (isset($component['type']) && $definition = $this->pluginManager->getDefinition($component['type'], FALSE)) {
-        if (in_array($definition['provider'], $dependencies['module'])) {
+      if ($renderer = $this->getRenderer($name)) {
+        if (in_array($renderer->getPluginDefinition()['provider'], $dependencies['module'])) {
           // Revert to the defaults if the plugin that supplies the widget or
           // formatter depends on a module that is being uninstalled.
           $this->setComponent($name);
           $changed = TRUE;
         }
+
+        // Give this component the opportunity to react on dependency removal.
+        $component_removed_dependencies = $this->getPluginRemovedDependencies($renderer->calculateDependencies(), $dependencies);
+        if ($component_removed_dependencies) {
+          if ($renderer->onDependencyRemoval($component_removed_dependencies)) {
+            // Update component settings to reflect changes.
+            $component['settings'] = $renderer->getSettings();
+            $component['third_party_settings'] = [];
+            foreach ($renderer->getThirdPartyProviders() as $module) {
+              $component['third_party_settings'][$module] = $renderer->getThirdPartySettings($module);
+            }
+            $this->setComponent($name, $component);
+            $changed = TRUE;
+          }
+          // If there are unresolved deleted dependencies left, disable this
+          // component to avoid the removal of the entire display entity.
+          if ($this->getPluginRemovedDependencies($renderer->calculateDependencies(), $dependencies)) {
+            $this->removeComponent($name);
+            $arguments = [
+              '@display' => (string) $this->getEntityType()->getLabel(),
+              '@id' => $this->id(),
+              '@name' => $name,
+            ];
+            $this->getLogger()->warning("@display '@id': Component '@name' was disabled because its settings depend on removed dependencies.", $arguments);
+            $changed = TRUE;
+          }
+        }
       }
     }
     return $changed;
+  }
+
+  /**
+   * Returns the plugin dependencies being removed.
+   *
+   * The function recursively computes the intersection between all plugin
+   * dependencies and all removed dependencies.
+   *
+   * Note: The two arguments do not have the same structure.
+   *
+   * @param array[] $plugin_dependencies
+   *   A list of dependencies having the same structure as the return value of
+   *   ConfigEntityInterface::calculateDependencies().
+   * @param array[] $removed_dependencies
+   *   A list of dependencies having the same structure as the input argument of
+   *   ConfigEntityInterface::onDependencyRemoval().
+   *
+   * @return array
+   *   A recursively computed intersection.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
+   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::onDependencyRemoval()
+   */
+  protected function getPluginRemovedDependencies(array $plugin_dependencies, array $removed_dependencies) {
+    $intersect = [];
+    foreach ($plugin_dependencies as $type => $dependencies) {
+      if ($removed_dependencies[$type]) {
+        // Config and content entities have the dependency names as keys while
+        // module and theme dependencies are indexed arrays of dependency names.
+        // @see \Drupal\Core\Config\ConfigManager::callOnDependencyRemoval()
+        if (in_array($type, ['config', 'content'])) {
+          $removed = array_intersect_key($removed_dependencies[$type], array_flip($dependencies));
+        }
+        else {
+          $removed = array_values(array_intersect($removed_dependencies[$type], $dependencies));
+        }
+        if ($removed) {
+          $intersect[$type] = $removed;
+        }
+      }
+    }
+    return $intersect;
   }
 
   /**
@@ -469,6 +538,16 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Run those values through the __construct(), as if they came from a
     // regular entity load.
     $this->__construct($values, $this->entityTypeId);
+  }
+
+  /**
+   * Provides the 'system' channel logger service.
+   *
+   * @return \Psr\Log\LoggerInterface
+   *   The 'system' channel logger.
+   */
+  protected function getLogger() {
+    return \Drupal::logger('system');
   }
 
 }

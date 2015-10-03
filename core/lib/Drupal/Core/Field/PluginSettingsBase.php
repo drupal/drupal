@@ -97,6 +97,16 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
   /**
    * {@inheritdoc}
    */
+  public function getThirdPartySettings($module = NULL) {
+    if ($module) {
+      return isset($this->thirdPartySettings[$module]) ? $this->thirdPartySettings[$module] : NULL;
+    }
+    return $this->thirdPartySettings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getThirdPartySetting($module, $key, $default = NULL) {
     return isset($this->thirdPartySettings[$module][$key]) ? $this->thirdPartySettings[$module][$key] : $default;
   }
@@ -112,6 +122,26 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
   /**
    * {@inheritdoc}
    */
+  public function unsetThirdPartySetting($module, $key) {
+    unset($this->thirdPartySettings[$module][$key]);
+    // If the third party is no longer storing any information, completely
+    // remove the array holding the settings for this module.
+    if (empty($this->thirdPartySettings[$module])) {
+      unset($this->thirdPartySettings[$module]);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartyProviders() {
+    return array_keys($this->thirdPartySettings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function calculateDependencies() {
     if (!empty($this->thirdPartySettings)) {
       // Create dependencies on any modules providing third party settings.
@@ -120,6 +150,19 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
       );
     }
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = FALSE;
+    if (!empty($this->thirdPartySettings) && !empty($dependencies['module'])) {
+      $old_count = count($this->thirdPartySettings);
+      $this->thirdPartySettings = array_diff_key($this->thirdPartySettings, array_flip($dependencies['module']));
+      $changed = $old_count != count($this->thirdPartySettings);
+    }
+    return $changed;
   }
 
 }

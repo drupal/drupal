@@ -8,11 +8,12 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Interface definition for plugin with settings.
  */
-interface PluginSettingsInterface extends PluginInspectionInterface {
+interface PluginSettingsInterface extends PluginInspectionInterface, ThirdPartySettingsInterface {
 
   /**
    * Defines the default settings for this plugin.
@@ -65,34 +66,27 @@ interface PluginSettingsInterface extends PluginInspectionInterface {
   public function setSetting($key, $value);
 
   /**
-   * Returns the value of a third-party setting, or $default if not set.
+   * Informs the plugin that some configuration it depends on will be deleted.
    *
-   * @param string $module
-   *   The module providing the third-party setting.
-   * @param string $key
-   *   The setting name.
-   * @param mixed $default
-   *   (optional) The default value if the third party setting is not set.
-   *   Defaults to NULL.
+   * This method allows plugins to keep their configuration up-to-date when a
+   * dependency calculated with ::calculateDependencies() is removed. For
+   * example, an entity view display contains a formatter having a setting
+   * pointing to an arbitrary config entity. When that config entity is deleted,
+   * this method is called by the view display to react to the dependency
+   * removal by updating its configuration.
    *
-   * @return mixed|NULL
-   *   The setting value. Returns NULL if the setting does not exist and
-   *   $default is not provided.
+   * This method must return TRUE if the removal event updated the plugin
+   * configuration or FALSE otherwise.
+   *
+   * @param array $dependencies
+   *   An array of dependencies that will be deleted keyed by dependency type.
+   *   Dependency types are 'config', 'content', 'module' and 'theme'.
+   *
+   * @return bool
+   *   TRUE if the plugin configuration has changed, FALSE if not.
+   *
+   * @see \Drupal\Core\Entity\EntityDisplayBase
    */
-  public function getThirdPartySetting($module, $key, $default = NULL);
-
-  /**
-   * Sets the value of a third-party setting for the plugin.
-   *
-   * @param string $module
-   *   The module providing the third-party setting.
-   * @param string $key
-   *   The setting name.
-   * @param mixed $value
-   *   The setting value.
-   *
-   * @return $this
-   */
-  public function setThirdPartySetting($module, $key, $value);
+  public function onDependencyRemoval(array $dependencies);
 
 }
