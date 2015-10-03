@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeTypeInterface;
@@ -153,11 +154,14 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function revisionOverview(NodeInterface $node) {
     $account = $this->currentUser();
+    $langcode = $this->languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+    $langname = $this->languageManager()->getLanguageName($langcode);
+    $languages = $node->getTranslationLanguages();
+    $has_translations = (count($languages) > 1);
     $node_storage = $this->entityManager()->getStorage('node');
     $type = $node->getType();
 
-    $build = array();
-    $build['#title'] = $this->t('Revisions for %title', array('%title' => $node->label()));
+    $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $node->label()]) : $this->t('Revisions for %title', ['%title' => $node->label()]);
     $header = array($this->t('Revision'), $this->t('Operations'));
 
     $revert_permission = (($account->hasPermission("revert $type revisions") || $account->hasPermission('revert all revisions') || $account->hasPermission('administer nodes')) && $node->access('update'));
@@ -167,74 +171,83 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     $vids = $node_storage->revisionIds($node);
 
+    $latest_revision = TRUE;
+
     foreach (array_reverse($vids) as $vid) {
+      /** @var \Drupal\node\NodeInterface $revision */
       $revision = $node_storage->loadRevision($vid);
-      $username = [
-        '#theme' => 'username',
-        '#account' => $revision->uid->entity,
-      ];
-
-      // Use revision link to link to revisions that are not active.
-      $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
-      if ($vid != $node->getRevisionId()) {
-        $link = $this->l($date, new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $vid]));
-      }
-      else {
-        $link = $node->link($date);
-      }
-
-      $row = [];
-      $column = [
-        'data' => [
-          '#type' => 'inline_template',
-          '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
-          '#context' => [
-            'date' => $link,
-            'username' => $this->renderer->renderPlain($username),
-            'message' => ['#markup' => $revision->revision_log->value, '#allowed_tags' => Xss::getHtmlTagList()],
-          ],
-        ],
-      ];
-      // @todo Simplify once https://www.drupal.org/node/2334319 lands.
-      $this->renderer->addCacheableDependency($column['data'], $username);
-      $row[] = $column;
-
-      if ($vid == $node->getRevisionId()) {
-        $row[0]['class'] = ['revision-current'];
-        $row[] = [
-          'data' => [
-            '#prefix' => '<em>',
-            '#markup' => $this->t('current revision'),
-            '#suffix' => '</em>',
-          ],
-          'class' => ['revision-current'],
+      if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)->isRevisionTranslationAffected()) {
+        $username = [
+          '#theme' => 'username',
+          '#account' => $revision->uid->entity,
         ];
-      }
-      else {
-        $links = [];
-        if ($revert_permission) {
-          $links['revert'] = [
-            'title' => $this->t('Revert'),
-            'url' => Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
+
+        // Use revision link to link to revisions that are not active.
+        $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
+        if ($vid != $node->getRevisionId()) {
+          $link = $this->l($date, new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $vid]));
+        }
+        else {
+          $link = $node->link($date);
+        }
+
+        $row = [];
+        $column = [
+          'data' => [
+            '#type' => 'inline_template',
+            '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
+            '#context' => [
+              'date' => $link,
+              'username' => $this->renderer->renderPlain($username),
+              'message' => ['#markup' => $revision->revision_log->value, '#allowed_tags' => Xss::getHtmlTagList()],
+            ],
+          ],
+        ];
+        // @todo Simplify once https://www.drupal.org/node/2334319 lands.
+        $this->renderer->addCacheableDependency($column['data'], $username);
+        $row[] = $column;
+
+        if ($latest_revision) {
+          $row[] = [
+            'data' => [
+              '#prefix' => '<em>',
+              '#markup' => $this->t('Current revision'),
+              '#suffix' => '</em>',
+            ],
+          ];
+          foreach ($row as &$current) {
+            $current['class'] = ['revision-current'];
+          }
+          $latest_revision = FALSE;
+        }
+        else {
+          $links = [];
+          if ($revert_permission) {
+            $links['revert'] = [
+              'title' => $this->t('Revert'),
+              'url' => $has_translations ?
+                Url::fromRoute('node.revision_revert_translation_confirm', ['node' => $node->id(), 'node_revision' => $vid, 'langcode' => $langcode]) :
+                Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
+            ];
+          }
+
+          if ($delete_permission) {
+            $links['delete'] = [
+              'title' => $this->t('Delete'),
+              'url' => Url::fromRoute('node.revision_delete_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
+            ];
+          }
+
+          $row[] = [
+            'data' => [
+              '#type' => 'operations',
+              '#links' => $links,
+            ],
           ];
         }
 
-        if ($delete_permission) {
-          $links['delete'] = [
-            'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('node.revision_delete_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
-          ];
-        }
-
-        $row[] = [
-          'data' => [
-            '#type' => 'operations',
-            '#links' => $links,
-          ],
-        ];
+        $rows[] = $row;
       }
-
-      $rows[] = $row;
     }
 
     $build['node_revisions_table'] = array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Form;
 
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -34,13 +35,23 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   protected $nodeStorage;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatter
+   */
+  protected $dateFormatter;
+
+  /**
    * Constructs a new NodeRevisionRevertForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The node storage.
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(EntityStorageInterface $node_storage) {
+  public function __construct(EntityStorageInterface $node_storage, DateFormatter $date_formatter) {
     $this->nodeStorage = $node_storage;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -48,7 +59,8 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('node')
+      $container->get('entity.manager')->getStorage('node'),
+      $container->get('date.formatter')
     );
   }
 
@@ -63,7 +75,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' => format_date($this->revision->getRevisionCreationTime())));
+    return t('Are you sure you want to revert to the revision from %revision-date?', ['%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime())]);
   }
 
   /**
@@ -101,17 +113,16 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $revision = $this->prepareRevertedRevision($this->revision);
+    // The revision timestamp will be updated when the revision is saved. Keep
+    // the original one for the confirmation message.
+    $original_revision_timestamp = $this->revision->getRevisionCreationTime();
 
-    // The revision timestamp will be updated when the revision is saved. Keep the
-    // original one for the confirmation message.
-    $original_revision_timestamp = $revision->getRevisionCreationTime();
-    $revision->revision_log = t('Copy of the revision from %date.', array('%date' => format_date($original_revision_timestamp)));
+    $this->revision = $this->prepareRevertedRevision($this->revision, $form_state);
+    $this->revision->revision_log = t('Copy of the revision from %date.', ['%date' => $this->dateFormatter->format($original_revision_timestamp)]);
+    $this->revision->save();
 
-    $revision->save();
-
-    $this->logger('content')->notice('@type: reverted %title revision %revision.', array('@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()));
-    drupal_set_message(t('@type %title has been reverted to the revision from %revision-date.', array('@type' => node_get_type_label($this->revision), '%title' => $this->revision->label(), '%revision-date' => format_date($original_revision_timestamp))));
+    $this->logger('content')->notice('@type: reverted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
+    drupal_set_message(t('@type %title has been reverted to the revision from %revision-date.', ['@type' => node_get_type_label($this->revision), '%title' => $this->revision->label(), '%revision-date' => $this->dateFormatter->format($original_revision_timestamp)]));
     $form_state->setRedirect(
       'entity.node.version_history',
       array('node' => $this->revision->id())
@@ -123,34 +134,13 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    *
    * @param \Drupal\node\NodeInterface $revision
    *   The revision to be reverted.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @return \Drupal\node\NodeInterface
    *   The prepared revision ready to be stored.
    */
-  protected function prepareRevertedRevision(NodeInterface $revision) {
-    /** @var \Drupal\node\NodeInterface $default_revision */
-    $default_revision = $this->nodeStorage->load($revision->id());
-
-    // If the entity is translated, make sure only translations affected by the
-    // specified revision are reverted.
-    $languages = $default_revision->getTranslationLanguages();
-    if (count($languages) > 1) {
-      // @todo Instead of processing all the available translations, we should
-      //   let the user decide which translations should be reverted. See
-      //   https://www.drupal.org/node/2465907.
-      foreach ($languages as $langcode => $language) {
-        if ($revision->hasTranslation($langcode) && !$revision->getTranslation($langcode)->isRevisionTranslationAffected()) {
-          $revision_translation = $revision->getTranslation($langcode);
-          $default_translation = $default_revision->getTranslation($langcode);
-          foreach ($default_revision->getFieldDefinitions() as $field_name => $definition) {
-            if ($definition->isTranslatable()) {
-              $revision_translation->set($field_name, $default_translation->get($field_name)->getValue());
-            }
-          }
-        }
-      }
-    }
-
+  protected function prepareRevertedRevision(NodeInterface $revision, FormStateInterface $form_state) {
     $revision->setNewRevision();
     $revision->isDefaultRevision(TRUE);
 
