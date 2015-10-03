@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Set the X-Content-Type-Options header to "nosniff" when possible, to prevent
+  certain web browsers from picking an unsafe MIME type.
 - Prevented the database API from executing multiple queries at once on MySQL,
   if the site's PHP version is new enough to do so. This is a secondary defense
   against SQL injection attacks.
