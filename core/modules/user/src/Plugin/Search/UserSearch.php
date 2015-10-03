@@ -93,6 +93,8 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->addCacheTags(['user_list']);
   }
 
   /**
@@ -154,6 +156,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
       if ($this->currentUser->hasPermission('administer users')) {
         $result['title'] .= ' (' . $account->getEmail() . ')';
       }
+      $this->addCacheableDependency($account);
       $results[] = $result;
     }
 

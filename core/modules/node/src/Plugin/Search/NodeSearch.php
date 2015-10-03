@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
@@ -167,6 +168,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     $this->renderer = $renderer;
     $this->account = $account;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->addCacheTags(['node_list']);
   }
 
   /**
@@ -333,6 +336,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       // Fetch comments for snippet.
       $rendered = $this->renderer->renderPlain($build);
+      $this->addCacheableDependency(CacheableMetadata::createFromRenderArray($build));
       $rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode));
 
       $extra = $this->moduleHandler->invokeAll('node_search_result', array($node, $item->langcode));
@@ -353,6 +357,14 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         'snippet' => search_excerpt($keys, $rendered, $item->langcode),
         'langcode' => $node->language()->getId(),
       );
+
+      $this->addCacheableDependency($node);
+
+      // We have to separately add the node owner's cache tags because search
+      // module doesn't use the rendering system, it does its own rendering
+      // without taking cacheability metadata into account. So we have to do it
+      // explicitly here.
+      $this->addCacheableDependency($node->getOwner());
 
       if ($type->displaySubmitted()) {
         $result += array(

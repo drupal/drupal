@@ -8,8 +8,10 @@
 namespace Drupal\search\Controller;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\search\SearchPageInterface;
 use Drupal\search\SearchPageRepositoryInterface;
 use Psr\Log\LoggerInterface;
@@ -36,16 +38,26 @@ class SearchController extends ControllerBase {
   protected $logger;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new search controller.
    *
    * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
    *   The search page repository.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(SearchPageRepositoryInterface $search_page_repository, LoggerInterface $logger) {
+  public function __construct(SearchPageRepositoryInterface $search_page_repository, LoggerInterface $logger, RendererInterface $renderer) {
     $this->searchPageRepository = $search_page_repository;
     $this->logger = $logger;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -54,7 +66,8 @@ class SearchController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('search.search_page_repository'),
-      $container->get('logger.factory')->get('search')
+      $container->get('logger.factory')->get('search'),
+      $container->get('renderer')
     );
   }
 
@@ -118,13 +131,15 @@ class SearchController extends ControllerBase {
         '#markup' => '<h3>' . $this->t('Your search yielded no results.') . '</h3>',
       ),
       '#list_type' => 'ol',
-      '#cache' => array(
-        'tags' => $entity->getCacheTags(),
-      ),
       '#context' => array(
         'plugin' => $plugin->getPluginId(),
       ),
     );
+
+    $this->renderer->addCacheableDependency($build, $entity);
+    if ($plugin instanceof CacheableDependencyInterface) {
+      $this->renderer->addCacheableDependency($build, $plugin);
+    }
 
     // If this plugin uses a search index, then also add the cache tag tracking
     // that search index, so that cached search result pages are invalidated
