@@ -1,6 +1,9 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Prevented the database API from executing multiple queries at once on MySQL,
+  if the site's PHP version is new enough to do so. This is a secondary defense
+  against SQL injection attacks.
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused the upgrade
   to fail when there were multiple file records pointing to the same file.
 
