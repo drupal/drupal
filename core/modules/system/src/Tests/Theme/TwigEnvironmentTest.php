@@ -65,6 +65,35 @@ class TwigEnvironmentTest extends KernelTestBase {
     // Render it twice so that twig caching is triggered.
     $this->assertEqual($renderer->renderRoot($element), 'test-with-context muuh');
     $this->assertEqual($renderer->renderRoot($element_copy), 'test-with-context muuh');
+
+    // Tests caching of inline templates with long content to ensure the
+    // generated cache key can be used as a filename.
+    $element = [];
+    $element['test'] = [
+      '#type' => 'inline_template',
+      '#template' => 'Llamas sometimes spit and wrestle with their {{ llama }}. Kittens are soft and fuzzy and they sometimes say {{ kitten }}. Flamingos have long legs and they are usually {{ flamingo }}. Pandas eat bamboo and they are {{ panda }}. Giraffes have long necks and long tongues and they eat {{ giraffe }}.',
+      '#context' => [
+        'llama' => 'necks',
+        'kitten' => 'meow',
+        'flamingo' => 'pink',
+        'panda' => 'bears',
+        'giraffe' => 'leaves',
+      ],
+    ];
+    $expected = 'Llamas sometimes spit and wrestle with their necks. Kittens are soft and fuzzy and they sometimes say meow. Flamingos have long legs and they are usually pink. Pandas eat bamboo and they are bears. Giraffes have long necks and long tongues and they eat leaves.';
+    $element_copy = $element;
+
+    // Render it twice so that twig caching is triggered.
+    $this->assertEqual($renderer->renderRoot($element), $expected);
+    $this->assertEqual($renderer->renderRoot($element_copy), $expected);
+
+    $name = '{# inline_template_start #}' . $element['test']['#template'];
+    $hash = $this->container->getParameter('twig_extension_hash');
+
+    $cache = $environment->getCache();
+    $class = $environment->getTemplateClass($name);
+    $expected = $hash . '_inline-template' . '_' . hash('sha256', $class);
+    $this->assertEqual($expected, $cache->generateKey($name, $class));
   }
 
   /**

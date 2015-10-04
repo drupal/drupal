@@ -74,8 +74,18 @@ class TwigPhpStorageCache implements \Twig_CacheInterface {
   public function generateKey($name, $className) {
     $hash = hash('sha256', $className);
 
+    if (strpos($name, '{# inline_template_start #}') === 0) {
+      // $name is an inline template, and can have characters that are not valid
+      // for a filename. $hash is unique for each inline template so we just use
+      // the generic name 'inline-template' here.
+      $name = 'inline-template';
+    }
+    else {
+      $name = basename($name);
+    }
+
     // The first part is what is invalidated.
-    return $this->templateCacheFilenamePrefix . '_' . basename($name) . '_' . $hash;
+    return $this->templateCacheFilenamePrefix . '_' . $name . '_' . $hash;
   }
 
   /**
