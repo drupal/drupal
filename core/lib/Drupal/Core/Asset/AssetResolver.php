@@ -166,6 +166,7 @@ class AssetResolver implements AssetResolverInterface {
     uasort($css, 'static::sort');
 
     // Allow themes to remove CSS files by CSS files full path and file name.
+    // @todo Remove in Drupal 9.0.x.
     if ($stylesheet_remove = $theme_info->getStyleSheetsRemove()) {
       foreach ($css as $key => $options) {
         if (isset($stylesheet_remove[$key])) {

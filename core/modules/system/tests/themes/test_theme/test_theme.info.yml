@@ -18,6 +18,49 @@ stylesheets-remove:
   - '@system/css/system.module.css'
 libraries:
   - test_theme/global-styling
+libraries-override:
+  # Replace an entire library.
+  core/drupal.collapse: test_theme/collapse
+  # Remove an entire library.
+  core/drupal.progress: false
+  # Replace particular library assets.
+  classy/base:
+    css:
+      component:
+        css/components/button.css: css/my-button.css
+        css/components/collapse-processed.css: css/my-collapse-processed.css
+        css/components/container-inline.css: /themes/my_theme/css/my-container-inline.css
+        css/components/details.css: /themes/my_theme/css/my-details.css
+  # Remove particular library assets.
+  classy/dialog:
+    css:
+      component:
+        css/components/dialog.css: false
+  # It works for JS as well.
+  core/jquery:
+    js:
+      assets/vendor/jquery/jquery.min.js: js/collapse.js
+  # Use Drupal-relative paths.
+  core/drupal.dropbutton:
+    css:
+      component:
+        misc/dropbutton/dropbutton.css: /themes/my_theme/css/dropbutton.css
+  # Use stream wrappers.
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: public://my_css/vertical-tabs.css
+  # Use a protocol-relative URI.
+  core/jquery.ui:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/core.css: //my-server/my_theme/css/jquery_ui.css
+  # Use an absolute URI.
+  core/jquery.farbtastic:
+    css:
+      component:
+        assets/vendor/farbtastic/farbtastic.css: http://example.com/my_theme/css/farbtastic.css
+
 regions:
   content: Content
   left: Left

@@ -175,7 +175,7 @@ class ThemeTest extends WebTestBase {
     $config->set('css.preprocess', 0);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
-    $this->assertNoText('system.module.css', 'The theme\'s .info.yml file is able to override a module CSS file from being added to the page.');
+    $this->assertNoText('system.module.css', "The theme's .info.yml file is able to remove a module CSS file from being added to the page.");
 
     // Also test with aggregation enabled, simply ensuring no PHP errors are
     // triggered during drupal_build_css_cache() when a source file doesn't

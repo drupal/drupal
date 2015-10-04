@@ -8,8 +8,10 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
+use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
@@ -88,6 +90,7 @@ class LibraryDiscoveryParser {
     }
 
     $libraries = $this->parseLibraryInfo($extension, $path);
+    $libraries = $this->applyLibrariesOverride($libraries, $extension);
 
     foreach ($libraries as $id => &$library) {
       if (!isset($library['js']) && !isset($library['css']) && !isset($library['drupalSettings'])) {
@@ -183,6 +186,13 @@ class LibraryDiscoveryParser {
             }
             // A stream wrapper URI (e.g., public://generated_js/example.js).
             elseif ($this->fileValidUri($source)) {
+              $options['data'] = $source;
+            }
+            // A regular URI (e.g., http://example.com/example.js) without
+            // 'external' explicitly specified, which may happen if, e.g.
+            // libraries-override is used.
+            elseif ($this->isValidUri($source)) {
+              $options['type'] = 'external';
               $options['data'] = $source;
             }
             // By default, file paths are relative to the registering extension.
@@ -314,6 +324,70 @@ class LibraryDiscoveryParser {
   }
 
   /**
+   * Apply libraries overrides specified for the current active theme.
+   *
+   * @param array $libraries
+   *   The libraries definitions.
+   * @param string $extension
+   *   The extension in which these libraries are defined.
+   *
+   * @return array
+   *   The modified libraries definitions.
+   */
+  protected function applyLibrariesOverride($libraries, $extension) {
+    $active_theme = $this->themeManager->getActiveTheme();
+    // ActiveTheme::getLibrariesOverride() returns libraries-overrides for the
+    // current theme as well as all its base themes.
+    $all_libraries_overrides = $active_theme->getLibrariesOverride();
+    foreach ($all_libraries_overrides as $theme_path => $libraries_overrides) {
+      foreach ($libraries as $library_name => $library) {
+        // Process libraries overrides.
+        if (isset($libraries_overrides["$extension/$library_name"])) {
+          // Active theme defines an override for this library.
+          $override_definition = $libraries_overrides["$extension/$library_name"];
+          if (is_string($override_definition) || $override_definition === FALSE) {
+            // A string or boolean definition implies an override (or removal)
+            // for the whole library. Use the override key to specify that this
+            // library will be overridden when it is called.
+            // @see \Drupal\Core\Asset\LibraryDiscovery::getLibraryByName()
+            if ($override_definition) {
+              $libraries[$library_name]['override'] = $override_definition;
+            }
+            else {
+              $libraries[$library_name]['override'] = FALSE;
+            }
+          }
+          elseif (is_array($override_definition)) {
+            // An array definition implies an override for an asset within this
+            // library.
+            foreach ($override_definition as $sub_key => $value) {
+              // Throw an exception if the asset is not properly specified.
+              if (!is_array($value)) {
+                throw new InvalidLibrariesOverrideSpecificationException(sprintf('Library asset %s is not correctly specified. It should be in the form "extension/library_name/sub_key/path/to/asset.js".', "$extension/$library_name/$sub_key"));
+              }
+              if ($sub_key === 'drupalSettings') {
+                // drupalSettings may not be overridden.
+                throw new InvalidLibrariesOverrideSpecificationException(sprintf('drupalSettings may not be overridden in libraries-override. Trying to override %s. Use hook_library_info_alter() instead.', "$extension/$library_name/$sub_key"));
+              }
+              elseif ($sub_key === 'css') {
+                // SMACSS category should be incorporated into the asset name.
+                foreach ($value as $category => $overrides) {
+                  $this->setOverrideValue($libraries[$library_name], [$sub_key, $category], $overrides, $theme_path);
+                }
+              }
+              else {
+                $this->setOverrideValue($libraries[$library_name], [$sub_key], $value, $theme_path);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return $libraries;
+  }
+
+  /**
    * Wraps drupal_get_path().
    */
   protected function drupalGetPath($type, $name) {
@@ -325,6 +399,69 @@ class LibraryDiscoveryParser {
    */
   protected function fileValidUri($source) {
     return file_valid_uri($source);
+  }
+
+  /**
+   * Determines if the supplied string is a valid URI.
+   */
+  protected function isValidUri($string) {
+    return count(explode('://', $string)) === 2;
+  }
+
+  /**
+   * Overrides the specified library asset.
+   *
+   * @param array $library
+   *   The containing library definition.
+   * @param array $sub_key
+   *   An array containing the sub-keys specifying the library asset, e.g.
+   *   @code['js']@endcode or @code['css', 'component']@endcode
+   * @param array $overrides
+   *   Specifies the overrides, this is an array where the key is the asset to
+   *   be overridden while the value is overriding asset.
+   */
+  protected function setOverrideValue(array &$library, array $sub_key, array $overrides, $theme_path) {
+    foreach ($overrides as $original => $replacement) {
+      // Get the attributes of the asset to be overridden. If the key does
+      // not exist, then throw an exception.
+      $key_exists = NULL;
+      $parents = array_merge($sub_key, [$original]);
+      // Save the attributes of the library asset to be overridden.
+      $attributes = NestedArray::getValue($library, $parents, $key_exists);
+      if ($key_exists) {
+        // Remove asset to be overridden.
+        NestedArray::unsetValue($library, $parents);
+        // No need to replace if FALSE is specified, since that is a removal.
+        if ($replacement) {
+          // Ensure the replacement path is relative to drupal root.
+          $replacement = $this->resolveThemeAssetPath($theme_path, $replacement);
+          $new_parents = array_merge($sub_key, [$replacement]);
+          // Replace with an override if specified.
+          NestedArray::setValue($library, $new_parents, $attributes);
+        }
+      }
+    }
+  }
+
+  /**
+   * Ensures that a full path is returned for an overriding theme asset.
+   *
+   * @param string $theme_path
+   *   The theme or base theme.
+   * @param string $overriding_asset
+   *   The overriding library asset.
+   *
+   * @return string
+   *   A fully resolved theme asset path relative to the Drupal directory.
+   */
+  protected function resolveThemeAssetPath($theme_path, $overriding_asset) {
+    if ($overriding_asset[0] !== '/' && !$this->isValidUri($overriding_asset)) {
+      // The destination is not an absolute path and it's not a URI (e.g.
+      // public://generated_js/example.js or http://example.com/js/my_js.js), so
+      // it's relative to the theme.
+      return '/' . $theme_path . '/' . $overriding_asset;
+    }
+    return $overriding_asset;
   }
 
 }

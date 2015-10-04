@@ -7,3 +7,11 @@ libraries:
   - test_basetheme/global-styling
 stylesheets-remove:
   - '@theme_test/css/base-remove.css'
+libraries-override:
+  core/drupal.dialog:
+    js:
+      misc/dialog/dialog.js: false
+  core/jquery.farbtastic:
+    css:
+      component:
+        assets/vendor/farbtastic/farbtastic.css: css/farbtastic.css

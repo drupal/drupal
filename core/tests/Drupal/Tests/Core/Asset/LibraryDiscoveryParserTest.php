@@ -73,6 +73,15 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $mock_active_theme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $mock_active_theme->expects($this->any())
+      ->method('getLibrariesOverride')
+      ->willReturn([]);
+    $this->themeManager->expects($this->any())
+      ->method('getActiveTheme')
+      ->willReturn($mock_active_theme);
     $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager);
   }
 

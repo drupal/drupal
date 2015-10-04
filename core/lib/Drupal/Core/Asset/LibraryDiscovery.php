@@ -9,8 +9,6 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Core\Cache\CacheCollectorInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Discovers available asset libraries in Drupal.
@@ -87,6 +85,8 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    */
   public function clearCachedDefinitions() {
     $this->cacheTagInvalidator->invalidateTags(['library_info']);
+    $this->libraryDefinitions = [];
+    $this->collector->clear();
   }
 
 }

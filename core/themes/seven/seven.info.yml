@@ -8,8 +8,11 @@ version: VERSION
 core: 8.x
 libraries:
  - seven/global-styling
-stylesheets-remove:
-  - core/assets/vendor/jquery.ui/themes/base/dialog.css
+libraries-override:
+  core/jquery.ui.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:

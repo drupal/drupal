@@ -161,27 +161,27 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $values['path'] = $theme_path;
     $values['name'] = $theme->getName();
 
-    // Prepare stylesheets from this theme as well as all ancestor themes.
-    // We work it this way so that we can have child themes remove CSS files
-    // easily from parent.
-    $values['stylesheets_remove'] = array();
+    // @todo Remove in Drupal 9.0.x.
+    $values['stylesheets_remove'] = $this->prepareStylesheetsRemove($theme, $base_themes);
 
-    // Grab stylesheets from base theme.
+    // Prepare libraries overrides from this theme and ancestor themes. This
+    // allows child themes to easily remove CSS files from base themes and
+    // modules.
+    $values['libraries_override'] = [];
+
+    // Get libraries overrides declared by base themes.
     foreach ($base_themes as $base) {
-      $base_theme_path = $base->getPath();
-      if (!empty($base->info['stylesheets-remove'])) {
-        foreach ($base->info['stylesheets-remove'] as $css_file) {
-          $css_file = $this->resolveStyleSheetPlaceholders($css_file);
-          $values['stylesheets_remove'][$css_file] = $css_file;
+      if (!empty($base->info['libraries-override'])) {
+        foreach ($base->info['libraries-override'] as $library => $override) {
+          $values['libraries_override'][$base->getPath()][$library] = $override;
         }
       }
     }
 
-    // Add stylesheets used by this theme.
-    if (!empty($theme->info['stylesheets-remove'])) {
-      foreach ($theme->info['stylesheets-remove'] as $css_file) {
-        $css_file = $this->resolveStyleSheetPlaceholders($css_file);
-        $values['stylesheets_remove'][$css_file] = $css_file;
+    // Add libraries overrides declared by this theme.
+    if (!empty($theme->info['libraries-override'])) {
+      foreach ($theme->info['libraries-override'] as $library => $override) {
+        $values['libraries_override'][$theme->getPath()][$library] = $override;
       }
     }
 
@@ -241,6 +241,8 @@ class ThemeInitialization implements ThemeInitializationInterface {
    *
    * @return string
    *   CSS file where placeholders are replaced.
+   *
+   * @todo Remove in Drupal 9.0.x.
    */
   protected function resolveStyleSheetPlaceholders($css_file) {
     $token_candidate = explode('/', $css_file)[0];
@@ -256,4 +258,44 @@ class ThemeInitialization implements ThemeInitializationInterface {
       return str_replace($token_candidate, $extensions[$token]->getPath(), $css_file);
     }
   }
+
+  /**
+   * Prepares stylesheets-remove specified in the *.info.yml file.
+   *
+   * @param \Drupal\Core\Extension\Extension $theme
+   *   The theme extension object.
+   * @param \Drupal\Core\Extension\Extension[] $base_themes
+   *   An array of base themes.
+   *
+   * @return string[]
+   *   The list of stylesheets-remove specified in the *.info.yml file.
+   *
+   * @todo Remove in Drupal 9.0.x.
+   */
+  protected function prepareStylesheetsRemove(Extension $theme, $base_themes) {
+    // Prepare stylesheets from this theme as well as all ancestor themes.
+    // We work it this way so that we can have child themes remove CSS files
+    // easily from parent.
+    $stylesheets_remove = array();
+    // Grab stylesheets from base theme.
+    foreach ($base_themes as $base) {
+      $base_theme_path = $base->getPath();
+      if (!empty($base->info['stylesheets-remove'])) {
+        foreach ($base->info['stylesheets-remove'] as $css_file) {
+          $css_file = $this->resolveStyleSheetPlaceholders($css_file);
+          $stylesheets_remove[$css_file] = $css_file;
+        }
+      }
+    }
+
+    // Add stylesheets used by this theme.
+    if (!empty($theme->info['stylesheets-remove'])) {
+      foreach ($theme->info['stylesheets-remove'] as $css_file) {
+        $css_file = $this->resolveStyleSheetPlaceholders($css_file);
+        $stylesheets_remove[$css_file] = $css_file;
+      }
+    }
+    return $stylesheets_remove;
+  }
+
 }

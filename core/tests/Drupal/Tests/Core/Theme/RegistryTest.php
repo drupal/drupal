@@ -93,7 +93,7 @@ class RegistryTest extends UnitTestCase {
       'engine' => 'twig',
       'owner' => 'twig',
       'stylesheets_remove' => [],
-      'stylesheets_override' => [],
+      'libraries_override' => [],
       'libraries' => [],
       'extension' => '.twig',
       'base_themes' => [],

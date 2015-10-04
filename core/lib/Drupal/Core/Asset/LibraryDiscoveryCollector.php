@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -79,9 +80,52 @@ class LibraryDiscoveryCollector extends CacheCollector {
    * {@inheritdoc}
    */
   protected function resolveCacheMiss($key) {
-    $this->storage[$key] = $this->discoveryParser->buildByExtension($key);
+    $this->storage[$key] = $this->getLibraryDefinitions($key);
     $this->persist($key);
 
     return $this->storage[$key];
   }
+
+
+  /**
+   * Returns the library definitions for a given extension.
+   *
+   * This also implements libraries-overrides for entire libraries that have
+   * been specified by the LibraryDiscoveryParser.
+   *
+   * @param string $extension
+   *   The name of the extension for which library definitions will be returned.
+   *
+   * @return array
+   *   The library definitions for $extension with overrides applied.
+   *
+   * @throws \Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException
+   */
+  protected function getLibraryDefinitions($extension) {
+    $libraries = $this->discoveryParser->buildByExtension($extension);
+    foreach ($libraries as $name => $definition) {
+      // Handle libraries that are marked for override or removal.
+      // @see \Drupal\Core\Asset\LibraryDiscoveryParser::applyLibrariesOverride()
+      if (isset($definition['override'])) {
+        if ($definition['override'] === FALSE) {
+          // Remove the library definition if FALSE is given.
+          unset($libraries[$name]);
+        }
+        else {
+          // Otherwise replace with existing library definition if it exists.
+          // Throw an exception if it doesn't.
+          list($replacement_extension, $replacement_name) = explode('/', $definition['override']);
+          $replacement_definition = $this->get($replacement_extension);
+          if (isset($replacement_definition[$replacement_name])) {
+            $libraries[$name] = $replacement_definition[$replacement_name];
+          }
+          else {
+            throw new InvalidLibrariesOverrideSpecificationException(sprintf('The specified library %s does not exist.', $definition['override']));
+          }
+        }
+      }
+    }
+    return $libraries;
+  }
+
 }
