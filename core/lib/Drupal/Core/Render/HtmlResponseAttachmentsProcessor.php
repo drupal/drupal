@@ -277,8 +277,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // Take Ajax page state into account, to allow for something like Turbolinks
     // to be implemented without altering core.
     // @see https://github.com/rails/turbolinks/
-    // @todo https://www.drupal.org/node/2497115 - Below line is broken due to ->request.
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->request->get('ajax_page_state');
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
     $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
 
     $variables = [];
