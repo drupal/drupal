@@ -660,7 +660,7 @@ class ConfigTranslationUiTest extends WebTestBase {
       $config->save();
 
       // Go to the translation page of the 'files' view.
-      $translation_url = 'admin/structure/views/view/files/translate/' . $langcode . '/add';
+      $translation_url = 'admin/structure/views/view/files/translate/en/add';
       $this->drupalGet($translation_url);
 
       // Check if the expected number of source elements are present.

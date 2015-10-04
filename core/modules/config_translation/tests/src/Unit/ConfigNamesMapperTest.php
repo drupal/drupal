@@ -538,7 +538,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
 
     $map = array();
     foreach ($config_names as $i => $config_name) {
-      $map[] = array($config_name, $mock_return_values[$i]);
+      $map[] = isset($mock_return_values[$i]) ? array($config_name, $mock_return_values[$i]) : array();
     }
     $this->configMapperManager
       ->expects($this->any())
@@ -560,10 +560,12 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function providerTestHasTranslatable() {
     return array(
+      array(array(), FALSE),
       array(array(TRUE), TRUE),
       array(array(FALSE), FALSE),
       array(array(TRUE, TRUE, TRUE), TRUE),
-      array(array(TRUE, FALSE, TRUE), FALSE),
+      array(array(FALSE, FALSE, FALSE), FALSE),
+      array(array(TRUE, FALSE, TRUE), TRUE),
     );
   }
 

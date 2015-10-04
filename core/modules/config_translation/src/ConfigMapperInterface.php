@@ -253,11 +253,11 @@ interface ConfigMapperInterface {
   public function hasSchema();
 
   /**
-   * Checks that all pieces of this configuration mapper have translatables.
+   * Checks if pieces of this configuration mapper have translatables.
    *
    * @return bool
-   *   TRUE if all of the configuration elements have translatables, FALSE
-   *   otherwise.
+   *   TRUE if at least one of the configuration elements has translatables,
+   *   FALSE otherwise.
    */
   public function hasTranslatable();
 

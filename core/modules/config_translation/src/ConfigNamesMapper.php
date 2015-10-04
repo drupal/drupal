@@ -438,11 +438,11 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    */
   public function hasTranslatable() {
     foreach ($this->getConfigNames() as $name) {
-      if (!$this->configMapperManager->hasTranslatable($name)) {
-        return FALSE;
+      if ($this->configMapperManager->hasTranslatable($name)) {
+        return TRUE;
       }
     }
-    return TRUE;
+    return FALSE;
   }
 
   /**

@@ -11,8 +11,8 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 
 /**
  * Checks access for displaying the configuration translation overview.
@@ -54,17 +54,20 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
   /**
    * Checks access to the overview based on permissions and translatability.
    *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to check against.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route_match to check against.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, AccountInterface $account) {
+  public function access(RouteMatchInterface $route_match, AccountInterface $account) {
+    $route = $route_match->getRouteObject();
+
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($route->getDefault('plugin_id'));
+    $mapper->populateFromRouteMatch($route_match);
     $this->sourceLanguage = $this->languageManager->getLanguage($mapper->getLangcode());
 
     // Allow access to the translation overview if the proper permission is
