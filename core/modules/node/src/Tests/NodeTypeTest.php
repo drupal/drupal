@@ -64,6 +64,13 @@ class NodeTypeTest extends NodeTestBase {
     // Create a content type via the user interface.
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types'));
     $this->drupalLogin($web_user);
+
+    $this->drupalGet('node/add');
+    $this->assertCacheTag('config:node_type_list');
+    $this->assertCacheContext('user.permissions');
+    $elements = $this->cssSelect('dl.node-type-list dt');
+    $this->assertEqual(3, count($elements));
+
     $edit = array(
       'name' => 'foo',
       'title_label' => 'title for foo',
@@ -72,6 +79,10 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
     $type_exists = (bool) NodeType::load('foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
+
+    $this->drupalGet('node/add');
+    $elements = $this->cssSelect('dl.node-type-list dt');
+    $this->assertEqual(4, count($elements));
   }
 
   /**

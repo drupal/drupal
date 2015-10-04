@@ -72,13 +72,22 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   type.
    */
   public function addPage() {
+    $build = [
+      '#theme' => 'node_add_list',
+      '#cache' => [
+        'tags' => $this->entityManager()->getDefinition('node_type')->getListCacheTags(),
+      ],
+    ];
+
     $content = array();
 
     // Only use node types the user has access to.
     foreach ($this->entityManager()->getStorage('node_type')->loadMultiple() as $type) {
-      if ($this->entityManager()->getAccessControlHandler('node')->createAccess($type->id())) {
+      $access = $this->entityManager()->getAccessControlHandler('node')->createAccess($type->id(), NULL, [], TRUE);
+      if ($access->isAllowed()) {
         $content[$type->id()] = $type;
       }
+      $this->renderer->addCacheableDependency($build, $access);
     }
 
     // Bypass the node/add listing if only one content type is available.
@@ -87,10 +96,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       return $this->redirect('node.add', array('node_type' => $type->id()));
     }
 
-    return array(
-      '#theme' => 'node_add_list',
-      '#content' => $content,
-    );
+    $build['#content'] = $content;
+
+    return $build;
   }
 
   /**
