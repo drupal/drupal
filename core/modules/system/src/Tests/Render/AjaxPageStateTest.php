@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Render;
 
-use Drupal\simpletest\AssertContentTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -16,7 +15,6 @@ use Drupal\simpletest\WebTestBase;
  * @group Render
  */
 class AjaxPageStateTest extends WebTestBase {
-  use AssertContentTrait;
 
   /**
    * User account with all available permissions
