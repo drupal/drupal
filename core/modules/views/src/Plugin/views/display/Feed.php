@@ -48,7 +48,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
    */
-  protected function getType() {
+  public function getType() {
     return 'feed';
   }
 

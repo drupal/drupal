@@ -492,6 +492,21 @@ interface DisplayPluginInterface {
   function preview();
 
   /**
+   * Returns the display type that this display requires.
+   *
+   * This can be used for filtering views plugins. E.g. if a plugin category of
+   * 'foo' is specified, only plugins with no 'types' declared or 'types'
+   * containing 'foo'. If you have a type of bar, this plugin will not be used.
+   * This is applicable for style, row, access, cache, and exposed_form plugins.
+   *
+   * @return string
+   *   The required display type. Defaults to 'normal'.
+   *
+   * @see \Drupal\views\Views::fetchPluginNames()
+   */
+  public function getType();
+
+  /**
    * Make sure the display and all associated handlers are valid.
    *
    * @return

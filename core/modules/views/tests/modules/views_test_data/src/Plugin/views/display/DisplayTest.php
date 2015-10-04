@@ -35,7 +35,7 @@ class DisplayTest extends DisplayPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
    */
-  protected function getType() {
+  public function getType() {
     return 'test';
   }
 

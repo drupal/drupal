@@ -143,7 +143,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
   /**
    * {@inheritdoc}
    */
-  protected function getType() {
+  public function getType() {
     return 'data';
   }
 
