@@ -112,6 +112,30 @@ function drupal_install_profile_distribution_name() {
 }
 
 /**
+ * Loads the installation profile, extracting its defined version.
+ *
+ * @return string Distribution version defined in the profile's .info.yml file.
+ * Defaults to \Drupal::VERSION if no version is explicitly provided
+ * by the installation profile.
+ *
+ * @see install_profile_info()
+ */
+function drupal_install_profile_distribution_version() {
+  // During installation, the profile information is stored in the global
+  // installation state (it might not be saved anywhere yet).
+  if (drupal_installation_attempted()) {
+    global $install_state;
+    return isset($install_state['profile_info']['version']) ? $install_state['profile_info']['version'] : \Drupal::VERSION;
+  }
+  // At all other times, we load the profile via standard methods.
+  else {
+    $profile = drupal_get_profile();
+    $info = system_get_info('module', $profile);
+    return $info['version'];
+  }
+}
+
+/**
  * Detects all supported databases that are compiled into PHP.
  *
  * @return

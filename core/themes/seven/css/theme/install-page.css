@@ -36,6 +36,12 @@
   word-break: break-word;
 }
 
+.install-page .site-version {
+  vertical-align: super;
+  font-size: 0.5em;
+  color: #595959;
+}
+
 @media all and (max-width: 1010px) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent {

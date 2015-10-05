@@ -1486,6 +1486,7 @@ function template_preprocess_install_page(&$variables) {
   // still in the process of being installed.
   $distribution_name = drupal_install_profile_distribution_name();
   $variables['site_name'] = $distribution_name;
+  $variables['site_version'] = drupal_install_profile_distribution_version();
 }
 
 /**
