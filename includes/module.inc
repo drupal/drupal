@@ -676,12 +676,16 @@ function module_hook($module, $hook) {
 /**
  * Determines which modules are implementing a hook.
  *
- * @param $hook
+ * Lazy-loaded include files specified with "group" via hook_hook_info() or
+ * hook_module_implements_alter() will be automatically included by this
+ * function when necessary.
+ *
+ * @param string $hook
  *   The name of the hook (e.g. "help" or "menu").
- * @param $sort
+ * @param bool $sort
  *   By default, modules are ordered by weight and filename, settings this option
  *   to TRUE, module list will be ordered by module name.
- * @param $reset
+ * @param bool $reset
  *   For internal use only: Whether to force the stored list of hook
  *   implementations to be regenerated (such as after enabling a new module,
  *   before processing hook_enable).
@@ -696,8 +700,10 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
     $drupal_static_fast['implementations'] = &drupal_static(__FUNCTION__);
+    $drupal_static_fast['verified'] = &drupal_static(__FUNCTION__ . ':verified');
   }
   $implementations = &$drupal_static_fast['implementations'];
+  $verified = &$drupal_static_fast['verified'];
 
   // We maintain a persistent cache of hook implementations in addition to the
   // static cache to avoid looping through every module and every hook on each
@@ -711,6 +717,7 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   // per request.
   if ($reset) {
     $implementations = array();
+    $verified = array();
     cache_set('module_implements', array(), 'cache_bootstrap');
     drupal_static_reset('module_hook_info');
     drupal_static_reset('drupal_alter');
@@ -719,6 +726,9 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   }
 
   // Fetch implementations from cache.
+  // This happens on the first call to module_implements(*, *, FALSE) during a
+  // request, but also when $implementations have been reset, e.g. after
+  // module_enable().
   if (empty($implementations)) {
     $implementations = cache_get('module_implements', 'cache_bootstrap');
     if ($implementations === FALSE) {
@@ -727,12 +737,17 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
     else {
       $implementations = $implementations->data;
     }
+    // Forget all previously "verified" hooks, in case that $implementations
+    // were cleared via drupal_static_reset('module_implements') instead of
+    // module_implements(*, *, TRUE).
+    $verified = array();
   }
 
   if (!isset($implementations[$hook])) {
     // The hook is not cached, so ensure that whether or not it has
     // implementations, that the cache is updated at the end of the request.
     $implementations['#write_cache'] = TRUE;
+    // Discover implementations for this hook.
     $hook_info = module_hook_info();
     $implementations[$hook] = array();
     $list = module_list(FALSE, FALSE, $sort);
@@ -744,13 +759,31 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
         $implementations[$hook][$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
       }
     }
-    // Allow modules to change the weight of specific implementations but avoid
+    // Allow modules to change the weight of specific implementations, but avoid
     // an infinite loop.
     if ($hook != 'module_implements_alter') {
+      // Remember the implementations before hook_module_implements_alter().
+      $implementations_before = $implementations[$hook];
       drupal_alter('module_implements', $implementations[$hook], $hook);
+      // Verify implementations that were added or modified.
+      foreach (array_diff_assoc($implementations[$hook], $implementations_before) as $module => $group) {
+        // If drupal_alter('module_implements') changed or added a $group, the
+        // respective file needs to be included.
+        if ($group) {
+          module_load_include('inc', $module, "$module.$group");
+        }
+        // If a new implementation was added, verify that the function exists.
+        if (!function_exists($module . '_' . $hook)) {
+          unset($implementations[$hook][$module]);
+        }
+      }
     }
+    // Implementations for this hook are now "verified".
+    $verified[$hook] = TRUE;
   }
-  else {
+  elseif (!isset($verified[$hook])) {
+    // Implementations for this hook were in the cache, but they are not
+    // "verified" yet.
     foreach ($implementations[$hook] as $module => $group) {
       // If this hook implementation is stored in a lazy-loaded file, so include
       // that file first.
@@ -769,6 +802,7 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
         $implementations['#write_cache'] = TRUE;
       }
     }
+    $verified[$hook] = TRUE;
   }
 
   return array_keys($implementations[$hook]);

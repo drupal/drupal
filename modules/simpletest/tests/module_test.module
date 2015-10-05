@@ -129,3 +129,14 @@ function module_test_modules_uninstalled($modules) {
   // can check that the modules were uninstalled in the correct sequence.
   variable_set('test_module_uninstall_order', $modules);
 }
+
+/**
+ * Implements hook_module_implements_alter()
+ */
+function module_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'altered_test_hook') {
+    // Add a hook implementation, that will be found in
+    // module_test.implementations.inc.
+    $implementations['module_test'] = 'implementations';
+  }
+}

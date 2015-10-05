@@ -302,3 +302,45 @@ class ModuleUninstallTestCase extends DrupalWebTestCase {
     $this->assertEqual(0, $count, 'Permissions were all removed.');
   }
 }
+
+class ModuleImplementsAlterTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Module implements alter',
+      'description' => 'Tests hook_module_implements_alter().',
+      'group' => 'Module',
+    );
+  }
+
+  /**
+   * Tests hook_module_implements_alter() adding an implementation.
+   */
+  function testModuleImplementsAlter() {
+    module_enable(array('module_test'), FALSE);
+    $this->assertTrue(module_exists('module_test'), 'Test module is enabled.');
+
+    // Assert that module_test.module is now included.
+    $this->assertTrue(function_exists('module_test_permission'),
+      'The file module_test.module was successfully included.');
+
+    $modules = module_implements('permission');
+    $this->assertTrue(in_array('module_test', $modules), 'module_test implements hook_permission.');
+
+    $modules = module_implements('module_implements_alter');
+    $this->assertTrue(in_array('module_test', $modules), 'module_test implements hook_module_implements_alter().');
+
+    // Assert that module_test.implementations.inc is not included yet.
+    $this->assertFalse(function_exists('module_test_altered_test_hook'),
+      'The file module_test.implementations.inc is not included yet.');
+
+    // Assert that module_test_module_implements_alter(*, 'altered_test_hook')
+    // has added an implementation
+    $this->assertTrue(in_array('module_test', module_implements('altered_test_hook')),
+      'module_test implements hook_altered_test_hook().');
+
+    // Assert that module_test.implementations.inc was included as part of the process.
+    $this->assertTrue(function_exists('module_test_altered_test_hook'),
+      'The file module_test.implementations.inc was included.');
+  }
+
+}
