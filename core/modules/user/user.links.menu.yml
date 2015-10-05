@@ -24,6 +24,6 @@ user.admin_index:
 entity.user.admin_form:
   title: 'Account settings'
   parent: user.admin_index
-  description: 'Configure default behavior of users, including registration requirements, emails, and fields.'
+  description: 'Configure default user account settings, including fields, registration requirements, and email messages.'
   weight: -10
   route_name: entity.user.admin_form

@@ -1,6 +1,6 @@
 aggregator.admin_overview:
   title: 'Feed aggregator'
-  description: 'Configure which content your site aggregates from other sites, how often it polls them, and how they''re categorized.'
+  description: 'Add feeds or import OPMLs to gather external content and configure how often they are updated.'
   route_name: aggregator.admin_overview
   parent: system.admin_config_services
   weight: 10
