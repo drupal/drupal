@@ -105,8 +105,14 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $this->assertEqual($violations->count(), 1, 'Validation throws a violation.');
     $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', array('%type' => $this->referencedEntityType, '%id' => 9999)));
 
-    // @todo Implement a test case for invalid bundle references after
-    //   https://www.drupal.org/node/2064191 is fixed.
+    // Test a non-referenceable bundle.
+    entity_test_create_bundle('non_referenceable', NULL, $this->referencedEntityType);
+    $referenced_entity = entity_create($this->referencedEntityType, array('type' => 'non_referenceable'));
+    $referenced_entity->save();
+    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
+    $violations = $entity->{$this->fieldName}->validate();
+    $this->assertEqual($violations->count(), 1, 'Validation throws a violation.');
+    $this->assertEqual($violations[0]->getMessage(), t('The entity must be of bundle %bundle.', array('%bundle' => $this->bundle)));
   }
 
   /**
