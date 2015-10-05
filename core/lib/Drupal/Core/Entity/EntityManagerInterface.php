@@ -252,9 +252,9 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
    * Creates a new handler instance for a entity type and handler type.
    *
    * @param string $entity_type
-   *   The entity type for this controller.
+   *   The entity type for this handler.
    * @param string $handler_type
-   *   The controller type to create an instance for.
+   *   The handler type to create an instance for.
    *
    * @return object
    *   A handler instance.
