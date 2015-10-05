@@ -297,13 +297,16 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function defaultValuesForm(array &$form, FormStateInterface $form_state) {
     if (empty($this->getFieldDefinition()->getDefaultValueCallback())) {
-      // Place the input in a separate place in the submitted values tree.
-      $widget = $this->defaultValueWidget($form_state);
+      if ($widget = $this->defaultValueWidget($form_state)) {
+        // Place the input in a separate place in the submitted values tree.
+        $element = array('#parents' => array('default_value_input'));
+        $element += $widget->form($this, $element, $form_state);
 
-      $element = array('#parents' => array('default_value_input'));
-      $element += $widget->form($this, $element, $form_state);
-
-      return $element;
+        return $element;
+      }
+      else {
+        return ['#markup' => $this->t('No widget available for: %type.', ['%type' => $this->getFieldDefinition()->getType()])];
+      }
     }
   }
 
@@ -312,16 +315,17 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function defaultValuesFormValidate(array $element, array &$form, FormStateInterface $form_state) {
     // Extract the submitted value, and validate it.
-    $widget = $this->defaultValueWidget($form_state);
-    $widget->extractFormValues($this, $element, $form_state);
-    // Force a non-required field definition.
-    // @see self::defaultValueWidget().
-    $this->getFieldDefinition()->setRequired(FALSE);
-    $violations = $this->validate();
+    if ($widget = $this->defaultValueWidget($form_state)) {
+      $widget->extractFormValues($this, $element, $form_state);
+      // Force a non-required field definition.
+      // @see self::defaultValueWidget().
+      $this->getFieldDefinition()->setRequired(FALSE);
+      $violations = $this->validate();
 
-    // Assign reported errors to the correct form element.
-    if (count($violations)) {
-      $widget->flagErrors($this, $violations, $element, $form_state);
+      // Assign reported errors to the correct form element.
+      if (count($violations)) {
+        $widget->flagErrors($this, $violations, $element, $form_state);
+      }
     }
   }
 
@@ -330,9 +334,10 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function defaultValuesFormSubmit(array $element, array &$form, FormStateInterface $form_state) {
     // Extract the submitted value, and return it as an array.
-    $widget = $this->defaultValueWidget($form_state);
-    $widget->extractFormValues($this, $element, $form_state);
-    return $this->getValue();
+    if ($widget = $this->defaultValueWidget($form_state)) {
+      $widget->extractFormValues($this, $element, $form_state);
+      return $this->getValue();
+    }
   }
 
   /**
@@ -348,8 +353,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the (entire) configuration form.
    *
-   * @return \Drupal\Core\Field\WidgetInterface
-   *   A Widget object.
+   * @return \Drupal\Core\Field\WidgetInterface|null
+   *   A Widget object or NULL if no widget is available.
    */
   protected function defaultValueWidget(FormStateInterface $form_state) {
     if (!$form_state->has('default_value_widget')) {

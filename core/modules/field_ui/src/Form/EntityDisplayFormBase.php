@@ -276,6 +276,12 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $display_options = $this->entity->getComponent($field_name);
     $label = $field_definition->getLabel();
 
+    // Disable fields without any applicable plugins.
+    if (empty($this->getApplicablePluginOptions($field_definition))) {
+      $this->entity->removeComponent($field_name)->save();
+      $display_options = $this->entity->getComponent($field_name);
+    }
+
     $regions = array_keys($this->getRegions());
     $field_row = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
@@ -814,6 +820,27 @@ abstract class EntityDisplayFormBase extends EntityForm {
   abstract protected function getEntityDisplay($entity_type_id, $bundle, $mode);
 
   /**
+   * Returns an array of applicable widget or formatter options for a field.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   *
+   * @return array
+   *   An array of applicable widget or formatter options.
+   */
+  protected function getApplicablePluginOptions(FieldDefinitionInterface $field_definition) {
+    $options = $this->pluginManager->getOptions($field_definition->getType());
+    $applicable_options = array();
+    foreach ($options as $option => $label) {
+      $plugin_class = DefaultFactory::getPluginClass($option, $this->pluginManager->getDefinition($option));
+      if ($plugin_class::isApplicable($field_definition)) {
+        $applicable_options[$option] = $label;
+      }
+    }
+    return $applicable_options;
+  }
+
+  /**
    * Returns an array of widget or formatter options for a field.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
@@ -823,14 +850,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    *   An array of widget or formatter options.
    */
   protected function getPluginOptions(FieldDefinitionInterface $field_definition) {
-    $options = $this->pluginManager->getOptions($field_definition->getType());
-    $applicable_options = array();
-    foreach ($options as $option => $label) {
-      $plugin_class = DefaultFactory::getPluginClass($option, $this->pluginManager->getDefinition($option));
-      if ($plugin_class::isApplicable($field_definition)) {
-        $applicable_options[$option] = $label;
-      }
-    }
+    $applicable_options = $this->getApplicablePluginOptions($field_definition);
     return $applicable_options + array('hidden' => '- ' . $this->t('Hidden') . ' -');
   }
 

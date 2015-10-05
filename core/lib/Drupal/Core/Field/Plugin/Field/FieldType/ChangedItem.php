@@ -18,6 +18,8 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   label = @Translation("Last changed"),
  *   description = @Translation("An entity field containing a UNIX timestamp of when the entity has been last updated."),
  *   no_ui = TRUE,
+ *   default_widget = "datetime_default",
+ *   default_formatter = "timestamp",
  *   list_class = "\Drupal\Core\Field\ChangedFieldItemList"
  * )
  *

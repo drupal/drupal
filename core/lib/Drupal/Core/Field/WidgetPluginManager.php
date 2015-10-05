@@ -151,7 +151,7 @@ class WidgetPluginManager extends DefaultPluginManager {
     // If no widget is specified, use the default widget.
     if (!isset($configuration['type'])) {
       $field_type = $this->fieldTypeManager->getDefinition($field_type);
-      $configuration['type'] = $field_type['default_widget'];
+      $configuration['type'] = isset($field_type['default_widget']) ? $field_type['default_widget'] : NULL;
     }
     // Filter out unknown settings, and fill in defaults for missing settings.
     $default_settings = $this->getDefaultSettings($configuration['type']);
