@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTest.
  */
 
-namespace Drupal\Tests\views\Unit\Plugin\field;
+namespace Drupal\Tests\views\Unit\Plugin\field {
 
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
@@ -223,6 +223,38 @@ class FieldPluginBaseTest extends UnitTestCase {
     $row = new ResultRow(['key' => 'value']);
 
     $expected_result = 'value';
+    $result = $field->advancedRender($row);
+    $this->assertEquals($expected_result, $result);
+  }
+
+  /**
+   * Test rendering as a link without a path.
+   *
+   * @covers ::renderText
+   */
+  public function testRenderTrimmedWithMoreLink() {
+    $alter = [
+      'trim' => TRUE,
+      'max_length' => 7,
+      'more_link' => TRUE,
+      // Don't invoke translation.
+      'ellipsis' => FALSE,
+      'more_link_text' => 'more link',
+    ];
+
+    $this->display->expects($this->any())
+      ->method('getHandlers')
+      ->willReturnMap([
+        ['argument', []],
+        ['field', []],
+      ]);
+
+    $this->setUpUrlIntegrationServices();
+    $field = $this->setupTestField(['alter' => $alter]);
+    $field->field_alias = 'key';
+    $row = new ResultRow(['key' => 'a long value']);
+
+    $expected_result = 'a long <a href="/%3Cfront%3E" class="views-more-link">more link</a>';
     $result = $field->advancedRender($row);
     $this->assertEquals($expected_result, $result);
   }
@@ -585,4 +617,13 @@ class FieldPluginBaseTestField extends FieldPluginBase {
     $this->linkGenerator = $link_generator;
   }
 
+}
+}
+// @todo Remove as part of https://www.drupal.org/node/2529170.
+namespace {
+  if (!function_exists('base_path')) {
+    function base_path() {
+      return '/';
+    }
+  }
 }
