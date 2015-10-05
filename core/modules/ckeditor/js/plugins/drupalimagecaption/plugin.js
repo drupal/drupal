@@ -51,8 +51,14 @@
         }, true);
 
         // Override requiredContent & allowedContent.
-        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-entity-type,data-entity-uuid,data-align,data-caption]';
-        widgetDefinition.allowedContent.img.attributes += ',!data-align,!data-caption';
+        var requiredContent = widgetDefinition.requiredContent.getDefinition();
+        requiredContent.attributes['data-align'] = '';
+        requiredContent.attributes['data-caption'] = '';
+        widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
+        var allowedContent = widgetDefinition.allowedContent.getDefinition();
+        allowedContent.attributes['!data-align'] = '';
+        allowedContent.attributes['!data-caption'] = '';
+        widgetDefinition.allowedContent = new CKEDITOR.style(allowedContent);
 
         // Override allowedContent setting for the 'caption' nested editable.
         // This must match what caption_filter enforces.
@@ -63,9 +69,12 @@
         // Override downcast(): ensure we *only* output <img>, but also ensure
         // we include the data-entity-type, data-entity-uuid, data-align and
         // data-caption attributes.
+        var originalDowncast = widgetDefinition.downcast;
         widgetDefinition.downcast = function (element) {
-          // Find an image element in the one being downcasted (can be itself).
-          var img = findElementByName(element, 'img');
+          var img = originalDowncast.call(this, element);
+          if (!img) {
+            img = findElementByName(element, 'img');
+          }
           var caption = this.editables.caption;
           var captionHtml = caption && caption.getData();
           var attrs = img.attributes;
@@ -94,6 +103,7 @@
         //   - <img> tag in a paragraph (non-captioned, centered image),
         //   - <figure> tag (captioned image).
         // We take the same attributes into account as downcast() does.
+        var originalUpcast = widgetDefinition.upcast;
         widgetDefinition.upcast = function (element, data) {
           if (element.name !== 'img' || !element.attributes['data-entity-type'] || !element.attributes['data-entity-uuid']) {
             return;
@@ -103,6 +113,7 @@
             return;
           }
 
+          element = originalUpcast.call(this, element, data);
           var attrs = element.attributes;
           var retElement = element;
           var caption;

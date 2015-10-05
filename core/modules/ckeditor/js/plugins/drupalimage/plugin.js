@@ -30,13 +30,38 @@
         }
 
         // Override requiredContent & allowedContent.
-        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-entity-type,data-entity-uuid]';
-        widgetDefinition.allowedContent.img.attributes += ',!data-entity-type,!data-entity-uuid';
-        // We don't allow <figure>, <figcaption>, <div> or <p>  in our downcast.
-        delete widgetDefinition.allowedContent.figure;
-        delete widgetDefinition.allowedContent.figcaption;
-        delete widgetDefinition.allowedContent.div;
-        delete widgetDefinition.allowedContent.p;
+        widgetDefinition.requiredContent = new CKEDITOR.style({
+          element: 'img',
+          attributes: {
+            'alt': '',
+            'src': '',
+            'width': '',
+            'height': '',
+            'data-entity-type': '',
+            'data-entity-uuid': ''
+          }
+        });
+        var allowedContentDefinition = {
+          element: 'img',
+          attributes: {
+            '!data-entity-type': '',
+            '!data-entity-uuid': ''
+          }
+        };
+        var imgAttributes = widgetDefinition.allowedContent.img.attributes.split(/\s*,\s*/);
+        for (var i = 0; i < imgAttributes.length; i++) {
+          allowedContentDefinition.attributes[imgAttributes[i]] = '';
+        }
+        if (widgetDefinition.allowedContent.img.classes) {
+          allowedContentDefinition.attributes['class'] = widgetDefinition.allowedContent.img.classes.split(/\s*,\s*/).join(' ');
+        }
+        if (widgetDefinition.allowedContent.img.styles) {
+          var imgStyles = widgetDefinition.allowedContent.img.styles.split(/\s*,\s*/);
+          for (var j = 0; j < imgStyles.length; j++) {
+            allowedContentDefinition.styles[imgStyles[j]] = '';
+          }
+        }
+        widgetDefinition.allowedContent = new CKEDITOR.style(allowedContentDefinition);
 
         // Override the 'link' part, to completely disable image2's link
         // support: http://dev.ckeditor.com/ticket/11341.

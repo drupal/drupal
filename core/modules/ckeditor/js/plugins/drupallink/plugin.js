@@ -13,8 +13,19 @@
     init: function (editor) {
       // Add the commands for link and unlink.
       editor.addCommand('drupallink', {
-        allowedContent: 'a[!href,target]',
-        requiredContent: 'a[href]',
+        allowedContent: new CKEDITOR.style({
+          element: 'a',
+          attributes: {
+            '!href': '',
+            'target': ''
+          }
+        }),
+        requiredContent: new CKEDITOR.style({
+          element: 'a',
+          attributes: {
+            href: ''
+          }
+        }),
         modes: {wysiwyg: 1},
         canUndo: true,
         exec: function (editor) {
@@ -111,8 +122,19 @@
       editor.addCommand('drupalunlink', {
         contextSensitive: 1,
         startDisabled: 1,
-        allowedContent: 'a[!href]',
-        requiredContent: 'a[href]',
+        allowedContent: new CKEDITOR.style({
+          element: 'a',
+          attributes: {
+            '!href': '',
+            'target': ''
+          }
+        }),
+        requiredContent: new CKEDITOR.style({
+          element: 'a',
+          attributes: {
+            href: ''
+          }
+        }),
         exec: function (editor) {
           var style = new CKEDITOR.style({element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1});
           editor.removeStyle(style);
