@@ -26,7 +26,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Placing and moving blocks') . '</dt>';
-      $output .= '<dd>' . t('You can place a new block by clicking on its title in the <em>Place blocks</em> list on the <a href=":blocks">Block layout page</a> and choosing a region to place it in. Once a block is placed, it can be moved to a different region by dragging or using the drop-down <em>Region</em> list, and then clicking <em>Save blocks</em>.', array(':blocks' => \Drupal::url('block.admin_display'))) . '</dd>';
+      $output .= '<dd>' . t('You can place a new block in a region by selecting <em>Place block</em> on the <a href=":blocks">Block layout page</a>. Once a block is placed, it can be moved to a different region by drag-and-drop or by using the <em>Region</em> drop-down list, and then clicking <em>Save blocks</em>.', array(':blocks' => \Drupal::url('block.admin_display'))) . '</dd>';
       $output .= '<dt>' . t('Toggling between different themes') . '</dt>';
       $output .= '<dd>' . t('Blocks are placed and configured specifically for each theme. The Block layout page opens with the default theme, but you can toggle to other installed themes.') . '</dd>';
       $output .= '<dt>' . t('Demonstrating block regions for a theme') . '</dt>';
@@ -43,7 +43,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
   if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
     $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
     $themes = \Drupal::service('theme_handler')->listInfo();
-    $output = '<p>' . t('This page provides a drag-and-drop interface for adding a block to a region, and for controlling the order of blocks within regions. To add a block to a region, or to configure its specific title and visibility settings, click the block title under <em>Place blocks</em>. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
+    $output = '<p>' . t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
     $output .= '<p>' . \Drupal::l(t('Demonstrate block regions (@theme)', array('@theme' => $themes[$demo_theme]->info['name'])), new Url('block.admin_demo', array('theme' => $demo_theme))) . '</p>';
     return $output;
   }
