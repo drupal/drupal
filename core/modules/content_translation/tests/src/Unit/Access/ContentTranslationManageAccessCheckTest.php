@@ -40,6 +40,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->cacheContextsManager->method('assertValidTokens')->willReturn(TRUE);
 
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $this->cacheContextsManager);

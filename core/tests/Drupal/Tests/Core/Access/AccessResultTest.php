@@ -38,6 +38,7 @@ class AccessResultTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->cacheContextsManager->method('assertValidTokens')->willReturn(TRUE);
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $this->cacheContextsManager);
     \Drupal::setContainer($container);

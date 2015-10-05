@@ -57,9 +57,8 @@ class BlockPageVariantTest extends UnitTestCase {
       ->getMock();
     $container->set('cache_contexts_manager', $cache_context_manager);
     $cache_context_manager->expects($this->any())
-      ->method('validateTokens')
-      ->with([])
-      ->willReturn([]);
+      ->method('assertValidTokens')
+      ->willReturn(TRUE);
     \Drupal::setContainer($container);
 
     $this->blockRepository = $this->getMock('Drupal\block\BlockRepositoryInterface');

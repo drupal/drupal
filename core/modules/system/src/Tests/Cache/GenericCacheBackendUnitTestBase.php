@@ -218,13 +218,13 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertEqual('value', $backend->get('TEST8')->data);
     $this->assertFalse($backend->get('test8'));
 
-    // Calling ::set() with invalid cache tags.
+    // Calling ::set() with invalid cache tags. This should fail an assertion.
     try {
-      $backend->set('exception_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);
-      $this->fail('::set() was called with invalid cache tags, no exception was thrown.');
+      $backend->set('assertion_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);
+      $this->fail('::set() was called with invalid cache tags, runtime assertion did not fail.');
     }
-    catch (\LogicException $e) {
-      $this->pass('::set() was called with invalid cache tags, an exception was thrown.');
+    catch (\AssertionError $e) {
+      $this->pass('::set() was called with invalid cache tags, runtime assertion failed.');
     }
   }
 
@@ -412,7 +412,8 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     $this->assertEqual($cached['cid_5']->data, $items['cid_5']['data'], 'New cache item set correctly.');
 
-    // Calling ::setMultiple() with invalid cache tags.
+    // Calling ::setMultiple() with invalid cache tags. This should fail an
+    // assertion.
     try {
       $items = [
         'exception_test_1' => array('data' => 1, 'tags' => []),
@@ -420,10 +421,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
         'exception_test_3' => array('data' => 3, 'tags' => ['node' => [3, 5, 7]]),
       ];
       $backend->setMultiple($items);
-      $this->fail('::setMultiple() was called with invalid cache tags, no exception was thrown.');
+      $this->fail('::setMultiple() was called with invalid cache tags, runtime assertion did not fail.');
     }
-    catch (\LogicException $e) {
-      $this->pass('::setMultiple() was called with invalid cache tags, an exception was thrown.');
+    catch (\AssertionError $e) {
+      $this->pass('::setMultiple() was called with invalid cache tags, runtime assertion failed.');
     }
   }
 

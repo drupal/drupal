@@ -115,7 +115,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    *   (optional) The tags to specify for the cache item.
    */
   public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = array()) {
-    Cache::validateTags($tags);
+    assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache tags must be strings.');
     $this->cid = $cid;
     $this->cache = $cache;
     $this->tags = $tags;

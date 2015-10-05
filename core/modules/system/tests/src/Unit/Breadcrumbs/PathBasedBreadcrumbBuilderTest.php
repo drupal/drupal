@@ -124,6 +124,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
+    $cache_contexts_manager->method('assertValidTokens')->willReturn(TRUE);
     $cache_contexts_manager->expects($this->any())
       ->method('validate_tokens');
     $container = new Container();

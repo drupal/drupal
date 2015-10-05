@@ -166,7 +166,7 @@ class ApcuBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
-    Cache::validateTags($tags);
+    assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache tags must be strings.');
     $tags = array_unique($tags);
     $cache = new \stdClass();
     $cache->cid = $cid;

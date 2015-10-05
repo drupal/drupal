@@ -106,8 +106,7 @@ class CacheContextsManagerTest extends UnitTestCase {
   /**
    * @covers ::convertTokensToKeys
    *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage "non-cache-context" is not a valid cache context ID.
+   * @expectedException \AssertionError
    */
   public function testInvalidContext() {
     $container = $this->getMockContainer();

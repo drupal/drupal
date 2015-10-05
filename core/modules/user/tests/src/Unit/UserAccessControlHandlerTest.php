@@ -64,7 +64,9 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
+    $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
+    $cache_contexts_manager->reveal();
     $container = new Container();
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);

@@ -969,6 +969,10 @@ abstract class TestBase {
       $this->httpAuthCredentials = $username . ':' . $password;
     }
 
+    // Force assertion failures to be thrown as AssertionError for PHP 5 & 7
+    // compatibility.
+    \Drupal\Component\Assertion\Handle::register();
+
     set_error_handler(array($this, 'errorHandler'));
     // Iterate through all the methods in this class, unless a specific list of
     // methods to run was passed.

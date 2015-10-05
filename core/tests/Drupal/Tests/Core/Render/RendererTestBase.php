@@ -144,6 +144,7 @@ class RendererTestBase extends UnitTestCase {
     $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->cacheContextsManager->method('assertValidTokens')->willReturn(TRUE);
     $current_user_role = &$this->currentUserRole;
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')

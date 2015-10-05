@@ -31,12 +31,36 @@ class InspectorTest extends PHPUnit_Framework_TestCase {
    * Tests asserting all members are strings.
    *
    * @covers ::assertAllStrings
+   * @dataProvider providerTestAssertAllStrings
    */
-  public function testAssertAllStrings() {
-    $this->assertTrue(Inspector::assertAllStrings([]));
-    $this->assertTrue(Inspector::assertAllStrings(['foo', 'bar']));
-    $this->assertFalse(Inspector::assertAllStrings('foo'));
-    $this->assertFalse(Inspector::assertAllStrings(['foo', new StringObject()]));
+  public function testAssertAllStrings($input, $expected) {
+    $this->assertSame($expected, Inspector::assertAllStrings($input));
+  }
+
+  public function providerTestAssertAllStrings() {
+    $data = [
+      'empty-array' => [[], TRUE],
+      'array-with-strings' => [['foo', 'bar'], TRUE],
+      'string' => ['foo', FALSE],
+      'array-with-strings-with-colon' => [['foo', 'bar', 'llama:2001988', 'baz', 'llama:14031991'], TRUE],
+
+      'with-FALSE' => [[FALSE], FALSE],
+      'with-TRUE' => [[TRUE], FALSE],
+      'with-string-and-boolean' => [['foo', FALSE], FALSE],
+      'with-NULL' => [[NULL], FALSE],
+      'string-with-NULL' => [['foo', NULL], FALSE],
+      'integer' => [[1337], FALSE],
+      'string-and-integer' => [['foo', 1337], FALSE],
+      'double' => [[3.14], FALSE],
+      'string-and-double' => [['foo', 3.14], FALSE],
+      'array' => [[[]], FALSE],
+      'string-and-array' => [['foo', []], FALSE],
+      'string-and-nested-array' => [['foo', ['bar']], FALSE],
+      'object' => [[new \stdClass()], FALSE],
+      'string-and-object' => [['foo', new StringObject()], FALSE],
+    ];
+
+    return $data;
   }
 
   /**

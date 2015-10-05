@@ -488,6 +488,10 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $cache_context_manager = $this->prophesize(CacheContextsManager::class);
 
+    foreach ([NULL, ['user.permissions'], ['route'], ['route', 'context.example1'], ['context.example1', 'route'], ['context.example1', 'route', 'context.example2'], ['context.example1', 'context.example2', 'route'], ['context.example1', 'context.example2', 'route', 'user.permissions']] as $argument) {
+      $cache_context_manager->assertValidTokens($argument)->willReturn(TRUE);
+    }
+
     $container->set('cache_contexts_manager', $cache_context_manager->reveal());
     \Drupal::setContainer($container);
   }

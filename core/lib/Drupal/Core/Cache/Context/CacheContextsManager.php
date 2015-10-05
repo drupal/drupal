@@ -103,11 +103,9 @@ class CacheContextsManager {
    *   The ContextCacheKeys object containing the converted cache keys and
    *   cacheability metadata.
    *
-   * @throws \LogicException
-   *   Thrown if any of the context tokens or parameters are not valid.
    */
   public function convertTokensToKeys(array $context_tokens) {
-    $this->validateTokens($context_tokens);
+    assert('$this->assertValidTokens($context_tokens)');
     $cacheable_metadata = new CacheableMetadata();
     $optimized_tokens = $this->optimizeTokens($context_tokens);
     // Iterate over cache contexts that have been optimized away and get their
@@ -297,6 +295,35 @@ class CacheContextsManager {
         throw new \LogicException(sprintf('"%s" is not a valid cache context ID.', $context_id));
       }
     }
+  }
+
+  /**
+   * Asserts the context tokens are valid
+   *
+   * Similar to ::validateTokens, this method returns boolean TRUE when the
+   * context tokens are valid, and FALSE when they are not instead of returning
+   * NULL when they are valid and throwing a \LogicException when they are not.
+   * This function should be used with the assert() statement.
+   *
+   * @param mixed $context_tokens
+   *   Variable to be examined - should be array of context_tokens.
+   *
+   * @return bool
+   *   TRUE if context_tokens is an array of valid tokens.
+   */
+  public function assertValidTokens($context_tokens) {
+    if (!is_array($context_tokens)) {
+      return FALSE;
+    }
+
+    try {
+      $this->validateTokens($context_tokens);
+    }
+    catch (\LogicException $e) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

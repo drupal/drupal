@@ -199,7 +199,7 @@ class DatabaseBackend implements CacheBackendInterface {
         'tags' => array(),
       );
 
-      Cache::validateTags($item['tags']);
+      assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($item[\'tags\'])', 'Cache Tags must be strings.');
       $item['tags'] = array_unique($item['tags']);
       // Sort the cache tags so that they are stored consistently in the DB.
       sort($item['tags']);
