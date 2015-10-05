@@ -19,15 +19,12 @@ class ProjectInfo {
   /**
    * Populates an array of project data.
    *
-   * @todo https://www.drupal.org/node/2553909 update class since extensions can
-   *   no longer be disabled.
-   *
    * This iterates over a list of the installed modules or themes and groups
    * them by project and status. A few parts of this function assume that
-   * enabled modules and themes are always processed first, and if disabled
+   * enabled modules and themes are always processed first, and if uninstalled
    * modules or themes are being processed (there is a setting to control if
-   * disabled code should be included in the Available updates report or not),
-   * those are only processed after $projects has been populated with
+   * uninstalled code should be included in the Available updates report or
+   * not),those are only processed after $projects has been populated with
    * information about the enabled code. 'Hidden' modules and themes are
    * ignored if they are not installed. 'Hidden' Modules and themes in the
    * "Testing" package are ignored regardless of installation status.
@@ -43,8 +40,8 @@ class ProjectInfo {
    * @param string $project_type
    *   The kind of data in the list. Can be 'module' or 'theme'.
    * @param bool $status
-   *   Boolean that controls what status (enabled or disabled) to process out of
-   *   the $list and add to the $projects array.
+   *   Boolean that controls what status (enabled or uninstalled) to process out
+   *   of the $list and add to the $projects array.
    * @param array $additional_whitelist
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().
@@ -111,7 +108,7 @@ class ProjectInfo {
         $project_display_type = $project_type;
       }
       if (empty($status)) {
-        // If we're processing disabled modules or themes, append a suffix.
+        // If we're processing uninstalled modules or themes, append a suffix.
         $project_display_type .= '-disabled';
       }
       if (!isset($projects[$project_name])) {
@@ -131,18 +128,19 @@ class ProjectInfo {
       elseif ($projects[$project_name]['project_type'] == $project_display_type) {
         // Only add the file we're processing to the 'includes' array for this
         // project if it is of the same type and status (which is encoded in the
-        // $project_display_type). This prevents listing all the disabled
+        // $project_display_type). This prevents listing all the uninstalled
         // modules included with an enabled project if we happen to be checking
-        // for disabled modules, too.
+        // for uninstalled modules, too.
         $projects[$project_name]['includes'][$file->getName()] = $file->info['name'];
         $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
         $projects[$project_name]['datestamp'] = max($projects[$project_name]['datestamp'], $file->info['datestamp']);
       }
       elseif (empty($status)) {
         // If we have a project_name that matches, but the project_display_type
-        // does not, it means we're processing a disabled module or theme that
-        // belongs to a project that has some enabled code. In this case, we add
-        // the disabled thing into a separate array for separate display.
+        // does not, it means we're processing a uninstalled module or theme
+        // that belongs to a project that has some enabled code. In this case,
+        // we add the uninstalled thing into a separate array for separate
+        // display.
         $projects[$project_name]['disabled'][$file->getName()] = $file->info['name'];
       }
     }
