@@ -611,7 +611,7 @@ function update_retrieve_dependencies() {
     // Ensure install file is loaded.
     module_load_install($module);
     if (function_exists($function)) {
-      $result = $function();
+      $updated_dependencies = $function();
       // Each implementation of hook_update_dependencies() returns a
       // multidimensional, associative array containing some keys that
       // represent module names (which are strings) and other keys that
@@ -620,9 +620,9 @@ function update_retrieve_dependencies() {
       // treats strings and integers differently. Therefore, we have to
       // explicitly loop through the expected array structure here and perform
       // the merge manually.
-      if (isset($result) && is_array($result)) {
-        foreach ($result as $module => $module_data) {
-          foreach ($module_data as $update => $update_data) {
+      if (isset($updated_dependencies) && is_array($updated_dependencies)) {
+        foreach ($updated_dependencies as $module_name => $module_data) {
+          foreach ($module_data as $update_version => $update_data) {
             foreach ($update_data as $module_dependency => $update_dependency) {
               // If there are redundant dependencies declared for the same
               // update function (so that it is declared to depend on more than
@@ -643,8 +643,8 @@ function update_retrieve_dependencies() {
               // guaranteed to run before system_update_8003() anyway (within
               // an individual module, updates are always run in numerical
               // order).
-              if (!isset($return[$module][$update][$module_dependency]) || $update_dependency > $return[$module][$update][$module_dependency]) {
-                $return[$module][$update][$module_dependency] = $update_dependency;
+              if (!isset($return[$module_name][$update_version][$module_dependency]) || $update_dependency > $return[$module_name][$update_version][$module_dependency]) {
+                $return[$module_name][$update_version][$module_dependency] = $update_dependency;
               }
             }
           }
