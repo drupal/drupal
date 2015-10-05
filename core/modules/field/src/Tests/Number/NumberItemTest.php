@@ -53,6 +53,9 @@ class NumberItemTest extends FieldUnitTestBase {
     $entity->field_integer = $integer;
     $float = 3.14;
     $entity->field_float = $float;
+    $entity->field_decimal = '20-40';
+    $violations = $entity->validate();
+    $this->assertIdentical(1, count($violations), 'Wrong decimal value causes validation error');
     $decimal = '31.3';
     $entity->field_decimal = $decimal;
     $entity->name->value = $this->randomMachineName();

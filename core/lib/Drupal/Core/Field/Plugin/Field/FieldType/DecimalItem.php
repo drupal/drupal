@@ -95,6 +95,25 @@ class DecimalItem extends NumericItemBase {
   /**
    * {@inheritdoc}
    */
+  public function getConstraints() {
+    $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+    $constraints = parent::getConstraints();
+
+    $constraints[] = $constraint_manager->create('ComplexData', array(
+      'value' => array(
+        'Regex' => array(
+          'pattern' => '/^[+-]?((\d+(\.\d*)?)|(\.\d+))$/i',
+        )
+      ),
+    ));
+
+    return $constraints;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::fieldSettingsForm($form, $form_state);
     $settings = $this->getSettings();

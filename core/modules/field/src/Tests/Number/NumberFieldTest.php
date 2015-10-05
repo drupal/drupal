@@ -220,6 +220,14 @@ class NumberFieldTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('%name must be lower than or equal to %maximum.', array('%name' => $field_name, '%maximum' => $maximum)), 'Correctly failed to save integer value greater than maximum allowed value.');
 
+    // Try to set a wrong integer value.
+    $this->drupalGet('entity_test/add');
+    $edit = array(
+      "{$field_name}[0][value]" => '20-40',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertRaw(t('%name must be a number.', array('%name' => $field_name)), 'Correctly failed to save wrong integer value.');
+
     // Test with valid entries.
     $valid_entries = array(
       '-1234',
