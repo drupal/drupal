@@ -90,7 +90,7 @@ action.configuration.node_unpublish_by_keyword_action:
   type: mapping
   label: 'Unpublish content containing keyword(s) configuration'
   mapping:
-    keyword:
+    keywords:
       type: sequence
       label: 'Keywords'
       sequence:
