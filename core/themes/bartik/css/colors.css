@@ -50,8 +50,7 @@ a:active,
 .site-branding,
 .site-branding__text a,
 .site-branding a,
-.region-secondary-menu .menu-item a,
-.region-secondary-menu .menu-item a.is-active {
+.region-secondary-menu .menu-item a {
   color: #fffeff;
 }
 

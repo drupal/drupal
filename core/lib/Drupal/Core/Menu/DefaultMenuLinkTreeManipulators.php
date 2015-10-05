@@ -206,14 +206,15 @@ class DefaultMenuLinkTreeManipulators {
       $access_result = AccessResult::allowed();
     }
     else {
-      $url = $instance->getUrlObject();
-
-      // When no route name is specified, this must be an external link.
-      if (!$url->isRouted()) {
+      // Use the definition here since that's a lot faster than creating a Url
+      // object that we don't need.
+      $definition = $instance->getPluginDefinition();
+      // 'url' should only be populated for external links.
+      if (!empty($definition['url']) && empty($definition['route_name'])) {
         $access_result = AccessResult::allowed();
       }
       else {
-        $access_result = $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $this->account, TRUE);
+        $access_result = $this->accessManager->checkNamedRoute($definition['route_name'], $definition['route_parameters'], $this->account, TRUE);
       }
     }
     return $access_result->cachePerPermissions();

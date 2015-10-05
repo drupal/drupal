@@ -893,7 +893,8 @@ class MenuTest extends MenuWebTestBase {
     // the front page.
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-    $instance = $menu_link_manager->getInstance(['id' => 'user.logout']);
+    $result = $menu_link_manager->loadLinksByRoute('user.logout');
+    $instance = reset($result);
 
     $this->assertTrue((bool) $instance, 'Standard menu link was loaded');
     return $instance;
