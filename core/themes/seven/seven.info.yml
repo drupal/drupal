@@ -9,10 +9,25 @@ core: 8.x
 libraries:
  - seven/global-styling
 libraries-override:
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        misc/vertical-tabs.css: false
+  core/jquery.ui:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
   core/jquery.ui.dialog:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
+  classy/dialog:
+    seven/seven.drupal.dialog
+libraries-extend:
+  core/drupal.vertical-tabs:
+    - seven/vertical-tabs
+  core/jquery.ui:
+    - seven/seven.jquery.ui
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:

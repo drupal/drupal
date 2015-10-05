@@ -8,3 +8,11 @@ core: 8.x
 libraries:
   - classy/base
   - core/normalize
+
+libraries-extend:
+  user/drupal.user:
+    - classy/user
+  core/drupal.dropbutton:
+    - classy/dropbutton
+  core/drupal.dialog:
+    - classy/dialog
