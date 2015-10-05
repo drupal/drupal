@@ -96,6 +96,14 @@ class ViewsSelection extends SelectionBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // Don't call the parent validation handler because we don't have any
+    // 'target_bundles' setting.
+  }
+
+  /**
    * Initializes a view.
    *
    * @param string|null $match

@@ -100,7 +100,7 @@ class EntityReferenceSelectionSortTest extends EntityUnitTestBase {
       'target_type' => 'node',
       'handler' => 'default',
       'handler_settings' => array(
-        'target_bundles' => array(),
+        'target_bundles' => NULL,
         // Add sorting.
         'sort' => array(
           'field' => 'field_text.value',

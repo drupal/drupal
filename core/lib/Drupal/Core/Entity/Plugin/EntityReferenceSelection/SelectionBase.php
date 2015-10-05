@@ -111,7 +111,10 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
 
     // Merge-in default values.
     $selection_handler_settings += array(
-      'target_bundles' => array(),
+      // For the 'target_bundles' setting, a NULL value is equivalent to "allow
+      // entities from any bundle to be referenced" and an empty array value is
+      // equivalent to "no entities from any bundle can be referenced".
+      'target_bundles' => NULL,
       'sort' => array(
         'field' => '_none',
       ),
@@ -128,7 +131,7 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
         '#type' => 'checkboxes',
         '#title' => $this->t('Bundles'),
         '#options' => $bundle_options,
-        '#default_value' => (!empty($selection_handler_settings['target_bundles'])) ? $selection_handler_settings['target_bundles'] : array(),
+        '#default_value' => (array) $selection_handler_settings['target_bundles'],
         '#required' => TRUE,
         '#size' => 6,
         '#multiple' => TRUE,
@@ -207,7 +210,15 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) { }
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // If no checkboxes were checked for 'target_bundles', store NULL ("all
+    // bundles are referenceable") rather than empty array ("no bundle is
+    // referenceable" - typically happens when all referenceable bundles have
+    // been deleted).
+    if ($form_state->getValue(['settings', 'handler_settings', 'target_bundles']) === []) {
+      $form_state->setValue(['settings', 'handler_settings', 'target_bundles'], NULL);
+    }
+  }
 
   /**
    * {@inheritdoc}
@@ -326,8 +337,20 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
     $entity_type = $this->entityManager->getDefinition($target_type);
 
     $query = $this->entityManager->getStorage($target_type)->getQuery();
-    if (!empty($handler_settings['target_bundles'])) {
-      $query->condition($entity_type->getKey('bundle'), $handler_settings['target_bundles'], 'IN');
+
+    // If 'target_bundles' is NULL, all bundles are referenceable, no further
+    // conditions are needed.
+    if (isset($handler_settings['target_bundles']) && is_array($handler_settings['target_bundles'])) {
+      // If 'target_bundles' is an empty array, no bundle is referenceable,
+      // force the query to never return anything and bail out early.
+      if ($handler_settings['target_bundles'] === []) {
+        $query->condition($entity_type->getKey('id'), NULL, '=');
+
+        return $query;
+      }
+      else {
+        $query->condition($entity_type->getKey('bundle'), $handler_settings['target_bundles'], 'IN');
+      }
     }
 
     if (isset($match) && $label_key = $entity_type->getKey('label')) {

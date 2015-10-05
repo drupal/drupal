@@ -77,7 +77,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'target_type' => 'node',
       'handler' => 'default',
       'handler_settings' => array(
-        'target_bundles' => array(),
+        'target_bundles' => NULL,
       ),
     );
 
@@ -203,7 +203,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'target_type' => 'user',
       'handler' => 'default',
       'handler_settings' => array(
-        'target_bundles' => array(),
+        'target_bundles' => NULL,
         'include_anonymous' => TRUE,
       ),
     );
@@ -345,7 +345,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'target_type' => 'comment',
       'handler' => 'default',
       'handler_settings' => array(
-        'target_bundles' => array(),
+        'target_bundles' => NULL,
       ),
     );
 

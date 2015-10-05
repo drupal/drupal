@@ -106,8 +106,12 @@ trait SchemaCheckTrait {
           (($type == 'double' || $type == 'integer') && $element instanceof FloatInterface) ||
           ($type == 'boolean' && $element instanceof BooleanInterface) ||
           ($type == 'string' && $element instanceof StringInterface) ||
-          // Null values are allowed for all types.
+          // Null values are allowed for all primitive types.
           ($value === NULL);
+      }
+      // Array elements can also opt-in for allowing a NULL value.
+      elseif ($element instanceof ArrayElement && $element->isNullable() && $value === NULL) {
+        $success = TRUE;
       }
       $class = get_class($element);
       if (!$success) {

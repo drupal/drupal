@@ -766,6 +766,7 @@ entity_reference_selection:
     target_bundles:
       type: sequence
       label: 'types'
+      nullable: true
       sequence:
         type: string
         label: 'Type'

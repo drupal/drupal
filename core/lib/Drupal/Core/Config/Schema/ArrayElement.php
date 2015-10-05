@@ -186,4 +186,14 @@ abstract class ArrayElement extends TypedData implements \IteratorAggregate, Typ
     $this->typedConfig = $typed_config;
   }
 
+  /**
+   * Determines if this element allows NULL as a value.
+   *
+   * @return bool
+   *   TRUE if NULL is a valid value, FALSE otherwise.
+   */
+  public function isNullable() {
+    return isset($this->definition['nullable']) && $this->definition['nullable'] == TRUE;
+  }
+
 }

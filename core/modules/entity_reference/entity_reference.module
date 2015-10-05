@@ -10,7 +10,6 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldConfigInterface;
@@ -210,4 +209,50 @@ function entity_reference_settings_ajax_submit($form, FormStateInterface $form_s
 function entity_reference_query_entity_reference_alter(AlterableInterface $query) {
   $handler = $query->getMetadata('entity_reference_selection_handler');
   $handler->entityQueryAlter($query);
+}
+
+/**
+ * Implements hook_entity_bundle_delete().
+ *
+ * We are duplicating the work done by
+ * \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::onDependencyRemoval()
+ * because we need to take into account bundles that are not provided by a
+ * config entity type so they are not part of the config dependencies.
+ */
+function entity_reference_entity_bundle_delete($entity_type_id, $bundle) {
+  // Gather a list of all entity reference fields.
+  $map = \Drupal::entityManager()->getFieldMapByFieldType('entity_reference');
+  $ids = [];
+  foreach ($map as $type => $info) {
+    foreach ($info as $name => $data) {
+      foreach ($data['bundles'] as $bundle_name) {
+        $ids[] = "$type.$bundle_name.$name";
+      }
+    }
+  }
+
+  // Update the 'target_bundles' handler setting if needed.
+  foreach (FieldConfig::loadMultiple($ids) as $field_config) {
+    if ($field_config->getSetting('target_type') == $entity_type_id) {
+      $handler_settings = $field_config->getSetting('handler_settings');
+      if (isset($handler_settings['target_bundles'][$bundle])) {
+        unset($handler_settings['target_bundles'][$bundle]);
+        $field_config->setSetting('handler_settings', $handler_settings);
+        $field_config->save();
+
+        // In case we deleted the only target bundle allowed by the field we
+        // have to log a warning message because the field will not function
+        // correctly anymore.
+        if ($handler_settings['target_bundles'] === []) {
+          \Drupal::logger('entity_reference')->critical('The %target_bundle bundle (entity type: %target_entity_type) was deleted. As a result, the %field_name entity reference field (entity_type: %entity_type, bundle: %bundle) no longer has any valid bundle it can reference. The field is not working correctly anymore and has to be adjusted.', [
+            '%target_bundle' => $bundle,
+            '%target_entity_type' => $entity_type_id,
+            '%field_name' => $field_config->getName(),
+            '%entity_type' => $field_config->getTargetEntityTypeId(),
+            '%bundle' => $field_config->getTargetBundle()
+          ]);
+        }
+      }
+    }
+  }
 }

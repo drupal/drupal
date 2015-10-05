@@ -151,7 +151,7 @@ class EntityReferenceItem extends FieldItemBase {
     list($current_handler) = explode(':', $this->getSetting('handler'), 2);
     if ($current_handler === 'default') {
       $handler_settings = $this->getSetting('handler_settings');
-      if (!empty($handler_settings['target_bundles'])) {
+      if (isset($handler_settings['target_bundles'])) {
         $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
         $constraints[] = $constraint_manager->create('ComplexData', [
           'entity' => [
@@ -298,9 +298,12 @@ class EntityReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
-    $dependencies = [];
+    $dependencies = parent::calculateDependencies($field_definition);
+    $manager = \Drupal::entityManager();
+    $target_entity_type = $manager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
+
+    // Depend on default values entity types configurations.
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
-      $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
       foreach ($default_value as $value) {
         if (is_array($value) && isset($value['target_uuid'])) {
           $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
@@ -312,6 +315,19 @@ class EntityReferenceItem extends FieldItemBase {
         }
       }
     }
+
+    // Depend on target bundle configurations.
+    $handler = $field_definition->getSetting('handler_settings');
+    if (!empty($handler['target_bundles'])) {
+      if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
+        if ($storage = $manager->getStorage($bundle_entity_type_id)) {
+          foreach ($storage->loadMultiple($handler['target_bundles']) as $bundle) {
+            $dependencies[$bundle->getConfigDependencyKey()][] = $bundle->getConfigDependencyName();
+          }
+        }
+      }
+    }
+
     return $dependencies;
   }
 
@@ -319,12 +335,15 @@ class EntityReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
-    $changed = FALSE;
+    $changed = parent::onDependencyRemoval($field_definition, $dependencies);
+    $entity_manager = \Drupal::entityManager();
+    $target_entity_type = $entity_manager->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
+
+    // Try to update the default value config dependency, if possible.
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
-      $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
       foreach ($default_value as $key => $value) {
         if (is_array($value) && isset($value['target_uuid'])) {
-          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
+          $entity = $entity_manager->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
             unset($default_value[$key]);
@@ -336,6 +355,41 @@ class EntityReferenceItem extends FieldItemBase {
         $field_definition->setDefaultValue($default_value);
       }
     }
+
+    // Update the 'target_bundles' handler setting if a bundle config dependency
+    // has been removed.
+    $bundles_changed = FALSE;
+    $handler_settings = $field_definition->getSetting('handler_settings');
+    if (!empty($handler_settings['target_bundles'])) {
+      if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
+        if ($storage = $entity_manager->getStorage($bundle_entity_type_id)) {
+          foreach ($storage->loadMultiple($handler_settings['target_bundles']) as $bundle) {
+            if (isset($dependencies[$bundle->getConfigDependencyKey()][$bundle->getConfigDependencyName()])) {
+              unset($handler_settings['target_bundles'][$bundle->id()]);
+              $bundles_changed = TRUE;
+
+              // In case we deleted the only target bundle allowed by the field
+              // we have to log a warning message because the field will not
+              // function correctly anymore.
+              if ($handler_settings['target_bundles'] === []) {
+                \Drupal::logger('entity_reference')->critical('The %target_bundle bundle (entity type: %target_entity_type) was deleted. As a result, the %field_name entity reference field (entity_type: %entity_type, bundle: %bundle) no longer has any valid bundle it can reference. The field is not working correctly anymore and has to be adjusted.', [
+                  '%target_bundle' => $bundle->label(),
+                  '%target_entity_type' => $bundle->getEntityType()->getBundleOf(),
+                  '%field_name' => $field_definition->getName(),
+                  '%entity_type' => $field_definition->getTargetEntityTypeId(),
+                  '%bundle' => $field_definition->getTargetBundle()
+                ]);
+              }
+            }
+          }
+        }
+      }
+    }
+    if ($bundles_changed) {
+      $field_definition->setSetting('handler_settings', $handler_settings);
+    }
+    $changed |= $bundles_changed;
+
     return $changed;
   }
 
