@@ -35,6 +35,26 @@ class DisplayTest extends UITestBase {
   public static $modules = array('contextual');
 
   /**
+   * Tests adding a display.
+   */
+  public function testAddDisplay() {
+    $view = $this->randomView();
+    $this->assertNoText('Block');
+    $this->assertNoText('Block 2');
+
+    $this->drupalPostForm(NULL, [], t('Add @display', ['@display' => 'Block']));
+    $this->assertText('Block');
+    $this->assertNoText('Block 2');
+
+    // Views has special form handling in views_ui_form_button_was_clicked()
+    // to be able to change the submit button text via JS, this simulates what
+    // the JS is doing.
+    $this->drupalPostForm(NULL, [], NULL, [], [], NULL, '&op=Block');
+    $this->assertText('Block');
+    $this->assertText('Block 2');
+  }
+
+  /**
    * Tests reordering of displays.
    */
   public function testReorderDisplay() {
