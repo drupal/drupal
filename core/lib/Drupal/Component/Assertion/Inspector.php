@@ -71,6 +71,9 @@ class Inspector {
   /**
    * Asserts that all members are strings.
    *
+   * Use this only if it is vital that the members not be objects, otherwise
+   * test with ::assertAllStringable().
+   *
    * @param mixed $traversable
    *   Variable to be examined.
    *
@@ -94,13 +97,29 @@ class Inspector {
   public static function assertAllStringable($traversable) {
     if (static::assertTraversable($traversable)) {
       foreach ($traversable as $member) {
-        if (!(is_string($member) || (is_object($member) && method_exists($member, '__toString')))) {
+        if (!static::assertStringable($member)) {
           return FALSE;
         }
       }
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Asserts argument is a string or an object castable to a string.
+   *
+   * Use this instead of is_string() alone unless the argument being an object
+   * in any way will cause a problem.
+   *
+   * @param mixed string
+   *   Variable to be examined
+   *
+   * @return bool
+   *   TRUE if $string is a string or an object castable to a string.
+   */
+  public static function assertStringable($string) {
+    return is_string($string) || (is_object($string) && method_exists($string, '__toString'));
   }
 
   /**
