@@ -38,7 +38,6 @@ class DecimalItem extends NumericItemBase {
 
   /**
    * {@inheritdoc}
-
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
