@@ -1271,7 +1271,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $more_link_path = $this->options['alter']['more_link_path'];
         $more_link_path = strip_tags(Html::decodeEntities($this->viewsTokenReplace($more_link_path, $tokens)));
 
-        // Make sure that paths which were run through _url() work as well.
+        // Make sure that paths which were run through URL generation work as
+        // well.
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
         if (strpos($more_link_path, $base_path) === 0) {
@@ -1501,7 +1502,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // parsed values.
     if (isset($alter['query'])) {
       // Convert the query to a string, perform token replacement, and then
-      // convert back to an array form for _l().
+      // convert back to an array form for
+      // \Drupal\Core\Utility\LinkGeneratorInterface::generate().
       $options['query'] = UrlHelper::buildQuery($alter['query']);
       $options['query'] = $this->viewsTokenReplace($options['query'], $tokens);
       $query = array();

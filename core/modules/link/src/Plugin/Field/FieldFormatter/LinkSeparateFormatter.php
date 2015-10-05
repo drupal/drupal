@@ -54,6 +54,9 @@ class LinkSeparateFormatter extends LinkFormatter {
 
       // If the link text field value is available, use it for the text.
       if (empty($settings['url_only']) && !empty($item->title)) {
+        // Unsanitized token replacement here because the entire link title
+        // gets auto-escaped during link generation in
+        // \Drupal\Core\Utility\LinkGenerator::generate().
         $link_title = \Drupal::token()->replace($item->title, [$entity->getEntityTypeId() => $entity], ['clear' => TRUE]);
       }
 

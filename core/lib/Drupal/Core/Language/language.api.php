@@ -159,8 +159,8 @@ use Drupal\Core\Language\LanguageInterface;
  * Perform alterations on language switcher links.
  *
  * A language switcher link may need to point to a different path or use a
- * translated link text before going through _l(), which will just handle the
- * path aliases.
+ * translated link text before going through the link generator, which will
+ * just handle the path aliases.
  *
  * @param $links
  *   Nested array of links keyed by language code.

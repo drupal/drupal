@@ -172,8 +172,9 @@ class FunctionsTest extends WebTestBase {
    * Tests links.html.twig.
    */
   function testLinks() {
-    // Turn off the query for the _l() function to compare the active
-    // link correctly.
+    // Turn off the query for the
+    // \Drupal\Core\Utility\LinkGeneratorInterface::generate() method to compare
+    // the active link correctly.
     $original_query = \Drupal::request()->query->all();
     \Drupal::request()->query->replace(array());
     // Verify that empty variables produce no output.

@@ -71,7 +71,8 @@ class LanguageTestController implements ContainerInjectionInterface {
   /**
    * Returns links to the current page with different langcodes.
    *
-   * Using #type 'link' causes these links to be rendered with _l().
+   * Using #type 'link' causes these links to be rendered with the link
+   * generator.
    */
   public function typeLinkActiveClass() {
     // We assume that 'en' and 'fr' have been configured.

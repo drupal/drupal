@@ -19,7 +19,8 @@ class CommonTestController {
   /**
    * Returns links to the current page, with and without query strings.
    *
-   * Using #type 'link' causes these links to be rendered with _l().
+   * Using #type 'link' causes these links to be rendered with the link
+   * generator.
    */
   public function typeLinkActiveClass() {
     return array(

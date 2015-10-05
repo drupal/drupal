@@ -267,15 +267,16 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           foreach ($children[$parent] as $plugin_id => $task_info) {
             $plugin = $this->createInstance($plugin_id);
             $this->instances[$route_name][$level][$plugin_id] = $plugin;
-            // Normally, _l() compares the href of every link with the current
-            // path and sets the active class accordingly. But the parents of
-            // the current local task may be on a different route in which
-            // case we have to set the class manually by flagging it active.
+            // Normally, the link generator compares the href of every link with
+            // the current path and sets the active class accordingly. But the
+            // parents of the current local task may be on a different route in
+            // which case we have to set the class manually by flagging it
+            // active.
             if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name']) {
               $plugin->setActive();
             }
             if (isset($children[$plugin_id])) {
-              // This tab has visible children
+              // This tab has visible children.
               $next_parent = $plugin_id;
             }
           }

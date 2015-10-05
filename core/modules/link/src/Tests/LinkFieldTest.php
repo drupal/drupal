@@ -389,8 +389,8 @@ class LinkFieldTest extends WebTestBase {
     // Verify that the link is output according to the formatter settings.
     // Not using generatePermutations(), since that leads to 32 cases, which
     // would not test actual link field formatter functionality but rather
-    // _l() and options/attributes. Only 'url_plain' has a dependency on
-    // 'url_only', so we have a total of ~10 cases.
+    // the link generator and options/attributes. Only 'url_plain' has a
+    // dependency on 'url_only', so we have a total of ~10 cases.
     $options = array(
       'trim_length' => array(NULL, 6),
       'rel' => array(NULL, 'nofollow'),

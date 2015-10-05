@@ -907,7 +907,8 @@ abstract class TestBase {
     $verbose_filename =  $this->verboseClassName . '-' . $this->verboseId . '-' . $this->testId . '.html';
     if (file_put_contents($this->verboseDirectory . '/' . $verbose_filename, $message)) {
       $url = $this->verboseDirectoryUrl . '/' . $verbose_filename;
-      // Not using _l() to avoid invoking the theme system, so that unit tests
+      // Not using \Drupal\Core\Utility\LinkGeneratorInterface::generate()
+      // to avoid invoking the theme system, so that unit tests
       // can use verbose() as well.
       $url = '<a href="' . $url . '" target="_blank">Verbose message</a>';
       $this->error($url, 'User notice');
