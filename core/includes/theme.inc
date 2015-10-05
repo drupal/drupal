@@ -1659,7 +1659,15 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       ),
     );
 
-    $variables['description'] = $element['#description'];
+    if (!empty($element['#description'])) {
+      $description_id = $element['#attributes']['aria-describedby'];
+      $description_attributes['id'] = $description_id;
+      $variables['description']['attributes'] = new Attribute($description_attributes);
+      $variables['description']['content'] = $element['#description'];
+
+      // Add the description's id to the table aria attributes.
+      $variables['table']['#attributes']['aria-describedby'] = $element['#attributes']['aria-describedby'];
+    }
   }
   else {
     $variables['elements'] = array();

@@ -11,7 +11,9 @@
  *
  * Available variables when there are multiple fields.
  * - table: Table of field items.
- * - description: Description text for the form element.
+ * - description: The description element containing the following properties:
+ *   - content: The description content of the form element.
+ *   - attributes: HTML attributes to apply to the description container.
  * - button: "Add another item" button.
  *
  * @see template_preprocess_field_multiple_value_form()
@@ -20,8 +22,8 @@
 {% if multiple %}
   <div class="js-form-item form-item">
     {{ table }}
-    {% if description %}
-      <div class="description">{{ description }}</div>
+    {% if description.content %}
+      <div{{ description.attributes.addClass('description') }} >{{ description.content }}</div>
     {% endif %}
     {% if button %}
       <div class="clearfix">{{ button }}</div>

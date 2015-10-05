@@ -254,6 +254,10 @@ class FormTest extends FieldTestBase {
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
 
+    // Check if aria-describedby attribute is placed on multiple value widgets.
+    $elements = $this->xpath('//table[@id="field-unlimited-values" and @aria-describedby="edit-field-unlimited--description"]');
+    $this->assertTrue(isset($elements[0]), t('aria-describedby attribute is properly placed on multiple value widgets.'));
+
     // Press 'add more' button -> 2 widgets.
     $this->drupalPostForm(NULL, array(), t('Add another item'));
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
