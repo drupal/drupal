@@ -460,6 +460,16 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       $option_values['summary_options'] = $options;
     }
 
+    // If the 'Specify validation criteria' checkbox is not checked, reset the
+    // validation options.
+    if (empty($option_values['specify_validation'])) {
+      $option_values['validate']['type'] = 'none';
+      // We need to keep the empty array of options for the 'None' plugin as
+      // it will be needed later.
+      $option_values['validate']['options'] = ['none' => []];
+      $option_values['validate']['fail'] = 'not found';
+    }
+
     $sanitized_id = $option_values['validate']['type'];
     // Correct ID for js sanitized version.
     $option_values['validate']['type'] = $validate_id = static::decodeValidatorId($sanitized_id);
