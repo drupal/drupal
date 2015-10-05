@@ -129,3 +129,17 @@ system_test.permission_dependent_route_access:
     _controller: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
   requirements:
     _permission: 'pet llamas'
+
+system_test.respond_response:
+  path: '/system-test/respond-reponse'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithReponse'
+  requirements:
+    _access: 'TRUE'
+
+system_test.respond_cacheable_response:
+  path: '/system-test/respond-cacheable-reponse'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableReponse'
+  requirements:
+    _access: 'TRUE'

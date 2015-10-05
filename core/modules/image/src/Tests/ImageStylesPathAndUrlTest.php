@@ -196,10 +196,15 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
         $this->assertNoRaw( chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
       }
     }
-    elseif ($clean_url) {
-      // Add some extra chars to the token.
-      $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-      $this->assertResponse(200, 'Existing image was accessible at the URL with an invalid token.');
+    else {
+      $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
+      $this->assertEqual(strpos($this->drupalGetHeader('Cache-Control'), 'no-cache'), FALSE, 'Cache-Control header contains \'no-cache\' to prevent caching.');
+
+      if ($clean_url) {
+        // Add some extra chars to the token.
+        $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
+        $this->assertResponse(200, 'Existing image was accessible at the URL with an invalid token.');
+      }
     }
 
     // Allow insecure image derivatives to be created for the remainder of this

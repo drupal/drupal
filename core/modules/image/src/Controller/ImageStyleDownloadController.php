@@ -178,7 +178,11 @@ class ImageStyleDownloadController extends FileDownloadController {
         'Content-Type' => $image->getMimeType(),
         'Content-Length' => $image->getFileSize(),
       );
-      return new BinaryFileResponse($uri, 200, $headers);
+      // \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onRespond()
+      // sets response as not cacheable if the Cache-Control header is not
+      // already modified. We pass in FALSE for non-private schemes for the
+      // $public parameter to make sure we don't change the headers.
+      return new BinaryFileResponse($uri, 200, $headers, $scheme !== 'private');
     }
     else {
       $this->logger->notice('Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));

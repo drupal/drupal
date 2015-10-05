@@ -7,9 +7,9 @@
 
 namespace Drupal\system_test\Controller;
 
+use Drupal\Core\Cache\CacheableJsonResponse;
+use Drupal\Core\Cache\CacheableResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Defines a controller to respond the page cache accept header test.
@@ -26,10 +26,10 @@ class PageCacheAcceptHeaderController {
    */
   public function content(Request $request) {
     if ($request->getRequestFormat() === 'json') {
-      return new JsonResponse(array('content' => 'oh hai this is json'));
+      return new CacheableJsonResponse(['content' => 'oh hai this is json']);
     }
     else {
-      return new Response("<p>oh hai this is html.</p>");
+      return new CacheableResponse("<p>oh hai this is html.</p>");
     }
   }
 }

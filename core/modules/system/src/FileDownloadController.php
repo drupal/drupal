@@ -59,7 +59,11 @@ class FileDownloadController extends ControllerBase {
       }
 
       if (count($headers)) {
-        return new BinaryFileResponse($uri, 200, $headers);
+        // \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onRespond()
+        // sets response as not cacheable if the Cache-Control header is not
+        // already modified. We pass in FALSE for non-private schemes for the
+        // $public parameter to make sure we don't change the headers.
+        return new BinaryFileResponse($uri, 200, $headers, $scheme !== 'private');
       }
 
       throw new AccessDeniedHttpException();
