@@ -589,13 +589,13 @@ class DateTimeFieldTest extends WebTestBase {
   protected function datelistDataProvider() {
     return [
       // Year only selected, validation error on Month, Day, Hour, Minute.
-      [['year' => 2012, 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], '4 errors have been found:   MonthDayHourMinute'],
+      [['year' => 2012, 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], '4 errors have been found: MonthDayHourMinute'],
       // Year and Month selected, validation error on Day, Hour, Minute.
-      [['year' => 2012, 'month' => '12', 'day' => '', 'hour' => '', 'minute' => ''], '3 errors have been found:   DayHourMinute'],
+      [['year' => 2012, 'month' => '12', 'day' => '', 'hour' => '', 'minute' => ''], '3 errors have been found: DayHourMinute'],
       // Year, Month and Day selected, validation error on Hour, Minute.
-      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => ''], '2 errors have been found:   HourMinute'],
+      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => ''], '2 errors have been found: HourMinute'],
       // Year, Month, Day and Hour selected, validation error on Minute only.
-      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => ''], '1 error has been found:   Minute'],
+      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => ''], '1 error has been found: Minute'],
     ];
   }
 

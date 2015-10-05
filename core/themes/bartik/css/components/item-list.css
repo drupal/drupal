@@ -25,6 +25,5 @@
 .item-list .item-list__comma-list li,
 [dir="rtl"] .item-list .item-list__comma-list,
 [dir="rtl"] .item-list .item-list__comma-list li {
-  margin: 0;
   padding: 0;
 }

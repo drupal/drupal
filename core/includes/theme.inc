@@ -1049,6 +1049,7 @@ function template_preprocess_table(&$variables) {
  * @see https://www.drupal.org/node/1842756
  */
 function template_preprocess_item_list(&$variables) {
+  $variables['wrapper_attributes'] = new Attribute($variables['wrapper_attributes']);
   foreach ($variables['items'] as &$item) {
     $attributes = array();
     // If the item value is an array, then it is a render array.
@@ -1752,7 +1753,7 @@ function drupal_common_theme() {
       'variables' => array('status' => MARK_NEW),
     ),
     'item_list' => array(
-      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array(), 'empty' => NULL, 'context' => array()),
+      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => array(), 'attributes' => array(), 'empty' => NULL, 'context' => array()),
     ),
     'feed_icon' => array(
       'variables' => array('url' => NULL, 'title' => NULL),

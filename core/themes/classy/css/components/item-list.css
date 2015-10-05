@@ -10,30 +10,23 @@
   margin: 0 0 0.75em 0;
   padding: 0;
 }
-.item-list ul li {
+.item-list li {
   margin: 0 0 0.25em 1.5em; /* LTR */
   padding: 0;
 }
-[dir="rtl"] .item-list ul li {
+[dir="rtl"] .item-list li {
   margin: 0 1.5em 0.25em 0;
 }
-ul.item-list__comma-list {
+
+/**
+ * Comma separated lists.
+ */
+.item-list--comma-list {
   display: inline;
 }
-ul.item-list__comma-list li {
-  display: inline;
-  list-style-type: none;
-}
-ul.item-list__comma-list,
-ul.item-list__comma-list li,
-[dir="rtl"] ul.item-list__comma-list,
-[dir="rtl"] ul.item-list__comma-list li {
+.item-list--comma-list .item-list__comma-list,
+.item-list__comma-list li,
+[dir="rtl"] .item-list--comma-list .item-list__comma-list,
+[dir="rtl"] .item-list__comma-list li {
   margin: 0;
-  padding: 0;
-}
-ul.item-list__comma-list li:after {
-  content: ", ";
-}
-ul.item-list__comma-list li:last-child:after {
-  content: "";
 }
