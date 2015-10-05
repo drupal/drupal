@@ -94,11 +94,10 @@ class DisplayPageTest extends ViewKernelTestBase {
 
     // Check the controller defaults.
     foreach ($collection as $id => $route) {
-      if (strpos($id, 'test_page_display_route') === 0) {
-        $this->assertEqual($route->getDefault('_controller'), 'Drupal\views\Routing\ViewPageController::handle');
-        $this->assertEqual($route->getDefault('view_id'), 'test_page_display_route');
-        $this->assertEqual($route->getDefault('display_id'), str_replace('test_page_display_route.', '', $id));
-      }
+      $this->assertEqual($route->getDefault('_controller'), 'Drupal\views\Routing\ViewPageController::handle');
+      $id_parts = explode('.', $id);
+      $this->assertEqual($route->getDefault('view_id'), $id_parts[1]);
+      $this->assertEqual($route->getDefault('display_id'), $id_parts[2]);
     }
 
     // Check the generated patterns and default values.
