@@ -130,18 +130,14 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
     }
 
     if ($operation == 'view') {
-      $entity = $items ? $items->getEntity() : NULL;
-      // Admins can view any fields except hostname, other users need both the
-      // "access comments" permission and for the comment to be published. The
-      // mail field is hidden from non-admins.
-      $admin_access = AccessResult::allowedIf($account->hasPermission('administer comments') && $field_definition->getName() != 'hostname')
-        ->cachePerPermissions();
-      $anonymous_access = AccessResult::allowedIf($account->hasPermission('access comments') && (!$entity || $entity->isPublished()) && !in_array($field_definition->getName(), array('mail', 'hostname'), TRUE))
-        ->cachePerPermissions();
-      if ($entity) {
-        $anonymous_access->cacheUntilEntityChanges($entity);
+      // Nobody has access to the hostname.
+      if ($field_definition->getName() == 'hostname') {
+        return AccessResult::forbidden();
       }
-      return $admin_access->orIf($anonymous_access);
+      // The mail field is hidden from non-admins.
+      if ($field_definition->getName() == 'mail') {
+        return AccessResult::allowedIfHasPermission($account, 'administer comments');
+      }
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
   }

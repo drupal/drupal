@@ -61,6 +61,9 @@ class CommentFieldNameTest extends CommentTestBase {
   public function testCommentFieldName() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
+    // Grant permission to properly check view access on render.
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
+    $this->container->get('account_switcher')->switchTo(new AnonymousUserSession());
     $view = Views::getView('test_comment_field_name');
     $this->executeView($view);
 
@@ -79,14 +82,7 @@ class CommentFieldNameTest extends CommentTestBase {
       'comment_field_data_field_name' => 'field_name',
     ];
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
-    // Test that no data can be rendered.
-    $this->assertIdentical(FALSE, isset($view->field['field_name']));
 
-    // Grant permission to properly check view access on render.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
-    $this->container->get('account_switcher')->switchTo(new AnonymousUserSession());
-    $view = Views::getView('test_comment_field_name');
-    $this->executeView($view);
     // Test that data rendered.
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['field_name']->advancedRender($view->result[0]);

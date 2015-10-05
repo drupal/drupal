@@ -40,6 +40,32 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAYNOT_CONTACT);
     $this->drupalLogout();
 
+    // Preview comments (with `skip comment approval` permission).
+    $edit = [];
+    $title = 'comment title with skip comment approval';
+    $body = 'comment body with skip comment approval';
+    $edit['subject[0][value]'] = $title;
+    $edit['comment_body[0][value]'] = $body;
+    $this->drupalPostForm($this->node->urlInfo(), $edit, t('Preview'));
+    // Cannot use assertRaw here since both title and body are in the form.
+    $preview = (string) $this->cssSelect('.preview')[0]->asXML();
+    $this->assertTrue(strpos($preview, $title) !== FALSE, 'Anonymous user can preview comment title.');
+    $this->assertTrue(strpos($preview, $body) !== FALSE, 'Anonymous user can preview comment body.');
+
+    // Preview comments (without `skip comment approval` permission).
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['skip comment approval']);
+    $edit = [];
+    $title = 'comment title without skip comment approval';
+    $body = 'comment body without skip comment approval';
+    $edit['subject[0][value]'] = $title;
+    $edit['comment_body[0][value]'] = $body;
+    $this->drupalPostForm($this->node->urlInfo(), $edit, t('Preview'));
+    // Cannot use assertRaw here since both title and body are in the form.
+    $preview = (string) $this->cssSelect('.preview')[0]->asXML();
+    $this->assertTrue(strpos($preview, $title) !== FALSE, 'Anonymous user can preview comment title.');
+    $this->assertTrue(strpos($preview, $body) !== FALSE, 'Anonymous user can preview comment body.');
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['skip comment approval']);
+
     // Post anonymous comment without contact info.
     $anonymous_comment1 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($anonymous_comment1), 'Anonymous comment without contact info found.');
@@ -168,4 +194,5 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $anonymous_comment2->id());
     $this->assertResponse(403);
   }
+
 }

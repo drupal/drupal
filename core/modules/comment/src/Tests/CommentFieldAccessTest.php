@@ -213,9 +213,8 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertEqual($may_view, $set['user']->hasPermission('administer comments') || ($set['comment']->isPublished() && $set['user']->hasPermission('access comments')), SafeMarkup::format('User @user @state view field @field on comment @comment', [
+        $this->assertTrue($may_view, SafeMarkup::format('User @user can view field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
         ]));
@@ -244,12 +243,20 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertEqual($may_view, $field != 'hostname' && ($set['user']->hasPermission('administer comments') ||
-            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user @state view field @field on comment @comment', [
+        // Nobody has access to to view the hostname field.
+        if ($field === 'hostname') {
+          $view_access = FALSE;
+          $state = 'cannot';
+        }
+        else {
+          $view_access = TRUE;
+          $state = 'can';
+        }
+        $this->assertEqual($may_view, $view_access, SafeMarkup::format('User @user @state view field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '@state' => $may_view ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
+          '@state' => $state,
         ]));
         $this->assertFalse($may_update, SafeMarkup::format('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
@@ -266,10 +273,8 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertEqual($may_view, $field != 'hostname' && ($set['user']->hasPermission('administer comments') ||
-            ($set['comment']->isPublished() && $set['user']->hasPermission('access comments'))), SafeMarkup::format('User @user @state view field @field on comment @comment', [
+        $this->assertEqual($may_view, TRUE, SafeMarkup::format('User @user can view field @field on comment @comment', [
           '@user' => $set['user']->getUsername(),
-          '@state' => $may_view ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
         ]));
