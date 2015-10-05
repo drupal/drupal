@@ -144,14 +144,14 @@ class DisplayPageTest extends ViewKernelTestBase {
    */
   public function testDependencies() {
     $view = Views::getView('test_page_display');
-    $this->assertIdentical([], $view->calculateDependencies());
+    $this->assertIdentical([], $view->getDependencies());
 
     $view = Views::getView('test_page_display_route');
     $expected = [
       'content' => ['StaticTest'],
       'module' => ['views_test_data'],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies());
+    $this->assertIdentical($expected, $view->getDependencies());
 
     $view = Views::getView('test_page_display_menu');
     $expected = [
@@ -160,7 +160,7 @@ class DisplayPageTest extends ViewKernelTestBase {
         'system.menu.tools',
       ],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies());
+    $this->assertIdentical($expected, $view->getDependencies());
   }
 
 }

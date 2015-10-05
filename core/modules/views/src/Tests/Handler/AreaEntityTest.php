@@ -191,7 +191,7 @@ class AreaEntityTest extends ViewKernelTestBase {
   public function doTestCalculateDependencies() {
     $view = View::load('test_entity_area');
 
-    $dependencies = $view->calculateDependencies();
+    $dependencies = $view->calculateDependencies()->getDependencies();
     // Ensure that both config and content entity dependencies are calculated.
     $this->assertEqual([
       'config' => ['block.block.test_block'],

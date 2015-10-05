@@ -144,8 +144,7 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
   /**
    * Calculates dependencies and stores them in the dependency property.
    *
-   * @return array
-   *   An array of dependencies grouped by type (module, theme, entity).
+   * @return $this
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
    */

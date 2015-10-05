@@ -183,7 +183,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
     }
 
     $this->addDependency('module', $this->module);
-    return $this->dependencies;
+    return $this;
   }
 
 }

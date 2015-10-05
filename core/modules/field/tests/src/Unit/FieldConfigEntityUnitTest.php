@@ -153,7 +153,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
     ), $this->entityTypeId);
-    $dependencies = $field->calculateDependencies();
+    $dependencies = $field->calculateDependencies()->getDependencies();
     $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['config']);
     $this->assertContains('test.test_entity_type.id', $dependencies['config']);
     $this->assertEquals(['test_module', 'test_module2', 'test_module3'], $dependencies['module']);

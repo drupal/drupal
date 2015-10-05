@@ -92,7 +92,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
       ->will($this->returnValue($this->entityType));
 
     $entity = new RdfMapping($values, $this->entityTypeId);
-    $dependencies = $entity->calculateDependencies();
+    $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertArrayNotHasKey('config', $dependencies);
     $this->assertContains('test_module', $dependencies['module']);
   }
@@ -123,7 +123,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
                         ->will($this->returnValue($this->entityType));
 
     $entity = new RdfMapping($values, $this->entityTypeId);
-    $dependencies = $entity->calculateDependencies();
+    $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module.type.' . $bundle_id, $dependencies['config']);
     $this->assertContains('test_module', $dependencies['module']);
   }

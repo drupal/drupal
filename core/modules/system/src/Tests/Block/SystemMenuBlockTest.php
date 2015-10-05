@@ -162,7 +162,7 @@ class SystemMenuBlockTest extends KernelTestBase {
       'theme' => 'stark',
     ));
 
-    $dependencies = $block->calculateDependencies();
+    $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = array(
       'config' => array(
         'system.menu.' . $this->menu->id()

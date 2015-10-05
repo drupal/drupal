@@ -83,9 +83,9 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
   }
 
   /**
-   * Tests the calculateDependencies method.
+   * Tests the getDependencies method.
    */
-  public function testCalculateDependencies() {
+  public function testGetDependencies() {
     $expected = [];
     $expected['test_field_get_entity'] = [
       'module' => [
@@ -135,7 +135,7 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
     foreach ($this::$testViews as $view_id) {
       $view = Views::getView($view_id);
 
-      $dependencies = $view->calculateDependencies();
+      $dependencies = $view->getDependencies();
       $this->assertEqual($expected[$view_id], $dependencies);
       $config = $this->config('views.view.' . $view_id);
       \Drupal::service('config.storage.staging')->write($view_id, $config->get());

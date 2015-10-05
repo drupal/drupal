@@ -108,7 +108,7 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
       ->with('test_group')
       ->willReturn(array('bartik' => 'theme', 'toolbar' => 'module'));
 
-    $dependencies = $entity->calculateDependencies();
+    $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertEquals(['toolbar'], $dependencies['module']);
     $this->assertEquals(['bartik'], $dependencies['theme']);
     $this->assertEquals(['image.style.fallback', 'image.style.large', 'image.style.medium', 'image.style.small'], $dependencies['config']);

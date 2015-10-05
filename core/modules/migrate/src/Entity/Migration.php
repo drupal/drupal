@@ -590,6 +590,6 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
       $this->addDependency('config', $this->getEntityType()->getConfigPrefix() . '.' . $dependency);
     }
 
-    return $this->dependencies;
+    return $this;
   }
 }

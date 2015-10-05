@@ -1206,6 +1206,8 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
+    $this->storage->calculateDependencies();
+    return $this;
   }
 
   /**

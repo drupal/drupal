@@ -98,7 +98,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
       ->setMethods(array('getFilterFormat'))
       ->getMock();
 
-    $dependencies = $this->entity->calculateDependencies();
+    $dependencies = $this->entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);
   }
 

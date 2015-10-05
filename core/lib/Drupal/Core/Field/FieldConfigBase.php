@@ -245,7 +245,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     $bundle_config_dependency = $this->entityManager()->getDefinition($this->entity_type)->getBundleConfigDependency($this->bundle);
     $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
 
-    return $this->dependencies;
+    return $this;
   }
 
   /**

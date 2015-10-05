@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config\Entity;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
@@ -353,16 +354,9 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    // Dependencies should be recalculated on every save. This ensures stale
-    // dependencies are never saved.
-    if (isset($this->dependencies['enforced'])) {
-      $dependencies = $this->dependencies['enforced'];
-      $this->dependencies = $dependencies;
-      $this->dependencies['enforced'] = $dependencies;
-    }
-    else {
-      $this->dependencies = array();
-    }
+    // All dependencies should be recalculated on every save apart from enforced
+    // dependencies. This ensures stale dependencies are never saved.
+    $this->dependencies = array_intersect_key($this->dependencies, ['enforced' => '']);
     if ($this instanceof EntityWithPluginCollectionInterface) {
       // Configuration entities need to depend on the providers of any plugins
       // that they store the configuration for.
@@ -379,7 +373,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
         $this->addDependency('module', $provider);
       }
     }
-    return $this->dependencies;
+    return $this;
   }
 
   /**
@@ -438,7 +432,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function getDependencies() {
-    return $this->dependencies;
+    $dependencies = $this->dependencies;
+    if (isset($dependencies['enforced'])) {
+      // Merge the enforced dependencies into the list of dependencies.
+      $enforced_dependencies = $dependencies['enforced'];
+      unset($dependencies['enforced']);
+      $dependencies = NestedArray::mergeDeep($dependencies, $enforced_dependencies);
+    }
+    return $dependencies;
   }
 
   /**

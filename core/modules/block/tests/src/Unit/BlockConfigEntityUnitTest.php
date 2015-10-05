@@ -100,7 +100,7 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
       ->method('getPluginCollections')
       ->will($this->returnValue(array($plugin_collection)));
 
-    $dependencies = $entity->calculateDependencies();
+    $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertContains('test', $dependencies['module']);
     $this->assertContains('stark', $dependencies['theme']);
   }

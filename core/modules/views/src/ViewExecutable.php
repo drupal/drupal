@@ -2315,15 +2315,16 @@ class ViewExecutable implements \Serializable {
   }
 
   /**
-   * Calculates dependencies for the view.
+   * Gets dependencies for the view.
    *
    * @see \Drupal\views\Entity\View::calculateDependencies()
+   * @see \Drupal\views\Entity\View::getDependencies()
    *
    * @return array
    *   An array of dependencies grouped by type (module, theme, entity).
    */
-  public function calculateDependencies() {
-    return $this->storage->calculateDependencies();
+  public function getDependencies() {
+    return $this->storage->calculateDependencies()->getDependencies();
   }
 
   /**

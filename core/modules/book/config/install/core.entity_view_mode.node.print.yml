@@ -2,7 +2,6 @@ langcode: en
 status: false
 dependencies:
   module:
-    - book
     - node
   enforced:
     module:

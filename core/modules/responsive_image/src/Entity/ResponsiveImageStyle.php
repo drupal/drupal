@@ -212,7 +212,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
     array_walk($styles, function ($style) {
       $this->addDependency('config', $style->getConfigDependencyName());
     });
-    return $this->dependencies;
+    return $this;
   }
 
   /**

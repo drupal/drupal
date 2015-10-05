@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Update;
 
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
 /**
@@ -415,6 +416,12 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     foreach ($expected_enabled_themes as $theme) {
       $this->assertTrue($this->container->get('theme_handler')->themeExists($theme), 'The "' . $theme . '" is still enabled.');
     }
+
+    // Ensure that the Book module's node type does not have duplicated enforced
+    // dependencies.
+    // @see system_post_update_fix_enforced_dependencies()
+    $book_node_type = NodeType::load('book');
+    $this->assertEqual(['enforced' => ['module' => ['book']]], $book_node_type->get('dependencies'));
   }
 
   /**

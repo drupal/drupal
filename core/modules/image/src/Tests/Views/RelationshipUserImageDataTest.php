@@ -84,7 +84,7 @@ class RelationshipUserImageDataTest extends ViewTestBase {
         'user',
       ],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies());
+    $this->assertIdentical($expected, $view->getDependencies());
     $this->executeView($view);
     $expected_result = array(
       array(

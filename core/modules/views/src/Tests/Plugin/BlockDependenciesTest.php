@@ -37,7 +37,7 @@ class BlockDependenciesTest extends ViewKernelTestBase {
    */
   public function testExposedBlock() {
     $block = $this->createBlock('views_exposed_filter_block:test_exposed_block-page_1');
-    $dependencies = $block->calculateDependencies();
+    $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = array(
       'config' => array('views.view.test_exposed_block'),
       'module' => array('views'),
@@ -53,7 +53,7 @@ class BlockDependenciesTest extends ViewKernelTestBase {
    */
   public function testViewsBlock() {
     $block = $this->createBlock('views_block:content_recent-block_1');
-    $dependencies = $block->calculateDependencies();
+    $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = array(
       'config' => array('views.view.content_recent'),
       'module' => array('views'),

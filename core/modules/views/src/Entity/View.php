@@ -286,7 +286,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       $this->calculatePluginDependencies($display);
     }
 
-    return $this->dependencies;
+    return $this;
   }
 
   /**

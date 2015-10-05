@@ -93,7 +93,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
       'module' => 'test_module',
     ));
 
-    $dependencies = $field_storage->calculateDependencies();
+    $dependencies = $field_storage->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);
     $this->assertContains('entity_provider_module', $dependencies['module']);
   }

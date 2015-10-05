@@ -320,7 +320,8 @@ class ConfigManager implements ConfigManagerInterface {
       }
       if ($this->callOnDependencyRemoval($dependent, $original_dependencies, $type, $names)) {
         // Recalculate dependencies and update the dependency graph data.
-        $dependency_manager->updateData($dependent->getConfigDependencyName(), $dependent->calculateDependencies());
+        $dependent->calculateDependencies();
+        $dependency_manager->updateData($dependent->getConfigDependencyName(), $dependent->getDependencies());
         // Based on the updated data rebuild the list of dependents.
         $dependents = $this->findConfigEntityDependentsAsEntities($type, $names, $dependency_manager);
         // Ensure that the dependency has actually been fixed. It is possible
@@ -457,6 +458,9 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($this->activeStorage->readMultiple($this->activeStorage->listAll()) as $config_data) {
       if (isset($config_data['dependencies']['content'])) {
         $content_dependencies = array_merge($content_dependencies, $config_data['dependencies']['content']);
+      }
+      if (isset($config_data['dependencies']['enforced']['content'])) {
+        $content_dependencies = array_merge($content_dependencies, $config_data['dependencies']['enforced']['content']);
       }
     }
     foreach (array_unique($content_dependencies) as $content_dependency) {

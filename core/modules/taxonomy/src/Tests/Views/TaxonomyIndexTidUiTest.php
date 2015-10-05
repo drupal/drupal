@@ -121,7 +121,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         'user',
       ],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies());
+    $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
   }
 
   /**

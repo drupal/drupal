@@ -69,7 +69,8 @@ class ConfigDependencyTest extends EntityUnitTestBase {
     // Ensure that the provider of the config entity is not actually written to
     // the dependencies array.
     $raw_config = $this->config('config_test.dynamic.entity1');
-    $this->assertTrue(array_search('node', $raw_config->get('dependencies.module')) !== FALSE, 'Node module is written to the dependencies array as this has to be explicit.');
+    $root_module_dependencies = $raw_config->get('dependencies.module');
+    $this->assertTrue(empty($root_module_dependencies), 'Node module is not written to the root dependencies array as it is enforced.');
 
     // Create additional entities to test dependencies on config entities.
     $entity2 = $storage->create(array('id' => 'entity2', 'dependencies' => array('enforced' => array('config' => array($entity1->getConfigDependencyName())))));
@@ -301,10 +302,10 @@ class ConfigDependencyTest extends EntityUnitTestBase {
     $this->assertFalse($storage->load('entity1'), 'Entity 1 deleted');
     $entity2 = $storage->load('entity2');
     $this->assertTrue($entity2, 'Entity 2 not deleted');
-    $this->assertEqual($entity2->calculateDependencies()['config'], array(), 'Entity 2 dependencies updated to remove dependency on Entity1.');
+    $this->assertEqual($entity2->calculateDependencies()->getDependencies()['config'], array(), 'Entity 2 dependencies updated to remove dependency on Entity1.');
     $entity3 = $storage->load('entity3');
     $this->assertTrue($entity3, 'Entity 3 not deleted');
-    $this->assertEqual($entity3->calculateDependencies()['config'], [$entity2->getConfigDependencyName()], 'Entity 3 still depends on Entity 2.');
+    $this->assertEqual($entity3->calculateDependencies()->getDependencies()['config'], [$entity2->getConfigDependencyName()], 'Entity 3 still depends on Entity 2.');
     $this->assertFalse($storage->load('entity4'), 'Entity 4 deleted');
   }
 
@@ -402,10 +403,10 @@ class ConfigDependencyTest extends EntityUnitTestBase {
     $this->assertFalse($storage->load('entity1'), 'Entity 1 deleted');
     $entity2 = $storage->load('entity2');
     $this->assertTrue($entity2, 'Entity 2 not deleted');
-    $this->assertEqual($entity2->calculateDependencies()['config'], array(), 'Entity 2 dependencies updated to remove dependency on Entity1.');
+    $this->assertEqual($entity2->calculateDependencies()->getDependencies()['config'], array(), 'Entity 2 dependencies updated to remove dependency on Entity1.');
     $entity3 = $storage->load('entity3');
     $this->assertTrue($entity3, 'Entity 3 not deleted');
-    $this->assertEqual($entity3->calculateDependencies()['config'], [$entity2->getConfigDependencyName()], 'Entity 3 still depends on Entity 2.');
+    $this->assertEqual($entity3->calculateDependencies()->getDependencies()['config'], [$entity2->getConfigDependencyName()], 'Entity 3 still depends on Entity 2.');
   }
 
   /**

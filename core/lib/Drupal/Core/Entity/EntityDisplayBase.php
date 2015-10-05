@@ -278,7 +278,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       $mode_entity = $this->entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
       $this->addDependency('config', $mode_entity->getConfigDependencyName());
     }
-    return $this->dependencies;
+    return $this;
   }
 
   /**

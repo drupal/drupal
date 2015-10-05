@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Config\Entity;
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Provides a value object to discover configuration dependencies.
  *
@@ -26,7 +28,7 @@ class ConfigEntityDependency {
    *
    * @var array
    */
-  protected $dependencies;
+  protected $dependencies = [];
 
   /**
    * Constructs the configuration entity dependency from the entity values.
@@ -36,13 +38,16 @@ class ConfigEntityDependency {
    * @param array $values
    *   (optional) The configuration entity's values.
    */
-  public function __construct($name, $values = array()) {
+  public function __construct($name, $values = []) {
     $this->name = $name;
-    if (isset($values['dependencies'])) {
-      $this->dependencies = $values['dependencies'];
+    if (isset($values['dependencies']) && isset($values['dependencies']['enforced'])) {
+      // Merge the enforced dependencies into the list of dependencies.
+      $enforced_dependencies = $values['dependencies']['enforced'];
+      unset($values['dependencies']['enforced']);
+      $this->dependencies = NestedArray::mergeDeep($values['dependencies'], $enforced_dependencies);
     }
-    else {
-      $this->dependencies = array();
+    elseif (isset($values['dependencies'])) {
+      $this->dependencies = $values['dependencies'];
     }
   }
 

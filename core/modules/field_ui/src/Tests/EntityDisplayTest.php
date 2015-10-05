@@ -109,7 +109,7 @@ class EntityDisplayTest extends KernelTestBase {
     $new_display = $display->createCopy('other_view_mode');
     $new_display->save();
     $new_display = entity_load('entity_view_display', $new_display->id());
-    $dependencies = $new_display->calculateDependencies();
+    $dependencies = $new_display->calculateDependencies()->getDependencies();
     $this->assertEqual(array('config' => array('core.entity_view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
     $this->assertEqual($new_display->getTargetEntityTypeId(), $display->getTargetEntityTypeId());
     $this->assertEqual($new_display->getTargetBundle(), $display->getTargetBundle());
@@ -239,7 +239,7 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that the display has dependencies on the field and the module that
     // provides the formatter.
-    $dependencies = $display->calculateDependencies();
+    $dependencies = $display->calculateDependencies()->getDependencies();
     $this->assertEqual(array('config' => array('field.field.entity_test.entity_test.test_field'), 'module' => array('entity_test', 'field_test')), $dependencies);
   }
 

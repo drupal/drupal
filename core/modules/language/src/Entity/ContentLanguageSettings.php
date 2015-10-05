@@ -200,7 +200,7 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
     $bundle_config_dependency = $entity_type->getBundleConfigDependency($this->target_bundle);
     $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
 
-    return $this->dependencies;
+    return $this;
   }
 
 }

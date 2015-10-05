@@ -130,7 +130,7 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
                         ->with('filter_format')
                         ->will($this->returnValue($storage));
 
-    $dependencies = $entity->calculateDependencies();
+    $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);
     $this->assertContains('filter.format.test', $dependencies['config']);
   }

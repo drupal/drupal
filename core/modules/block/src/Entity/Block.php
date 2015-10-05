@@ -231,7 +231,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   public function calculateDependencies() {
     parent::calculateDependencies();
     $this->addDependency('theme', $this->theme);
-    return $this->dependencies;
+    return $this;
   }
 
   /**

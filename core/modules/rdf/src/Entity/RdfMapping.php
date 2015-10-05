@@ -148,7 +148,7 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
     $bundle_config_dependency = $entity_type->getBundleConfigDependency($this->bundle);
     $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
 
-    return $this->dependencies;
+    return $this;
   }
 
   /**

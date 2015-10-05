@@ -58,11 +58,11 @@ use Drupal\Component\Utility\SortArray;
  * Configuration entity classes usually extend
  * \Drupal\Core\Config\Entity\ConfigEntityBase. The base class provides a
  * generic implementation of the calculateDependencies() method that can
- * discover dependencies due to enforced dependencies, plugins, and third party
- * settings. If the configuration entity has dependencies that cannot be
- * discovered by the base class's implementation, then it needs to implement
+ * discover dependencies due to plugins, and third party settings. If the
+ * configuration entity has dependencies that cannot be discovered by the base
+ * class's implementation, then it needs to implement
  * \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies() to
- * calculate (and return) the dependencies. In this method, use
+ * calculate the dependencies. In this method, use
  * \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency() to add
  * dependencies. Implementations should call the base class implementation to
  * inherit the generic functionality.
@@ -87,7 +87,7 @@ use Drupal\Component\Utility\SortArray;
  * for configuration synchronization, which needs to be able to validate
  * configuration in the staging directory before the synchronization has
  * occurred. Also, if you have a configuration entity object and you want to
- * get the current dependencies without recalculation, you can use
+ * get the current dependencies (without recalculation), you can use
  * \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies().
  *
  * When uninstalling a module or a theme, configuration entities that are
@@ -115,6 +115,7 @@ use Drupal\Component\Utility\SortArray;
  * module dependency in the sub-module only.
  *
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
+ * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies()
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::onDependencyRemoval()
  * @see \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency()
  * @see \Drupal\Core\Config\ConfigInstallerInterface::installDefaultConfig()

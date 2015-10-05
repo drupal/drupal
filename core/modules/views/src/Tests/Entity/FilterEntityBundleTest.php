@@ -84,7 +84,7 @@ class FilterEntityBundleTest extends ViewTestBase {
         'node'
       ],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies());
+    $this->assertIdentical($expected, $view->getDependencies());
 
     $this->executeView($view);
 

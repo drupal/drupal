@@ -107,7 +107,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
     //   config entity and dependency on provider is managed automatically.
     $definition = $this->editorPluginManager()->createInstance($this->editor)->getPluginDefinition();
     $this->addDependency('module', $definition['provider']);
-    return $this->dependencies;
+    return $this;
   }
 
   /**

@@ -102,7 +102,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',
     ), 'language_content_settings');
-    $dependencies = $config->calculateDependencies();
+    $dependencies = $config->calculateDependencies()->getDependencies();
     $this->assertContains('test.test_entity_type.id', $dependencies['config']);
   }
 

@@ -6,8 +6,6 @@ status: true
 langcode: en
 protected_property: Default
 dependencies:
-  module:
-    - config_install_dependency_test
   enforced:
     module:
       - config_install_dependency_test

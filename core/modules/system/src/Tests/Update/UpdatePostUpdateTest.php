@@ -62,6 +62,7 @@ class UpdatePostUpdateTest extends UpdatePathTestBase {
     $updates = array_merge([
       'block_post_update_disable_blocks_with_missing_contexts',
       'field_post_update_save_custom_storage_property',
+      'system_post_update_fix_enforced_dependencies',
       'views_post_update_update_cacheability_metadata',
     ], $updates);
     $this->assertEqual($updates, $key_value->get('existing_updates'));

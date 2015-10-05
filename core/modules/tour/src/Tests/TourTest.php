@@ -143,7 +143,7 @@ class TourTest extends TourTestBasic {
 
     // Ensure that a tour entity has the expected dependencies based on plugin
     // providers and the module named in the configuration entity.
-    $dependencies = $tour->calculateDependencies();
+    $dependencies = $tour->calculateDependencies()->getDependencies();
     $this->assertEqual($dependencies['module'], array('system', 'tour_test'));
 
     $this->drupalGet('tour-test-1');
