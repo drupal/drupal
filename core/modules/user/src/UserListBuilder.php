@@ -7,7 +7,7 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -33,7 +33,7 @@ class UserListBuilder extends EntityListBuilder {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -53,12 +53,12 @@ class UserListBuilder extends EntityListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, QueryFactory $query_factory, DateFormatter $date_formatter,  RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, QueryFactory $query_factory, DateFormatterInterface $date_formatter,  RedirectDestinationInterface $redirect_destination) {
     parent::__construct($entity_type, $storage);
     $this->queryFactory = $query_factory;
     $this->dateFormatter = $date_formatter;

@@ -11,7 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -41,7 +41,7 @@ class DbLogController extends ControllerBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -78,12 +78,12 @@ class DbLogController extends ControllerBase {
    *   A database connection.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   A module handler.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder service.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, DateFormatter $date_formatter, FormBuilderInterface $form_builder) {
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, DateFormatterInterface $date_formatter, FormBuilderInterface $form_builder) {
     $this->database = $database;
     $this->moduleHandler = $module_handler;
     $this->dateFormatter = $date_formatter;

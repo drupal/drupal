@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 
 /**
  * A handler to provide proper displays for dates.
@@ -25,7 +25,7 @@ class Date extends FieldPluginBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -45,12 +45,12 @@ class Date extends FieldPluginBase {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Entity\EntityStorageInterface $date_format_storage
    *   The date format storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatter $date_formatter, EntityStorageInterface $date_format_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, EntityStorageInterface $date_format_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->dateFormatter = $date_formatter;

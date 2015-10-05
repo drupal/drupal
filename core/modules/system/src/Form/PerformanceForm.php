@@ -11,7 +11,7 @@ use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,7 +30,7 @@ class PerformanceForm extends ConfigFormBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -54,14 +54,14 @@ class PerformanceForm extends ConfigFormBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Cache\CacheBackendInterface $render_cache
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
    *   The CSS asset collection optimizer service.
    * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $js_collection_optimizer
    *   The JavaScript asset collection optimizer service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache, DateFormatter $date_formatter, AssetCollectionOptimizerInterface $css_collection_optimizer, AssetCollectionOptimizerInterface $js_collection_optimizer) {
+  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache, DateFormatterInterface $date_formatter, AssetCollectionOptimizerInterface $css_collection_optimizer, AssetCollectionOptimizerInterface $js_collection_optimizer) {
     parent::__construct($config_factory);
 
     $this->renderCache = $render_cache;

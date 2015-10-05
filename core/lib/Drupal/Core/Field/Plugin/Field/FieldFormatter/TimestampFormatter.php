@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -34,7 +34,7 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -62,12 +62,12 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
    *   The view mode.
    * @param array $third_party_settings
    *   Third party settings.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Entity\EntityStorageInterface $date_format_storage
    *   The date format storage.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, DateFormatter $date_formatter, EntityStorageInterface $date_format_storage) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, DateFormatterInterface $date_formatter, EntityStorageInterface $date_format_storage) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
     $this->dateFormatter = $date_formatter;

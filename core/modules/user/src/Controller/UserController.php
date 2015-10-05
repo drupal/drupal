@@ -9,7 +9,7 @@ namespace Drupal\user\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -24,7 +24,7 @@ class UserController extends ControllerBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -45,14 +45,14 @@ class UserController extends ControllerBase {
   /**
    * Constructs a UserController object.
    *
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
    * @param \Drupal\user\UserDataInterface $user_data
    *   The user data service.
    */
-  public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data) {
+  public function __construct(DateFormatterInterface $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;

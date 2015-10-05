@@ -8,7 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +23,7 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -37,12 +37,12 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * Constructs a new date format form.
    *
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date service.
    * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $date_format_storage
    *   The date format storage.
    */
-  public function __construct(DateFormatter $date_formatter, ConfigEntityStorageInterface $date_format_storage) {
+  public function __construct(DateFormatterInterface $date_formatter, ConfigEntityStorageInterface $date_format_storage) {
     $date = new DrupalDateTime();
 
     $this->dateFormatter = $date_formatter;

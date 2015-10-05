@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,17 +24,17 @@ class AggregatorController extends ControllerBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
    * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
    *
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *    The date formatter service.
    */
-  public function __construct(DateFormatter $date_formatter) {
+  public function __construct(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
   }
 

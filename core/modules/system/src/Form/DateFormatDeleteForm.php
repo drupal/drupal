@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,17 +19,17 @@ class DateFormatDeleteForm extends EntityDeleteForm {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
    * Constructs an DateFormatDeleteForm object.
    *
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(DateFormatter $date_formatter) {
+  public function __construct(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
   }
 

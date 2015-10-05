@@ -10,7 +10,7 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
@@ -39,7 +39,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -57,12 +57,12 @@ class CommentAdminOverview extends FormBase {
    *   The entity manager service.
    * @param \Drupal\comment\CommentStorageInterface $comment_storage
    *   The comment storage.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(EntityManagerInterface $entity_manager, CommentStorageInterface $comment_storage, DateFormatter $date_formatter, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, CommentStorageInterface $comment_storage, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->commentStorage = $comment_storage;
     $this->dateFormatter = $date_formatter;

@@ -14,7 +14,7 @@ use Drupal\aggregator\FeedInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
@@ -61,7 +61,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -80,10 +80,10 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *   The entity query object for feed items.
    * @param \Drupal\aggregator\ItemStorageInterface $item_storage
    *   The entity storage for feed items.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config, QueryInterface $item_query, ItemStorageInterface $item_storage, DateFormatter $date_formatter) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config, QueryInterface $item_query, ItemStorageInterface $item_storage, DateFormatterInterface $date_formatter) {
     $this->configFactory = $config;
     $this->itemStorage = $item_storage;
     $this->itemQuery = $item_query;

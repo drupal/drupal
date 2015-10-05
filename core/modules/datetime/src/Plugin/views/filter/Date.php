@@ -7,7 +7,7 @@
 
 namespace Drupal\datetime\Plugin\views\filter;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\views\FieldAPIHandlerTrait;
@@ -32,7 +32,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -61,12 +61,12 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Symfony\Component\HttpFoundation\RequestStack
    *   The request stack used to determine the current time.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatter $date_formatter, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->dateFormatter = $date_formatter;
     $this->requestStack = $request_stack;
