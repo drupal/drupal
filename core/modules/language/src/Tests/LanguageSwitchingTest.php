@@ -25,7 +25,7 @@ class LanguageSwitchingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'language', 'block', 'language_test', 'menu_ui');
+  public static $modules = array('locale', 'locale_test', 'language', 'block', 'language_test', 'menu_ui');
 
   protected function setUp() {
     parent::setUp();

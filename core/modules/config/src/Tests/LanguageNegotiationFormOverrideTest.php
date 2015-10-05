@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class LanguageNegotiationFormOverrideTest extends WebTestBase {
 
-  public static $modules = array('language', 'locale');
+  public static $modules = array('language', 'locale', 'locale_test');
 
   /**
    * Tests that overrides do not affect language-negotiation form values.

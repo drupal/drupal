@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
@@ -87,8 +88,12 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertRaw(t('Missing translations for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', array('@languages' => t('German'), ':updates' => \Drupal::url('locale.translate_status'))), 'Missing translations message');
     $this->drupalGet('admin/reports/translations');
     $this->assertText(t('Missing translations for one project'), 'No translations found');
-    $this->assertText(SafeMarkup::format('@module (@version). @info', array('@module' => 'Locale test translate', '@version' => '1.3-dev', '@info' => t('No translation files are provided for development releases.'))), 'Release details');
-    $this->assertText(t('No translation files are provided for development releases.'), 'Release info');
+    $release_details = new FormattableMarkup('@module (@version). @info', [
+      '@module' => 'Locale test translate',
+      '@version' => '1.3-dev',
+      '@info' => t('File not found at %local_path', array('%local_path' => 'core/modules/locale/tests/test.de.po'))
+    ]);
+    $this->assertRaw($release_details->__toString(), 'Release details');
 
     // Override Drupal core translation status as 'no translations found'.
     $status = locale_translation_get_status();

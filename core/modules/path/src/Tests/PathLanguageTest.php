@@ -19,7 +19,7 @@ class PathLanguageTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'locale', 'content_translation');
+  public static $modules = array('path', 'locale', 'locale_test', 'content_translation');
 
   /**
    * An user with permissions to administer content types.

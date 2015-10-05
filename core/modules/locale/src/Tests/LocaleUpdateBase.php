@@ -50,18 +50,13 @@ abstract class LocaleUpdateBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('update', 'update_test', 'locale', 'locale_test');
+  public static $modules = array('locale', 'locale_test');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-
-    // Update module should not go out to d.o to check for updates. We override
-    // the url to the default update_test xml path. But without providing
-    // a mock xml file, no update data will be found.
-    $this->config('update.settings')->set('fetch.url', Url::fromRoute('update_test.update_test', [], ['absolute' => TRUE])->toString())->save();
 
     // Setup timestamps to identify old and new translation sources.
     $this->timestampOld = REQUEST_TIME - 300;
@@ -186,6 +181,7 @@ EOF;
     // A flag is set to let the locale_test module replace the project data with
     // a set of test projects which match the below project files.
     \Drupal::state()->set('locale.test_projects_alter', TRUE);
+    \Drupal::state()->set('locale.remove_core_project', FALSE);
 
     // Setup the environment.
     $public_path = PublicStream::basePath();

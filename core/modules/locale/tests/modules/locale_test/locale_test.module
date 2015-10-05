@@ -45,6 +45,10 @@ function locale_test_locale_translation_projects_alter(&$projects) {
   // translation update system will not go out to l.d.o to check.
   $projects['drupal']['server_pattern'] = 'translations://';
 
+  if (\Drupal::state()->get('locale.remove_core_project')) {
+    unset($projects['drupal']);
+  }
+
   if (\Drupal::state()->get('locale.test_projects_alter')) {
 
     // Instead of the default ftp.drupal.org we use the file system of the test

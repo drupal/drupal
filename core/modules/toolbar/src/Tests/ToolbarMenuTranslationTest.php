@@ -28,7 +28,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('toolbar', 'toolbar_test', 'locale');
+  public static $modules = array('toolbar', 'toolbar_test', 'locale', 'locale_test');
 
   protected function setUp() {
     parent::setUp();

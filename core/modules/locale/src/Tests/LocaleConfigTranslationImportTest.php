@@ -23,7 +23,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'update', 'locale_test_translate');
+  public static $modules = array('language', 'locale_test_translate');
 
   /**
    * {@inheritdoc}
@@ -33,10 +33,6 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
 
     $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions'));
     $this->drupalLogin($admin_user);
-
-    // Update module should not go out to d.o to check for updates. We override
-    // the url to an invalid update source. No update data will be found.
-    $this->config('update.settings')->set('fetch.url', (string) Url::fromRoute('<front>')->setAbsolute()->toString())->save();
   }
 
   /**

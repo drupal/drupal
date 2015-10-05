@@ -23,7 +23,7 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale');
+  public static $modules = array('locale', 'locale_test');
 
   public function testFileParsing() {
     $filename = drupal_get_path('module', 'locale') . '/tests/locale_test.js';

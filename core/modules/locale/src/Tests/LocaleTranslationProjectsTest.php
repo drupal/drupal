@@ -19,7 +19,7 @@ class LocaleTranslationProjectsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['locale'];
+  public static $modules = ['locale', 'locale_test'];
 
   /**
    * The module handler used in this test.
@@ -43,6 +43,7 @@ class LocaleTranslationProjectsTest extends KernelTestBase {
 
     $this->moduleHandler = $this->container->get('module_handler');
     $this->projectStorage = $this->container->get('locale.project');
+    \Drupal::state()->set('locale.remove_core_project', TRUE);
   }
 
 

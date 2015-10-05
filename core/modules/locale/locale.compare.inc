@@ -44,11 +44,6 @@ function locale_translation_flush_projects() {
  *   - "status": Project status, 1 = enabled.
  */
 function locale_translation_build_projects() {
-  // This function depends on Update module. We degrade gracefully.
-  if (!\Drupal::moduleHandler()->moduleExists('update')) {
-    return array();
-  }
-
   // Get the project list based on .info.yml files.
   $projects = locale_translation_project_list();
 
@@ -57,33 +52,18 @@ function locale_translation_build_projects() {
 
   $default_server = locale_translation_default_translation_server();
 
-  // If project is a dev release, or core, find the latest available release.
-  $project_updates = update_get_available(TRUE);
   foreach ($projects as $name => $data) {
-    if (isset($project_updates[$name]['releases']) && $project_updates[$name]['project_status'] != 'not-fetched') {
-      // Find out if a dev version is installed.
-      if (preg_match("/^\d+\.x-(\d+)\..*-dev$/", $data['info']['version'], $matches) ||
-          preg_match("/^(\d+)\.\d+\.\d+.*-dev$/", $data['info']['version'], $matches)) {
-        // Find a suitable release to use as alternative translation.
-        foreach ($project_updates[$name]['releases'] as $project_release) {
-          // The first release with the same major release number which is not a
-          // dev release is the one. Releases are sorted the most recent first.
-          // For example the major release number for a contrib module
-          // 8.x-2.x-dev is "2", for core 8.1.0-dev is "8".
-          // @todo https://www.drupal.org/node/1774024 Make a helper function.
-          if ($project_release['version_major'] == $matches[1] &&
-              (!isset($project_release['version_extra']) || $project_release['version_extra'] != 'dev')) {
-            $release = $project_release;
-            break;
-          }
-        }
+    // For dev releases, remove the '-dev' part and trust the translation server
+    // to fall back to the latest stable release for that branch.
+    if (isset($data['info']['version']) && strpos($data['info']['version'], '-dev')) {
+      if (preg_match("/^(\d+\.x-\d+\.).*$/", $data['info']['version'], $matches)) {
+        // Example matches: 8.x-1.x-dev, 8.x-1.0-alpha1+5-dev => 8.x-1.x
+        $data['info']['version'] = $matches[1] . 'x';
       }
-
-      if (!empty($release['version'])) {
-        $data['info']['version'] = $release['version'];
+      elseif (preg_match("/^(\d+\.\d+\.).*$/", $data['info']['version'], $matches)) {
+        // Example match: 8.0.0-dev => 8.0.x (Drupal core)
+        $data['info']['version'] = $matches[1] . 'x';
       }
-
-      unset($release);
     }
 
     // For every project store information.
@@ -96,6 +76,7 @@ function locale_translation_build_projects() {
       'server_pattern' => isset($data['info']['interface translation server pattern']) && $data['info']['interface translation server pattern'] ? $data['info']['interface translation server pattern'] : $default_server['pattern'],
       'status' => !empty($data['project_status']) ? 1 : 0,
     );
+
     $project = (object) $data;
     $projects[$name] = $project;
 
@@ -117,8 +98,6 @@ function locale_translation_build_projects() {
 function locale_translation_project_list() {
   $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
-    module_load_include('compare.inc', 'update');
-    $config = \Drupal::config('locale.settings');
     $projects = array();
 
     $additional_whitelist = array(

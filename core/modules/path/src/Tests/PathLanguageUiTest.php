@@ -19,7 +19,7 @@ class PathLanguageUiTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'locale');
+  public static $modules = array('path', 'locale', 'locale_test');
 
   protected function setUp() {
     parent::setUp();

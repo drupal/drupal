@@ -1,7 +1,0 @@
-name: 'Locale Test Not Development Release'
-type: module
-description: 'The first release with the same major release number which is not a development release.'
-package: Testing
-version: VERSION
-core: 8.x
-hidden: true
