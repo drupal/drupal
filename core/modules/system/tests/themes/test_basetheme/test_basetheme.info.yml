@@ -15,3 +15,7 @@ libraries-override:
     css:
       component:
         assets/vendor/farbtastic/farbtastic.css: css/farbtastic.css
+
+libraries-extend:
+  classy/base:
+    - test_basetheme/global-styling

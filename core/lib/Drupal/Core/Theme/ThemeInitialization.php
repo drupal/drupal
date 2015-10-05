@@ -185,6 +185,35 @@ class ThemeInitialization implements ThemeInitializationInterface {
       }
     }
 
+    // Get libraries extensions declared by base themes.
+    foreach ($base_themes as $base) {
+      if (!empty($base->info['libraries-extend'])) {
+        foreach ($base->info['libraries-extend'] as $library => $extend) {
+          if (isset($values['libraries_extend'][$library])) {
+            // Merge if libraries-extend has already been defined for this
+            // library.
+            $values['libraries_extend'][$library] = array_merge($values['libraries_extend'][$library], $extend);
+          }
+          else {
+            $values['libraries_extend'][$library] = $extend;
+          }
+        }
+      }
+    }
+    // Add libraries extensions declared by this theme.
+    if (!empty($theme->info['libraries-extend'])) {
+      foreach ($theme->info['libraries-extend'] as $library => $extend) {
+        if (isset($values['libraries_extend'][$library])) {
+          // Merge if libraries-extend has already been defined for this
+          // library.
+          $values['libraries_extend'][$library] = array_merge($values['libraries_extend'][$library], $extend);
+        }
+        else {
+          $values['libraries_extend'][$library] = $extend;
+        }
+      }
+    }
+
     // Do basically the same as the above for libraries
     $values['libraries'] = array();
 

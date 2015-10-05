@@ -94,7 +94,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
     $this->activeTheme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->themeManager->expects($this->once())
+    $this->themeManager->expects($this->exactly(3))
       ->method('getActiveTheme')
       ->willReturn($this->activeTheme);
     $this->activeTheme->expects($this->once())
@@ -120,7 +120,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
     $this->activeTheme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->themeManager->expects($this->once())
+    $this->themeManager->expects($this->exactly(3))
       ->method('getActiveTheme')
       ->willReturn($this->activeTheme);
     $this->activeTheme->expects($this->once())

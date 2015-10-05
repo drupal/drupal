@@ -104,6 +104,7 @@ class ActiveTheme {
       'base_themes' => [],
       'regions' => [],
       'libraries_override' => [],
+      'libraries_extend' => [],
     ];
 
     $this->name = $values['name'];
@@ -116,6 +117,7 @@ class ActiveTheme {
     $this->baseThemes = $values['base_themes'];
     $this->regions = $values['regions'];
     $this->librariesOverride = $values['libraries_override'];
+    $this->librariesExtend = $values['libraries_extend'];
   }
 
   /**
@@ -217,6 +219,16 @@ class ActiveTheme {
    */
   public function getLibrariesOverride() {
     return $this->librariesOverride;
+  }
+
+  /**
+   * Returns the libraries extended by the active theme.
+   *
+   * @return array
+   *   The list of libraries-extend definitions.
+   */
+  public function getLibrariesExtend() {
+    return $this->librariesExtend;
   }
 
 }

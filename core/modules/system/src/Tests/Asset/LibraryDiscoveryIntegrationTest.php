@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Asset;
 
+use Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException;
 use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\simpletest\KernelTestBase;
 
@@ -159,6 +160,54 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   }
 
   /**
+   * Tests libraries-extend.
+   */
+  public function testLibrariesExtend() {
+    // Activate classy themes and verify the libraries are not extended.
+    $this->activateTheme('classy');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/css/extend_1.css', 'classy', 'book-navigation', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/js/extend_1.js', 'classy', 'book-navigation', 'js');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/css/extend_2.css', 'classy', 'book-navigation', 'css');
+
+    // Activate the theme that extends the book-navigation library in classy.
+    $this->activateTheme('test_theme_libraries_extend');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/css/extend_1.css', 'classy', 'book-navigation', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/js/extend_1.js', 'classy', 'book-navigation', 'js');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/css/extend_2.css', 'classy', 'book-navigation', 'css');
+
+    // Activate a sub theme and confirm that it inherits the library assets
+    // extended in the base theme as well as its own.
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'classy', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'classy', 'base', 'css');
+    $this->activateTheme('test_subtheme');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'classy', 'base', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'classy', 'base', 'css');
+
+    // Activate test theme that extends with a non-existent library. An
+    // exception should be thrown.
+    $this->activateTheme('test_theme_libraries_extend');
+    try {
+      $this->libraryDiscovery->getLibraryByName('core', 'drupal.dialog');
+      $this->fail('Throw Exception when specifying non-existent libraries-extend.');
+    }
+    catch (InvalidLibrariesExtendSpecificationException $e) {
+      $expected_message = 'The specified library "test_theme_libraries_extend/non_existent_library" does not exist.';
+      $this->assertEqual($e->getMessage(), $expected_message, 'Throw Exception when specifying non-existent libraries-extend.');
+    }
+
+    // Also, test non-string libraries-extend. An exception should be thrown.
+    $this->container->get('theme_installer')->install(['test_theme']);
+    try {
+      $this->libraryDiscovery->getLibraryByName('test_theme', 'collapse');
+      $this->fail('Throw Exception when specifying non-string libraries-extend.');
+    }
+    catch (InvalidLibrariesExtendSpecificationException $e) {
+      $expected_message = 'The libraries-extend specification for each library must be a list of strings.';
+      $this->assertEqual($e->getMessage(), $expected_message, 'Throw Exception when specifying non-string libraries-extend.');
+    }
+  }
+
+  /**
    * Activates a specified theme.
    *
    * Installs the theme if not already installed and makes it the active theme.
@@ -178,6 +227,9 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $theme_manager->setActiveTheme($theme_initializer->getActiveThemeByName($theme_name));
 
     $this->libraryDiscovery->clearCachedDefinitions();
+
+    // Assert message.
+    $this->pass(sprintf('Activated theme "%s"', $theme_name));
   }
 
   /**

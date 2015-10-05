@@ -9,3 +9,7 @@ libraries:
 stylesheets-remove:
   - '@theme_test/css/sub-remove.css'
   - '@test_basetheme/base-add.sub-remove.css'
+
+libraries-extend:
+  classy/base:
+    - test_subtheme/global-styling

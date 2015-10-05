@@ -1,0 +1,15 @@
+name: 'Test theme libraries-extend'
+type: theme
+description: 'Test Theme with libraries-extend'
+version: VERSION
+base theme: classy
+core: 8.x
+libraries-extend:
+  classy/book-navigation:
+    - test_theme_libraries_extend/extend_one
+    - test_theme_libraries_extend/extend_two
+  core/drupal.dialog:
+    - test_theme_libraries_extend/non_existent_library
+  test_theme/collapse:
+    - not_a_string:
+        expected: 'an exception'
