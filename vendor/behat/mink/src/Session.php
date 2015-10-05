@@ -39,9 +39,9 @@ class Session
             $selectorsHandler = new SelectorsHandler();
         }
 
-        $this->driver           = $driver;
+        $this->driver = $driver;
         $this->selectorsHandler = $selectorsHandler;
-        $this->page             = new DocumentElement($this);
+        $this->page = new DocumentElement($this);
     }
 
     /**
@@ -144,7 +144,7 @@ class Session
     }
 
     /**
-     * Sets HTTP Basic authentication parameters
+     * Sets HTTP Basic authentication parameters.
      *
      * @param string|Boolean $user     user name or false to disable authentication
      * @param string         $password password
@@ -176,6 +176,27 @@ class Session
     }
 
     /**
+     * Returns specific response header.
+     *
+     * @param string $name
+     *
+     * @return string|null
+     */
+    public function getResponseHeader($name)
+    {
+        $headers = $this->driver->getResponseHeaders();
+
+        $name = strtolower($name);
+        $headers = array_change_key_case($headers, CASE_LOWER);
+
+        if (!isset($headers[$name])) {
+            return null;
+        }
+
+        return is_array($headers[$name]) ? $headers[$name][0] : $headers[$name];
+    }
+
+    /**
      * Sets cookie.
      *
      * @param string $name
@@ -201,7 +222,7 @@ class Session
     /**
      * Returns response status code.
      *
-     * @return integer
+     * @return int
      */
     public function getStatusCode()
     {
@@ -230,7 +251,7 @@ class Session
     }
 
     /**
-     * Return the names of all open windows
+     * Return the names of all open windows.
      *
      * @return array Array of all open window's names.
      */
@@ -240,7 +261,7 @@ class Session
     }
 
     /**
-     * Return the name of the currently active window
+     * Return the name of the currently active window.
      *
      * @return string The name of the current window.
      */
@@ -318,10 +339,10 @@ class Session
     /**
      * Waits some time or until JS condition turns true.
      *
-     * @param integer $time      time in milliseconds
-     * @param string  $condition JS condition
+     * @param int    $time      time in milliseconds
+     * @param string $condition JS condition
      *
-     * @return boolean
+     * @return bool
      */
     public function wait($time, $condition = 'false')
     {
@@ -331,9 +352,9 @@ class Session
     /**
      * Set the dimensions of the window.
      *
-     * @param integer $width  set the window width, measured in pixels
-     * @param integer $height set the window height, measured in pixels
-     * @param string  $name   window name (null for the main window)
+     * @param int    $width  set the window width, measured in pixels
+     * @param int    $height set the window height, measured in pixels
+     * @param string $name   window name (null for the main window)
      */
     public function resizeWindow($width, $height, $name = null)
     {
@@ -341,7 +362,7 @@ class Session
     }
 
     /**
-     * Maximize the window if it is not maximized already
+     * Maximize the window if it is not maximized already.
      *
      * @param string $name window name (null for the main window)
      */

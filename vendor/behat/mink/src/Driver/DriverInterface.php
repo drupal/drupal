@@ -140,7 +140,7 @@ interface DriverInterface
     public function back();
 
     /**
-     * Sets HTTP Basic authentication parameters
+     * Sets HTTP Basic authentication parameters.
      *
      * @param string|Boolean $user     user name or false to disable authentication
      * @param string         $password password
@@ -217,7 +217,7 @@ interface DriverInterface
     /**
      * Returns last response status code.
      *
-     * @return integer
+     * @return int
      *
      * @throws UnsupportedDriverActionException When operation not supported by the driver
      * @throws DriverException                  When the operation cannot be done
@@ -519,9 +519,9 @@ interface DriverInterface
     /**
      * Presses specific keyboard key.
      *
-     * @param string         $xpath
-     * @param string|integer $char     could be either char ('b') or char-code (98)
-     * @param string         $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     * @param string     $xpath
+     * @param string|int $char     could be either char ('b') or char-code (98)
+     * @param string     $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
      *
      * @throws UnsupportedDriverActionException When operation not supported by the driver
      * @throws DriverException                  When the operation cannot be done
@@ -531,9 +531,9 @@ interface DriverInterface
     /**
      * Pressed down specific keyboard key.
      *
-     * @param string         $xpath
-     * @param string|integer $char     could be either char ('b') or char-code (98)
-     * @param string         $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     * @param string     $xpath
+     * @param string|int $char     could be either char ('b') or char-code (98)
+     * @param string     $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
      *
      * @throws UnsupportedDriverActionException When operation not supported by the driver
      * @throws DriverException                  When the operation cannot be done
@@ -543,9 +543,9 @@ interface DriverInterface
     /**
      * Pressed up specific keyboard key.
      *
-     * @param string         $xpath
-     * @param string|integer $char     could be either char ('b') or char-code (98)
-     * @param string         $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     * @param string     $xpath
+     * @param string|int $char     could be either char ('b') or char-code (98)
+     * @param string     $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
      *
      * @throws UnsupportedDriverActionException When operation not supported by the driver
      * @throws DriverException                  When the operation cannot be done
@@ -591,10 +591,10 @@ interface DriverInterface
     /**
      * Waits some time or until JS condition turns true.
      *
-     * @param integer $timeout   timeout in milliseconds
-     * @param string  $condition JS condition
+     * @param int    $timeout   timeout in milliseconds
+     * @param string $condition JS condition
      *
-     * @return boolean
+     * @return bool
      *
      * @throws UnsupportedDriverActionException When operation not supported by the driver
      * @throws DriverException                  When the operation cannot be done
@@ -604,9 +604,9 @@ interface DriverInterface
     /**
      * Set the dimensions of the window.
      *
-     * @param integer $width  set the window width, measured in pixels
-     * @param integer $height set the window height, measured in pixels
-     * @param string  $name   window name (null for the main window)
+     * @param int    $width  set the window width, measured in pixels
+     * @param int    $height set the window height, measured in pixels
+     * @param string $name   window name (null for the main window)
      *
      * @throws UnsupportedDriverActionException When operation not supported by the driver
      * @throws DriverException                  When the operation cannot be done
@@ -614,7 +614,7 @@ interface DriverInterface
     public function resizeWindow($width, $height, $name = null);
 
     /**
-     * Maximize the window if it is not maximized already
+     * Maximizes the window if it is not maximized already.
      *
      * @param string $name window name (null for the main window)
      *

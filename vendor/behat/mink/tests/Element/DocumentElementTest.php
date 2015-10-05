@@ -19,6 +19,9 @@ class DocumentElementTest extends ElementTest
         $this->document = new DocumentElement($this->session);
     }
 
+    /**
+     * @group legacy
+     */
     public function testGetSession()
     {
         $this->assertEquals($this->session, $this->document->getSession());

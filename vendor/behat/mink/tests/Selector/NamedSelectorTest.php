@@ -3,7 +3,7 @@
 namespace Behat\Mink\Tests\Selector;
 
 use Behat\Mink\Selector\NamedSelector;
-use Behat\Mink\Selector\SelectorsHandler;
+use Behat\Mink\Selector\Xpath\Escaper;
 
 abstract class NamedSelectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,10 +42,6 @@ abstract class NamedSelectorTest extends \PHPUnit_Framework_TestCase
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->loadHTML(file_get_contents(__DIR__.'/fixtures/'.$fixtureFile));
 
-        // Escape the locator as Mink 1.x expects the caller of the NamedSelector to handle it
-        $selectorsHandler = new SelectorsHandler();
-        $locator = $selectorsHandler->xpathLiteral($locator);
-
         $namedSelector = $this->getSelector();
 
         $xpath = $namedSelector->translateToXPath(array($selector, $locator));
@@ -54,6 +50,19 @@ abstract class NamedSelectorTest extends \PHPUnit_Framework_TestCase
         $nodeList = $domXpath->query($xpath);
 
         $this->assertEquals($expectedCount, $nodeList->length);
+    }
+
+    /**
+     * @dataProvider getSelectorTests
+     * @group legacy
+     */
+    public function testEscapedSelectors($fixtureFile, $selector, $locator, $expectedExactCount, $expectedPartialCount = null)
+    {
+        // Escape the locator as Mink 1.x expects the caller of the NamedSelector to handle it
+        $escaper = new Escaper();
+        $locator = $escaper->escapeLiteral($locator);
+
+        $this->testSelectors($fixtureFile, $selector, $locator, $expectedExactCount, $expectedPartialCount);
     }
 
     public function getSelectorTests()
@@ -122,6 +131,7 @@ abstract class NamedSelectorTest extends \PHPUnit_Framework_TestCase
 
             // 3 matches, because matches every HTML node in path: html > body > div
             'content' => array('test.html', 'content', 'content-text', 1, 4),
+            'content with quotes' => array('test.html', 'content', 'some "quoted" content', 1, 3),
 
             'select (name/label)' => array('test.html', 'select', 'the-field', 3),
             'select (with-id)' => array('test.html', 'select', 'the-field-select', 1),
@@ -152,7 +162,7 @@ abstract class NamedSelectorTest extends \PHPUnit_Framework_TestCase
     abstract protected function getSelector();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract protected function allowPartialMatch();
 }

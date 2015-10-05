@@ -7,7 +7,8 @@ use Behat\Mink\Tests\Driver\TestCase;
 class CookieTest extends TestCase
 {
     /**
-     * test cookie decoding
+     * test cookie decoding.
+     *
      * @group issue140
      */
     public function testIssue140()

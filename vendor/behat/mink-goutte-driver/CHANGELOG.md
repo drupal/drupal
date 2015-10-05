@@ -1,3 +1,14 @@
+1.2.0 / 2015-09-21
+==================
+
+New features:
+
+* Added support for Goutte 3.1+
+
+Misc:
+
+* Updated the repository structure to PSR-4
+
 1.1.0 / 2014-10-09
 ==================
 

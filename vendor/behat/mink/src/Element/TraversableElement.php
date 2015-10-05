@@ -28,8 +28,6 @@ abstract class TraversableElement extends Element
      */
     public function findById($id)
     {
-        $id = $this->getSelectorsHandler()->xpathLiteral($id);
-
         return $this->find('named', array('id', $id));
     }
 
@@ -54,9 +52,7 @@ abstract class TraversableElement extends Element
      */
     public function findLink($locator)
     {
-        return $this->find('named', array(
-            'link', $this->getSelectorsHandler()->xpathLiteral($locator),
-        ));
+        return $this->find('named', array('link', $locator));
     }
 
     /**
@@ -71,7 +67,7 @@ abstract class TraversableElement extends Element
         $link = $this->findLink($locator);
 
         if (null === $link) {
-            throw $this->elementNotFound('link', 'id|title|alt|text', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'link', 'id|title|alt|text', $locator);
         }
 
         $link->click();
@@ -98,9 +94,7 @@ abstract class TraversableElement extends Element
      */
     public function findButton($locator)
     {
-        return $this->find('named', array(
-            'button', $this->getSelectorsHandler()->xpathLiteral($locator),
-        ));
+        return $this->find('named', array('button', $locator));
     }
 
     /**
@@ -115,7 +109,7 @@ abstract class TraversableElement extends Element
         $button = $this->findButton($locator);
 
         if (null === $button) {
-            throw $this->elementNotFound('button', 'id|name|title|alt|value', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'button', 'id|name|title|alt|value', $locator);
         }
 
         $button->press();
@@ -142,9 +136,7 @@ abstract class TraversableElement extends Element
      */
     public function findField($locator)
     {
-        return $this->find('named', array(
-            'field', $this->getSelectorsHandler()->xpathLiteral($locator),
-        ));
+        return $this->find('named', array('field', $locator));
     }
 
     /**
@@ -162,7 +154,7 @@ abstract class TraversableElement extends Element
         $field = $this->findField($locator);
 
         if (null === $field) {
-            throw $this->elementNotFound('form field', 'id|name|label|value', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'form field', 'id|name|label|value|placeholder', $locator);
         }
 
         $field->setValue($value);
@@ -212,7 +204,7 @@ abstract class TraversableElement extends Element
         $field = $this->findField($locator);
 
         if (null === $field) {
-            throw $this->elementNotFound('form field', 'id|name|label|value', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'form field', 'id|name|label|value', $locator);
         }
 
         $field->check();
@@ -230,7 +222,7 @@ abstract class TraversableElement extends Element
         $field = $this->findField($locator);
 
         if (null === $field) {
-            throw $this->elementNotFound('form field', 'id|name|label|value', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'form field', 'id|name|label|value', $locator);
         }
 
         $field->uncheck();
@@ -245,9 +237,7 @@ abstract class TraversableElement extends Element
      */
     public function hasSelect($locator)
     {
-        return $this->has('named', array(
-            'select', $this->getSelectorsHandler()->xpathLiteral($locator),
-        ));
+        return $this->has('named', array('select', $locator));
     }
 
     /**
@@ -266,7 +256,7 @@ abstract class TraversableElement extends Element
         $field = $this->findField($locator);
 
         if (null === $field) {
-            throw $this->elementNotFound('form field', 'id|name|label|value', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'form field', 'id|name|label|value', $locator);
         }
 
         $field->selectOption($value, $multiple);
@@ -281,9 +271,7 @@ abstract class TraversableElement extends Element
      */
     public function hasTable($locator)
     {
-        return $this->has('named', array(
-            'table', $this->getSelectorsHandler()->xpathLiteral($locator),
-        ));
+        return $this->has('named', array('table', $locator));
     }
 
     /**
@@ -301,7 +289,7 @@ abstract class TraversableElement extends Element
         $field = $this->findField($locator);
 
         if (null === $field) {
-            throw $this->elementNotFound('form field', 'id|name|label|value', $locator);
+            throw new ElementNotFoundException($this->getDriver(), 'form field', 'id|name|label|value', $locator);
         }
 
         $field->attachFile($path);

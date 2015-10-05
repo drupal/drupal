@@ -33,7 +33,7 @@ abstract class AbstractConfig
     }
 
     /**
-     * Gets the base url to the fixture folder
+     * Gets the base url to the fixture folder.
      *
      * @return string
      */

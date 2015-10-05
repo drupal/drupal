@@ -8,7 +8,7 @@ class ExpectationExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function testEmptyMessageAndPreviousException()
     {
-        $exception = new ExpectationException('', $this->getSessionMock(), new \Exception('Something failed'));
+        $exception = new ExpectationException('', $this->getMock('Behat\Mink\Driver\DriverInterface'), new \Exception('Something failed'));
 
         $this->assertEquals('Something failed', $exception->getMessage());
     }
@@ -16,24 +16,16 @@ class ExpectationExceptionTest extends \PHPUnit_Framework_TestCase
     public function testExceptionToString()
     {
         $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
-        $page = $this->getPageMock();
 
-        $session = $this->getSessionMock();
-        $session->expects($this->any())
-            ->method('getDriver')
-            ->will($this->returnValue($driver));
-        $session->expects($this->any())
-            ->method('getPage')
-            ->will($this->returnValue($page));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getStatusCode')
             ->will($this->returnValue(200));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getCurrentUrl')
             ->will($this->returnValue('http://localhost/test'));
 
         $html = "<html><head><title>Hello</title></head>\n<body>\n<h1>Hello world</h1>\n<p>Test</p>\n</body></html>";
-        $page->expects($this->any())
+        $driver->expects($this->any())
             ->method('getContent')
             ->will($this->returnValue($html));
 
@@ -51,7 +43,7 @@ TXT;
 
         $expected = sprintf($expected.'  ', get_class($driver));
 
-        $exception = new ExpectationException('Expectation failure', $session);
+        $exception = new ExpectationException('Expectation failure', $driver);
 
         $this->assertEquals($expected, $exception->__toString());
     }
@@ -59,26 +51,18 @@ TXT;
     public function testBigContent()
     {
         $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
-        $page = $this->getPageMock();
 
-        $session = $this->getSessionMock();
-        $session->expects($this->any())
-            ->method('getDriver')
-            ->will($this->returnValue($driver));
-        $session->expects($this->any())
-            ->method('getPage')
-            ->will($this->returnValue($page));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getStatusCode')
             ->will($this->returnValue(200));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getCurrentUrl')
             ->will($this->returnValue('http://localhost/test'));
 
         $body = str_repeat('a', 1001 - strlen('<body></body>'));
 
         $html = sprintf("<html><head><title>Hello</title></head>\n<body>%s</body></html>", $body);
-        $page->expects($this->any())
+        $driver->expects($this->any())
             ->method('getContent')
             ->will($this->returnValue($html));
 
@@ -93,34 +77,38 @@ TXT;
 
         $expected = sprintf($expected.'  ', get_class($driver), $body);
 
-        $exception = new ExpectationException('Expectation failure', $session);
+        $exception = new ExpectationException('Expectation failure', $driver);
 
         $this->assertEquals($expected, $exception->__toString());
     }
 
     public function testExceptionWhileRenderingString()
     {
-        $session = $this->getSessionMock();
-        $session->expects($this->any())
-            ->method('getPage')
+        $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
+        $driver->expects($this->any())
+            ->method('getContent')
             ->will($this->throwException(new \Exception('Broken page')));
 
-        $exception = new ExpectationException('Expectation failure', $session);
+        $exception = new ExpectationException('Expectation failure', $driver);
 
         $this->assertEquals('Expectation failure', $exception->__toString());
     }
 
-    private function getSessionMock()
+    /**
+     * @group legacy
+     */
+    public function testConstructWithSession()
     {
-        return $this->getMockBuilder('Behat\Mink\Session')
+        $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
+        $session = $this->getMockBuilder('Behat\Mink\Session')
             ->disableOriginalConstructor()
             ->getMock();
-    }
+        $session->expects($this->any())
+            ->method('getDriver')
+            ->will($this->returnValue($driver));
 
-    private function getPageMock()
-    {
-        return $this->getMockBuilder('Behat\Mink\Element\DocumentElement')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $exception = new ExpectationException('', $session, new \Exception('Something failed'));
+
+        $this->assertEquals('Something failed', $exception->getMessage());
     }
 }

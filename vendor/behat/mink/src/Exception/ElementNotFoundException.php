@@ -10,6 +10,7 @@
 
 namespace Behat\Mink\Exception;
 
+use Behat\Mink\Driver\DriverInterface;
 use Behat\Mink\Session;
 
 /**
@@ -22,12 +23,12 @@ class ElementNotFoundException extends ExpectationException
     /**
      * Initializes exception.
      *
-     * @param Session $session  session instance
-     * @param string  $type     element type
-     * @param string  $selector element selector type
-     * @param string  $locator  element locator
+     * @param DriverInterface|Session $driver   driver instance
+     * @param string                  $type     element type
+     * @param string                  $selector element selector type
+     * @param string                  $locator  element locator
      */
-    public function __construct(Session $session, $type = null, $selector = null, $locator = null)
+    public function __construct($driver, $type = null, $selector = null, $locator = null)
     {
         $message = '';
 
@@ -48,6 +49,6 @@ class ElementNotFoundException extends ExpectationException
 
         $message .= ' not found.';
 
-        parent::__construct($message, $session);
+        parent::__construct($message, $driver);
     }
 }

@@ -36,11 +36,6 @@ abstract class ElementTest extends \PHPUnit_Framework_TestCase
 
         $this->selectors = $this->getMockBuilder('Behat\Mink\Selector\SelectorsHandler')->getMock();
         $this->session = new Session($this->driver, $this->selectors);
-
-        $this->selectors
-            ->expects($this->any())
-            ->method('xpathLiteral')
-            ->will($this->returnArgument(0));
     }
 
     protected function mockNamedFinder($xpath, array $results, $locator, $times = 2)
@@ -55,7 +50,7 @@ abstract class ElementTest extends \PHPUnit_Framework_TestCase
             $processedResults[] = $result;
             if (empty($result)) {
                 $processedResults[] = $result;
-                $times++;
+                ++$times;
             }
         }
 

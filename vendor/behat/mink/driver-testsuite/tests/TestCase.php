@@ -22,7 +22,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     private static $config;
 
     /**
-     * Initializes the test case
+     * Initializes the test case.
      */
     public static function setUpBeforeClass()
     {
@@ -102,9 +102,20 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function findById($id)
     {
-        $id = $this->getSession()->getSelectorsHandler()->xpathLiteral($id);
-
         return $this->getAssertSession()->elementExists('named', array('id', $id));
+    }
+
+    /**
+     * Creates a new driver instance.
+     *
+     * This driver is not associated to a session. It is meant to be used for tests on the driver
+     * implementation itself rather than test using the Mink API.
+     *
+     * @return \Behat\Mink\Driver\DriverInterface
+     */
+    protected function createDriver()
+    {
+        return self::getConfig()->createDriver();
     }
 
     /**
@@ -136,7 +147,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Waits for a condition to be true, considering than it is successful for drivers not supporting wait()
+     * Waits for a condition to be true, considering than it is successful for drivers not supporting wait().
      *
      * @param int    $time
      * @param string $condition A JS condition to evaluate

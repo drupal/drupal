@@ -16,7 +16,11 @@
 
     "require": {
         "php":                   ">=5.3.1",
-        "symfony/css-selector":  "~2.0"
+        "symfony/css-selector":  "~2.1"
+    },
+
+    "require-dev": {
+        "symfony/phpunit-bridge": "~2.7"
     },
 
     "suggest": {
@@ -40,7 +44,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "1.6.x-dev"
+            "dev-master": "1.7.x-dev"
         }
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Behat\Mink\Tests\Driver;
 
+use Behat\Mink\Element\NodeElement;
+
 class CoreDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function testNoExtraMethods()
@@ -17,6 +19,34 @@ class CoreDriverTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testCreateNodeElements()
+    {
+        $driver = $this->getMockBuilder('Behat\Mink\Driver\CoreDriver')
+            ->setMethods(array('findElementXpaths'))
+            ->getMockForAbstractClass();
+
+        $session = $this->getMockBuilder('Behat\Mink\Session')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $driver->setSession($session);
+
+        $driver->expects($this->once())
+            ->method('findElementXpaths')
+            ->with('xpath')
+            ->willReturn(array('xpath1', 'xpath2'));
+
+        /** @var NodeElement[] $elements */
+        $elements = $driver->find('xpath');
+
+        $this->assertInternalType('array', $elements);
+        $this->assertCount(2, $elements);
+        $this->assertContainsOnlyInstancesOf('Behat\Mink\Element\NodeElement', $elements);
+
+        $this->assertSame('xpath1', $elements[0]->getXpath());
+        $this->assertSame('xpath2', $elements[1]->getXpath());
+    }
+
     /**
      * @dataProvider getDriverInterfaceMethods
      */
@@ -28,6 +58,10 @@ class CoreDriverTest extends \PHPUnit_Framework_TestCase
             $refl->getMethod($method->getName())->isAbstract(),
             sprintf('CoreDriver should implement a dummy %s method', $method->getName())
         );
+
+        if ('setSession' === $method->getName()) {
+            return; // setSession is actually implemented, so we don't expect an exception here.
+        }
 
         $driver = $this->getMockForAbstractClass('Behat\Mink\Driver\CoreDriver');
 

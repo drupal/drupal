@@ -49,7 +49,7 @@ class WebAssert
     public function addressEquals($page)
     {
         $expected = $this->cleanUrl($page);
-        $actual   = $this->getCurrentUrlPath();
+        $actual = $this->getCurrentUrlPath();
 
         $this->assert($actual === $expected, sprintf('Current page is "%s", but "%s" expected.', $actual, $expected));
     }
@@ -64,7 +64,7 @@ class WebAssert
     public function addressNotEquals($page)
     {
         $expected = $this->cleanUrl($page);
-        $actual   = $this->getCurrentUrlPath();
+        $actual = $this->getCurrentUrlPath();
 
         $this->assert($actual !== $expected, sprintf('Current page is "%s", but should not be.', $actual));
     }
@@ -85,7 +85,7 @@ class WebAssert
     }
 
     /**
-     * Checks that specified cookie exists and its value equals to a given one
+     * Checks that specified cookie exists and its value equals to a given one.
      *
      * @param string $name  cookie name
      * @param string $value cookie value
@@ -103,7 +103,7 @@ class WebAssert
     }
 
     /**
-     * Checks that specified cookie exists
+     * Checks that specified cookie exists.
      *
      * @param string $name cookie name
      *
@@ -118,7 +118,7 @@ class WebAssert
     /**
      * Checks that current response code equals to provided one.
      *
-     * @param integer $code
+     * @param int $code
      *
      * @throws ExpectationException
      */
@@ -133,7 +133,7 @@ class WebAssert
     /**
      * Checks that current response code not equals to provided one.
      *
-     * @param integer $code
+     * @param int $code
      *
      * @throws ExpectationException
      */
@@ -143,6 +143,106 @@ class WebAssert
         $message = sprintf('Current response status code is %d, but should not be.', $actual);
 
         $this->assert(intval($code) !== intval($actual), $message);
+    }
+
+    /**
+     * Checks that current response header equals value.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @throws ExpectationException
+     */
+    public function responseHeaderEquals($name, $value)
+    {
+        $actual = $this->session->getResponseHeader($name);
+        $message = sprintf('Current response header "%s" is "%s", but "%s" expected.', $name, $actual, $value);
+
+        $this->assert($value === $actual, $message);
+    }
+
+    /**
+     * Checks that current response header does not equal value.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @throws ExpectationException
+     */
+    public function responseHeaderNotEquals($name, $value)
+    {
+        $actual = $this->session->getResponseHeader($name);
+        $message = sprintf('Current response header "%s" is "%s", but should not be.', $name, $actual, $value);
+
+        $this->assert($value !== $actual, $message);
+    }
+
+    /**
+     * Checks that current response header contains value.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @throws ExpectationException
+     */
+    public function responseHeaderContains($name, $value)
+    {
+        $actual = $this->session->getResponseHeader($name);
+        $message = sprintf('The text "%s" was not found anywhere in the "%s" response header.', $value, $name);
+
+        $this->assert(false !== stripos($actual, $value), $message);
+    }
+
+    /**
+     * Checks that current response header does not contain value.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @throws ExpectationException
+     */
+    public function responseHeaderNotContains($name, $value)
+    {
+        $actual = $this->session->getResponseHeader($name);
+        $message = sprintf('The text "%s" was found in the "%s" response header, but it should not.', $value, $name);
+
+        $this->assert(false === stripos($actual, $value), $message);
+    }
+
+    /**
+     * Checks that current response header matches regex.
+     *
+     * @param string $name
+     * @param string $regex
+     *
+     * @throws ExpectationException
+     */
+    public function responseHeaderMatches($name, $regex)
+    {
+        $actual = $this->session->getResponseHeader($name);
+        $message = sprintf('The pattern "%s" was not found anywhere in the "%s" response header.', $regex, $name);
+
+        $this->assert((bool) preg_match($regex, $actual), $message);
+    }
+
+    /**
+     * Checks that current response header does not match regex.
+     *
+     * @param string $name
+     * @param string $regex
+     *
+     * @throws ExpectationException
+     */
+    public function responseHeaderNotMatches($name, $regex)
+    {
+        $actual = $this->session->getResponseHeader($name);
+        $message = sprintf(
+            'The pattern "%s" was found in the text of the "%s" response header, but it should not.',
+            $regex,
+            $name
+        );
+
+        $this->assert(!preg_match($regex, $actual), $message);
     }
 
     /**
@@ -156,7 +256,7 @@ class WebAssert
     {
         $actual = $this->session->getPage()->getText();
         $actual = preg_replace('/\s+/u', ' ', $actual);
-        $regex  = '/'.preg_quote($text, '/').'/ui';
+        $regex = '/'.preg_quote($text, '/').'/ui';
         $message = sprintf('The text "%s" was not found anywhere in the text of the current page.', $text);
 
         $this->assertResponseText((bool) preg_match($regex, $actual), $message);
@@ -173,7 +273,7 @@ class WebAssert
     {
         $actual = $this->session->getPage()->getText();
         $actual = preg_replace('/\s+/u', ' ', $actual);
-        $regex  = '/'.preg_quote($text, '/').'/ui';
+        $regex = '/'.preg_quote($text, '/').'/ui';
         $message = sprintf('The text "%s" appears in the text of this page, but it should not.', $text);
 
         $this->assertResponseText(!preg_match($regex, $actual), $message);
@@ -219,7 +319,7 @@ class WebAssert
     public function responseContains($text)
     {
         $actual = $this->session->getPage()->getContent();
-        $regex  = '/'.preg_quote($text, '/').'/ui';
+        $regex = '/'.preg_quote($text, '/').'/ui';
         $message = sprintf('The string "%s" was not found anywhere in the HTML response of the current page.', $text);
 
         $this->assert((bool) preg_match($regex, $actual), $message);
@@ -235,7 +335,7 @@ class WebAssert
     public function responseNotContains($text)
     {
         $actual = $this->session->getPage()->getContent();
-        $regex  = '/'.preg_quote($text, '/').'/ui';
+        $regex = '/'.preg_quote($text, '/').'/ui';
         $message = sprintf('The string "%s" appears in the HTML response of this page, but it should not.', $text);
 
         $this->assert(!preg_match($regex, $actual), $message);
@@ -276,7 +376,7 @@ class WebAssert
      *
      * @param string           $selectorType element selector type (css, xpath)
      * @param string|array     $selector     element selector
-     * @param integer          $count        expected count
+     * @param int              $count        expected count
      * @param ElementInterface $container    document to check against
      *
      * @throws ExpectationException
@@ -317,7 +417,7 @@ class WebAssert
                 $selector = implode(' ', $selector);
             }
 
-            throw new ElementNotFoundException($this->session, 'element', $selectorType, $selector);
+            throw new ElementNotFoundException($this->session->getDriver(), 'element', $selectorType, $selector);
         }
 
         return $node;
@@ -357,8 +457,8 @@ class WebAssert
     public function elementTextContains($selectorType, $selector, $text)
     {
         $element = $this->elementExists($selectorType, $selector);
-        $actual  = $element->getText();
-        $regex   = '/'.preg_quote($text, '/').'/ui';
+        $actual = $element->getText();
+        $regex = '/'.preg_quote($text, '/').'/ui';
 
         $message = sprintf(
             'The text "%s" was not found in the text of the %s.',
@@ -381,8 +481,8 @@ class WebAssert
     public function elementTextNotContains($selectorType, $selector, $text)
     {
         $element = $this->elementExists($selectorType, $selector);
-        $actual  = $element->getText();
-        $regex   = '/'.preg_quote($text, '/').'/ui';
+        $actual = $element->getText();
+        $regex = '/'.preg_quote($text, '/').'/ui';
 
         $message = sprintf(
             'The text "%s" appears in the text of the %s, but it should not.',
@@ -405,8 +505,8 @@ class WebAssert
     public function elementContains($selectorType, $selector, $html)
     {
         $element = $this->elementExists($selectorType, $selector);
-        $actual  = $element->getHtml();
-        $regex   = '/'.preg_quote($html, '/').'/ui';
+        $actual = $element->getHtml();
+        $regex = '/'.preg_quote($html, '/').'/ui';
 
         $message = sprintf(
             'The string "%s" was not found in the HTML of the %s.',
@@ -429,8 +529,8 @@ class WebAssert
     public function elementNotContains($selectorType, $selector, $html)
     {
         $element = $this->elementExists($selectorType, $selector);
-        $actual  = $element->getHtml();
-        $regex   = '/'.preg_quote($html, '/').'/ui';
+        $actual = $element->getHtml();
+        $regex = '/'.preg_quote($html, '/').'/ui';
 
         $message = sprintf(
             'The string "%s" appears in the HTML of the %s, but it should not.',
@@ -480,8 +580,8 @@ class WebAssert
     public function elementAttributeContains($selectorType, $selector, $attribute, $text)
     {
         $element = $this->elementAttributeExists($selectorType, $selector, $attribute);
-        $actual  = $element->getAttribute($attribute);
-        $regex   = '/'.preg_quote($text, '/').'/ui';
+        $actual = $element->getAttribute($attribute);
+        $regex = '/'.preg_quote($text, '/').'/ui';
 
         $message = sprintf(
             'The text "%s" was not found in the attribute "%s" of the %s.',
@@ -506,8 +606,8 @@ class WebAssert
     public function elementAttributeNotContains($selectorType, $selector, $attribute, $text)
     {
         $element = $this->elementAttributeExists($selectorType, $selector, $attribute);
-        $actual  = $element->getAttribute($attribute);
-        $regex   = '/'.preg_quote($text, '/').'/ui';
+        $actual = $element->getAttribute($attribute);
+        $regex = '/'.preg_quote($text, '/').'/ui';
 
         $message = sprintf(
             'The text "%s" was found in the attribute "%s" of the %s.',
@@ -535,7 +635,7 @@ class WebAssert
         $node = $container->findField($field);
 
         if (null === $node) {
-            throw new ElementNotFoundException($this->session, 'form field', 'id|name|label|value', $field);
+            throw new ElementNotFoundException($this->session->getDriver(), 'form field', 'id|name|label|value', $field);
         }
 
         return $node;
@@ -568,9 +668,9 @@ class WebAssert
      */
     public function fieldValueEquals($field, $value, TraversableElement $container = null)
     {
-        $node   = $this->fieldExists($field, $container);
+        $node = $this->fieldExists($field, $container);
         $actual = $node->getValue();
-        $regex  = '/^'.preg_quote($value, '/').'$/ui';
+        $regex = '/^'.preg_quote($value, '/').'$/ui';
 
         $message = sprintf('The field "%s" value is "%s", but "%s" expected.', $field, $actual, $value);
 
@@ -588,9 +688,9 @@ class WebAssert
      */
     public function fieldValueNotEquals($field, $value, TraversableElement $container = null)
     {
-        $node   = $this->fieldExists($field, $container);
+        $node = $this->fieldExists($field, $container);
         $actual = $node->getValue();
-        $regex  = '/^'.preg_quote($value, '/').'$/ui';
+        $regex = '/^'.preg_quote($value, '/').'$/ui';
 
         $message = sprintf('The field "%s" value is "%s", but it should not be.', $field, $actual);
 
@@ -650,7 +750,7 @@ class WebAssert
         $fragment = empty($parts['fragment']) ? '' : '#'.$parts['fragment'];
         $path = empty($parts['path']) ? '/' : $parts['path'];
 
-        return preg_replace('/^\/[^\.\/]+\.php/', '', $path).$fragment;
+        return preg_replace('/^\/[^\.\/]+\.php\//', '/', $path).$fragment;
     }
 
     /**
@@ -667,7 +767,7 @@ class WebAssert
             return;
         }
 
-        throw new ExpectationException($message, $this->session);
+        throw new ExpectationException($message, $this->session->getDriver());
     }
 
     /**
@@ -684,7 +784,7 @@ class WebAssert
             return;
         }
 
-        throw new ResponseTextException($message, $this->session);
+        throw new ResponseTextException($message, $this->session->getDriver());
     }
 
     /**
@@ -702,7 +802,7 @@ class WebAssert
             return;
         }
 
-        throw new ElementHtmlException($message, $this->session, $element);
+        throw new ElementHtmlException($message, $this->session->getDriver(), $element);
     }
 
     /**
@@ -720,13 +820,13 @@ class WebAssert
             return;
         }
 
-        throw new ElementTextException($message, $this->session, $element);
+        throw new ElementTextException($message, $this->session->getDriver(), $element);
     }
 
     /**
      * @param string       $selectorType
      * @param string|array $selector
-     * @param boolean      $plural
+     * @param bool         $plural
      *
      * @return string
      */

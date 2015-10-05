@@ -13,7 +13,7 @@ class SelectTest extends TestCase
         $page = $this->getSession()->getPage();
         $this->assertEquals('Multiselect Test', $webAssert->elementExists('css', 'h1')->getText());
 
-        $select      = $webAssert->fieldExists('select_number');
+        $select = $webAssert->fieldExists('select_number');
         $multiSelect = $webAssert->fieldExists('select_multiple_numbers[]');
         $secondMultiSelect = $webAssert->fieldExists('select_multiple_values[]');
 
@@ -66,8 +66,7 @@ OUT;
         $session->visit($this->pathTo('/multiselect_form.html'));
         $select = $webAssert->fieldExists($selectName);
 
-        $optionValueEscaped = $session->getSelectorsHandler()->xpathLiteral($optionValue);
-        $option = $webAssert->elementExists('named', array('option', $optionValueEscaped));
+        $option = $webAssert->elementExists('named', array('option', $optionValue));
 
         $this->assertFalse($option->isSelected());
         $select->selectOption($optionText);

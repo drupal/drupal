@@ -7,7 +7,8 @@ use Behat\Mink\Tests\Driver\TestCase;
 class TraversingTest extends TestCase
 {
     /**
-     * find by label
+     * find by label.
+     *
      * @group issue211
      */
     public function testIssue211()
@@ -24,20 +25,23 @@ class TraversingTest extends TestCase
 
         $page = $this->getSession()->getPage();
 
-        $this->assertNotNull($page->find('css', 'h1'));
-        $this->assertEquals('Extremely useless page', $page->find('css', 'h1')->getText());
-        $this->assertEquals('h1', $page->find('css', 'h1')->getTagName());
+        $title = $page->find('css', 'h1');
+        $this->assertNotNull($title);
+        $this->assertEquals('Extremely useless page', $title->getText());
+        $this->assertEquals('h1', $title->getTagName());
 
-        $this->assertNotNull($page->find('xpath', '//div/strong[3]'));
-        $this->assertEquals('pariatur', $page->find('xpath', '//div/strong[3]')->getText());
-        $this->assertEquals('super-duper', $page->find('xpath', '//div/strong[3]')->getAttribute('class'));
-        $this->assertTrue($page->find('xpath', '//div/strong[3]')->hasAttribute('class'));
+        $strong = $page->find('xpath', '//div/strong[3]');
+        $this->assertNotNull($strong);
+        $this->assertEquals('pariatur', $strong->getText());
+        $this->assertEquals('super-duper', $strong->getAttribute('class'));
+        $this->assertTrue($strong->hasAttribute('class'));
 
-        $this->assertNotNull($page->find('xpath', '//div/strong[2]'));
-        $this->assertEquals('veniam', $page->find('xpath', '//div/strong[2]')->getText());
-        $this->assertEquals('strong', $page->find('xpath', '//div/strong[2]')->getTagName());
-        $this->assertNull($page->find('xpath', '//div/strong[2]')->getAttribute('class'));
-        $this->assertFalse($page->find('xpath', '//div/strong[2]')->hasAttribute('class'));
+        $strong2 = $page->find('xpath', '//div/strong[2]');
+        $this->assertNotNull($strong2);
+        $this->assertEquals('veniam', $strong2->getText());
+        $this->assertEquals('strong', $strong2->getTagName());
+        $this->assertNull($strong2->getAttribute('class'));
+        $this->assertFalse($strong2->hasAttribute('class'));
 
         $strongs = $page->findAll('css', 'div#core > strong');
         $this->assertCount(3, $strongs);
@@ -46,6 +50,7 @@ class TraversingTest extends TestCase
 
         $element = $page->find('css', '#some-element');
 
+        $this->assertNotNull($element);
         $this->assertEquals('some very interesting text', $element->getText());
         $this->assertEquals(
             "\n            some <div>very\n            </div>\n".
@@ -105,12 +110,11 @@ class TraversingTest extends TestCase
     {
         $this->getSession()->visit($this->pathTo('/index.html'));
 
-        $traversDiv = $this->getSession()->getPage()->findAll('css', 'div.travers');
+        $traversDivs = $this->getSession()->getPage()->findAll('css', 'div.travers');
 
-        $this->assertCount(1, $traversDiv);
-        $traversDiv = $traversDiv[0];
+        $this->assertCount(1, $traversDivs);
 
-        $subDivs = $traversDiv->findAll('css', 'div.sub');
+        $subDivs = $traversDivs[0]->findAll('css', 'div.sub');
         $this->assertCount(3, $subDivs);
 
         $this->assertTrue($subDivs[2]->hasLink('some deep url'));

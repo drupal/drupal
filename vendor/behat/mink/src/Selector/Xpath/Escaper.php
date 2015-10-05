@@ -47,6 +47,6 @@ class Escaper
             }
         }
 
-        return sprintf("concat(%s)", implode($parts, ','));
+        return sprintf('concat(%s)', implode($parts, ','));
     }
 }

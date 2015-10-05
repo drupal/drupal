@@ -1,3 +1,24 @@
+1.3.0 / 2015-09-21
+==================
+
+BC break:
+
+* Dropped support for Symfony 2.2 and older
+* Bumped required PHP version to 5.3.6
+
+New features:
+
+* Updated the driver to use findElementsXpaths for Mink 1.7 and forward compatibility with Mink 2
+
+Bug fixes:
+
+* Improved the exception message when clicking on an invalid element
+* Use `saveHTML` to get correct HTML code back
+
+Misc:
+
+* Updated the repository structure to PSR-4
+
 1.2.0 / 2014-09-26
 ==================
 

@@ -11,7 +11,7 @@ class VisibilityTest extends TestCase
         $this->getSession()->visit($this->pathTo('/js_test.html'));
         $webAssert = $this->getAssertSession();
 
-        $clicker   = $webAssert->elementExists('css', '.elements div#clicker');
+        $clicker = $webAssert->elementExists('css', '.elements div#clicker');
         $invisible = $webAssert->elementExists('css', '#invisible');
 
         $this->assertFalse($invisible->isVisible());

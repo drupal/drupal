@@ -7,7 +7,8 @@ use Behat\Mink\Tests\Driver\TestCase;
 class HeaderTest extends TestCase
 {
     /**
-     * test referrer
+     * test referrer.
+     *
      * @group issue130
      */
     public function testIssue130()

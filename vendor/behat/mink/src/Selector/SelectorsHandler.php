@@ -75,7 +75,7 @@ class SelectorsHandler
     public function getSelector($name)
     {
         if ('named' === $name) {
-            trigger_error(
+            @trigger_error(
                 'Using the "named" selector directly from the handler is deprecated as of 1.6 and will be removed in 2.0.'
                 .' Use the "named_partial" or use the "named" selector through the Element API instead.',
                 E_USER_DEPRECATED
@@ -114,12 +114,22 @@ class SelectorsHandler
     /**
      * Translates string to XPath literal.
      *
+     * @deprecated since Mink 1.7. Use \Behat\Mink\Selector\Xpath\Escaper::escapeLiteral when building Xpath
+     *             or pass the unescaped value when using the named selector.
+     *
      * @param string $s
      *
      * @return string
      */
     public function xpathLiteral($s)
     {
+        @trigger_error(
+            'The '.__METHOD__.' method is deprecated as of 1.7 and will be removed in 2.0.'
+            .' Use \Behat\Mink\Selector\Xpath\Escaper::escapeLiteral instead when building Xpath'
+            .' or pass the unescaped value when using the named selector.',
+            E_USER_DEPRECATED
+        );
+
         return $this->escaper->escapeLiteral($s);
     }
 }

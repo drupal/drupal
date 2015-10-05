@@ -127,7 +127,7 @@ HTML;
 
     /**
      * @expectedException \Behat\Mink\Exception\DriverException
-     * @expectedExceptionMessage Behat\Mink\Driver\BrowserKitDriver supports clicking on links and buttons only. But "div" provided
+     * @expectedExceptionMessage Behat\Mink\Driver\BrowserKitDriver supports clicking on links and submit or reset buttons only. But "div" provided
      */
     public function testClickOnUnsupportedElement()
     {

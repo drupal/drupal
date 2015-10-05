@@ -121,7 +121,7 @@ class Mink
     }
 
     /**
-     * Checks whether a named session (or the default session) has already been started
+     * Checks whether a named session (or the default session) has already been started.
      *
      * @param string $name session name - if null then the default session will be checked
      *

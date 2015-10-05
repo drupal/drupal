@@ -12,13 +12,13 @@ class NavigationTest extends TestCase
         $this->assertEquals($this->pathTo('/redirect_destination.html'), $this->getSession()->getCurrentUrl());
     }
 
-    public function testPageControlls()
+    public function testPageControls()
     {
         $this->getSession()->visit($this->pathTo('/randomizer.php'));
-        $number1 = $this->getSession()->getPage()->find('css', '#number')->getText();
+        $number1 = $this->getAssertSession()->elementExists('css', '#number')->getText();
 
         $this->getSession()->reload();
-        $number2 = $this->getSession()->getPage()->find('css', '#number')->getText();
+        $number2 = $this->getAssertSession()->elementExists('css', '#number')->getText();
 
         $this->assertNotEquals($number1, $number2);
 
@@ -58,7 +58,7 @@ class NavigationTest extends TestCase
 
         $this->getSession()->visit($this->pathTo('/links.html'));
         $page = $this->getSession()->getPage();
-        $link = $page->findLink("Link with a ");
+        $link = $page->findLink('Link with a ');
 
         $this->assertNotNull($link);
         $this->assertRegExp('/links\.html\?quoted$/', $link->getAttribute('href'));

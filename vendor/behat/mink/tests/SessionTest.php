@@ -130,6 +130,29 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($ret, $this->session->getResponseHeaders());
     }
 
+    /**
+     * @dataProvider provideResponseHeader
+     */
+    public function testGetResponseHeader($expected, $name, array $headers)
+    {
+        $this->driver->expects($this->once())
+            ->method('getResponseHeaders')
+            ->willReturn($headers);
+
+        $this->assertSame($expected, $this->session->getResponseHeader($name));
+    }
+
+    public function provideResponseHeader()
+    {
+        return array(
+            array('test', 'Mink', array('Mink' => 'test')),
+            array('test', 'mink', array('Mink' => 'test')),
+            array('test', 'Mink', array('mink' => 'test')),
+            array('test', 'Mink', array('Mink' => array('test', 'test2'))),
+            array(null, 'other', array('Mink' => 'test')),
+        );
+    }
+
     public function testSetCookie()
     {
         $this->driver->expects($this->once())

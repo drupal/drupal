@@ -11,11 +11,9 @@ class ElementNotFoundExceptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildMessage($message, $type, $selector = null, $locator = null)
     {
-        $session = $this->getMockBuilder('Behat\Mink\Session')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
 
-        $exception = new ElementNotFoundException($session, $type, $selector, $locator);
+        $exception = new ElementNotFoundException($driver, $type, $selector, $locator);
 
         $this->assertEquals($message, $exception->getMessage());
     }
@@ -30,5 +28,23 @@ class ElementNotFoundExceptionTest extends \PHPUnit_Framework_TestCase
             array('Field matching xpath "foobar" not found.', 'Field', 'xpath', 'foobar'),
             array('Tag with name "foobar" not found.', null, 'name', 'foobar'),
         );
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testConstructWithSession()
+    {
+        $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
+        $session = $this->getMockBuilder('Behat\Mink\Session')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $session->expects($this->any())
+            ->method('getDriver')
+            ->will($this->returnValue($driver));
+
+        $exception = new ElementNotFoundException($session);
+
+        $this->assertEquals('Tag not found.', $exception->getMessage());
     }
 }

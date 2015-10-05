@@ -130,16 +130,16 @@ class NodeElement extends TraversableElement
     }
 
     /**
-     * Checks whether an element has a named CSS class
+     * Checks whether an element has a named CSS class.
      *
      * @param string $className Name of the class
      *
-     * @return boolean
+     * @return bool
      */
     public function hasClass($className)
     {
         if ($this->hasAttribute('class')) {
-            return in_array($className, explode(' ', $this->getAttribute('class')));
+            return in_array($className, preg_split('/\s+/', $this->getAttribute('class')));
         }
 
         return false;
@@ -206,7 +206,7 @@ class NodeElement extends TraversableElement
     }
 
     /**
-     * Selects specified option for select field or specified radio button in the group
+     * Selects specified option for select field or specified radio button in the group.
      *
      * If the current node is a select box, this selects the option found by its value or
      * its text.
@@ -228,12 +228,10 @@ class NodeElement extends TraversableElement
             return;
         }
 
-        $opt = $this->find('named', array(
-            'option', $this->getSelectorsHandler()->xpathLiteral($option),
-        ));
+        $opt = $this->find('named', array('option', $option));
 
         if (null === $opt) {
-            throw $this->elementNotFound('select option', 'value|text', $option);
+            throw new ElementNotFoundException($this->getDriver(), 'select option', 'value|text', $option);
         }
 
         $this->getDriver()->selectOption($this->getXpath(), $opt->getValue(), $multiple);
@@ -310,8 +308,8 @@ class NodeElement extends TraversableElement
     /**
      * Presses specific keyboard key.
      *
-     * @param string|integer $char     could be either char ('b') or char-code (98)
-     * @param string         $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     * @param string|int $char     could be either char ('b') or char-code (98)
+     * @param string     $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
      */
     public function keyPress($char, $modifier = null)
     {
@@ -321,8 +319,8 @@ class NodeElement extends TraversableElement
     /**
      * Pressed down specific keyboard key.
      *
-     * @param string|integer $char     could be either char ('b') or char-code (98)
-     * @param string         $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     * @param string|int $char     could be either char ('b') or char-code (98)
+     * @param string     $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
      */
     public function keyDown($char, $modifier = null)
     {
@@ -332,8 +330,8 @@ class NodeElement extends TraversableElement
     /**
      * Pressed up specific keyboard key.
      *
-     * @param string|integer $char     could be either char ('b') or char-code (98)
-     * @param string         $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     * @param string|int $char     could be either char ('b') or char-code (98)
+     * @param string     $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
      */
     public function keyUp($char, $modifier = null)
     {

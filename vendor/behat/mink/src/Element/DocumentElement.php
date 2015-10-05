@@ -46,8 +46,6 @@ class DocumentElement extends TraversableElement
      */
     public function hasContent($content)
     {
-        return $this->has('named', array(
-            'content', $this->getSelectorsHandler()->xpathLiteral($content),
-        ));
+        return $this->has('named', array('content', $content));
     }
 }

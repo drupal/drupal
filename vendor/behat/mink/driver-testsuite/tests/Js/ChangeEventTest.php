@@ -4,10 +4,13 @@ namespace Behat\Mink\Tests\Driver\Js;
 
 use Behat\Mink\Tests\Driver\TestCase;
 
+/**
+ * @group slow
+ */
 class ChangeEventTest extends TestCase
 {
     /**
-     * 'change' event should be fired after selecting an <option> in a <select>
+     * 'change' event should be fired after selecting an <option> in a <select>.
      *
      * TODO check whether this test is redundant with other change event tests.
      */
@@ -19,7 +22,7 @@ class ChangeEventTest extends TestCase
         $session->getPage()->selectFieldOption('foo_select', 'Option 3');
 
         $session->wait(2000, '$("#output_foo_select").text() != ""');
-        $this->assertEquals('onChangeSelect', $session->getPage()->find('css', '#output_foo_select')->getText());
+        $this->assertEquals('onChangeSelect', $this->getAssertSession()->elementExists('css', '#output_foo_select')->getText());
     }
 
     public function testIssue178()

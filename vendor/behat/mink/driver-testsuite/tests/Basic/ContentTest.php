@@ -21,6 +21,18 @@ class ContentTest extends TestCase
         );
     }
 
+    public function testDumpingEmptyElements()
+    {
+        $this->getSession()->visit($this->pathTo('/index.html'));
+
+        $element = $this->getAssertSession()->elementExists('css', '#empty');
+
+        $this->assertEquals(
+            'An empty <em></em> tag should be rendered with both open and close tags.',
+            trim($element->getHtml())
+        );
+    }
+
     /**
      * @dataProvider getAttributeDataProvider
      */

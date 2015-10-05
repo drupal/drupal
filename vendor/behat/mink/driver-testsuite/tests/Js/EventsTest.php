@@ -96,7 +96,7 @@ class EventsTest extends TestCase
         $input1 = $webAssert->elementExists('css', '.elements input.input.first');
         $input2 = $webAssert->elementExists('css', '.elements input.input.second');
         $input3 = $webAssert->elementExists('css', '.elements input.input.third');
-        $event  = $webAssert->elementExists('css', '.elements .text-event');
+        $event = $webAssert->elementExists('css', '.elements .text-event');
 
         $input1->keyDown('u', $modifier);
         $this->assertEquals('key downed:'.$eventProperties, $event->getText());

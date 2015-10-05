@@ -10,6 +10,7 @@
 
 namespace Behat\Mink\Exception;
 
+use Behat\Mink\Driver\DriverInterface;
 use Behat\Mink\Session;
 
 /**
@@ -22,17 +23,28 @@ use Behat\Mink\Session;
 class ExpectationException extends Exception
 {
     private $session;
+    private $driver;
 
     /**
      * Initializes exception.
      *
-     * @param string     $message   optional message
-     * @param Session    $session   session instance
-     * @param \Exception $exception expectation exception
+     * @param string                  $message   optional message
+     * @param DriverInterface|Session $driver    driver instance (or session for BC)
+     * @param \Exception|null         $exception expectation exception
      */
-    public function __construct($message, Session $session, \Exception $exception = null)
+    public function __construct($message, $driver, \Exception $exception = null)
     {
-        $this->session = $session;
+        if ($driver instanceof Session) {
+            @trigger_error('Passing a Session object to the ExpectationException constructor is deprecated as of Mink 1.7. Pass the driver instead.', E_USER_DEPRECATED);
+
+            $this->session = $driver;
+            $this->driver = $driver->getDriver();
+        } elseif (!$driver instanceof DriverInterface) {
+            // Trigger an exception as we cannot typehint a disjunction
+            throw new \InvalidArgumentException('The ExpectationException constructor expects a DriverInterface or a Session.');
+        } else {
+            $this->driver = $driver;
+        }
 
         if (!$message && null !== $exception) {
             $message = $exception->getMessage();
@@ -50,7 +62,7 @@ class ExpectationException extends Exception
     {
         try {
             $pageText = $this->pipeString($this->trimString($this->getContext())."\n");
-            $string   = sprintf("%s\n\n%s%s", $this->getMessage(), $this->getResponseInfo(), $pageText);
+            $string = sprintf("%s\n\n%s%s", $this->getMessage(), $this->getResponseInfo(), $pageText);
         } catch (\Exception $e) {
             return $this->getMessage();
         }
@@ -59,22 +71,40 @@ class ExpectationException extends Exception
     }
 
     /**
-     * Gets the context rendered for this exception
+     * Gets the context rendered for this exception.
      *
      * @return string
      */
     protected function getContext()
     {
-        return $this->trimBody($this->getSession()->getPage()->getContent());
+        return $this->trimBody($this->driver->getContent());
+    }
+
+    /**
+     * Returns driver.
+     *
+     * @return DriverInterface
+     */
+    protected function getDriver()
+    {
+        return $this->driver;
     }
 
     /**
      * Returns exception session.
      *
      * @return Session
+     *
+     * @deprecated since 1.7, to be removed in 2.0. Use getDriver and the driver API instead.
      */
     protected function getSession()
     {
+        if (null === $this->session) {
+            throw new \LogicException(sprintf('The deprecated method %s cannot be used when passing a driver in the constructor', __METHOD__));
+        }
+
+        @trigger_error(sprintf('The method %s is deprecated as of Mink 1.7 and will be removed in 2.0. Use getDriver and the driver API instead.'));
+
         return $this->session;
     }
 
@@ -107,8 +137,8 @@ class ExpectationException extends Exception
     /**
      * Trims string to specified number of chars.
      *
-     * @param string  $string response content
-     * @param integer $count  trim count
+     * @param string $string response content
+     * @param int    $count  trim count
      *
      * @return string
      */
@@ -130,15 +160,15 @@ class ExpectationException extends Exception
      */
     protected function getResponseInfo()
     {
-        $driver = basename(str_replace('\\', '/', get_class($this->session->getDriver())));
+        $driver = basename(str_replace('\\', '/', get_class($this->driver)));
 
         $info = '+--[ ';
         try {
-            $info .= 'HTTP/1.1 '.$this->session->getStatusCode().' | ';
+            $info .= 'HTTP/1.1 '.$this->driver->getStatusCode().' | ';
         } catch (UnsupportedDriverActionException $e) {
             // Ignore the status code when not supported
         }
-        $info .= $this->session->getCurrentUrl().' | '.$driver." ]\n|\n";
+        $info .= $this->driver->getCurrentUrl().' | '.$driver." ]\n|\n";
 
         return $info;
     }

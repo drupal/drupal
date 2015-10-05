@@ -4,6 +4,9 @@ namespace Behat\Mink\Tests\Exception;
 
 use Behat\Mink\Exception\ElementException;
 
+/**
+ * @group legacy
+ */
 class ElementExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function testMessage()

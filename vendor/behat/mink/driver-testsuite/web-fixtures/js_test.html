@@ -44,23 +44,27 @@
     <script src="js/jquery-ui-1.8.14.custom.min.js"></script>
 	<script>
 		$(document).ready(function() {
-            $('#clicker').click(function() {
+            var $clicker = $('#clicker');
+
+            $clicker.click(function() {
                 $(this).text('single clicked');
             });
 
-            $('#clicker').dblclick(function() {
+            $clicker.dblclick(function() {
                 $(this).text('double clicked');
             });
 
-            $('#clicker').bind('contextmenu', function() {
+            $clicker.bind('contextmenu', function() {
                 $(this).text('right clicked');
             });
 
-            $('#focus-blur-detector').focus(function() {
+            var $focusDetector = $('#focus-blur-detector');
+
+            $focusDetector.focus(function() {
                 $(this).val('focused');
             });
 
-            $('#focus-blur-detector').blur(function() {
+            $focusDetector.blur(function() {
                 $(this).val('blured');
             });
 

@@ -11,14 +11,10 @@ class ElementTextExceptionTest extends \PHPUnit_Framework_TestCase
         $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
         $element = $this->getElementMock();
 
-        $session = $this->getSessionMock();
-        $session->expects($this->any())
-            ->method('getDriver')
-            ->will($this->returnValue($driver));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getStatusCode')
             ->will($this->returnValue(200));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getCurrentUrl')
             ->will($this->returnValue('http://localhost/test'));
 
@@ -38,16 +34,9 @@ TXT;
 
         $expected = sprintf($expected.'  ', get_class($driver));
 
-        $exception = new ElementTextException('Text error', $session, $element);
+        $exception = new ElementTextException('Text error', $driver, $element);
 
         $this->assertEquals($expected, $exception->__toString());
-    }
-
-    private function getSessionMock()
-    {
-        return $this->getMockBuilder('Behat\Mink\Session')
-            ->disableOriginalConstructor()
-            ->getMock();
     }
 
     private function getElementMock()

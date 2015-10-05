@@ -25,8 +25,8 @@ class GeneralTest extends TestCase
         $page = $this->getSession()->getPage();
         $this->assertEquals('Basic Form Page', $webAssert->elementExists('css', 'h1')->getText());
 
-        $firstname  = $webAssert->fieldExists('first_name');
-        $lastname   = $webAssert->fieldExists('lastn');
+        $firstname = $webAssert->fieldExists('first_name');
+        $lastname = $webAssert->fieldExists('lastn');
 
         $this->assertEquals('Firstname', $firstname->getValue());
         $this->assertEquals('Lastname', $lastname->getValue());
@@ -150,15 +150,15 @@ class GeneralTest extends TestCase
         $page = $this->getSession()->getPage();
         $this->assertEquals('ADvanced Form Page', $webAssert->elementExists('css', 'h1')->getText());
 
-        $firstname   = $webAssert->fieldExists('first_name');
-        $lastname    = $webAssert->fieldExists('lastn');
-        $email       = $webAssert->fieldExists('Your email:');
-        $select      = $webAssert->fieldExists('select_number');
-        $sex         = $webAssert->fieldExists('sex');
-        $maillist    = $webAssert->fieldExists('mail_list');
-        $agreement   = $webAssert->fieldExists('agreement');
-        $notes       = $webAssert->fieldExists('notes');
-        $about       = $webAssert->fieldExists('about');
+        $firstname = $webAssert->fieldExists('first_name');
+        $lastname = $webAssert->fieldExists('lastn');
+        $email = $webAssert->fieldExists('Your email:');
+        $select = $webAssert->fieldExists('select_number');
+        $sex = $webAssert->fieldExists('sex');
+        $maillist = $webAssert->fieldExists('mail_list');
+        $agreement = $webAssert->fieldExists('agreement');
+        $notes = $webAssert->fieldExists('notes');
+        $about = $webAssert->fieldExists('about');
 
         $this->assertEquals('Firstname', $firstname->getValue());
         $this->assertEquals('Lastname', $lastname->getValue());

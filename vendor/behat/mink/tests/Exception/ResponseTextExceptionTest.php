@@ -9,24 +9,16 @@ class ResponseTextExceptionTest extends \PHPUnit_Framework_TestCase
     public function testExceptionToString()
     {
         $driver = $this->getMock('Behat\Mink\Driver\DriverInterface');
-        $page = $this->getPageMock();
 
-        $session = $this->getSessionMock();
-        $session->expects($this->any())
-            ->method('getDriver')
-            ->will($this->returnValue($driver));
-        $session->expects($this->any())
-            ->method('getPage')
-            ->will($this->returnValue($page));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getStatusCode')
             ->will($this->returnValue(200));
-        $session->expects($this->any())
+        $driver->expects($this->any())
             ->method('getCurrentUrl')
             ->will($this->returnValue('http://localhost/test'));
-
-        $page->expects($this->any())
+        $driver->expects($this->any())
             ->method('getText')
+            ->with('//html')
             ->will($this->returnValue("Hello world\nTest\n"));
 
         $expected = <<<'TXT'
@@ -41,22 +33,8 @@ TXT;
 
         $expected = sprintf($expected.'  ', get_class($driver));
 
-        $exception = new ResponseTextException('Text error', $session);
+        $exception = new ResponseTextException('Text error', $driver);
 
         $this->assertEquals($expected, $exception->__toString());
-    }
-
-    private function getSessionMock()
-    {
-        return $this->getMockBuilder('Behat\Mink\Session')
-            ->disableOriginalConstructor()
-            ->getMock();
-    }
-
-    private function getPageMock()
-    {
-        return $this->getMockBuilder('Behat\Mink\Element\DocumentElement')
-            ->disableOriginalConstructor()
-            ->getMock();
     }
 }

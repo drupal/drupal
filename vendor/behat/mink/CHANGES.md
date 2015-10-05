@@ -1,3 +1,45 @@
+1.7.0 / 2015-09-20
+==================
+
+New features:
+
+* Added `Session::getResponseHeader` to access a response header easily
+* Added support for header assertions
+* Added a forward compatibility layer for drivers to allow them to prepare
+  for Mink 2.0 (they won't require any change if they use it). They should
+  now overwrite `CoreDriver::findElementXpaths` instead of implementing `find`
+  and `setSession` themselves.
+* Added escaping of the locator in the NamedSelector rather than expecting
+  the caller to perform the escaping. Passing an escaped locator is still
+  supported but deprecated.
+* Remove the dependency on the Session in expectation exceptions. Passing
+  the session in the exception constructor is now deprecated. The driver
+  should be passed instead.
+
+Bug fixes:
+
+* Fixed the URL assertions when comparing paths ending in ``.php``
+* Silenced deprecation warnings (following the Symfony convention) to make
+  them less invasive. Use the `symfony/phpunit-bridge` to get them reported
+  when using Mink in your PHPUnit tests.
+* Fixed `NodeElement::hasClass` in case the class attribute contains newlines
+
+Testsuite:
+
+* Made the testsuite compatible with PHPUnit strict timing mode (only the library testsuite, not the driver one)
+* Added testing against PHP 7
+* Added testing against lowest version of dependencies to ensure we got the lower bounds right
+
+Driver testsuite:
+
+* Added an extra test to ensure the right behavior when getting the HTML with empty elements
+* Added a few more safeguards to ensure test failures rather than fatal errors for misbehaving drivers
+* Added a test ensuring that drivers follow recommended practices
+
+Misc:
+
+* Added a few missing deprecation warnings for deprecated APIs or classes.
+
 1.6.1 / 2015-02-04
 ==================
 

@@ -53,8 +53,8 @@ class CheckboxTest extends TestCase
 
         $this->assertEquals('Multicheckbox Test', $webAssert->elementExists('css', 'h1')->getText());
 
-        $updateMail  = $webAssert->elementExists('css', '[name="mail_types[]"][value="update"]');
-        $spamMail    = $webAssert->elementExists('css', '[name="mail_types[]"][value="spam"]');
+        $updateMail = $webAssert->elementExists('css', '[name="mail_types[]"][value="update"]');
+        $spamMail = $webAssert->elementExists('css', '[name="mail_types[]"][value="spam"]');
 
         $this->assertEquals('update', $updateMail->getValue());
         $this->assertNull($spamMail->getValue());
