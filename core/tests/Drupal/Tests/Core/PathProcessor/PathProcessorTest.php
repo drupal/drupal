@@ -62,6 +62,7 @@ class PathProcessorTest extends UnitTestCase {
     $method_definitions = array(
       LanguageNegotiationUrl::METHOD_ID => array(
         'class' => '\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl',
+        'weight' => 9,
       ),
     );
 
@@ -134,7 +135,10 @@ class PathProcessorTest extends UnitTestCase {
       ->getMock();
     $negotiator->expects($this->any())
       ->method('getNegotiationMethods')
-      ->will($this->returnValue(array(LanguageNegotiationUrl::METHOD_ID => array('class' => 'Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl'))));
+      ->will($this->returnValue(array(LanguageNegotiationUrl::METHOD_ID => array(
+        'class' => 'Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl',
+        'weight' => 9,
+        ))));
     $method = new LanguageNegotiationUrl();
     $method->setConfig($config_factory_stub);
     $method->setLanguageManager($this->languageManager);

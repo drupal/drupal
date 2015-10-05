@@ -125,16 +125,31 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
   protected function initProcessors($scope) {
     $interface = '\Drupal\Core\PathProcessor\\' . Unicode::ucfirst($scope) . 'PathProcessorInterface';
     $this->processors[$scope] = array();
+    $weights = [];
     foreach ($this->languageManager->getLanguageTypes() as $type) {
       foreach ($this->negotiator->getNegotiationMethods($type) as $method_id => $method) {
         if (!isset($this->processors[$scope][$method_id])) {
           $reflector = new \ReflectionClass($method['class']);
           if ($reflector->implementsInterface($interface)) {
             $this->processors[$scope][$method_id] = $this->negotiator->getNegotiationMethodInstance($method_id);
+            $weights[$method_id] = $method['weight'];
           }
         }
       }
     }
+
+    // Sort the processors list, so that their functions are called in the
+    // order specified by the weight of the methods.
+    uksort($this->processors[$scope], function ($method_id_a, $method_id_b) use($weights) {
+      $a_weight = $weights[$method_id_a];
+      $b_weight = $weights[$method_id_b];
+
+      if ($a_weight == $b_weight) {
+        return 0;
+      }
+
+      return ($a_weight < $b_weight) ? -1 : 1;
+    });
   }
 
 }
