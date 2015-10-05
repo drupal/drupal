@@ -790,7 +790,7 @@ class Crawler extends \SplObjectStorage
             throw new \InvalidArgumentException('The current node list is empty.');
         }
 
-        $form = new Form($this->getNode(0), $this->uri, $method);
+        $form = new Form($this->getNode(0), $this->uri, $method, $this->baseHref);
 
         if (null !== $values) {
             $form->setValues($values);
@@ -1036,13 +1036,13 @@ class Crawler extends \SplObjectStorage
     }
 
     /**
-     * @param $xpath
+     * @param string $xpath
      *
      * @return array
      */
     private function findNamespacePrefixes($xpath)
     {
-        if (preg_match_all('/(?P<prefix>[a-z_][a-z_0-9\-\.]*):[^"\/:]/i', $xpath, $matches)) {
+        if (preg_match_all('/(?P<prefix>[a-z_][a-z_0-9\-\.]*+):[^"\/:]/i', $xpath, $matches)) {
             return array_unique($matches['prefix']);
         }
 

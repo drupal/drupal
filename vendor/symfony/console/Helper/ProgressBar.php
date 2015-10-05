@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Console\Helper;
 
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -54,6 +55,10 @@ class ProgressBar
      */
     public function __construct(OutputInterface $output, $max = 0)
     {
+        if ($output instanceof ConsoleOutputInterface) {
+            $output = $output->getErrorOutput();
+        }
+
         $this->output = $output;
         $this->setMaxSteps($max);
 
@@ -476,7 +481,7 @@ class ProgressBar
     /**
      * Sets the progress bar maximal steps.
      *
-     * @param int     The progress bar max steps
+     * @param int $max The progress bar max steps
      */
     private function setMaxSteps($max)
     {

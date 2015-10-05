@@ -18,6 +18,16 @@ require_once __DIR__.'/ClockMock.php';
 
 class ResponseHeaderBagTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        with_clock_mock(true);
+    }
+
+    protected function tearDown()
+    {
+        with_clock_mock(false);
+    }
+
     /**
      * @covers Symfony\Component\HttpFoundation\ResponseHeaderBag::allPreserveCase
      * @dataProvider provideAllPreserveCase
