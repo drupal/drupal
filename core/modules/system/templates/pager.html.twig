@@ -17,8 +17,8 @@
  *   items.pages contain the following elements:
  *   - href: URL with appropriate query parameters for the item.
  *   - attributes: A keyed list of HTML attributes for the item.
- *   - text: The visible text used for the item link, such as "‹ previous"
- *     or "next ›".
+ *   - text: The visible text used for the item link, such as "‹ Previous"
+ *     or "Next ›".
  * - current: The page number of the current page.
  * - ellipses: If there are more pages than the quantity allows, then an
  *   ellipsis before or after the listed pages may be present.
@@ -40,7 +40,7 @@
         <li class="pager__item pager__item--first">
           <a href="{{ items.first.href }}" title="{{ 'Go to first page'|t }}"{{ items.first.attributes|without('href', 'title') }}>
             <span class="visually-hidden">{{ 'First page'|t }}</span>
-            <span aria-hidden="true">{{ items.first.text|default('« first'|t) }}</span>
+            <span aria-hidden="true">{{ items.first.text|default('« First'|t) }}</span>
           </a>
         </li>
       {% endif %}
@@ -49,7 +49,7 @@
         <li class="pager__item pager__item--previous">
           <a href="{{ items.previous.href }}" title="{{ 'Go to previous page'|t }}" rel="prev"{{ items.previous.attributes|without('href', 'title', 'rel') }}>
             <span class="visually-hidden">{{ 'Previous page'|t }}</span>
-            <span aria-hidden="true">{{ items.previous.text|default('‹ previous'|t) }}</span>
+            <span aria-hidden="true">{{ items.previous.text|default('‹ Previous'|t) }}</span>
           </a>
         </li>
       {% endif %}
@@ -82,7 +82,7 @@
         <li class="pager__item pager__item--next">
           <a href="{{ items.next.href }}" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel') }}>
             <span class="visually-hidden">{{ 'Next page'|t }}</span>
-            <span aria-hidden="true">{{ items.next.text|default('next ›'|t) }}</span>
+            <span aria-hidden="true">{{ items.next.text|default('Next ›'|t) }}</span>
           </a>
         </li>
       {% endif %}
@@ -91,7 +91,7 @@
         <li class="pager__item pager__item--last">
           <a href="{{ items.last.href }}" title="{{ 'Go to last page'|t }}"{{ items.last.attributes|without('href', 'title') }}>
             <span class="visually-hidden">{{ 'Last page'|t }}</span>
-            <span aria-hidden="true">{{ items.last.text|default('last »'|t) }}</span>
+            <span aria-hidden="true">{{ items.last.text|default('Last »'|t) }}</span>
           </a>
         </li>
       {% endif %}

@@ -38,10 +38,10 @@ display:
         options:
           items_per_page: 50
           tags:
-            previous: '‹ previous'
-            next: 'next ›'
-            first: '« first'
-            last: 'last »'
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
       style:
         type: table
         options:

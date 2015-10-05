@@ -36,8 +36,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     );
     $options['tags'] = array(
       'contains' => array(
-        'previous' => array('default' => $this->t('‹ previous')),
-        'next' => array('default' => $this->t('next ›')),
+        'previous' => array('default' => $this->t('‹ Previous')),
+        'next' => array('default' => $this->t('Next ›')),
       ),
     );
     return $options;
