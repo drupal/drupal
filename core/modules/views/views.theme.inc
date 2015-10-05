@@ -209,19 +209,6 @@ function template_preprocess_views_view_grouping(&$variables) {
 }
 
 /**
- * Display a single views field.
- *
- * Interesting bits of info:
- * $field->field_alias says what the raw value in $row will be. Reach it like
- * this: @code { $row->{$field->field_alias} @endcode
- *
- * @ingroup themeable
- */
-function theme_views_view_field($variables) {
-  return $variables['output'];
-}
-
-/**
  * Prepares variables for views field templates.
  *
  * Default template: views-view-field.html.twig.

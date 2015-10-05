@@ -133,7 +133,6 @@ function views_theme($existing, $type, $theme, $path) {
   // Default view themes
   $hooks['views_view_field'] = $base + array(
     'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
-    'function' => 'theme_views_view_field',
   );
   $hooks['views_view_grouping'] = $base + array(
     'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
