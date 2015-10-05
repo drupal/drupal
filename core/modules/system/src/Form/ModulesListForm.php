@@ -60,34 +60,6 @@ class ModulesListForm extends FormBase {
   protected $keyValueExpirable;
 
   /**
-   * The title resolver.
-   *
-   * @var \Drupal\Core\Controller\TitleResolverInterface
-   */
-  protected $titleResolver;
-
-  /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The menu link manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
    * The module installer.
    *
    * @var \Drupal\Core\Extension\ModuleInstallerInterface
@@ -111,10 +83,6 @@ class ModulesListForm extends FormBase {
       $container->get('keyvalue.expirable')->get('module_list'),
       $container->get('access_manager'),
       $container->get('current_user'),
-      $container->get('current_route_match'),
-      $container->get('title_resolver'),
-      $container->get('router.route_provider'),
-      $container->get('plugin.manager.menu.link'),
       $container->get('user.permissions')
     );
   }
@@ -132,27 +100,15 @@ class ModulesListForm extends FormBase {
    *   Access manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current route match.
-   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
-   *   The title resolver.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
-   *   The menu link manager.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, AccessManagerInterface $access_manager, AccountInterface $current_user, RouteMatchInterface $route_match, TitleResolverInterface $title_resolver, RouteProviderInterface $route_provider, MenuLinkManagerInterface $menu_link_manager, PermissionHandlerInterface $permission_handler) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, AccessManagerInterface $access_manager, AccountInterface $current_user, PermissionHandlerInterface $permission_handler) {
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
     $this->accessManager = $access_manager;
     $this->currentUser = $current_user;
-    $this->routeMatch = $route_match;
-    $this->titleResolver = $title_resolver;
-    $this->routeProvider = $route_provider;
-    $this->menuLinkManager = $menu_link_manager;
     $this->permissionHandler = $permission_handler;
   }
 
@@ -296,32 +252,13 @@ class ModulesListForm extends FormBase {
     if ($module->status && isset($module->info['configure'])) {
       $route_parameters = isset($module->info['configure_parameters']) ? $module->info['configure_parameters'] : array();
       if ($this->accessManager->checkNamedRoute($module->info['configure'], $route_parameters, $this->currentUser)) {
-
-        $links = $this->menuLinkManager->loadLinksByRoute($module->info['configure']);
-        /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
-        $link = reset($links);
-        // Most configure links have a corresponding menu link, though some just
-        // have a route.
-        if ($link) {
-          $description = $link->getDescription();
-        }
-        else {
-          $request = new Request();
-          $request->attributes->set('_route_name', $module->info['configure']);
-          $route_object = $this->routeProvider->getRouteByName($module->info['configure']);
-          $request->attributes->set('_route', $route_object);
-          $request->attributes->add($route_parameters);
-          $description = $this->titleResolver->getTitle($request, $route_object);
-        }
-
         $row['links']['configure'] = array(
           '#type' => 'link',
-          '#title' => $this->t('Configure'),
+          '#title' => $this->t('Configure <span class="visually-hidden">the @module module</span>', ['@module' => $module->info['name']]),
           '#url' => Url::fromRoute($module->info['configure'], $route_parameters),
           '#options' => array(
             'attributes' => array(
               'class' => array('module-link', 'module-link-configure'),
-              'title' => $description,
             ),
           ),
         );

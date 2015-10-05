@@ -42,7 +42,7 @@ class ModulesListFormWebTest extends WebTestBase {
     $this->assertResponse('200');
 
     // Check that system_test's configure link was rendered correctly.
-    $this->assertFieldByXPath("//a[contains(@href, '/system-test/configure/bar') and @title='Bar.bar']");
+    $this->assertFieldByXPath("//a[contains(@href, '/system-test/configure/bar') and text()='Configure ']/span[contains(@class, 'visually-hidden') and text()='the System test module']");
 
     // Check that system_test's permissions link was rendered correctly.
     $this->assertFieldByXPath("//a[contains(@href, '/admin/people/permissions#module-system_test') and @title='Configure permissions']");
