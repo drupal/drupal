@@ -1,25 +1,5 @@
 # Schema for the views plugins of the Field module.
 
-views.argument.field_list:
-  type: views.argument.numeric
-  label: 'List field name'
-  mapping:
-    human:
-      type: boolean
-      label: 'Display list value as human readable'
-
-views.argument.field_list_string:
-  type: views.argument.string
-  label: 'List field name'
-  mapping:
-    human:
-      type: boolean
-      label: 'Display list value as human readable'
-
-views.filter.field_list:
-  type: views.filter.many_to_one
-  label: 'List field'
-
 views.relationship.entity_reverse:
   type: views_relationship
   label: 'Reverse entity reference'
