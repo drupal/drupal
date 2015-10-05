@@ -21,7 +21,7 @@ class BlockAdminThemeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'contextual');
 
   /**
    * Check for the accessibility of the admin theme on the block admin page.
@@ -43,4 +43,40 @@ class BlockAdminThemeTest extends WebTestBase {
     $this->drupalGet('admin/structure/block/list/bartik');
     $this->assertResponse(200);
   }
+
+  /**
+   * Ensure contextual links are disabled in Seven theme.
+   */
+  function testSevenAdminTheme() {
+    // Create administrative user.
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer themes',
+      'access contextual links',
+      'view the administration theme',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    // Install admin theme and confirm that tab is accessible.
+    \Drupal::service('theme_handler')->install(['seven']);
+    $edit['admin_theme'] = 'seven';
+    $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
+
+    // Define our block settings.
+    $settings = [
+      'theme' => 'seven',
+      'region' => 'header',
+    ];
+
+    // Place a block.
+    $block = $this->drupalPlaceBlock('local_tasks_block', $settings);
+
+    // Open admin page.
+    $this->drupalGet('admin');
+
+    // Check if contextual link classes are unavailable.
+    $this->assertNoRaw('<div data-contextual-id="block:block=' . $block->id() . ':langcode=en"></div>');
+    $this->assertNoRaw('contextual-region');
+  }
+
 }
