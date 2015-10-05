@@ -107,11 +107,15 @@ class AddHandler extends ViewsFormBase {
       $form['options']['name'] = array(
         '#prefix' => '<div class="views-radio-box form-checkboxes views-filterable-options">',
         '#suffix' => '</div>',
-        '#tree' => TRUE,
-        '#default_value' => 'all',
+        '#type' => 'tableselect',
+        '#header' => array(
+          'title' => $this->t('Title'),
+          'group' => $this->t('Category'),
+          'help' => $this->t('Description'),
+        ),
+        '#js_select' => FALSE,
       );
 
-      // Group options first to simplify the usage of #states.
       $grouped_options = array();
       foreach ($options as $key => $option) {
         $group = preg_replace('/[^a-z0-9]/', '-', strtolower($option['group']));
@@ -137,23 +141,22 @@ class AddHandler extends ViewsFormBase {
 
       foreach ($grouped_options as $group => $group_options) {
         foreach ($group_options as $key => $option) {
-          $form['options']['name'][$key] = array(
-            '#type' => 'checkbox',
-            '#title' => $this->t('@group: @field', array('@group' => $option['group'], '@field' => $option['title'])),
-            '#description' => $option['help'],
-            '#return_value' => $key,
-            '#prefix' => "<div class='filterable-option'>",
-            '#suffix' => '</div>',
-            '#states' => array(
-              'visible' => array(
-                array(
-                  ':input[name="override[controls][group]"]' => array('value' => 'all'),
-                ),
-                array(
-                  ':input[name="override[controls][group]"]' => array('value' => $group),
-                ),
-              )
-            )
+          $form['options']['name']['#options'][$key] = array(
+            '#attributes' => array(
+              'class' => array('filterable-option', $group),
+            ),
+            'title' => array(
+              'data' => array(
+                '#title' => $option['title'],
+                '#plain_text' => $option['title'],
+              ),
+              'class' => array('title'),
+            ),
+            'group' => $option['group'],
+            'help' => array(
+              'data' => $option['help'],
+              'class' => array('description'),
+            ),
           );
         }
       }

@@ -291,7 +291,7 @@
    */
   Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
     var $target = $(event.target);
-    var label = $.trim($target.next().html());
+    var label = $.trim($target.closest('td').next().html());
     // Add/remove the checked item to the list.
     if ($target.is(':checked')) {
       this.$selected_div.show().css('display', 'block');
@@ -443,11 +443,18 @@
      */
     this.$form = $form;
 
-    /**
-     * Add a keyup handler to the search box.
-     */
-    this.$searchBox = this.$form.find('[data-drupal-selector="edit-override-controls-options-search"]');
-    this.$searchBox.on('keyup', $.proxy(this.handleKeyup, this));
+    // Click on the title checks the box.
+    this.$form.on('click', 'td.title', function (event) {
+      var $target = $(event.currentTarget);
+      $target.closest('tr').find('input').trigger('click');
+    });
+
+    var searchBoxSelector = '[data-drupal-selector="edit-override-controls-options-search"]';
+    var controlGroupSelector = '[data-drupal-selector="edit-override-controls-group"]';
+    this.$form.on('formUpdated', searchBoxSelector + ',' + controlGroupSelector, $.proxy(this.handleFilter, this));
+
+    this.$searchBox = this.$form.find(searchBoxSelector);
+    this.$controlGroup = this.$form.find(controlGroupSelector);
 
     /**
      * Get a list of option labels and their corresponding divs and maintain it
@@ -455,8 +462,6 @@
      */
     this.options = this.getOptions(this.$form.find('.filterable-option'));
 
-    // Restripe on initial loading.
-    this.handleKeyup();
     // Trap the ENTER key in the search box so that it doesn't submit the form.
     this.$searchBox.on('keypress', function (event) {
       if (event.which === 13) {
@@ -486,7 +491,7 @@
       for (var i = 0; i < length; i++) {
         $option = $($allOptions[i]);
         $label = $option.find('label');
-        $description = $option.find('div.description');
+        $description = $option.find('.description');
         options[i] = {
           // Search on the lowercase version of the label text + description.
           searchText: $label.text().toLowerCase() + " " + $description.text().toLowerCase(),
@@ -500,52 +505,41 @@
     },
 
     /**
-     * Keyup handler for the search box that hides or shows the relevant
+     * Filter handler for the search box and type select that hides or shows the relevant
      * options.
      *
      * @param {jQuery.Event} event
-     *   The keyup event.
+     *   The formUpdated event.
      */
-    handleKeyup: function (event) {
-      var found;
-      var option;
-      var zebraClass;
-
+    handleFilter: function (event) {
       // Determine the user's search query. The search text has been converted
       // to lowercase.
       var search = this.$searchBox.val().toLowerCase();
       var words = search.split(' ');
-      var wordsLength = words.length;
-
-      // Start the counter for restriping rows.
-      var zebraCounter = 0;
+      // Get selected Group
+      var group = this.$controlGroup.val();
 
       // Search through the search texts in the form for matching text.
-      var length = this.options.length;
-      for (var i = 0; i < length; i++) {
-        // Use a local variable for the option being searched, for performance.
-        option = this.options[i];
-        found = true;
+      this.options.forEach(function (option) {
+        function hasWord(word) {
+          return option.searchText.indexOf(word) !== -1;
+        }
+
+        var found = true;
         // Each word in the search string has to match the item in order for the
         // item to be shown.
-        for (var j = 0; j < wordsLength; j++) {
-          if (option.searchText.indexOf(words[j]) === -1) {
-            found = false;
-          }
+        if (search) {
+          found = words.every(hasWord);
         }
-        if (found) {
-          zebraClass = (zebraCounter % 2) ? 'odd' : 'even';
-          // Show the checkbox row, and restripe it.
-          option.$div.removeClass('even odd');
-          option.$div.addClass(zebraClass);
-          option.$div.show();
-          zebraCounter++;
+        if (found && group !== 'all') {
+          found = option.$div.hasClass(group);
         }
-        else {
-          // The search string wasn't found; hide this item.
-          option.$div.hide();
-        }
-      }
+
+        option.$div.toggle(found);
+      });
+
+      // Adapt dialog to content size.
+      $(event.target).trigger('dialogContentResize');
     }
   });
 
