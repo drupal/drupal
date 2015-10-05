@@ -20,8 +20,8 @@ class EntityTestViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
+  protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
+    $build = parent::getBuildDefaults($entity, $view_mode);
     unset($build['#theme']);
     return $build;
   }
@@ -29,8 +29,8 @@ class EntityTestViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
-    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
+    parent::buildComponents($build, $entities, $displays, $view_mode);
 
     foreach ($entities as $id => $entity) {
       $build[$id]['label'] = array(

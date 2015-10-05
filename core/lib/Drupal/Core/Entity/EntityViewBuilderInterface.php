@@ -29,11 +29,8 @@ interface EntityViewBuilderInterface {
    *   configured for the entity components, keyed by bundle name.
    * @param string $view_mode
    *   The view mode in which the entity is being viewed.
-   * @param string $langcode
-   *   (optional) For which language the entity should be build, defaults to
-   *   the current content language.
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL);
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode);
 
   /**
    * Builds the render array for the provided entity.

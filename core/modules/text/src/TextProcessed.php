@@ -41,7 +41,7 @@ class TextProcessed extends TypedData {
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
    */
-  public function getValue($langcode = NULL) {
+  public function getValue() {
     if ($this->processed !== NULL) {
       return $this->processed;
     }

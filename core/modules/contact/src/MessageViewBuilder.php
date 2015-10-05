@@ -20,8 +20,8 @@ class MessageViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
+  protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
+    $build = parent::getBuildDefaults($entity, $view_mode);
     // The message fields are individually rendered into email templates, so
     // the entity has no template itself.
     unset($build['#theme']);
@@ -31,8 +31,8 @@ class MessageViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
-    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
+    parent::buildComponents($build, $entities, $displays, $view_mode);
 
     foreach ($entities as $id => $entity) {
       // Add the message extra field, if enabled.

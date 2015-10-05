@@ -360,7 +360,7 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
 function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $reset = FALSE) {
   $render_controller = \Drupal::entityManager()->getViewBuilder($entity->getEntityTypeId());
   if ($reset) {
-    $render_controller->resetCache(array($entity->id()));
+    $render_controller->resetCache([$entity]);
   }
   return $render_controller->view($entity, $view_mode, $langcode);
 }
@@ -397,7 +397,7 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $reset = FALSE) {
   $render_controller = \Drupal::entityManager()->getViewBuilder(reset($entities)->getEntityTypeId());
   if ($reset) {
-    $render_controller->resetCache(array_keys($entities));
+    $render_controller->resetCache($entities);
   }
   return $render_controller->viewMultiple($entities, $view_mode, $langcode);
 }

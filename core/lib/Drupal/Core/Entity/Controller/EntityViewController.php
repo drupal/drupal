@@ -91,17 +91,14 @@ class EntityViewController implements ContainerInjectionInterface {
    * @param string $view_mode
    *   (optional) The view mode that should be used to display the entity.
    *   Defaults to 'full'.
-   * @param string $langcode
-   *   (optional) For which language the entity should be rendered, defaults to
-   *   the current content language.
    *
    * @return array
    *   A render array as expected by drupal_render().
    */
-  public function view(EntityInterface $_entity, $view_mode = 'full', $langcode = NULL) {
+  public function view(EntityInterface $_entity, $view_mode = 'full') {
     $page = $this->entityManager
       ->getViewBuilder($_entity->getEntityTypeId())
-      ->view($_entity, $view_mode, $langcode);
+      ->view($_entity, $view_mode);
 
     $page['#pre_render'][] = [$this, 'buildTitle'];
     $page['#entity_type'] = $_entity->getEntityTypeId();

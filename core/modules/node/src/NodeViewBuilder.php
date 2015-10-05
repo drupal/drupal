@@ -21,13 +21,13 @@ class NodeViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
     /** @var \Drupal\node\NodeInterface[] $entities */
     if (empty($entities)) {
       return;
     }
 
-    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
+    parent::buildComponents($build, $entities, $displays, $view_mode);
 
     foreach ($entities as $id => $entity) {
       $bundle = $entity->bundle();
@@ -38,7 +38,7 @@ class NodeViewBuilder extends EntityViewBuilder {
           '#lazy_builder' => [get_called_class() . '::renderLinks', [
             $entity->id(),
             $view_mode,
-            $langcode,
+            $entity->language()->getId(),
             !empty($entity->in_preview),
           ]],
         );
@@ -60,8 +60,8 @@ class NodeViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $defaults = parent::getBuildDefaults($entity, $view_mode, $langcode);
+  protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
+    $defaults = parent::getBuildDefaults($entity, $view_mode);
 
     // Don't cache nodes that are in 'preview' mode.
     if (isset($defaults['#cache']) && isset($entity->in_preview)) {
@@ -148,9 +148,9 @@ class NodeViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode = NULL) {
+  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
     /** @var \Drupal\node\NodeInterface $entity */
-    parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
+    parent::alterBuild($build, $entity, $display, $view_mode);
     if ($entity->id()) {
       $build['#contextual_links']['node'] = array(
         'route_parameters' =>array('node' => $entity->id()),

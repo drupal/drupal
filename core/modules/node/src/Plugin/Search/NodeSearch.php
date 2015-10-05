@@ -337,9 +337,9 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       // Fetch comments for snippet.
       $rendered = $this->renderer->renderPlain($build);
       $this->addCacheableDependency(CacheableMetadata::createFromRenderArray($build));
-      $rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode));
+      $rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', [$node]);
 
-      $extra = $this->moduleHandler->invokeAll('node_search_result', array($node, $item->langcode));
+      $extra = $this->moduleHandler->invokeAll('node_search_result', [$node]);
 
       $language = $this->languageManager->getLanguage($item->langcode);
       $username = array(
@@ -461,14 +461,14 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       // Add the title to text so it is searchable.
       $build['search_title'] = [
         '#prefix' => '<h1>',
-        '#plain_text' => $node->label($language->getId()),
+        '#plain_text' => $node->label(),
         '#suffix' => '</h1>',
         '#weight' => -1000
       ];
       $text = $this->renderer->renderPlain($build);
 
       // Fetch extra data normally not visible.
-      $extra = $this->moduleHandler->invokeAll('node_update_index', array($node, $language->getId()));
+      $extra = $this->moduleHandler->invokeAll('node_update_index', [$node]);
       foreach ($extra as $t) {
         $text .= $t;
       }

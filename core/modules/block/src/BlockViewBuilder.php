@@ -65,7 +65,7 @@ class BlockViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
   }
 
   /**
@@ -192,7 +192,7 @@ class BlockViewBuilder extends EntityViewBuilder {
    * @return array
    *   A render array with a #pre_render callback to render the block.
    */
-  public static function lazyBuilder($entity_id, $view_mode, $langcode) {
+  public static function lazyBuilder($entity_id, $view_mode) {
     return static::buildPreRenderableBlock(entity_load('block', $entity_id), \Drupal::service('module_handler'));
   }
 

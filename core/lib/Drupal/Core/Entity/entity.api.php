@@ -468,7 +468,9 @@ use Drupal\node\Entity\NodeType;
  * @endcode
  * Then, to build and render the entity:
  * @code
- * // You can omit the language ID if the default language is being used.
+ * // You can omit the language ID, by default the current content language will
+ * // be used. If no translation is available for the current language, fallback
+ * // rules will be used.
  * $build = $view_builder->view($entity, 'view_mode_name', $language->getId());
  * // $build is a render array.
  * $rendered = drupal_render($build);
@@ -502,6 +504,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @see i18n
  * @see entity_crud
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getTranslationFromContext()
  * @}
  */
 
@@ -1232,8 +1235,6 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
  *   entity components.
  * @param $view_mode
  *   The view mode the entity is rendered in.
- * @param $langcode
- *   The language code used for rendering.
  *
  * The module may add elements to $build prior to rendering. The
  * structure of $build is a renderable array as expected by
@@ -1244,7 +1245,7 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
  *
  * @ingroup entity_crud
  */
-function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // entity bundle in hook_entity_extra_field_info().
@@ -1268,8 +1269,6 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
  *   entity components.
  * @param $view_mode
  *   The view mode the entity is rendered in.
- * @param $langcode
- *   The language code used for rendering.
  *
  * The module may add elements to $build prior to rendering. The
  * structure of $build is a renderable array as expected by
@@ -1280,7 +1279,7 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // entity bundle in hook_entity_extra_field_info().
@@ -1443,8 +1442,6 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  *   The entity that is being viewed.
  * @param string $view_mode
  *   The view_mode that is to be used to display the entity.
- * @param string $langcode
- *   The code of the language $entity is accessed in.
  *
  * @see drupal_render()
  * @see \Drupal\Core\Entity\EntityViewBuilder
@@ -1452,7 +1449,7 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode, $langcode) {
+function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode) {
 
 }
 
@@ -1469,8 +1466,6 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
  *   The entity that is being viewed.
  * @param string $view_mode
  *   The view_mode that is to be used to display the entity.
- * @param string $langcode
- *   The code of the language $entity is accessed in.
  *
  * @see drupal_render()
  * @see \Drupal\Core\Entity\EntityViewBuilder
@@ -1478,7 +1473,7 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
  *
  * @ingroup entity_crud
  */
-function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode, $langcode) {
+function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode) {
 
 }
 

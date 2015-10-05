@@ -62,8 +62,8 @@ class CommentViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
+  protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
+    $build = parent::getBuildDefaults($entity, $view_mode);
 
     /** @var \Drupal\comment\CommentInterface $entity */
     // Store a threading field setting to use later in self::buildComponents().
@@ -88,7 +88,7 @@ class CommentViewBuilder extends EntityViewBuilder {
    * @throws \InvalidArgumentException
    *   Thrown when a comment is attached to an entity that no longer exists.
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
     /** @var \Drupal\comment\CommentInterface[] $entities */
     if (empty($entities)) {
       return;
@@ -101,7 +101,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     }
     $this->entityManager->getStorage('user')->loadMultiple(array_unique($uids));
 
-    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
+    parent::buildComponents($build, $entities, $displays, $view_mode);
 
     // A counter to track the indentation level.
     $current_indent = 0;
@@ -136,7 +136,7 @@ class CommentViewBuilder extends EntityViewBuilder {
           '#lazy_builder' => ['comment.lazy_builders:renderLinks', [
             $entity->id(),
             $view_mode,
-            $langcode,
+            $entity->language()->getId(),
             !empty($entity->in_preview),
           ]],
           '#create_placeholder' => TRUE,
@@ -166,8 +166,8 @@ class CommentViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function alterBuild(array &$build, EntityInterface $comment, EntityViewDisplayInterface $display, $view_mode, $langcode = NULL) {
-    parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
+  protected function alterBuild(array &$build, EntityInterface $comment, EntityViewDisplayInterface $display, $view_mode) {
+    parent::alterBuild($build, $comment, $display, $view_mode);
     if (empty($comment->in_preview)) {
       $prefix = '';
 

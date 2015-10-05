@@ -215,7 +215,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
 /**
  * Implements hook_entity_view().
  */
-function comment_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function comment_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   if ($entity instanceof FieldableEntityInterface && $view_mode == 'rss' && $display->getComponent('links')) {
     /** @var \Drupal\comment\CommentManagerInterface $comment_manager */
     $comment_manager = \Drupal::service('comment.manager');
@@ -426,7 +426,7 @@ function _comment_entity_uses_integer_id($entity_type_id) {
 /**
  * Implements hook_node_update_index().
  */
-function comment_node_update_index(EntityInterface $node, $langcode) {
+function comment_node_update_index(EntityInterface $node) {
   $index_comments = &drupal_static(__FUNCTION__);
 
   if ($index_comments === NULL) {

@@ -19,8 +19,8 @@ class TermViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode = NULL) {
-    parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
+  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+    parent::alterBuild($build, $entity, $display, $view_mode);
     $build['#contextual_links']['taxonomy_term'] = array(
       'route_parameters' => array('taxonomy_term' => $entity->id()),
       'metadata' => array('changed' => $entity->getChangedTime()),

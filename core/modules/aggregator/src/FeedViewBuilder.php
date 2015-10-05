@@ -52,8 +52,8 @@ class FeedViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
-    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
+    parent::buildComponents($build, $entities, $displays, $view_mode);
 
     foreach ($entities as $id => $entity) {
       $bundle = $entity->bundle();
@@ -69,7 +69,7 @@ class FeedViewBuilder extends EntityViewBuilder {
 
         $build[$id]['items'] = $this->entityManager
           ->getViewBuilder('aggregator_item')
-          ->viewMultiple($items, $view_mode, $langcode);
+          ->viewMultiple($items, $view_mode, $entity->language()->getId());
 
         if ($view_mode == 'full') {
           // Also add the pager.

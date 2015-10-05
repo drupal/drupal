@@ -41,7 +41,7 @@ function node_test_node_view(array &$build, NodeInterface $node, EntityViewDispl
 /**
  * Implements hook_ENTITY_TYPE_build_defaults_alter() for node entities.
  */
-function node_test_node_build_defaults_alter(array &$build, NodeInterface &$node, $view_mode = 'full', $langcode = NULL) {
+function node_test_node_build_defaults_alter(array &$build, NodeInterface &$node, $view_mode = 'full') {
   if ($view_mode == 'rss') {
     $node->rss_namespaces['xmlns:drupaltest'] = 'http://example.com/test-namespace';
   }
