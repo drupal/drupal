@@ -17,8 +17,18 @@ use Drupal\Core\Cache\ApcuBackend;
  */
 class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
 
-  protected function checkRequirements() {
-    $requirements = parent::checkRequirements();
+  /**
+   * Get a list of failed requirements.
+   *
+   * This specifically bypasses checkRequirements because it fails tests. PHP 7
+   * does not have APC and simpletest does not have a explicit "skip"
+   * functionality so to emulate it we override all test methods and explicitly
+   * pass when  requirements are not met.
+   *
+   * @return array
+   */
+  protected function getRequirements() {
+    $requirements = [];
     if (!extension_loaded('apc')) {
       $requirements[] = 'APC extension not found.';
     }
@@ -33,15 +43,150 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
     return $requirements;
   }
 
+  /**
+   * Check if requirements fail.
+   *
+   * If the requirements fail the test method should return immediately instead
+   * of running any tests. Messages will be output to display why the test was
+   * skipped.
+   */
+  protected function requirementsFail() {
+    $requirements = $this->getRequirements();
+    if (!empty($requirements)) {
+      foreach ($requirements as $message) {
+        $this->pass($message);
+      }
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function createCacheBackend($bin) {
     return new ApcuBackend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown() {
     foreach ($this->cachebackends as $bin => $cachebackend) {
       $this->cachebackends[$bin]->removeBin();
     }
     parent::tearDown();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testSetGet() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testSetGet();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testDelete() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testDelete();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testValueTypeIsKept() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testValueTypeIsKept();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testGetMultiple() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testGetMultiple();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testSetMultiple() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testSetMultiple();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testDeleteMultiple() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testDeleteMultiple();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testDeleteAll() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testDeleteAll();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testInvalidate() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testInvalidate();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testInvalidateTags() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testInvalidateTags();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testInvalidateAll() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testInvalidateAll();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRemoveBin() {
+    if ($this->requirementsFail()) {
+      return;
+    }
+    parent::testRemoveBin();
   }
 
 }
