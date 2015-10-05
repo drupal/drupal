@@ -19,12 +19,12 @@
 #}
 <div class="{{ attributes.class }} project-update__version"{{ attributes|without('class') }}>
   <div class="clearfix">
-    <div class="project-update__version-title layout-column quarter">{{ title }}</div>
-    <div class="project-update__version-details layout-column quarter">
+    <div class="project-update__version-title layout-column layout-column--quarter">{{ title }}</div>
+    <div class="project-update__version-details layout-column layout-column--quarter">
       <a href="{{ version.release_link }}">{{ version.version }}</a>
       <span class="project-update__version-date">({{ version.date|date('Y-M-d') }})</span>
     </div>
-    <div class="layout-column half">
+    <div class="layout-column layout-column--half">
       <ul class="project-update__version-links">
         <li class="project-update__download-link">
           <a href="{{ version.download_link }}">{{ 'Download'|t }}</a>
