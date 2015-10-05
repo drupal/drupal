@@ -63,7 +63,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     if (!empty($sid)) {
       // Read the session data from the database.
       $query = $this->connection
-        ->queryRange('SELECT session FROM {sessions} WHERE sid = :sid', 0, 1, ['sid' => Crypt::hashBase64($sid)]);
+        ->queryRange('SELECT session FROM {sessions} WHERE sid = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
       $data = (string) $query->fetchField();
     }
     return $data;
