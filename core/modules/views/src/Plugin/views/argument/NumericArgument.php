@@ -49,7 +49,7 @@ class NumericArgument extends ArgumentPluginBase {
       '#title' => $this->t('Allow multiple values'),
       '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['not'] = array(
@@ -57,7 +57,7 @@ class NumericArgument extends ArgumentPluginBase {
       '#title' => $this->t('Exclude'),
       '#description' => $this->t('If selected, the numbers entered for the filter will be excluded rather than limiting the view.'),
       '#default_value' => !empty($this->options['not']),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
   }
 

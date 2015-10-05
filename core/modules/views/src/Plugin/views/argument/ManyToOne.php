@@ -72,7 +72,7 @@ class ManyToOne extends ArgumentPluginBase {
       '#title' => $this->t('Allow multiple values'),
       '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['add_table'] = array(
@@ -80,14 +80,14 @@ class ManyToOne extends ArgumentPluginBase {
       '#title' => $this->t('Allow multiple filter values to work together'),
       '#description' => $this->t('If selected, multiple instances of this filter can work together, as though multiple values were supplied to the same filter. This setting is not compatible with the "Reduce duplicates" setting.'),
       '#default_value' => !empty($this->options['add_table']),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['require_value'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Do not display items with no value in summary'),
       '#default_value' => !empty($this->options['require_value']),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $this->helper->buildOptionsForm($form, $form_state);

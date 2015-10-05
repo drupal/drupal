@@ -65,7 +65,7 @@ class StringArgument extends ArgumentPluginBase {
       '#title' => $this->t('Glossary mode'),
       '#description' => $this->t('Glossary mode applies a limit to the number of characters used in the filter value, which allows the summary view to act as a glossary.'),
       '#default_value' => $this->options['glossary'],
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['limit'] = array(
@@ -78,7 +78,7 @@ class StringArgument extends ArgumentPluginBase {
           ':input[name="options[glossary]"]' => array('checked' => TRUE),
         ),
       ),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['case'] = array(
@@ -93,7 +93,7 @@ class StringArgument extends ArgumentPluginBase {
         'ucwords' => $this->t('Capitalize each word'),
       ),
       '#default_value' => $this->options['case'],
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['path_case'] = array(
@@ -108,14 +108,14 @@ class StringArgument extends ArgumentPluginBase {
         'ucwords' => $this->t('Capitalize each word'),
       ),
       '#default_value' => $this->options['path_case'],
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     $form['transform_dash'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Transform spaces to dashes in URL'),
       '#default_value' => $this->options['transform_dash'],
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
 
     if (!empty($this->definition['many to one'])) {
@@ -124,14 +124,14 @@ class StringArgument extends ArgumentPluginBase {
         '#title' => $this->t('Allow multiple filter values to work together'),
         '#description' => $this->t('If selected, multiple instances of this filter can work together, as though multiple values were supplied to the same filter. This setting is not compatible with the "Reduce duplicates" setting.'),
         '#default_value' => !empty($this->options['add_table']),
-        '#fieldset' => 'more',
+        '#group' => 'options][more',
       );
 
       $form['require_value'] = array(
         '#type' => 'checkbox',
         '#title' => $this->t('Do not display items with no value in summary'),
         '#default_value' => !empty($this->options['require_value']),
-        '#fieldset' => 'more',
+        '#group' => 'options][more',
       );
     }
 
@@ -141,7 +141,7 @@ class StringArgument extends ArgumentPluginBase {
       '#title' => $this->t('Allow multiple values'),
       '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
-      '#fieldset' => 'more',
+      '#group' => 'options][more',
     );
   }
 

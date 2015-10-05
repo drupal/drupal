@@ -305,7 +305,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       '#type' => 'details',
       '#title' => $this->t('More'),
       '#weight' => 200,
+      '#optional' => TRUE,
     );
+
     // Allow to alter the default values brought into the form.
     // @todo Do we really want to keep this hook.
     $this->getModuleHandler()->alter('views_handler_options', $this->options, $this->view);

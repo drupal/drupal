@@ -483,7 +483,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         unset($form[$key]);
       }
     }
-
     return $form;
   }
 
