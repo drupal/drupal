@@ -45,95 +45,140 @@ class SelectExtender implements SelectInterface {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\PlaceholderInterface::uniqueIdentifier().
+   * {@inheritdoc}
    */
   public function uniqueIdentifier() {
     return $this->uniqueIdentifier;
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\PlaceholderInterface::nextPlaceholder().
+   * {@inheritdoc}
    */
   public function nextPlaceholder() {
     return $this->placeholder++;
   }
 
-  /* Implementations of Drupal\Core\Database\Query\AlterableInterface. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function addTag($tag) {
     $this->query->addTag($tag);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasTag($tag) {
     return $this->query->hasTag($tag);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasAllTags() {
     return call_user_func_array(array($this->query, 'hasAllTags'), func_get_args());
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasAnyTag() {
     return call_user_func_array(array($this->query, 'hasAnyTag'), func_get_args());
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addMetaData($key, $object) {
     $this->query->addMetaData($key, $object);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getMetaData($key) {
     return $this->query->getMetaData($key);
   }
 
-  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the WHERE clause. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function condition($field, $value = NULL, $operator = '=') {
     $this->query->condition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &conditions() {
     return $this->query->conditions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function arguments() {
     return $this->query->arguments();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function where($snippet, $args = array()) {
     $this->query->where($snippet, $args);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     return $this->query->compile($connection, $queryPlaceholder);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function compiled() {
     return $this->query->compiled();
   }
 
-  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the HAVING clause. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function havingCondition($field, $value = NULL, $operator = '=') {
     $this->query->havingCondition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &havingConditions() {
     return $this->query->havingConditions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function havingArguments() {
     return $this->query->havingArguments();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function having($snippet, $args = array()) {
     $this->query->having($snippet, $args);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function havingCompile(Connection $connection) {
     return $this->query->havingCompile($connection);
   }
@@ -170,8 +215,9 @@ class SelectExtender implements SelectInterface {
     return $this;
   }
 
-  /* Implementations of Drupal\Core\Database\Query\ExtendableInterface. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function extend($extender_name) {
     $class = $this->connection->getDriverClass($extender_name);
     return new $class($this, $this->connection);
@@ -179,26 +225,44 @@ class SelectExtender implements SelectInterface {
 
   /* Alter accessors to expose the query data to alter hooks. */
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getFields() {
     return $this->query->getFields();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getExpressions() {
     return $this->query->getExpressions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getOrderBy() {
     return $this->query->getOrderBy();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getGroupBy() {
     return $this->query->getGroupBy();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getTables() {
     return $this->query->getTables();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getUnion() {
     return $this->query->getUnion();
   }
@@ -218,14 +282,23 @@ class SelectExtender implements SelectInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     return $this->query->getArguments($queryPlaceholder);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isPrepared() {
     return $this->query->isPrepared();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function preExecute(SelectInterface $query = NULL) {
     // If no query object is passed in, use $this.
     if (!isset($query)) {
@@ -235,6 +308,9 @@ class SelectExtender implements SelectInterface {
     return $this->query->preExecute($query);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     // By calling preExecute() here, we force it to preprocess the extender
     // object rather than just the base query object.  That means
@@ -246,93 +322,153 @@ class SelectExtender implements SelectInterface {
     return $this->query->execute();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function distinct($distinct = TRUE) {
     $this->query->distinct($distinct);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addField($table_alias, $field, $alias = NULL) {
     return $this->query->addField($table_alias, $field, $alias);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fields($table_alias, array $fields = array()) {
     $this->query->fields($table_alias, $fields);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addExpression($expression, $alias = NULL, $arguments = array()) {
     return $this->query->addExpression($expression, $alias, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function join($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->query->join($table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->query->innerJoin($table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->query->leftJoin($table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->query->rightJoin($table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->query->addJoin($type, $table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function orderBy($field, $direction = 'ASC') {
     $this->query->orderBy($field, $direction);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function orderRandom() {
     $this->query->orderRandom();
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function range($start = NULL, $length = NULL) {
     $this->query->range($start, $length);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function union(SelectInterface $query, $type = '') {
     $this->query->union($query, $type);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function groupBy($field) {
     $this->query->groupBy($field);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function forUpdate($set = TRUE) {
     $this->query->forUpdate($set);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function countQuery() {
     return $this->query->countQuery();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function isNull($field) {
     $this->query->isNull($field);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function isNotNull($field) {
     $this->query->isNotNull($field);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function exists(SelectInterface $select) {
     $this->query->exists($select);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function notExists(SelectInterface $select) {
     $this->query->notExists($select);
     return $this;
@@ -345,6 +481,9 @@ class SelectExtender implements SelectInterface {
     return (string) $this->query;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __clone() {
     $this->uniqueIdentifier = uniqid('', TRUE);
 
