@@ -48,7 +48,7 @@ function editor_help($route_name, RouteMatchInterface $route_match) {
  */
 function editor_menu_links_discovered_alter(array &$links) {
   $links['filter.admin_overview']['title'] = new TranslatableMarkup('Text formats and editors');
-  $links['filter.admin_overview']['description'] = new TranslatableMarkup('Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).');
+  $links['filter.admin_overview']['description'] = new TranslatableMarkup('Select and configure text editors, and how content is filtered when displayed.');
 }
 
 /**

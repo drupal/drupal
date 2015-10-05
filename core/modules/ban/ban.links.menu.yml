@@ -1,6 +1,6 @@
 ban.admin_page:
   title: 'IP address bans'
-  description: 'Manage banned IP addresses.'
+  description: 'Ban visits from specific IP addresses.'
   route_name: ban.admin_page
   weight: 10
   parent: user.admin_index

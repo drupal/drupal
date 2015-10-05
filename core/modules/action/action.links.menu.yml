@@ -1,5 +1,5 @@
 action.admin:
   title: Actions
-  description: 'Manage the actions defined for your site.'
+  description: 'Create tasks that the system can execute.'
   route_name: entity.action.collection
   parent: system.admin_config_system

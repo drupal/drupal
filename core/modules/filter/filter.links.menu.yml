@@ -5,5 +5,5 @@ filter.tips_all:
 filter.admin_overview:
   title: 'Text formats'
   parent: system.admin_config_content
-  description: 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.'
+  description: 'Configure how content is filtered when displayed, including which HTML tags are rendered, and enable module-provided filters.'
   route_name: filter.admin_overview
