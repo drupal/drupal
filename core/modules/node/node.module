@@ -1340,3 +1340,10 @@ function node_comment_delete($comment) {
     node_reindex_node_search($comment->getCommentedEntityId());
   }
 }
+
+/**
+ * Implements hook_config_translation_info_alter().
+ */
+function node_config_translation_info_alter(&$info) {
+  $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
+}

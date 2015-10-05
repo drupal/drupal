@@ -405,34 +405,6 @@ class ConfigTranslationUiTest extends WebTestBase {
   }
 
   /**
-   * Tests the node type translation.
-   */
-  public function testNodeTypeTranslation() {
-    $type = Unicode::strtolower($this->randomMachineName(16));
-    $name = $this->randomString();
-    $this->drupalLogin($this->adminUser);
-    $this->drupalCreateContentType(array('type' => $type, 'name' => $name));
-
-    // Translate the node type name.
-    $langcode = $this->langcodes[0];
-    $translated_name = $langcode . '-' . $name;
-    $edit = array(
-      "translation[config_names][node.type.$type][name]" => $translated_name,
-    );
-    $this->drupalPostForm("admin/structure/types/manage/$type/translate/$langcode/add", $edit, t('Save translation'));
-
-    // Check the name is translated without admin theme for editing.
-    $this->drupalPostForm('admin/appearance', array('use_admin_theme' => '0'), t('Save configuration'));
-    $this->drupalGet("$langcode/node/add/$type");
-    $this->assertRaw(t('Create @name', array('@name' => $translated_name)));
-
-    // Check the name is translated with admin theme for editing.
-    $this->drupalPostForm('admin/appearance', array('use_admin_theme' => '1'), t('Save configuration'));
-    $this->drupalGet("$langcode/node/add/$type");
-    $this->assertRaw(t('Create @name', array('@name' => $translated_name)));
-  }
-
-  /**
    * Tests date format translation.
    */
   public function testDateFormatTranslation() {
