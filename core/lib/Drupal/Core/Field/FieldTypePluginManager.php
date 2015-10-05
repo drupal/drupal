@@ -13,7 +13,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 
 /**
  * Plugin manager for 'field type' plugins.
@@ -27,7 +27,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   /**
    * The typed data manager.
    *
-   * @var \Drupal\Core\TypedData\TypedDataManager
+   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
    */
   protected $typedDataManager;
 
@@ -41,10 +41,10 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler.
-   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManager $typed_data_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');

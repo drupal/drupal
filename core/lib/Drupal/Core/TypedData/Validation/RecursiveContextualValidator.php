@@ -10,7 +10,7 @@ namespace Drupal\Core\TypedData\Validation;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -64,10 +64,10 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    *   The metadata factory.
    * @param \Symfony\Component\Validator\ConstraintValidatorFactoryInterface $validator_factory
    *   The constraint validator factory.
-   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
    */
-  public function __construct(ExecutionContextInterface $context, MetadataFactoryInterface $metadata_factory, ConstraintValidatorFactoryInterface $validator_factory, TypedDataManager $typed_data_manager) {
+  public function __construct(ExecutionContextInterface $context, MetadataFactoryInterface $metadata_factory, ConstraintValidatorFactoryInterface $validator_factory, TypedDataManagerInterface $typed_data_manager) {
     $this->context = $context;
     $this->metadataFactory = $metadata_factory;
     $this->constraintValidatorFactory = $validator_factory;

@@ -71,13 +71,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
 
 
   /**
-   * Gets typed configuration data.
-   *
-   * @param string $name
-   *   Configuration object name.
-   *
-   * @return \Drupal\Core\Config\Schema\TypedConfigInterface
-   *   Typed configuration data.
+   * {@inheritdoc}
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
@@ -340,19 +334,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       }
       throw new ConfigSchemaAlterException($message);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createInstance($data_type, array $configuration = array()) {
-    $instance = parent::createInstance($data_type, $configuration);
-    // Enable elements to construct their own definitions using the typed config
-    // manager.
-    if ($instance instanceof ArrayElement) {
-      $instance->setTypedConfig($this);
-    }
-    return $instance;
   }
 
 }

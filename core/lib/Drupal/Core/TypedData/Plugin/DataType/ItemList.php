@@ -222,7 +222,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
   protected function createItem($offset = 0, $value = NULL) {
-    return \Drupal::typedDataManager()->getPropertyInstance($this, $offset, $value);
+    return $this->getTypedDataManager()->getPropertyInstance($this, $offset, $value);
   }
 
   /**

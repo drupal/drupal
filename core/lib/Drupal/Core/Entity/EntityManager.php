@@ -32,7 +32,7 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
-use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -111,7 +111,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * The typed data manager.
    *
-   * @var \Drupal\Core\TypedData\TypedDataManager
+   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
    */
   protected $typedDataManager;
 
@@ -193,14 +193,14 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The string translationManager.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
-   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The keyvalue factory.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager, KeyValueFactoryInterface $key_value_factory, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManagerInterface $typed_data_manager, KeyValueFactoryInterface $key_value_factory, EventDispatcherInterface $event_dispatcher) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface');
 
     $this->setCacheBackend($cache, 'entity_type', array('entity_types'));

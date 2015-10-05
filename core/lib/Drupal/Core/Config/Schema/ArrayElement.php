@@ -7,27 +7,10 @@
 
 namespace Drupal\Core\Config\Schema;
 
-use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\TypedData\TypedData;
-
 /**
  * Defines a generic configuration element that contains multiple properties.
  */
-abstract class ArrayElement extends TypedData implements \IteratorAggregate, TypedConfigInterface {
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfig;
-
-  /**
-   * The configuration value.
-   *
-   * @var mixed
-   */
-  protected $value;
+abstract class ArrayElement extends Element implements \IteratorAggregate, TypedConfigInterface {
 
   /**
    * Parsed elements.
@@ -152,7 +135,7 @@ abstract class ArrayElement extends TypedData implements \IteratorAggregate, Typ
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
   protected function createElement($definition, $value, $key) {
-    return $this->typedConfig->create($definition, $value, $key, $this);
+    return $this->getTypedDataManager()->create($definition, $value, $key, $this);
   }
 
   /**
@@ -170,20 +153,7 @@ abstract class ArrayElement extends TypedData implements \IteratorAggregate, Typ
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
    */
   protected function buildDataDefinition($definition, $value, $key) {
-    return $this->typedConfig->buildDataDefinition($definition, $value, $key, $this);
-  }
-
-
-  /**
-   * Sets the typed config manager on the instance.
-   *
-   * This must be called immediately after construction to enable
-   * self::parseElement() and self::buildDataDefinition() to work.
-   *
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
-   */
-  public function setTypedConfig(TypedConfigManagerInterface $typed_config) {
-    $this->typedConfig = $typed_config;
+    return $this->getTypedDataManager()->buildDataDefinition($definition, $value, $key, $this);
   }
 
   /**

@@ -281,7 +281,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // widgets.
     $cardinality = $this->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
     if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $constraints[] = \Drupal::typedDataManager()
+      $constraints[] = $this->getTypedDataManager()
         ->getValidationConstraintManager()
         ->create('Count', array(
           'max' => $cardinality,
