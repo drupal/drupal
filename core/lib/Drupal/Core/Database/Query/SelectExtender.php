@@ -338,6 +338,9 @@ class SelectExtender implements SelectInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     return (string) $this->query;
   }

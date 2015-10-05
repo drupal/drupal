@@ -648,4 +648,12 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    */
   public function forUpdate($set = TRUE);
 
+  /**
+   * Returns a string representation of how the query will be executed in SQL.
+   *
+   * @return string
+   *   The Select Query object expressed as a string.
+   */
+  public function __toString();
+
 }
