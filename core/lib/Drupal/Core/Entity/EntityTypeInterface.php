@@ -652,6 +652,20 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function setUriCallback($callback);
 
   /**
+   * Gets the machine name of the entity type group.
+   *
+   * @return string
+   */
+  public function getGroup();
+
+  /**
+   * Gets the human-readable name of the entity type group.
+   *
+   * @return string
+   */
+  public function getGroupLabel();
+
+  /**
    * The list cache contexts associated with this entity type.
    *
    * Enables code listing entities of this type to ensure that rendered listings
