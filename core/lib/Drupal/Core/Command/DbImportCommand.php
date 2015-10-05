@@ -58,6 +58,8 @@ class DbImportCommand extends DbCommandBase {
    *   Path to dump script.
    */
   protected function runScript(Connection $connection, $script) {
+    $old_key = Database::setActiveConnection($connection->getKey());
+
     if (substr($script, -3) == '.gz') {
       $script = "compress.zlib://$script";
     }
@@ -67,6 +69,7 @@ class DbImportCommand extends DbCommandBase {
     catch (SchemaObjectExistsException $e) {
       throw new \RuntimeException('An existing Drupal installation exists at this location. Try removing all tables or changing the database prefix in your settings.php file.');
     }
+    Database::setActiveConnection($old_key);
   }
 
 }

@@ -8,7 +8,6 @@
 namespace Drupal\Tests\system\Kernel\Scripts;
 
 use Drupal\Core\Command\DbImportCommand;
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -54,20 +53,25 @@ class DbImportCommandTest extends KernelTestBase {
 
   /**
    * Test the command directly.
+   *
+   * @requires extension pdo_sqlite
    */
   public function testDbImportCommand() {
-    /** @var \Drupal\Core\Database\Connection $connection */
-    $connection = $this->container->get('database');
-    // Drop tables to avoid conflicts.
-    foreach ($this->tables as $table) {
-      $connection->schema()->dropTable($table);
-    }
+    $connection_info = array(
+      'driver' => 'sqlite',
+      'database' => ':memory:',
+    );
+    Database::addConnectionInfo($this->databasePrefix, 'default', $connection_info);
 
     $command = new DbImportCommand();
     $command_tester = new CommandTester($command);
-    $command_tester->execute(['script' => __DIR__ . '/../../../fixtures/update/drupal-8.bare.standard.php.gz']);
+    $command_tester->execute([
+      'script' => __DIR__ . '/../../../fixtures/update/drupal-8.bare.standard.php.gz',
+      '--database' => $this->databasePrefix,
+    ]);
 
     // The tables should now exist.
+    $connection = Database::getConnection('default', $this->databasePrefix);
     foreach ($this->tables as $table) {
       $this->assertTrue($connection
         ->schema()
