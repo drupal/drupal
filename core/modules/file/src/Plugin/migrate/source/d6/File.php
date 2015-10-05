@@ -44,18 +44,13 @@ class File extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('files', 'f')->fields('f', array(
-      'fid',
-      'uid',
-      'filename',
-      'filepath',
-      'filemime',
-      'filesize',
-      'status',
-      'timestamp',
-    ));
-    $query->orderBy('timestamp');
-    return $query;
+    return $this->select('files', 'f')
+      ->fields('f')
+      ->orderBy('timestamp')
+      // If two or more files have the same timestamp, they'll end up in a
+      // non-deterministic order. Ordering by fid (or any other unique field)
+      // will prevent this.
+      ->orderBy('fid');
   }
 
   /**

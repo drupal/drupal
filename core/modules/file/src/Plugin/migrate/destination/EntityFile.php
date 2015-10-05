@@ -76,6 +76,20 @@ class EntityFile extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEntity(Row $row, array $old_destination_id_values) {
+    $destination = $row->getDestinationProperty($this->configuration['destination_path_property']);
+    $entity = $this->storage->loadByProperties(['uri' => $destination]);
+    if ($entity) {
+      return reset($entity);
+    }
+    else {
+      return parent::getEntity($row, $old_destination_id_values);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function import(Row $row, array $old_destination_id_values = array()) {
     $file = $row->getSourceProperty($this->configuration['source_path_property']);
     $destination = $row->getDestinationProperty($this->configuration['destination_path_property']);
