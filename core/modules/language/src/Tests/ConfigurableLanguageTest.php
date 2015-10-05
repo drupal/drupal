@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Tests\language\ConfigurableLanguageTest.
+ * Contains \Drupal\language\Tests\ConfigurableLanguageTest.
  */
 
-namespace Drupal\Tests\language;
+namespace Drupal\language\Tests;
 
 use Drupal\simpletest\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
