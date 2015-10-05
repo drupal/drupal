@@ -22,9 +22,6 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
  *
  * Supported settings (below the definition's 'settings' key) are:
  * - target_type: The entity type to reference. Required.
- * - target_bundle: (optional): If set, restricts the entity bundles which may
- *   may be referenced. May be set to an single bundle, or to an array of
- *   allowed bundles.
  *
  * @FieldType(
  *   id = "entity_reference",
