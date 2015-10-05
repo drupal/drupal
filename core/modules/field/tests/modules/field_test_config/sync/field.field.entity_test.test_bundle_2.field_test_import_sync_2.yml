@@ -1,7 +1,7 @@
-id: entity_test.test_bundle_2.field_test_import_staging_2
+id: entity_test.test_bundle_2.field_test_import_sync_2
 uuid: 49d6dd19-5097-443d-8f00-fc79525bebce
 langcode: en
-field_name: field_test_import_staging_2
+field_name: field_test_import_sync_2
 entity_type: entity_test
 bundle: test_bundle_2
 label: 'Test import field 2 on test bundle 2'
@@ -13,4 +13,4 @@ settings: { }
 field_type: text
 dependencies:
   config:
-    - field.storage.entity_test.field_test_import_staging_2
+    - field.storage.entity_test.field_test_import_sync_2

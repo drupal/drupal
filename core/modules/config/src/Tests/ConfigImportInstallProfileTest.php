@@ -42,7 +42,7 @@ class ConfigImportInstallProfileTest extends WebTestBase {
 
     $this->webUser = $this->drupalCreateUser(array('synchronize configuration'));
     $this->drupalLogin($this->webUser);
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
   }
 
   /**
@@ -51,13 +51,13 @@ class ConfigImportInstallProfileTest extends WebTestBase {
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
   public function testInstallProfileValidation() {
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($this->container->get('config.storage'), $staging);
-    $core = $staging->read('core.extension');
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($this->container->get('config.storage'), $sync);
+    $core = $sync->read('core.extension');
 
     // Ensure install profiles can not be uninstalled.
     unset($core['module']['testing_config_import']);
-    $staging->write('core.extension', $core);
+    $sync->write('core.extension', $core);
 
     $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
@@ -68,11 +68,11 @@ class ConfigImportInstallProfileTest extends WebTestBase {
     unset($core['module']['syslog']);
     unset($core['theme']['stark']);
     $core['theme']['classy'] = 0;
-    $staging->write('core.extension', $core);
-    $staging->deleteAll('syslog.');
-    $theme = $staging->read('system.theme');
+    $sync->write('core.extension', $core);
+    $sync->deleteAll('syslog.');
+    $theme = $sync->read('system.theme');
     $theme['default'] = 'classy';
-    $staging->write('system.theme', $theme);
+    $sync->write('system.theme', $theme);
     $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
     $this->assertText('The configuration was imported successfully.');
     $this->rebuildContainer();

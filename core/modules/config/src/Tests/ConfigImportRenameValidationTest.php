@@ -48,7 +48,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage.sync'),
       $this->container->get('config.storage'),
       $this->container->get('config.manager')
     );
@@ -80,8 +80,8 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
 
     // Stage the test entity and then delete it from the active storage.
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
     $test_entity->delete();
 
     // Create a content type with a matching UUID in the active storage.
@@ -127,8 +127,8 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
     $config->set('uuid', $uuid_value)->save();
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
     $config->delete();
 
     // Create another simple configuration with the same UUID.

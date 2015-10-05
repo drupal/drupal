@@ -443,11 +443,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($style->buildUrl($original_uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
-    // Copy config to staging, and delete the image style.
-    $staging = $this->container->get('config.storage.staging');
+    // Copy config to sync, and delete the image style.
+    $sync = $this->container->get('config.storage.sync');
     $active = $this->container->get('config.storage');
-    $this->copyConfig($active, $staging);
-    $staging->delete('image.style.' . $style_name);
+    $this->copyConfig($active, $sync);
+    $sync->delete('image.style.' . $style_name);
     $this->configImporter()->import();
 
     $this->assertFalse(ImageStyle::load($style_name), 'Style deleted after config import.');

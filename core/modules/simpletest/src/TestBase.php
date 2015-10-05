@@ -1518,7 +1518,7 @@ abstract class TestBase {
     if (!$this->configImporter) {
       // Set up the ConfigImporter object for testing.
       $storage_comparer = new StorageComparer(
-        $this->container->get('config.storage.staging'),
+        $this->container->get('config.storage.sync'),
         $this->container->get('config.storage'),
         $this->container->get('config.manager')
       );

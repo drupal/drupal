@@ -11,7 +11,7 @@ use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 
 /**
- * Tests staging and importing config entities with IDs and UUIDs that match
+ * Tests sync and importing config entities with IDs and UUIDs that match
  * existing config.
  *
  * @group config

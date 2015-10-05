@@ -1,7 +1,7 @@
-id: entity_test.field_test_import_staging
+id: entity_test.field_test_import_sync
 uuid: 0bf654cc-f14a-4881-b94c-76959e47466b
 langcode: en
-field_name: field_test_import_staging
+field_name: field_test_import_sync
 entity_type: entity_test
 type: text
 settings:

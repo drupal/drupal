@@ -28,8 +28,8 @@ trait AssertConfigEntityImportTrait {
     $entity_uuid = $entity->uuid();
     $entity_type_id = $entity->getEntityTypeId();
     $original_data = $entity->toArray();
-    // Copy everything to staging.
-    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.staging'));
+    // Copy everything to sync.
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
     // Delete the configuration from active. Don't worry about side effects of
     // deleting config like fields cleaning up field storages. The coming import
     // should recreate everything as necessary.

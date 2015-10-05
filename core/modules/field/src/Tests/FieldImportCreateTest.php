@@ -77,14 +77,14 @@ class FieldImportCreateTest extends FieldUnitTestBase {
    */
   function testImportCreate() {
     // A field storage with one single field.
-    $field_name = 'field_test_import_staging';
+    $field_name = 'field_test_import_sync';
     $field_storage_id = "entity_test.$field_name";
     $field_id = "entity_test.entity_test.$field_name";
     $field_storage_config_name = "field.storage.$field_storage_id";
     $field_config_name = "field.field.$field_id";
 
     // A field storage with two fields.
-    $field_name_2 = 'field_test_import_staging_2';
+    $field_name_2 = 'field_test_import_sync_2';
     $field_storage_id_2 = "entity_test.$field_name_2";
     $field_id_2a = "entity_test.test_bundle.$field_name_2";
     $field_id_2b = "entity_test.test_bundle_2.$field_name_2";
@@ -93,32 +93,32 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $field_config_name_2b = "field.field.$field_id_2b";
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
 
-    // Add the new files to the staging directory.
-    $src_dir = drupal_get_path('module', 'field_test_config') . '/staging';
-    $target_dir = $this->configDirectories[CONFIG_STAGING_DIRECTORY];
+    // Add the new files to the sync directory.
+    $src_dir = drupal_get_path('module', 'field_test_config') . '/sync';
+    $target_dir = $this->configDirectories[CONFIG_SYNC_DIRECTORY];
     $this->assertTrue(file_unmanaged_copy("$src_dir/$field_storage_config_name.yml", "$target_dir/$field_storage_config_name.yml"));
     $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name.yml", "$target_dir/$field_config_name.yml"));
     $this->assertTrue(file_unmanaged_copy("$src_dir/$field_storage_config_name_2.yml", "$target_dir/$field_storage_config_name_2.yml"));
     $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name_2a.yml", "$target_dir/$field_config_name_2a.yml"));
     $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name_2b.yml", "$target_dir/$field_config_name_2b.yml"));
 
-    // Import the content of the staging directory.
+    // Import the content of the sync directory.
     $this->configImporter()->import();
 
     // Check that the field and storage were created.
     $field_storage = FieldStorageConfig::load($field_storage_id);
-    $this->assertTrue($field_storage, 'Test import storage field from staging exists');
+    $this->assertTrue($field_storage, 'Test import storage field from sync exists');
     $field = FieldConfig::load($field_id);
-    $this->assertTrue($field, 'Test import field  from staging exists');
+    $this->assertTrue($field, 'Test import field  from sync exists');
     $field_storage = FieldStorageConfig::load($field_storage_id_2);
-    $this->assertTrue($field_storage, 'Test import storage field 2 from staging exists');
+    $this->assertTrue($field_storage, 'Test import storage field 2 from sync exists');
     $field = FieldConfig::load($field_id_2a);
-    $this->assertTrue($field, 'Test import field 2a from staging exists');
+    $this->assertTrue($field, 'Test import field 2a from sync exists');
     $field = FieldConfig::load($field_id_2b);
-    $this->assertTrue($field, 'Test import field 2b from staging exists');
+    $this->assertTrue($field, 'Test import field 2b from sync exists');
   }
 }
 

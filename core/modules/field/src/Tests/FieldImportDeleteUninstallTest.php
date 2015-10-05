@@ -81,17 +81,17 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     $unrelated_field_storage->delete();
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
 
     // Stage uninstall of the Telephone module.
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['telephone']);
-    $staging->write('core.extension', $core_extension);
+    $sync->write('core.extension', $core_extension);
 
     // Stage the field deletion
-    $staging->delete('field.storage.entity_test.field_test');
-    $staging->delete('field.field.entity_test.entity_test.field_test');
+    $sync->delete('field.storage.entity_test.field_test');
+    $sync->delete('field.field.entity_test.entity_test.field_test');
 
     $steps = $this->configImporter()->initialize();
     $this->assertIdentical($steps[0], array('\Drupal\field\ConfigImporterFieldPurger', 'process'), 'The additional process configuration synchronization step has been added.');
@@ -143,13 +143,13 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     $field_storage->delete();
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
 
     // Stage uninstall of the Telephone module.
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['telephone']);
-    $staging->write('core.extension', $core_extension);
+    $sync->write('core.extension', $core_extension);
 
     $deleted_storages = \Drupal::state()->get('field.storage.deleted') ?: array();
     $this->assertTrue(isset($deleted_storages[$field_storage_uuid]), 'Field has been deleted and needs purging before configuration synchronization.');

@@ -138,7 +138,7 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
       $dependencies = $view->getDependencies();
       $this->assertEqual($expected[$view_id], $dependencies);
       $config = $this->config('views.view.' . $view_id);
-      \Drupal::service('config.storage.staging')->write($view_id, $config->get());
+      \Drupal::service('config.storage.sync')->write($view_id, $config->get());
     }
 
     // Ensure that dependencies are calculated on the display level.

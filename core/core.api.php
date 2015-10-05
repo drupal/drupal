@@ -115,7 +115,7 @@
  *   and HAL.
  * - Node entity support is configured by default. If you would like to support
  *   other types of entities, you can copy
- *   core/modules/rest/config/install/rest.settings.yml to your staging
+ *   core/modules/rest/config/install/rest.settings.yml to your sync
  *   configuration directory, appropriately modified for other entity types,
  *   and import it. Support for GET on the log from the Database Logging module
  *   can also be enabled in this way; in this case, the 'entity:node' line

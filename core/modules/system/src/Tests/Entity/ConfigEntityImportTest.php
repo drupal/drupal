@@ -31,7 +31,7 @@ class ConfigEntityImportTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
   }
 
   /**
@@ -58,7 +58,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     $this->checkSinglePluginConfigSync($entity, 'configuration', 'message', '');
 
-    // Read the existing data, and prepare an altered version in staging.
+    // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
     $custom_data['configuration']['message'] = 'Granny Smith';
     $this->assertConfigUpdateImport($name, $original_data, $custom_data);
@@ -78,7 +78,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     $this->checkSinglePluginConfigSync($block, 'settings', 'label', 'Red Delicious');
 
-    // Read the existing data, and prepare an altered version in staging.
+    // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
     $custom_data['settings']['label'] = 'Granny Smith';
     $this->assertConfigUpdateImport($name, $original_data, $custom_data);
@@ -110,7 +110,7 @@ class ConfigEntityImportTest extends WebTestBase {
     $this->assertIdentical($filters, $entity->get('filters'));
     $this->assertIdentical($filters, $plugin_collection->getConfiguration());
 
-    // Read the existing data, and prepare an altered version in staging.
+    // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
     $custom_data['filters']['filter_url']['settings']['filter_url_length'] = 100;
     $this->assertConfigUpdateImport($name, $original_data, $custom_data);
@@ -145,7 +145,7 @@ class ConfigEntityImportTest extends WebTestBase {
     $this->assertIdentical($effects, $entity->get('effects'));
     $this->assertIdentical($effects, $plugin_collection->getConfiguration());
 
-    // Read the existing data, and prepare an altered version in staging.
+    // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
     $effect_name = key($original_data['effects']);
 
@@ -167,7 +167,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     $this->checkSinglePluginConfigSync($entity, 'configuration', 'boost', 'bi');
 
-    // Read the existing data, and prepare an altered version in staging.
+    // Read the existing data, and prepare an altered version in sync.
     $custom_data = $original_data = $this->container->get('config.storage')->read($name);
     $custom_data['configuration']['boost'] = 'asdf';
     $this->assertConfigUpdateImport($name, $original_data, $custom_data);
@@ -218,7 +218,7 @@ class ConfigEntityImportTest extends WebTestBase {
    *   The new data to store in the config object.
    */
   public function assertConfigUpdateImport($name, $original_data, $custom_data) {
-    $this->container->get('config.storage.staging')->write($name, $custom_data);
+    $this->container->get('config.storage.sync')->write($name, $custom_data);
 
     // Verify the active configuration still returns the default values.
     $config = $this->config($name);

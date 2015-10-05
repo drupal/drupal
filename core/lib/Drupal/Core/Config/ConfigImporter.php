@@ -367,8 +367,8 @@ class ConfigImporter {
     $current_extensions = $this->storageComparer->getTargetStorage()->read('core.extension');
     $new_extensions = $this->storageComparer->getSourceStorage()->read('core.extension');
 
-    // If there is no extension information in staging then exit. This is
-    // probably due to an empty staging directory.
+    // If there is no extension information in sync then exit. This is probably
+    // due to an empty sync directory.
     if (!$new_extensions) {
       return;
     }
@@ -780,7 +780,7 @@ class ConfigImporter {
    *   The name of the extension to process.
    */
   protected function processExtension($type, $op, $name) {
-    // Set the config installer to use the staging directory instead of the
+    // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSyncing(TRUE)

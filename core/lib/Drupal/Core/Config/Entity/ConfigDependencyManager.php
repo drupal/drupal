@@ -85,9 +85,9 @@ use Drupal\Component\Utility\SortArray;
  * configuration object so that they can be checked without the module that
  * provides the configuration entity class being installed. This is important
  * for configuration synchronization, which needs to be able to validate
- * configuration in the staging directory before the synchronization has
- * occurred. Also, if you have a configuration entity object and you want to
- * get the current dependencies (without recalculation), you can use
+ * configuration in the sync directory before the synchronization has occurred.
+ * Also, if you have a configuration entity object and you want to get the
+ * current dependencies (without recalculation), you can use
  * \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies().
  *
  * When uninstalling a module or a theme, configuration entities that are

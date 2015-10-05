@@ -29,9 +29,9 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
    */
   public function testConfigOverrideImport() {
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    /* @var \Drupal\Core\Config\StorageInterface $staging */
-    $staging = \Drupal::service('config.storage.staging');
-    $this->copyConfig(\Drupal::service('config.storage'), $staging);
+    /* @var \Drupal\Core\Config\StorageInterface $sync */
+    $sync = \Drupal::service('config.storage.sync');
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
 
     // Uninstall the language module and its dependencies so we can test
     // enabling the language module and creating overrides at the same time
@@ -41,11 +41,11 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
     // ConfigFactory.
     $this->rebuildContainer();
 
-    /* @var \Drupal\Core\Config\StorageInterface $override_staging */
-    $override_staging = $staging->createCollection('language.fr');
-    // Create some overrides in staging.
-    $override_staging->write('system.site', array('name' => 'FR default site name'));
-    $override_staging->write('system.maintenance', array('message' => 'FR message: @site is currently under maintenance. We should be back shortly. Thank you for your patience'));
+    /* @var \Drupal\Core\Config\StorageInterface $override_sync */
+    $override_sync = $sync->createCollection('language.fr');
+    // Create some overrides in sync.
+    $override_sync->write('system.site', array('name' => 'FR default site name'));
+    $override_sync->write('system.maintenance', array('message' => 'FR message: @site is currently under maintenance. We should be back shortly. Thank you for your patience'));
 
     $this->configImporter()->import();
     $this->rebuildContainer();
@@ -71,14 +71,14 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
-    /* @var \Drupal\Core\Config\StorageInterface $staging */
-    $staging = \Drupal::service('config.storage.staging');
-    $this->copyConfig(\Drupal::service('config.storage'), $staging);
+    /* @var \Drupal\Core\Config\StorageInterface $sync */
+    $sync = \Drupal::service('config.storage.sync');
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
 
-    /* @var \Drupal\Core\Config\StorageInterface $override_staging */
-    $override_staging = $staging->createCollection('language.fr');
-    // Create some overrides in staging.
-    $override_staging->write('system.site', array('name' => 'FR default site name'));
+    /* @var \Drupal\Core\Config\StorageInterface $override_sync */
+    $override_sync = $sync->createCollection('language.fr');
+    // Create some overrides in sync.
+    $override_sync->write('system.site', array('name' => 'FR default site name'));
     \Drupal::state()->set('config_events_test.event', FALSE);
 
     $this->configImporter()->import();

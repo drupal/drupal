@@ -40,11 +40,11 @@ class ConfigImportRecreateTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installConfig(array('field', 'node'));
 
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage.sync'),
       $this->container->get('config.storage'),
       $this->container->get('config.manager')
     );
@@ -71,11 +71,11 @@ class ConfigImportRecreateTest extends KernelTestBase {
     node_add_body_field($content_type);
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
-    /** @var \Drupal\Core\Config\StorageInterface $staging */
-    $staging = $this->container->get('config.storage.staging');
+    /** @var \Drupal\Core\Config\StorageInterface $sync */
+    $sync = $this->container->get('config.storage.sync');
 
     $config_name = $content_type->getEntityType()->getConfigPrefix() . '.' . $content_type->id();
-    $this->copyConfig($active, $staging);
+    $this->copyConfig($active, $sync);
 
     // Delete the content type. This will also delete a field storage, a field,
     // an entity view display and an entity form display.

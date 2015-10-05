@@ -210,7 +210,7 @@ class ConfigFileContentTest extends KernelTestBase {
     );
 
     // Encode and write, and reload and decode the configuration data.
-    $filestorage = new FileStorage($this->configDirectories[CONFIG_STAGING_DIRECTORY]);
+    $filestorage = new FileStorage($this->configDirectories[CONFIG_SYNC_DIRECTORY]);
     $filestorage->write($name, $config_data);
     $config_parsed = $filestorage->read($name);
 

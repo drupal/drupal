@@ -32,7 +32,7 @@ class ConfigSnapshotTest extends KernelTestBase {
     // Update the config snapshot. This allows the parent::setUp() to write
     // configuration files.
     \Drupal::service('config.manager')->createSnapshot(\Drupal::service('config.storage'), \Drupal::service('config.storage.snapshot'));
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
   }
 
   /**
@@ -40,7 +40,7 @@ class ConfigSnapshotTest extends KernelTestBase {
    */
   function testSnapshot() {
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
     $snapshot = $this->container->get('config.storage.snapshot');
     $config_manager = $this->container->get('config.manager');
     $config_name = 'config_test.system';
@@ -48,7 +48,7 @@ class ConfigSnapshotTest extends KernelTestBase {
     $new_data = 'foobar';
 
     $active_snapshot_comparer = new StorageComparer($active, $snapshot, $config_manager);
-    $staging_snapshot_comparer = new StorageComparer($staging, $snapshot, $config_manager);
+    $sync_snapshot_comparer = new StorageComparer($sync, $snapshot, $config_manager);
 
     // Verify that we have an initial snapshot that matches the active
     // configuration. This has to be true as no config should be installed.
@@ -66,17 +66,17 @@ class ConfigSnapshotTest extends KernelTestBase {
     // objects.
     $this->assertFalse($active_snapshot_comparer->reset()->hasChanges());
 
-    // Change a configuration value in staging.
-    $staging_data = $this->config($config_name)->get();
-    $staging_data[$config_key] = $new_data;
-    $staging->write($config_name, $staging_data);
+    // Change a configuration value in sync.
+    $sync_data = $this->config($config_name)->get();
+    $sync_data[$config_key] = $new_data;
+    $sync->write($config_name, $sync_data);
 
-    // Verify that active and snapshot match, and that staging doesn't match
+    // Verify that active and snapshot match, and that sync doesn't match
     // active.
     $this->assertFalse($active_snapshot_comparer->reset()->hasChanges());
-    $this->assertTrue($staging_snapshot_comparer->createChangelist()->hasChanges());
+    $this->assertTrue($sync_snapshot_comparer->createChangelist()->hasChanges());
 
-    // Import changed data from staging to active.
+    // Import changed data from sync to active.
     $this->configImporter()->import();
 
     // Verify changed config was properly imported.

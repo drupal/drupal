@@ -39,11 +39,11 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_mul');
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage.sync'),
       $this->container->get('config.storage'),
       $this->container->get('config.manager')
     );
@@ -68,7 +68,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
     $config_id = $entity_type_id . '.' . $entity_type_id;
     $config_name = 'language.content_settings.' . $config_id;
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
 
     // Verify the configuration to create does not exist yet.
     $this->assertIdentical($storage->exists($config_name), FALSE, $config_name . ' not found.');
@@ -90,8 +90,8 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
         'content_translation' => array('enabled' => TRUE),
       ),
     );
-    $staging->write($config_name, $data);
-    $this->assertIdentical($staging->exists($config_name), TRUE, $config_name . ' found.');
+    $sync->write($config_name, $data);
+    $this->assertIdentical($sync->exists($config_name), TRUE, $config_name . ' found.');
 
     // Import.
     $this->configImporter->reset()->import();

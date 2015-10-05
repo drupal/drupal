@@ -37,16 +37,16 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $field_config_name = "field.field.$field_id";
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
 
-    // Save as files in the staging directory.
+    // Save as files in the sync directory.
     $field = $active->read($field_config_name);
     $new_label = 'Test update import field';
     $field['label'] = $new_label;
-    $staging->write($field_config_name, $field);
+    $sync->write($field_config_name, $field);
 
-    // Import the content of the staging directory.
+    // Import the content of the sync directory.
     $this->configImporter()->import();
 
     // Check that the updated config was correctly imported.

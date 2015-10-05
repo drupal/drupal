@@ -70,8 +70,8 @@ class ConfigImportAllTest extends ModuleTestBase {
       $this->assertModuleTablesExist($module);
     }
 
-    // Export active config to staging
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    // Export active config to sync.
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
     system_list_reset();
     $this->resetAll();
@@ -145,7 +145,7 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Ensure that we have no configuration changes to import.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage.sync'),
       $this->container->get('config.storage'),
       $this->container->get('config.manager')
     );

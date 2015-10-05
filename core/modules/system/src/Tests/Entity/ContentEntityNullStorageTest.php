@@ -51,11 +51,11 @@ class ContentEntityNullStorageTest extends KernelTestBase {
     $contact_form = ContactForm::create(['id' => 'test']);
     $contact_form->save();
 
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage.sync'),
       $this->container->get('config.storage'),
       $this->container->get('config.manager')
     );
@@ -71,9 +71,9 @@ class ContentEntityNullStorageTest extends KernelTestBase {
       $this->container->get('string_translation')
     );
 
-    // Delete the contact message in staging.
-    $staging = $this->container->get('config.storage.staging');
-    $staging->delete($contact_form->getConfigDependencyName());
+    // Delete the contact message in sync.
+    $sync = $this->container->get('config.storage.sync');
+    $sync->delete($contact_form->getConfigDependencyName());
 
     // Import.
     $config_importer->reset()->import();

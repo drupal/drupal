@@ -79,17 +79,17 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $this->assertEqual($entity->field_tel[0]->value, $value);
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
 
     // Stage uninstall of the Telephone module.
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['telephone']);
-    $staging->write('core.extension', $core_extension);
+    $sync->write('core.extension', $core_extension);
 
     // Stage the field deletion
-    $staging->delete('field.storage.entity_test.field_tel');
-    $staging->delete('field.field.entity_test.entity_test.field_tel');
+    $sync->delete('field.storage.entity_test.field_tel');
+    $sync->delete('field.field.entity_test.entity_test.field_tel');
     $this->drupalGet('admin/config/development/configuration');
     // Test that the message for one field being purged during a configuration
     // synchronization is correct.
@@ -98,7 +98,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     // Stage an uninstall of the datetime module to test the message for
     // multiple fields.
     unset($core_extension['module']['datetime']);
-    $staging->write('core.extension', $core_extension);
+    $sync->write('core.extension', $core_extension);
 
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText('This synchronization will delete data from the fields: entity_test.field_tel, entity_test.field_date.');

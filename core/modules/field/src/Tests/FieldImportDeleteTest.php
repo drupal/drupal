@@ -63,18 +63,18 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $field_storage_uuid_2 = FieldStorageConfig::load($field_storage_id_2)->uuid();
 
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
-    $this->assertTrue($staging->delete($field_storage_config_name), SafeMarkup::format('Deleted field storage: @field_storage', array('@field_storage' => $field_storage_config_name)));
-    $this->assertTrue($staging->delete($field_storage_config_name_2), SafeMarkup::format('Deleted field storage: @field_storage', array('@field_storage' => $field_storage_config_name_2)));
-    $this->assertTrue($staging->delete($field_config_name), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name)));
-    $this->assertTrue($staging->delete($field_config_name_2a), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name_2a)));
-    $this->assertTrue($staging->delete($field_config_name_2b), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name_2b)));
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
+    $this->assertTrue($sync->delete($field_storage_config_name), SafeMarkup::format('Deleted field storage: @field_storage', array('@field_storage' => $field_storage_config_name)));
+    $this->assertTrue($sync->delete($field_storage_config_name_2), SafeMarkup::format('Deleted field storage: @field_storage', array('@field_storage' => $field_storage_config_name_2)));
+    $this->assertTrue($sync->delete($field_config_name), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name)));
+    $this->assertTrue($sync->delete($field_config_name_2a), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name_2a)));
+    $this->assertTrue($sync->delete($field_config_name_2b), SafeMarkup::format('Deleted field: @field', array('@field' => $field_config_name_2b)));
 
     $deletes = $this->configImporter()->getUnprocessedConfiguration('delete');
     $this->assertEqual(count($deletes), 5, 'Importing configuration will delete 3 fields and 2 field storages.');
 
-    // Import the content of the staging directory.
+    // Import the content of the sync directory.
     $this->configImporter()->import();
 
     // Check that the field storages and fields are gone.

@@ -40,7 +40,7 @@ class ConfigImportForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.storage.staging')
+      $container->get('config.storage.sync')
     );
   }
 
@@ -93,7 +93,7 @@ class ConfigImportForm extends FormBase {
         foreach ($archiver->listContent() as $file) {
           $files[] = $file['filename'];
         }
-        $archiver->extractList($files, config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+        $archiver->extractList($files, config_get_config_directory(CONFIG_SYNC_DIRECTORY));
         drupal_set_message($this->t('Your configuration files were successfully uploaded and are ready for import.'));
         $form_state->setRedirect('config.sync');
       }

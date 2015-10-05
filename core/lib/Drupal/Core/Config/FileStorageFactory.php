@@ -25,12 +25,12 @@ class FileStorageFactory {
   }
 
   /**
-   * Returns a FileStorage object working with the staging config directory.
+   * Returns a FileStorage object working with the sync config directory.
    *
    * @return \Drupal\Core\Config\FileStorage FileStorage
    */
-  static function getStaging() {
-    return new FileStorage(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+  static function getSync() {
+    return new FileStorage(config_get_config_directory(CONFIG_SYNC_DIRECTORY));
   }
 
 }

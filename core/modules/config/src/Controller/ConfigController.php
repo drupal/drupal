@@ -64,7 +64,7 @@ class ConfigController implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.storage'),
-      $container->get('config.storage.staging'),
+      $container->get('config.storage.sync'),
       $container->get('config.manager'),
       new FileDownloadController(),
       $container->get('diff.formatter')

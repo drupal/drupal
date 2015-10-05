@@ -44,11 +44,11 @@ class ConfigImporterTest extends KernelTestBase {
     // so it has to be cleared out manually.
     unset($GLOBALS['hook_config_test']);
 
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.staging'),
+      $this->container->get('config.storage.sync'),
       $this->container->get('config.storage'),
       $this->container->get('config.manager')
     );
@@ -80,12 +80,12 @@ class ConfigImporterTest extends KernelTestBase {
   }
 
   /**
-   * Tests that trying to import from an empty staging configuration directory
+   * Tests that trying to import from an empty sync configuration directory
    * fails.
    */
   function testEmptyImportFails() {
     try {
-      $this->container->get('config.storage.staging')->deleteAll();
+      $this->container->get('config.storage.sync')->deleteAll();
       $this->configImporter->reset()->import();
       $this->fail('ConfigImporterException thrown, successfully stopping an empty import.');
     }
@@ -98,12 +98,12 @@ class ConfigImporterTest extends KernelTestBase {
    * Tests verification of site UUID before importing configuration.
    */
   function testSiteUuidValidate() {
-    $staging = \Drupal::service('config.storage.staging');
+    $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
     // Generate a new site UUID.
     $config_data['uuid'] = \Drupal::service('uuid')->generate();
-    $staging->write('system.site', $config_data);
+    $sync->write('system.site', $config_data);
     try {
       $this->configImporter->reset()->import();
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
@@ -122,14 +122,14 @@ class ConfigImporterTest extends KernelTestBase {
   function testDeleted() {
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
 
     // Verify the default configuration values exist.
     $config = $this->config($dynamic_name);
     $this->assertIdentical($config->get('id'), 'dotted.default');
 
-    // Delete the file from the staging directory.
-    $staging->delete($dynamic_name);
+    // Delete the file from the sync directory.
+    $sync->delete($dynamic_name);
 
     // Import.
     $this->configImporter->reset()->import();
@@ -159,7 +159,7 @@ class ConfigImporterTest extends KernelTestBase {
   function testNew() {
     $dynamic_name = 'config_test.dynamic.new';
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
 
     // Verify the configuration to create does not exist yet.
     $this->assertIdentical($storage->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
@@ -178,9 +178,9 @@ class ConfigImporterTest extends KernelTestBase {
       'size_value' => '',
       'protected_property' => '',
     );
-    $staging->write($dynamic_name, $original_dynamic_data);
+    $sync->write($dynamic_name, $original_dynamic_data);
 
-    $this->assertIdentical($staging->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
+    $this->assertIdentical($sync->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
     // Import.
     $this->configImporter->reset()->import();
@@ -213,7 +213,7 @@ class ConfigImporterTest extends KernelTestBase {
   function testSecondaryWritePrimaryFirst() {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
     $values_primary = array(
@@ -222,7 +222,7 @@ class ConfigImporterTest extends KernelTestBase {
       'weight' => 0,
       'uuid' => $uuid->generate(),
     );
-    $staging->write($name_primary, $values_primary);
+    $sync->write($name_primary, $values_primary);
     $values_secondary = array(
       'id' => 'secondary',
       'label' => 'Secondary Sync',
@@ -233,7 +233,7 @@ class ConfigImporterTest extends KernelTestBase {
         'config' => array($name_primary),
       )
     );
-    $staging->write($name_secondary, $values_secondary);
+    $sync->write($name_secondary, $values_secondary);
 
     // Import.
     $this->configImporter->reset()->import();
@@ -259,7 +259,7 @@ class ConfigImporterTest extends KernelTestBase {
   function testSecondaryWriteSecondaryFirst() {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
     $values_primary = array(
@@ -272,14 +272,14 @@ class ConfigImporterTest extends KernelTestBase {
         'config' => array($name_secondary),
       )
     );
-    $staging->write($name_primary, $values_primary);
+    $sync->write($name_primary, $values_primary);
     $values_secondary = array(
       'id' => 'secondary',
       'label' => 'Secondary Sync',
       'weight' => 0,
       'uuid' => $uuid->generate(),
     );
-    $staging->write($name_secondary, $values_secondary);
+    $sync->write($name_secondary, $values_secondary);
 
     // Import.
     $this->configImporter->reset()->import();
@@ -307,7 +307,7 @@ class ConfigImporterTest extends KernelTestBase {
     $name_deletee = 'config_test.dynamic.deletee';
     $name_other = 'config_test.dynamic.other';
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
     $values_deleter = array(
@@ -318,7 +318,7 @@ class ConfigImporterTest extends KernelTestBase {
     );
     $storage->write($name_deleter, $values_deleter);
     $values_deleter['label'] = 'Updated Deleter';
-    $staging->write($name_deleter, $values_deleter);
+    $sync->write($name_deleter, $values_deleter);
     $values_deletee = array(
       'id' => 'deletee',
       'label' => 'Deletee',
@@ -331,7 +331,7 @@ class ConfigImporterTest extends KernelTestBase {
     );
     $storage->write($name_deletee, $values_deletee);
     $values_deletee['label'] = 'Updated Deletee';
-    $staging->write($name_deletee, $values_deletee);
+    $sync->write($name_deletee, $values_deletee);
 
     // Ensure that import will continue after the error.
     $values_other = array(
@@ -347,7 +347,7 @@ class ConfigImporterTest extends KernelTestBase {
     );
     $storage->write($name_other, $values_other);
     $values_other['label'] = 'Updated other';
-    $staging->write($name_other, $values_other);
+    $sync->write($name_other, $values_other);
 
     // Check update changelist order.
     $updates = $this->configImporter->reset()->getStorageComparer()->getChangelist('update');
@@ -392,7 +392,7 @@ class ConfigImporterTest extends KernelTestBase {
     $name_deleter = 'config_test.dynamic.deleter';
     $name_deletee = 'config_test.dynamic.deletee';
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
     $values_deleter = array(
@@ -407,7 +407,7 @@ class ConfigImporterTest extends KernelTestBase {
     );
     $storage->write($name_deleter, $values_deleter);
     $values_deleter['label'] = 'Updated Deleter';
-    $staging->write($name_deleter, $values_deleter);
+    $sync->write($name_deleter, $values_deleter);
     $values_deletee = array(
       'id' => 'deletee',
       'label' => 'Deletee',
@@ -416,7 +416,7 @@ class ConfigImporterTest extends KernelTestBase {
     );
     $storage->write($name_deletee, $values_deletee);
     $values_deletee['label'] = 'Updated Deletee';
-    $staging->write($name_deletee, $values_deletee);
+    $sync->write($name_deletee, $values_deletee);
 
     // Import.
     $this->configImporter->reset()->import();
@@ -480,21 +480,21 @@ class ConfigImporterTest extends KernelTestBase {
     $name = 'config_test.system';
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
 
     // Verify that the configuration objects to import exist.
     $this->assertIdentical($storage->exists($name), TRUE, $name . ' found.');
     $this->assertIdentical($storage->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
     // Replace the file content of the existing configuration objects in the
-    // staging directory.
+    // sync directory.
     $original_name_data = array(
       'foo' => 'beer',
     );
-    $staging->write($name, $original_name_data);
+    $sync->write($name, $original_name_data);
     $original_dynamic_data = $storage->read($dynamic_name);
     $original_dynamic_data['label'] = 'Updated';
-    $staging->write($dynamic_name, $original_dynamic_data);
+    $sync->write($dynamic_name, $original_dynamic_data);
 
     // Verify the active configuration still returns the default values.
     $config = $this->config($name);
@@ -513,8 +513,8 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertIdentical($config->get('label'), 'Updated');
 
     // Verify that the original file content is still the same.
-    $this->assertIdentical($staging->read($name), $original_name_data);
-    $this->assertIdentical($staging->read($dynamic_name), $original_dynamic_data);
+    $this->assertIdentical($sync->read($name), $original_name_data);
+    $this->assertIdentical($sync->read($dynamic_name), $original_dynamic_data);
 
     // Verify that appropriate module API hooks have been invoked.
     $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));
@@ -549,29 +549,29 @@ class ConfigImporterTest extends KernelTestBase {
    */
   public function testUnmetDependency() {
     $storage = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
 
     // Test an unknown configuration owner.
-    $staging->write('unknown.config', ['test' => 'test']);
+    $sync->write('unknown.config', ['test' => 'test']);
 
     // Make a config entity have unmet dependencies.
-    $config_entity_data = $staging->read('config_test.dynamic.dotted.default');
+    $config_entity_data = $sync->read('config_test.dynamic.dotted.default');
     $config_entity_data['dependencies'] = ['module' => ['unknown']];
-    $staging->write('config_test.dynamic.dotted.module', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.module', $config_entity_data);
     $config_entity_data['dependencies'] = ['theme' => ['unknown']];
-    $staging->write('config_test.dynamic.dotted.theme', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.theme', $config_entity_data);
     $config_entity_data['dependencies'] = ['config' => ['unknown']];
-    $staging->write('config_test.dynamic.dotted.config', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.config', $config_entity_data);
 
-    // Make an active config depend on something that is missing in staging.
+    // Make an active config depend on something that is missing in sync.
     // The whole configuration needs to be consistent, not only the updated one.
     $config_entity_data['dependencies'] = [];
     $storage->write('config_test.dynamic.dotted.deleted', $config_entity_data);
     $config_entity_data['dependencies'] = ['config' => ['config_test.dynamic.dotted.deleted']];
     $storage->write('config_test.dynamic.dotted.existing', $config_entity_data);
-    $staging->write('config_test.dynamic.dotted.existing', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.existing', $config_entity_data);
 
-    $extensions = $staging->read('core.extension');
+    $extensions = $sync->read('core.extension');
     // Add a module and a theme that do not exist.
     $extensions['module']['unknown_module'] = 0;
     $extensions['theme']['unknown_theme'] = 0;
@@ -579,7 +579,7 @@ class ConfigImporterTest extends KernelTestBase {
     $extensions['module']['book'] = 0;
     $extensions['theme']['bartik'] = 0;
 
-    $staging->write('core.extension', $extensions);
+    $sync->write('core.extension', $extensions);
     try {
       $this->configImporter->reset()->import();
       $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
@@ -604,13 +604,13 @@ class ConfigImporterTest extends KernelTestBase {
     }
 
     // Make a config entity have mulitple unmet dependencies.
-    $config_entity_data = $staging->read('config_test.dynamic.dotted.default');
+    $config_entity_data = $sync->read('config_test.dynamic.dotted.default');
     $config_entity_data['dependencies'] = ['module' => ['unknown', 'dblog']];
-    $staging->write('config_test.dynamic.dotted.module', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.module', $config_entity_data);
     $config_entity_data['dependencies'] = ['theme' => ['unknown', 'seven']];
-    $staging->write('config_test.dynamic.dotted.theme', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.theme', $config_entity_data);
     $config_entity_data['dependencies'] = ['config' => ['unknown', 'unknown2']];
-    $staging->write('config_test.dynamic.dotted.config', $config_entity_data);
+    $sync->write('config_test.dynamic.dotted.config', $config_entity_data);
     try {
       $this->configImporter->reset()->import();
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
@@ -635,8 +635,8 @@ class ConfigImporterTest extends KernelTestBase {
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
   public function testMissingCoreExtension() {
-    $staging = $this->container->get('config.storage.staging');
-    $staging->delete('core.extension');
+    $sync = $this->container->get('config.storage.sync');
+    $sync->delete('core.extension');
     try {
       $this->configImporter->reset()->import();
       $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
@@ -654,13 +654,13 @@ class ConfigImporterTest extends KernelTestBase {
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
   public function testInstallProfile() {
-    $staging = $this->container->get('config.storage.staging');
+    $sync = $this->container->get('config.storage.sync');
 
-    $extensions = $staging->read('core.extension');
+    $extensions = $sync->read('core.extension');
     // Add an install profile.
     $extensions['module']['standard'] = 0;
 
-    $staging->write('core.extension', $extensions);
+    $sync->write('core.extension', $extensions);
     try {
       $this->configImporter->reset()->import();
       $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
@@ -677,8 +677,8 @@ class ConfigImporterTest extends KernelTestBase {
    * Tests config_get_config_directory().
    */
   public function testConfigGetConfigDirectory() {
-    $directory = config_get_config_directory(CONFIG_STAGING_DIRECTORY);
-    $this->assertEqual($this->configDirectories[CONFIG_STAGING_DIRECTORY], $directory);
+    $directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+    $this->assertEqual($this->configDirectories[CONFIG_SYNC_DIRECTORY], $directory);
 
     $message = 'Calling config_get_config_directory() with CONFIG_ACTIVE_DIRECTORY results in an exception.';
     try {

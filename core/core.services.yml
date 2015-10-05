@@ -290,9 +290,13 @@ services:
     public: false
     tags:
       - { name: backend_overridable }
+  # @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Use
+  #   config.storage.sync instead.
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
-    factory: Drupal\Core\Config\FileStorageFactory::getStaging
+    factory: Drupal\Core\Config\FileStorageFactory::getSync
+  config.storage.sync:
+    alias: config.storage.staging
   config.storage.snapshot:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]

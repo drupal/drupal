@@ -202,8 +202,8 @@ function drupal_get_database_types() {
  *   and comment properties.
  *   @code
  *   $settings['config_directories'] = array(
- *     CONFIG_STAGING_DIRECTORY => (object) array(
- *       'value' => 'config_hash/staging',
+ *     CONFIG_SYNC_DIRECTORY => (object) array(
+ *       'value' => 'config_hash/sync',
  *       'required' => TRUE,
  *     ),
  *   );
@@ -211,7 +211,7 @@ function drupal_get_database_types() {
  *   gets dumped as:
  *   @code
  *   $config_directories['active'] = 'config_hash/active';
- *   $config_directories['staging'] = 'config_hash/staging'
+ *   $config_directories['sync'] = 'config_hash/sync'
  *   @endcode
  */
 function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
@@ -487,9 +487,9 @@ function drupal_install_config_directories() {
   // manually defined in the existing already.
   $settings = [];
   $config_directories_hash = Crypt::randomBytesBase64(55);
-  if (empty($config_directories[CONFIG_STAGING_DIRECTORY])) {
-    $settings['config_directories'][CONFIG_STAGING_DIRECTORY] = (object) [
-      'value' => \Drupal::service('site.path') . '/files/config_' . $config_directories_hash . '/staging',
+  if (empty($config_directories[CONFIG_SYNC_DIRECTORY])) {
+    $settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
+      'value' => \Drupal::service('site.path') . '/files/config_' . $config_directories_hash . '/sync',
       'required' => TRUE,
     ];
   }
@@ -505,19 +505,19 @@ function drupal_install_config_directories() {
   // public files directory, which has already been verified to be writable
   // itself. But if it somehow fails anyway, the installation cannot proceed.
   // Bail out using a similar error message as in system_requirements().
-  if (!install_ensure_config_directory(CONFIG_STAGING_DIRECTORY)) {
+  if (!install_ensure_config_directory(CONFIG_SYNC_DIRECTORY)) {
     throw new Exception(t('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href=":handbook_url">online handbook</a>.', array(
-      '%directory' => config_get_config_directory(CONFIG_STAGING_DIRECTORY),
+      '%directory' => config_get_config_directory(CONFIG_SYNC_DIRECTORY),
       ':handbook_url' => 'https://www.drupal.org/server-permissions',
     )));
   }
 
-  // Put a README.txt into the staging config directory. This is required so
-  // that they can later be added to git. Since this directory is auto-
-  // created, we have to write out the README rather than just adding it
-  // to the drupal core repo.
+  // Put a README.txt into the sync config directory. This is required so that
+  // they can later be added to git. Since this directory is auto-created, we
+  // have to write out the README rather than just adding it to the drupal core
+  // repo.
   $text =  'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration/sync.'  .' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
-  file_put_contents(config_get_config_directory(CONFIG_STAGING_DIRECTORY) . '/README.txt', $text);
+  file_put_contents(config_get_config_directory(CONFIG_SYNC_DIRECTORY) . '/README.txt', $text);
 }
 
 /**
@@ -525,7 +525,7 @@ function drupal_install_config_directories() {
  *
  * @param string $type
  *   Type of config directory to return. Drupal core provides 'active' and
- *   'staging'.
+ *   'sync'.
  *
  * @return bool
  *   TRUE if the config directory exists and is writable.

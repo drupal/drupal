@@ -46,12 +46,12 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
 
     // Pre-configure config directories.
     $this->settings['config_directories'] = array(
-      CONFIG_STAGING_DIRECTORY => (object) array(
-        'value' => DrupalKernel::findSitePath(Request::createFromGlobals()) . '/files/config_staging',
+      CONFIG_SYNC_DIRECTORY => (object) array(
+        'value' => DrupalKernel::findSitePath(Request::createFromGlobals()) . '/files/config_sync',
         'required' => TRUE,
       ),
     );
-    mkdir($this->settings['config_directories'][CONFIG_STAGING_DIRECTORY]->value, 0777, TRUE);
+    mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
 
     parent::setUp();
   }

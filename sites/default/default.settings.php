@@ -223,13 +223,13 @@ $databases = array();
  * Location of the site configuration files.
  *
  * The $config_directories array specifies the location of file system
- * directories used for configuration data. On install, "active" and "staging"
- * directories are created for configuration. The staging directory is used for
+ * directories used for configuration data. On install, "active" and "sync"
+ * directories are created for configuration. The sync directory is used for
  * configuration imports; the active directory is not used by default, since the
  * default storage for active configuration is the database rather than the file
  * system (this can be changed; see "Active configuration settings" below).
  *
- * The default location for the active and staging directories is inside a
+ * The default location for the active and sync directories is inside a
  * randomly-named directory in the public files path; this setting allows you to
  * override these locations. If you use files for the active configuration, you
  * can enhance security by putting the active configuration outside your
@@ -238,7 +238,7 @@ $databases = array();
  * Example:
  * @code
  *   $config_directories = array(
- *     CONFIG_STAGING_DIRECTORY => '/another/directory/outside/webroot',
+ *     CONFIG_SYNC_DIRECTORY => '/another/directory/outside/webroot',
  *   );
  * @endcode
  */

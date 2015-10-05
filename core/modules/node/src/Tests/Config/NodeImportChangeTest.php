@@ -44,16 +44,16 @@ class NodeImportChangeTest extends KernelTestBase {
     // Simulate config data to import:
     // - a modified version (modified label) of the node type config.
     $active = $this->container->get('config.storage');
-    $staging = $this->container->get('config.storage.staging');
-    $this->copyConfig($active, $staging);
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($active, $sync);
 
     $node_type = $active->read($node_type_config_name);
     $new_label = 'Test update import field';
     $node_type['name'] = $new_label;
-    // Save as files in the staging directory.
-    $staging->write($node_type_config_name, $node_type);
+    // Save as files in the sync directory.
+    $sync->write($node_type_config_name, $node_type);
 
-    // Import the content of the staging directory.
+    // Import the content of the sync directory.
     $this->configImporter()->import();
 
     // Check that the updated config was correctly imported.

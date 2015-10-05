@@ -33,7 +33,7 @@ function config_help($route_name, RouteMatchInterface $route_match) {
 
     case 'config.sync':
       $output = '';
-      $output .= '<p>' . t('Compare the configuration uploaded to your staging directory with the active configuration before completing the import.') . '</p>';
+      $output .= '<p>' . t('Compare the configuration uploaded to your sync directory with the active configuration before completing the import.') . '</p>';
       return $output;
 
     case 'config.export_full':
@@ -43,7 +43,7 @@ function config_help($route_name, RouteMatchInterface $route_match) {
 
     case 'config.import_full':
       $output = '';
-      $output .= '<p>' . t('Upload a full site configuration archive to the staging directory. It can then be compared and imported on the Synchronize page.') . '</p>';
+      $output .= '<p>' . t('Upload a full site configuration archive to the sync directory. It can then be compared and imported on the Synchronize page.') . '</p>';
       return $output;
 
     case 'config.export_single':

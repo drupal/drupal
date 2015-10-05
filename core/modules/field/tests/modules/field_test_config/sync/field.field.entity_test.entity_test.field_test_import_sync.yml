@@ -1,10 +1,10 @@
-id: entity_test.entity_test.field_test_import_staging
+id: entity_test.entity_test.field_test_import_sync
 uuid: ea711065-6940-47cd-813d-618f64095481
 langcode: en
-field_name: field_test_import_staging
+field_name: field_test_import_sync
 entity_type: entity_test
 bundle: entity_test
-label: 'Import from staging'
+label: 'Import from sync'
 description: ''
 required: '0'
 default_value: {  }
@@ -13,4 +13,4 @@ settings: { }
 field_type: text
 dependencies:
   config:
-    - field.storage.entity_test.field_test_import_staging
+    - field.storage.entity_test.field_test_import_sync
