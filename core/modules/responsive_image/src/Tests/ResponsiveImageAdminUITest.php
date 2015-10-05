@@ -77,7 +77,10 @@ class ResponsiveImageAdminUITest extends WebTestBase {
       array('wide', '1x'),
       array('wide', '2x'),
     );
-
+    $image_styles = array_merge(
+      [RESPONSIVE_IMAGE_EMPTY_IMAGE, RESPONSIVE_IMAGE_ORIGINAL_IMAGE],
+      array_keys(image_style_options(FALSE))
+    );
     foreach ($cases as $case) {
       // Check if the radio buttons are present.
       $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_mapping_type]', '');
@@ -85,8 +88,17 @@ class ResponsiveImageAdminUITest extends WebTestBase {
       $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]', '');
       // Check if the sizes textfields are present.
       $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes]', '');
-      // Check if the image styles checkboxes are present.
-      foreach (array_keys(image_style_options(FALSE)) as $image_style_name) {
+
+      foreach ($image_styles as $image_style_name) {
+        // Check if the image styles are available in the dropdowns.
+        $this->assertTrue($this->xpath(
+          '//select[@name=:name]//option[@value=:style]',
+          [
+            ':name' => 'keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]',
+            ':style' => $image_style_name,
+          ]
+        ));
+        // Check if the image styles checkboxes are present.
         $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes_image_styles][' . $image_style_name . ']');
       }
     }

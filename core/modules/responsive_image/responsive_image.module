@@ -18,6 +18,7 @@ use Drupal\breakpoint\BreakpointInterface;
  * The machine name for the empty image breakpoint image style option.
  */
 const RESPONSIVE_IMAGE_EMPTY_IMAGE = '_empty image_';
+const RESPONSIVE_IMAGE_ORIGINAL_IMAGE = '_original image_';
 
 /**
  * Implements hook_help().
@@ -476,7 +477,12 @@ function responsive_image_get_mime_type($image_style_name, $extension) {
   }
   // The MIME type guesser needs a full path, not just an extension, but the
   // file doesn't have to exist.
-  $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
+  if ($image_style_name === RESPONSIVE_IMAGE_ORIGINAL_IMAGE) {
+    $fake_path = 'responsive_image.' . $extension;
+  }
+  else {
+    $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
+  }
   return Drupal::service('file.mime_type.guesser.extension')->guess($fake_path);
 }
 

@@ -84,6 +84,7 @@ class ResponsiveImageStyleForm extends EntityForm {
     );
 
     $image_styles = image_style_options(TRUE);
+    $image_styles[RESPONSIVE_IMAGE_ORIGINAL_IMAGE] = $this->t('- None (original image) -');
     $image_styles[RESPONSIVE_IMAGE_EMPTY_IMAGE] = $this->t('- empty image -');
 
     if ((bool) $responsive_image_style->id() && $this->operation != 'duplicate') {

@@ -148,6 +148,11 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
           'image_mapping_type' => 'image_style',
           'image_mapping' => 'large',
         ))
+        // Test the output of the original image.
+        ->addImageStyleMapping('responsive_image_test_module.wide', '3x', array(
+          'image_mapping_type' => 'image_style',
+          'image_mapping' => RESPONSIVE_IMAGE_ORIGINAL_IMAGE,
+        ))
         ->save();
     }
   }
@@ -286,6 +291,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       // Assert the output of the 'srcset' attribute (small multipliers first).
       $this->assertRaw('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . $thumbnail_style->buildUrl($image_uri) . ' 1.5x');
       $this->assertRaw('/styles/medium/');
+      // Assert the output of the original image.
+      $this->assertRaw(file_create_url($image_uri) . ' 3x');
       // Assert the output of the breakpoints.
       $this->assertRaw('media="(min-width: 0px)"');
       $this->assertRaw('media="(min-width: 560px)"');
