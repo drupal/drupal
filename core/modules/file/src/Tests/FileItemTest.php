@@ -10,6 +10,7 @@ namespace Drupal\file\Tests;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
@@ -70,6 +71,12 @@ class FileItemTest extends FieldUnitTestBase {
    * Tests using entity fields of the file field type.
    */
   public function testFileItem() {
+    // Check that the selection handler was automatically assigned to
+    // 'default:file'.
+    $field_definition = FieldConfig::load('entity_test.entity_test.file_test');
+    $handler_id = $field_definition->getSetting('handler');
+    $this->assertEqual($handler_id, 'default:file');
+
     // Create a test entity with the
     $entity = entity_create('entity_test');
     $entity->file_test->target_id = $this->file->id();

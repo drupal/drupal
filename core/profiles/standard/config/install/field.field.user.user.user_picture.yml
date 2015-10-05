@@ -32,6 +32,6 @@ settings:
     height: null
   alt_field_required: false
   title_field_required: false
-  handler: 'default:node'
+  handler: 'default:file'
   handler_settings: {  }
 field_type: image

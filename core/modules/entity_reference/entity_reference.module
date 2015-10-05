@@ -11,8 +11,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -69,56 +67,6 @@ function entity_reference_field_widget_info_alter(&$info) {
   if (isset($info['options_buttons'])) {
     $info['options_buttons']['field_types'][] = 'entity_reference';
   }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
- *
- * Reset the instance handler settings, when the target type is changed.
- */
-function entity_reference_field_storage_config_update(FieldStorageConfigInterface $field_storage) {
-  if ($field_storage->getType() != 'entity_reference') {
-    // Only act on entity reference fields.
-    return;
-  }
-
-  if ($field_storage->isSyncing()) {
-    // Don't change anything during a configuration sync.
-    return;
-  }
-
-  if ($field_storage->getSetting('target_type') == $field_storage->original->getSetting('target_type')) {
-    // Target type didn't change.
-    return;
-  }
-
-  foreach ($field_storage->getBundles() as $bundle) {
-    $field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());
-    $field->setSetting('handler_settings', []);
-    $field->save();
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
- *
- * Determine the selection handler plugin ID for an entity reference field.
- */
-function entity_reference_field_config_presave(FieldConfigInterface $field) {
-  if ($field->getType() != 'entity_reference') {
-    // Only act on entity reference fields.
-    return;
-  }
-
-  if ($field->isSyncing()) {
-    // Don't change anything during a configuration sync.
-    return;
-  }
-
-  $target_type = $field->getFieldStorageDefinition()->getSetting('target_type');
-  $selection_manager = \Drupal::service('plugin.manager.entity_reference_selection');
-  list($current_handler) = explode(':', $field->getSetting('handler'), 2);
-  $field->setSetting('handler', $selection_manager->getPluginId($target_type, $current_handler));
 }
 
 /**

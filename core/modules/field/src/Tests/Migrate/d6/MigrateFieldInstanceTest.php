@@ -79,9 +79,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
       'display_field' => FALSE,
       'display_default' => FALSE,
       'uri_scheme' => 'public',
-      // This value should be 'default:file' but the test does not migrate field
-      // storages so we end up with the default value for this setting.
-      'handler' => 'default:node',
+      'handler' => 'default:file',
       'handler_settings' => array(),
     );
     $field_settings = $field->getSettings();

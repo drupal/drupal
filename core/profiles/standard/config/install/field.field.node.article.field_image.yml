@@ -32,6 +32,6 @@ settings:
     title: ''
     width: null
     height: null
-  handler: 'default:node'
+  handler: 'default:file'
   handler_settings: {  }
 field_type: image

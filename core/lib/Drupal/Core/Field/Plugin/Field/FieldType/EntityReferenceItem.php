@@ -51,7 +51,7 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public static function defaultFieldSettings() {
     return array(
-      'handler' => 'default:' . (\Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user'),
+      'handler' => 'default',
       'handler_settings' => array(),
     ) + parent::defaultFieldSettings();
   }

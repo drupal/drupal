@@ -303,20 +303,34 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $field_storage->save();
 
     // Do not specify any value for the 'handler' setting in order to verify
-    // that the default value is properly used.
+    // that the default handler with the correct derivative is used.
     $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $field->save();
-
     $field = FieldConfig::load($field->id());
-    $this->assertTrue($field->getSetting('handler') == 'default:entity_test');
+    $this->assertEqual($field->getSetting('handler'), 'default:entity_test');
 
+    // Change the target_type in the field storage, and check that the handler
+    // was correctly reassigned in the field.
+    $field_storage->setSetting('target_type', 'entity_test_rev');
+    $field_storage->save();
+    $field = FieldConfig::load($field->id());
+    $this->assertEqual($field->getSetting('handler'), 'default:entity_test_rev');
+
+    // Change the handler to another, non-derivative plugin.
     $field->setSetting('handler', 'views');
     $field->save();
     $field = FieldConfig::load($field->id());
-    $this->assertTrue($field->getSetting('handler') == 'views');
+    $this->assertEqual($field->getSetting('handler'), 'views');
+
+    // Change the target_type in the field storage again, and check that the
+    // non-derivative handler was unchanged.
+    $field_storage->setSetting('target_type', 'entity_test_rev');
+    $field_storage->save();
+    $field = FieldConfig::load($field->id());
+    $this->assertEqual($field->getSetting('handler'), 'views');
   }
 
   /**
