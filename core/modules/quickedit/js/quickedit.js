@@ -369,10 +369,11 @@
     var entityElement = $(fieldElement).closest(entityElementSelector);
     // In the case of a full entity view page, the entity title is rendered
     // outside of "the entity DOM node": it's rendered as the page title. So in
-    // this case, we find the main element of the page and use it as a full
-    // entity ancestor.
+    // this case, we find the lowest common parent element (deepest in the tree)
+    // and consider that the entity element.
     if (entityElement.length === 0) {
-      entityElement = $('.js-quickedit-main-content').find(entityElementSelector);
+      var $lowestCommonParent = $(entityElementSelector).parents().has(fieldElement).first();
+      entityElement = $lowestCommonParent.find(entityElementSelector);
     }
     var entityInstanceID = entityElement
       .get(0)

@@ -114,6 +114,13 @@ function quickedit_field_formatter_info_alter(&$info) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for the page title template.
+ */
+function quickedit_preprocess_page_title(&$variables) {
+  $variables['title_attributes']['class'][] = 'js-quickedit-page-title';
+}
+
+/**
  * Implements hook_preprocess_HOOK() for field templates.
  */
 function quickedit_preprocess_field(&$variables) {

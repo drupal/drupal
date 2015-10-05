@@ -105,7 +105,7 @@ class HelpTest extends WebTestBase {
       $this->assertResponse($response);
       if ($response == 200) {
         $this->assertTitle($name . ' | Drupal', format_string('%module title was displayed', array('%module' => $module)));
-        $this->assertRaw('<h1 class="page-title">' . t($name) . '</h1>', format_string('%module heading was displayed', array('%module' => $module)));
+        $this->assertEqual($this->cssSelect('h1.page-title')[0], t($name), format_string('%module heading was displayed', array('%module' => $module)));
         $admin_tasks = system_get_module_admin_tasks($module, system_get_info('module', $module));
         if (!empty($admin_tasks)) {
           $this->assertText(t('@module administration pages', array('@module' => $name)));
