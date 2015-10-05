@@ -1097,23 +1097,6 @@ function template_preprocess_item_list(&$variables) {
 }
 
 /**
- * Returns HTML for an indentation div; used for drag and drop tables.
- *
- * @param $variables
- *   An associative array containing:
- *   - size: Optional. The number of indentations to create.
- *
- * @ingroup themeable
- */
-function theme_indentation($variables) {
-  $output = '';
-  for ($n = 0; $n < $variables['size']; $n++) {
-    $output .= '<div class="js-indentation indentation">&nbsp;</div>';
-  }
-  return $output;
-}
-
-/**
  * Prepares variables for container templates.
  *
  * Default template: container.html.twig.
@@ -1779,7 +1762,6 @@ function drupal_common_theme() {
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
-      'function' => 'theme_indentation',
     ),
     // From theme.maintenance.inc.
     'maintenance_page' => array(
