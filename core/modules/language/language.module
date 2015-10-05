@@ -105,11 +105,6 @@ function language_theme() {
       'render element' => 'form',
       'file' => 'language.admin.inc',
     ),
-    'language_negotiation_configure_browser_form_table' => array(
-      'render element' => 'form',
-      'file' => 'language.admin.inc',
-      'function' => 'theme_language_negotiation_configure_browser_form_table',
-    ),
     'language_content_settings_table' => array(
       'render element' => 'element',
       'file' => 'language.admin.inc',

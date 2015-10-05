@@ -10,6 +10,7 @@ namespace Drupal\language\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -87,10 +88,16 @@ class NegotiationBrowserForm extends ConfigFormBase {
       );
     }
 
-    $form['mappings'] = array(
-      '#tree' => TRUE,
-      '#theme' => 'language_negotiation_configure_browser_form_table',
-    );
+    $form['mappings'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Browser language code'),
+        $this->t('Site language'),
+        $this->t('Operations'),
+      ],
+      '#attributes' => ['id' => 'language-negotiation-browser'],
+      '#empty' => $this->t('No browser language mappings available.'),
+    ];
 
     $mappings = $this->language_get_browser_drupal_langcode_mappings();
     foreach ($mappings as $browser_langcode => $drupal_langcode) {
@@ -112,6 +119,15 @@ class NegotiationBrowserForm extends ConfigFormBase {
           '#required' => TRUE,
         ),
       );
+      // Operations column.
+      $form['mappings'][$browser_langcode]['operations'] = [
+        '#type' => 'operations',
+        '#links' => [],
+      ];
+      $form['mappings'][$browser_langcode]['operations']['#links']['delete'] = [
+        'title' => $this->t('Delete'),
+        'url' => Url::fromRoute('language.negotiation_browser_delete', ['browser_langcode' => $browser_langcode]),
+      ];
     }
 
     // Add empty row.

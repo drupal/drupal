@@ -7,7 +7,6 @@
 
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Url;
 
 /**
  * Prepares variables for language negotiation configuration form.
@@ -92,55 +91,6 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
   }
 
   $variables['children'] = $form;
-}
-
-/**
- * Theme browser configuration form as table.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_language_negotiation_configure_browser_form_table($variables) {
-  $form = $variables['form'];
-  $rows = array();
-  foreach (Element::children($form, TRUE) as $key) {
-    $row = array();
-    $row[] = drupal_render($form[$key]['browser_langcode']);
-    $row[] = drupal_render($form[$key]['drupal_langcode']);
-    $links = array();
-    $links['delete'] = array(
-      'title' => t('Delete'),
-      'url' => Url::fromRoute('language.negotiation_browser_delete', ['browser_langcode' => $key]),
-    );
-    $row[] = array(
-      'data' => array(
-        '#type' => 'operations',
-        '#links' => $links,
-      ),
-    );
-
-    $rows[] = $row;
-  }
-
-  $header = array(
-    t('Browser language code'),
-    t('Site language'),
-    t('Operations'),
-  );
-
-  $table = array(
-    '#type' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-    '#empty' => t('No browser language mappings available.'),
-    '#attributes' => array('id' => 'language-negotiation-browser'),
-  );
-  $output = drupal_render($table);
-
-  return $output;
 }
 
 /**
