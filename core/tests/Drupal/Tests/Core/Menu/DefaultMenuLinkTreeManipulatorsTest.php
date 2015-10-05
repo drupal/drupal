@@ -73,6 +73,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
     $this->accessManager = $this->getMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->currentUser->method('isAuthenticated')
+      ->willReturn(TRUE);
     $this->queryFactory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
       ->disableOriginalConstructor()
       ->getMock();
@@ -100,6 +102,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    *   - 7
    * - 6
    * - 8
+   * - 9
    *
    * With link 6 being the only external link.
    */
@@ -113,6 +116,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       6 => MenuLinkMock::create(array('id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'barbar', 'parent' => '')),
       7 => MenuLinkMock::create(array('id' => 'test.example7', 'route_name' => 'example7', 'title' => 'bazbaz', 'parent' => '')),
       8 => MenuLinkMock::create(array('id' => 'test.example8', 'route_name' => 'example8', 'title' => 'quxqux', 'parent' => '')),
+      9 => DynamicMenuLinkMock::create(array('id' => 'test.example9', 'parent' => ''))->setCurrentUser($this->currentUser),
     );
     $this->originalTree = array();
     $this->originalTree[1] = new MenuLinkTreeElement($this->links[1], FALSE, 1, FALSE, array());
@@ -126,6 +130,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     ));
     $this->originalTree[6] = new MenuLinkTreeElement($this->links[6], FALSE, 1, FALSE, array());
     $this->originalTree[8] = new MenuLinkTreeElement($this->links[8], FALSE, 1, FALSE, array());
+    $this->originalTree[9] = new MenuLinkTreeElement($this->links[9], FALSE, 1, FALSE, array());
   }
 
   /**
@@ -159,16 +164,17 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    */
   public function testCheckAccess() {
     // Those menu links that are non-external will have their access checks
-    // performed. 8 routes, but 1 is external, 2 already have their 'access'
-    // property set, and 1 is a child if an inaccessible menu link, so only 4
+    // performed. 9 routes, but 1 is external, 2 already have their 'access'
+    // property set, and 1 is a child if an inaccessible menu link, so only 5
     // calls will be made.
-    $this->accessManager->expects($this->exactly(4))
+    $this->accessManager->expects($this->exactly(5))
       ->method('checkNamedRoute')
       ->will($this->returnValueMap(array(
         array('example1', array(), $this->currentUser, TRUE, AccessResult::forbidden()),
         array('example2', array('foo' => 'bar'), $this->currentUser, TRUE, AccessResult::allowed()->cachePerPermissions()),
         array('example3', array('baz' => 'qux'), $this->currentUser, TRUE, AccessResult::neutral()),
         array('example5', array(), $this->currentUser, TRUE, AccessResult::allowed()),
+        array('user.logout', array(), $this->currentUser, TRUE, AccessResult::allowed()),
       )));
 
     $this->mockTree();
@@ -230,7 +236,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    */
   public function testCheckAccessWithLinkToAnyPagePermission() {
     $this->mockTree();
-    $this->currentUser->expects($this->exactly(8))
+    $this->currentUser->expects($this->exactly(9))
       ->method('hasPermission')
       ->with('link to any page')
       ->willReturn(TRUE);
@@ -246,6 +252,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals($expected_access_result, $this->originalTree[5]->subtree[7]->access);
     $this->assertEquals($expected_access_result, $this->originalTree[6]->access);
     $this->assertEquals($expected_access_result, $this->originalTree[8]->access);
+    $this->assertEquals($expected_access_result, $this->originalTree[9]->access);
   }
 
   /**
@@ -256,8 +263,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   public function testFlatten() {
     $this->mockTree();
     $tree = $this->defaultMenuTreeManipulators->flatten($this->originalTree);
-    $this->assertEquals(array(1, 2, 5, 6, 8), array_keys($this->originalTree));
-    $this->assertEquals(array(1, 2, 5, 6, 8, 3, 4, 7), array_keys($tree));
+    $this->assertEquals(array(1, 2, 5, 6, 8, 9), array_keys($this->originalTree));
+    $this->assertEquals(array(1, 2, 5, 6, 8, 9, 3, 4, 7), array_keys($tree));
   }
 
   /**

@@ -4,10 +4,9 @@ user.page:
   route_name: user.page
   menu_name: account
 user.logout:
-  title: 'Log out'
-  route_name: user.logout
   weight: 10
   menu_name: account
+  class: Drupal\user\Plugin\Menu\LoginLogoutMenuLink
 entity.user.collection:
   title: People
   route_name: entity.user.collection

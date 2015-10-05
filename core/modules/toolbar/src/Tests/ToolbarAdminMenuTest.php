@@ -291,12 +291,13 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->assertTrue($original_subtree_hash, 'A valid hash value for the admin menu subtrees was created.');
     $this->drupalLogout();
 
-    // Translate the string 'Menus' in the xx language. This string appears in
-    // a link in the admin menu subtrees. Changing the string should create a
-    // new menu hash if the toolbar subtrees cache is properly cleared.
+    // Translate the string 'Search and metadata' in the xx language. This
+    // string appears in a link in the admin menu subtrees. Changing the string
+    // should create a new menu hash if the toolbar subtrees cache is correctly
+    // invalidated.
     $this->drupalLogin($translate_user);
     $search = array(
-      'string' => 'Menus',
+      'string' => 'Search and metadata',
       'langcode' => $langcode,
       'translation' => 'untranslated',
     );

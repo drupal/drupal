@@ -130,7 +130,7 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
       $options['attributes']['title'] = $description;
     }
     if (empty($this->pluginDefinition['url'])) {
-      return new Url($this->pluginDefinition['route_name'], $this->pluginDefinition['route_parameters'], $options);
+      return new Url($this->getRouteName(), $this->getRouteParameters(), $options);
     }
     else {
       return Url::fromUri($this->pluginDefinition['url'], $options);
