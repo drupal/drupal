@@ -7,8 +7,19 @@
 
 ## Requirements
 
-* PHP 5.3.3 is required but using the latest version of PHP is highly recommended
-* [Xdebug](http://xdebug.org/) 2.1.3 is required but using the latest version of Xdebug is highly recommended
+PHP 5.3.3 is required but using the latest version of PHP is highly recommended
+
+### PHP 5
+
+[Xdebug](http://xdebug.org/) is the only source of raw code coverage data supported for PHP 5. Version 2.1.3 of Xdebug is required but using the latest version is highly recommended.
+
+### PHP 7
+
+[phpdbg](http://phpdbg.com/docs) is currently the only source of raw code coverage data supported for PHP 7. Once Xdebug has been updated for PHP 7 it, too, will be supported.
+
+### HHVM
+
+A version of HHVM that implements the Xdebug API for code coverage (`xdebug_*_code_coverage()`) is required.
 
 ## Installation
 
@@ -16,7 +27,7 @@ To add PHP_CodeCoverage as a local, per-project dependency to your project, simp
 
     {
         "require": {
-            "phpunit/php-code-coverage": "~2.0"
+            "phpunit/php-code-coverage": "^2"
         }
     }
 
@@ -37,4 +48,3 @@ $writer->process($coverage, '/tmp/clover.xml');
 $writer = new PHP_CodeCoverage_Report_HTML;
 $writer->process($coverage, '/tmp/code-coverage-report');
 ```
-
