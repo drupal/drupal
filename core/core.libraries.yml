@@ -837,10 +837,10 @@ normalize:
 
 picturefill:
   remote: https://github.com/scottjehl/picturefill
-  version: "2.3.1"
+  version: "3.0.1"
   license:
     name: MIT
-    url: https://github.com/scottjehl/picturefill/blob/2.3.1/LICENSE
+    url: https://github.com/scottjehl/picturefill/blob/3.0.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
