@@ -174,7 +174,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
       '#maxlength' => USERNAME_MAX_LENGTH,
-      '#description' => $this->t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.'),
+      '#description' => $this->t("Several special characters are allowed, including space, period (.), hyphen (-), apostrophe ('), underscore (_), and the @ sign."),
       '#required' => TRUE,
       '#attributes' => array('class' => array('username')),
     );
