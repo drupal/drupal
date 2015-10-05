@@ -230,7 +230,7 @@ abstract class QueryBase implements QueryInterface {
   public function sort($field, $direction = 'ASC', $langcode = NULL) {
     $this->sort[] = array(
       'field' => $field,
-      'direction' => $direction,
+      'direction' => strtoupper($direction),
       'langcode' => $langcode,
     );
     return $this;

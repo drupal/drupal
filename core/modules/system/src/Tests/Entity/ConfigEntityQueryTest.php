@@ -482,6 +482,74 @@ class ConfigEntityQueryTest extends KernelTestBase {
   }
 
   /**
+   * Tests sorting with tableSort on config entity queries.
+   */
+  public function testTableSort() {
+    $header = array(
+      array('data' => t('ID'), 'specifier' => 'id'),
+      array('data' => t('Number'), 'specifier' => 'number'),
+    );
+
+    // Sort key: id
+    // Sorting with 'DESC' upper case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('id', 'DESC')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('5', '4', '3', '2', '1'));
+
+    // Sorting with 'ASC' upper case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('id', 'ASC')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('1', '2', '3', '4', '5'));
+
+    // Sorting with 'desc' lower case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('id', 'desc')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('5', '4', '3', '2', '1'));
+
+    // Sorting with 'asc' lower case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('id', 'asc')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('1', '2', '3', '4', '5'));
+
+    // Sort key: number
+    // Sorting with 'DeSc' mixed upper and lower case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('number', 'DeSc')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('3', '5', '2', '1', '4'));
+
+    // Sorting with 'AsC' mixed upper and lower case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('number', 'AsC')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('4', '1', '2', '5', '3'));
+
+    // Sorting with 'dEsC' mixed upper and lower case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('number', 'dEsC')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('3', '5', '2', '1', '4'));
+
+    // Sorting with 'aSc' mixed upper and lower case
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->tableSort($header)
+      ->sort('number', 'aSc')
+      ->execute();
+    $this->assertIdentical(array_values($this->queryResults), array('4', '1', '2', '5', '3'));
+  }
+
+  /**
    * Tests dotted path matching.
    */
   public function testDotted() {
