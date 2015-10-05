@@ -210,6 +210,15 @@
             // upcasting existing elements (see widgetDefinition.upcast).
             if (dialogReturnValues.attributes.hasCaption) {
               actualWidget.editables.caption.setAttribute('data-placeholder', placeholderText);
+
+              // Some browsers will add a <br> tag to a newly created DOM
+              // element with no content. Remove this <br> if it is the only
+              // thing in the caption. Our placeholder support requires the
+              // element be entirely empty. See filter-caption.css.
+              var captionElement = actualWidget.editables.caption.$;
+              if (captionElement.childNodes.length === 1 && captionElement.childNodes.item(0).nodeName === 'BR') {
+                captionElement.removeChild(captionElement.childNodes.item(0));
+              }
             }
           };
         };
