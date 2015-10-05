@@ -1,7 +1,7 @@
 entity.node_type.collection:
   title: 'Content types'
   parent: system.admin_structure
-  description: 'Manage content types, including default status, front page promotion, comment settings, etc.'
+  description: 'Create content types and manage their default settings.'
   route_name: entity.node_type.collection
 node.add_page:
   title: 'Add content'
