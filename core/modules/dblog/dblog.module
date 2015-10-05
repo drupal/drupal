@@ -32,7 +32,7 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'dblog.overview':
-      return '<p>' . t('The Database Logging module monitors your website, capturing system events in a log (shown here) to be reviewed by an authorized individual at a later time. This log is a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the Recent log messages report on a regular basis, as it is often the only way to tell what is going on.') . '</p>';
+      return '<p>' . t('The Database Logging module logs system events in the Drupal database. Monitor your site or debug site problems on this page.') . '</p>';
   }
 }
 
