@@ -907,11 +907,12 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Use the bare HTML page renderer to render our links.
     $renderer = $this->container->get('bare_html_page_renderer');
     $response = $renderer->renderBarePage(
-      $build, '', $this->container->get('theme.manager')->getActiveTheme()->getName()
+      $elements, '', $this->container->get('theme.manager')->getActiveTheme()->getName()
     );
 
     // Glean the content from the response object.
-    $this->setRawContent($response->getContent());
+    $content = $response->getContent();
+    $this->setRawContent($content);
     $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
   }

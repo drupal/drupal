@@ -46,7 +46,9 @@ class TableTest extends KernelTestBase {
       '#sticky' => TRUE,
     );
     $this->render($table);
-    $this->assertTrue(in_array('core/drupal.tableheader', $table['#attached']['library']), 'tableheader asset library found.');
+    // Make sure tableheader.js was attached.
+    $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
+    $this->assertEqual(count($tableheader), 1);
     $this->assertRaw('sticky-enabled');
   }
 
@@ -69,7 +71,9 @@ class TableTest extends KernelTestBase {
       '#sticky' => FALSE,
     );
     $this->render($table);
-    $this->assertFalse(in_array('core/drupal.tableheader', $table['#attached']['library']), 'tableheader asset library not found.');
+    // Make sure tableheader.js was not attached.
+    $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
+    $this->assertEqual(count($tableheader), 0);
     $this->assertNoRaw('sticky-enabled');
   }
 

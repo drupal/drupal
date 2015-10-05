@@ -151,48 +151,51 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       throw new \LogicException(sprintf('You are not allowed to use %s in #attached.', implode(', ', $unsupported_types)));
     }
 
-    // Get the placeholders from attached and then remove them.
-    $attachment_placeholders = $attached['html_response_attachment_placeholders'];
-    unset($attached['html_response_attachment_placeholders']);
+    // If we don't have any placeholders, there is no need to proceed.
+    if (!empty($attached['html_response_attachment_placeholders'])) {
+      // Get the placeholders from attached and then remove them.
+      $attachment_placeholders = $attached['html_response_attachment_placeholders'];
+      unset($attached['html_response_attachment_placeholders']);
 
-    $variables = $this->processAssetLibraries($attached, $attachment_placeholders);
+      $variables = $this->processAssetLibraries($attached, $attachment_placeholders);
 
-    // Since we can only replace content in the HTML head section if there's a
-    // placeholder for it, we can safely avoid processing the render array if
-    // it's not present.
-    if (!empty($attachment_placeholders['head'])) {
-      // 'feed' is a special case of 'html_head_link'. We process them into
-      // 'html_head_link' entries and merge them.
-      if (!empty($attached['feed'])) {
-        $attached = BubbleableMetadata::mergeAttachments(
-          $attached,
-          $this->processFeed($attached['feed'])
-        );
-      }
-      // 'html_head_link' is a special case of 'html_head' which can be present
-      // as a head element, but also as a Link: HTTP header depending on
-      // settings in the render array. Processing it can add to both the
-      // 'html_head' and 'http_header' keys of '#attached', so we must address
-      // it before 'html_head'.
-      if (!empty($attached['html_head_link'])) {
-        // Merge the processed 'html_head_link' into $attached so that its
-        // 'html_head' and 'http_header' values are present for further
-        // processing.
-        $attached = BubbleableMetadata::mergeAttachments(
-          $attached,
-          $this->processHtmlHeadLink($attached['html_head_link'])
-        );
+      // Since we can only replace content in the HTML head section if there's a
+      // placeholder for it, we can safely avoid processing the render array if
+      // it's not present.
+      if (!empty($attachment_placeholders['head'])) {
+        // 'feed' is a special case of 'html_head_link'. We process them into
+        // 'html_head_link' entries and merge them.
+        if (!empty($attached['feed'])) {
+          $attached = BubbleableMetadata::mergeAttachments(
+            $attached,
+            $this->processFeed($attached['feed'])
+          );
+        }
+        // 'html_head_link' is a special case of 'html_head' which can be present
+        // as a head element, but also as a Link: HTTP header depending on
+        // settings in the render array. Processing it can add to both the
+        // 'html_head' and 'http_header' keys of '#attached', so we must address
+        // it before 'html_head'.
+        if (!empty($attached['html_head_link'])) {
+          // Merge the processed 'html_head_link' into $attached so that its
+          // 'html_head' and 'http_header' values are present for further
+          // processing.
+          $attached = BubbleableMetadata::mergeAttachments(
+            $attached,
+            $this->processHtmlHeadLink($attached['html_head_link'])
+          );
+        }
+
+        // Now we can process 'html_head', which contains both 'feed' and
+        // 'html_head_link'.
+        if (!empty($attached['html_head'])) {
+          $variables['head'] = $this->processHtmlHead($attached['html_head']);
+        }
       }
 
-      // Now we can process 'html_head', which contains both 'feed' and
-      // 'html_head_link'.
-      if (!empty($attached['html_head'])) {
-        $variables['head'] = $this->processHtmlHead($attached['html_head']);
-      }
+      // Now replace the attachment placeholders.
+      $this->renderHtmlResponseAttachmentPlaceholders($response, $attachment_placeholders, $variables);
     }
-
-    // Now replace the attachment placeholders.
-    $this->renderHtmlResponseAttachmentPlaceholders($response, $attachment_placeholders, $variables);
 
     // Set the HTTP headers and status code on the response if any bubbled.
     if (!empty($attached['http_header'])) {

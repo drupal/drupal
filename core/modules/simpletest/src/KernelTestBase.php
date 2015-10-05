@@ -585,7 +585,14 @@ EOD;
    *   The rendered string output (typically HTML).
    */
   protected function render(array &$elements) {
-    $content = $this->container->get('renderer')->renderRoot($elements);
+    // Use the bare HTML page renderer to render our links.
+    $renderer = $this->container->get('bare_html_page_renderer');
+    $response = $renderer->renderBarePage(
+      $elements, '', $this->container->get('theme.manager')->getActiveTheme()->getName()
+    );
+
+    // Glean the content from the response object.
+    $content = $response->getContent();
     $this->setRawContent($content);
     $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
