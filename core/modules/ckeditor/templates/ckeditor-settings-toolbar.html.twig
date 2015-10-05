@@ -26,7 +26,7 @@
         {# Available buttons. #}
         <div class="ckeditor-toolbar-available">
           <label for="ckeditor-available-buttons">{{ 'Available buttons'|t }}</label>
-          <ul id="ckeditor-available-buttons" class="ckeditor-buttons" role="form" data-drupal-ckeditor-button-sorting="source">
+          <ul id="ckeditor-available-buttons" class="ckeditor-buttons clearfix" role="form" data-drupal-ckeditor-button-sorting="source">
           {% for disabled_button in disabled_buttons %}
              <li{{ disabled_button.attributes.addClass('ckeditor-button') }}>{{ disabled_button.value }}</li>
           {% endfor %}
