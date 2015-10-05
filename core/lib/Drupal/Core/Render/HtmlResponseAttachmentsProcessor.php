@@ -187,12 +187,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       // Now we can process 'html_head', which contains both 'feed' and
       // 'html_head_link'.
       if (!empty($attached['html_head'])) {
-        $html_head = $this->processHtmlHead($attached['html_head']);
-        // Invoke hook_html_head_alter().
-        $this->moduleHandler->alter('html_head', $html_head);
-        // Store the result in $variables so it can be inserted into the
-        // placeholder.
-        $variables['head'] = $html_head;
+        $variables['head'] = $this->processHtmlHead($attached['html_head']);
       }
     }
 
