@@ -50,6 +50,9 @@ field.storage.*.*:
     persist_with_no_fields:
       type: boolean
       label: 'Persist field storage with no fields'
+    custom_storage:
+      type: boolean
+      label: 'Enable custom storage'
 
 field.field.*.*.*:
   type: field_config_base

@@ -10,6 +10,7 @@ namespace Drupal\field\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldException;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
@@ -135,6 +136,44 @@ class FieldCrudTest extends FieldUnitTestBase {
     }
 
     // TODO: test other failures.
+  }
+
+  /**
+   * Test creating a field with custom storage set.
+   */
+  public function testCreateFieldCustomStorage() {
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    \Drupal::state()->set('field_test_custom_storage', $field_name);
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'test_field',
+      'custom_storage' => TRUE,
+    ]);
+    $field_storage->save();
+
+    $field = FieldConfig::create([
+      'field_name' => $field_storage->getName(),
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ]);
+    $field->save();
+
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+
+    // Check that no table has been created for the field.
+    $this->assertFalse(\Drupal::database()->schema()->tableExists('entity_test__' . $field_storage->getName()));
+
+    // Save an entity with a value in the custom storage field and verify no
+    // data is retrieved on load.
+    $entity = EntityTest::create(['name' => $this->randomString(), $field_name => 'Test value']);
+    $this->assertIdentical('Test value', $entity->{$field_name}->value, 'The test value is set on the field.');
+
+    $entity->save();
+    $entity = EntityTest::load($entity->id());
+
+    $this->assertNull($entity->{$field_name}->value, 'The loaded entity field value is NULL.');
   }
 
   /**

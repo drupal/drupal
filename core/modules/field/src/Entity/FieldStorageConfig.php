@@ -42,6 +42,7 @@ use Drupal\field\FieldStorageConfigInterface;
  *     "translatable",
  *     "indexes",
  *     "persist_with_no_fields",
+ *     "custom_storage",
  *   }
  * )
  */
@@ -159,6 +160,13 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * @var bool
    */
   protected $persist_with_no_fields = FALSE;
+
+  /**
+   * A boolean indicating whether or not the field item uses custom storage.
+   *
+   * @var bool
+   */
+  public $custom_storage = FALSE;
 
   /**
    * The custom storage indexes for the field data storage.
@@ -436,6 +444,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       $schema = $class::schema($this);
       // Fill in default values for optional entries.
       $schema += array(
+        'columns' => array(),
         'unique keys' => array(),
         'indexes' => array(),
         'foreign keys' => array(),
@@ -455,7 +464,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function hasCustomStorage() {
-    return FALSE;
+    return $this->custom_storage;
   }
 
   /**
