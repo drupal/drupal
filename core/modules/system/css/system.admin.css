@@ -132,7 +132,11 @@ small .admin-link:after {
   cursor: default;
 }
 .system-modules td {
-  padding-left: 0;
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .system-modules td {
+  padding-left: 12px;
+  padding-right: 0;
 }
 
 @media screen and (max-width: 40em) {
@@ -369,5 +373,8 @@ small .admin-link:after {
   padding: 0 0 0 0.7em;
 }
 .system-themes-admin-form {
-  clear: left;
+  clear: left; /* LTR */
+}
+[dir="rtl"] .system-themes-admin-form {
+  clear: right;
 }

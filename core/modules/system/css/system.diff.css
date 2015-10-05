@@ -26,7 +26,11 @@ table.diff .diff-marker {
   width: 1.4em;
 }
 table.diff th {
-  padding-right: inherit;
+  padding-right: inherit; /* LTR */
+}
+[dir="rtl"] table.diff th {
+  padding-right: 0;
+  padding-left: inherit;
 }
 table.diff td div {
   overflow: auto;

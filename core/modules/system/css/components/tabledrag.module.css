@@ -59,8 +59,11 @@ a.tabledrag-handle:focus .handle {
   width: 40px;
 }
 .touch a.tabledrag-handle .handle {
-  background-position: 40% 19px;
+  background-position: 40% 19px; /* LTR */
   height: 21px;
+}
+[dir="rtl"] .touch a.tabledrag-handle .handle {
+  background-position: right 40% top 19px;
 }
 .touch .draggable.drag a.tabledrag-handle .handle {
   background-position: 50% -32px;

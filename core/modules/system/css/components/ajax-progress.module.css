@@ -29,7 +29,7 @@ tr .ajax-progress-throbber .throbber {
 /* Full screen throbber */
 .ajax-progress-fullscreen {
   /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
-  left: 49%;
+  left: 49%; /* LTR */
   position: fixed;
   top: 48.5%;
   z-index: 1000;
@@ -42,4 +42,8 @@ tr .ajax-progress-throbber .throbber {
   opacity: 0.9;
   padding: 4px;
   width: 24px;
+}
+[dir="rtl"] .ajax-progress-fullscreen {
+  left: auto;
+  right: 49%;
 }

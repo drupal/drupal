@@ -40,7 +40,7 @@
       #0094f0 100% );
   background-size: 40px 40px;
   margin-top: -1px;
-  margin-left: -1px;
+  margin-left: -1px; /* LTR */
   padding: 0 1px;
   height: 16px;
   border-radius: 10em;
@@ -48,6 +48,13 @@
   -moz-animation: animate-stripes 3s linear infinite;
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;
+}
+[dir="rtl"] .progress__bar {
+  margin-left: 0;
+  margin-right: -1px;
+  animation-direction: reverse;
+  -webkit-animation-direction: reverse;
+  -moz-animation-direction: reverse;
 }
 
 /**

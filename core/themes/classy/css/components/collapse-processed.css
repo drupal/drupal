@@ -10,7 +10,7 @@
 .collapse-processed > summary:before {
   background: url(../../../../misc/menu-expanded.png) 0px 100% no-repeat; /* LTR */
   content: "";
-  float: left;
+  float: left; /* LTR */
   height: 1em;
   width: 1em;
 }

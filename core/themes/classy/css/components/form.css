@@ -17,6 +17,7 @@ form .field-multiple-table .field-multiple-drag .tabledrag-handle {
   padding-right: .5em; /*LTR*/
 }
 [dir="rtl"] form .field-multiple-table .field-multiple-drag .tabledrag-handle {
+  padding-right: 0;
   padding-left: .5em;
 }
 form .field-add-more-submit {
@@ -59,7 +60,12 @@ label.option {
 }
 .form-type-radio .description,
 .form-type-checkbox .description {
-  margin-left: 2.4em;
+  margin-left: 2.4em; /* LTR */
+}
+[dir="rtl"] .form-type-radio .description,
+[dir="rtl"] .form-type-checkbox .description {
+   margin-left: 0;
+   margin-right: 2.4em;
 }
 .marker {
   color: #e00;
