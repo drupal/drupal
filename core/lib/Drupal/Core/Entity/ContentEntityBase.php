@@ -138,7 +138,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $isDefaultRevision = TRUE;
 
   /**
-   * Holds translatable entity keys such as the ID, bundle and revision ID.
+   * Holds untranslatable entity keys such as the ID, bundle, and revision ID.
    *
    * @var array
    */
