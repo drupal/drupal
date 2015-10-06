@@ -215,9 +215,10 @@
 
       // Add a consistent dialog class.
       var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
-      classes.push('editor-dialog');
+      classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = Drupal.checkWidthBreakpoint(600);
+      dialogSettings.width = 'auto';
 
       // Add a "Loading…" message, hide it underneath the CKEditor toolbar,
       // create a Drupal.Ajax instance to load the dialog and trigger it.
@@ -248,7 +249,7 @@
 
   // Moves the dialog to the top of the CKEDITOR stack.
   $(window).on('dialogcreate', function (e, dialog, $element, settings) {
-    $('.editor-dialog').css("zIndex", CKEDITOR.config.baseFloatZIndex + 1);
+    $('.ui-dialog--narrow').css("zIndex", CKEDITOR.config.baseFloatZIndex + 1);
   });
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.

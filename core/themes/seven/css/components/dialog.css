@@ -11,7 +11,8 @@
 }
 @media all and (max-width: 48em) { /* 768px */
   .ui-dialog {
-    width: 92% !important;
+    min-width: 92%;
+    max-width: 92%;
   }
 }
 .ui-dialog .ui-dialog-titlebar {
