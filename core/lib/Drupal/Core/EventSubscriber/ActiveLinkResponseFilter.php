@@ -134,12 +134,17 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
     $search_key_current_path = 'data-drupal-link-system-path="' . $current_path . '"';
     $search_key_front = 'data-drupal-link-system-path="&lt;front&gt;"';
 
-    // An active link's path is equal to the current path, so search the HTML
-    // for an attribute with that value.
     $offset = 0;
+    // There are two distinct conditions that can make a link be marked active:
+    // 1. A link has the current path in its 'data-drupal-link-system-path'
+    //    attribute.
+    // 2. We are on the front page and a link has the special '<front>' value in
+    //    its 'data-drupal-link-system-path' attribute.
     while (strpos($html_markup, $search_key_current_path, $offset) !== FALSE || ($is_front && strpos($html_markup, $search_key_front, $offset) !== FALSE)) {
       $pos_current_path = strpos($html_markup, $search_key_current_path, $offset);
-      $pos_front = strpos($html_markup, $search_key_front, $offset);
+      // Only look for links with the special '<front>' system path if we are
+      // actually on the front page.
+      $pos_front = $is_front ? strpos($html_markup, $search_key_front, $offset) : FALSE;
 
       // Determine which of the two values is the next match: the exact path, or
       // the <front> special case.
