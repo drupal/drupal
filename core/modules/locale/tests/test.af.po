@@ -8,3 +8,6 @@ msgstr ""
 
 msgid "@site is currently under maintenance. We should be back shortly. Thank you for your patience."
 msgstr "Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees."
+
+msgid "Locale can translate"
+msgstr "Locale can translate Afrikaans"

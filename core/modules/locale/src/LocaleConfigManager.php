@@ -122,13 +122,14 @@ class LocaleConfigManager {
   }
 
   /**
-   * Gets array of translated strings for translatable configuration.
+   * Gets array of translated strings for Locale translatable configuration.
    *
    * @param string $name
    *   Configuration object name.
    *
    * @return array
-   *   Array of translatable elements of the default configuration in $name.
+   *   Array of Locale translatable elements of the default configuration in
+   *   $name.
    */
   public function getTranslatableDefaultConfig($name) {
     if ($this->isSupported($name)) {
@@ -167,13 +168,16 @@ class LocaleConfigManager {
       }
     }
     else {
+      // Something is only translatable by Locale if there is a string in the
+      // first place.
+      $value = $element->getValue();
       $definition = $element->getDataDefinition();
-      if (!empty($definition['translatable'])) {
+      if (!empty($definition['translatable']) && $value !== '' && $value !== NULL) {
         $options = array();
         if (isset($definition['translation context'])) {
           $options['context'] = $definition['translation context'];
         }
-        return new TranslatableMarkup($element->getValue(), array(), $options);
+        return new TranslatableMarkup($value, array(), $options);
       }
     }
     return $translatable;
@@ -559,33 +563,27 @@ class LocaleConfigManager {
 
       foreach ($langcodes as $langcode) {
         $processed = $this->processTranslatableData($name, $active, $translatable, $langcode);
+        // If the language code is not the same as the active storage
+        // language, we should update the configuration override.
         if ($langcode != $active_langcode) {
-          // If the language code is not the same as the active storage
-          // language, we should update a configuration override.
+          $override = $this->languageManager->getLanguageConfigOverride($langcode, $name);
+          // Filter out locale managed configuration keys so that translations
+          // removed from Locale will be reflected in the config override.
+          $data = $this->filterOverride($override->get(), $translatable);
           if (!empty($processed)) {
-            // Update translation data in configuration override.
-            $this->saveTranslationOverride($name, $langcode, $processed);
+            // Merge in the Locale managed translations with existing data.
+            $data = NestedArray::mergeDeepArray(array($data, $processed), TRUE);
+          }
+          if (empty($data) && !$override->isNew()) {
+            // The configuration override contains Locale overrides that no
+            // longer exist.
+            $this->deleteTranslationOverride($name, $langcode);
             $count++;
           }
-          else {
-            $override = $this->languageManager->getLanguageConfigOverride($langcode, $name);
-            if (!$override->isNew()) {
-              $data = $this->filterOverride($override->get(), $translatable);
-              if (empty($data)) {
-                // Delete language override if there is no data left at all.
-                // This means all prior translations in the override were locale
-                // managed.
-                $this->deleteTranslationOverride($name, $langcode);
-                $count++;
-              }
-              else {
-                // If there were translatable elements besides locale managed
-                // items, save with only those, and remove the ones managed
-                // by locale only.
-                $this->saveTranslationOverride($name, $langcode, $data);
-                $count++;
-              }
-            }
+          elseif (!empty($data)) {
+            // Update translation data in configuration override.
+            $this->saveTranslationOverride($name, $langcode, $data);
+            $count++;
           }
         }
         elseif (locale_is_translatable($langcode)) {
