@@ -37,43 +37,61 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertEqual($this->container->get('state')->get('system_test_preuninstall_module'), 'module_test');
     $this->resetAll();
 
-    // Try to install and uninstall book, toolbar modules and its dependencies.
     $all_modules = system_rebuild_module_data();
 
+    // Test help on required modules, but do not test uninstalling.
+    $required_modules = array_filter($all_modules, function ($module) {
+      if (!empty($module->info['required']) || $module->status == TRUE) {
+        if ($module->info['package'] != 'Testing' && empty($module->info['hidden'])) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    });
+
+    $required_modules['help'] = $all_modules['help'];
+
+    // Test uninstalling without hidden, required, and already enabled modules.
     $all_modules = array_filter($all_modules, function ($module) {
-      // Filter hidden, required and already enabled modules.
       if (!empty($module->info['hidden']) || !empty($module->info['required']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
         return FALSE;
       }
       return TRUE;
     });
 
-    // Go through each module in the list and try to install it (unless it was
-    // already installed automatically due to a dependency).
-    $automatically_installed = array();
+    // Install the Help module, and verify it installed successfully.
+    unset($all_modules['help']);
+    $this->assertModuleNotInstalled('help');
+    $edit = array();
+    $package = $required_modules['help']->info['package'];
+    $edit["modules[$package][help][enable]"] = TRUE;
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->assertText('has been enabled', 'Modules status has been updated.');
+    $this->assertText(t('hook_modules_installed fired for help'));
+    $this->assertModuleSuccessfullyInstalled('help');
+
+    // Test help for the required modules.
+    foreach ($required_modules as $name => $module) {
+      $this->assertHelp($name, $module->info['name']);
+    }
+
+    // Go through each module in the list and try to install and uninstall
+    // it with its dependencies.
     while (list($name, $module) = each($all_modules)) {
-      // Skip modules that have been automatically installed.
-      if (in_array($name, $automatically_installed)) {
-        continue;
-      }
+      $was_installed_list = \Drupal::moduleHandler()->getModuleList();
 
       // Start a list of modules that we expect to be installed this time.
       $modules_to_install = array($name);
       foreach (array_keys($module->requires) as $dependency) {
-        if (isset($all_modules[$dependency]) && !in_array($dependency, $automatically_installed)) {
+        if (isset($all_modules[$dependency])) {
           $modules_to_install[] = $dependency;
-
-          // Add any potential dependency of this module to the list of modules we
-          // expect to be automatically installed.
-          $automatically_installed[] = $dependency;
         }
       }
 
       // Check that each module is not yet enabled and does not have any
       // database tables yet.
       foreach ($modules_to_install as $module_to_install) {
-        $this->assertModules(array($module_to_install), FALSE);
-        $this->assertModuleTablesDoNotExist($module_to_install);
+        $this->assertModuleNotInstalled($module_to_install);
       }
 
       // Install the module.
@@ -104,42 +122,54 @@ class InstallUninstallTest extends ModuleTestBase {
       // appropriate messages appear in the logs.
       foreach ($modules_to_install as $module_to_install) {
         $this->assertText(t('hook_modules_installed fired for @module', array('@module' => $module_to_install)));
-        $this->assertModules(array($module_to_install), TRUE);
-        $this->assertModuleTablesExist($module_to_install);
-        $this->assertModuleConfig($module_to_install);
         $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_install), RfcLogLevel::INFO);
         $this->assertInstallModuleUpdates($module_to_install);
+        $this->assertModuleSuccessfullyInstalled($module_to_install);
       }
 
-      // Uninstall the original module, and check appropriate
-      // hooks, tables, and log messages. (Later, we'll go back and do the
-      // same thing for modules that were enabled automatically.)
-      $this->assertSuccessfulUninstall($name, $package);
-    }
+      // Verify the help page.
+      $this->assertHelp($name, $module->info['name']);
 
-    // Go through all modules that were automatically installed, and try to
-    // uninstall them one by one.
-    while ($automatically_installed) {
-      $initial_count = count($automatically_installed);
-      foreach ($automatically_installed as $name) {
-        $package = $all_modules[$name]->info['package'];
-        // If the module can't be uninstalled due to dependencies, skip it and
-        // try again the next time. Otherwise, try to uninstall it.
-        $this->drupalGet('admin/modules/uninstall');
-        $disabled_checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[' . $name . ']"]');
-        if (empty($disabled_checkbox)) {
-          $automatically_installed = array_diff($automatically_installed, array($name));
-          $this->assertSuccessfulUninstall($name, $package);
+      // Uninstall the original module, plus everything else that was installed
+      // with it.
+      if ($name == 'forum') {
+        // Forum has an extra step to be able to uninstall it.
+        $this->preUninstallForum();
+      }
+
+      $now_installed_list = \Drupal::moduleHandler()->getModuleList();
+      $added_modules = array_diff(array_keys($now_installed_list), array_keys($was_installed_list));
+      while ($added_modules) {
+        $initial_count = count($added_modules);
+        foreach ($added_modules as $to_uninstall) {
+          // See if we can currently uninstall this module (if its dependencies
+          // have been uninstalled), and do so if we can.
+          $this->drupalGet('admin/modules/uninstall');
+          $field_name = "uninstall[$to_uninstall]";
+          $has_checkbox = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '"]');
+          $disabled = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '" and @disabled="disabled"]');
+
+          if (!empty($has_checkbox) && empty($disabled)) {
+            // This one is eligible for being uninstalled.
+            $package = $all_modules[$to_uninstall]->info['package'];
+            $this->assertSuccessfulUninstall($to_uninstall, $package);
+            $added_modules = array_diff($added_modules, array($to_uninstall));
+          }
+        }
+
+        // If we were not able to find a module to uninstall, fail and exit the
+        // loop.
+        $final_count = count($added_modules);
+        if ($initial_count == $final_count) {
+          $this->fail('Remaining modules could not be uninstalled for ' . $name);
+          break;
         }
       }
-      $final_count = count($automatically_installed);
-      // If all checkboxes were disabled, something is really wrong with the
-      // test. Throw a failure and avoid an infinite loop.
-      if ($initial_count == $final_count) {
-        $this->fail('Remaining modules could not be disabled.');
-        break;
-      }
     }
+
+    // Uninstall the help module and put it back into the list of modules.
+    $all_modules['help'] = $required_modules['help'];
+    $this->assertSuccessfulUninstall('help', $required_modules['help']->info['package']);
 
     // Now that all modules have been tested, go back and try to enable them
     // all again at once. This tests two things:
@@ -156,6 +186,29 @@ class InstallUninstallTest extends ModuleTestBase {
   }
 
   /**
+   * Asserts that a module is not yet installed.
+   *
+   * @param string $name
+   *   Name of the module to check.
+   */
+  protected function assertModuleNotInstalled($name) {
+    $this->assertModules(array($name), FALSE);
+    $this->assertModuleTablesDoNotExist($name);
+  }
+
+  /**
+   * Asserts that a module was successfully installed.
+   *
+   * @param string $name
+   *   Name of the module to check.
+   */
+  protected function assertModuleSuccessfullyInstalled($name) {
+    $this->assertModules(array($name), TRUE);
+    $this->assertModuleTablesExist($name);
+    $this->assertModuleConfig($name);
+  }
+
+  /**
    * Uninstalls a module and asserts that it was done correctly.
    *
    * @param string $module
@@ -166,15 +219,6 @@ class InstallUninstallTest extends ModuleTestBase {
    */
   protected function assertSuccessfulUninstall($module, $package = 'Core') {
     $edit = array();
-    if ($module == 'forum') {
-      // Forum cannot be uninstalled until all of the content entities related
-      // to it have been deleted.
-      $vid = $this->config('forum.settings')->get('vocabulary');
-      $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
-      foreach ($terms as $term) {
-        $term->delete();
-      }
-    }
     $edit['uninstall[' . $module . ']'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
@@ -245,6 +289,39 @@ class InstallUninstallTest extends ModuleTestBase {
         $this->assertFalse(array_intersect(['block_post_update_disable_blocks_with_missing_contexts'], $existing_updates), 'Asserts that no post update functions are stored in keyvalue store.');
         break;
     }
+  }
+
+  /**
+   * Verifies a module's help.
+   *
+   * Verifies that the module help page from hook_help() exists and can be
+   * displayed, and that it contains the phrase "Foo Bar module", where "Foo
+   * Bar" is the name of the module from the .info.yml file.
+   *
+   * @param string $module
+   *   Machine name of the module to verify.
+   * @param string $name
+   *   Human-readable name of the module to verify.
+   */
+  protected function assertHelp($module, $name) {
+    $this->drupalGet('admin/help/' . $module);
+    $this->assertResponse(200, "Help for $module displayed successfully");
+    $this->assertText($name . ' module', "'$name module' is on the help page for $module");
+    $this->assertLink('online documentation for the ' . $name . ' module', 0, "Correct online documentation link is in the help page for $module");
+  }
+
+  /**
+   * Deletes forum taxonomy terms, so Forum can be uninstalled.
+   */
+  protected function preUninstallForum() {
+    // There only should be a 'General discussion' term in the 'forums'
+    // vocabulary, but just delete any terms there in case the name changes.
+    $query = \Drupal::entityQuery('taxonomy_term');
+    $query->condition('vid', 'forums');
+    $ids = $query->execute();
+    $storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+    $terms = $storage->loadMultiple($ids);
+    $storage->delete($terms);
   }
 
 }
