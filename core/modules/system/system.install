@@ -1808,5 +1808,22 @@ function system_update_8011() {
 }
 
 /**
+ * Install the Stable base theme if needed.
+ */
+function system_update_8012() {
+  $theme_handler = \Drupal::service('theme_handler');
+  // Ensure we have fresh info.
+  $theme_handler->rebuildThemeData();
+  foreach ($theme_handler->listInfo() as $theme) {
+    // We first check that a base theme is set because if it's set to false then
+    // it's unset in \Drupal\Core\Extension\ThemeHandler::rebuildThemeData().
+    if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
+      $theme_handler->install(['stable']);
+      return;
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */

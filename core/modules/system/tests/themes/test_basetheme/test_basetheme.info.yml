@@ -3,6 +3,7 @@ type: theme
 description: 'Test theme which acts as a base theme for other test subthemes.'
 version: VERSION
 core: 8.x
+base theme: false
 libraries:
   - test_basetheme/global-styling
 stylesheets-remove:
