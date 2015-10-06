@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\editor\Entity\Editor;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -508,4 +509,31 @@ function _editor_parse_file_uuids($text) {
     $uuids[] = $node->getAttribute('data-entity-uuid');
   }
   return $uuids;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ *
+ * Synchronizes the editor status to its paired text format status.
+ */
+function editor_filter_format_presave(FilterFormatInterface $format) {
+  // The text format being created cannot have a text editor yet.
+  if ($format->isNew()) {
+    return;
+  }
+
+  /** @var \Drupal\filter\FilterFormatInterface $original */
+  $original = \Drupal::entityManager()
+    ->getStorage('filter_format')
+    ->loadUnchanged($format->getOriginalId());
+
+  // If the text format status is the same, return early.
+  if (($status = $format->status()) === $original->status()) {
+    return;
+  }
+
+  /** @var \Drupal\editor\EditorInterface $editor */
+  if ($editor = Editor::load($format->id())) {
+    $editor->setStatus($status)->save();
+  }
 }
