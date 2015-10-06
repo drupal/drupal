@@ -35,8 +35,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
-    $this->assertText('1 error has been found: ' . $field->label(), 'Node save failed when required file field was empty.');
-    $this->assertIdentical(1, count($this->xpath('//div[contains(concat(" ", normalize-space(@class), " "), :class)]//a', [':class' => ' messages--error '])), 'There is one link in the error message.');
+    $this->assertRaw(t('@title field is required.', array('@title' => $field->getLabel())), 'Node save failed when required file field was empty.');
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -57,8 +56,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
-    $this->assertText('1 error has been found: ' . $field->label(), 'Node save failed when required multiple value file field was empty.');
-    $this->assertIdentical(1, count($this->xpath('//div[contains(concat(" ", normalize-space(@class), " "), :class)]//a', [':class' => ' messages--error '])), 'There is one link in the error message.');
+    $this->assertRaw(t('@title field is required.', array('@title' => $field->getLabel())), 'Node save failed when required multiple value file field was empty.');
 
     // Create a new node with the uploaded file into the multivalue field.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);

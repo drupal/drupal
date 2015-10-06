@@ -275,7 +275,6 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertText(t('1 error has been found: Test Entity Reference Field'), 'Node save failed when required entity reference field was not correctly filled.');
     $this->assertText(t('There are no entities matching "@entity"', ['@entity' => 'Test']));
 
     $edit = array(
@@ -286,7 +285,6 @@ class EntityReferenceAdminTest extends WebTestBase {
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertText(t('1 error has been found: Test Entity Reference Field'));
     $this->assertText(t('Multiple entities match this reference;'));
     $this->assertText(t("@node1", ['@node1' => $node1->getTitle() . ' (' . $node1->id() . ')']));
     $this->assertText(t("@node2", ['@node2' => $node2->getTitle() . ' (' . $node2->id() . ')']));

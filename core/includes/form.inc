@@ -10,7 +10,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\FormElementHelper;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
@@ -222,11 +221,8 @@ function template_preprocess_fieldset(&$variables) {
     $variables['attributes']['aria-describedby'] = $description_id;
   }
 
-  // Display any error messages.
+  // Suppress error messages.
   $variables['errors'] = NULL;
-  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
-    $variables['errors'] = $element['#errors'];
-  }
 }
 
 /**
@@ -257,11 +253,8 @@ function template_preprocess_details(&$variables) {
   $variables['children'] = (isset($element['#children'])) ? $element['#children'] : '';
   $variables['value'] = (isset($element['#value'])) ? $element['#value'] : '';
 
-  // Display any error messages.
+  // Suppress error messages.
   $variables['errors'] = NULL;
-  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
-    $variables['errors'] = $element['#errors'];
-  }
 }
 
 /**
@@ -437,7 +430,7 @@ function template_preprocess_form_element(&$variables) {
   );
   $variables['attributes'] = $element['#wrapper_attributes'];
 
-  // Add element #id for #type 'item' and 'password_confirm'.
+  // Add element #id for #type 'item'.
   if (isset($element['#markup']) && !empty($element['#id'])) {
     $variables['attributes']['id'] = $element['#id'];
   }
@@ -453,11 +446,8 @@ function template_preprocess_form_element(&$variables) {
   // Pass elements disabled status to template.
   $variables['disabled'] = !empty($element['#attributes']['disabled']) ? $element['#attributes']['disabled'] : NULL;
 
-  // Display any error messages.
+  // Suppress error messages.
   $variables['errors'] = NULL;
-  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
-    $variables['errors'] = $element['#errors'];
-  }
 
   // If #title is not set, we don't display any label.
   if (!isset($element['#title'])) {

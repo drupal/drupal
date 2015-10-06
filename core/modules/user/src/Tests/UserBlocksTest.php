@@ -67,15 +67,6 @@ class UserBlocksTest extends WebTestBase {
    * Test the user login block.
    */
   function testUserLoginBlock() {
-    // Make sure the validation error is displayed when try to login with
-    // invalid username/password.
-    $edit['name'] = $this->randomMachineName();
-    $edit['pass'] = $this->randomMachineName();
-    $this->drupalPostForm('node', $edit, t('Log in'));
-    $this->assertRaw('1 error has been found:');
-    $this->assertRaw('<a href="#edit-name">Username</a>');
-    $this->assertText(t('Unrecognized username or password.'));
-
     // Create a user with some permission that anonymous users lack.
     $user = $this->drupalCreateUser(array('administer permissions'));
 

@@ -1,0 +1,6 @@
+type: module
+name: Inline Form Errors
+description: 'Enables inline form errors.'
+version: VERSION
+core: 8.x
+package: Core (Experimental)
