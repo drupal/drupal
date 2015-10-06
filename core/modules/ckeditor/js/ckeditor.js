@@ -217,7 +217,7 @@
       var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
-      dialogSettings.autoResize = Drupal.checkWidthBreakpoint(600);
+      dialogSettings.autoResize = window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
 
       // Add a "Loading…" message, hide it underneath the CKEditor toolbar,

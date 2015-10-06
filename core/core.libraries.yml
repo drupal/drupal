@@ -317,6 +317,7 @@ drupal.vertical-tabs:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
+    - core/matchmedia
 
 html5shiv:
   # Block the page from being loaded until html5shiv is initialized.
