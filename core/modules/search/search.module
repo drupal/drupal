@@ -90,9 +90,6 @@ function search_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('By default, the Search module only supports exact keyword matching in content searches. You can modify this behavior by installing a language-specific stemming module for your language (such as <a href=":porterstemmer_url">Porter Stemmer</a> for American English), which allows words such as walk, walking, and walked to be matched in the Search module. Another approach is to use a third-party search technology with stemming or partial word matching features built in, such as <a href=":solr_url">Apache Solr</a> or <a href=":sphinx_url">Sphinx</a>. There are also contributed modules that provide additional search pages. These and other <a href=":contrib-search">search-related contributed modules</a> can be downloaded by visiting Drupal.org.', array(':contrib-search' => 'https://www.drupal.org/project/project_module?f[2]=im_vid_3%3A105', ':porterstemmer_url' => 'https://www.drupal.org/project/porterstemmer', ':solr_url' => 'https://www.drupal.org/project/apachesolr', ':sphinx_url' => 'https://www.drupal.org/project/sphinx')) . '</dd>';
       $output .= '</dl>';
       return $output;
-
-    case 'entity.search_page.collection':
-      return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href=":cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array(':cron' => \Drupal::url('system.status'))) . '</p>';
   }
 }
 
