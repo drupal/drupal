@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Wraps the caching logic for the render caching system.
  *
+ * @internal
+ *
  * @todo Refactor this out into a generic service capable of cache redirects,
  *   and let RenderCache use that. https://www.drupal.org/node/2551419
  */

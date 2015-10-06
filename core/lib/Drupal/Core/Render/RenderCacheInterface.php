@@ -10,8 +10,9 @@ namespace Drupal\Core\Render;
 /**
  * Defines an interface for caching rendered render arrays.
  *
- * @see sec_caching
+ * @internal
  *
+ * @see sec_caching
  * @see \Drupal\Core\Render\RendererInterface
  */
 interface RenderCacheInterface {
