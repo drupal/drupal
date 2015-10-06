@@ -8,7 +8,7 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 

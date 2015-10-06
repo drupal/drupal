@@ -9,7 +9,7 @@ namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 

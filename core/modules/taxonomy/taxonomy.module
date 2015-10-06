@@ -501,9 +501,12 @@ function taxonomy_build_node_index($node) {
   if ($status && $node->isDefaultRevision()) {
     // Collect a unique list of all the term IDs from all node fields.
     $tid_all = array();
+    $entity_reference_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
     foreach ($node->getFieldDefinitions() as $field) {
       $field_name = $field->getName();
-      if (is_subclass_of($field->getItemDefinition()->getClass(), '\Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem') && $field->getSetting('target_type') == 'taxonomy_term') {
+      $class = $field->getItemDefinition()->getClass();
+      $is_entity_reference_class = ($class === $entity_reference_class) || is_subclass_of($class, $entity_reference_class);
+      if ($is_entity_reference_class && $field->getSetting('target_type') == 'taxonomy_term') {
         foreach ($node->getTranslationLanguages() as $language) {
           foreach ($node->getTranslation($language->getId())->$field_name as $item) {
             if (!$item->isEmpty()) {

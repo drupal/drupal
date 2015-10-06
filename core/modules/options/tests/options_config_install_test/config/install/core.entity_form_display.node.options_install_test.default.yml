@@ -5,7 +5,6 @@ dependencies:
     - field.field.node.options_install_test.body
     - node.type.options_install_test
   module:
-    - entity_reference
     - text
 id: node.options_install_test.default
 targetEntityType: node

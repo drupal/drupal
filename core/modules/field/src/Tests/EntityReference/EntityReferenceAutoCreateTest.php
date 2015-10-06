@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceAutoCreateTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceAutoCreateTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
@@ -18,7 +18,7 @@ use Drupal\node\Entity\Node;
  */
 class EntityReferenceAutoCreateTest extends WebTestBase {
 
-  public static $modules = array('entity_reference', 'node');
+  public static $modules = ['node'];
 
   /**
    * The name of a content type that will reference $referencedType.

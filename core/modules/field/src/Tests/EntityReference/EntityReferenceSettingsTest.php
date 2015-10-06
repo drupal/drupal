@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceSettingsTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceSettingsTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
@@ -16,7 +16,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 /**
  * Tests entity reference field settings.
  *
- * @group entity_reference
+ * @group field
  */
 class EntityReferenceSettingsTest extends KernelTestBase {
 

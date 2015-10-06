@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceXSSTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceXSSTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -25,7 +25,7 @@ class EntityReferenceXSSTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'entity_reference'];
+  protected static $modules = ['node'];
 
   /**
    * Tests markup is escaped in the entity reference select and label formatter.

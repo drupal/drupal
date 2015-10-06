@@ -20,7 +20,7 @@ class EntityResolverTest extends NormalizerTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_reference', 'hal', 'rest');
+  public static $modules = ['hal', 'rest'];
 
   /**
    * The format being tested.

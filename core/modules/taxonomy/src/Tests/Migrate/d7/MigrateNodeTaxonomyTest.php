@@ -21,7 +21,6 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
   public static $modules = array(
     'datetime',
-    'entity_reference',
     'field',
     'filter',
     'image',

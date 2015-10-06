@@ -8,7 +8,7 @@
 namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Tests\ViewTestData;
@@ -36,7 +36,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'taxonomy', 'taxonomy_test_views', 'entity_reference');
+  public static $modules = ['node', 'taxonomy', 'taxonomy_test_views'];
 
   /**
    * A nested array of \Drupal\taxonomy\TermInterface objects.

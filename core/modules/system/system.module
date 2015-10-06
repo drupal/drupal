@@ -9,6 +9,7 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Form\FormStateInterface;
@@ -1423,4 +1424,12 @@ function system_path_insert() {
  */
 function system_path_delete($path) {
   \Drupal::service('path.alias_manager')->cacheClear();
+}
+
+/**
+ * Implements hook_query_TAG_alter() for entity reference selection handlers.
+ */
+function system_query_entity_reference_alter(AlterableInterface $query) {
+  $handler = $query->getMetadata('entity_reference_selection_handler');
+  $handler->entityQueryAlter($query);
 }

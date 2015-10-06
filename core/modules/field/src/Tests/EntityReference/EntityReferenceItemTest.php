@@ -13,7 +13,6 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -36,7 +35,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_reference', 'taxonomy', 'text', 'filter', 'views');
+  public static $modules = ['taxonomy', 'text', 'filter', 'views', 'field'];
 
   /**
    * The taxonomy vocabulary to test with.

@@ -32,7 +32,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'field', 'text', 'user', 'node', 'entity_reference');
+  public static $modules = ['system', 'field', 'text', 'user', 'node'];
 
   protected function setUp() {
     parent::setUp();

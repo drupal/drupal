@@ -127,3 +127,7 @@ views.display.attachment:
     render_pager:
       type: boolean
       label: 'Render pager'
+
+views.display.entity_reference:
+  type: views_display
+  label: 'Entity Reference'

@@ -32,7 +32,7 @@ class ViewEntityDependenciesTest extends ViewKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'user', 'field', 'text', 'entity_reference', 'search'];
+  public static $modules = ['node', 'comment', 'user', 'field', 'text', 'search'];
 
   /**
    * {@inheritdoc}

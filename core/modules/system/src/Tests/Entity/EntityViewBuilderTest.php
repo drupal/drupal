@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -21,13 +21,6 @@ use Drupal\user\RoleInterface;
 class EntityViewBuilderTest extends EntityUnitTestBase {
 
   use EntityReferenceTestTrait;
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_reference');
 
   /**
    * {@inheritdoc}

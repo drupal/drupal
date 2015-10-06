@@ -2,15 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceIntegrationTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceIntegrationTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
@@ -50,7 +49,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'entity_test', 'entity_reference', 'field_ui');
+  public static $modules = ['config_test', 'entity_test', 'field_ui'];
 
   /**
    * {@inheritdoc}

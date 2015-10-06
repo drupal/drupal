@@ -340,4 +340,11 @@ class FileItem extends EntityReferenceItem {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function getPreconfiguredOptions() {
+    return [];
+  }
+
 }

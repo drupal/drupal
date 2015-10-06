@@ -21,7 +21,6 @@ class MigrateTrackerNodeTest extends MigrateDrupal7TestBase {
    * {@inheritdoc}
    */
   public static $modules = [
-    'entity_reference',
     'node',
     'text',
     'tracker',

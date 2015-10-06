@@ -12,6 +12,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -135,7 +136,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Contain
         '#required' => TRUE,
         '#size' => 6,
         '#multiple' => TRUE,
-        '#element_validate' => array('_entity_reference_element_validate_filter'),
+        '#element_validate' => [[get_class($this), 'elementValidateFilter']],
       );
     }
     else {
@@ -182,7 +183,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Contain
       $form['sort']['settings'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('entity_reference-settings')),
-        '#process' => array('_entity_reference_form_process_merge_parent'),
+        '#process' => [[EntityReferenceItem::class, 'formProcessMergeParent']],
       );
 
       if ($selection_handler_settings['sort']['field'] != '_none') {
@@ -224,6 +225,14 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Contain
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) { }
+
+  /**
+   * Form element validation handler; Filters the #value property of an element.
+   */
+  public static function elementValidateFilter(&$element, FormStateInterface $form_state) {
+    $element['#value'] = array_filter($element['#value']);
+    $form_state->setValueForElement($element, $element['#value']);
+  }
 
   /**
    * {@inheritdoc}
@@ -320,8 +329,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Contain
     // Add entity-access tag.
     $query->addTag($target_type . '_access');
 
-    // Add the Selection handler for
-    // entity_reference_query_entity_reference_alter().
+    // Add the Selection handler for system_query_entity_reference_alter().
     $query->addTag('entity_reference');
     $query->addMetaData('entity_reference_selection_handler', $this);
 

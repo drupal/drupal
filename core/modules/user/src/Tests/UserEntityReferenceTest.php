@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
@@ -33,13 +33,6 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
    * @var \Drupal\user\Entity\RoleInterface
    */
   protected $role2;
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_reference', 'user');
 
   /**
    * {@inheritdoc}

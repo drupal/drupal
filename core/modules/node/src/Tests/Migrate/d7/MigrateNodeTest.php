@@ -21,7 +21,6 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   static $modules = array(
     'comment',
     'datetime',
-    'entity_reference',
     'filter',
     'image',
     'link',

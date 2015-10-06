@@ -23,7 +23,7 @@ class BookUninstallTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field', 'filter', 'text', 'entity_reference', 'node', 'book');
+  public static $modules = ['system', 'user', 'field', 'filter', 'text', 'node', 'book'];
 
   /**
    * {@inheritdoc}

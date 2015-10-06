@@ -10,7 +10,6 @@ namespace Drupal\field\Tests\EntityReference;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -61,13 +60,6 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    * @var \Drupal\Core\Entity\EntityInterface
    */
   protected $unsavedReferencedEntity;
-
-  /**
-   * Modules to install.
-   *
-   * @var array
-   */
-  public static $modules = array('entity_reference');
 
   protected function setUp() {
     parent::setUp();

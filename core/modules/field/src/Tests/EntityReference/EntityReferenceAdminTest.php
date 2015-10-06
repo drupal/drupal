@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceAdminTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceAdminTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Entity\Entity;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
@@ -31,7 +31,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block', 'views', 'views_ui', 'entity_test');
+  public static $modules = ['node', 'field_ui', 'path', 'taxonomy', 'block', 'views_ui'];
 
   /**
    * The name of the content type created for testing purposes.

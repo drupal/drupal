@@ -10,7 +10,7 @@ entity_type: node
 type: entity_reference
 settings:
   target_type: taxonomy_term
-module: entity_reference
+module: core
 locked: false
 cardinality: -1
 translatable: true

@@ -120,7 +120,7 @@ class UserSelection extends DefaultSelection {
     $form['filter']['settings'] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('entity_reference-settings')),
-      '#process' => array('_entity_reference_form_process_merge_parent'),
+      '#process' => array(array('\Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem', 'formProcessMergeParent')),
     );
 
     if ($selection_handler_settings['filter']['type'] == 'role') {

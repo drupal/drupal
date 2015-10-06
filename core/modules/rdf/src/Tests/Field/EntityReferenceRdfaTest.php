@@ -6,7 +6,7 @@
 
 namespace Drupal\rdf\Tests\Field;
 
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -48,7 +48,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('entity_reference', 'text', 'filter');
+  public static $modules = ['text', 'filter'];
 
   protected function setUp() {
     parent::setUp();

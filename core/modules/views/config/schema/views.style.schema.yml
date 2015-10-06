@@ -143,3 +143,14 @@ views.style.unformatted_summary:
     separator:
       type: string
       label: 'Separator'
+
+views.style.entity_reference:
+  type: views_style
+  label: 'Entity Reference list'
+  mapping:
+    search_fields:
+      type: sequence
+      label: 'Search fields'
+      sequence:
+        type: string
+        label: 'Search field'

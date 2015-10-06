@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.

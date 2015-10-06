@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Check boxes/radio buttons"),
  *   field_types = {
  *     "boolean",
+ *     "entity_reference",
  *     "list_integer",
  *     "list_float",
  *     "list_string",

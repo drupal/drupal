@@ -33,7 +33,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'entity_reference', 'field', 'hal', 'language', 'rest', 'serialization', 'system', 'text', 'user', 'filter');
+  public static $modules = ['entity_test', 'field', 'hal', 'language', 'rest', 'serialization', 'system', 'text', 'user', 'filter'];
 
   /**
    * The mock serializer.

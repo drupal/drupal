@@ -130,6 +130,25 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Provided by Drupal core') . '</dt>';
       $output .= '<dd>' . t('As mentioned previously, some field types, widgets, and formatters are provided by Drupal core. Here are some notes on how to use some of these:');
       $output .= '<ul>';
+      $output .= '<li><p>' . t('<strong>Entity Reference</strong> fields allow you to create fields that contain links to other entities (such as content items, taxonomy terms, etc.) within the site. This allows you, for example, to include a link to a user within a content item. For more information, see <a href=":er_do">the online documentation for the Entity Reference module</a>.', array(':er_do' => 'https://drupal.org/documentation/modules/entityreference')) . '</p>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing and displaying entity reference fields') . '</dt>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the entity reference field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', array(':field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dt>' . t('Selecting reference type') . '</dt>';
+      $output .= '<dd>' . t('In the field settings you can select which entity type you want to create a reference to.') . '</dd>';
+      $output .= '<dt>' . t('Filtering and sorting reference fields') . '</dt>';
+      $output .= '<dd>' . t('Depending on the chosen entity type, additional filtering and sorting options are available for the list of entities that can be referred to, in the field settings. For example, the list of users can be filtered by role and sorted by name or ID.') . '</dd>';
+      $output .= '<dt>' . t('Displaying a reference') . '</dt>';
+      $output .= '<dd>' . t('An entity reference can be displayed as a simple label with or without a link to the entity. Alternatively, the referenced entity can be displayed as a teaser (or any other available view mode) inside the referencing entity.') . '</dd>';
+      $output .= '<dt>' . t('Configuring form displays') . '</dt>';
+      $output .= '<dd>' . t('Reference fields have several widgets available on the <em>Manage form display</em> page:');
+      $output .= '<ul>';
+      $output .= '<li>' . t('The <em>Check boxes/radio buttons</em> widget displays the existing entities for the entity type as check boxes or radio buttons based on the <em>Allowed number of values</em> set for the field.') . '</li>';
+      $output .= '<li>' . t('The <em>Select list</em> widget displays the existing entities in a drop-down list or scrolling list box based on the <em>Allowed number of values</em> setting for the field.') . '</li>';
+      $output .= '<li>' . t('The <em>Autocomplete</em> widget displays text fields in which users can type entity labels based on the <em>Allowed number of values</em>. The widget can be configured to display all entities that contain the typed characters or restricted to those starting with those characters.') . '</li>';
+      $output .= '<li>' . t('The <em>Autocomplete (Tags style)</em> widget displays a multi-text field in which users can type in a comma-separated list of entity labels.') . '</li>';
+      $output .= '</ul></dd>';
+      $output .= '</dl></li>';
       $output .= '<li>' . t('<strong>Number fields</strong>: When you add a number field you can choose from three types: <em>decimal</em>, <em>float</em>, and <em>integer</em>. The <em>decimal</em> number field type allows users to enter exact decimal values, with fixed numbers of decimal places. The <em>float</em> number field type allows users to enter approximate decimal values. The <em>integer</em> number field type allows users to enter whole numbers, such as years (for example, 2012) or values (for example, 1, 2, 5, 305). It does not allow decimals.') . '</li>';
       $output .= '</ul></dd>';
       $output .= '</dl>';
@@ -190,19 +209,60 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
 
 /**
  * Implements hook_entity_bundle_delete().
- *
- * This deletes the data for the field as well as the field themselves. This
- * function actually just marks the data and fields as deleted, leaving the
- * garbage collection for a separate process, because it is not always
- * possible to delete this much data in a single page request (particularly
- * since for some field types, the deletion is more than just a simple DELETE
- * query).
  */
-function field_entity_bundle_delete($entity_type, $bundle) {
+function field_entity_bundle_delete($entity_type_id, $bundle) {
+  $storage = \Drupal::entityManager()->getStorage('field_config');
   // Get the fields on the bundle.
-  $fields = entity_load_multiple_by_properties('field_config', array('entity_type' => $entity_type, 'bundle' => $bundle));
+  $fields =  $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle]);
+  // This deletes the data for the field as well as the field themselves. This
+  // function actually just marks the data and fields as deleted, leaving the
+  // garbage collection for a separate process, because it is not always
+  // possible to delete this much data in a single page request (particularly
+  // since for some field types, the deletion is more than just a simple DELETE
+  // query).
   foreach ($fields as $field) {
     $field->delete();
+  }
+
+  // We are duplicating the work done by
+  // \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::onDependencyRemoval()
+  // because we need to take into account bundles that are not provided by a
+  // config entity type so they are not part of the config dependencies.
+
+  // Gather a list of all entity reference fields.
+  $map = \Drupal::entityManager()->getFieldMapByFieldType('entity_reference');
+  $ids = [];
+  foreach ($map as $type => $info) {
+    foreach ($info as $name => $data) {
+      foreach ($data['bundles'] as $bundle_name) {
+        $ids[] = "$type.$bundle_name.$name";
+      }
+    }
+  }
+
+  // Update the 'target_bundles' handler setting if needed.
+  foreach (FieldConfig::loadMultiple($ids) as $field_config) {
+    if ($field_config->getSetting('target_type') == $entity_type_id) {
+      $handler_settings = $field_config->getSetting('handler_settings');
+      if (isset($handler_settings['target_bundles'][$bundle])) {
+        unset($handler_settings['target_bundles'][$bundle]);
+        $field_config->setSetting('handler_settings', $handler_settings);
+        $field_config->save();
+
+        // In case we deleted the only target bundle allowed by the field we
+        // have to log a warning message because the field will not function
+        // correctly anymore.
+        if ($handler_settings['target_bundles'] === []) {
+          \Drupal::logger('entity_reference')->critical('The %target_bundle bundle (entity type: %target_entity_type) was deleted. As a result, the %field_name entity reference field (entity_type: %entity_type, bundle: %bundle) no longer has any valid bundle it can reference. The field is not working correctly anymore and has to be adjusted.', [
+            '%target_bundle' => $bundle,
+            '%target_entity_type' => $entity_type_id,
+            '%field_name' => $field_config->getName(),
+            '%entity_type' => $field_config->getTargetEntityTypeId(),
+            '%bundle' => $field_config->getTargetBundle()
+          ]);
+        }
+      }
+    }
   }
 }
 

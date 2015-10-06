@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceFileUploadTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceFileUploadTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;

@@ -297,3 +297,14 @@ function field_ui_local_tasks_alter(&$local_tasks) {
   $local_task = FieldUiLocalTask::create($container, 'field_ui.fields');
   $local_task->alterLocalTasks($local_tasks);
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'field_ui_field_storage_add_form'.
+ */
+function field_ui_form_field_ui_field_storage_add_form_alter(array &$form) {
+  $optgroup = (string) t('Reference');
+  // Move the "Entity reference" option to the end of the list and rename it to
+  // "Other".
+  unset($form['add']['new_storage_type']['#options'][$optgroup]['entity_reference']);
+  $form['add']['new_storage_type']['#options'][$optgroup]['entity_reference'] = t('Other…');
+}

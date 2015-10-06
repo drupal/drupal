@@ -5,7 +5,6 @@ package: Core
 version: VERSION
 core: 8.x
 dependencies:
-  - entity_reference
   - node
   - text
 configure: entity.taxonomy_vocabulary.collection

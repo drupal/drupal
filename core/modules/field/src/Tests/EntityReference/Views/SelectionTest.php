@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\Views\SelectionTest.
+ * Contains \Drupal\field\Tests\EntityReference\Views\SelectionTest.
  */
 
-namespace Drupal\entity_reference\Tests\Views;
+namespace Drupal\field\Tests\EntityReference\Views;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\Views;
@@ -17,7 +17,7 @@ use Drupal\views\Views;
  */
 class SelectionTest extends WebTestBase {
 
-  public static $modules = array('node', 'views', 'entity_reference', 'entity_reference_test', 'entity_test');
+  public static $modules = ['node', 'views', 'entity_reference_test', 'entity_test'];
 
   /**
    * Nodes for testing.

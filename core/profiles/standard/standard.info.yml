@@ -19,7 +19,6 @@ dependencies:
   - block_content
   - quickedit
   - editor
-  - entity_reference
   - help
   - image
   - menu_ui

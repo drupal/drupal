@@ -23,7 +23,6 @@ class MigrateForumSettingsTest extends MigrateDrupal7TestBase {
     'comment',
     'field',
     'filter',
-    'entity_reference',
     'text',
     'node',
     'taxonomy',

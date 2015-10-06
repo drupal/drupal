@@ -25,7 +25,7 @@ class RowEntityRenderersTest extends ViewKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'filter', 'text', 'node', 'user', 'language', 'entity_reference', 'views_test_language');
+  public static $modules = ['field', 'filter', 'text', 'node', 'user', 'language', 'views_test_language'];
 
   /**
    * Views used by this test.

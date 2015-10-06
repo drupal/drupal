@@ -22,7 +22,7 @@ class TermEntityReferenceTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_reference', 'entity_reference_test', 'entity_test');
+  public static $modules = ['entity_reference_test', 'entity_test'];
 
   /**
    * Tests an entity reference field restricted to a single vocabulary.

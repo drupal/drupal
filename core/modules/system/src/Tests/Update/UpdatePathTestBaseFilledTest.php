@@ -358,7 +358,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'datetime',
       'dblog',
       'editor',
-      'entity_reference',
       'field',
       'field_ui',
       'file',

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceFieldDefaultValueTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceFieldDefaultValueTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\config\Tests\SchemaCheckTestTrait;
@@ -18,6 +18,7 @@ use Drupal\simpletest\WebTestBase;
  * @group entity_reference
  */
 class EntityReferenceFieldDefaultValueTest extends WebTestBase {
+
   use SchemaCheckTestTrait;
 
   /**
@@ -25,7 +26,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_reference', 'field_ui', 'node');
+  public static $modules = ['field_ui', 'node'];
 
   /**
    * A user with permission to administer content types, node fields, etc.

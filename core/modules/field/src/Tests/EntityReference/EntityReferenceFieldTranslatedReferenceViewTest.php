@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceFieldTranslatedReferenceViewTest.
+ * Contains \Drupal\field\Tests\EntityReference\EntityReferenceFieldTranslatedReferenceViewTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -117,7 +117,6 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
   public static $modules = array(
     'language',
     'content_translation',
-    'entity_reference',
     'node',
   );
 

@@ -7,15 +7,24 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
+use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
 
 /**
  * Defines the 'entity_reference' entity field type.
@@ -28,14 +37,15 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
  *   label = @Translation("Entity reference"),
  *   description = @Translation("An entity field containing an entity reference."),
  *   category = @Translation("Reference"),
- *   no_ui = TRUE,
  *   default_widget = "entity_reference_autocomplete",
  *   default_formatter = "entity_reference_label",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
+ *   default_widget = "entity_reference_autocomplete",
+ *   default_formatter = "entity_reference_label",
  *   constraints = {"ValidReference" = {}}
  * )
  */
-class EntityReferenceItem extends FieldItemBase {
+class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
 
   /**
    * {@inheritdoc}
@@ -148,6 +158,13 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function getConstraints() {
     $constraints = parent::getConstraints();
+    // Remove the 'AllowedValuesConstraint' validation constraint because entity
+    // reference fields already use the 'ValidReference' constraint.
+    foreach ($constraints as $key => $constraint) {
+      if ($constraint instanceof AllowedValuesConstraint) {
+        unset($constraints[$key]);
+      }
+    }
     list($current_handler) = explode(':', $this->getSetting('handler'), 2);
     if ($current_handler === 'default') {
       $handler_settings = $this->getSetting('handler_settings');
@@ -281,6 +298,103 @@ class EntityReferenceItem extends FieldItemBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element['target_type'] = array(
+      '#type' => 'select',
+      '#title' => t('Type of item to reference'),
+      '#options' => \Drupal::entityManager()->getEntityTypeLabels(TRUE),
+      '#default_value' => $this->getSetting('target_type'),
+      '#required' => TRUE,
+      '#disabled' => $has_data,
+      '#size' => 1,
+    );
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $field = $form_state->getFormObject()->getEntity();
+
+    // Get all selection plugins for this entity type.
+    $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
+    $handlers_options = array();
+    foreach (array_keys($selection_plugins) as $selection_group_id) {
+      // We only display base plugins (e.g. 'default', 'views', ...) and not
+      // entity type specific plugins (e.g. 'default:node', 'default:user',
+      // ...).
+      if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
+        $handlers_options[$selection_group_id] = Html::escape($selection_plugins[$selection_group_id][$selection_group_id]['label']);
+      }
+      elseif (array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
+        $selection_group_plugin = $selection_group_id . ':' . $this->getSetting('target_type');
+        $handlers_options[$selection_group_plugin] = Html::escape($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
+      }
+    }
+
+    $form = array(
+      '#type' => 'container',
+      '#process' => array(array(get_class($this), 'fieldSettingsAjaxProcess')),
+      '#element_validate' => array(array(get_class($this), 'fieldSettingsFormValidate')),
+
+    );
+    $form['handler'] = array(
+      '#type' => 'details',
+      '#title' => t('Reference type'),
+      '#open' => TRUE,
+      '#tree' => TRUE,
+      '#process' => array(array(get_class($this), 'formProcessMergeParent')),
+    );
+
+    $form['handler']['handler'] = array(
+      '#type' => 'select',
+      '#title' => t('Reference method'),
+      '#options' => $handlers_options,
+      '#default_value' => $field->getSetting('handler'),
+      '#required' => TRUE,
+      '#ajax' => TRUE,
+      '#limit_validation_errors' => array(),
+    );
+    $form['handler']['handler_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Change handler'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array(
+        'class' => array('js-hide'),
+      ),
+      '#submit' => array(array(get_class($this), 'settingsAjaxSubmit')),
+    );
+
+    $form['handler']['handler_settings'] = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('entity_reference-settings')),
+    );
+
+    $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
+    $form['handler']['handler_settings'] += $handler->buildConfigurationForm(array(), $form_state);
+
+    return $form;
+  }
+
+  /**
+   * Form element validation handler; Invokes selection plugin's validation.
+   *
+   * @param array $form
+   *   The form where the settings form is being included in.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state of the (entire) configuration form.
+   */
+  public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state) {
+    $field = $form_state->getFormObject()->getEntity();
+    $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
+    $handler->validateConfigurationForm($form, $form_state);
+  }
+
+  /**
    * Determines whether the item holds an unsaved entity.
    *
    * This is notably used for "autocreate" widgets, and more generally to
@@ -391,6 +505,145 @@ class EntityReferenceItem extends FieldItemBase {
     $changed |= $bundles_changed;
 
     return $changed;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPossibleValues(AccountInterface $account = NULL) {
+    return $this->getSettableValues($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPossibleOptions(AccountInterface $account = NULL) {
+    return $this->getSettableOptions($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettableValues(AccountInterface $account = NULL) {
+    // Flatten options first, because "settable options" may contain group
+    // arrays.
+    $flatten_options = OptGroup::flattenOptions($this->getSettableOptions($account));
+    return array_keys($flatten_options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettableOptions(AccountInterface $account = NULL) {
+    $field_definition = $this->getFieldDefinition();
+    if (!$options = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field_definition, $this->getEntity())->getReferenceableEntities()) {
+      return array();
+    }
+
+    // Rebuild the array by changing the bundle key into the bundle label.
+    $target_type = $field_definition->getSetting('target_type');
+    $bundles = \Drupal::entityManager()->getBundleInfo($target_type);
+
+    $return = array();
+    foreach ($options as $bundle => $entity_ids) {
+      // The label does not need sanitizing since it is used as an optgroup
+      // which is only supported by select elements and auto-escaped.
+      $bundle_label = (string) $bundles[$bundle]['label'];
+      $return[$bundle_label] = $entity_ids;
+    }
+
+    return count($return) == 1 ? reset($return) : $return;
+  }
+
+  /**
+   * Render API callback: Processes the field settings form and allows access to
+   * the form state.
+   *
+   * @see static::fieldSettingsForm()
+   */
+  public static function fieldSettingsAjaxProcess($form, FormStateInterface $form_state) {
+    static::fieldSettingsAjaxProcessElement($form, $form);
+    return $form;
+  }
+
+  /**
+   * Adds entity_reference specific properties to AJAX form elements from the
+   * field settings form.
+   *
+   * @see static::fieldSettingsAjaxProcess()
+   */
+  public static function fieldSettingsAjaxProcessElement(&$element, $main_form) {
+    if (!empty($element['#ajax'])) {
+      $element['#ajax'] = array(
+        'callback' => array(get_called_class(), 'settingsAjax'),
+        'wrapper' => $main_form['#id'],
+        'element' => $main_form['#array_parents'],
+      );
+    }
+
+    foreach (Element::children($element) as $key) {
+      static::fieldSettingsAjaxProcessElement($element[$key], $main_form);
+    }
+  }
+
+  /**
+   * Render API callback: Moves entity_reference specific Form API elements
+   * (i.e. 'handler_settings') up a level for easier processing by the
+   * validation and submission handlers.
+   *
+   * @see _entity_reference_field_settings_process()
+   */
+  public static function formProcessMergeParent($element) {
+    $parents = $element['#parents'];
+    array_pop($parents);
+    $element['#parents'] = $parents;
+    return $element;
+  }
+
+  /**
+   * Ajax callback for the handler settings form.
+   *
+   * @see static::fieldSettingsForm()
+   */
+  public static function settingsAjax($form, FormStateInterface $form_state) {
+    return NestedArray::getValue($form, $form_state->getTriggeringElement()['#ajax']['element']);
+  }
+
+  /**
+   * Submit handler for the non-JS case.
+   *
+   * @see static::fieldSettingsForm()
+   */
+  public static function settingsAjaxSubmit($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
+
+    /**
+   * {@inheritdoc}
+   */
+  public static function getPreconfiguredOptions() {
+    $options = array();
+
+    // Add all the commonly referenced entity types as distinct pre-configured
+    // options.
+    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $common_references = array_filter($entity_types, function (EntityTypeInterface $entity_type) {
+      return $entity_type->isCommonReferenceTarget();
+    });
+
+    /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
+    foreach ($common_references as $entity_type) {
+      $options[$entity_type->id()] = [
+        'label' => $entity_type->getLabel(),
+        'field_storage_config' => [
+          'settings' => [
+            'target_type' => $entity_type->id(),
+          ]
+        ]
+      ];
+    }
+
+    return $options;
   }
 
 }

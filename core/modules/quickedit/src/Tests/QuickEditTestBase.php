@@ -19,7 +19,7 @@ abstract class QuickEditTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity_test', 'field', 'field_test', 'filter', 'user', 'text', 'quickedit', 'entity_reference');
+  public static $modules = ['system', 'entity_test', 'field', 'field_test', 'filter', 'user', 'text', 'quickedit'];
 
   /**
    * Bag of created fields.

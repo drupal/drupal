@@ -323,10 +323,6 @@ Email module
 Editor module
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
-Entity Reference module
-- Amitai Burstein 'Amitaibu' https://www.drupal.org/u/amitaibu
-- Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
-
 Field UI module
 - Yves Chedemois 'yched' https://www.drupal.org/u/yched
 - Kristof De Jaeger 'swentel' https://www.drupal.org/u/swentel

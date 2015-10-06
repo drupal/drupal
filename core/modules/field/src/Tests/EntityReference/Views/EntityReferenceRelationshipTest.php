@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\Views\EntityReferenceRelationshipTest.
+ * Contains \Drupal\field\Tests\EntityReference\Views\EntityReferenceRelationshipTest.
  */
 
-namespace Drupal\entity_reference\Tests\Views;
+namespace Drupal\field\Tests\EntityReference\Views;
 
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\views\Tests\ViewTestData;
@@ -18,7 +18,8 @@ use Drupal\views\Views;
  * Tests entity reference relationship data.
  *
  * @group entity_reference
- * @see entity_reference_field_views_data()
+ *
+ * @see core_field_views_data()
  */
 class EntityReferenceRelationshipTest extends ViewKernelTestBase {
 
@@ -41,7 +42,7 @@ class EntityReferenceRelationshipTest extends ViewKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'field', 'entity_test', 'entity_reference', 'views', 'entity_reference_test_views');
+  public static $modules = ['user', 'field', 'entity_test', 'views', 'entity_reference_test_views'];
 
   /**
    * The entity_test entities used by the test.

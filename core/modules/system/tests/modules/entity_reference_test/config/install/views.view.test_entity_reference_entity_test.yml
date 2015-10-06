@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - entity_reference
     - entity_reference_test
     - entity_test
 id: test_entity_reference_entity_test

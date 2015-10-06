@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 use Drupal\Component\Utility\Unicode;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 
 /**
  * Tests the Entity Query relationship API.

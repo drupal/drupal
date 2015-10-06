@@ -7,4 +7,3 @@ core: 8.x
 configure: entity.node_type.collection
 dependencies:
   - text
-  - entity_reference

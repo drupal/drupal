@@ -24,7 +24,7 @@ class AggregatorTitleTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('file', 'field', 'options', 'aggregator', 'entity_reference');
+  public static $modules = ['file', 'field', 'options', 'aggregator'];
 
   /**
    * The field name that is tested.

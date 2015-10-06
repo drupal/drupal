@@ -85,3 +85,7 @@ views.row.opml_fields:
     url_field:
       type: string
       label: 'URL attribute'
+
+views.row.entity_reference:
+  type: views.row.fields
+  label: 'Entity Reference inline fields'

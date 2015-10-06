@@ -20,7 +20,6 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
    */
   public static $modules = [
     'datetime',
-    'entity_reference',
     'filter',
     'image',
     'link',

@@ -5,7 +5,6 @@ dependencies:
     - field.field.node.book.body
     - node.type.book
   module:
-    - entity_reference
     - text
 id: node.book.default
 targetEntityType: node

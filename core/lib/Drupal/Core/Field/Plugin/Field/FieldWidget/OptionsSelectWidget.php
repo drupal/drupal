@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "options_select",
  *   label = @Translation("Select list"),
  *   field_types = {
+ *     "entity_reference",
  *     "list_integer",
  *     "list_float",
  *     "list_string"

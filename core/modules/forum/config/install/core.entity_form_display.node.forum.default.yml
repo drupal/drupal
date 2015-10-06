@@ -8,7 +8,6 @@ dependencies:
     - node.type.forum
   module:
     - comment
-    - entity_reference
     - text
 id: node.forum.default
 targetEntityType: node

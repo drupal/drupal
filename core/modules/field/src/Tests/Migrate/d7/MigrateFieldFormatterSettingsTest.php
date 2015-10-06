@@ -24,7 +24,6 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
   public static $modules = [
     'comment',
     'datetime',
-    'entity_reference',
     'file',
     'image',
     'link',
