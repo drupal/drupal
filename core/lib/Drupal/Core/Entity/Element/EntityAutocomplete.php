@@ -155,7 +155,7 @@ class EntityAutocomplete extends Textfield {
         if ($match === NULL) {
           // Try to get a match from the input string when the user didn't use
           // the autocomplete but filled in a value manually.
-          $match = $handler->validateAutocompleteInput($input, $element, $form_state, $complete_form, !$autocreate);
+          $match = static::matchEntityByTitle($handler, $input, $element, $form_state, !$autocreate);
         }
 
         if ($match !== NULL) {
@@ -200,6 +200,60 @@ class EntityAutocomplete extends Textfield {
     }
 
     $form_state->setValueForElement($element, $value);
+  }
+
+  /**
+   * Finds an entity from an autocomplete input without an explicit ID.
+   *
+   * The method will return an entity ID if one single entity unambuguously
+   * matches the incoming input, and sill assign form errors otherwise.
+   *
+   * @param string $input
+   *   Single string from autocomplete element.
+   * @param array $element
+   *   The form element to set a form error.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   * @param bool $strict
+   *   Whether to trigger a form error if an element from $input (eg. an entity)
+   *   is not found.
+   *
+   * @return integer|null
+   *   Value of a matching entity ID, or NULL if none.
+   */
+  protected static function matchEntityByTitle($handler, $input, &$element, FormStateInterface $form_state, $strict) {
+    $entities_by_bundle = $handler->getReferenceableEntities($input, '=', 6);
+    $entities = array_reduce($entities_by_bundle, function ($flattened, $bundle_entities) {
+      return $flattened + $bundle_entities;
+    }, []);
+    $params = array(
+      '%value' => $input,
+      '@value' => $input,
+    );
+    if (empty($entities)) {
+      if ($strict) {
+        // Error if there are no entities available for a required field.
+        $form_state->setError($element, t('There are no entities matching "%value".', $params));
+      }
+    }
+    elseif (count($entities) > 5) {
+      $params['@id'] = key($entities);
+      // Error if there are more than 5 matching entities.
+      $form_state->setError($element, t('Many entities are called %value. Specify the one you want by appending the id in parentheses, like "@value (@id)".', $params));
+    }
+    elseif (count($entities) > 1) {
+      // More helpful error if there are only a few matching entities.
+      $multiples = array();
+      foreach ($entities as $id => $name) {
+        $multiples[] = $name . ' (' . $id . ')';
+      }
+      $params['@id'] = $id;
+      $form_state->setError($element, t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', array('%multiple' => implode('", "', $multiples))));
+    }
+    else {
+      // Take the one and only matching entity.
+      return key($entities);
+    }
   }
 
   /**

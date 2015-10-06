@@ -17,10 +17,9 @@ use Drupal\Component\Utility\Unicode;
  * cannot filter properly, for example when the target entity type has no
  * 'label' key provided in the entity type plugin definition.
  *
- * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase
- * @see \Drupal\Core\Entity\Plugin\Derivative\SelectionBase
+ * @see \Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver
  */
-class PhpSelection extends SelectionBase {
+class PhpSelection extends DefaultSelection {
 
   /**
    * {@inheritdoc}

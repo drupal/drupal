@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\EntityReferenceSelection;
 
-use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 
 /**
  * Provides specific access control for the file entity type.
@@ -20,7 +20,7 @@ use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
  *   weight = 1
  * )
  */
-class FileSelection extends SelectionBase {
+class FileSelection extends DefaultSelection {
 
   /**
    * {@inheritdoc}

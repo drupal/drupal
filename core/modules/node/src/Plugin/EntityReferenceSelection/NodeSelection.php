@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\EntityReferenceSelection;
 
-use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   weight = 1
  * )
  */
-class NodeSelection extends SelectionBase {
+class NodeSelection extends DefaultSelection {
 
   /**
    * {@inheritdoc}

@@ -9,7 +9,7 @@ namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -24,7 +24,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *   weight = 1
  * )
  */
-class TermSelection extends SelectionBase {
+class TermSelection extends DefaultSelection {
 
   /**
    * {@inheritdoc}

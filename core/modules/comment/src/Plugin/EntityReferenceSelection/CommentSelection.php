@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\comment\CommentInterface;
 
 /**
@@ -22,7 +22,7 @@ use Drupal\comment\CommentInterface;
  *   weight = 1
  * )
  */
-class CommentSelection extends SelectionBase {
+class CommentSelection extends DefaultSelection {
 
   /**
    * {@inheritdoc}

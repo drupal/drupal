@@ -19,8 +19,6 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
- * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase
- * @see \Drupal\Core\Entity\Plugin\Derivative\SelectionBase
  * @see plugin_api
  *
  * @Annotation

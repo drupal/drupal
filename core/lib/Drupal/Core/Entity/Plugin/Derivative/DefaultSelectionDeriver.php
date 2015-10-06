@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Derivative\SelectionBase.
+ * Contains \Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver.
  */
 
 namespace Drupal\Core\Entity\Plugin\Derivative;
@@ -13,15 +13,15 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides derivative plugins for Entity Reference Selection plugins.
+ * Provides derivative plugins for the DefaultSelection plugin.
  *
- * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase
+ * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
  * @see \Drupal\Core\Entity\Annotation\EntityReferenceSelection
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
  * @see plugin_api
  */
-class SelectionBase extends DeriverBase implements ContainerDeriverInterface {
+class DefaultSelectionDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The entity manager

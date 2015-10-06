@@ -10,7 +10,7 @@ namespace Drupal\user\Plugin\EntityReferenceSelection;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   weight = 1
  * )
  */
-class UserSelection extends SelectionBase {
+class UserSelection extends DefaultSelection {
 
   /**
    * The database connection.
