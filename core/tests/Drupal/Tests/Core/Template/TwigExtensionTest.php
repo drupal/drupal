@@ -126,6 +126,33 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
+   * Tests the active_theme_path function.
+   */
+  public function testActiveThemePath() {
+    $renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
+    $extension = new TwigExtension($renderer);
+    $theme_manager = $this->getMock('\Drupal\Core\Theme\ThemeManagerInterface');
+    $active_theme = $this->getMockBuilder('\Drupal\Core\Theme\ActiveTheme')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $active_theme
+      ->expects($this->once())
+      ->method('getPath')
+      ->willReturn('foo/bar');
+    $theme_manager
+      ->expects($this->once())
+      ->method('getActiveTheme')
+      ->willReturn($active_theme);
+    $extension->setThemeManager($theme_manager);
+
+    $loader = new \Twig_Loader_String();
+    $twig = new \Twig_Environment($loader);
+    $twig->addExtension($extension);
+    $result = $twig->render('{{ active_theme_path() }}');
+    $this->assertEquals('foo/bar', $result);
+  }
+
+  /**
    * Tests the escaping of objects implementing MarkupInterface.
    *
    * @covers ::escapeFilter
