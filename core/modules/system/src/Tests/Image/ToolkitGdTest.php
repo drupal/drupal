@@ -278,8 +278,18 @@ class ToolkitGdTest extends KernelTestBase {
           }
         }
 
+        // Store the original GD resource.
+        $old_res = $toolkit->getResource();
+
         // Perform our operation.
         $image->apply($values['function'], $values['arguments']);
+
+        // If the operation replaced the resource, check that the old one has
+        // been destroyed.
+        $new_res = $toolkit->getResource();
+        if ($new_res !== $old_res) {
+          $this->assertFalse(is_resource($old_res), SafeMarkup::format("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
+        }
 
         // To keep from flooding the test with assert values, make a general
         // value for whether each group of values fail.
@@ -389,7 +399,7 @@ class ToolkitGdTest extends KernelTestBase {
       }
     }
 
-    // Test failures of CreateNew.
+    // Test failures of the 'create_new' operation.
     $image = $this->imageFactory->get();
     $image->createNew(-50, 20);
     $this->assertFalse($image->isValid(), 'CreateNew with negative width fails.');
@@ -405,12 +415,24 @@ class ToolkitGdTest extends KernelTestBase {
    * Tests that GD resources are freed from memory.
    */
   public function testResourceDestruction() {
+    // Test that an Image object going out of scope releases its GD resource.
     $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/image-test.png');
     $res = $image->getToolkit()->getResource();
     $this->assertTrue(is_resource($res), 'Successfully loaded image resource.');
-    // Force the toolkit to go out of scope.
     $image = NULL;
     $this->assertFalse(is_resource($res), 'Image resource was destroyed after losing scope.');
+
+    // Test that 'create_new' operation does not leave orphaned GD resources.
+    $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/image-test.png');
+    $old_res = $image->getToolkit()->getResource();
+    // Check if resource has been created successfully.
+    $this->assertTrue(is_resource($old_res));
+    $image->createNew(20, 20);
+    $new_res = $image->getToolkit()->getResource();
+    // Check if the original resource has been destroyed.
+    $this->assertFalse(is_resource($old_res));
+    // Check if a new resource has been created successfully.
+    $this->assertTrue(is_resource($new_res));
   }
 
   /**

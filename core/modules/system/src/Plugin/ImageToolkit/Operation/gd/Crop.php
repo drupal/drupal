@@ -86,12 +86,19 @@ class Crop extends GDImageToolkitOperationBase {
       'width' => $arguments['width'],
       'height' => $arguments['height'],
       'extension' => image_type_to_extension($this->getToolkit()->getType(), FALSE),
-      'transparent_color' => $this->getToolkit()->getTransparentColor()
+      'transparent_color' => $this->getToolkit()->getTransparentColor(),
+      'is_temp' => TRUE,
     );
     if ($this->getToolkit()->apply('create_new', $data)) {
       if (imagecopyresampled($this->getToolkit()->getResource(), $original_resource, 0, 0, $arguments['x'], $arguments['y'], $arguments['width'], $arguments['height'], $arguments['width'], $arguments['height'])) {
         imagedestroy($original_resource);
         return TRUE;
+      }
+      else {
+        // In case of failure, destroy the temporary resource and restore
+        // the original one.
+        imagedestroy($this->getToolkit()->getResource());
+        $this->getToolkit()->setResource($original_resource);
       }
     }
     return FALSE;

@@ -196,6 +196,7 @@ class GDToolkit extends ImageToolkitBase {
           'height' => imagesy($resource),
           'extension' => image_type_to_extension($this->getType(), FALSE),
           'transparent_color' => $this->getTransparentColor(),
+          'is_temp' => TRUE,
         );
         if ($this->apply('create_new', $data)) {
           imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));

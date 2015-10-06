@@ -56,7 +56,8 @@ class Convert extends GDImageToolkitOperationBase {
       'width' => $width,
       'height' => $height,
       'extension' => $arguments['extension'],
-      'transparent_color' => $this->getToolkit()->getTransparentColor()
+      'transparent_color' => $this->getToolkit()->getTransparentColor(),
+      'is_temp' => TRUE,
     );
     if ($this->getToolkit()->apply('create_new', $data)) {
       if (imagecopyresampled($this->getToolkit()->getResource(), $original_resource, 0, 0, 0, 0, $width, $height, $width, $height)) {
