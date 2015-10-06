@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 id: tools
 label: Tools
-description: 'Contains links for site visitors. Some modules add their links here.'
+description: 'User tool links, often added by modules'
 locked: true

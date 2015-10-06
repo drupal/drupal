@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 id: footer
 label: Footer
-description: 'Use this for linking to site information.'
+description: 'Site information links'
 locked: true

@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 id: admin
 label: Administration
-description: 'Contains links to administrative tasks.'
+description: 'Administrative task links'
 locked: true

@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 id: main
 label: 'Main navigation'
-description: 'Use this for linking to the main site sections.'
+description: 'Site section links'
 locked: true
