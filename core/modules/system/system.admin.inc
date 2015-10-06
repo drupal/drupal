@@ -170,110 +170,81 @@ function template_preprocess_status_report(&$variables) {
 }
 
 /**
- * Returns HTML for the modules form.
+ * Prepares variables for the module details templates.
+ *
+ * Default template: system-modules-details.html.twig.
  *
  * @param $variables
  *   An associative array containing:
- *   - form: A render element representing the form.
+ *   - form: A render element representing the form. The main form element
+ *     represents a package, and child elements of the form are individual
+ *     projects. Each project (or module) is an associative array containing the
+ *     following elements:
+ *     - name: The name of the module.
+ *     - enable: A checkbox for enabling the module.
+ *     - description: A description of the module.
+ *     - version: The version of the module.
+ *     - links: Administration links provided by the module.
+ *     - #requires: A list of modules that the project requires.
+ *     - #required_by: A list of modules that require the project.
+ *     - #attributes: A list of attributes for the module wrapper.
  *
- * @ingroup themeable
+ * @see \Drupal\system\Form\ModulesListForm
  */
-function theme_system_modules_details($variables) {
+function template_preprocess_system_modules_details(&$variables) {
   $form = $variables['form'];
 
-  // Individual table headers.
-  $rows = array();
+  $variables['modules'] = [];
   // Iterate through all the modules, which are children of this element.
   foreach (Element::children($form) as $key) {
     // Stick the key into $module for easier access.
     $module = $form[$key];
-    // Create the row for the table.
-    $row = array();
-    // Add the checkbox into the first cell.
     unset($module['enable']['#title']);
     $module['#requires'] = array_filter($module['#requires']);
     $module['#required_by'] = array_filter($module['#required_by']);
-
-    $requires = !empty($module['#requires']);
-    $required_by = !empty($module['#required_by']);
-    $version = !empty($module['version']['#markup']);
-
-    $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
+    // Add the checkbox to allow installing new modules and to show the
+    // installation status of the module.
+    $module['checkbox'] = $module['enable'];
 
     // Add the module label and expand/collapse functionality.
     $id = Html::getUniqueId('module-' . $key);
-    $col2 = [
-      '#type' => 'inline_template',
-      '#template' => '<label id="{{ id }}" for="{{ enable_id }}" class="module-name table-filter-text-source">{{ module_name }}</label>',
-      '#context' => [
-        'id' => $id,
-        'enable_id' => $module['enable']['#id'],
-        'module_name' => $module['name'],
-      ],
-    ];
-    $row[] = ['class' => ['module'], 'data' => $col2];
+    $module['id'] = $id;
+    $module['enable_id'] = $module['enable']['#id'];
 
-    // Add the description, along with any modules it requires.
-    $description = '';
-    $description .= '<div class="requirements">';
+    // @todo Remove early rendering and use safe_join in the Twig template once
+    //   https://www.drupal.org/node/2579091 is fixed.
     $renderer = \Drupal::service('renderer');
     $machine_name_render = [
       '#prefix' => '<span dir="ltr" class="table-filter-text-source">',
       '#plain_text' => $key,
-      '#suffix' => '</span'
+      '#suffix' => '</span>',
     ];
-    $description .= '<div class="admin-requirements">' . t('Machine name: @machine-name', array('@machine-name' =>  $renderer->render($machine_name_render))) . '</div>';
-    if ($version) {
-      $description .= '<div class="admin-requirements">' . t('Version: @module-version', array('@module-version' => $renderer->render($module['version']))) . '</div>';
-    }
-    if ($requires) {
+    $module['machine_name'] = $renderer->render($machine_name_render);
+
+    if (!empty($module['#requires'])) {
       $requires = [
         '#theme' => 'item_list',
         '#items' => $module['#requires'],
         '#context' => ['list_style' => 'comma-list'],
       ];
-      $description .= '<div class="admin-requirements">' . t('Requires: @module-list', array('@module-list' => $renderer->render($requires))) . '</div>';
+      $module['requires'] = $renderer->render($requires);
     }
-    if ($required_by) {
+    if (!empty($module['#required_by'])) {
       $required_by = [
         '#theme' => 'item_list',
         '#items' => $module['#required_by'],
         '#context' => ['list_style' => 'comma-list'],
       ];
-      $description .= '<div class="admin-requirements">' . t('Required by: @module-list', array('@module-list' => $renderer->render($required_by))) . '</div>';
+      $module['required_by'] = $renderer->render($required_by);
     }
-    $description .= '</div>';
-    $links = '';
-    foreach (array('help', 'permissions', 'configure') as $link_type) {
-      $links .= drupal_render($module['links'][$link_type]);
-    }
-    if ($links) {
-      $description .= '  <div class="links">';
-      $description .= $links;
-      $description .= '</div>';
-    }
-    $title = [
-      '#type' => 'inline_template',
-      '#template' => '<span class="text module-description">{{ module_description }}</span>',
-      '#context' => ['module_description' => $module['description']],
-    ];
-    $details = array(
-      '#type' => 'details',
-      '#title' => $title,
-      '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
-      '#description' => $description,
-    );
-    $row[] = ['class' => ['description', 'expand'], 'data' => $details];
 
-    $rows[] = $module['#attributes'] + array('data' => $row);
+    if (!empty($module['version'])) {
+      $module['version'] = $renderer->render($module['version']);
+    }
+
+    $module['attributes'] = new Attribute($module['#attributes']);
+    $variables['modules'][] = $module;
   }
-
-  $table = array(
-    '#type' => 'table',
-    '#header' => $form['#header'],
-    '#rows' => $rows,
-  );
-  return drupal_render($table);
 }
 
 /**

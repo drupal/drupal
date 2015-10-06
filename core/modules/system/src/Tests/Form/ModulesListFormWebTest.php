@@ -49,6 +49,11 @@ class ModulesListFormWebTest extends WebTestBase {
 
     // Check that system_test's help link was rendered correctly.
     $this->assertFieldByXPath("//a[contains(@href, '/admin/help/system_test') and @title='Help']");
+
+    // Ensure that the Testing module's machine name is printed. Testing module
+    // is used because its machine name is different than its human readable
+    // name.
+    $this->assertText('simpletest');
   }
 
 }

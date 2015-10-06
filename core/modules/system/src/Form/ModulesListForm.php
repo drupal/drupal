@@ -170,11 +170,6 @@ class ModulesListForm extends FormBase {
         '#title' => $this->t($package),
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
-        '#header' => array(
-          array('data' => $this->t('Installed'), 'class' => array('checkbox', 'visually-hidden')),
-          array('data' => $this->t('Name'), 'class' => array('name', 'visually-hidden')),
-          array('data' => $this->t('Description'), 'class' => array('description', 'visually-hidden', RESPONSIVE_PRIORITY_LOW)),
-        ),
         '#attributes' => array('class' => array('package-listing')),
         // Ensure that the "Core" package comes first.
         '#weight' => $package == 'Core' ? -10 : NULL,
@@ -226,7 +221,6 @@ class ModulesListForm extends FormBase {
     // Generate link for module's help page. Assume that if a hook_help()
     // implementation exists then the module provides an overview page, rather
     // than checking to see if the page exists, which is costly.
-    $row['links']['help'] = array();
     if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
       $row['links']['help'] = array(
         '#type' => 'link',
@@ -237,7 +231,6 @@ class ModulesListForm extends FormBase {
     }
 
     // Generate link for module's permission, if the user has access to it.
-    $row['links']['permissions'] = array();
     if ($module->status && $this->currentUser->hasPermission('administer permissions') && $this->permissionHandler->moduleProvidesPermissions($module->getName())) {
       $row['links']['permissions'] = array(
         '#type' => 'link',
@@ -248,7 +241,6 @@ class ModulesListForm extends FormBase {
     }
 
     // Generate link for module's configuration page, if it has one.
-    $row['links']['configure'] = array();
     if ($module->status && isset($module->info['configure'])) {
       $route_parameters = isset($module->info['configure_parameters']) ? $module->info['configure_parameters'] : array();
       if ($this->accessManager->checkNamedRoute($module->info['configure'], $route_parameters, $this->currentUser)) {
