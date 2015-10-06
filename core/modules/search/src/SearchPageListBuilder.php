@@ -188,6 +188,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#type' => 'details',
       '#title' => $this->t('Indexing progress'),
       '#open' => TRUE,
+      '#description' => $this->t('Only items in the index will appear in search results. To build and maintain the index, a correctly configured <a href=":cron">cron maintenance task</a> is required.', array(':cron' => \Drupal::url('system.cron_settings'))),
     );
     $form['status']['status'] = array('#markup' => $status);
     $form['status']['wipe'] = array(
@@ -210,7 +211,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#title' => $this->t('Number of items to index per cron run'),
       '#default_value' => $search_settings->get('index.cron_limit'),
       '#options' => $items,
-      '#description' => $this->t('The maximum number of items indexed in each pass of a <a href=":cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing. Some search page types may have their own setting for this.', array(':cron' => \Drupal::url('system.status'))),
+      '#description' => $this->t('The maximum number of items indexed in each run of the <a href=":cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing. Some search page types may have their own setting for this.', array(':cron' => \Drupal::url('system.cron_settings'))),
     );
     // Indexing settings:
     $form['indexing_settings'] = array(
@@ -227,7 +228,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#default_value' => $search_settings->get('index.minimum_word_size'),
       '#min' => 1,
       '#max' => 1000,
-      '#description' => $this->t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
+      '#description' => $this->t('The minimum character length for a word to be added to the index. Searches must include a keyword of at least this length.'),
     );
     $form['indexing_settings']['overlap_cjk'] = array(
       '#type' => 'checkbox',
