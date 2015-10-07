@@ -51,7 +51,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     switch ($operation) {
       case 'view':
         // There is no direct viewing of a menu link, but still for purposes of

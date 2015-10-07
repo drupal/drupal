@@ -22,12 +22,12 @@ class ViewAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation == 'view') {
       return AccessResult::allowed();
     }
     else {
-      return parent::checkAccess($entity, $operation, $langcode, $account);
+      return parent::checkAccess($entity, $operation, $account);
     }
   }
 

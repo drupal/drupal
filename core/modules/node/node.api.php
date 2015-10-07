@@ -319,15 +319,13 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  *   - "view"
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object to perform the access check operation on.
- * @param string $langcode
- *   The language code to perform the access check operation on.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *    The access result.
  *
  * @ingroup node_access
  */
-function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account, $langcode) {
+function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account) {
   $type = $node->bundle();
 
   switch ($op) {

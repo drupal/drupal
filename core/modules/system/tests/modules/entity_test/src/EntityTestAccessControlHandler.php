@@ -29,7 +29,9 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+    /** @var \Drupal\entity_test\Entity\EntityTest $entity */
+
     // Always forbid access to entities with the label 'forbid_access', used for
     // \Drupal\system\Tests\Entity\EntityAccessHControlandlerTest::testDefaultEntityAccess().
     if ($entity->label() == 'forbid_access') {
@@ -37,7 +39,7 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
     }
 
     if ($operation === 'view') {
-      if ($langcode != LanguageInterface::LANGCODE_DEFAULT) {
+      if (!$entity->isDefaultTranslation()) {
         return AccessResult::allowedIfHasPermission($account, 'view test entity translations');
       }
       return AccessResult::allowedIfHasPermission($account, 'view test entity');

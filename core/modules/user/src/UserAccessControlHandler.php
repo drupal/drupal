@@ -24,7 +24,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\user\UserInterface $entity*/
 
     // The anonymous user's profile can neither be viewed, updated nor deleted.

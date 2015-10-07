@@ -46,7 +46,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
     ));
 
     // Default realm access and node records are present.
-    $this->assertTrue(\Drupal::service('node.grant_storage')->access($node, 'view', 'en', $this->webUser), 'The expected node access records are present');
+    $this->assertTrue(\Drupal::service('node.grant_storage')->access($node, 'view', $this->webUser), 'The expected node access records are present');
     $this->assertEqual(1, \Drupal::service('node.grant_storage')->checkAll($this->webUser), 'There is an all realm access record');
     $this->assertTrue(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions need to be rebuilt');
 
@@ -57,7 +57,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
 
     // Test if the rebuild has been successful.
     $this->assertNull(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions have been rebuilt');
-    $this->assertTrue(\Drupal::service('node.grant_storage')->access($node, 'view', 'en', $this->webUser), 'The expected node access records are present');
+    $this->assertTrue(\Drupal::service('node.grant_storage')->access($node, 'view', $this->webUser), 'The expected node access records are present');
     $this->assertFalse(\Drupal::service('node.grant_storage')->checkAll($this->webUser), 'There is no all realm access record');
   }
 

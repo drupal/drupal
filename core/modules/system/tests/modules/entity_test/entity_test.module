@@ -621,7 +621,7 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
 /**
  * Implements hook_entity_access().
  */
-function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
+function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
   // Only apply to the 'entity_test' entities.
   if ($entity->getEntityType()->getProvider() != 'entity_test') {
     return AccessResult::neutral();
@@ -644,7 +644,7 @@ function entity_test_entity_access(EntityInterface $entity, $operation, AccountI
 /**
  * Implements hook_ENTITY_TYPE_access() for 'entity_test'.
  */
-function entity_test_entity_test_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
+function entity_test_entity_test_access(EntityInterface $entity, $operation, AccountInterface $account) {
   \Drupal::state()->set('entity_test_entity_test_access', TRUE);
 
   // No opinion.

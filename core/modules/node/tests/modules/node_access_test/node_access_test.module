@@ -144,10 +144,10 @@ function node_access_test_add_field(NodeTypeInterface $type) {
 /**
  * Implements hook_node_access().
  */
-function node_access_test_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account, $langcode) {
+function node_access_test_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account) {
   $secret_catalan = \Drupal::state()
     ->get('node_access_test_secret_catalan') ?: 0;
-  if ($secret_catalan && $langcode == 'ca') {
+  if ($secret_catalan && $node->language()->getId() == 'ca') {
     // Make all Catalan content secret.
     return AccessResult::forbidden()->setCacheMaxAge(0);
   }

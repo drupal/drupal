@@ -593,7 +593,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
     return $this->entityManager()
       ->getAccessControlHandler($this->entityTypeId)
-      ->access($this, $operation, $this->activeLangcode, $account, $return_as_object);
+      ->access($this, $operation, $account, $return_as_object);
   }
 
   /**

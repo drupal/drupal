@@ -60,7 +60,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(EntityInterface $entity, $operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
     if ($account->hasPermission('bypass node access')) {
@@ -71,7 +71,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       $result = AccessResult::forbidden()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
-    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerPermissions();
+    $result = parent::access($entity, $operation, $account, TRUE)->cachePerPermissions();
     return $return_as_object ? $result : $result->isAllowed();
   }
 
@@ -97,14 +97,12 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $node, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $node, $operation, AccountInterface $account) {
     /** @var \Drupal\node\NodeInterface $node */
-    /** @var \Drupal\node\NodeInterface $translation */
-    $translation = $node->hasTranslation($langcode) ? $node->getTranslation($langcode) : $node;
 
     // Fetch information from the node object if possible.
-    $status = $translation->isPublished();
-    $uid = $translation->getOwnerId();
+    $status = $node->isPublished();
+    $uid = $node->getOwnerId();
 
     // Check if authors can view their own unpublished nodes.
     if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
@@ -112,7 +110,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     }
 
     // Evaluate node grants.
-    return $this->grantStorage->access($node, $operation, $langcode, $account);
+    return $this->grantStorage->access($node, $operation, $account);
   }
 
   /**

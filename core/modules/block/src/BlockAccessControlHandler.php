@@ -88,10 +88,10 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\block\BlockInterface $entity */
     if ($operation != 'view') {
-      return parent::checkAccess($entity, $operation, $langcode, $account);
+      return parent::checkAccess($entity, $operation, $account);
     }
 
     // Don't grant access to disabled blocks.

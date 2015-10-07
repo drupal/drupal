@@ -21,7 +21,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\file\FileInterface $entity */
     if ($operation == 'download' || $operation == 'view') {
       if (\Drupal::service('file_system')->uriScheme($entity->getFileUri()) === 'public') {

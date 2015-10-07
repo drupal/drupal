@@ -313,7 +313,7 @@ abstract class Entity implements EntityInterface {
     }
     return $this->entityManager()
       ->getAccessControlHandler($this->entityTypeId)
-      ->access($this, $operation, LanguageInterface::LANGCODE_DEFAULT, $account, $return_as_object);
+      ->access($this, $operation, $account, $return_as_object);
   }
 
   /**

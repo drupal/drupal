@@ -23,14 +23,14 @@ class SearchPageAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var $entity \Drupal\search\SearchPageInterface */
     if (in_array($operation, array('delete', 'disable'))) {
       if ($entity->isDefaultSearch()) {
         return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
       }
       else {
-        return parent::checkAccess($entity, $operation, $langcode, $account)->cacheUntilEntityChanges($entity);
+        return parent::checkAccess($entity, $operation, $account)->cacheUntilEntityChanges($entity);
       }
     }
     if ($operation == 'view') {
@@ -43,7 +43,7 @@ class SearchPageAccessControlHandler extends EntityAccessControlHandler {
       }
       return AccessResult::allowed()->cacheUntilEntityChanges($entity);
     }
-    return parent::checkAccess($entity, $operation, $langcode, $account);
+    return parent::checkAccess($entity, $operation, $account);
   }
 
 }

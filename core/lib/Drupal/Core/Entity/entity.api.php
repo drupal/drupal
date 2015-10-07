@@ -522,8 +522,6 @@ use Drupal\node\Entity\NodeType;
  *   The operation that is to be performed on $entity.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account trying to access the entity.
- * @param string $langcode
- *   The code of the language $entity is accessed in.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result. The final result is calculated by using
@@ -541,7 +539,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @ingroup entity_api
  */
-function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
+function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -555,8 +553,6 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *   The operation that is to be performed on $entity.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account trying to access the entity.
- * @param string $langcode
- *   The code of the language $entity is accessed in.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result. hook_entity_access() has detailed documentation.
@@ -567,7 +563,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
+function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
   // No opinion.
   return AccessResult::neutral();
 }

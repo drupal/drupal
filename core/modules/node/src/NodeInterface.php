@@ -160,12 +160,4 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function setRevisionAuthorId($uid);
 
-  /**
-   * Prepares the langcode for a node.
-   *
-   * @return string
-   *   The langcode for this node.
-   */
-  public function prepareLangcode();
-
 }

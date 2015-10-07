@@ -22,7 +22,7 @@ class ContactFormAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation == 'view') {
       // Do not allow access personal form via site-wide route.
       return AccessResult::allowedIf($account->hasPermission('access site-wide contact form') && $entity->id() !== 'personal')->cachePerPermissions();
@@ -33,7 +33,7 @@ class ContactFormAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::allowedIf($account->hasPermission('administer contact forms') && $entity->id() !== 'personal')->cachePerPermissions();
     }
 
-    return parent::checkAccess($entity, $operation, $langcode, $account);
+    return parent::checkAccess($entity, $operation, $account);
   }
 
 }

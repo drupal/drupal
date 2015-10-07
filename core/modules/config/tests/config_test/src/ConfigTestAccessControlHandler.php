@@ -22,7 +22,7 @@ class ConfigTestAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     return AccessResult::allowed();
   }
 

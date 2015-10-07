@@ -92,15 +92,11 @@ class NodeRevisionAccessCheck implements AccessInterface {
    *   performed.
    * @param string $op
    *   (optional) The specific operation being checked. Defaults to 'view.'
-   * @param string|null $langcode
-   *   (optional) Language code for the variant of the node. Different language
-   *   variants might have different permissions associated. If NULL, the
-   *   original langcode of the node is used. Defaults to NULL.
    *
    * @return bool
    *   TRUE if the operation may be performed, FALSE otherwise.
    */
-  public function checkAccess(NodeInterface $node, AccountInterface $account, $op = 'view', $langcode = NULL) {
+  public function checkAccess(NodeInterface $node, AccountInterface $account, $op = 'view') {
     $map = array(
       'view' => 'view all revisions',
       'update' => 'revert all revisions',
@@ -119,13 +115,9 @@ class NodeRevisionAccessCheck implements AccessInterface {
       return FALSE;
     }
 
-    // If no language code was provided, default to the node revision's langcode.
-    if (empty($langcode)) {
-      $langcode = $node->language()->getId();
-    }
-
     // Statically cache access by revision ID, language code, user account ID,
     // and operation.
+    $langcode = $node->language()->getId();
     $cid = $node->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $op;
 
     if (!isset($this->access[$cid])) {
@@ -149,7 +141,7 @@ class NodeRevisionAccessCheck implements AccessInterface {
       else {
         // First check the access to the default revision and finally, if the
         // node passed in is not the default revision then access to that, too.
-        $this->access[$cid] = $this->nodeAccess->access($this->nodeStorage->load($node->id()), $op, $langcode, $account) && ($node->isDefaultRevision() || $this->nodeAccess->access($node, $op, $langcode, $account));
+        $this->access[$cid] = $this->nodeAccess->access($this->nodeStorage->load($node->id()), $op, $account) && ($node->isDefaultRevision() || $this->nodeAccess->access($node, $op, $account));
       }
     }
 

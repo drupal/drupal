@@ -85,7 +85,7 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->assertTrue($node->isPublished(), 'Node is initially published.');
 
     // Ensure that the node can not be edited.
-    $this->assertEqual(FALSE, $this->accessHandler->access($node, 'update', $node->prepareLangcode(), $account), 'The node may not be edited.');
+    $this->assertEqual(FALSE, $this->accessHandler->access($node, 'update', $account), 'The node may not be edited.');
 
     // Test editing the node using the bulk form.
     $edit = array(
@@ -155,9 +155,9 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->drupalLogin($account);
 
     // Ensure that the private node can not be deleted.
-    $this->assertEqual(FALSE, $this->accessHandler->access($private_node, 'delete', $private_node->prepareLangcode(), $account), 'The private node may not be deleted.');
+    $this->assertEqual(FALSE, $this->accessHandler->access($private_node, 'delete', $account), 'The private node may not be deleted.');
     // Ensure that the public node may be deleted.
-    $this->assertEqual(TRUE, $this->accessHandler->access($own_node, 'delete', $own_node->prepareLangcode(), $account), 'The own node may be deleted.');
+    $this->assertEqual(TRUE, $this->accessHandler->access($own_node, 'delete', $account), 'The own node may be deleted.');
 
     // Try to delete the node using the bulk form.
     $edit = array(

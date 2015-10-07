@@ -55,7 +55,7 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($shortcut_set = $this->shortcutSetStorage->load($entity->bundle())) {
       return shortcut_set_edit_access($shortcut_set, $account);
     }

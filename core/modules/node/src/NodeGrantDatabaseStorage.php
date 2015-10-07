@@ -67,14 +67,14 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(NodeInterface $node, $operation, $langcode, AccountInterface $account) {
+  public function access(NodeInterface $node, $operation, AccountInterface $account) {
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
     if (!$this->moduleHandler->getImplementations('node_grants') || !$node->id()) {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
-        return AccessResult::allowedIf($node->getTranslation($langcode)->isPublished())->cacheUntilEntityChanges($node);
+        return AccessResult::allowedIf($node->isPublished())->cacheUntilEntityChanges($node);
       }
       else {
         return AccessResult::neutral();
@@ -89,7 +89,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // Check for grants for this node and the correct langcode.
     $nids = $query->andConditionGroup()
       ->condition('nid', $node->id())
-      ->condition('langcode', $langcode);
+      ->condition('langcode', $node->language()->getId());
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.
     $status = $node->isPublished();

@@ -181,29 +181,8 @@ class Node extends ContentEntityBase implements NodeInterface {
 
     return \Drupal::entityManager()
       ->getAccessControlHandler($this->entityTypeId)
-      ->access($this, $operation, $this->prepareLangcode(), $account, $return_as_object);
+      ->access($this, $operation, $account, $return_as_object);
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareLangcode() {
-    $langcode = $this->language()->getId();
-    // If the Language module is enabled, try to use the language from content
-    // negotiation.
-    if (\Drupal::moduleHandler()->moduleExists('language')) {
-      // Load languages the node exists in.
-      $node_translations = $this->getTranslationLanguages();
-      // Load the language from content negotiation.
-      $content_negotiation_langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
-      // If there is a translation available, use it.
-      if (isset($node_translations[$content_negotiation_langcode])) {
-        $langcode = $content_negotiation_langcode;
-      }
-    }
-    return $langcode;
-  }
-
 
   /**
    * {@inheritdoc}
