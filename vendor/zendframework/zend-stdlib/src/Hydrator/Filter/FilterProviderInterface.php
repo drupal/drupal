@@ -8,12 +8,11 @@
  */
 namespace Zend\Stdlib\Hydrator\Filter;
 
-interface FilterProviderInterface
+use Zend\Hydrator\Filter\FilterProviderInterface as BaseFilterProviderInterface;
+
+/**
+ * @deprecated Use Zend\Hydrator\Filter\FilterProviderInterface from zendframework/zend-hydrator instead.
+ */
+interface FilterProviderInterface extends BaseFilterProviderInterface
 {
-    /**
-     * Provides a filter for hydration
-     *
-     * @return FilterInterface
-     */
-    public function getFilter();
 }

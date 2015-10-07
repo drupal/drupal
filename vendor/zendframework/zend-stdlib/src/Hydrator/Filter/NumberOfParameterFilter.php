@@ -9,41 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator\Filter;
 
-use ReflectionException;
-use ReflectionMethod;
-use Zend\Stdlib\Exception\InvalidArgumentException;
+use Zend\Hydrator\Filter\NumberOfParameterFilter as BaseNumberOfParameterFilter;
 
-class NumberOfParameterFilter implements FilterInterface
+/**
+ * @deprecated Use Zend\Hydrator\Filter\NumberOfParameterFilter from zendframework/zend-hydrator instead.
+ */
+class NumberOfParameterFilter extends BaseNumberOfParameterFilter implements FilterInterface
 {
-    /**
-     * The number of parameters beeing accepted
-     * @var int
-     */
-    protected $numberOfParameters = null;
-
-    /**
-     * @param int $numberOfParameters Number of accepted parameters
-     */
-    public function __construct($numberOfParameters = 0)
-    {
-        $this->numberOfParameters = (int) $numberOfParameters;
-    }
-
-    /**
-     * @param string $property the name of the property
-     * @return bool
-     * @throws InvalidArgumentException
-     */
-    public function filter($property)
-    {
-        try {
-            $reflectionMethod = new ReflectionMethod($property);
-        } catch (ReflectionException $exception) {
-            throw new InvalidArgumentException(
-                "Method $property doesn't exist"
-            );
-        }
-
-        return $reflectionMethod->getNumberOfParameters() === $this->numberOfParameters;
-    }
 }

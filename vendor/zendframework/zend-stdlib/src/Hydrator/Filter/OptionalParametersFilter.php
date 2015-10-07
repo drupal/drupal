@@ -8,47 +8,13 @@
  */
 namespace Zend\Stdlib\Hydrator\Filter;
 
-use InvalidArgumentException;
-use ReflectionException;
-use ReflectionMethod;
-use ReflectionParameter;
+use Zend\Hydrator\Filter\OptionalParametersFilter as BaseOptionalParametersFilter;
 
 /**
  * Filter that includes methods which have no parameters or only optional parameters
+ *
+ * @deprecated Use Zend\Hydrator\Filter\OptionalParametersFilter from zendframework/zend-hydrator instead.
  */
-class OptionalParametersFilter implements FilterInterface
+class OptionalParametersFilter extends BaseOptionalParametersFilter implements FilterInterface
 {
-    /**
-     * Map of methods already analyzed
-     * by {@see \Zend\Stdlib\Hydrator\Filter\OptionalParametersFilter::filter()},
-     * cached for performance reasons
-     *
-     * @var bool[]
-     */
-    protected static $propertiesCache = [];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function filter($property)
-    {
-        if (isset(static::$propertiesCache[$property])) {
-            return static::$propertiesCache[$property];
-        }
-
-        try {
-            $reflectionMethod = new ReflectionMethod($property);
-        } catch (ReflectionException $exception) {
-            throw new InvalidArgumentException(sprintf('Method %s doesn\'t exist', $property));
-        }
-
-        $mandatoryParameters = array_filter(
-            $reflectionMethod->getParameters(),
-            function (ReflectionParameter $parameter) {
-                return ! $parameter->isOptional();
-            }
-        );
-
-        return static::$propertiesCache[$property] = empty($mandatoryParameters);
-    }
 }

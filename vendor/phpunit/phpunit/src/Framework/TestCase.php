@@ -670,6 +670,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $includePath        = "'." . $includePath . ".'";
             $codeCoverageFilter = "'." . $codeCoverageFilter . ".'";
 
+            $configurationFilePath = (isset($GLOBALS['__PHPUNIT_CONFIGURATION_FILE']) ? $GLOBALS['__PHPUNIT_CONFIGURATION_FILE'] : '');
+
             $template->setVar(
                 array(
                     'composerAutoload'                        => $composerAutoload,
@@ -690,7 +692,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                     'isStrictAboutOutputDuringTests'          => $isStrictAboutOutputDuringTests,
                     'isStrictAboutTestSize'                   => $isStrictAboutTestSize,
                     'isStrictAboutTodoAnnotatedTests'         => $isStrictAboutTodoAnnotatedTests,
-                    'codeCoverageFilter'                      => $codeCoverageFilter
+                    'codeCoverageFilter'                      => $codeCoverageFilter,
+                    'configurationFilePath'                   => $configurationFilePath
                 )
             );
 

@@ -8,20 +8,11 @@
  */
 namespace Zend\Stdlib\Hydrator\Filter;
 
-class IsFilter implements FilterInterface
-{
-    public function filter($property)
-    {
-        $pos = strpos($property, '::');
-        if ($pos !== false) {
-            $pos += 2;
-        } else {
-            $pos = 0;
-        }
+use Zend\Hydrator\Filter\IsFilter as BaseIsFilter;
 
-        if (substr($property, $pos, 2) === 'is') {
-            return true;
-        }
-        return false;
-    }
+/**
+ * @deprecated Use Zend\Hydrator\Filter\IsFilter from zendframework/zend-hydrator instead.
+ */
+class IsFilter extends BaseIsFilter implements FilterInterface
+{
 }

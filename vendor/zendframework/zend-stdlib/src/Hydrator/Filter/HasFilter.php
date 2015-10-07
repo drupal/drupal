@@ -8,20 +8,11 @@
  */
 namespace Zend\Stdlib\Hydrator\Filter;
 
-class HasFilter implements FilterInterface
-{
-    public function filter($property)
-    {
-        $pos = strpos($property, '::');
-        if ($pos !== false) {
-            $pos += 2;
-        } else {
-            $pos = 0;
-        }
+use Zend\Hydrator\Filter\HasFilter as BaseHasFilter;
 
-        if (substr($property, $pos, 3) === 'has') {
-            return true;
-        }
-        return false;
-    }
+/**
+ * @deprecated Use Zend\Hydrator\Filter\HasFilter from zendframework/zend-hydrator instead.
+ */
+class HasFilter extends BaseHasFilter implements FilterInterface
+{
 }

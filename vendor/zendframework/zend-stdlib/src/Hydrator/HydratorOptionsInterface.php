@@ -9,11 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator;
 
-interface HydratorOptionsInterface
+use Zend\Hydrator\HydratorOptionsInterface as BaseHydratorOptionsInterface;
+
+/**
+ * @deprecated Use Zend\Hydrator\HydratorOptionsInterface from zendframework/zend-hydrator instead.
+ */
+interface HydratorOptionsInterface extends BaseHydratorOptionsInterface
 {
-    /**
-     * @param  array|\Traversable $options
-     * @return HydratorOptionsInterface
-     */
-    public function setOptions($options);
 }

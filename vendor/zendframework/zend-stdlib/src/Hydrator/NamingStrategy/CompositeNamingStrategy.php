@@ -9,56 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator\NamingStrategy;
 
-final class CompositeNamingStrategy implements NamingStrategyInterface
+use Zend\Hydrator\NamingStrategy\CompositeNamingStrategy as BaseCompositeNamingStrategy;
+
+/**
+ * @deprecated Use Zend\Hydrator\NamingStrategy\CompositeNamingStrategy from zendframework/zend-hydrator instead.
+ */
+class CompositeNamingStrategy extends BaseCompositeNamingStrategy implements NamingStrategyInterface
 {
-    /**
-     * @var array
-     */
-    private $namingStrategies = [];
-
-    /**
-     * @var NamingStrategyInterface
-     */
-    private $defaultNamingStrategy;
-
-    /**
-     * @param NamingStrategyInterface[]    $strategies            indexed by the name they translate
-     * @param NamingStrategyInterface|null $defaultNamingStrategy
-     */
-    public function __construct(array $strategies, NamingStrategyInterface $defaultNamingStrategy = null)
-    {
-        $this->namingStrategies = array_map(
-            function (NamingStrategyInterface $strategy) {
-                // this callback is here only to ensure type-safety
-                return $strategy;
-            },
-            $strategies
-        );
-
-        $this->defaultNamingStrategy = $defaultNamingStrategy ?: new IdentityNamingStrategy();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function extract($name)
-    {
-        $strategy = isset($this->namingStrategies[$name])
-            ? $this->namingStrategies[$name]
-            : $this->defaultNamingStrategy;
-
-        return $strategy->extract($name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hydrate($name)
-    {
-        $strategy = isset($this->namingStrategies[$name])
-            ? $this->namingStrategies[$name]
-            : $this->defaultNamingStrategy;
-
-        return $strategy->hydrate($name);
-    }
 }

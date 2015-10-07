@@ -148,7 +148,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * sets the last modification time of the stream content
      *
      * @param   int  $filemtime
-     * @return  vfsStreamContent
+     * @return  $this
      */
     public function lastModified($filemtime)
     {
@@ -170,7 +170,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * sets last access time of the stream content
      *
      * @param   int  $fileatime
-     * @return  vfsStreamContent
+     * @return  $this
      * @since   0.9
      */
     public function lastAccessed($fileatime)
@@ -194,7 +194,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * sets the last attribute modification time of the stream content
      *
      * @param   int  $filectime
-     * @return  vfsStreamContent
+     * @return  $this
      * @since   0.9
      */
     public function lastAttributeModified($filectime)
@@ -218,7 +218,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * adds content to given container
      *
      * @param   vfsStreamContainer  $container
-     * @return  vfsStreamContent
+     * @return  $this
      */
     public function at(vfsStreamContainer $container)
     {
@@ -230,7 +230,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * change file mode to given permissions
      *
      * @param   int  $permissions
-     * @return  vfsStreamContent
+     * @return  $this
      */
     public function chmod($permissions)
     {
@@ -314,7 +314,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * change owner of file to given user
      *
      * @param   int  $user
-     * @return  vfsStreamContent
+     * @return  $this
      */
     public function chown($user)
     {
@@ -348,7 +348,7 @@ abstract class vfsStreamAbstractContent implements vfsStreamContent
      * change owner group of file to given group
      *
      * @param   int  $group
-     * @return  vfsStreamContent
+     * @return  $this
      */
     public function chgrp($group)
     {

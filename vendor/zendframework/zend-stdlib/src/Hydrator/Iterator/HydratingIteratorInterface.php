@@ -9,25 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator\Iterator;
 
-use Iterator;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\Iterator\HydratingIteratorInterface as BaseHydratingIteratorInterface;
 
-interface HydratingIteratorInterface extends Iterator
+/**
+ * @deprecated Use Zend\Hydrator\Iterator\HydratingIteratorInterface from zendframework/zend-hydrator instead.
+ */
+interface HydratingIteratorInterface extends BaseHydratingIteratorInterface
 {
-    /**
-     * This sets the prototype to hydrate.
-     *
-     * This prototype can be the name of the class or the object itself;
-     * iteration will clone the object.
-     *
-     * @param string|object $prototype
-     */
-    public function setPrototype($prototype);
-
-    /**
-     * Sets the hydrator to use during iteration.
-     *
-     * @param HydratorInterface $hydrator
-     */
-    public function setHydrator(HydratorInterface $hydrator);
 }

@@ -147,6 +147,8 @@ class PHPUnit_Util_Test
             }
 
             $element = preg_replace('/[\s()]+$/', '', $element);
+            $element = explode(' ', $element);
+            $element = $element[0];
 
             $codeList = array_merge(
                 $codeList,
@@ -846,7 +848,9 @@ class PHPUnit_Util_Test
     {
         $codeToCoverList = array();
 
-        if (strpos($element, '::') !== false) {
+        if (strpos($element, '\\') !== false && function_exists($element)) {
+            $codeToCoverList[] = new ReflectionFunction($element);
+        } else if (strpos($element, '::') !== false) {
             list($className, $methodName) = explode('::', $element);
 
             if (isset($methodName[0]) && $methodName[0] == '<') {

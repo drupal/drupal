@@ -9,49 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Hydrator\DelegatingHydrator as BaseDelegatingHydrator;
 
-class DelegatingHydrator implements HydratorInterface
+/**
+ * @deprecated Use Zend\Hydrator\DelegatingHydrator from zendframework/zend-hydrator instead.
+ */
+class DelegatingHydrator extends BaseDelegatingHydrator implements HydratorInterface
 {
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $hydrators;
-
-    /**
-     * Constructor
-     *
-     * @param ServiceLocatorInterface $hydrators
-     */
-    public function __construct(ServiceLocatorInterface $hydrators)
-    {
-        $this->hydrators = $hydrators;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hydrate(array $data, $object)
-    {
-        return $this->getHydrator($object)->hydrate($data, $object);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function extract($object)
-    {
-        return $this->getHydrator($object)->extract($object);
-    }
-
-    /**
-     * Gets hydrator of an object
-     *
-     * @param  object $object
-     * @return HydratorInterface
-     */
-    protected function getHydrator($object)
-    {
-        return $this->hydrators->get(get_class($object));
-    }
 }

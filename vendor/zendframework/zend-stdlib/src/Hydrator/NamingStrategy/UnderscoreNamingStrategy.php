@@ -9,72 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator\NamingStrategy;
 
-use Zend\Filter\FilterChain;
+use Zend\Hydrator\NamingStrategy\UnderscoreNamingStrategy as BaseUnderscoreNamingStrategy;
 
-class UnderscoreNamingStrategy implements NamingStrategyInterface
+/**
+ * @deprecated Use Zend\Hydrator\NamingStrategy\UnderscoreNamingStrategy from zendframework/zend-hydrator instead.
+ */
+class UnderscoreNamingStrategy extends BaseUnderscoreNamingStrategy implements NamingStrategyInterface
 {
-    /**
-     * @var FilterChain|null
-     */
-    protected static $camelCaseToUnderscoreFilter;
-
-    /**
-     * @var FilterChain|null
-     */
-    protected static $underscoreToStudlyCaseFilter;
-
-    /**
-     * Remove underscores and capitalize letters
-     *
-     * @param  string $name
-     * @return string
-     */
-    public function hydrate($name)
-    {
-        return $this->getUnderscoreToStudlyCaseFilter()->filter($name);
-    }
-
-    /**
-     * Remove capitalized letters and prepend underscores.
-     *
-     * @param  string $name
-     * @return string
-     */
-    public function extract($name)
-    {
-        return $this->getCamelCaseToUnderscoreFilter()->filter($name);
-    }
-
-    /**
-     * @return FilterChain
-     */
-    protected function getUnderscoreToStudlyCaseFilter()
-    {
-        if (static::$underscoreToStudlyCaseFilter instanceof FilterChain) {
-            return static::$underscoreToStudlyCaseFilter;
-        }
-
-        $filter = new FilterChain();
-
-        $filter->attachByName('WordUnderscoreToStudlyCase');
-
-        return static::$underscoreToStudlyCaseFilter = $filter;
-    }
-
-    /**
-     * @return FilterChain
-     */
-    protected function getCamelCaseToUnderscoreFilter()
-    {
-        if (static::$camelCaseToUnderscoreFilter instanceof FilterChain) {
-            return static::$camelCaseToUnderscoreFilter;
-        }
-
-        $filter = new FilterChain();
-
-        $filter->attachByName('WordCamelCaseToUnderscore');
-        $filter->attachByName('StringToLower');
-
-        return static::$camelCaseToUnderscoreFilter = $filter;
-    }
 }

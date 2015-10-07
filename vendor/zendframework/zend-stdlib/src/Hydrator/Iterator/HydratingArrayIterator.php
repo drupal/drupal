@@ -9,28 +9,11 @@
 
 namespace Zend\Stdlib\Hydrator\Iterator;
 
-use ArrayIterator;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use Zend\Hydrator\Iterator\HydratingArrayIterator as BaseHydratingArrayIterator;
 
-class HydratingArrayIterator extends HydratingIteratorIterator
+/**
+ * @deprecated Use Zend\Hydrator\Iterator\HydratingArrayIterator from zendframework/zend-hydrator instead.
+ */
+class HydratingArrayIterator extends BaseHydratingArrayIterator implements HydratingIteratorInterface
 {
-    /**
-     * @var HydratorInterface
-     */
-    protected $hydrator;
-
-    /**
-     * @var object
-     */
-    protected $prototype;
-
-    /**
-     * @param HydratorInterface $hydrator
-     * @param array $data
-     * @param string|object $prototype Object, or class name to use for prototype.
-     */
-    public function __construct(HydratorInterface $hydrator, array $data, $prototype)
-    {
-        parent::__construct($hydrator, new ArrayIterator($data), $prototype);
-    }
 }
