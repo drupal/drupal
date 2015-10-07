@@ -448,6 +448,16 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   /**
    * {@inheritdoc}
    */
+  public static function calculateStorageDependencies(FieldStorageDefinitionInterface $field_definition) {
+    $dependencies = parent::calculateStorageDependencies($field_definition);
+    $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
+    $dependencies['module'][] = $target_entity_type->getProvider();
+    return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
     $changed = parent::onDependencyRemoval($field_definition, $dependencies);
     $entity_manager = \Drupal::entityManager();

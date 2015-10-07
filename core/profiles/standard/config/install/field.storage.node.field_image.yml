@@ -2,8 +2,9 @@ langcode: en
 status: true
 dependencies:
   module:
-    - node
+    - file
     - image
+    - node
 id: node.field_image
 field_name: field_image
 entity_type: node

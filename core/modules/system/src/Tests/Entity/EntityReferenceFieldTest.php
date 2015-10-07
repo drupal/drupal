@@ -14,6 +14,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -404,6 +405,37 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     catch (EntityStorageException $e) {
       $this->pass($message);
     }
+  }
+
+  /**
+   * Tests the dependencies entity reference fields are created with.
+   */
+  public function testEntityReferenceFieldDependencies() {
+    $field_name = 'user_reference_field';
+    $entity_type = 'entity_test';
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'type' => 'entity_reference',
+      'entity_type' => $entity_type,
+      'settings' => [
+        'target_type' => 'user',
+      ],
+    ]);
+    $field_storage->save();
+    $this->assertEqual(['module' => ['entity_test', 'user']], $field_storage->getDependencies());
+
+    $field = FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => 'entity_test',
+      'label' => $field_name,
+      'settings' => [
+        'handler' => 'default',
+      ],
+    ]);
+    $field->save();
+    $this->assertEqual(['config' => ['field.storage.entity_test.user_reference_field'], 'module' => ['entity_test']], $field->getDependencies());
   }
 
 }

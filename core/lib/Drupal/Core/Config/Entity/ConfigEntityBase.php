@@ -342,7 +342,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
         throw new ConfigDuplicateUUIDException("Attempt to save a configuration entity '{$this->id()}' with UUID '{$this->uuid()}' when this entity already exists with UUID '{$original->uuid()}'");
       }
     }
-    if (!$this->isSyncing() && !$this->trustedData) {
+    if (!$this->isSyncing()) {
       // Ensure the correct dependencies are present. If the configuration is
       // being written during a configuration synchronization then there is no
       // need to recalculate the dependencies.

@@ -242,7 +242,9 @@ function update_invoke_post_update($function, &$context) {
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
 
-      \Drupal::service('update.post_update_registry')->registerInvokedUpdates([$function]);
+      if (!isset($context['sandbox']['#finished']) || (isset($context['sandbox']['#finished']) && $context['sandbox']['#finished'] >= 1)) {
+        \Drupal::service('update.post_update_registry')->registerInvokedUpdates([$function]);
+      }
     }
     // @TODO We may want to do different error handling for different exception
     // types, but for now we'll just log the exception and return the message

@@ -343,6 +343,11 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     parent::calculateDependencies();
     // Ensure the field is dependent on the providing module.
     $this->addDependency('module', $this->getTypeProvider());
+    // Ask the field type for any additional storage dependencies.
+    // @see \Drupal\Core\Field\FieldItemInterface::calculateStorageDependencies()
+    $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getType(), FALSE);
+    $this->addDependencies($definition['class']::calculateStorageDependencies($this));
+
     // Ensure the field is dependent on the provider of the entity type.
     $entity_type = \Drupal::entityManager()->getDefinition($this->entity_type);
     $this->addDependency('module', $entity_type->getProvider());

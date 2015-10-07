@@ -270,6 +270,13 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
+  public static function calculateStorageDependencies(FieldStorageDefinitionInterface $field_definition) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
     return FALSE;
   }

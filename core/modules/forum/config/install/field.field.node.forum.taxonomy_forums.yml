@@ -4,8 +4,7 @@ dependencies:
   config:
     - field.storage.node.taxonomy_forums
     - node.type.forum
-  module:
-    - taxonomy
+    - taxonomy.vocabulary.forums
 id: node.forum.taxonomy_forums
 field_name: taxonomy_forums
 entity_type: node

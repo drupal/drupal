@@ -8,6 +8,9 @@
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\UnitTestCase;
 
@@ -40,15 +43,24 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   protected $uuid;
 
   /**
+   * The field type manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $fieldTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
+    $this->fieldTypeManager = $this->getMock(FieldTypePluginManagerInterface::class);
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
+    $container->set('plugin.manager.field.field_type', $this->fieldTypeManager);
     \Drupal::setContainer($container);
   }
 
@@ -73,29 +85,50 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
     // ConfigEntityBase::addDependency() to get the provider of the field config
     // entity type and once in FieldStorageConfig::calculateDependencies() to
     // get the provider of the entity type that field is attached to.
-    $this->entityManager->expects($this->at(0))
+    $this->entityManager->expects($this->any())
       ->method('getDefinition')
-      ->with('field_storage_config')
-      ->will($this->returnValue($fieldStorageConfigentityType));
-    $this->entityManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($attached_entity_type_id)
-      ->will($this->returnValue($attached_entity_type));
-    $this->entityManager->expects($this->at(2))
-      ->method('getDefinition')
-      ->with('field_storage_config')
-      ->will($this->returnValue($fieldStorageConfigentityType));
+      ->willReturnMap([
+        ['field_storage_config', TRUE, $fieldStorageConfigentityType],
+        [$attached_entity_type_id, TRUE, $attached_entity_type],
+      ]);
 
-    $field_storage = new FieldStorageConfig(array(
+    $this->fieldTypeManager->expects($this->atLeastOnce())
+      ->method('getDefinition')
+      ->with('test_field_type', FALSE)
+      ->willReturn([
+        'class' => TestFieldType::class,
+      ]);
+
+    $field_storage = new FieldStorageConfig([
       'entity_type' => $attached_entity_type_id,
       'field_name' => 'test_field',
       'type' => 'test_field_type',
       'module' => 'test_module',
-    ));
+    ]);
 
     $dependencies = $field_storage->calculateDependencies()->getDependencies();
-    $this->assertContains('test_module', $dependencies['module']);
-    $this->assertContains('entity_provider_module', $dependencies['module']);
+    $this->assertEquals(['entity_provider_module', 'entity_test', 'test_module'], $dependencies['module']);
+    $this->assertEquals(['stark'], $dependencies['theme']);
+  }
+
+}
+
+/**
+ * A test class to test field storage dependencies.
+ *
+ * @see \Drupal\Core\Field\FieldItemInterface::calculateStorageDependencies()
+ */
+class TestFieldType {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function calculateStorageDependencies(FieldStorageDefinitionInterface $field_definition) {
+    $dependencies = [];
+    $dependencies['module'] = ['entity_test'];
+    $dependencies['theme'] = ['stark'];
+
+    return $dependencies;
   }
 
 }

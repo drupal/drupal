@@ -1,11 +1,11 @@
 langcode: en
 status: false
 dependencies:
-  module:
-    - node
   enforced:
     module:
       - book
+  module:
+    - node
 id: node.print
 label: Print
 targetEntityType: node

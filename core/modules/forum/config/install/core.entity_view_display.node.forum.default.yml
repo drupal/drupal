@@ -8,7 +8,6 @@ dependencies:
     - node.type.forum
   module:
     - comment
-    - taxonomy
     - text
     - user
 id: node.forum.default

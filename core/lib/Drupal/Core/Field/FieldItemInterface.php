@@ -419,6 +419,39 @@ interface FieldItemInterface extends ComplexDataInterface {
   public static function calculateDependencies(FieldDefinitionInterface $field_definition);
 
   /**
+   * Calculates dependencies for field items on the storage level.
+   *
+   * Dependencies are saved in the field storage configuration entity and are
+   * used to determine configuration synchronization order. For example, if the
+   * field type storage depends on a particular entity type, this method should
+   * return an array of dependencies listing the module that provides the entity
+   * type.
+   *
+   * Dependencies returned from this method are stored in field storage
+   * configuration and are always considered hard dependencies. If the
+   * dependency is removed the field storage configuration must be deleted.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
+   *   The field storage definition.
+   *
+   * @return array
+   *   An array of dependencies grouped by type (config, content, module,
+   *   theme). For example:
+   *   @code
+   *   [
+   *     'config' => ['user.role.anonymous', 'user.role.authenticated'],
+   *     'content' => ['node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'],
+   *     'module' => ['node', 'user'],
+   *     'theme' => ['seven'],
+   *   ];
+   *   @endcode
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
+   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+   */
+  public static function calculateStorageDependencies(FieldStorageDefinitionInterface $field_storage_definition);
+
+  /**
    * Informs the plugin that a dependency of the field will be deleted.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition

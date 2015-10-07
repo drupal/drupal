@@ -8,7 +8,6 @@ dependencies:
     - field.field.node.forum.taxonomy_forums
     - node.type.forum
   module:
-    - taxonomy
     - text
     - user
 id: node.forum.teaser
