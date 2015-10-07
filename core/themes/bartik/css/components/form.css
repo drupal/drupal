@@ -82,7 +82,7 @@ textarea {
 @media screen and (max-width: 60em) { /* 920px */
   input,
   textarea {
-    font-size: 1.142857143em;
+    font-size: 16px;
   }
 }
 textarea {
