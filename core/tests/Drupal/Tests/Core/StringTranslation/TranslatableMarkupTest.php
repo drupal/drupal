@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\StringTranslation;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
@@ -83,6 +84,29 @@ class TranslatableMarkupTest extends UnitTestCase {
 
     $this->assertEquals(E_USER_ERROR, $this->lastErrorNumber);
     $this->assertRegExp('/Exception thrown while calling __toString on a .*Mock_TranslatableMarkup_.* object in .*TranslatableMarkupTest.php on line [0-9]+: Yes you may./', $this->lastErrorMessage);
+  }
+
+  /**
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage $string ("foo") must be a string.
+   *
+   * @covers ::__construct
+   */
+  public function testIsStringAssertion() {
+    $translation = $this->getStringTranslationStub();
+    new TranslatableMarkup(new TranslatableMarkup('foo', [], [], $translation));
+  }
+
+  /**
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage $string ("foo") must be a string.
+   *
+   * @covers ::__construct
+   */
+  public function testIsStringAssertionWithFormattableMarkup() {
+    $translation = $this->getStringTranslationStub();
+    $formattable_string = new FormattableMarkup('@bar', ['@bar' => 'foo']);
+    new TranslatableMarkup($formattable_string);
   }
 
 }

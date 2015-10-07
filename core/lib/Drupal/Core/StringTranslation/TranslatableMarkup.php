@@ -72,9 +72,16 @@ class TranslatableMarkup extends FormattableMarkup {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   (optional) The string translation service.
    *
+   * @throws \InvalidArgumentException
+   *   Exception thrown when $string is not a string.
+   *
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
   public function __construct($string, array $arguments = array(), array $options = array(), TranslationInterface $string_translation = NULL) {
+    if (!is_string($string)) {
+      $message = $string instanceof TranslatableMarkup ? '$string ("' . $string->getUntranslatedString() . '") must be a string.' : '$string ("' . (string) $string . '") must be a string.';
+      throw new \InvalidArgumentException($message);
+    }
     $this->string = $string;
     $this->arguments = $arguments;
     $this->options = $options;

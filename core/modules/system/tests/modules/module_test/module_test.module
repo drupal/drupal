@@ -47,7 +47,7 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
     }
   }
   if ($file->getName() == 'seven' && $type == 'theme') {
-    $info['regions']['test_region'] = t('Test region');
+    $info['regions']['test_region'] = 'Test region';
   }
 }
 

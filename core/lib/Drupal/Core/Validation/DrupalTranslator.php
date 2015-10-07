@@ -8,6 +8,7 @@
 namespace Drupal\Core\Validation;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Translates strings using Drupal's translation system.
@@ -27,8 +28,9 @@ class DrupalTranslator implements TranslatorInterface {
    * Implements \Symfony\Component\Translation\TranslatorInterface::trans().
    */
   public function trans($id, array $parameters = array(), $domain = NULL, $locale = NULL) {
-
-    return t($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
+    // If a TranslatableMarkup object is passed in as $id, return it since the
+    // message has already been translated.
+    return $id instanceof TranslatableMarkup ? $id : t($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
   }
 
   /**

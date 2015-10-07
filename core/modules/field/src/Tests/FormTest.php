@@ -23,9 +23,11 @@ class FormTest extends FieldTestBase {
   /**
    * Modules to enable.
    *
+   * Locale is installed so that TranslatableMarkup actually does something.
+   *
    * @var array
    */
-  public static $modules = array('node', 'field_test', 'options', 'entity_test');
+  public static $modules = array('node', 'field_test', 'options', 'entity_test', 'locale');
 
   /**
    * An array of values defining a field single.
