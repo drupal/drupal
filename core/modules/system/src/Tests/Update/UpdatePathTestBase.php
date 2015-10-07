@@ -263,7 +263,6 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $names = $this->container->get('config.storage')->listAll();
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
     $typed_config = $this->container->get('config.typed');
-    $typed_config->clearCachedDefinitions();
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());

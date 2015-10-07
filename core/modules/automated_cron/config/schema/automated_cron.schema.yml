@@ -1,9 +1,0 @@
-# Schema for the configuration files of the Automated cron module.
-
-automated_cron.settings:
-  type: config_object
-  label: 'Automated cron settings'
-  mapping:
-    interval:
-      type: integer
-      label: 'Run cron every'

@@ -21,7 +21,7 @@ class CronRunTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['common_test', 'common_test_cron_helper', 'automated_cron'];
+  public static $modules = array('common_test', 'common_test_cron_helper');
 
   /**
    * Test cron runs.
@@ -43,42 +43,42 @@ class CronRunTest extends WebTestBase {
   }
 
   /**
-   * Ensure that the automated cron run module is working.
+   * Ensure that the automatic cron run feature is working.
    *
    * In these tests we do not use REQUEST_TIME to track start time, because we
    * need the exact time when cron is triggered.
    */
-  function testAutomatedCron() {
+  function testAutomaticCron() {
     // Test with a logged in user; anonymous users likely don't cause Drupal to
     // fully bootstrap, because of the internal page cache or an external
     // reverse proxy. Reuse this user for disabling cron later in the test.
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
 
-    // Ensure cron does not run when a non-zero cron interval is specified and
-    // was not passed.
+    // Ensure cron does not run when the cron threshold is enabled and was
+    // not passed.
     $cron_last = time();
-    $cron_safe_interval = 100;
+    $cron_safe_threshold = 100;
     \Drupal::state()->set('system.cron_last', $cron_last);
-    $this->config('automated_cron.settings')
-      ->set('interval', $cron_safe_interval)
+    $this->config('system.cron')
+      ->set('threshold.autorun', $cron_safe_threshold)
       ->save();
     $this->drupalGet('');
-    $this->assertTrue($cron_last == \Drupal::state()->get('system.cron_last'), 'Cron does not run when the cron interval is not passed.');
+    $this->assertTrue($cron_last == \Drupal::state()->get('system.cron_last'), 'Cron does not run when the cron threshold is not passed.');
 
-    // Test if cron runs when the cron interval was passed.
+    // Test if cron runs when the cron threshold was passed.
     $cron_last = time() - 200;
     \Drupal::state()->set('system.cron_last', $cron_last);
     $this->drupalGet('');
     sleep(1);
-    $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when the cron interval is passed.');
+    $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when the cron threshold is passed.');
 
-    // Disable cron through the interface by setting the interval to zero.
-    $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], t('Save configuration'));
+    // Disable the cron threshold through the interface.
+    $this->drupalPostForm('admin/config/system/cron', array('cron_safe_threshold' => 0), t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     $this->drupalLogout();
 
-    // Test if cron does not run when the cron interval is set to zero.
+    // Test if cron does not run when the cron threshold is disabled.
     $cron_last = time() - 200;
     \Drupal::state()->set('system.cron_last', $cron_last);
     $this->drupalGet('');

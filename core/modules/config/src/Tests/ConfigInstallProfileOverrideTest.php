@@ -37,6 +37,7 @@ class ConfigInstallProfileOverrideTest extends WebTestBase {
     // The expected configuration from the system module.
     $expected_original_data = array(
       'threshold' => array(
+        'autorun' => 0,
         'requirements_warning' => 172800,
         'requirements_error' => 1209600,
       ),
@@ -44,6 +45,7 @@ class ConfigInstallProfileOverrideTest extends WebTestBase {
     // The expected active configuration altered by the install profile.
     $expected_profile_data = array(
       'threshold' => array(
+        'autorun' => 0,
         'requirements_warning' => 259200,
         'requirements_error' => 1209600,
       ),

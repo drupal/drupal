@@ -1825,27 +1825,5 @@ function system_update_8012() {
 }
 
 /**
- * Enable automated cron module and move the config into it.
- */
-function system_update_8013() {
-  $config_factory = \Drupal::configFactory();
-  $system_cron_config = $config_factory->getEditable('system.cron');
-  if ($autorun = $system_cron_config->get('threshold.autorun')) {
-    // Install 'automated_cron' module.
-    \Drupal::service('module_installer')->install(['automated_cron'], FALSE);
-
-    // Copy 'autorun' value into the new module's 'interval' setting.
-    $config_factory->getEditable('automated_cron.settings')
-      ->set('interval', $autorun)
-      ->save(TRUE);
-  }
-
-  // Remove the 'autorun' key in system module config.
-  $system_cron_config
-    ->clear('threshold.autorun')
-    ->save(TRUE);
-}
-
-/**
  * @} End of "addtogroup updates-8.0.0-beta".
  */

@@ -1,3 +1,4 @@
 threshold:
+  autorun: 0
   requirements_warning: 259200
   requirements_error: 1209600

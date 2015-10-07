@@ -66,6 +66,9 @@ system.cron:
       type: mapping
       label: 'Thresholds'
       mapping:
+        autorun:
+          type: integer
+          label: 'Run cron every'
         requirements_warning:
           type: integer
           label: 'Requirements warning period'
