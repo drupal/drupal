@@ -41,7 +41,7 @@ interface ModuleUninstallValidatorInterface {
    *   Each reason should not end with any punctuation since multiple reasons
    *   can be displayed together.
    *
-   * @see theme_system_modules_uninstall()
+   * @see template_preprocess_system_modules_uninstall()
    */
   public function validate($module);
 }

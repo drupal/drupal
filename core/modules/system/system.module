@@ -194,7 +194,6 @@ function system_theme() {
     'system_modules_uninstall' => array(
       'render element' => 'form',
       'file' => 'system.admin.inc',
-      'function' => 'theme_system_modules_uninstall',
     ),
     'status_report' => array(
       'variables' => array('requirements' => NULL),
