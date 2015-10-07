@@ -117,17 +117,6 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromPath($path = NULL, $options = array(), $collect_bubbleable_metadata = FALSE) {
-    $generated_url = $this->urlGenerator->generateFromPath($path, $options, TRUE);
-    if (!$collect_bubbleable_metadata) {
-      $this->bubble($generated_url, $options);
-    }
-    return $collect_bubbleable_metadata ? $generated_url : $generated_url->getGeneratedUrl();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function supports($name) {
     return $this->urlGenerator->supports($name);
   }

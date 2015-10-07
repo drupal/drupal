@@ -13,6 +13,7 @@ use Behat\Mink\Exception\Exception;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
@@ -23,6 +24,7 @@ use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Test\TestRunnerKernel;
+use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -404,7 +406,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
     if ($this->container->has('url_generator')) {
-      $url = $this->container->get('url_generator')->generateFromPath($path, $options);
+      if (UrlHelper::isExternal($path)) {
+        $url = Url::fromUri($path, $options)->toString();
+      }
+      else {
+        // This is needed for language prefixing.
+        $options['path_processing'] = TRUE;
+        $url = Url::fromUri('base:/' . $path, $options)->toString();
+      }
     }
     else {
       $url = $this->getAbsoluteUrl($path);

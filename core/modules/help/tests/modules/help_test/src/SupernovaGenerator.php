@@ -39,13 +39,6 @@ class SupernovaGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromPath($path = NULL, $options = array(), $collect_bubbleable_metadata = FALSE) {
-    throw new \Exception();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPathFromRoute($name, $parameters = array()) {
     throw new \Exception();
   }

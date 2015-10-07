@@ -11,7 +11,7 @@ use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -25,22 +25,22 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RedirectResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The url generator service.
+   * The unrouted URL assembler service.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
    */
-  protected $urlGenerator;
+  protected $unroutedUrlAssembler;
 
   /**
    * Constructs a RedirectResponseSubscriber object.
    *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator service.
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
+   *   The unrouted URL assembler service.
    * @param \Drupal\Core\Routing\RequestContext $request_context
    *   The request context.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, RequestContext $request_context) {
-    $this->urlGenerator = $url_generator;
+  public function __construct(UnroutedUrlAssemblerInterface $url_assembler, RequestContext $request_context) {
+    $this->unroutedUrlAssembler = $url_assembler;
     $this->requestContext = $request_context;
   }
 
@@ -117,19 +117,18 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
         $destination = $scheme_and_host . $destination;
       }
       else {
-        // Legacy destination query parameters can be relative paths that have
-        // not yet been converted to URLs (outbound path processors and other
-        // URL handling still needs to be performed).
-        // @todo As generateFromPath() is deprecated, remove this in
-        //   https://www.drupal.org/node/2418219.
+        // Legacy destination query parameters can be internal paths that have
+        // not yet been converted to URLs.
         $destination = UrlHelper::parse($destination);
-        $path = $destination['path'];
+        $uri = 'base:' . $destination['path'];
         $options = [
           'query' => $destination['query'],
           'fragment' => $destination['fragment'],
           'absolute' => TRUE,
         ];
-        $destination = $this->urlGenerator->generateFromPath($path, $options);
+        // Treat this as if it's user input of a path relative to the site's
+        // base URL.
+        $destination = $this->unroutedUrlAssembler->assemble($uri, $options);
       }
     }
     return $destination;

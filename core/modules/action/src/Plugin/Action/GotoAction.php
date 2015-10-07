@@ -7,12 +7,13 @@
 
 namespace Drupal\action\Plugin\Action;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,11 +38,11 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
   protected $dispatcher;
 
   /**
-   * The url generator service.
+   * The unrouted URL assembler service.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
    */
-  protected $urlGenerator;
+  protected $unroutedUrlAssembler;
 
   /**
    * Constructs a new DeleteNode object.
@@ -54,29 +55,47 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
    *   The plugin implementation definition.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The tempstore factory.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator service.
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
+   *   The unrouted URL assembler service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $dispatcher, UrlGeneratorInterface $url_generator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $dispatcher, UnroutedUrlAssemblerInterface $url_assembler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->dispatcher = $dispatcher;
-    $this->urlGenerator = $url_generator;
+    $this->unroutedUrlAssembler = $url_assembler;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('event_dispatcher'), $container->get('url_generator'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('event_dispatcher'), $container->get('unrouted_url_assembler'));
   }
 
   /**
    * {@inheritdoc}
    */
   public function execute($object = NULL) {
-    $url = $this->urlGenerator
-      ->generateFromPath($this->configuration['url'], array('absolute' => TRUE));
+    $url = $this->configuration['url'];
+    // Leave external URLs unchanged, and assemble others as absolute URLs
+    // relative to the site's base URL.
+    if (!UrlHelper::isExternal($url)) {
+      $parts = UrlHelper::parse($url);
+      // @todo '<front>' is valid input for BC reasons, may be removed by
+      //   https://www.drupal.org/node/2421941
+      if ($parts['path'] === '<front>') {
+        $parts['path'] = '';
+      }
+      $uri = 'base:' . $parts['path'];
+      $options = [
+        'query' => $parts['query'],
+        'fragment' => $parts['fragment'],
+        'absolute' => TRUE,
+      ];
+      // Treat this as if it's user input of a path relative to the site's
+      // base URL.
+      $url = $this->unroutedUrlAssembler->assemble($uri, $options);
+    }
     $response = new RedirectResponse($url);
     $listener = function($event) use ($response) {
       $event->setResponse($response);
@@ -101,7 +120,7 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
     $form['url'] = array(
       '#type' => 'textfield',
       '#title' => t('URL'),
-      '#description' => t('The URL to which the user should be redirected. This can be an internal URL like node/1234 or an external URL like @url.', array('@url' => 'http://example.com')),
+      '#description' => t('The URL to which the user should be redirected. This can be an internal URL like /node/1234 or an external URL like @url.', array('@url' => 'http://example.com')),
       '#default_value' => $this->configuration['url'],
       '#required' => TRUE,
     );

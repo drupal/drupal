@@ -2684,12 +2684,18 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertUrl($path, array $options = array(), $message = '', $group = 'Other') {
     if ($path instanceof Url)  {
-      $url = $path->setAbsolute()->toString();
+      $url_obj = $path;
+    }
+    elseif (UrlHelper::isExternal($path)) {
+      $url_obj = Url::fromUri($path, $options);
     }
     else {
-      $options['absolute'] = TRUE;
-      $url = $this->container->get('url_generator')->generateFromPath($path, $options);
+      $uri = $path === '<front>' ? 'base:/' : 'base:/' . $path;
+      // This is needed for language prefixing.
+      $options['path_processing'] = TRUE;
+      $url_obj = Url::fromUri($uri, $options);
     }
+    $url = $url_obj->setAbsolute()->toString();
     if (!$message) {
       $message = SafeMarkup::format('Expected @url matches current URL (@current_url).', array(
         '@url' => var_export($url, TRUE),
@@ -2950,8 +2956,19 @@ abstract class WebTestBase extends TestBase {
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
     else if ($this->container->has('url_generator')) {
-      $options['absolute'] = TRUE;
-      return $this->container->get('url_generator')->generateFromPath($path, $options);
+      $force_internal = isset($options['external']) && $options['external'] == FALSE;
+      if (!$force_internal && UrlHelper::isExternal($path)) {
+        return Url::fromUri($path, $options)->toString();
+      }
+      else {
+        $uri = $path === '<front>' ? 'base:/' : 'base:/' . $path;
+        // Path processing is needed for language prefixing.  Skip it when a
+        // path that may look like an external URL is being used as internal.
+        $options['path_processing'] = !$force_internal;
+        return Url::fromUri($uri, $options)
+          ->setAbsolute()
+          ->toString();
+      }
     }
     else {
       return $this->getAbsoluteUrl($path);

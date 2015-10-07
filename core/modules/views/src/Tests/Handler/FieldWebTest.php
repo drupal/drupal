@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 
@@ -262,7 +263,7 @@ class FieldWebTest extends HandlerTestBase {
 
       // @todo The route-based URL generator strips out NULL attributes.
       // $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute]);
-      $expected_result = \Drupal::urlGenerator()->generateFromPath('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
+      $expected_result = Url::fromUserInput('/node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute))->toString();
       $alter['path'] = 'node/123?foo#bar';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);

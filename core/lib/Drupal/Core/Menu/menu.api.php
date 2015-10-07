@@ -452,7 +452,7 @@ function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$bread
  *     URL.
  *   - url: The \Drupal\Core\Url object.
  *   - options: An associative array of additional options that will be passed
- *     to either \Drupal\Core\Routing\UrlGenerator::generateFromPath() or
+ *     to either \Drupal\Core\Utility\UnroutedUrlAssembler::assemble() or
  *     \Drupal\Core\Routing\UrlGenerator::generateFromRoute() to generate the
  *     href attribute for this link, and also used when generating the link.
  *     Defaults to an empty array. It may contain the following elements:
@@ -469,7 +469,7 @@ function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$bread
  *       to work as an argument for the constructor of the class
  *       Drupal\Core\Template\Attribute($options['attributes']).
  *
- * @see \Drupal\Core\Routing\UrlGenerator::generateFromPath()
+ * @see \Drupal\Core\Utility\UnroutedUrlAssembler::assemble()
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute()
  */
 function hook_link_alter(&$variables) {

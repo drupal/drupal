@@ -22,7 +22,7 @@ interface OutboundPathProcessorInterface {
    *   The path to process, with a leading slash.
    * @param array $options
    *   An array of options such as would be passed to the generator's
-   *   generateFromPath() method.
+   *   generateFromRoute() method.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HttpRequest object representing the current request.
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata

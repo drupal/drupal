@@ -1077,7 +1077,7 @@ services:
       - { name: event_subscriber }
   redirect_response_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
-    arguments: ['@url_generator', '@router.request_context']
+    arguments: ['@unrouted_url_assembler', '@router.request_context']
     tags:
       - { name: event_subscriber }
   redirect_leading_slashes_subscriber:

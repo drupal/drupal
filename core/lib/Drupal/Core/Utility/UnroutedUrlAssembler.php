@@ -115,11 +115,6 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     //   https://www.drupal.org/node/2417459
     $uri = substr($uri, 5);
 
-    // Strip leading slashes from internal paths to prevent them becoming
-    // external URLs without protocol. /example.com should not be turned into
-    // //example.com.
-    $uri = ltrim($uri, '/');
-
     // Allow (outbound) path processing, if needed. A valid use case is the path
     // alias overview form:
     // @see \Drupal\path\Controller\PathController::adminOverview().
@@ -128,6 +123,10 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       // want to include e.g. the request language in the processing.
       $uri = $this->pathProcessor->processOutbound($uri, $options, NULL, $generated_url);
     }
+    // Strip leading slashes from internal paths to prevent them becoming
+    // external URLs without protocol. /example.com should not be turned into
+    // //example.com.
+    $uri = ltrim($uri, '/');
 
     // Add any subdirectory where Drupal is installed.
     $current_base_path = $request->getBasePath() . '/';
@@ -177,8 +176,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
 
     // If the current request was made with the script name (eg, index.php) in
     // it, then extract it, making sure the leading / is gone, and a trailing /
-    // is added, to allow simple string concatenation with other parts.  This
-    // mirrors code from UrlGenerator::generateFromPath().
+    // is added, to allow simple string concatenation with other parts.
     if (!empty($base_path_with_script)) {
       $script_name = $request->getScriptName();
       if (strpos($base_path_with_script, $script_name) !== FALSE) {
