@@ -256,6 +256,9 @@ Action module
 Aggregator module
 - Paris Liakos 'ParisLiakos' https://www.drupal.org/u/parisliakos
 
+Automated Cron module
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+
 Ban module
 - ?
 

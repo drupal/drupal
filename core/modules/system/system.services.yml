@@ -37,11 +37,6 @@ services:
     class: Drupal\system\SystemConfigSubscriber
     tags:
       - { name: event_subscriber }
-  system.automatic_cron:
-    class: Drupal\system\EventSubscriber\AutomaticCron
-    arguments: ['@cron', '@config.factory', '@state']
-    tags:
-      - { name: event_subscriber }
   system.config_cache_tag:
     class: Drupal\system\EventSubscriber\ConfigCacheTag
     arguments: ['@theme_handler', '@cache_tags.invalidator']

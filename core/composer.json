@@ -41,6 +41,7 @@
   "replace": {
     "drupal/action": "self.version",
     "drupal/aggregator": "self.version",
+    "drupal/automated_cron": "self.version",
     "drupal/bartik": "self.version",
     "drupal/ban": "self.version",
     "drupal/basic_auth": "self.version",

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\EventSubscriber\AutomaticCron.
+ * Contains \Drupal\automated_cron\EventSubscriber\AutomatedCron.
  */
 
-namespace Drupal\system\EventSubscriber;
+namespace Drupal\automated_cron\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\CronInterface;
@@ -15,9 +15,9 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * A subscriber running cron when a request terminates.
+ * A subscriber running cron after a response is sent.
  */
-class AutomaticCron implements EventSubscriberInterface {
+class AutomatedCron implements EventSubscriberInterface {
 
   /**
    * The cron service.
@@ -36,43 +36,38 @@ class AutomaticCron implements EventSubscriberInterface {
   /**
    * The state key value store.
    *
-   * Drupal\Core\State\StateInterface;
+   * @var \Drupal\Core\State\StateInterface;
    */
   protected $state;
 
   /**
-   * Construct a new automatic cron runner.
+   * Constructs a new automated cron runner.
    *
    * @param \Drupal\Core\CronInterface $cron
    *   The cron service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\State\StateInterface $state
-   *   The state key value store.
+   *   The state key-value store service.
    */
   public function __construct(CronInterface $cron, ConfigFactoryInterface $config_factory, StateInterface $state) {
     $this->cron = $cron;
-    $this->config = $config_factory->get('system.cron');
+    $this->config = $config_factory->get('automated_cron.settings');
     $this->state = $state;
   }
 
   /**
    * Run the automated cron if enabled.
    *
-   * @param Symfony\Component\HttpKernel\Event\PostResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\PostResponseEvent $event
    *   The Event to process.
    */
   public function onTerminate(PostResponseEvent $event) {
-    // If the site is not fully installed, suppress the automated cron run.
-    // Otherwise it could be triggered prematurely by Ajax requests during
-    // installation.
-    if ($this->state->get('install_task') == 'done') {
-      $threshold = $this->config->get('threshold.autorun');
-      if ($threshold > 0) {
-        $cron_next = $this->state->get('system.cron_last', 0) + $threshold;
-        if (REQUEST_TIME > $cron_next) {
-          $this->cron->run();
-        }
+    $interval = $this->config->get('interval');
+    if ($interval > 0) {
+      $cron_next = $this->state->get('system.cron_last', 0) + $interval;
+      if ((int) $event->getRequest()->server->get('REQUEST_TIME') > $cron_next) {
+        $this->cron->run();
       }
     }
   }
@@ -84,9 +79,7 @@ class AutomaticCron implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
-
-    return $events;
+    return [KernelEvents::TERMINATE => [['onTerminate', 100]]];
   }
 
 }
