@@ -10,7 +10,6 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
