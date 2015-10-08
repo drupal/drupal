@@ -8,8 +8,6 @@
 namespace Drupal\book;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**

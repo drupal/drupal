@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 

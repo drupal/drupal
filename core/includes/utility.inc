@@ -5,7 +5,6 @@
  * Miscellaneous functions.
  */
 
-use Drupal\Component\Utility\Variable;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;

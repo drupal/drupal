@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\views\Views;
 
 /**
  * Tests Views forms functionality.

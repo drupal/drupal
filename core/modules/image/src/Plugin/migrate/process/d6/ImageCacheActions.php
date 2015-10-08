@@ -8,7 +8,6 @@
 namespace Drupal\image\Plugin\migrate\process\d6;
 
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 

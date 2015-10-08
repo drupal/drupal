@@ -8,7 +8,6 @@
 namespace Drupal\locale\StreamWrapper;
 
 use Drupal\Core\Annotation\StreamWrapper;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 

@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Language;
 
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 
 /**

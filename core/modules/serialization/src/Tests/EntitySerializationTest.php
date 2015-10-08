@@ -7,9 +7,7 @@
 
 namespace Drupal\serialization\Tests;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\user\Entity\User;
 
 /**
  * Tests that entities can be serialized to supported core formats.

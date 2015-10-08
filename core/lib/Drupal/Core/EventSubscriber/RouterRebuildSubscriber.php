@@ -7,11 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
-use Drupal\Core\Routing\RoutingEvents;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

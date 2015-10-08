@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 

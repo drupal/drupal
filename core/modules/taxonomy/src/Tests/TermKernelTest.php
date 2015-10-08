@@ -8,7 +8,6 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\Tests\TaxonomyTestTrait;
 use Drupal\simpletest\KernelTestBase;
 
 /**

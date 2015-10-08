@@ -13,7 +13,6 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateTemplateStorage;
 use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
-use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

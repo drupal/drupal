@@ -7,8 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Tests for download/file transfer functions.
  *

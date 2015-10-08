@@ -9,7 +9,6 @@ namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\simpletest\KernelTestBase;
 

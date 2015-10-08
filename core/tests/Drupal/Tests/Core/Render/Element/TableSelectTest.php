@@ -11,7 +11,6 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element\Tableselect;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 

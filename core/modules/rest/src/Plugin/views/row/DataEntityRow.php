@@ -7,7 +7,6 @@
 
 namespace Drupal\rest\Plugin\views\row;
 
-use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**

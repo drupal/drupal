@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Controller\EntityViewController;
 

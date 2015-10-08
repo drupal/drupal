@@ -9,7 +9,6 @@ namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\user\Entity\User;
 use Drupal\views\Tests\Handler\FieldFieldAccessTestBase;
 
 /**

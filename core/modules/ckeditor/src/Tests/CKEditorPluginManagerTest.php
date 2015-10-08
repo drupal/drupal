@@ -8,7 +8,6 @@
 namespace Drupal\ckeditor\Tests;
 
 use Drupal\simpletest\KernelTestBase;
-use Drupal\ckeditor\CKEditorPluginManager;
 
 /**
  * Tests different ways of enabling CKEditor plugins.

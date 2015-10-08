@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Render;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Renderer;
 use Drupal\Core\State\State;
 use Drupal\Core\Cache\Cache;
 

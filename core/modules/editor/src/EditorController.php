@@ -8,13 +8,9 @@
 namespace Drupal\editor;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
-use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\editor\Ajax\GetUntransformedTextCommand;
-use Drupal\editor\Form\EditorImageDialog;
-use Drupal\editor\Form\EditorLinkDialog;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\FilterFormatInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

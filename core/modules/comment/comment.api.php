@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Url;
 

@@ -5,9 +5,6 @@
  * Installation functions for Content Translation module.
  */
 
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
-
 /**
  * Implements hook_install().
  */

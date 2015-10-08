@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 
 /**

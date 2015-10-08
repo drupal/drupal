@@ -8,10 +8,8 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the shortcut set customize form.

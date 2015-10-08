@@ -11,7 +11,6 @@ use Drupal\Core\PrivateKey;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\user\Entity\Role;
 
 /**
  * Generates and caches the permissions hash for a user.

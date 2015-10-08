@@ -6,7 +6,6 @@
  */
 
 use Drupal\config_test\Entity\ConfigTest;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 

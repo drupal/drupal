@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Views;
 
 /**

@@ -9,7 +9,6 @@ namespace Drupal\config;
 
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
-use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 
 

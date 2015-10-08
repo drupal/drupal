@@ -9,7 +9,6 @@ namespace Drupal\config\Tests\Storage;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\CachedStorage;
-use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 

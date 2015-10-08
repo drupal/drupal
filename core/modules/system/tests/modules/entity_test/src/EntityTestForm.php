@@ -9,7 +9,6 @@ namespace Drupal\entity_test;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Form controller for the test entity edit forms.

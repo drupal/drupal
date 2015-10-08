@@ -11,7 +11,6 @@ namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass

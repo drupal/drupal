@@ -8,7 +8,6 @@
 namespace Drupal\block\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for building the block instance add form.

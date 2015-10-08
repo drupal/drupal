@@ -8,7 +8,6 @@
 namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\locale\TranslationString;
 use Drupal\simpletest\WebTestBase;
 
 /**

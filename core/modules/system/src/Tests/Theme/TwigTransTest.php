@@ -7,10 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Url;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**

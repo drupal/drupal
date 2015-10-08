@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\CommandInterface;
-
 /**
  * Generic AJAX command for inserting content.
  *

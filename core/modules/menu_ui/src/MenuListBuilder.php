@@ -7,7 +7,6 @@
 
 namespace Drupal\menu_ui;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 

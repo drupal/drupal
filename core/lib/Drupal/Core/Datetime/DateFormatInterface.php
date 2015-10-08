@@ -8,7 +8,6 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Provides an interface defining a date format.

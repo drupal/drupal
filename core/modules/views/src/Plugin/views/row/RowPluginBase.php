@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**

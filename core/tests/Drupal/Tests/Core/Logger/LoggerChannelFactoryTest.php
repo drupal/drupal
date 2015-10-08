@@ -8,9 +8,7 @@
 namespace Drupal\Tests\Core\Logger;
 
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\Core\Logger\LoggerChannelFactory

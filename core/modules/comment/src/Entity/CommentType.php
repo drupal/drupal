@@ -8,7 +8,6 @@
 namespace Drupal\comment\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\comment\CommentTypeInterface;
 
 /**

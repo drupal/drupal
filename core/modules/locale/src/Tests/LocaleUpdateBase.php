@@ -8,7 +8,6 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\SafeMarkup;
 

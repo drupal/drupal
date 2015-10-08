@@ -5,8 +5,6 @@
  * Provides views runtime hooks for action.module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * Implements hook_views_form_substitutions().
  */

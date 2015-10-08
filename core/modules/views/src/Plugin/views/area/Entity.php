@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

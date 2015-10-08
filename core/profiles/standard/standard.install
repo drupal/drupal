@@ -4,7 +4,6 @@
  * Install, update and uninstall functions for the standard installation profile.
  */
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 

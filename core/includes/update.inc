@@ -9,7 +9,6 @@
  */
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Utility\Error;
 
 /**

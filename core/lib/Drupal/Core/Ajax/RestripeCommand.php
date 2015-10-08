@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\CommandInterface;
-
 /**
  * AJAX command for resetting the striping on a table.
  *

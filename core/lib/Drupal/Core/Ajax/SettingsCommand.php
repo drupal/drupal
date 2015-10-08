@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\CommandInterface;
-
 /**
  * AJAX command for adjusting Drupal's JavaScript settings.
  *

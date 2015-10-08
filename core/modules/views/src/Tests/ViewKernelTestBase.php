@@ -8,10 +8,8 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsBundle;
 use Drupal\simpletest\KernelTestBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines a base class for Views unit testing.

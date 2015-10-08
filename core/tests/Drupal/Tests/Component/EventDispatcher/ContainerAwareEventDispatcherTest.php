@@ -10,8 +10,6 @@ namespace Drupal\Tests\Component\EventDispatcher;
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\Tests\AbstractEventDispatcherTest;
 use Symfony\Component\EventDispatcher\Tests\CallableClass;
 use Symfony\Component\EventDispatcher\Tests\TestEventListener;

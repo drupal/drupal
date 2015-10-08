@@ -9,7 +9,6 @@ namespace Drupal\language\Tests\Condition;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\KernelTestBase;
-use Drupal\Core\Condition\ConditionManager;
 
 /**
  * Tests that the language condition, provided by the language module, is

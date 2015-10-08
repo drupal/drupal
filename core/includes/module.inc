@@ -5,7 +5,6 @@
  * API for loading and interacting with Drupal modules.
  */
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**

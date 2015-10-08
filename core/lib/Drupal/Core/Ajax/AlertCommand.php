@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\CommandInterface;
-
 /**
  * AJAX command for a javascript alert box.
  *

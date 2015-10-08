@@ -8,8 +8,6 @@
 namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 

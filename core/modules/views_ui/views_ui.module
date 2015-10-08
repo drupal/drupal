@@ -10,7 +10,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Analyzer;
-use Drupal\Component\Utility\Xss;
 
 /**
  * Implements hook_help().

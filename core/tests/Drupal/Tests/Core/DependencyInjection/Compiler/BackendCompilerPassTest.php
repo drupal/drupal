@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 
-use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Alias;

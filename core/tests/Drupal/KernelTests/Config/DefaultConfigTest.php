@@ -7,11 +7,9 @@
 
 namespace Drupal\KernelTests\Config;
 
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\KernelTests\KernelTestBase;
 

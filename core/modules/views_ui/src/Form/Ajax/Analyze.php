@@ -9,8 +9,6 @@ namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
-use Drupal\views_ui\ViewUI;
-use Drupal\views\Analyzer;
 
 /**
  * Displays analysis information for a view.

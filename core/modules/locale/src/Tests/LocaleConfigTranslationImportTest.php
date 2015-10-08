@@ -10,7 +10,6 @@ namespace Drupal\locale\Tests;
 use Drupal\locale\Locale;
 use Drupal\simpletest\WebTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\Core\Url;
 
 /**
  * Tests translation update's effects on configuration translations.

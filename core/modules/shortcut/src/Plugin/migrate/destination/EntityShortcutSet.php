@@ -8,7 +8,6 @@
 namespace Drupal\shortcut\Plugin\migrate\destination;
 
 use Drupal\migrate\Row;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 
 /**

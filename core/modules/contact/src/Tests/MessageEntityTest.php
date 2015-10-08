@@ -6,7 +6,6 @@
 
 namespace Drupal\contact\Tests;
 
-use Drupal\contact\Entity\Message;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**

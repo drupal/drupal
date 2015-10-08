@@ -8,7 +8,6 @@
 namespace Drupal\aggregator\Tests;
 
 use Drupal\Core\Url;
-use Zend\Feed\Reader\Reader;
 
 /**
  * Tests the built-in feed parser with valid feed samples.

@@ -10,7 +10,6 @@ namespace Drupal\views\Tests\EventSubscriber;
 use Drupal\Core\Entity\EntityTypeEvent;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\system\Tests\Entity\EntityDefinitionTestTrait;
-use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewKernelTestBase;
 
 /**

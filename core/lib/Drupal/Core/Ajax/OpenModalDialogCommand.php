@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\OpenDialogCommand;
-
 /**
  * Defines an AJAX command to open certain content in a dialog in a modal dialog.
  *

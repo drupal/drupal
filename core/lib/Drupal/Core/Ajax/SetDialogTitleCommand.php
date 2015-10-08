@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\SetDialogOptionCommand;
-
 /**
  * Defines an AJAX command that sets jQuery UI dialog properties.
  *

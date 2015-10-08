@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\Asset\AssetDumperInterface;
 use Drupal\Component\Utility\Crypt;
 
 /**

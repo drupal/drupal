@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;

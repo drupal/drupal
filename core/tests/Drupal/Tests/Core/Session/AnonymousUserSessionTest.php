@@ -9,11 +9,7 @@ namespace Drupal\Tests\Core\Session;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Session\AnonymousUserSession;
-  use Drupal\user\RoleInterface;
-  use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Scope;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\user\RoleInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Session\AnonymousUserSession

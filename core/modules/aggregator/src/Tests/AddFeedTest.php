@@ -6,7 +6,6 @@
  */
 
 namespace Drupal\aggregator\Tests;
-use Drupal\Component\Utility\Html;
 
 /**
  * Add feed test.

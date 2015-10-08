@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
 /**

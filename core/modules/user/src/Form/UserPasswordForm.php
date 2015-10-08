@@ -7,13 +7,11 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
 use Drupal\user\UserStorageInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

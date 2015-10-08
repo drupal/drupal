@@ -8,7 +8,6 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Session\UserSession;
 use Drupal\comment\CommentInterface;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;

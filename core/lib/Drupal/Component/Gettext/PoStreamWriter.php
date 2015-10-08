@@ -7,12 +7,6 @@
 
 namespace Drupal\Component\Gettext;
 
-use Drupal\Component\Gettext\PoHeader;
-use Drupal\Component\Gettext\PoItem;
-use Drupal\Component\Gettext\PoReaderInterface;
-use Drupal\Component\Gettext\PoWriterInterface;
-use Drupal\Component\Gettext\PoStreamInterface;
-
 /**
  * Defines a Gettext PO stream writer.
  */

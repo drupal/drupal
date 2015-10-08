@@ -7,7 +7,6 @@
 
 namespace Drupal\ckeditor\Plugin\Editor;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\Form\FormStateInterface;

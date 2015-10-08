@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Template\Attribute;
 
 /**
  * Tests Drupal's Twig filters.

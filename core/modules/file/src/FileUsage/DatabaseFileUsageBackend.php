@@ -8,7 +8,6 @@
 namespace Drupal\file\FileUsage;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\file\FileInterface;
 
 /**

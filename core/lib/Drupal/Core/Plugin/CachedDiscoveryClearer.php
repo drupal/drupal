@@ -8,8 +8,6 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
-use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Defines a class which is capable of clearing the cache on plugin managers.

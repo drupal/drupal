@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\views\access;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;

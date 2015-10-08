@@ -7,7 +7,6 @@
 
 namespace Drupal\content_translation\Tests\Views;
 
-use Drupal\views\Tests\ViewTestBase;
 use Drupal\content_translation\Tests\ContentTranslationTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\Core\Language\Language;

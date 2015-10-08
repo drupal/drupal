@@ -10,7 +10,6 @@ namespace Drupal\block_content\Tests;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 use Symfony\Component\HttpFoundation\Request;
 

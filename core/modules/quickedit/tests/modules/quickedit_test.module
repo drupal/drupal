@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Implements hook_quickedit_render_field().

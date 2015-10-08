@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Path;
 
-use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**

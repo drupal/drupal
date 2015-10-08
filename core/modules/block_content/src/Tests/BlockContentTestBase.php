@@ -7,7 +7,6 @@
 
 namespace Drupal\block_content\Tests;
 
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**

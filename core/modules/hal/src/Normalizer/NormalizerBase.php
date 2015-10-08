@@ -7,7 +7,6 @@
 
 namespace Drupal\hal\Normalizer;
 
-use Drupal\serialization\EntityResolver\EntityResolverInterface;
 use Drupal\serialization\Normalizer\NormalizerBase as SerializationNormalizerBase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 

@@ -8,7 +8,6 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a confirmation form for deleting a language entity.

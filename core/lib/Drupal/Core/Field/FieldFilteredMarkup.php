@@ -10,7 +10,6 @@ namespace Drupal\Core\Field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 
 /**

@@ -15,7 +15,6 @@ use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
  * @defgroup views_wizard_plugins Views wizard plugins

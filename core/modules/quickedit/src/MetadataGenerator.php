@@ -8,7 +8,6 @@
 namespace Drupal\quickedit;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheckInterface;

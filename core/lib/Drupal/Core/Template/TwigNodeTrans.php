@@ -14,9 +14,6 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Site\Settings;
-
 /**
  * A class that defines the Twig 'trans' tag for Drupal.
  */

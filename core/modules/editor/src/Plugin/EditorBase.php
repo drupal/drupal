@@ -10,7 +10,6 @@ namespace Drupal\editor\Plugin;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
-use Drupal\editor\Plugin\EditorPluginInterface;
 
 /**
  * Defines a base class from which other modules providing editors may extend.

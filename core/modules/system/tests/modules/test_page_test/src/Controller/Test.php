@@ -7,8 +7,6 @@
 
 namespace Drupal\test_page_test\Controller;
 
-use Drupal\Component\Utility\Html;
-
 /**
  * Defines a test controller for page titles.
  */

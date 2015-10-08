@@ -9,7 +9,6 @@ namespace Drupal\block_content\Tests;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Url;
 
 /**
  * Ensures that custom block type functions work correctly.

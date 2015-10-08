@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * @coversDefaultClass \Drupal\Component\DependencyInjection\PhpArrayContainer

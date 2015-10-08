@@ -5,7 +5,6 @@
  * Field module functionality for the File module.
  */
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\Element;

@@ -8,7 +8,6 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;

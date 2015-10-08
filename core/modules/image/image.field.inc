@@ -5,7 +5,6 @@
  * Implement an image field, based on the file module's file field.
  */
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 

@@ -10,7 +10,6 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 
 /**
  * Wrapper methods for the Link Generator.

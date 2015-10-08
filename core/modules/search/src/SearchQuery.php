@@ -12,7 +12,6 @@ namespace Drupal\search;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Database\StatementEmpty;
 
 /**
  * Performs a query on the full-text search index for a word or words.

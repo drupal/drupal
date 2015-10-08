@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Condition;
 
 use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**

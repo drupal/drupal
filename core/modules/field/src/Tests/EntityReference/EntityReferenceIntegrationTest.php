@@ -9,7 +9,6 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 

@@ -7,8 +7,6 @@
 
 namespace Drupal\language_test\Plugin\LanguageNegotiation;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Class for identifying language from a selected language.
  *

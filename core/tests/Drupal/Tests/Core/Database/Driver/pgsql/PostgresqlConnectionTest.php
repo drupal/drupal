@@ -7,7 +7,6 @@
 namespace Drupal\Tests\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Driver\pgsql\Connection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**

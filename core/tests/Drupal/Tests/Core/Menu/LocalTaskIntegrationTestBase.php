@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Tests\UnitTestCase;

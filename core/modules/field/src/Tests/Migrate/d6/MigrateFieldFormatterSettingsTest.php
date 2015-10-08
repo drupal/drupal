@@ -8,7 +8,6 @@
 namespace Drupal\field\Tests\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\migrate\Entity\Migration;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 

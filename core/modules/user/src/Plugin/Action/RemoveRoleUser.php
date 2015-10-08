@@ -7,10 +7,6 @@
 
 namespace Drupal\user\Plugin\Action;
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Plugin\Action\ChangeUserRoleBase;
-
 /**
  * Removes a role from a user.
  *

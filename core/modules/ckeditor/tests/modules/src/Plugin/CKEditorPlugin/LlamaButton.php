@@ -8,7 +8,6 @@
 namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
-use Drupal\Component\Plugin\PluginBase;
 
 /**
  * Defines a "LlamaButton" plugin, with a toolbar builder-enabled "llama" feature.

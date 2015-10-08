@@ -9,7 +9,6 @@ namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\TypedData\PrimitiveBase;
 use Drupal\Core\TypedData\Type\BinaryInterface;
-use Drupal\Core\TypedData\TypedData;
 
 /**
  * The binary data type.

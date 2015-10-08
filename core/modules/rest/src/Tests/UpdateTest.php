@@ -8,7 +8,6 @@
 namespace Drupal\rest\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\rest\Tests\RESTTestBase;
 
 /**
  * Tests the update of resources.

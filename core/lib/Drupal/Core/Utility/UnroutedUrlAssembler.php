@@ -8,7 +8,6 @@
 namespace Drupal\Core\Utility;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewKernelTestBase;

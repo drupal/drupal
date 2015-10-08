@@ -7,9 +7,6 @@
 
 namespace Drupal\Component\Gettext;
 
-use Drupal\Component\Gettext\PoReaderInterface;
-use Drupal\Component\Gettext\PoStreamInterface;
-use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**

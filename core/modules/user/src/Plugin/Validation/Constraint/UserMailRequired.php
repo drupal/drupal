@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\Validation\Constraint;
 
-use Drupal\Component\Utility\Html;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\ExecutionContextInterface;

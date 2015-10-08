@@ -5,7 +5,6 @@
  * Main functions of the module.
  */
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\system\EventSubscriber;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;

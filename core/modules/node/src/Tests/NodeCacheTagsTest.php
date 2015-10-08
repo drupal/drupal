@@ -9,7 +9,6 @@ namespace Drupal\node\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
-use Drupal\user\Entity\Role;
 
 /**
  * Tests the Node entity's cache tags.

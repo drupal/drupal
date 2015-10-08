@@ -7,9 +7,6 @@
 
 namespace Drupal\node\Tests\Views;
 
-use Drupal\views\Views;
-use Drupal\node\Tests\Views\NodeTestBase;
-
 /**
  * Tests replacement of Views tokens supplied by the Node module.
  *

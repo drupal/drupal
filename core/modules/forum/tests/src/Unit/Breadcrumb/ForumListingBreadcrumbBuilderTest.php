@@ -10,7 +10,6 @@ namespace Drupal\Tests\forum\Unit\Breadcrumb;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\Container;
 
 /**

@@ -10,7 +10,6 @@ namespace Drupal\filter_test\Plugin\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides a test filter to merge with CacheableMetadata.

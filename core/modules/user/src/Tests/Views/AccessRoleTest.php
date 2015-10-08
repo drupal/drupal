@@ -11,7 +11,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\user\Plugin\views\access\Role;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests views role access plugin.

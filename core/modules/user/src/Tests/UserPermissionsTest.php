@@ -10,7 +10,6 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleStorage;
 
 /**
  * Verify that role permissions can be added and removed via the permissions

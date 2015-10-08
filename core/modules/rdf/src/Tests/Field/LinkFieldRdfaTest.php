@@ -6,9 +6,6 @@
 
 namespace Drupal\rdf\Tests\Field;
 
-use Drupal\Component\Utility\Unicode;
-use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
-
 /**
  * Tests the placement of RDFa in link field formatters.
  *

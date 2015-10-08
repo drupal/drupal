@@ -10,7 +10,6 @@ namespace Drupal\views_ui\Form\Ajax;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\views_ui\ViewUI;
 
 /**
  * Displays the display reorder form.

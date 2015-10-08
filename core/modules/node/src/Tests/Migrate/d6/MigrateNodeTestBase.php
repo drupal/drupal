@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\user\Entity\User;
 

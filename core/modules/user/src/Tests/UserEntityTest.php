@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;

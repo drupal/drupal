@@ -8,7 +8,6 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Password\PhpassHashedPassword;
 use Drupal\user\Entity\User;
 
 /**

@@ -6,7 +6,6 @@
  */
 
 namespace Drupal\rest\LinkManager;
-use Drupal\Core\Url;
 
 /**
  * Defines an abstract base-class for REST link manager objects.

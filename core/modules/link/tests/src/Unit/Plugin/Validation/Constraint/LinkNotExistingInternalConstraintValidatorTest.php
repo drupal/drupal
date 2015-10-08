@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
 use Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidator;

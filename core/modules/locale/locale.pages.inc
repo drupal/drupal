@@ -5,13 +5,9 @@
  * Interface translation summary, editing and deletion user interfaces.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Render\Element;
-use Drupal\locale\SourceString;
-use Drupal\locale\TranslationString;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Page callback: Checks for translation updates and displays the status.

@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Annotation;
 
-use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 
 /**
  * Defines a Plugin annotation object for views access plugins.

@@ -14,7 +14,6 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
-use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;

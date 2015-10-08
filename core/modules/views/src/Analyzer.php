@@ -8,7 +8,6 @@
 namespace Drupal\views;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\views\ViewExecutable;
 
 /**
  * This tool is a small plugin manager to perform analysis on a view and

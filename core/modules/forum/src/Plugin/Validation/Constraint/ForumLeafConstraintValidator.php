@@ -7,7 +7,6 @@
 
 namespace Drupal\forum\Plugin\Validation\Constraint;
 
-use Drupal\Component\Utility\Unicode;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewTestData;
-
 /**
  * Tests the dropbutton field handler.
  *

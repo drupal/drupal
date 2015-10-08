@@ -5,8 +5,6 @@
  * Schema API handling functions.
  */
 
-use Drupal\Core\Database\Database;
-
 /**
  * @addtogroup schemaapi
  * @{

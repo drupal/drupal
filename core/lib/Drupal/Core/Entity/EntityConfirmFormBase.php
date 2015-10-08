@@ -10,7 +10,6 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Form\ConfirmFormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a generic base class for an entity-based confirmation form.

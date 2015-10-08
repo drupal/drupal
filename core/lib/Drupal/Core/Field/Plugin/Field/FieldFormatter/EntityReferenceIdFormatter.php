@@ -8,7 +8,6 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Plugin implementation of the 'entity reference ID' formatter.

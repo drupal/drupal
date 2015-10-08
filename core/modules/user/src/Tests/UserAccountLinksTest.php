@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\simpletest\WebTestBase;
 
 /**

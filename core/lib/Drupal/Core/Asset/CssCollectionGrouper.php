@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\Asset\AssetCollectionGrouperInterface;
-
 /**
  * Groups CSS assets.
  */

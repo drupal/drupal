@@ -8,11 +8,8 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
-use Drupal\views\Plugin\views\display\DefaultDisplay;
-use Drupal\views\Plugin\views\display\Feed;
 use Drupal\views\Views;
 
 /**

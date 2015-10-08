@@ -12,7 +12,6 @@ use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\Query\QueryInterface;

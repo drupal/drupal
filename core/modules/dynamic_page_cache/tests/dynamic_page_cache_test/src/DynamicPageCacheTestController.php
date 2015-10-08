@@ -7,7 +7,6 @@
 
 namespace Drupal\dynamic_page_cache_test;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Entity\User;

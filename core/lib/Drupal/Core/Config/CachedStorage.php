@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 

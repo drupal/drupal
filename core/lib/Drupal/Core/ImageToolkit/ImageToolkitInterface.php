@@ -9,7 +9,6 @@ namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\Image\ImageInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**

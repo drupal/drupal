@@ -6,9 +6,6 @@
  */
 
 use Drupal\Core\Url;
-use Drupal\block_content\Entity\BlockContentType;
-use Drupal\block_content\Entity\BlockContent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Prepares variables for a custom block type creation list templates.

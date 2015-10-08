@@ -7,7 +7,6 @@
 
 namespace Drupal\simpletest\Form;
 
-use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;

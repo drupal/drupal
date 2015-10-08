@@ -5,7 +5,6 @@
  * Functions to aid in presenting database results as a set of pages.
  */
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\UrlHelper;
 
 /**

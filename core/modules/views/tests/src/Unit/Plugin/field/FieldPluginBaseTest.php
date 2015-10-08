@@ -9,7 +9,6 @@ namespace Drupal\Tests\views\Unit\Plugin\field {
 
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;

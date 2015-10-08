@@ -10,7 +10,6 @@ namespace Drupal\comment\Tests;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;

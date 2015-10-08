@@ -8,10 +8,6 @@
 namespace Drupal\forum\Tests;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Core\DrupalKernel;
-use Drupal\Core\Session\UserSession;
-use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;

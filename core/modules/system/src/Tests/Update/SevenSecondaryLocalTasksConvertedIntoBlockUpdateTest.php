@@ -7,8 +7,6 @@
 
 namespace Drupal\system\Tests\Update;
 
-use Drupal\node\Entity\Node;
-
 /**
  * Tests the upgrade path for converting seven secondary local tasks into a block.
  *

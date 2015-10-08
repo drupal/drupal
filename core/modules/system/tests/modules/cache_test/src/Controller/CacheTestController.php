@@ -7,8 +7,6 @@
 
 namespace Drupal\cache_test\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Url;
 
 /**

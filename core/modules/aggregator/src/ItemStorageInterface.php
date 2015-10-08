@@ -7,7 +7,6 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\aggregator\Entity\Item;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**

@@ -7,8 +7,6 @@
 
 namespace Drupal\serialization\Normalizer;
 
-use Symfony\Component\Serializer\Exception\RuntimeException;
-
 /**
  * Converts typed data objects to arrays.
  */

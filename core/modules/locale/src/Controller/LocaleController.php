@@ -7,7 +7,6 @@
 namespace Drupal\locale\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Return response for manual check translations.

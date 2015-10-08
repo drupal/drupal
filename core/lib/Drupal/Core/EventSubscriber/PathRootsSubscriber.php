@@ -11,7 +11,6 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides all available first bits of all route paths.

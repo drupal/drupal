@@ -14,7 +14,6 @@
  * @see batch_get()
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\Percentage;

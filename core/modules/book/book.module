@@ -6,7 +6,6 @@
  */
 
 use Drupal\book\BookManager;
-use Drupal\book\BookManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;

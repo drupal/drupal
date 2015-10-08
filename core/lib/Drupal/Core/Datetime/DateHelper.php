@@ -16,8 +16,6 @@
  */
 namespace Drupal\Core\Datetime;
 
-use Drupal\Core\Datetime\DrupalDateTime;
-
 /**
  * Defines Gregorian Calendar date values.
  */

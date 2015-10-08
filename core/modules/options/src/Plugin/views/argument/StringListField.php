@@ -14,7 +14,6 @@ use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument\StringArgument;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Argument handler for list field to show the human readable name in summary.

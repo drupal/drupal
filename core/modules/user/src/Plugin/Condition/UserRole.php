@@ -9,7 +9,6 @@ namespace Drupal\user\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
  * Provides a 'User Role' condition.

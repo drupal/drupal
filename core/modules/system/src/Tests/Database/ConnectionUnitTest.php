@@ -7,9 +7,7 @@
 
 namespace Drupal\system\Tests\Database;
 
-use Doctrine\Common\Reflection\StaticReflectionProperty;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Site\Settings;
 use Drupal\simpletest\KernelTestBase;
 
 /**

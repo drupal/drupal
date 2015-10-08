@@ -7,8 +7,6 @@
 
 namespace Drupal\system\Tests\Update;
 
-use Drupal\node\Entity\Node;
-
 /**
  * Tests the upgrade path for local actions/tasks being converted into blocks.
  *

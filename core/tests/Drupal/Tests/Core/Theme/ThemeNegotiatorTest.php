@@ -10,8 +10,6 @@ namespace Drupal\Tests\Core\Theme;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\ThemeNegotiator;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 
 /**

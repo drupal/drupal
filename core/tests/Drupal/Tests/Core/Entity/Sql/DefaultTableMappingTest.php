@@ -6,8 +6,8 @@
  */
 
 namespace Drupal\Tests\Core\Entity\Sql;
+
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorageException;
 use Drupal\Tests\UnitTestCase;
 
 /**

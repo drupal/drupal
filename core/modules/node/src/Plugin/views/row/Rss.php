@@ -9,8 +9,6 @@ namespace Drupal\node\Plugin\views\row;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\row\RssPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\node\NodeStorageInterface;
 
 /**
  * Plugin which performs a node_view on the resulting object

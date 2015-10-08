@@ -8,7 +8,6 @@
 namespace Drupal\image\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the functions for generating paths and URLs for image styles.

@@ -9,7 +9,6 @@ namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the grid style plugin.

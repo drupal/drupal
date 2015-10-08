@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Core\Render\MainContent\HtmlRenderer;
 use Drupal\simpletest\KernelTestBase;
 
 /**

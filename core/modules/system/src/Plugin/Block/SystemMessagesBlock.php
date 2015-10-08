@@ -10,7 +10,6 @@ namespace Drupal\system\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\MessagesBlockPluginInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a block to display the messages.

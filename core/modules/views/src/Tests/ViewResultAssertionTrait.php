@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests;
 
 use Drupal\views\Plugin\views\field\Field;
-use Drupal\views\ViewExecutable;
 
 /**
  * Provides a class for assertions to check for the expected result of a View.

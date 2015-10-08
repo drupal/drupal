@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Session\SessionConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

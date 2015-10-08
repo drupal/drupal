@@ -8,7 +8,6 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\Component\Utility\Html;
-use Drupal\views\Views;
 use Drupal\user\Entity\User;
 
 /**

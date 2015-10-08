@@ -9,7 +9,6 @@ namespace Drupal\user\Tests\Views;
 
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
-use Drupal\views\Views;
 
 /**
  * Tests the roles filter handler.

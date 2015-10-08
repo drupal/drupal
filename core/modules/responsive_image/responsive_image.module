@@ -7,9 +7,7 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
-use \Drupal\Core\Template\Attribute;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\Core\Url;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\breakpoint\BreakpointInterface;

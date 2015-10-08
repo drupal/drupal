@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\SharedTempStoreFactory;

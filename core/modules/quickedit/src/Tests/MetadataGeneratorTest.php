@@ -9,7 +9,6 @@ namespace Drupal\quickedit\Tests;
 
 use Drupal\quickedit\EditorSelector;
 use Drupal\quickedit\MetadataGenerator;
-use Drupal\quickedit\Plugin\InPlaceEditorManager;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
 
 /**

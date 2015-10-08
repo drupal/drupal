@@ -8,7 +8,6 @@
 namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;

@@ -7,9 +7,7 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigImporter;
-use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\simpletest\KernelTestBase;
 

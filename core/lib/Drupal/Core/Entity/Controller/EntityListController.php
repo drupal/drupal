@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic controller to list entities.

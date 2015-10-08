@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Url;
-use Drupal\entity_test\Entity\EntityTest;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 

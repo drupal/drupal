@@ -7,7 +7,6 @@
 
 namespace Drupal\datetime\Tests\Views;
 
-use Drupal\Core\Datetime\Element\Datetime;
 use Drupal\views\Views;
 
 /**

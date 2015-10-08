@@ -8,7 +8,6 @@
 namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Core\DestructableInterface;
 use Drupal\Core\Database\Connection;
 
 /**

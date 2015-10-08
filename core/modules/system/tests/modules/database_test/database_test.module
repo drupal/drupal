@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Database\Query\AlterableInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Implements hook_query_alter().

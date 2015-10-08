@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\simpletest\KernelTestBase;
 

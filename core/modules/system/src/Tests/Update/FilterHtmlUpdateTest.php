@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Update;
 
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\system\Tests\Update\UpdatePathTestBase;
 
 /**
  * Tests that the allowed html configutations are updated with attributes.

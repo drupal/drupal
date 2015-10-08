@@ -8,7 +8,6 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\simpletest\KernelTestBase;
-use Drupal\editor\Plugin\EditorManager;
 
 /**
  * Tests detection of text editors and correct generation of attachments.

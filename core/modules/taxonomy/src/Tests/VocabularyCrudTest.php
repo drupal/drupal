@@ -8,7 +8,6 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**

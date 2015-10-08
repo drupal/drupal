@@ -11,12 +11,9 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\Condition;
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a controller class that handles the node grants system.

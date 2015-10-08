@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
 

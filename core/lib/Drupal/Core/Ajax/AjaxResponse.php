@@ -7,15 +7,10 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\Renderer;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\AttachmentsTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * JSON response object for AJAX requests.

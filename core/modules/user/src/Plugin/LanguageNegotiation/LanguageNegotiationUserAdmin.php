@@ -10,7 +10,6 @@ namespace Drupal\user\Plugin\LanguageNegotiation;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\AdminContext;
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;

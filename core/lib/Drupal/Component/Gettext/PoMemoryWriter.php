@@ -7,10 +7,6 @@
 
 namespace Drupal\Component\Gettext;
 
-use Drupal\Component\Gettext\PoWriterInterface;
-use Drupal\Component\Gettext\PoHeader;
-use Drupal\Component\Gettext\PoItem;
-
 /**
  * Defines a Gettext PO memory writer, to be used by the installer.
  */

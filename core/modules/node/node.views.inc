@@ -5,9 +5,6 @@
  * Provide views data for node.module.
  */
 
-use Drupal\views\Analyzer;
-use Drupal\views\ViewExecutable;
-
 /**
  * Implements hook_views_wizard().
  */

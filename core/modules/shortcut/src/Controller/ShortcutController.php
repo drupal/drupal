@@ -10,7 +10,6 @@ namespace Drupal\shortcut\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\shortcut\ShortcutSetInterface;
 use Drupal\shortcut\ShortcutInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides route responses for taxonomy.module.

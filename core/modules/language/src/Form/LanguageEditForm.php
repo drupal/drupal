@@ -8,7 +8,6 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\language\Form\LanguageFormBase;
 
 /**
  * Controller for language edit forms.

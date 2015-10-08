@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

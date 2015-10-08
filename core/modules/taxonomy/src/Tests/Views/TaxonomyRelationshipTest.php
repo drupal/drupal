@@ -9,7 +9,6 @@ namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
-use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**

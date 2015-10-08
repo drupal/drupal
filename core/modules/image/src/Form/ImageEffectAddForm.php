@@ -7,7 +7,6 @@
 
 namespace Drupal\image\Form;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\ImageEffectManager;
 use Drupal\image\ImageStyleInterface;

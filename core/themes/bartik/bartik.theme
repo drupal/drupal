@@ -5,7 +5,6 @@
  * Functions to support theming in the Bartik theme.
  */
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
 /**

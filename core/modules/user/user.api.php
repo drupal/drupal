@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * @file
  * Hooks provided by the User module.

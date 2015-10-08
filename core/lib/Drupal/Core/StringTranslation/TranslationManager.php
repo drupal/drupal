@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\StringTranslation;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 

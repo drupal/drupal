@@ -9,7 +9,6 @@ namespace Drupal\rest\Tests;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
-use Drupal\rest\Tests\RESTTestBase;
 
 /**
  * Tests the retrieval of resources.

@@ -9,7 +9,6 @@ namespace Drupal\views_ui\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
-use Drupal\views\Views;
 
 /**
  * Tests some general functionality of editing views, like deleting a view.

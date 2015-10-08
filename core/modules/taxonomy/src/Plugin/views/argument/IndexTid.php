@@ -9,7 +9,6 @@ namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\views\Plugin\views\argument\ManyToOne;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Allow taxonomy term ID(s) as argument.

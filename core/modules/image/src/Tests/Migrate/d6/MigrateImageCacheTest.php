@@ -9,9 +9,7 @@ namespace Drupal\image\Tests\Migrate\d6;
 
 use Drupal\Core\Database\Database;
 use Drupal\image\Entity\ImageStyle;
-use \Drupal\image\ConfigurableImageEffectBase;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\MigrateException;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**

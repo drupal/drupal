@@ -21,7 +21,6 @@ use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Zend\Stdlib\ArrayObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Menu\LocalTaskManager

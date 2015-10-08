@@ -9,8 +9,6 @@ namespace Drupal\dblog\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
  * Provides a field handler that renders operation link markup.

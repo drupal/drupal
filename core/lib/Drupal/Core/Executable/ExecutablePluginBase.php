@@ -8,7 +8,6 @@
 namespace Drupal\Core\Executable;
 
 use Drupal\Core\Plugin\ContextAwarePluginBase;
-use Symfony\Component\Validator\Validation;
 use Drupal\Component\Plugin\Exception\PluginException;
 
 /**

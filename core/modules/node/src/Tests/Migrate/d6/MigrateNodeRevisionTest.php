@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\migrate\Entity\Migration;
-
 /**
  * Node content revisions migration.
  *

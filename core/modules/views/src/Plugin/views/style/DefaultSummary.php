@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\style\StylePluginBase;
 
 /**
  * The default style plugin for summaries.

@@ -7,9 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element\Email;
 use Drupal\simpletest\KernelTestBase;

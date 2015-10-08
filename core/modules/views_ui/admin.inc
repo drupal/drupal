@@ -6,12 +6,8 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Tags;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Views;
-use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.

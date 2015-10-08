@@ -8,7 +8,6 @@
 namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
 
 /**

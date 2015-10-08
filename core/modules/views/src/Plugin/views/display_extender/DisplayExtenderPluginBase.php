@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\display_extender;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**

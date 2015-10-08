@@ -9,7 +9,6 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
-use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'map' entity field type.

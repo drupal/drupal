@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Tests\Core\Database\Stub\StubConnection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**

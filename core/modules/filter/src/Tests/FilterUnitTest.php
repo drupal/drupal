@@ -8,7 +8,6 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
 use Drupal\editor\EditorXssFilter\Standard;

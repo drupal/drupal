@@ -8,8 +8,7 @@
 namespace Drupal\Tests\user\Unit\Plugin\Core\Entity;
 
 use Drupal\Tests\Core\Session\UserSessionTest;
-use Drupal\user\Entity\User;
-  use Drupal\user\RoleInterface;
+use Drupal\user\RoleInterface;
 
   /**
  * @coversDefaultClass \Drupal\user\Entity\User

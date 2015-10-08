@@ -9,7 +9,6 @@ namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\PreExistingConfigException;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\simpletest\KernelTestBase;
 

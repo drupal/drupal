@@ -5,9 +5,6 @@
  * Field hooks to implement a simple datetime field.
  */
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**

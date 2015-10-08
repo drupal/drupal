@@ -5,8 +5,6 @@
  * Helper module for Views tests.
  */
 
-use Drupal\views\ViewExecutable;
-
 /**
  * Access callback for the generic handler test.
  *

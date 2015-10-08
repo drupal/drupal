@@ -8,7 +8,6 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Provides an interface for common functionality for content translation.

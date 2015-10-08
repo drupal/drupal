@@ -5,12 +5,7 @@
  * Functions for form and batch generation and processing.
  */
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;

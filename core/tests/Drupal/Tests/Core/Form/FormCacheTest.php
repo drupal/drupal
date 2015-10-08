@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormCache;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;

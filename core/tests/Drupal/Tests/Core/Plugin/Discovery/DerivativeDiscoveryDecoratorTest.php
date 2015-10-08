@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
-use Drupal\Component\Plugin\Exception\InvalidDeriverException;
 use Drupal\Tests\UnitTestCase;
 
 /**

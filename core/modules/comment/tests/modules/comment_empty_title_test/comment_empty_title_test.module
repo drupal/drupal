@@ -6,8 +6,6 @@
  * markup in edge case scenarios where comments have empty titles.
  */
 
-use Drupal\comment\CommentInterface;
-
 /**
  * Implements hook_preprocess_comment().
  */

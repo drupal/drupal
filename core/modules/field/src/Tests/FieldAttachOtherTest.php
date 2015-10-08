@@ -8,7 +8,6 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests other Field API functions.

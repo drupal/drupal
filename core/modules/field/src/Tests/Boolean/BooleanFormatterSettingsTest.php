@@ -9,8 +9,6 @@ namespace Drupal\field\Tests\Boolean;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;

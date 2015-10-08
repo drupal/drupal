@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Returns responses for Contextual module routes.

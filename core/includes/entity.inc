@@ -5,8 +5,6 @@
  * Entity API for handling entities like nodes or users.
  */
 
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityInterface;
 
 /**

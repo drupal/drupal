@@ -9,7 +9,6 @@ namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
-use Drupal\Core\Render\Element\Ajax;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;

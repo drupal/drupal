@@ -11,7 +11,6 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
 
 /**
  * Render controller for nodes.

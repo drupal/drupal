@@ -6,8 +6,6 @@
 
 namespace Drupal\rdf\Tests\Field;
 
-use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
-
 /**
  * Tests RDFa output by text field formatters.
  *

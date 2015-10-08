@@ -7,8 +7,6 @@
 
 namespace Drupal\serialization\Normalizer;
 
-use Symfony\Component\Serializer\Exception\RuntimeException;
-
 /**
  * Converts the Drupal entity object structures to a normalized array.
  *

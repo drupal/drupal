@@ -7,8 +7,6 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 

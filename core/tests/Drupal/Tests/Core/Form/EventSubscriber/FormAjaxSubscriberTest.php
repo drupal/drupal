@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Form\EventSubscriber;
 
-use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
@@ -18,7 +17,6 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 

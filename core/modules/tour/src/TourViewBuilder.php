@@ -8,7 +8,6 @@
 namespace Drupal\tour;
 
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Html;
 
 /**

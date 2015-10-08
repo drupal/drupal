@@ -7,10 +7,7 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\Component\Utility\UserAgent;
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests browser language detection.

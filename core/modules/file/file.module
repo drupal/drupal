@@ -18,7 +18,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\file\FileUsage\FileUsageInterface;
 
 // Load all Field module hooks for File.
 require_once __DIR__ . '/file.field.inc';

@@ -9,7 +9,6 @@ namespace Drupal\Tests\migrate\Unit\process;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\migrate\process\Get;
 use Drupal\migrate\Plugin\migrate\process\Iterator;
-use Drupal\migrate\Plugin\migrate\process\StaticMap;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 

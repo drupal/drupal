@@ -9,7 +9,6 @@ namespace Drupal\migrate\Tests;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Entity\Migration;
-use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;

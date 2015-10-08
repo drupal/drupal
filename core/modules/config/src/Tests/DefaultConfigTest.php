@@ -9,7 +9,6 @@ namespace Drupal\config\Tests;
 
 use Drupal\config_test\TestInstallStorage;
 use Drupal\Core\Config\InstallStorage;
-use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\DependencyInjection\Reference;

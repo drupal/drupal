@@ -7,7 +7,6 @@
 
 namespace Drupal\toolbar\Tests;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;

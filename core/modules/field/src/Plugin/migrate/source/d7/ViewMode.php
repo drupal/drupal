@@ -7,7 +7,6 @@
 
 namespace Drupal\field\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Annotation\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**

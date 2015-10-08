@@ -8,7 +8,6 @@
 namespace Drupal\text\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 

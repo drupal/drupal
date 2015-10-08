@@ -7,9 +7,6 @@
 
 namespace Drupal\Component\Gettext;
 
-use Drupal\Component\Gettext\PoMetadataInterface;
-use Drupal\Component\Gettext\PoItem;
-
 /**
  * Shared interface definition for all Gettext PO Writers.
  */

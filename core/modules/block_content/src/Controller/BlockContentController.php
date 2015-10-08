@@ -7,7 +7,6 @@
 
 namespace Drupal\block_content\Controller;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\block_content\BlockContentTypeInterface;

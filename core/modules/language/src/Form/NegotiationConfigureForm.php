@@ -9,7 +9,6 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;

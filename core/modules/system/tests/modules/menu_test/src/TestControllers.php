@@ -8,7 +8,6 @@
 namespace Drupal\menu_test;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controllers for testing the menu integration routing system.

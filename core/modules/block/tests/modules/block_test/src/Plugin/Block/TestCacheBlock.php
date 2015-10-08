@@ -8,7 +8,6 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a block to test caching.

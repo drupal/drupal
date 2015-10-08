@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\RouteProcessor;
 
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\Routing\Route;

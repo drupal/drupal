@@ -8,9 +8,6 @@
 namespace Drupal\file\Tests;
 
 use Drupal\file\Entity\File;
-use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 
 /**
  * File saving tests.

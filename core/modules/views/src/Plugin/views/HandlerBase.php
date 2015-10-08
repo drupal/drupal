@@ -18,7 +18,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Database\Database;
 use Drupal\views\Views;
 use Drupal\views\ViewsData;
 

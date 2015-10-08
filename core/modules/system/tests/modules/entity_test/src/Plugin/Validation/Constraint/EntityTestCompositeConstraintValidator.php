@@ -7,7 +7,6 @@
 
 namespace Drupal\entity_test\Plugin\Validation\Constraint;
 
-use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

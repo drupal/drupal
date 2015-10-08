@@ -7,10 +7,8 @@
 
 namespace Drupal\Core\DependencyInjection\Compiler;
 
-use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds services tagged 'stream_wrapper' to the stream_wrapper_manager service.

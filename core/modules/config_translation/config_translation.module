@@ -5,11 +5,9 @@
  * Configuration Translation module.
  */
 
-use Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\FieldConfigInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Implements hook_help().

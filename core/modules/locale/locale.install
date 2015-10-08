@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Url;
-use Drupal\Core\Language\Language;
-use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 
 /**
  * Implements hook_install().

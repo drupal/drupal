@@ -7,11 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Core\Site\Settings;
-use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
-use Drupal\user\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests output on the status overview page.

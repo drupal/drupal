@@ -7,7 +7,6 @@
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\Plugin\migrate\process\TestGet;
-use Drupal\migrate\Row;
 
 /**
  * Tests the get process plugin.

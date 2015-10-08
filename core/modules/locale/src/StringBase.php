@@ -7,8 +7,6 @@
 
 namespace Drupal\locale;
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * Defines the locale string base class.
  *

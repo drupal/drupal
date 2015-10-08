@@ -9,8 +9,6 @@ namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Provides common functionality for content translation.

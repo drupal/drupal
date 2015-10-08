@@ -7,7 +7,6 @@
 
 namespace Drupal\locale\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 use Drupal\core\language\languageInterface;
 

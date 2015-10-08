@@ -7,9 +7,7 @@
 
 namespace Drupal\block_content\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\block_content\BlockContentTypeInterface;
 
 /**

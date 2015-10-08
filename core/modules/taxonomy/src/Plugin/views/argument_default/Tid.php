@@ -17,8 +17,6 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\VocabularyStorageInterface;
 
 /**

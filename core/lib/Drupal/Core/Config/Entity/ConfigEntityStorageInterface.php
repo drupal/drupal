@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**

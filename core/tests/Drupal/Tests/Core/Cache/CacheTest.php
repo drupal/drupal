@@ -7,10 +7,8 @@
 
 namespace Drupal\Tests\Core\Cache;
 
-use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Cache\Cache

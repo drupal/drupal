@@ -9,7 +9,6 @@ namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
-use Drupal\views_ui\ViewUI;
 
 /**
  * Provides a form for editing the details of a View.

@@ -12,7 +12,6 @@ use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\KernelTestBase;
-use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 

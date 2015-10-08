@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Render\Markup;
 

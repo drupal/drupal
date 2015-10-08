@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Plugin\views\wizard;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**

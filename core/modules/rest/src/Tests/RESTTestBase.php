@@ -7,7 +7,6 @@
 
 namespace Drupal\rest\Tests;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 

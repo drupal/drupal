@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Ajax;
 
-use Drupal\Core\Ajax\InsertCommand;
-
 /**
  * AJAX command for calling the jQuery replace() method.
  *

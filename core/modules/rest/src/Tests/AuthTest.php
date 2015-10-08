@@ -8,7 +8,6 @@
 namespace Drupal\rest\Tests;
 
 use Drupal\Core\Url;
-use Drupal\rest\Tests\RESTTestBase;
 
 /**
  * Tests authentication provider restrictions.

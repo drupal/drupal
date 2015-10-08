@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\KernelTestBase;
 
 /**

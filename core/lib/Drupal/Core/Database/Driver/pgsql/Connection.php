@@ -10,9 +10,6 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
-use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * @addtogroup database

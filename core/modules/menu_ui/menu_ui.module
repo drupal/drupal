@@ -20,7 +20,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\node\NodeInterface;
 
 /**

@@ -12,7 +12,6 @@ use Drupal\Core\Session\PermissionsHashGenerator;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
-
 /**
  * @coversDefaultClass \Drupal\Core\Session\PermissionsHashGenerator
  * @group Session

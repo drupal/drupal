@@ -9,7 +9,6 @@ namespace Drupal\field_ui\Controller;
 
 use Drupal\Core\Entity\Controller\EntityListController;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines a controller to list field instances.

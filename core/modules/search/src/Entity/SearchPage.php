@@ -10,7 +10,6 @@ namespace Drupal\search\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginCollection;

@@ -4,7 +4,6 @@
  * @file
  * Install, update and uninstall functions for the aggregator module.
  */
-use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_requirements().

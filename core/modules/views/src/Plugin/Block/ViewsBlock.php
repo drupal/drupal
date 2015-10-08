@@ -8,10 +8,8 @@
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Config\Entity\Query\Query;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Element\View;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a generic Views block.

@@ -5,8 +5,6 @@
  * @{
  */
 
-use Drupal\Component\Utility\NestedArray;
-
 /**
  * @defgroup field_types Field Types API
  * @{

@@ -8,7 +8,6 @@
 namespace Drupal\tour\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\tour\TipsPluginCollection;
 use Drupal\tour\TourInterface;
 

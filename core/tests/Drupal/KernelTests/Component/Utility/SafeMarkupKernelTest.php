@@ -7,9 +7,7 @@
 
 namespace Drupal\KernelTests\Component\Utility;
 
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 

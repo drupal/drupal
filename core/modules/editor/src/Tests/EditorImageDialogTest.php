@@ -7,20 +7,12 @@
 
 namespace Drupal\editor\Tests;
 
-use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\PathElement;
-use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\editor\Form\EditorImageDialog;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\NodeType;
-use Drupal\simpletest\KernelTestBase;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
-use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests EditorImageDialog validation and conversion functionality.
