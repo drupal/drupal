@@ -46,24 +46,28 @@ div.simpletest-pass {
   color: #981010;
 }
 
+tr.simpletest-pass,
 tr.simpletest-pass.odd {
   background-color: #b6ffb6;
 }
 tr.simpletest-pass.even {
   background-color: #9bff9b;
 }
+tr.simpletest-fail,
 tr.simpletest-fail.odd {
   background-color: #ffc9c9;
 }
 tr.simpletest-fail.even {
   background-color: #ffacac;
 }
+tr.simpletest-exception,
 tr.simpletest-exception.odd {
   background-color: #f4ea71;
 }
 tr.simpletest-exception.even {
   background-color: #f5e742;
 }
+tr.simpletest-debug,
 tr.simpletest-debug.odd {
   background-color: #eee;
 }
