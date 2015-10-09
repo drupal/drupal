@@ -27,7 +27,7 @@ class Condition extends ConditionBase {
     $single_conditions = array();
     $condition_groups = array();
     foreach ($this->conditions as $condition) {
-      if ($condition['field'] instanceOf ConditionInterface) {
+      if ($condition['field'] instanceof ConditionInterface) {
         $condition_groups[] = $condition;
       }
       else {

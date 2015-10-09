@@ -41,7 +41,7 @@ class SafeMarkup {
    *   \Drupal\Component\Render\MarkupInterface.
    */
   public static function isSafe($string, $strategy = 'html') {
-    return $string instanceOf MarkupInterface;
+    return $string instanceof MarkupInterface;
   }
 
   /**

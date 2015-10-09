@@ -447,7 +447,7 @@ class DateHelper {
    *   The number of days in the month.
    */
   public static function daysInMonth($date = NULL) {
-    if (!$date instanceOf DrupalDateTime) {
+    if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
     if (!$date->hasErrors()) {
@@ -467,7 +467,7 @@ class DateHelper {
    *   The number of days in the year.
    */
   public static function daysInYear($date = NULL) {
-    if (!$date instanceOf DrupalDateTime) {
+    if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
     if (!$date->hasErrors()) {
@@ -492,7 +492,7 @@ class DateHelper {
    *   The number of the day in the week.
    */
   public static function dayOfWeek($date = NULL) {
-    if (!$date instanceOf DrupalDateTime) {
+    if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
     if (!$date->hasErrors()) {
@@ -515,7 +515,7 @@ class DateHelper {
    *   The name of the day in the week for that date.
    */
   public static function dayOfWeekName($date = NULL, $abbr = TRUE) {
-    if (!$date instanceOf DrupalDateTime) {
+    if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
     $dow = self::dayOfWeek($date);

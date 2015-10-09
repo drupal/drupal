@@ -51,7 +51,7 @@ class DateTimeComputed extends TypedData {
     $storage_format = $item->getFieldDefinition()->getSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
     try {
       $date = DrupalDateTime::createFromFormat($storage_format, $value, DATETIME_STORAGE_TIMEZONE);
-      if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+      if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
         $this->date = $date;
       }
     }

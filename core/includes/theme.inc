@@ -385,7 +385,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
  *   https://www.drupal.org/node/2575065
  */
 function theme_render_and_autoescape($arg) {
-  if ($arg instanceOf MarkupInterface) {
+  if ($arg instanceof MarkupInterface) {
     return (string) $arg;
   }
   $return = NULL;

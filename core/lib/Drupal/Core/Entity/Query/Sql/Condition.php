@@ -37,7 +37,7 @@ class Condition extends ConditionBase {
     $sql_query = $conditionContainer instanceof SelectInterface ? $conditionContainer : $conditionContainer->sqlQuery;
     $tables = $this->query->getTables($sql_query);
     foreach ($this->conditions as $condition) {
-      if ($condition['field'] instanceOf ConditionInterface) {
+      if ($condition['field'] instanceof ConditionInterface) {
         $sql_condition = new SqlCondition($condition['field']->getConjunction());
         // Add the SQL query to the object before calling this method again.
         $sql_condition->sqlQuery = $sql_query;

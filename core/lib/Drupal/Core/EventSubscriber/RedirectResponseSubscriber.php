@@ -52,7 +52,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
    */
   public function checkRedirectUrl(FilterResponseEvent $event) {
     $response = $event->getResponse();
-    if ($response instanceOf RedirectResponse) {
+    if ($response instanceof RedirectResponse) {
       $request = $event->getRequest();
 
       // Let the 'destination' query parameter override the redirect target.
@@ -71,7 +71,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
 
       // Regardless of whether the target is the original one or the overridden
       // destination, ensure that all redirects are safe.
-      if (!($response instanceOf SecuredRedirectResponse)) {
+      if (!($response instanceof SecuredRedirectResponse)) {
         try {
           // SecuredRedirectResponse is an abstract class that requires a
           // concrete implementation. Default to LocalRedirectResponse, which

@@ -277,10 +277,10 @@ class Condition implements ConditionInterface, \Countable {
     $this->changed = TRUE;
     foreach ($this->conditions as $key => $condition) {
       if ($key !== '#conjunction') {
-        if ($condition['field'] instanceOf ConditionInterface) {
+        if ($condition['field'] instanceof ConditionInterface) {
           $this->conditions[$key]['field'] = clone($condition['field']);
         }
-        if ($condition['value'] instanceOf SelectInterface) {
+        if ($condition['value'] instanceof SelectInterface) {
           $this->conditions[$key]['value'] = clone($condition['value']);
         }
       }

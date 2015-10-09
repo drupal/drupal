@@ -30,7 +30,7 @@ class ConditionAggregate extends ConditionAggregateBase {
     $sql_query = ($conditionContainer instanceof SelectInterface) ? $conditionContainer : $conditionContainer->sqlQuery;
     $tables = new Tables($sql_query);
     foreach ($this->conditions as $condition) {
-      if ($condition['field'] instanceOf ConditionAggregateInterface) {
+      if ($condition['field'] instanceof ConditionAggregateInterface) {
         $sql_condition = new SqlCondition($condition['field']->getConjunction());
         // Add the SQL query to the object before calling this method again.
         $sql_condition->sqlQuery = $sql_query;

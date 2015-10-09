@@ -67,7 +67,7 @@ class Datelist extends DateElementBase {
         }
         $timezone = !empty($element['#date_timezone']) ? $element['#date_timezone'] : NULL;
         $date = DrupalDateTime::createFromArray($input, $timezone);
-        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+        if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
           static::incrementRound($date, $increment);
         }
       }
@@ -76,7 +76,7 @@ class Datelist extends DateElementBase {
       $return = array_fill_keys($parts, '');
       if (!empty($element['#default_value'])) {
         $date = $element['#default_value'];
-        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+        if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
           static::incrementRound($date, $increment);
           foreach ($parts as $part) {
             switch ($part) {
@@ -184,7 +184,7 @@ class Datelist extends DateElementBase {
     $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
 
     // Set a fallback timezone.
-    if ($date instanceOf DrupalDateTime) {
+    if ($date instanceof DrupalDateTime) {
       $element['#date_timezone'] = $date->getTimezone()->getName();
     }
     elseif (!empty($element['#timezone'])) {
@@ -253,7 +253,7 @@ class Datelist extends DateElementBase {
       }
 
       $default = isset($element['#value'][$part]) && trim($element['#value'][$part]) != '' ? $element['#value'][$part] : '';
-      $value = $date instanceOf DrupalDateTime && !$date->hasErrors() ? $date->format($format) : $default;
+      $value = $date instanceof DrupalDateTime && !$date->hasErrors() ? $date->format($format) : $default;
       if (!empty($value) && $part != 'ampm') {
         $value = intval($value);
       }
@@ -320,7 +320,7 @@ class Datelist extends DateElementBase {
       else {
         // If the input is valid, set it.
         $date = $input['object'];
-        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+        if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
           $form_state->setValueForElement($element, $date);
         }
         // If the input is invalid, set an error.
@@ -364,7 +364,7 @@ class Datelist extends DateElementBase {
    */
   protected static function incrementRound(&$date, $increment) {
     // Round minutes and seconds, if necessary.
-    if ($date instanceOf DrupalDateTime && $increment > 1) {
+    if ($date instanceof DrupalDateTime && $increment > 1) {
       $day = intval($date->format('j'));
       $hour = intval($date->format('H'));
       $second = intval(round(intval($date->format('s')) / $increment) * $increment);

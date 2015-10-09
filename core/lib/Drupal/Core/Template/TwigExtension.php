@@ -415,7 +415,7 @@ class TwigExtension extends \Twig_Extension {
     }
 
     // Keep Twig_Markup objects intact to support autoescaping.
-    if ($autoescape && ($arg instanceOf \Twig_Markup || $arg instanceOf MarkupInterface)) {
+    if ($autoescape && ($arg instanceof \Twig_Markup || $arg instanceof MarkupInterface)) {
       return $arg;
     }
 

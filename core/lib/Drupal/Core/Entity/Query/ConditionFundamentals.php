@@ -87,7 +87,7 @@ abstract class ConditionFundamentals {
    */
   public function __clone() {
     foreach ($this->conditions as $key => $condition) {
-      if ($condition['field'] instanceOf ConditionInterface) {
+      if ($condition['field'] instanceof ConditionInterface) {
         $this->conditions[$key]['field'] = clone($condition['field']);
       }
     }
