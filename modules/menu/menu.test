@@ -72,6 +72,17 @@ class MenuTestCase extends DrupalWebTestCase {
     $saved_item = menu_link_load($item['mlid']);
     $this->assertEqual($description, $saved_item['options']['attributes']['title'], 'Saving an existing link updates the description (title attribute)');
     $this->resetMenuLink($item, $old_title);
+
+    // Test that the page title is correct when a local task appears in a
+    // top-level menu item. See https://www.drupal.org/node/1973262.
+    $item = $this->addMenuLink(0, 'user/register', 'user-menu');
+    $this->drupalGet('user/password');
+    $this->assertNoTitle('Home | Drupal');
+    $this->drupalLogout();
+    $this->drupalGet('user/register');
+    $this->assertTitle($item['link_title'] . ' | Drupal');
+    $this->drupalGet('user');
+    $this->assertNoTitle('Home | Drupal');
   }
 
   /**
