@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Added an optional 'project:' prefix that can be added to dependencies in a
+  module's .info file to indicate which project the dependency resides in.
 - Fixed various bugs that occurred after hooks were invoked early in the Drupal
   bootstrap and that caused module_implements() and drupal_alter() to cache an
   incomplete set of hook implementations for later use.

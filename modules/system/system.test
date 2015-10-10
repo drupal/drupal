@@ -390,6 +390,18 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   }
 
   /**
+   * Checks functionality of project namespaces for dependencies.
+   */
+  function testProjectNamespaceForDependencies() {
+    // Enable module with project namespace to ensure nothing breaks.
+    $edit = array(
+      'modules[Testing][system_project_namespace_test][enable]' => TRUE,
+    );
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('system_project_namespace_test'), TRUE);
+  }
+
+  /**
    * Attempt to enable translation module without locale enabled.
    */
   function testEnableWithoutDependency() {

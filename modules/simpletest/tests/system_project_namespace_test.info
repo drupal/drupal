@@ -1,0 +1,7 @@
+name = "System project namespace test"
+description = "Support module for testing project namespace dependencies."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
+dependencies[] = drupal:filter
