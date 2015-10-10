@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in the Statistics module that caused JavaScript files attached to
+  a node while it is being viewed to be omitted from the page.
 - Added an optional 'project:' prefix that can be added to dependencies in a
   module's .info file to indicate which project the dependency resides in.
 - Fixed various bugs that occurred after hooks were invoked early in the Drupal

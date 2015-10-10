@@ -118,10 +118,9 @@ function statistics_node_view($node, $view_mode) {
   // Attach Ajax node count statistics if configured.
   if (variable_get('statistics_count_content_views', 0) && variable_get('statistics_count_content_views_ajax', 0)) {
     if (!empty($node->nid) && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
-      $node->content['#attached']['js'] = array(
-        drupal_get_path('module', 'statistics') . '/statistics.js' => array(
-          'scope' => 'footer'
-        ),
+      $statistics = drupal_get_path('module', 'statistics') . '/statistics.js';
+      $node->content['#attached']['js'][$statistics] = array(
+        'scope' => 'footer',
       );
       $settings = array('data' => array('nid' => $node->nid), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
       $node->content['#attached']['js'][] = array(
