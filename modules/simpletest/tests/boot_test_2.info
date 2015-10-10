@@ -1,0 +1,6 @@
+name = Early bootstrap tests
+description = A support module for hook_boot hook testing.
+core = 7.x
+package = Testing
+version = VERSION
+hidden = TRUE

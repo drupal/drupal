@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Defines a hook_help() implementation in a non-"bootstrap" module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function boot_test_2_help($path, $arg) {
+  // Empty hook.
+}

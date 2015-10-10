@@ -11,6 +11,7 @@ configure = admin/config/development/testing/settings
 files[] = tests/actions.test
 files[] = tests/ajax.test
 files[] = tests/batch.test
+files[] = tests/boot.test
 files[] = tests/bootstrap.test
 files[] = tests/cache.test
 files[] = tests/common.test

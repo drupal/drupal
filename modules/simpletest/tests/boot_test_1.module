@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Tests calling module_implements() during hook_boot() invocation.
+ */
+
+/**
+ * Implements hook_boot().
+ */
+function boot_test_1_boot() {
+  // Calling module_implements during hook_boot() will return "vital" modules
+  // only, and this list of modules will be statically cached.
+  module_implements('help');
+  // Define a special path to test that the static cache isn't written away
+  // if we exit before having completed the bootstrap.
+  if ($_GET['q'] == 'early_exit') {
+    module_implements_write_cache();
+    exit();
+  }
+}
