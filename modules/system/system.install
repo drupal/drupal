@@ -800,6 +800,7 @@ function system_schema() {
         'type' => 'varchar',
         'length' => 100,
         'not null' => TRUE,
+        'binary' => TRUE,
       ),
       'type' => array(
         'description' => 'The date format type, e.g. medium.',
@@ -3175,6 +3176,20 @@ function system_update_7079() {
     'default' => 0,
   );
   db_change_field('file_managed', 'filesize', 'filesize', $spec);
+}
+
+/**
+ * Convert the 'format' column in {date_format_locale} to case sensitive varchar.
+ */
+function system_update_7080() {
+  $spec = array(
+    'description' => 'The date format string.',
+    'type' => 'varchar',
+    'length' => 100,
+    'not null' => TRUE,
+    'binary' => TRUE,
+  );
+  db_change_field('date_format_locale', 'format', 'format', $spec);
 }
 
 /**

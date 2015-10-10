@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Made the format column in the {date_format_locale} database table
+  case-sensitive, to match the equivalent column in the {date_formats} table.
 - Fixed a bug in the Statistics module that caused JavaScript files attached to
   a node while it is being viewed to be omitted from the page.
 - Added an optional 'project:' prefix that can be added to dependencies in a
