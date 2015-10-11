@@ -1983,3 +1983,26 @@ class FilterSettingsTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Tests DOMDocument serialization.
+ */
+class FilterDOMSerializeTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Serialization',
+      'description' => 'Test serialization of DOMDocument objects.',
+      'group' => 'Filter',
+    );
+  }
+
+  /**
+   * Tests empty DOMDocument object.
+   */
+  function testFilterEmptyDOMSerialization() {
+    $document = new DOMDocument();
+    $result = filter_dom_serialize($document);
+    $this->assertEqual('', $result);
+  }
+}
