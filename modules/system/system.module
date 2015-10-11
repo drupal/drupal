@@ -2411,6 +2411,10 @@ function _system_rebuild_module_data() {
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
 
+    // The "name" key is required, but to avoid a fatal error in the menu system
+    // we set a reasonable default if it is not provided.
+    $modules[$key]->info += array('name' => $key);
+
     // Prefix stylesheets and scripts with module path.
     $path = dirname($module->uri);
     if (isset($module->info['stylesheets'])) {
@@ -2545,6 +2549,10 @@ function _system_rebuild_theme_data() {
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+
+    // The "name" key is required, but to avoid a fatal error in the menu system
+    // we set a reasonable default if it is not provided.
+    $themes[$key]->info += array('name' => $key);
 
     // Add the info file modification time, so it becomes available for
     // contributed modules to use for ordering theme lists.

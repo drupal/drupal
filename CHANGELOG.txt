@@ -1,6 +1,10 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Prevented malformed theme .info files (without a "name" key) from causing
+  exceptions during menu rebuilds. If an .info file without a "name" key is
+  found in a module or theme directory, Drupal will now use the module or
+  theme's machine name as the display name instead.
 - Made the format column in the {date_format_locale} database table
   case-sensitive, to match the equivalent column in the {date_formats} table.
 - Fixed a bug in the Statistics module that caused JavaScript files attached to
