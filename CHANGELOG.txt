@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Made drupal_set_message() display and return messages when "0" is passed in
+  as the message to set.
 - Fixed non-functional "Files displayed by default" setting on file fields.
 - The "worker callback" provided in hook_cron_queue_info() and the "finished"
   callback specified during batch processing can now be any PHP callable
