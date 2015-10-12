@@ -1,6 +1,9 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- The "worker callback" provided in hook_cron_queue_info() and the "finished"
+  callback specified during batch processing can now be any PHP callable
+  instead of just functions.
 - Prevented drupal_set_time_limit() from decreasing the time limit in the case
   where the PHP maximum execution time is already unlimited.
 - Changed the default thousand marker for numeric fields from a space ("1 000")

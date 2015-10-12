@@ -923,7 +923,7 @@ class CronQueueTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp(array('common_test', 'common_test_cron_helper'));
+    parent::setUp(array('common_test', 'common_test_cron_helper', 'cron_queue_test'));
   }
 
   /**
@@ -941,6 +941,23 @@ class CronQueueTestCase extends DrupalWebTestCase {
 
     // The item should be left in the queue.
     $this->assertEqual($queue->numberOfItems(), 1, 'Failing item still in the queue after throwing an exception.');
+  }
+
+  /**
+   * Tests worker defined as a class method callable.
+   */
+  function testCallable() {
+    $queue = DrupalQueue::get('cron_queue_test_callback');
+
+    // Enqueue an item for processing.
+    $queue->createItem(array($this->randomName() => $this->randomName()));
+
+    // Run cron; the worker should perform the task and delete the item from the
+    // queue.
+    $this->cronRun();
+
+    // The queue should be empty.
+    $this->assertEqual($queue->numberOfItems(), 0);
   }
 
 }

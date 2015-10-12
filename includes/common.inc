@@ -5380,12 +5380,12 @@ function drupal_cron_run() {
       // Do not run if queue wants to skip.
       continue;
     }
-    $function = $info['worker callback'];
+    $callback = $info['worker callback'];
     $end = time() + (isset($info['time']) ? $info['time'] : 15);
     $queue = DrupalQueue::get($queue_name);
     while (time() < $end && ($item = $queue->claimItem())) {
       try {
-        $function($item->data);
+        call_user_func($callback, $item->data);
         $queue->deleteItem($item);
       }
       catch (Exception $e) {

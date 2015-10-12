@@ -7,9 +7,21 @@ function cron_queue_test_cron_queue_info() {
   $queues['cron_queue_test_exception'] = array(
     'worker callback' => 'cron_queue_test_exception',
   );
+  $queues['cron_queue_test_callback'] = array(
+    'worker callback' => array('CronQueueTestCallbackClass', 'foo'),
+  );
+
   return $queues;
 }
 
 function cron_queue_test_exception($item) {
   throw new Exception('That is not supposed to happen.');
+}
+
+class CronQueueTestCallbackClass {
+
+  static public function foo() {
+    // Do nothing.
+  }
+
 }
