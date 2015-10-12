@@ -93,6 +93,8 @@ Drupal.behaviors.password = {
  * Returns the estimated strength and the relevant output message.
  */
 Drupal.evaluatePasswordStrength = function (password, translate) {
+  password = $.trim(password);
+
   var weaknesses = 0, strength = 100, msg = [];
 
   var hasLowercase = /[a-z]+/.test(password);
