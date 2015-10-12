@@ -951,6 +951,34 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
     $this->assertRaw($field_name . '[' . LANGUAGE_NONE . '][0][display]', 'First file appears as expected.');
     $this->assertRaw($field_name . '[' . LANGUAGE_NONE . '][1][display]', 'Second file appears as expected.');
   }
+
+  /**
+   * Tests default display of File Field.
+   */
+  function testDefaultFileFieldDisplay() {
+    $field_name = strtolower($this->randomName());
+    $type_name = 'article';
+    $field_settings = array(
+      'display_field' => '1',
+      'display_default' => '0',
+    );
+    $instance_settings = array(
+      'description_field' => '1',
+    );
+    $widget_settings = array();
+    $this->createFileField($field_name, $type_name, $field_settings, $instance_settings, $widget_settings);
+    $field = field_info_field($field_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
+
+    $test_file = $this->getTestFile('text');
+
+    // Create a new node with the uploaded file.
+    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->assertFieldByXPath('//input[@type="checkbox" and @name="' . $field_name . '[und][0][display]"]', NULL, 'Default file display checkbox field exists.');
+    $this->assertFieldByXPath('//input[@type="checkbox" and @name="' . $field_name . '[und][0][display]" and not(@checked)]', NULL, 'Default file display is off.');
+  }
 }
 
 /**
