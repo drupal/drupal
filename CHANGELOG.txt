@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Changed the default settings.php configuration to exclude private files from
+  the "404_fast_paths" behavior.
 - Changed the page that displays filter tips for a particular text format, for
   example filter/tips/full_html, to return "page not found" or "access denied"
   if the format does not exist or the user does not have access to it. This
