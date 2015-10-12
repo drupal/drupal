@@ -1,6 +1,9 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Changed one-time login link failure messages to be displayed as errors or
+  warnings as appropriate, rather than as regular status messages (minor UI
+  change and data structure change).
 - Changed the default settings.php configuration to exclude private files from
   the "404_fast_paths" behavior.
 - Changed the page that displays filter tips for a particular text format, for
