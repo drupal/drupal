@@ -1,6 +1,11 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Changed the page that displays filter tips for a particular text format, for
+  example filter/tips/full_html, to return "page not found" or "access denied"
+  if the format does not exist or the user does not have access to it. This
+  change adds a new menu item to the Filter module's hook_menu() entry (minor
+  data structure change).
 - Added a new hook, hook_block_cid_parts_alter(), to allow modules to alter the
   cache keys used for caching a particular block.
 - Made drupal_set_message() display and return messages when "0" is passed in
