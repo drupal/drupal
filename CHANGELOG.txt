@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Prevented drupal_set_time_limit() from decreasing the time limit in the case
+  where the PHP maximum execution time is already unlimited.
 - Changed the default thousand marker for numeric fields from a space ("1 000")
   to nothing ("1000").
 - Prevented malformed theme .info files (without a "name" key) from causing
