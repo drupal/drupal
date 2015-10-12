@@ -188,7 +188,7 @@ function number_field_formatter_info() {
       'label' => t('Default'),
       'field types' => array('number_integer'),
       'settings' =>  array(
-        'thousand_separator' => ' ',
+        'thousand_separator' => '',
         // The 'decimal_separator' and 'scale' settings are not configurable
         // through the UI, and will therefore keep their default values. They
         // are only present so that the 'number_integer' and 'number_decimal'
@@ -202,7 +202,7 @@ function number_field_formatter_info() {
       'label' => t('Default'),
       'field types' => array('number_decimal', 'number_float'),
       'settings' =>  array(
-        'thousand_separator' => ' ',
+        'thousand_separator' => '',
         'decimal_separator' => '.',
         'scale' => 2,
         'prefix_suffix' => TRUE,

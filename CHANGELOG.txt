@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Changed the default thousand marker for numeric fields from a space ("1 000")
+  to nothing ("1000").
 - Prevented malformed theme .info files (without a "name" key) from causing
   exceptions during menu rebuilds. If an .info file without a "name" key is
   found in a module or theme directory, Drupal will now use the module or
