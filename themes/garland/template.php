@@ -19,22 +19,22 @@ function garland_breadcrumb($variables) {
 /**
  * Override or insert variables into the maintenance page template.
  */
-function garland_preprocess_maintenance_page(&$vars) {
+function garland_preprocess_maintenance_page(&$variables) {
   // While markup for normal pages is split into page.tpl.php and html.tpl.php,
   // the markup for the maintenance page is all in the single
   // maintenance-page.tpl.php template. So, to have what's done in
   // garland_preprocess_html() also happen on the maintenance page, it has to be
   // called here.
-  garland_preprocess_html($vars);
+  garland_preprocess_html($variables);
 }
 
 /**
  * Override or insert variables into the html template.
  */
-function garland_preprocess_html(&$vars) {
+function garland_preprocess_html(&$variables) {
   // Toggle fixed or fluid width.
   if (theme_get_setting('garland_width') == 'fluid') {
-    $vars['classes_array'][] = 'fluid-width';
+    $variables['classes_array'][] = 'fluid-width';
   }
   // Add conditional CSS for IE6.
   drupal_add_css(path_to_theme() . '/fix-ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
@@ -43,27 +43,27 @@ function garland_preprocess_html(&$vars) {
 /**
  * Override or insert variables into the html template.
  */
-function garland_process_html(&$vars) {
+function garland_process_html(&$variables) {
   // Hook into color.module
   if (module_exists('color')) {
-    _color_html_alter($vars);
+    _color_html_alter($variables);
   }
 }
 
 /**
  * Override or insert variables into the page template.
  */
-function garland_preprocess_page(&$vars) {
+function garland_preprocess_page(&$variables) {
   // Move secondary tabs into a separate variable.
-  $vars['tabs2'] = array(
+  $variables['tabs2'] = array(
     '#theme' => 'menu_local_tasks',
-    '#secondary' => $vars['tabs']['#secondary'],
+    '#secondary' => $variables['tabs']['#secondary'],
   );
-  unset($vars['tabs']['#secondary']);
+  unset($variables['tabs']['#secondary']);
 
-  if (isset($vars['main_menu'])) {
-    $vars['primary_nav'] = theme('links__system_main_menu', array(
-      'links' => $vars['main_menu'],
+  if (isset($variables['main_menu'])) {
+    $variables['primary_nav'] = theme('links__system_main_menu', array(
+      'links' => $variables['main_menu'],
       'attributes' => array(
         'class' => array('links', 'inline', 'main-menu'),
       ),
@@ -75,11 +75,11 @@ function garland_preprocess_page(&$vars) {
     ));
   }
   else {
-    $vars['primary_nav'] = FALSE;
+    $variables['primary_nav'] = FALSE;
   }
-  if (isset($vars['secondary_menu'])) {
-    $vars['secondary_nav'] = theme('links__system_secondary_menu', array(
-      'links' => $vars['secondary_menu'],
+  if (isset($variables['secondary_menu'])) {
+    $variables['secondary_nav'] = theme('links__system_secondary_menu', array(
+      'links' => $variables['secondary_menu'],
       'attributes' => array(
         'class' => array('links', 'inline', 'secondary-menu'),
       ),
@@ -91,66 +91,66 @@ function garland_preprocess_page(&$vars) {
     ));
   }
   else {
-    $vars['secondary_nav'] = FALSE;
+    $variables['secondary_nav'] = FALSE;
   }
 
   // Prepare header.
   $site_fields = array();
-  if (!empty($vars['site_name'])) {
-    $site_fields[] = $vars['site_name'];
+  if (!empty($variables['site_name'])) {
+    $site_fields[] = $variables['site_name'];
   }
-  if (!empty($vars['site_slogan'])) {
-    $site_fields[] = $vars['site_slogan'];
+  if (!empty($variables['site_slogan'])) {
+    $site_fields[] = $variables['site_slogan'];
   }
-  $vars['site_title'] = implode(' ', $site_fields);
+  $variables['site_title'] = implode(' ', $site_fields);
   if (!empty($site_fields)) {
     $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
   }
-  $vars['site_html'] = implode(' ', $site_fields);
+  $variables['site_html'] = implode(' ', $site_fields);
 
   // Set a variable for the site name title and logo alt attributes text.
-  $slogan_text = $vars['site_slogan'];
-  $site_name_text = $vars['site_name'];
-  $vars['site_name_and_slogan'] = $site_name_text . ' ' . $slogan_text;
+  $slogan_text = $variables['site_slogan'];
+  $site_name_text = $variables['site_name'];
+  $variables['site_name_and_slogan'] = $site_name_text . ' ' . $slogan_text;
 }
 
 /**
  * Override or insert variables into the node template.
  */
-function garland_preprocess_node(&$vars) {
-  $vars['submitted'] = $vars['date'] . ' — ' . $vars['name'];
+function garland_preprocess_node(&$variables) {
+  $variables['submitted'] = $variables['date'] . ' — ' . $variables['name'];
 }
 
 /**
  * Override or insert variables into the comment template.
  */
-function garland_preprocess_comment(&$vars) {
-  $vars['submitted'] = $vars['created'] . ' — ' . $vars['author'];
+function garland_preprocess_comment(&$variables) {
+  $variables['submitted'] = $variables['created'] . ' — ' . $variables['author'];
 }
 
 /**
  * Override or insert variables into the block template.
  */
-function garland_preprocess_block(&$vars) {
-  $vars['title_attributes_array']['class'][] = 'title';
-  $vars['classes_array'][] = 'clearfix';
+function garland_preprocess_block(&$variables) {
+  $variables['title_attributes_array']['class'][] = 'title';
+  $variables['classes_array'][] = 'clearfix';
 }
 
 /**
  * Override or insert variables into the page template.
  */
-function garland_process_page(&$vars) {
+function garland_process_page(&$variables) {
   // Hook into color.module
   if (module_exists('color')) {
-    _color_page_alter($vars);
+    _color_page_alter($variables);
   }
 }
 
 /**
  * Override or insert variables into the region template.
  */
-function garland_preprocess_region(&$vars) {
-  if ($vars['region'] == 'header') {
-    $vars['classes_array'][] = 'clearfix';
+function garland_preprocess_region(&$variables) {
+  if ($variables['region'] == 'header') {
+    $variables['classes_array'][] = 'clearfix';
   }
 }
