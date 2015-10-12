@@ -967,6 +967,7 @@ function _block_get_cache_id($block) {
     // Start with common sub-patterns: block identification, theme, language.
     $cid_parts[] = $block->module;
     $cid_parts[] = $block->delta;
+    drupal_alter('block_cid_parts', $cid_parts, $block);
     $cid_parts = array_merge($cid_parts, drupal_render_cid_parts($block->cache));
 
     return implode(':', $cid_parts);

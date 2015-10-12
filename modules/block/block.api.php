@@ -364,5 +364,30 @@ function hook_block_list_alter(&$blocks) {
 }
 
 /**
+ * Act on block cache ID (cid) parts before the cid is generated.
+ *
+ * This hook allows you to add, remove or modify the custom keys used to
+ * generate a block cache ID (by default, these keys are set to the block
+ * module and delta). These keys will be combined with the standard ones
+ * provided by drupal_render_cid_parts() to generate the final block cache ID.
+ *
+ * To change the cache granularity used by drupal_render_cid_parts(), this hook
+ * cannot be used; instead, set the 'cache' key in the block's definition in
+ * hook_block_info().
+ *
+ * @params $cid_parts
+ *   An array of elements used to build the cid.
+ * @param $block
+ *   The block object being acted on.
+ *
+ * @see _block_get_cache_id()
+ */
+function hook_block_cid_parts_alter(&$cid_parts, $block) {
+  global $user;
+  // This example shows how to cache a block based on the user's timezone.
+  $cid_parts[] = $user->timezone;
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

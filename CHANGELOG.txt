@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Added a new hook, hook_block_cid_parts_alter(), to allow modules to alter the
+  cache keys used for caching a particular block.
 - Made drupal_set_message() display and return messages when "0" is passed in
   as the message to set.
 - Fixed non-functional "Files displayed by default" setting on file fields.
