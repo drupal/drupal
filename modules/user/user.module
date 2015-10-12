@@ -1911,13 +1911,13 @@ function user_menu_link_alter(&$link) {
   // for authenticated users. Authenticated users should see "My account", but
   // anonymous users should not see it at all. Therefore, invoke
   // user_translated_menu_link_alter() to conditionally hide the link.
-  if ($link['link_path'] == 'user' && $link['module'] == 'system') {
+  if ($link['link_path'] == 'user' && isset($link['module']) && $link['module'] == 'system') {
     $link['options']['alter'] = TRUE;
   }
 
   // Force the Logout link to appear on the top-level of 'user-menu' menu by
   // default (i.e., unless it has been customized).
-  if ($link['link_path'] == 'user/logout' && $link['module'] == 'system' && empty($link['customized'])) {
+  if ($link['link_path'] == 'user/logout' && isset($link['module']) && $link['module'] == 'system' && empty($link['customized'])) {
     $link['plid'] = 0;
   }
 }
