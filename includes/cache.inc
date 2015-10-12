@@ -14,6 +14,7 @@
  *
  * @param $bin
  *   The cache bin for which the cache object should be returned.
+ *
  * @return DrupalCacheInterface
  *   The cache object associated with the specified bin.
  *
