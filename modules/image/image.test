@@ -78,6 +78,24 @@ class ImageFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Create a random style.
+   *
+   * @return array
+   *  A list containing the details of the generated image style.
+   */
+  function createRandomStyle() {
+    $style_name = strtolower($this->randomName(10));
+    $style_label = $this->randomString();
+    image_style_save(array('name' => $style_name, 'label' => $style_label));
+    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    return array(
+      'name' => $style_name,
+      'label' => $style_label,
+      'path' => $style_path,
+    );
+  }
+
+  /**
    * Upload an image to a node.
    *
    * @param $image
@@ -466,6 +484,58 @@ class ImageEffectsUnitTest extends ImageToolkitTestCase {
     $this->assertTrue(is_null($image_effect_definitions_called), 'image_effect_definitions() returned data from cache.');
 
     $this->assertTrue($effects == $cached_effects, 'Cached effects are the same as generated effects.');
+  }
+}
+
+/**
+ * Tests the administrative user interface.
+ */
+class ImageAdminUiTestCase extends ImageFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Administrative user interface',
+      'description' => 'Tests the forms used in the administrative user interface.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('image'));
+  }
+
+  /**
+   * Test if the help text is available on the add effect form.
+   */
+  function testAddEffectHelpText() {
+    // Create a random image style.
+    $style = $this->createRandomStyle();
+
+    // Open the add effect form and check for the help text.
+    $this->drupalGet($style['path'] . '/add/image_crop');
+    $this->assertText(t('Cropping will remove portions of an image to make it the specified dimensions.'), 'The image style effect help text was displayed on the add effect page.');
+  }
+
+  /**
+   * Test if the help text is available on the edit effect form.
+   */
+  function testEditEffectHelpText() {
+    // Create a random image style.
+    $random_style = $this->createRandomStyle();
+
+    // Add the crop effect to the image style.
+    $edit = array();
+    $edit['data[width]'] = 20;
+    $edit['data[height]'] = 20;
+    $this->drupalPost($random_style['path'] . '/add/image_crop', $edit, t('Add effect'));
+
+    // Open the edit effect form and check for the help text.
+    drupal_static_reset('image_styles');
+    $style = image_style_load($random_style['name']);
+
+    foreach ($style['effects'] as $ieid => $effect) {
+      $this->drupalGet($random_style['path'] . '/effects/' . $ieid);
+      $this->assertText(t('Cropping will remove portions of an image to make it the specified dimensions.'), 'The image style effect help text was displayed on the edit effect page.');
+    }
   }
 }
 

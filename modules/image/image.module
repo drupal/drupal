@@ -64,7 +64,7 @@ function image_help($path, $arg) {
       $effect = image_effect_definition_load($arg[7]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
     case 'admin/config/media/image-styles/edit/%/effects/%':
-      $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6], $arg[4]);
+      $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[7], $arg[5]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
   }
 }
