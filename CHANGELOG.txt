@@ -2,7 +2,7 @@
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
 - Added alternate text to file icons displayed by the File module, to improve
-  accessibility (minor API addition to theme_file_icon()).
+  accessibility (string change, and minor API addition to theme_file_icon()).
 - Changed one-time login link failure messages to be displayed as errors or
   warnings as appropriate, rather than as regular status messages (minor UI
   change and data structure change).
