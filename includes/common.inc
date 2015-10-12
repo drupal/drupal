@@ -7165,6 +7165,7 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
  */
 function drupal_schema_field_types($table) {
   $table_schema = drupal_get_schema($table);
+  $field_types = array();
   foreach ($table_schema['fields'] as $field_name => $field_info) {
     $field_types[$field_name] = isset($field_info['type']) ? $field_info['type'] : NULL;
   }
