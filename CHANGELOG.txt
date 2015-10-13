@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Allowed the user-picture.tpl.php theme template to have HTML classes besides
+  the default "user-picture" class printed in it (markup change).
 - Fixed the URL text filter to convert e-mail addresses with plus signs into
   mailto: links.
 - Added alternate text to file icons displayed by the File module, to improve
