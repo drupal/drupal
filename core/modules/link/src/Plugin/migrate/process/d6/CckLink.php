@@ -45,8 +45,11 @@ class CckLink extends ProcessPluginBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    // Drupal 6 link attributes are double serialized.
-    $attributes = unserialize(unserialize($value['attributes']));
+    $attributes = unserialize($value['attributes']);
+    // Drupal 6 link attributes might be double serialized.
+    if (!is_array($attributes)) {
+      $attributes = unserialize($attributes);
+    }
 
     // Massage the values into the correct form for the link.
     $route['uri'] = $value['url'];

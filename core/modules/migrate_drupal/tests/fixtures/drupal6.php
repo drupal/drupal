@@ -2021,6 +2021,12 @@ $connection->insert('content_field_test')
   'field_test_value' => NULL,
   'field_test_format' => NULL,
 ))
+->values(array(
+  'vid' => '12',
+  'nid' => '9',
+  'field_test_value' => 'text for default value',
+  'field_test_format' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('content_field_test_text_single_checkbox', array(
@@ -2076,6 +2082,11 @@ $connection->insert('content_field_test_text_single_checkbox')
   'vid' => '5',
   'nid' => '2',
   'field_test_text_single_checkbox_value' => NULL,
+))
+->values(array(
+  'vid' => '12',
+  'nid' => '9',
+  'field_test_text_single_checkbox_value' => '0',
 ))
 ->execute();
 
@@ -2143,6 +2154,12 @@ $connection->insert('content_field_test_two')
 ->values(array(
   'vid' => '5',
   'nid' => '2',
+  'delta' => '0',
+  'field_test_two_value' => NULL,
+))
+->values(array(
+  'vid' => '12',
+  'nid' => '9',
   'delta' => '0',
   'field_test_two_value' => NULL,
 ))
@@ -3229,6 +3246,34 @@ $connection->insert('content_type_story')
   'field_test_phone_value' => NULL,
   'field_test_exclude_unset_value' => NULL,
   'field_test_exclude_unset_format' => NULL,
+  'field_test_imagefield_fid' => NULL,
+  'field_test_imagefield_list' => NULL,
+  'field_test_imagefield_data' => NULL,
+))
+->values(array(
+  'nid' => '9',
+  'vid' => '12',
+  'uid' => '0',
+  'field_test_three_value' => '101.00',
+  'field_test_identical1_value' => NULL,
+  'field_test_identical2_value' => NULL,
+  'field_test_link_url' => 'http://www.example.com/buy-one-upon-a-time',
+  'field_test_link_title' => 'Buy it now',
+  'field_test_link_attributes' => 'a:1:{s:6:"target";s:6:"_blank";}',
+  'field_test_date_value' => NULL,
+  'field_test_datestamp_value' => NULL,
+  'field_test_datetime_value' => NULL,
+  'field_test_email_email' => NULL,
+  'field_test_filefield_fid' => NULL,
+  'field_test_filefield_list' => NULL,
+  'field_test_filefield_data' => NULL,
+  'field_test_four_value' => '101',
+  'field_test_integer_selectlist_value' => NULL,
+  'field_test_float_single_checkbox_value' => '3',
+  'field_test_decimal_radio_buttons_value' => NULL,
+  'field_test_phone_value' => NULL,
+  'field_test_exclude_unset_value' => 'text for default value',
+  'field_test_exclude_unset_format' => '1',
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
@@ -21406,6 +21451,23 @@ $connection->insert('node')
   'tnid' => '0',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '9',
+  'vid' => '12',
+  'type' => 'story',
+  'language' => '',
+  'title' => 'Once upon a time',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1444671588',
+  'changed' => '1444671588',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -21537,6 +21599,13 @@ $connection->insert('node_comment_statistics')
 ->values(array(
   'nid' => '2',
   'last_comment_timestamp' => '1389002813',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '9',
+  'last_comment_timestamp' => '1444671588',
   'last_comment_name' => NULL,
   'last_comment_uid' => '1',
   'comment_count' => '0',
@@ -21771,6 +21840,17 @@ $connection->insert('node_revisions')
   'teaser' => 'test for node 9',
   'log' => '',
   'timestamp' => '1390095701',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '9',
+  'vid' => '12',
+  'uid' => '1',
+  'title' => 'Once upon a time',
+  'body' => 'Come on kid, go to sleep.',
+  'teaser' => 'Come on kid, go to sleep.',
+  'log' => '',
+  'timestamp' => '1444671588',
   'format' => '1',
 ))
 ->execute();
