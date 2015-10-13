@@ -313,6 +313,10 @@ class BootstrapAutoloadTestCase extends DrupalWebTestCase {
     $this->assertTrue(drupal_autoload_interface('drupalautoloadtestinterface'), 'drupal_autoload_interface() recognizes <em>DrupalAutoloadTestInterface</em> in lower case.');
     // Test class autoloader.
     $this->assertTrue(drupal_autoload_class('drupalautoloadtestclass'), 'drupal_autoload_class() recognizes <em>DrupalAutoloadTestClass</em> in lower case.');
+    // Test trait autoloader.
+    if (version_compare(PHP_VERSION, '5.4') >= 0) {
+      $this->assertTrue(drupal_autoload_trait('drupalautoloadtesttrait'), 'drupal_autoload_trait() recognizes <em>DrupalAutoloadTestTrait</em> in lower case.');
+    }
   }
 
 }

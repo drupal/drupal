@@ -4,3 +4,19 @@
  * @file
  * Test module to check code registry.
  */
+
+/**
+ * Implements hook_registry_files_alter().
+ */
+function drupal_autoload_test_registry_files_alter(&$files, $modules) {
+  foreach ($modules as $module) {
+    // Add the drupal_autoload_test_trait.sh file to the registry when PHP 5.4+
+    // is being used.
+    if ($module->name == 'drupal_autoload_test' && version_compare(PHP_VERSION, '5.4') >= 0) {
+      $files["$module->dir/drupal_autoload_test_trait.sh"] = array(
+        'module' => $module->name,
+        'weight' => $module->weight,
+      );
+    }
+  }
+}

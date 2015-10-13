@@ -2468,6 +2468,9 @@ function _drupal_bootstrap_database() {
   // the install or upgrade process.
   spl_autoload_register('drupal_autoload_class');
   spl_autoload_register('drupal_autoload_interface');
+  if (version_compare(PHP_VERSION, '5.4') >= 0) {
+    spl_autoload_register('drupal_autoload_trait');
+  }
 }
 
 /**
@@ -3112,6 +3115,22 @@ function drupal_autoload_class($class) {
 }
 
 /**
+ * Confirms that a trait is available.
+ *
+ * This function is rarely called directly. Instead, it is registered as an
+ * spl_autoload() handler, and PHP calls it for us when necessary.
+ *
+ * @param string $trait
+ *   The name of the trait to check or load.
+ *
+ * @return bool
+ *   TRUE if the trait is currently available, FALSE otherwise.
+ */
+function drupal_autoload_trait($trait) {
+  return _registry_check_code('trait', $trait);
+}
+
+/**
  * Checks for a resource in the registry.
  *
  * @param $type
@@ -3129,7 +3148,7 @@ function drupal_autoload_class($class) {
 function _registry_check_code($type, $name = NULL) {
   static $lookup_cache, $cache_update_needed;
 
-  if ($type == 'class' && class_exists($name) || $type == 'interface' && interface_exists($name)) {
+  if ($type == 'class' && class_exists($name) || $type == 'interface' && interface_exists($name) || $type == 'trait' && trait_exists($name)) {
     return TRUE;
   }
 
