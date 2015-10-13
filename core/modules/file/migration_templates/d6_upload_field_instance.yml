@@ -11,7 +11,14 @@ source:
       description_field: 1
 process:
   entity_type: 'constants/entity_type'
-  bundle: node_type
+  bundle:
+    -
+      plugin: migration
+      migration: d6_node_type
+      source: node_type
+    -
+      plugin: skip_on_empty
+      method: row
   field_name: 'constants/name'
   settings: 'constants/settings'
   'settings/file_extensions': file_extensions

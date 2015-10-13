@@ -28,7 +28,14 @@ process:
       index:
         - 1
   entity_type: 'constants/entity_type'
-  bundle: type_name
+  bundle:
+    -
+      plugin: migration
+      migration: d6_node_type
+      source: type_name
+    -
+      plugin: skip_on_empty
+      method: row
   view_mode:
     -
       plugin: migration

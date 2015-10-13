@@ -20,17 +20,11 @@ use Drupal\node\Entity\Node;
 class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->migrateFields();
-  }
-
-  /**
    * Tests migration of file variables to file.settings.yml.
    */
-  public function testFieldInstanceSettings() {
+  public function testFieldInstanceMigration() {
+    $this->migrateFields();
+
     $entity = Node::create(['type' => 'story']);
     // Test a text field.
     $field = FieldConfig::load('node.story.field_test');
@@ -96,6 +90,22 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
     $this->assertIdentical('https://www.drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
     $this->assertIdentical([], $entity->field_test_link->options['attributes']);
+  }
+
+  /**
+   * Tests migrating fields into non-existent content types.
+   */
+  public function testMigrateFieldIntoUnknownNodeType() {
+    $this->sourceDatabase->delete('node_type')
+      ->condition('type', 'test_planet')
+      ->execute();
+    // The field migrations use the migration plugin to ensure that the node
+    // types exist, so this should produce no failures...
+    $this->migrateFields();
+
+    // ...and the field instances should not have been migrated.
+    $this->assertNull(FieldConfig::load('node.test_planet.field_multivalue'));
+    $this->assertNull(FieldConfig::load('node.test_planet.field_test_text_single_checkbox'));
   }
 
 }
