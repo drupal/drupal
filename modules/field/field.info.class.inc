@@ -612,10 +612,12 @@ class FieldInfo {
     // Fill in default values.
     $display += array(
       'label' => 'above',
-      'type' => $field_type_info['default_formatter'],
       'settings' => array(),
       'weight' => 0,
     );
+    if (empty($display['type'])) {
+      $display['type'] = $field_type_info['default_formatter'];
+    }
     if ($display['type'] != 'hidden') {
       $formatter_type_info = field_info_formatter_types($display['type']);
       // Fall back to default formatter if formatter type is not available.
