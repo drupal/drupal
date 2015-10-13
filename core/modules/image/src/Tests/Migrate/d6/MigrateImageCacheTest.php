@@ -9,11 +9,13 @@ namespace Drupal\image\Tests\Migrate\d6;
 
 use Drupal\Core\Database\Database;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
- * Migrate ImageCache presets to Image styles
+ * Tests migration of ImageCache presets to image styles.
  *
  * @group image
  */
@@ -25,6 +27,29 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   public function setUp() {
     parent::setUp();
     $this->installConfig(['image']);
+  }
+
+  /**
+   * Tests that an exception is thrown when ImageCache is not installed.
+   */
+  public function testMissingTable() {
+    $this->sourceDatabase->update('system')
+      ->fields(array(
+        'status' => 0,
+      ))
+      ->condition('name', 'imagecache')
+      ->condition('type', 'module')
+      ->execute();
+
+    try {
+      Migration::load('d6_imagecache_presets')
+        ->getSourcePlugin()
+        ->checkRequirements();
+      $this->fail('Did not catch expected RequirementsException.');
+    }
+    catch (RequirementsException $e) {
+      $this->pass('Caught expected RequirementsException: ' . $e->getMessage());
+    }
   }
 
   /**

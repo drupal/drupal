@@ -14,7 +14,8 @@ use Drupal\migrate\Row;
  * Drupal 6 imagecache presets source from database.
  *
  * @MigrateSource(
- *   id = "d6_imagecache_presets"
+ *   id = "d6_imagecache_presets",
+ *   source_provider = "imagecache"
  * )
  */
 class ImageCachePreset extends DrupalSqlBase {
