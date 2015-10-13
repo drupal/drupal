@@ -1065,7 +1065,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $lines = array(16, 256, 1024, 2048, 20480);
       $count = 0;
       foreach ($lines as $line) {
-        simpletest_generate_file('text-' . $count++, 64, $line);
+        simpletest_generate_file('text-' . $count++, 64, $line, 'text');
       }
 
       // Copy other test files from simpletest.
