@@ -34,7 +34,7 @@ Drupal 7.40, xxxx-xx-xx (development version)
 - Prevented drupal_set_time_limit() from decreasing the time limit in the case
   where the PHP maximum execution time is already unlimited.
 - Changed the default thousand marker for numeric fields from a space ("1 000")
-  to nothing ("1000").
+  to nothing ("1000") (minor UI change: https://www.drupal.org/node/1388376).
 - Prevented malformed theme .info files (without a "name" key) from causing
   exceptions during menu rebuilds. If an .info file without a "name" key is
   found in a module or theme directory, Drupal will now use the module or
@@ -44,7 +44,8 @@ Drupal 7.40, xxxx-xx-xx (development version)
 - Fixed a bug in the Statistics module that caused JavaScript files attached to
   a node while it is being viewed to be omitted from the page.
 - Added an optional 'project:' prefix that can be added to dependencies in a
-  module's .info file to indicate which project the dependency resides in.
+  module's .info file to indicate which project the dependency resides in (API
+  addition: https://www.drupal.org/node/2299747).
 - Fixed various bugs that occurred after hooks were invoked early in the Drupal
   bootstrap and that caused module_implements() and drupal_alter() to cache an
   incomplete set of hook implementations for later use.
@@ -52,9 +53,12 @@ Drupal 7.40, xxxx-xx-xx (development version)
   certain web browsers from picking an unsafe MIME type.
 - Prevented the database API from executing multiple queries at once on MySQL,
   if the site's PHP version is new enough to do so. This is a secondary defense
-  against SQL injection attacks.
+  against SQL injection (API change: https://www.drupal.org/node/2463973).
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused the upgrade
   to fail when there were multiple file records pointing to the same file.
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.39, 2015-08-19
 -----------------------
