@@ -5,7 +5,7 @@
 
 (function (Backbone) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.BaseModel = Backbone.Model.extend(/** @lends Drupal.quickedit.BaseModel# */{
 

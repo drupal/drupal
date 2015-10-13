@@ -5,7 +5,7 @@
 
 (function ($, Modernizr, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attach datepicker fallback on date elements.

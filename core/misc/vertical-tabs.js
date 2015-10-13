@@ -14,7 +14,7 @@
 
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   /**
    * This script transforms a set of details into a stack of vertical tabs.
@@ -126,7 +126,7 @@
         event.preventDefault();
         self.focus();
         // Set focus on the first input field of the visible details/tab pane.
-        $(".vertical-tabs__pane :input:visible:enabled").eq(0).trigger('focus');
+        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
       }
     });
 

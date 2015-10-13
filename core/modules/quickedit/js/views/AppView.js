@@ -7,7 +7,7 @@
 
 (function ($, _, Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   // Indicates whether the page should be reloaded after in-place editing has
   // shut down. A page reload is necessary to re-instate the original HTML of

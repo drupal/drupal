@@ -8,7 +8,7 @@
 
 (function ($, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Render "X new comments" links wherever necessary.

@@ -7,7 +7,7 @@
 
 (function ($, Drupal, drupalSettings, storage) {
 
-  "use strict";
+  'use strict';
 
   var currentUserID = parseInt(drupalSettings.user.uid, 10);
 

@@ -7,7 +7,7 @@
 
 (function ($, Drupal, drupalSettings, CKEDITOR) {
 
-  "use strict";
+  'use strict';
 
   CKEDITOR.plugins.add('drupallink', {
     init: function (editor) {

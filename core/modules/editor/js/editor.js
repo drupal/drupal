@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Finds the text area field associated with the given text format selector.

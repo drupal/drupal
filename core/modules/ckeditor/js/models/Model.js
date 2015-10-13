@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Backbone model for the CKEditor toolbar configuration state.

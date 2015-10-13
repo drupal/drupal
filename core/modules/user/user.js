@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attach handlers to evaluate the strength of any password fields and to

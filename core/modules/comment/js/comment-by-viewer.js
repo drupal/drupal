@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Add 'by-viewer' class to comments written by the current user.

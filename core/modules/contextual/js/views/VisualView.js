@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone, Modernizr) {
 
-  "use strict";
+  'use strict';
 
   Drupal.contextual.VisualView = Backbone.View.extend(/** @lends Drupal.contextual.VisualView# */{
 

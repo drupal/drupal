@@ -8,7 +8,7 @@
 
 (function ($, Drupal, window) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Renders "new" comment indicators wherever necessary.

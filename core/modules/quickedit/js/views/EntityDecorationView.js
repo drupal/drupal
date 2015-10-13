@@ -5,7 +5,7 @@
 
 (function (Drupal, $, Backbone) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.EntityDecorationView = Backbone.View.extend(/** @lends Drupal.quickedit.EntityDecorationView# */{
 

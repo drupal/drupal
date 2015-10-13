@@ -6,7 +6,7 @@
 
 (function (Drupal, Backbone, $) {
 
-  "use strict";
+  'use strict';
 
   Drupal.ckeditor.AuralView = Backbone.View.extend(/** @lends Drupal.ckeditor.AuralView# */{
 
@@ -104,8 +104,8 @@
       // If this position is the first in the last row then tell the user that
       // pressing the down arrow key will create a new row.
       if (position === 1 && row === rowCount) {
-        text += "\n";
-        text += Drupal.t("Press the down arrow key to create a new row.");
+        text += '\n';
+        text += Drupal.t('Press the down arrow key to create a new row.');
       }
       Drupal.announce(text, 'assertive');
     },
@@ -139,7 +139,7 @@
           '@name': $button.children().attr('aria-label'),
           '@type': type
         });
-        text += "\n" + Drupal.t('Press the down arrow key to activate.');
+        text += '\n' + Drupal.t('Press the down arrow key to activate.');
 
         Drupal.announce(text, 'assertive');
       }
@@ -157,14 +157,14 @@
         // If this position is the first in the last row then tell the user that
         // pressing the down arrow key will create a new row.
         if (groupPosition === 1 && position === 1 && row === rowCount) {
-          text += "\n";
-          text += Drupal.t("Press the down arrow key to create a new button group in a new row.");
+          text += '\n';
+          text += Drupal.t('Press the down arrow key to create a new button group in a new row.');
         }
         // If this position is the last one in this row then tell the user that
         // moving the button to the next group will create a new group.
         if (groupPosition === groupPositionCount && position === positionCount) {
-          text += "\n";
-          text += Drupal.t("This is the last group. Move the button forward to create a new group.");
+          text += '\n';
+          text += Drupal.t('This is the last group. Move the button forward to create a new group.');
         }
         Drupal.announce(text, 'assertive');
       }
@@ -186,14 +186,14 @@
         message = Drupal.t('The "@name" button is currently enabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n" + Drupal.t('Use the keyboard arrow keys to change the position of this button.');
-        message += "\n" + Drupal.t('Press the up arrow key on the top row to disable the button.');
+        message += '\n' + Drupal.t('Use the keyboard arrow keys to change the position of this button.');
+        message += '\n' + Drupal.t('Press the up arrow key on the top row to disable the button.');
       }
       else {
         message = Drupal.t('The "@name" button is currently disabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n" + Drupal.t('Use the down arrow key to move this button into the active toolbar.');
+        message += '\n' + Drupal.t('Use the down arrow key to move this button into the active toolbar.');
       }
       Drupal.announce(message);
       event.preventDefault();
@@ -215,15 +215,15 @@
         message = Drupal.t('This @name is currently enabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n" + Drupal.t('Use the keyboard arrow keys to change the position of this separator.');
+        message += '\n' + Drupal.t('Use the keyboard arrow keys to change the position of this separator.');
       }
       else {
         message = Drupal.t('Separators are used to visually split individual buttons.');
-        message += "\n" + Drupal.t('This @name is currently disabled.', {
+        message += '\n' + Drupal.t('This @name is currently disabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n" + Drupal.t('Use the down arrow key to move this separator into the active toolbar.');
-        message += "\n" + Drupal.t('You may add multiple separators to each button group.');
+        message += '\n' + Drupal.t('Use the down arrow key to move this separator into the active toolbar.');
+        message += '\n' + Drupal.t('You may add multiple separators to each button group.');
       }
       Drupal.announce(message);
       event.preventDefault();

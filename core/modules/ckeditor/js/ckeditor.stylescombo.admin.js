@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Ensures that the "stylescombo" button's metadata remains up-to-date.
@@ -66,8 +66,8 @@
     _generateStylesSetSetting: function (styles) {
       var stylesSet = [];
 
-      styles = styles.replace(/\r/g, "\n");
-      var lines = styles.split("\n");
+      styles = styles.replace(/\r/g, '\n');
+      var lines = styles.split('\n');
       for (var i = 0; i < lines.length; i++) {
         var style = $.trim(lines[i]);
 
@@ -118,7 +118,7 @@
           return Drupal.t('No styles configured');
         }
         else {
-          var count = $.trim(styles).split("\n").length;
+          var count = $.trim(styles).split('\n').length;
           return Drupal.t('@count styles configured', {'@count': count});
         }
       });

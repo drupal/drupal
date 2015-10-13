@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Models the state of a contextual link's trigger, list & region.

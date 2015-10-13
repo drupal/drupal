@@ -13,7 +13,7 @@
 
 (function ($, window, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attaches the Ajax behavior to each Ajax form element.
@@ -106,20 +106,20 @@
     var responseText;
     var readyStateText;
     if (xmlhttp.status) {
-      statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") + "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
+      statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', {'!status': xmlhttp.status});
     }
     else {
-      statusCode = "\n" + Drupal.t("An AJAX HTTP request terminated abnormally.");
+      statusCode = '\n' + Drupal.t('An AJAX HTTP request terminated abnormally.');
     }
-    statusCode += "\n" + Drupal.t("Debugging information follows.");
-    pathText = "\n" + Drupal.t("Path: !uri", {'!uri': uri});
+    statusCode += '\n' + Drupal.t('Debugging information follows.');
+    pathText = '\n' + Drupal.t('Path: !uri', {'!uri': uri});
     statusText = '';
     // In some cases, when statusCode === 0, xmlhttp.statusText may not be
     // defined. Unfortunately, testing for it with typeof, etc, doesn't seem to
     // catch that and the test causes an exception. So we need to catch the
     // exception here.
     try {
-      statusText = "\n" + Drupal.t("StatusText: !statusText", {'!statusText': $.trim(xmlhttp.statusText)});
+      statusText = '\n' + Drupal.t('StatusText: !statusText', {'!statusText': $.trim(xmlhttp.statusText)});
     }
     catch (e) {
       // Empty.
@@ -129,20 +129,20 @@
     // Again, we don't have a way to know for sure whether accessing
     // xmlhttp.responseText is going to throw an exception. So we'll catch it.
     try {
-      responseText = "\n" + Drupal.t("ResponseText: !responseText", {'!responseText': $.trim(xmlhttp.responseText)});
+      responseText = '\n' + Drupal.t('ResponseText: !responseText', {'!responseText': $.trim(xmlhttp.responseText)});
     }
     catch (e) {
       // Empty.
     }
 
     // Make the responseText more readable by stripping HTML tags and newlines.
-    responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, "");
-    responseText = responseText.replace(/[\n]+\s+/g, "\n");
+    responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, '');
+    responseText = responseText.replace(/[\n]+\s+/g, '\n');
 
     // We don't need readyState except for status == 0.
-    readyStateText = xmlhttp.status === 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
+    readyStateText = xmlhttp.status === 0 ? ('\n' + Drupal.t('ReadyState: !readyState', {'!readyState': xmlhttp.readyState})) : '';
 
-    customMessage = customMessage ? ("\n" + Drupal.t("CustomMessage: !customMessage", {'!customMessage': customMessage})) : "";
+    customMessage = customMessage ? ('\n' + Drupal.t('CustomMessage: !customMessage', {'!customMessage': customMessage})) : '';
 
     /**
      * Formatted and translated error message.
@@ -406,7 +406,7 @@
         //   the response headers cannot be accessed for verification.
         if (response !== null && !drupalSettings.ajaxTrustedUrl[ajax.url]) {
           if (xmlhttprequest.getResponseHeader('X-Drupal-Ajax-Token') !== '1') {
-            var customMessage = Drupal.t("The response failed verification so will not be processed.");
+            var customMessage = Drupal.t('The response failed verification so will not be processed.');
             return ajax.error(xmlhttprequest, ajax.url, customMessage);
           }
         }
@@ -499,7 +499,7 @@
       // Unset the ajax.ajaxing flag here because it won't be unset during
       // the complete response.
       this.ajaxing = false;
-      window.alert("An error occurred while attempting to process " + this.options.url + ": " + e.message);
+      window.alert('An error occurred while attempting to process ' + this.options.url + ': ' + e.message);
     }
   };
 
@@ -579,7 +579,7 @@
       // Unset the ajax.ajaxing flag here because it won't be unset during
       // the complete response.
       ajax.ajaxing = false;
-      window.alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
+      window.alert('An error occurred while attempting to process ' + ajax.options.url + ': ' + e.message);
     }
   };
 

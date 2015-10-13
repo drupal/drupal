@@ -5,7 +5,7 @@
 
 (function (Drupal, debounce, CKEDITOR, $) {
 
-  "use strict";
+  'use strict';
 
   /**
    * @namespace
@@ -34,7 +34,7 @@
       // label so that screen readers say something that is understandable
       // for end users.
       var label = $('label[for=' + element.getAttribute('id') + ']').html();
-      format.editorSettings.title = Drupal.t("Rich Text Editor, !label field", {'!label': label});
+      format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', {'!label': label});
 
       return !!CKEDITOR.replace(element, format.editorSettings);
     },
@@ -249,7 +249,7 @@
 
   // Moves the dialog to the top of the CKEDITOR stack.
   $(window).on('dialogcreate', function (e, dialog, $element, settings) {
-    $('.ui-dialog--narrow').css("zIndex", CKEDITOR.config.baseFloatZIndex + 1);
+    $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
   });
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.

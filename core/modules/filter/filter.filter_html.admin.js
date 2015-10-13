@@ -5,7 +5,7 @@
 
 (function ($, _, document, window) {
 
-  "use strict";
+  'use strict';
 
   if (Drupal.filterConfiguration) {
 

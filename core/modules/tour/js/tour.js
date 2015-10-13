@@ -5,7 +5,7 @@
 
 (function ($, Backbone, Drupal, document) {
 
-  "use strict";
+  'use strict';
 
   var queryString = decodeURI(window.location.search);
 

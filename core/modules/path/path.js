@@ -4,7 +4,7 @@
  */
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Behaviors for settings summaries on path edit forms.

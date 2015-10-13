@@ -5,7 +5,7 @@
 
 (function ($, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Handles `aria-expanded` and `aria-pressed` attributes on details elements.

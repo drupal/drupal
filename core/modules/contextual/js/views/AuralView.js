@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone) {
 
-  "use strict";
+  'use strict';
 
   Drupal.contextual.AuralView = Backbone.View.extend(/** @lends Drupal.contextual.AuralView# */{
 

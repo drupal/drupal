@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone) {
 
-  "use strict";
+  'use strict';
 
   Drupal.contextual.KeyboardView = Backbone.View.extend(/** @lends Drupal.contextual.KeyboardView# */{
 

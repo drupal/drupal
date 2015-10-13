@@ -9,7 +9,7 @@
 
 (function (window, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   // When the window's "load" event is triggered, mark all enumerated nodes as
   // read. This still allows for Drupal behaviors (which are triggered on the

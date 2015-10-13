@@ -5,7 +5,7 @@
 
 (function ($, Drupal, debounce) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Filters the module list table by a text input search string.

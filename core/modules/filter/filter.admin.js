@@ -5,7 +5,7 @@
 
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Displays and updates the status of filters on the admin page.

@@ -11,7 +11,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Store the state of weight columns display for all tables.

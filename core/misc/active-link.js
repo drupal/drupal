@@ -5,7 +5,7 @@
 
 (function (Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Append is-active class.

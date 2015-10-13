@@ -5,7 +5,7 @@
 
 (function (Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Backbone model for the toolbar.

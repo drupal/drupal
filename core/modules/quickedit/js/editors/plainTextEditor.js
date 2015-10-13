@@ -5,7 +5,7 @@
 
 (function ($, _, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.editors.plain_text = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.plain_text# */{
 

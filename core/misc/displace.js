@@ -26,7 +26,7 @@
 
 (function ($, Drupal, debounce) {
 
-  "use strict";
+  'use strict';
 
   /**
    * @name Drupal.displace.offsets

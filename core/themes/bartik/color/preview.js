@@ -4,7 +4,7 @@
  */
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   Drupal.color = {
     logoChanged: false,
@@ -37,7 +37,7 @@
       var gradient_start = form.find('.js-color-palette input[name="palette[top]"]').val();
       var gradient_end = form.find('.js-color-palette input[name="palette[bottom]"]').val();
 
-      form.find('.color-preview .color-preview-header').attr('style', "background-color: " + gradient_start + "; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(" + gradient_start + "), to(" + gradient_end + ")); background-image: -moz-linear-gradient(-90deg, " + gradient_start + ", " + gradient_end + ");");
+      form.find('.color-preview .color-preview-header').attr('style', 'background-color: ' + gradient_start + '; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(' + gradient_start + '), to(' + gradient_end + ')); background-image: -moz-linear-gradient(-90deg, ' + gradient_start + ', ' + gradient_end + ');');
 
       form.find('.color-preview .color-preview-site-name').css('color', form.find('.js-color-palette input[name="palette[titleslogan]"]').val());
     }

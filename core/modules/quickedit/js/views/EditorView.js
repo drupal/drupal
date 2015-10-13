@@ -5,7 +5,7 @@
 
 (function ($, Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.EditorView = Backbone.View.extend(/** @lends Drupal.quickedit.EditorView# */{
 

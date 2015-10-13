@@ -5,7 +5,7 @@
 
 (function (Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Backbone Model for collapsible menus.

@@ -20,7 +20,7 @@
 
 (function (Drupal, debounce) {
 
-  "use strict";
+  'use strict';
 
   var liveElement;
   var announcements = [];

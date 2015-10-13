@@ -5,7 +5,7 @@
 
 (function ($, _, Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.FieldToolbarView = Backbone.View.extend(/** @lends Drupal.quickedit.FieldToolbarView# */{
 

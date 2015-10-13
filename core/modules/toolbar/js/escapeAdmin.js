@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   var pathInfo = drupalSettings.path;
   var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');

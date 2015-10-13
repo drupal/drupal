@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   // Merge run-time settings with the defaults.
   var options = $.extend(

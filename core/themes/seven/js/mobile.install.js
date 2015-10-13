@@ -1,6 +1,6 @@
 (function () {
 
-  "use strict";
+  'use strict';
 
   function findActiveStep(steps) {
     for (var i = 0; i < steps.length; i++) {

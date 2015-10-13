@@ -7,7 +7,7 @@
  */
 (function ($, Drupal) {
 
-  "use strict";
+  'use strict';
 
   function init(i, tab) {
     var $tab = $(tab);

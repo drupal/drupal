@@ -1,6 +1,6 @@
 (function (Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Call picturefill so newly added responsive images are processed.

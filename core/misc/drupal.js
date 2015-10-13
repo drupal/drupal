@@ -52,7 +52,7 @@ if (window.jQuery) {
 // wrapping it in an anonymous closure.
 (function (domready, Drupal, drupalSettings, drupalTranslations) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Helper to rethrow errors asynchronously.

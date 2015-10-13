@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Ajax command for highlighting elements.
@@ -81,7 +81,7 @@
     var oldTitle = doc.title;
     // Escape the site name, in case it has special characters in it, so we can
     // use it in our regex.
-    var escapedSiteName = response.siteName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    var escapedSiteName = response.siteName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     var re = new RegExp('.+ (.) ' + escapedSiteName);
     doc.title = oldTitle.replace(re, response.title + ' $1 ' + response.siteName);
 
@@ -127,12 +127,12 @@
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach: function (context) {
-      $("#views-tabset a").once('views-ajax').on('click', function () {
+      $('#views-tabset a').once('views-ajax').on('click', function () {
         var href = $(this).attr('href');
         // Cut of #views-tabset.
         var display_id = href.substr(11);
         // Set the form element.
-        $("#views-live-preview #preview-display-id").val(display_id);
+        $('#views-live-preview #preview-display-id').val(display_id);
       });
     }
   };

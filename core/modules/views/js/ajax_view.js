@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attaches the AJAX behavior to exposed filters forms and key View links.
@@ -56,7 +56,7 @@
 
     // If there are multiple views this might've ended up showing up multiple
     // times.
-    if (ajax_path.constructor.toString().indexOf("Array") !== -1) {
+    if (ajax_path.constructor.toString().indexOf('Array') !== -1) {
       ajax_path = ajax_path[0];
     }
 

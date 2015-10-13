@@ -5,7 +5,7 @@
 
 (function (_, $, Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend(/** @lends Drupal.quickedit.EntityModel# */{
 
@@ -536,7 +536,7 @@
         }
       }
       else if (currentIsCommitting === true && nextIsCommitting === true) {
-        return "isCommitting is a mutex, hence only changes are allowed";
+        return 'isCommitting is a mutex, hence only changes are allowed';
       }
     },
 

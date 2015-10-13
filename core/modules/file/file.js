@@ -9,7 +9,7 @@
 
 (function ($, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attach behaviors to the file fields passed in the settings.
@@ -142,7 +142,7 @@
       if (extensionPattern.length > 1 && this.value.length > 0) {
         var acceptableMatch = new RegExp('\\.(' + extensionPattern + ')$', 'gi');
         if (!acceptableMatch.test(this.value)) {
-          var error = Drupal.t("The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.", {
+          var error = Drupal.t('The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.', {
             // According to the specifications of HTML5, a file upload control
             // should not reveal the real local path to the file that a user
             // has selected. Some web browsers implement this restriction by

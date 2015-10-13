@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings, Backbone) {
 
-  "use strict";
+  'use strict';
 
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend(/** @lends Drupal.toolbar.ToolbarVisualView# */{
 

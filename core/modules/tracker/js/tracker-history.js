@@ -5,7 +5,7 @@
  */
 (function ($, Drupal, window) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Render "new" and "updated" node indicators, as well as "X new" replies links.

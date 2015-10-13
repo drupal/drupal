@@ -5,7 +5,7 @@
 
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Auto-hide summary textarea if empty and show hide and unhide links.

@@ -5,7 +5,7 @@
 
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Behaviors for setting summaries on content type form.
@@ -26,7 +26,7 @@
       });
       $context.find('#edit-workflow').drupalSetSummary(function (context) {
         var vals = [];
-        $(context).find("input[name^='options']:checked").parent().each(function () {
+        $(context).find('input[name^="options"]:checked').parent().each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
         if (!$(context).find('#edit-options-status').is(':checked')) {
@@ -37,7 +37,7 @@
       $('#edit-language', context).drupalSetSummary(function (context) {
         var vals = [];
 
-        vals.push($(".js-form-item-language-configuration-langcode select option:selected", context).text());
+        vals.push($('.js-form-item-language-configuration-langcode select option:selected', context).text());
 
         $('input:checked', context).next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));

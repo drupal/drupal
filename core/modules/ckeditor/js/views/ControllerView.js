@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone, $) {
 
-  "use strict";
+  'use strict';
 
   Drupal.ckeditor.ControllerView = Backbone.View.extend(/** @lends Drupal.ckeditor.ControllerView# */{
 

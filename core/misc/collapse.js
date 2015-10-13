@@ -5,7 +5,7 @@
 
 (function ($, Modernizr, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * The collapsible details object represents a single details element.

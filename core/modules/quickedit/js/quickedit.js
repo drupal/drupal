@@ -19,7 +19,7 @@
 
 (function ($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
 
-  "use strict";
+  'use strict';
 
   var options = $.extend(drupalSettings.quickedit,
     // Merge strings on top of drupalSettings so that they are not mutable.

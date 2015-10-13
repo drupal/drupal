@@ -5,7 +5,7 @@
 
 (function (_, Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.FieldModel = Drupal.quickedit.BaseModel.extend(/** @lends Drupal.quickedit.FieldModel# */{
 
@@ -138,7 +138,7 @@
      */
     destroy: function (options) {
       if (this.get('state') !== 'inactive') {
-        throw new Error("FieldModel cannot be destroyed if it is not inactive state.");
+        throw new Error('FieldModel cannot be destroyed if it is not inactive state.');
       }
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
     },

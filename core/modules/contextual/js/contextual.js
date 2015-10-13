@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
 
-  "use strict";
+  'use strict';
 
   var options = $.extend(drupalSettings.contextual,
     // Merge strings on top of drupalSettings so that they are not mutable.

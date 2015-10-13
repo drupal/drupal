@@ -5,7 +5,7 @@
 
 (function ($, Drupal, window) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attach the tableResponsive function to {@link Drupal.behaviors}.

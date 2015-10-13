@@ -28,7 +28,7 @@
  */
 Drupal.debounce = function (func, wait, immediate) {
 
-  "use strict";
+  'use strict';
 
   var timeout;
   var result;

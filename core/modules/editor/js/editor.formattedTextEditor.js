@@ -13,7 +13,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.editors.editor = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.editor# */{
 

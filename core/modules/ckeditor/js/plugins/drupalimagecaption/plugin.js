@@ -12,7 +12,7 @@
 
 (function (CKEDITOR) {
 
-  "use strict";
+  'use strict';
 
   CKEDITOR.plugins.add('drupalimagecaption', {
     requires: 'drupalimage',

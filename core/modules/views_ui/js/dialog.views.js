@@ -5,7 +5,7 @@
 
 (function ($, Drupal, drupalSettings) {
 
-  "use strict";
+  'use strict';
 
   function handleDialogResize(e) {
     var $modal = $(e.currentTarget);

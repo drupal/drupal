@@ -5,7 +5,7 @@
 
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Shows checked and disabled checkboxes for inherited permissions.
@@ -43,7 +43,7 @@
         // permission table would be polluted with redundant entries. This
         // is deliberate, but desirable when we automatically check them.
         var $dummy = $('<input type="checkbox" class="dummy-checkbox js-dummy-checkbox" disabled="disabled" checked="checked" />')
-          .attr('title', Drupal.t("This permission is inherited from the authenticated user role."))
+          .attr('title', Drupal.t('This permission is inherited from the authenticated user role.'))
           .hide();
 
         $table

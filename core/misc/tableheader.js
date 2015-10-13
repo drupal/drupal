@@ -5,7 +5,7 @@
 
 (function ($, Drupal, displace) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Attaches sticky table headers.

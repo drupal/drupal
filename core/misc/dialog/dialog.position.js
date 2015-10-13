@@ -11,7 +11,7 @@
 
 (function ($, Drupal, drupalSettings, debounce, displace) {
 
-  "use strict";
+  'use strict';
 
   // autoResize option will turn off resizable and draggable.
   drupalSettings.dialog = $.extend({autoResize: true, maxHeight: '95%'}, drupalSettings.dialog);

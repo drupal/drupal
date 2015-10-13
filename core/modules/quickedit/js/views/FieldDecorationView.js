@@ -5,7 +5,7 @@
 
 (function ($, Backbone, Drupal) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend(/** @lends Drupal.quickedit.FieldDecorationView# */{
 
@@ -237,7 +237,7 @@
       // width and *then* add 5px padding, hence ensuring the padding is added
       // "on the outside".
       // 1) Freeze the width (if it's not already set); don't use animations.
-      if (this.$el[0].style.width === "") {
+      if (this.$el[0].style.width === '') {
         this._widthAttributeIsEmpty = true;
         this.$el
           .addClass('quickedit-animate-disable-width')

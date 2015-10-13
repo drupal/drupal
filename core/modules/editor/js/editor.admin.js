@@ -9,7 +9,7 @@
 
 (function ($, _, Drupal, document) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Editor configuration namespace.
@@ -308,7 +308,7 @@
         // The complex case: wildcard in property value.
         else {
           var atLeastOneFound = false;
-          var regex = key.replace(/\*/g, "[^ ]*");
+          var regex = key.replace(/\*/g, '[^ ]*');
           _.each(_.keys(universe[tag]), function (key) {
             if (key.match(regex)) {
               atLeastOneFound = true;

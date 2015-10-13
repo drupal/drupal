@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone, Modernizr) {
 
-  "use strict";
+  'use strict';
 
   Drupal.contextual.RegionView = Backbone.View.extend(/** @lends Drupal.contextual.RegionView# */{
 

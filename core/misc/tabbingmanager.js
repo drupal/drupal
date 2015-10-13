@@ -29,7 +29,7 @@
 
 (function ($, Drupal) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Provides an API for managing page tabbing order modifications.

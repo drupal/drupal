@@ -15,7 +15,7 @@
 
 (function ($, Drupal, CKEDITOR) {
 
-  "use strict";
+  'use strict';
 
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',

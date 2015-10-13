@@ -5,7 +5,7 @@
 
 (function () {
 
-  "use strict";
+  'use strict';
 
   var settingsElement = document.querySelector('script[type="application/json"][data-drupal-selector="drupal-settings-json"]');
 

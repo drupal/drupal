@@ -5,7 +5,7 @@
 
 (function ($) {
 
-  "use strict";
+  'use strict';
 
   $.widget('ui.dialog', $.ui.dialog, {
     options: {

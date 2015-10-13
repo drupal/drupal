@@ -5,7 +5,7 @@
 
 (function ($, Drupal, _, CKEDITOR) {
 
-  "use strict";
+  'use strict';
 
   Drupal.ckeditor = Drupal.ckeditor || {};
 

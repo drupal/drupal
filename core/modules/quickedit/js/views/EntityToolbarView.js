@@ -5,7 +5,7 @@
 
 (function ($, _, Backbone, Drupal, debounce) {
 
-  "use strict";
+  'use strict';
 
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend(/** @lends Drupal.quickedit.EntityToolbarView# */{
 

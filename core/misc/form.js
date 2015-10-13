@@ -14,7 +14,7 @@
 
 (function ($, Drupal, debounce) {
 
-  "use strict";
+  'use strict';
 
   /**
    * Retrieves the summary for the first element.
