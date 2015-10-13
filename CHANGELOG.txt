@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Fixed the URL text filter to convert e-mail addresses with plus signs into
+  mailto: links.
 - Added alternate text to file icons displayed by the File module, to improve
   accessibility (string change, and minor API addition to theme_file_icon()).
 - Changed one-time login link failure messages to be displayed as errors or
