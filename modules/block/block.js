@@ -24,7 +24,7 @@ Drupal.behaviors.blockSettingsSummary = {
     $('fieldset#edit-node-type', context).drupalSetSummary(function (context) {
       var vals = [];
       $('input[type="checkbox"]:checked', context).each(function () {
-        vals.push($.trim($(this).next('label').text()));
+        vals.push($.trim($(this).next('label').html()));
       });
       if (!vals.length) {
         vals.push(Drupal.t('Not restricted'));
@@ -35,7 +35,7 @@ Drupal.behaviors.blockSettingsSummary = {
     $('fieldset#edit-role', context).drupalSetSummary(function (context) {
       var vals = [];
       $('input[type="checkbox"]:checked', context).each(function () {
-        vals.push($.trim($(this).next('label').text()));
+        vals.push($.trim($(this).next('label').html()));
       });
       if (!vals.length) {
         vals.push(Drupal.t('Not restricted'));
@@ -49,7 +49,7 @@ Drupal.behaviors.blockSettingsSummary = {
         return Drupal.t('Not customizable');
       }
       else {
-        return $radio.next('label').text();
+        return $radio.next('label').html();
       }
     });
   }
