@@ -23,6 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CckFile extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
+  /**
+   * The migration process plugin, configured for lookups in d6_file.
+   *
+   * @var \Drupal\migrate\Plugin\MigrateProcessInterface
+   */
   protected $migrationPlugin;
 
   /**
@@ -92,6 +97,8 @@ class CckFile extends ProcessPluginBase implements ContainerFactoryPluginInterfa
         'target_id' => $fid,
         'display' => $value['list'],
         'description' => isset($options['description']) ? $options['description'] : '',
+        'alt' => isset($options['alt']) ? $options['alt'] : '',
+        'title' => isset($options['title']) ? $options['title'] : '',
       ];
     }
     else {
