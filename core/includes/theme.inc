@@ -1577,7 +1577,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
         'data' => array(
           '#prefix' => '<h4' . $header_attributes . '>',
           'title' => array(
-            '#markup' => t($element['#title']),
+            '#markup' => $element['#title'],
           ),
           '#suffix' => '</h4>',
         ),
