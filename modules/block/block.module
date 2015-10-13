@@ -350,7 +350,7 @@ function _block_get_renderable_array($list = array()) {
       '#block' => $block,
       '#weight' => ++$weight,
     );
-    $build[$key]['#theme_wrappers'][] ='block';
+    $build[$key]['#theme_wrappers'][] = 'block';
   }
   $build['#sorted'] = TRUE;
   return $build;
