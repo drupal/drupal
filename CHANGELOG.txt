@@ -1,6 +1,8 @@
 
 Drupal 7.40, xxxx-xx-xx (development version)
 -----------------------
+- Prevented drupal_http_request() from returning an error when it receives a
+  201 through 206 HTTP status code.
 - Added support for autoloading traits via the registry on sites running PHP
   5.4 or higher.
 - Allowed the user-picture.tpl.php theme template to have HTML classes besides

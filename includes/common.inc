@@ -1057,6 +1057,12 @@ function drupal_http_request($url, array $options = array()) {
 
   switch ($code) {
     case 200: // OK
+    case 201: // Created
+    case 202: // Accepted
+    case 203: // Non-Authoritative Information
+    case 204: // No Content
+    case 205: // Reset Content
+    case 206: // Partial Content
     case 304: // Not modified
       break;
     case 301: // Moved permanently
