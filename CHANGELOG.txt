@@ -147,11 +147,11 @@ Drupal 7.36, 2015-04-01
 - Additional automated test coverage.
 
 Drupal 7.35, 2015-03-18
-----------------------
+-----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2015-001.
 
 Drupal 7.34, 2014-11-19
-----------------------
+-----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2014-006.
 
 Drupal 7.33, 2014-11-07
@@ -220,11 +220,11 @@ Drupal 7.33, 2014-11-07
 - Additional automated test coverage.
 
 Drupal 7.32, 2014-10-15
-----------------------
+-----------------------
 - Fixed security issues (SQL injection). See SA-CORE-2014-005.
 
 Drupal 7.31, 2014-08-06
-----------------------
+-----------------------
 - Fixed security issues (denial of service). See SA-CORE-2014-004.
 
 Drupal 7.30, 2014-07-24
@@ -239,7 +239,7 @@ Drupal 7.30, 2014-07-24
 - Additional automated test coverage.
 
 Drupal 7.29, 2014-07-16
-----------------------
+-----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2014-003.
 
 Drupal 7.28, 2014-05-08
@@ -285,11 +285,11 @@ Drupal 7.28, 2014-05-08
 - Additional automated test coverage.
 
 Drupal 7.27, 2014-04-16
-----------------------
+-----------------------
 - Fixed security issues (information disclosure). See SA-CORE-2014-002.
 
 Drupal 7.26, 2014-01-15
-----------------------
+-----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2014-001.
 
 Drupal 7.25, 2014-01-02
@@ -355,7 +355,7 @@ Drupal 7.25, 2014-01-02
 - Additional automated test coverage.
 
 Drupal 7.24, 2013-11-20
-----------------------
+-----------------------
 - Fixed security issues (multiple vulnerabilities), see SA-CORE-2013-003.
 
 Drupal 7.23, 2013-08-07
@@ -609,8 +609,8 @@ Drupal 7.15, 2012-08-01
 - Numerous API documentation improvements.
 - Additional automated test coverage.
 
-Drupal 7.14 2012-05-02
-----------------------
+Drupal 7.14, 2012-05-02
+-----------------------
 - Fixed "integrity constraint" fatal errors when rebuilding registry.
 - Fixed custom logo and favicon functionality referencing incorrect paths.
 - Fixed DB Case Sensitivity: Allow BINARY attribute in MySQL.
@@ -658,12 +658,12 @@ Drupal 7.14 2012-05-02
   - system_update_7061() converts filepaths too aggressively.
   - Trigger upgrade path: Node triggers removed when upgrading to 7-x from 6.25.
 
-Drupal 7.13 2012-05-02
-----------------------
+Drupal 7.13, 2012-05-02
+-----------------------
 - Fixed security issues (Multiple vulnerabilities), see SA-CORE-2012-002.
 
 Drupal 7.12, 2012-02-01
-----------------------
+-----------------------
 - Fixed bug preventing custom menus from receiving an active trail.
 - Fixed hook_field_delete() no longer invoked during field_purge_data().
 - Fixed bug causing entity info cache to not be cleared with the rest of caches.
@@ -697,11 +697,11 @@ Drupal 7.12, 2012-02-01
   cache.
 
 Drupal 7.11, 2012-02-01
-----------------------
+-----------------------
 - Fixed security issues (Multiple vulnerabilities), see SA-CORE-2012-001.
 
 Drupal 7.10, 2011-12-05
-----------------------
+-----------------------
 - Fixed Content-Language HTTP header to not cause issues with Drush 5.x.
 - Reduce memory usage of theme registry (performance).
 - Fixed PECL upload progress bar for FileField
@@ -1054,7 +1054,7 @@ Drupal 7.0, 2011-01-05
       requests.
 
 Drupal 6.23-dev, xxxx-xx-xx (development release)
------------------------
+---------------------------
 
 Drupal 6.22, 2011-05-25
 -----------------------
@@ -1064,25 +1064,25 @@ Drupal 6.22, 2011-05-25
 - Fixed a variety of other bugs.
 
 Drupal 6.21, 2011-05-25
-----------------------
+-----------------------
 - Fixed security issues (Cross site scripting), see SA-CORE-2011-001.
 
 Drupal 6.20, 2010-12-15
-----------------------
+-----------------------
 - Fixed a variety of small bugs, improved code documentation.
 
 Drupal 6.19, 2010-08-11
-----------------------
+-----------------------
 - Fixed a variety of small bugs, improved code documentation.
 
 Drupal 6.18, 2010-08-11
-----------------------
+-----------------------
 - Fixed security issues (OpenID authentication bypass, File download access
   bypass, Comment unpublishing bypass, Actions cross site scripting),
   see SA-CORE-2010-002.
 
 Drupal 6.17, 2010-06-02
-----------------------
+-----------------------
 - Improved PostgreSQL compatibility
 - Better PHP 5.3 and PHP 4 compatibility
 - Better browser compatibility of CSS and JS aggregation
@@ -1091,7 +1091,7 @@ Drupal 6.17, 2010-06-02
 - Fixed a variety of other bugs.
 
 Drupal 6.16, 2010-03-03
-----------------------
+-----------------------
 - Fixed security issues (Installation cross site scripting, Open redirection,
   Locale module cross site scripting, Blocked user session regeneration),
   see SA-CORE-2010-001.
@@ -1103,12 +1103,12 @@ Drupal 6.16, 2010-03-03
 - Fixed a variety of other bugs.
 
 Drupal 6.15, 2009-12-16
-----------------------
+-----------------------
 - Fixed security issues (Cross site scripting), see SA-CORE-2009-009.
 - Fixed a variety of other bugs.
 
 Drupal 6.14, 2009-09-16
-----------------------
+-----------------------
 - Fixed security issues (OpenID association cross site request forgeries,
   OpenID impersonation and File upload), see SA-CORE-2009-008.
 - Changed the system modules page to not run all cache rebuilds; use the
@@ -1117,18 +1117,18 @@ Drupal 6.14, 2009-09-16
 - Fixed a variety of small bugs.
 
 Drupal 6.13, 2009-07-01
-----------------------
+-----------------------
 - Fixed security issues (Cross site scripting, Input format access bypass and
   Password leakage in URL), see SA-CORE-2009-007.
 - Fixed a variety of small bugs.
 
 Drupal 6.12, 2009-05-13
-----------------------
+-----------------------
 - Fixed security issues (Cross site scripting), see SA-CORE-2009-006.
 - Fixed a variety of small bugs.
 
 Drupal 6.11, 2009-04-29
-----------------------
+-----------------------
 - Fixed security issues (Cross site scripting and limited information
   disclosure), see SA-CORE-2009-005
 - Fixed performance issues with the menu router cache, the update
@@ -1136,7 +1136,7 @@ Drupal 6.11, 2009-04-29
 - Fixed a variety of small bugs.
 
 Drupal 6.10, 2009-02-25
-----------------------
+-----------------------
 - Fixed a security issue, (Local file inclusion on Windows),
   see SA-CORE-2009-003
 - Fixed node_feed() so custom fields can show up in RSS feeds.
@@ -1532,7 +1532,7 @@ Drupal 4.7.9, 2007-12-05
 - fixed a security issue (SQL injection), see SA-2007-031
 
 Drupal 4.7.8, 2007-10-17
-----------------------
+------------------------
 - fixed a security issue (HTTP response splitting), see SA-2007-024
 - fixed a security issue (Cross site scripting via uploads), see SA-2007-026
 - fixed a security issue (API handling of unpublished comment), see SA-2007-030
@@ -1645,7 +1645,7 @@ Drupal 4.6.11, 2007-01-05
 - Fixed security issue (DoS), see SA-2007-002
 
 Drupal 4.6.10, 2006-10-18
-------------------------
+-------------------------
 - Fixed security issue (XSS), see SA-2006-024
 - Fixed security issue (CSRF), see SA-2006-025
 - Fixed security issue (Form action attribute injection), see SA-2006-026
