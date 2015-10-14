@@ -229,12 +229,20 @@ define('MENU_CONTEXT_INLINE', 0x0002);
 define('MENU_FOUND', 1);
 
 /**
- * Internal menu status code -- Menu item was not found.
+ * Menu status code -- Not found.
+ *
+ * This can be used as the return value from a page callback, although it is
+ * preferable to use a load function to accomplish this; see the hook_menu()
+ * documentation for details.
  */
 define('MENU_NOT_FOUND', 2);
 
 /**
- * Internal menu status code -- Menu item access is denied.
+ * Menu status code -- Access denied.
+ *
+ * This can be used as the return value from a page callback, although it is
+ * preferable to use an access callback to accomplish this; see the hook_menu()
+ * documentation for details.
  */
 define('MENU_ACCESS_DENIED', 3);
 
