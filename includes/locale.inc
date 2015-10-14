@@ -2306,6 +2306,8 @@ function _locale_batch_build($files, $finished = NULL, $components = array()) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Perform interface translation import as a batch step.
  *
  * @param $filepath
@@ -2324,6 +2326,8 @@ function _locale_batch_import($filepath, &$context) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Finished callback of system page locale import batch.
  * Inform the user of translation files imported.
  */
@@ -2334,6 +2338,8 @@ function _locale_batch_system_finished($success, $results) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Finished callback of language addition locale import batch.
  * Inform the user of translation files imported.
  */

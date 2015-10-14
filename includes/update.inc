@@ -908,6 +908,8 @@ function update_get_d6_session_name() {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Performs one update and stores the results for display on the results page.
  *
  * If an update function completes successfully, it should return a message
@@ -1078,6 +1080,8 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Finishes the update process and stores the results for eventual display.
  *
  * After the updates run, all caches are flushed. The update results are

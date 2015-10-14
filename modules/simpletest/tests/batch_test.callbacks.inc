@@ -7,6 +7,8 @@
  */
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Simple batch operation.
  */
 function _batch_test_callback_1($id, $sleep, &$context) {
@@ -20,6 +22,8 @@ function _batch_test_callback_1($id, $sleep, &$context) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Multistep batch operation.
  */
 function _batch_test_callback_2($start, $total, $sleep, &$context) {
@@ -53,6 +57,8 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Simple batch operation.
  */
 function _batch_test_callback_5($id, $sleep, &$context) {
@@ -68,6 +74,8 @@ function _batch_test_callback_5($id, $sleep, &$context) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Batch operation setting up its own batch.
  */
 function _batch_test_nested_batch_callback() {
@@ -76,6 +84,8 @@ function _batch_test_nested_batch_callback() {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Common 'finished' callbacks for batches 1 to 4.
  */
 function _batch_test_finished_helper($batch_id, $success, $results, $operations) {
@@ -99,6 +109,8 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * 'finished' callback for batch 0.
  */
 function _batch_test_finished_0($success, $results, $operations) {
@@ -106,6 +118,8 @@ function _batch_test_finished_0($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * 'finished' callback for batch 1.
  */
 function _batch_test_finished_1($success, $results, $operations) {
@@ -113,6 +127,8 @@ function _batch_test_finished_1($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * 'finished' callback for batch 2.
  */
 function _batch_test_finished_2($success, $results, $operations) {
@@ -120,6 +136,8 @@ function _batch_test_finished_2($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * 'finished' callback for batch 3.
  */
 function _batch_test_finished_3($success, $results, $operations) {
@@ -127,6 +145,8 @@ function _batch_test_finished_3($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * 'finished' callback for batch 4.
  */
 function _batch_test_finished_4($success, $results, $operations) {
@@ -134,6 +154,8 @@ function _batch_test_finished_4($success, $results, $operations) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * 'finished' callback for batch 5.
  */
 function _batch_test_finished_5($success, $results, $operations) {

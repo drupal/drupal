@@ -335,6 +335,8 @@ function update_manager_update_form_submit($form, &$form_state) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Batch callback: Performs actions when the download batch is completed.
  *
  * @param $success
@@ -847,7 +849,9 @@ function update_manager_file_get($url) {
 }
 
 /**
- * Batch callback: Downloads, unpacks, and verifies a project.
+ * Implements callback_batch_operation().
+ *
+ * Downloads, unpacks, and verifies a project.
  *
  * This function assumes that the provided URL points to a file archive of some
  * sort. The URL can have any scheme that we have a file stream wrapper to
