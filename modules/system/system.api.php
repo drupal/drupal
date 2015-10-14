@@ -113,21 +113,21 @@ function hook_hook_info_alter(&$hooks) {
  *     translation handlers. Array keys are the module names, array values
  *     can be any data structure the module uses to provide field translation.
  *     Any empty value disallows the module to appear as a translation handler.
- *   - entity keys: An array describing how the Field API can extract the
- *     information it needs from the objects of the type. Elements:
+ *   - entity keys: (optional) An array describing how the Field API can extract
+ *     the information it needs from the objects of the type. Elements:
  *     - id: The name of the property that contains the primary id of the
  *       entity. Every entity object passed to the Field API must have this
  *       property and its value must be numeric.
  *     - revision: The name of the property that contains the revision id of
  *       the entity. The Field API assumes that all revision ids are unique
  *       across all entities of a type. This entry can be omitted if the
- *       entities of this type are not versionable.
+ *       entities of this type are not versionable. Defaults to an empty string.
  *     - bundle: The name of the property that contains the bundle name for the
  *       entity. The bundle name defines which set of fields are attached to
  *       the entity (e.g. what nodes call "content type"). This entry can be
  *       omitted if this entity type exposes a single bundle (all entities have
  *       the same collection of fields). The name of this single bundle will be
- *       the same as the entity type.
+ *       the same as the entity type. Defaults to an empty string.
  *     - label: The name of the property that contains the entity label. For
  *       example, if the entity's label is located in $entity->subject, then
  *       'subject' should be specified here. If complex logic is required to
