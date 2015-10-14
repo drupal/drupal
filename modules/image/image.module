@@ -801,6 +801,8 @@ function image_style_options($include_empty = TRUE, $output = CHECK_PLAIN) {
  *
  * @param $style
  *   The image style
+ * @param $scheme
+ *   The file scheme, for example 'public' for public files.
  */
 function image_style_deliver($style, $scheme) {
   $args = func_get_args();
