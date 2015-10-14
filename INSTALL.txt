@@ -23,7 +23,7 @@ Drupal requires:
   - Percona Server 5.1.70 (or greater) (http://www.percona.com/). Percona
     Server is a backwards-compatible replacement for MySQL.
   - PostgreSQL 8.3 (or greater) (http://www.postgresql.org/).
-  - SQLite 3.4.2 (or greater) (http://www.sqlite.org/).
+  - SQLite 3.3.7 (or greater) (http://www.sqlite.org/).
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"
