@@ -1,5 +1,5 @@
 
-Drupal 7.40, xxxx-xx-xx (development version)
+Drupal 7.40, 2015-10-14
 -----------------------
 - Made Drupal's code for parsing .info files run much faster and use much less
   memory.
