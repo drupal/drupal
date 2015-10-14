@@ -1,3 +1,0 @@
-services:
-    factory: { class: FooBarClass, factory: baz:getClass}
-    factory_with_static_call: { class: FooBarClass, factory: FooBacFactory::createFooBar}

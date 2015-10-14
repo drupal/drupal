@@ -80,7 +80,7 @@ class Installer extends LibraryInstaller
 
         if ($frameworkType === false) {
             throw new \InvalidArgumentException(
-                'The package type of this package is not yet supported.'
+                'Sorry the package type of this package is not yet supported.'
             );
         }
 

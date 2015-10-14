@@ -1,4 +1,0 @@
-services:
-    method_call1:
-        class: FooClass
-        calls: foo
