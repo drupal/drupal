@@ -83,7 +83,6 @@ Install system
 JavaScript
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 - Steve De Jonghe 'seutje' https://www.drupal.org/u/seutje
-- Jesse Renée Beach 'jessebeach' https://www.drupal.org/u/jessebeach
 
 Language system
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
