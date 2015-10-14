@@ -1710,11 +1710,29 @@ function theme_status_messages($variables) {
  * copy if none of the enabled modules or the active theme implement any
  * preprocess or process functions or override this theme implementation.
  *
- * @param $variables
- *   An associative array containing the keys 'text', 'path', and 'options'.
- *   See the l() function for information about these variables.
+ * @param array $variables
+ *   An associative array containing the keys:
+ *   - text: The text of the link.
+ *   - path: The internal path or external URL being linked to. It is used as
+ *     the $path parameter of the url() function.
+ *   - options: (optional) An array that defaults to empty, but can contain:
+ *     - attributes: Can contain optional attributes:
+ *       - class: must be declared in an array. Example: 'class' =>
+ *         array('class_name1','class_name2').
+ *       - title: must be a string. Example: 'title' => 'Example title'
+ *       - Others are more flexible as long as they work with
+ *         drupal_attributes($variables['options']['attributes]).
+ *     - html: Boolean flag that tells whether text contains HTML or plain
+ *       text. If set to TRUE, the text value will not be sanitized so the
+         calling function must ensure that it already contains safe HTML.
+ *   The elements $variables['options']['attributes'] and
+ *   $variables['options']['html'] are used in this function similarly to the
+ *   way that $options['attributes'] and $options['html'] are used in l().
+ *   The link itself is built by the url() function, which takes
+ *   $variables['path'] and $variables['options'] as arguments.
  *
  * @see l()
+ * @see url()
  */
 function theme_link($variables) {
   return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . ($variables['options']['html'] ? $variables['text'] : check_plain($variables['text'])) . '</a>';
