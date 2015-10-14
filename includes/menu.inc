@@ -431,7 +431,7 @@ function menu_set_item($path, $router_item) {
  *
  * @param $path
  *   The path; for example, 'node/5'. The function will find the corresponding
- *   node/% item and return that.
+ *   node/% item and return that. Defaults to the current path.
  * @param $router_item
  *   Internal use only.
  *
