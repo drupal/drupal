@@ -2959,7 +2959,9 @@ function ip_address() {
  * Gets the schema definition of a table, or the whole database schema.
  *
  * The returned schema will include any modifications made by any
- * module that implements hook_schema_alter().
+ * module that implements hook_schema_alter(). To get the schema without
+ * modifications, use drupal_get_schema_unprocessed().
+ *
  *
  * @param $table
  *   The name of the table. If not given, the schema of all tables is returned.
