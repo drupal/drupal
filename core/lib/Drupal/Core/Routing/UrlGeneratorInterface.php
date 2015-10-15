@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 interface UrlGeneratorInterface extends VersatileGeneratorInterface {
 
   /**
-   * Gets the internal path (system path) of a route.
+   * Gets the internal path (system path) for a route.
    *
    * @param string|\Symfony\Component\Routing\Route $name
    *  The route name or a route object.
@@ -27,9 +27,6 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *
    * @return string
    *  The internal Drupal path corresponding to the route.
-   *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 8.0.0
-   *   System paths should not be used - use route names and parameters.
    */
   public function getPathFromRoute($name, $parameters = array());
 
