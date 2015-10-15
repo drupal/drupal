@@ -184,6 +184,12 @@ class ThemeTest extends WebTestBase {
       )
     );
     $this->assertEqual($elements[0]['src'], file_create_url($uploaded_filename));
+
+    $this->container->get('theme_handler')->install(array('bartik'));
+    $this->drupalGet('admin/appearance/settings/bartik');
+    // The logo field should only be present on the global theme settings form.
+    $this->assertNoFieldByName('logo_path');
+    $this->drupalPostForm(NULL, [], t('Save configuration'));
   }
 
   /**

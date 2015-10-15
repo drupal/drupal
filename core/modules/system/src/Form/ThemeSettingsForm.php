@@ -428,34 +428,32 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     // If the user uploaded a new logo or favicon, save it to a permanent location
     // and use it in place of the default theme-provided file.
-    if ($this->moduleHandler->moduleExists('file')) {
-      if ($file = $values['logo_upload']) {
-        $filename = file_unmanaged_copy($file->getFileUri());
-        $values['default_logo'] = 0;
-        $values['logo_path'] = $filename;
-        $values['toggle_logo'] = 1;
-      }
-      if ($file = $values['favicon_upload']) {
-        $filename = file_unmanaged_copy($file->getFileUri());
-        $values['default_favicon'] = 0;
-        $values['favicon_path'] = $filename;
-        $values['toggle_favicon'] = 1;
-      }
-      unset($values['logo_upload']);
-      unset($values['favicon_upload']);
+    if (!empty($values['logo_upload'])) {
+      $filename = file_unmanaged_copy($values['logo_upload']->getFileUri());
+      $values['default_logo'] = 0;
+      $values['logo_path'] = $filename;
+      $values['toggle_logo'] = 1;
+    }
+    if (!empty($values['favicon_upload'])) {
+      $filename = file_unmanaged_copy($values['favicon_upload']->getFileUri());
+      $values['default_favicon'] = 0;
+      $values['favicon_path'] = $filename;
+      $values['toggle_favicon'] = 1;
+    }
+    unset($values['logo_upload']);
+    unset($values['favicon_upload']);
 
-      // If the user entered a path relative to the system files directory for
-      // a logo or favicon, store a public:// URI so the theme system can handle it.
-      if (!empty($values['logo_path'])) {
-        $values['logo_path'] = $this->validatePath($values['logo_path']);
-      }
-      if (!empty($values['favicon_path'])) {
-        $values['favicon_path'] = $this->validatePath($values['favicon_path']);
-      }
+    // If the user entered a path relative to the system files directory for
+    // a logo or favicon, store a public:// URI so the theme system can handle it.
+    if (!empty($values['logo_path'])) {
+      $values['logo_path'] = $this->validatePath($values['logo_path']);
+    }
+    if (!empty($values['favicon_path'])) {
+      $values['favicon_path'] = $this->validatePath($values['favicon_path']);
+    }
 
-      if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
-        $values['favicon_mimetype'] = $this->mimeTypeGuesser->guess($values['favicon_path']);
-      }
+    if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
+      $values['favicon_mimetype'] = $this->mimeTypeGuesser->guess($values['favicon_path']);
     }
 
     theme_settings_convert_to_config($values, $config)->save();
