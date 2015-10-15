@@ -489,7 +489,7 @@ class XssTest extends UnitTestCase {
   }
 
   /**
-   * Check that strings in HTML attributes are are correctly processed.
+   * Check that strings in HTML attributes are correctly processed.
    *
    * @covers ::attributes
    * @dataProvider providerTestAttributes

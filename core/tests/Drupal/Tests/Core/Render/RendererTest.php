@@ -96,7 +96,7 @@ class RendererTest extends RendererTestBase {
       '#plain_text' => '<em>foo</em>',
       '#markup' => 'bar',
     ], '&lt;em&gt;foo&lt;/em&gt;'];
-    // Safe strings in #plain_text are are still escaped.
+    // Safe strings in #plain_text are still escaped.
     $data[] = [[
       '#plain_text' => Markup::create('<em>foo</em>'),
     ], '&lt;em&gt;foo&lt;/em&gt;'];
