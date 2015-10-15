@@ -775,9 +775,6 @@ class Url {
    *
    * @throws \UnexpectedValueException.
    *   If this is a URI with no corresponding system path.
-   *
-   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
-   *   System paths should not be used - use route names and parameters.
    */
   public function getInternalPath() {
     if ($this->unrouted) {
