@@ -502,7 +502,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
   }
 
   /**
-   * Provides data for for ConfigMapperTest::testHasSchema().
+   * Provides data for ConfigMapperTest::testHasSchema().
    *
    * @return array
    *   An array of arrays, where each inner array has an array of values that

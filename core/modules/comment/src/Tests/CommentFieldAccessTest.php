@@ -243,7 +243,7 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        // Nobody has access to to view the hostname field.
+        // Nobody has access to view the hostname field.
         if ($field === 'hostname') {
           $view_access = FALSE;
           $state = 'cannot';

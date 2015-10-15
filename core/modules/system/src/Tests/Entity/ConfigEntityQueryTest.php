@@ -569,7 +569,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition('array.level1.level2', 3)
       ->execute();
     $this->assertResults(array('5'));
-    // Make sure that values on the wildcard level do not match if if there are
+    // Make sure that values on the wildcard level do not match if there are
     // sub-keys defined. This must not find anything even if entity 2 has a
     // top-level key number with value 41.
     $this->queryResults = $this->factory->get('config_query_test')

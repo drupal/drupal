@@ -295,7 +295,7 @@ class SystemMenuBlockTest extends KernelTestBase {
    * Converts the result of MenuLinkTree::build() in a "menu link ID tree".
    *
    * @param array $build
-   *   The return value of of MenuLinkTree::build()
+   *   The return value of MenuLinkTree::build()
    *
    * @return array
    *   The "menu link ID tree" representation of the given render array.

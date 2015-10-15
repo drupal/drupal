@@ -97,7 +97,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * The list of options and info for advanced search filters.
    *
-   * Each entry in the array has the option as the key and and for its value, an
+   * Each entry in the array has the option as the key and for its value, an
    * array that determines how the value is matched in the database query. The
    * possible keys in that array are:
    * - column: (required) Name of the database column to match against.

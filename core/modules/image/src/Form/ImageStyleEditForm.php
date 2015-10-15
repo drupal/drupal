@@ -273,7 +273,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    * Updates image effect weights.
    *
    * @param array $effects
-   *   Associative array with effects having effect uuid as keys and and array
+   *   Associative array with effects having effect uuid as keys and array
    *   with effect data as values.
    */
   protected function updateEffectWeights(array $effects) {

@@ -455,7 +455,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    *   The entity being tested.
    *
    * @return string
-   *   The the field name.
+   *   The field name.
    */
   protected function getChangedFieldName($entity) {
     return $entity->hasField('content_translation_changed') ? 'content_translation_changed' : 'changed';

@@ -153,7 +153,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
       // Referenceables containing '_', limited to 3. Expecting 3 limited items
       // ('Xyz_', 'xyabz_', 'foo_') and 5 total.
       ['_', 'CONTAINS', 3, 3, ['Xyz_', 'xyabz_', 'foo_'], 6],
-      // Referenceables ending with with 'z_', limited to 3. Expecting 3 limited
+      // Referenceables ending with 'z_', limited to 3. Expecting 3 limited
       // items ('Xyz_', 'xyabz_', 'baz_') and 4 total.
       ['z_', 'ENDS_WITH', 3, 3, ['Xyz_', 'xyabz_', 'baz_'], 4],
       // Referenceables identical with 'xyabz_', no limit. Expecting 1 item

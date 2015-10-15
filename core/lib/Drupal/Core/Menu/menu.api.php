@@ -297,7 +297,7 @@ function hook_menu_links_discovered_alter(&$links) {
  *
  * @param array $data
  *   An associative array containing list of (up to 2) tab levels that contain a
- *   list of of tabs keyed by their href, each one being an associative array
+ *   list of tabs keyed by their href, each one being an associative array
  *   as described above.
  * @param string $route_name
  *   The route name of the page.

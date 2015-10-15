@@ -140,7 +140,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
 
     $form['expose']['items_per_page_options_all'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow user to to display all items'),
+      '#title' => $this->t('Allow user to display all items'),
       '#default_value' => $this->options['expose']['items_per_page_options_all'],
     );
 

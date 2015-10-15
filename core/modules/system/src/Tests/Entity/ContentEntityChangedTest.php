@@ -390,7 +390,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
 
     $this->assertFalse(
       $this->getRevisionTranslationAffectedFlag($german),
-      'Changed flag of of the German translation is not set for new revision without changes.'
+      'Changed flag of the German translation is not set for new revision without changes.'
     );
 
     $entity->setNewRevision();

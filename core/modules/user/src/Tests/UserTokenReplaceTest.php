@@ -157,7 +157,7 @@ class UserTokenReplaceTest extends WebTestBase {
     foreach ($tests as $input => $expected) {
       foreach (array($user1, $user2) as $account) {
         $output = $token_service->replace($input, ['user' => $account], ['langcode' => 'de', 'callback' => 'user_mail_tokens', 'clear' => TRUE]);
-        $this->assertTrue(strpos($output, $link) === 0, "Generated URL in in the requested language.");
+        $this->assertTrue(strpos($output, $link) === 0, "Generated URL in the requested language.");
       }
     }
 

@@ -70,7 +70,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     // Non-existing token.
     $source .= '[bogus:token]';
 
-    // Replace with with the clear parameter, only the valid token should remain.
+    // Replace with the clear parameter, only the valid token should remain.
     $target = Html::escape($this->config('system.site')->get('name'));
     $result = $this->tokenService->replace($source, array(), array('langcode' => $this->interfaceLanguage->getId(), 'clear' => TRUE));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');

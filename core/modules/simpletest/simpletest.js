@@ -83,7 +83,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches the filter behavior the the text input element.
+   *   Attaches the filter behavior to the text input element.
    */
   Drupal.behaviors.simpletestTableFilterByText = {
     attach: function (context) {

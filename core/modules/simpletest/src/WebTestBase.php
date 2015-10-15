@@ -2921,7 +2921,7 @@ abstract class WebTestBase extends TestBase {
     $server = array_merge($server, $override_server_vars);
 
     $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
-    // Ensure the the request time is REQUEST_TIME to ensure that API calls
+    // Ensure the request time is REQUEST_TIME to ensure that API calls
     // in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $this->container->get('request_stack')->push($request);

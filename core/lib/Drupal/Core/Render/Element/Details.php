@@ -13,7 +13,7 @@ use Drupal\Core\Render\Element;
  * Provides a render element for a details element, similar to a fieldset.
  *
  * Fieldsets can only be used in forms, while details elements can be used
- * outside of forms.  Users click on the the title to open or close the details
+ * outside of forms. Users click on the title to open or close the details
  * element, showing or hiding the contained elements.
  *
  * Properties:
