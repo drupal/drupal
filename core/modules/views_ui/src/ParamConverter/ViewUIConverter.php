@@ -42,6 +42,8 @@ class ViewUIConverter extends EntityConverter implements ParamConverterInterface
   /**
    * Constructs a new ViewUIConverter.
    *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
