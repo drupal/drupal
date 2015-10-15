@@ -62,8 +62,9 @@ interface DataDefinitionInterface {
   /**
    * Returns a human readable label.
    *
-   * @return string
-   *   The label.
+   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The label. A string or an instance of TranslatableMarkup will be returned
+   *   based on the way the label translation is handled.
    */
   public function getLabel();
 
