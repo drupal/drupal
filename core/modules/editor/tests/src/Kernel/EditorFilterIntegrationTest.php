@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\editor\Kernel\EditorFilterIntegration.
+ * Contains \Drupal\Tests\editor\Kernel\EditorFilterIntegrationTest.
  */
 
 namespace Drupal\Tests\editor\Kernel;
