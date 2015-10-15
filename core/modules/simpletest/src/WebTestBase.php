@@ -785,7 +785,7 @@ abstract class WebTestBase extends TestBase {
       $services = $yaml->parse($content);
       $services['services']['simpletest.config_schema_checker'] = [
         'class' => 'Drupal\Core\Config\Testing\ConfigSchemaChecker',
-        'arguments' => ['@config.typed'],
+        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
         'tags' => [['name' => 'event_subscriber']]
       ];
       file_put_contents($directory . '/services.yml', $yaml->dump($services));

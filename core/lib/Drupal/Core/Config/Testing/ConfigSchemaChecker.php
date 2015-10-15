@@ -44,13 +44,23 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
   protected $checked = array();
 
   /**
+   * An array of config object names that are excluded from schema checking.
+   *
+   * @var string[]
+   */
+  protected $exclude = array();
+
+  /**
    * Constructs the ConfigSchemaChecker object.
    *
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_manager
    *   The typed config manager.
+   * @param string[] $exclude
+   *   An array of config object names that are excluded from schema checking.
    */
-  public function __construct(TypedConfigManagerInterface $typed_manager) {
+  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = array()) {
     $this->typedManager = $typed_manager;
+    $this->exclude = $exclude;
   }
 
   /**
@@ -74,17 +84,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
     $name = $saved_config->getName();
     $data = $saved_config->get();
     $checksum = hash('crc32b', serialize($data));
-    $exceptions = array(
-      // Following are used to test lack of or partial schema. Where partial
-      // schema is provided, that is explicitly tested in specific tests.
-      'config_schema_test.noschema',
-      'config_schema_test.someschema',
-      'config_schema_test.schema_data_types',
-      'config_schema_test.no_schema_data_types',
-      // Used to test application of schema to filtering of configuration.
-      'config_test.dynamic.system',
-    );
-    if (!in_array($name, $exceptions) && !isset($this->checked[$name . ':' . $checksum])) {
+    if (!in_array($name, $this->exclude) && !isset($this->checked[$name . ':' . $checksum])) {
       $this->checked[$name . ':' . $checksum] = TRUE;
       $errors = $this->checkConfigSchema($this->typedManager, $name, $data);
       if ($errors === FALSE) {

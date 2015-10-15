@@ -322,6 +322,7 @@ EOD;
       $container
         ->register('simpletest.config_schema_checker', 'Drupal\Core\Config\Testing\ConfigSchemaChecker')
         ->addArgument(new Reference('config.typed'))
+        ->addArgument($this->getConfigSchemaExclusions())
         ->addTag('event_subscriber');
     }
 
