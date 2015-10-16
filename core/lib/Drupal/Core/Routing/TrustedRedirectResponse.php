@@ -7,14 +7,12 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
-
 /**
  * Provides a redirect response which contains trusted URLs.
  *
  * Use this class in case you know that you want to redirect to an external URL.
  */
-class TrustedRedirectResponse extends SecuredRedirectResponse {
+class TrustedRedirectResponse extends CacheableSecuredRedirectResponse {
 
   use LocalAwareRedirectResponseTrait;
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Cache\CacheableRedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -39,7 +39,7 @@ class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
       if ($qs) {
         $qs = '?' . $qs;
       }
-      $event->setResponse(new RedirectResponse($request->getUriForPath($path) . $qs));
+      $event->setResponse(new CacheableRedirectResponse($request->getUriForPath($path) . $qs));
     }
   }
 
