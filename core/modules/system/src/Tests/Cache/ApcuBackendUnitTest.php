@@ -87,6 +87,15 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
       return;
     }
     parent::testSetGet();
+
+    // Make sure entries are permanent (i.e. no TTL).
+    $backend = $this->getCacheBackend($this->getTestBin());
+    $key = $backend->getApcuKey('TEST8');
+    foreach (new \APCIterator('user', '/^' . $key . '/') as $item) {
+      $this->assertEqual(0, $item['ttl']);
+      $found = TRUE;
+    }
+    $this->assertTrue($found);
   }
 
   /**

@@ -68,7 +68,7 @@ class ApcuBackend implements CacheBackendInterface {
    * @return string
    *   The APCu key for the cache item ID.
    */
-  protected function getApcuKey($cid) {
+  public function getApcuKey($cid) {
     return $this->binPrefix . $cid;
   }
 
@@ -178,14 +178,8 @@ class ApcuBackend implements CacheBackendInterface {
     $cache->serialized = 0;
     $cache->data = $data;
 
-    // apc_store()'s $ttl argument can be omitted but also set to 0 (zero),
-    // in which case the value will persist until it's removed from the cache or
-    // until the next cache clear, restart, etc. This is what we want to do
-    // when $expire equals CacheBackendInterface::CACHE_PERMANENT.
-    if ($expire === CacheBackendInterface::CACHE_PERMANENT) {
-      $expire = 0;
-    }
-    apc_store($this->getApcuKey($cid), $cache, $expire);
+    // Expiration is handled by our own prepareItem(), not APCu.
+    apc_store($this->getApcuKey($cid), $cache);
   }
 
   /**
