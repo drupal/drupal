@@ -57,17 +57,6 @@ trait StringTranslationTrait {
   }
 
   /**
-   * Formats a translated string containing a count of items.
-   *
-   * See the
-   * \Drupal\Core\StringTranslation\TranslationInterface::formatPluralTranslated()
-   * documentation for details.
-   */
-  protected function formatPluralTranslated($count, $translated, array $args = array(), array $options = array()) {
-    return $this->getStringTranslation()->formatPluralTranslated($count, $translated, $args, $options);
-  }
-
-  /**
    * Returns the number of plurals supported by a given language.
    *
    * See the \Drupal\locale\PluralFormulaInterface::getNumberOfPlurals()
