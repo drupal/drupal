@@ -251,9 +251,12 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function onDependencyRemoval(array $dependencies) {
+    $changed = parent::onDependencyRemoval($dependencies);
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $definition = $field_type_manager->getDefinition($this->getType());
-    $changed = $definition['class']::onDependencyRemoval($this, $dependencies);
+    if ($definition['class']::onDependencyRemoval($this, $dependencies)) {
+      $changed = TRUE;
+    }
     return $changed;
   }
 

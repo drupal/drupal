@@ -213,6 +213,35 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::onDependencyRemoval
+   */
+  public function testOnDependencyRemoval() {
+    $this->fieldTypePluginManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_field')
+      ->willReturn(['class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
+
+    $field = new FieldConfig([
+      'field_name' => $this->fieldStorage->getName(),
+      'entity_type' => 'test_entity_type',
+      'bundle' => 'test_bundle',
+      'field_type' => 'test_field',
+      'dependencies' => [
+        'module' => [
+          'fruiter',
+        ]
+      ],
+      'third_party_settings' => [
+        'fruiter' => [
+          'fruit' => 'apple',
+        ]
+      ]
+    ]);
+    $changed = $field->onDependencyRemoval(['module' => ['fruiter']]);
+    $this->assertTrue($changed);
+  }
+
+  /**
    * @covers ::toArray
    */
   public function testToArray() {
@@ -288,6 +317,9 @@ class DependencyFieldItem {
 
   public static function calculateDependencies(FieldDefinitionInterface $definition) {
     return ['module' => ['test_module3']];
+  }
+
+  public static function onDependencyRemoval($field_config, $dependencies) {
   }
 
 }
