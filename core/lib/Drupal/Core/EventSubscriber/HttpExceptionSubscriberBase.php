@@ -56,7 +56,7 @@ abstract class HttpExceptionSubscriberBase implements EventSubscriberInterface {
    *
    * @return array
    *   An indexed array of the format machine names that this subscriber will
-   *   attempt ot process,such as "html" or "json". Returning an empty array
+   *   attempt to process, such as "html" or "json". Returning an empty array
    *   will apply to all formats.
    *
    * @see \Symfony\Component\HttpFoundation\Request
