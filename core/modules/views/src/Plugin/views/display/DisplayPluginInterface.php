@@ -37,8 +37,21 @@ use Drupal\Core\Session\AccountInterface;
  */
 interface DisplayPluginInterface {
 
+  /**
+   * Initializes the display plugin.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   The views executable.
+   * @param array $display
+   *   The display that will be populated and attached to the view.
+   * @param array $options
+   *   (optional) The options for the display plugin. Defaults to NULL.
+   */
   public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL);
 
+  /**
+   * Destroys the display's components and the display itself.
+   */
   public function destroy();
 
   /**
