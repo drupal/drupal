@@ -42,7 +42,7 @@ function hook_user_cancel($edit, $account, $method) {
       // Unpublish nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
       $nodes = \Drupal::entityQuery('node')
-        ->condition('uid', $user->id())
+        ->condition('uid', $account->id())
         ->execute();
       node_mass_update($nodes, array('status' => 0), NULL, TRUE);
       break;
@@ -51,7 +51,7 @@ function hook_user_cancel($edit, $account, $method) {
       // Anonymize nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
       $nodes = \Drupal::entityQuery('node')
-        ->condition('uid', $user->id())
+        ->condition('uid', $account->id())
         ->execute();
       node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
       // Anonymize old revisions.
