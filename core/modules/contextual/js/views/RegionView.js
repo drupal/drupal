@@ -23,7 +23,7 @@
         }
       };
       // We don't want mouse hover events on touch.
-      if (Modernizr.touch) {
+      if (Modernizr.touchevents) {
         mapping = {};
       }
       return mapping;

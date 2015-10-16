@@ -28,7 +28,7 @@
         'touchend .contextual-links a': touchEndToClick
       };
       // We only want mouse hover events on non-touch.
-      if (!Modernizr.touch) {
+      if (!Modernizr.touchevents) {
         mapping.mouseenter = function () { this.model.focus(); };
       }
       return mapping;

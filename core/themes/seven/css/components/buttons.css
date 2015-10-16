@@ -127,7 +127,7 @@
 /**
  * 1. Use px units to ensure button text is centered vertically.
  */
-.no-touch .button--small {
+.no-touchevents .button--small {
   font-size: 13px;
   font-size: 0.813rem;
   padding: 2px 1em;  /* 1 */

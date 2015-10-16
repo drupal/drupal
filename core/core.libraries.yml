@@ -821,7 +821,7 @@ modernizr:
     name: MIT
     url: http://modernizr.com/license/
     gpl-compatible: true
-  version: "v2.8.3"
+  version: "v3.1.0"
   js:
     assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
 

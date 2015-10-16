@@ -236,7 +236,7 @@
 
     // Add event bindings to the document. The self variable is passed along
     // as event handlers do not have direct access to the tableDrag object.
-    if (Modernizr.touch) {
+    if (Modernizr.touchevents) {
       $(document).on('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
       $(document).on('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
     }
@@ -460,7 +460,7 @@
       $item.find('td').eq(0).prepend(handle);
     }
 
-    if (Modernizr.touch) {
+    if (Modernizr.touchevents) {
       handle.on('touchstart', function (event) {
         event.preventDefault();
         event = event.originalEvent.touches[0];

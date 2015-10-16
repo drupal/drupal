@@ -47,25 +47,25 @@ a.tabledrag-handle:hover .handle,
 a.tabledrag-handle:focus .handle {
   background-image: url(../../../../misc/icons/000000/move.svg);
 }
-.touch .draggable td {
+.touchevents .draggable td {
   padding: 0 10px;
 }
-.touch .draggable .menu-item__link {
+.touchevents .draggable .menu-item__link {
   display: inline-block;
   padding: 10px 0;
 }
-.touch a.tabledrag-handle {
+.touchevents a.tabledrag-handle {
   height: 44px;
   width: 40px;
 }
-.touch a.tabledrag-handle .handle {
+.touchevents a.tabledrag-handle .handle {
   background-position: 40% 19px; /* LTR */
   height: 21px;
 }
 [dir="rtl"] .touch a.tabledrag-handle .handle {
   background-position: right 40% top 19px;
 }
-.touch .draggable.drag a.tabledrag-handle .handle {
+.touchevents .draggable.drag a.tabledrag-handle .handle {
   background-position: 50% -32px;
 }
 .tabledrag-toggle-weight-wrapper {

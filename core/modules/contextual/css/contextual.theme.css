@@ -99,14 +99,14 @@
   margin: 0.25em 0;
   padding: 0.4em 0.6em;
 }
-.touch .contextual-region .contextual .contextual-links a {
+.touchevents .contextual-region .contextual .contextual-links a {
   font-size: large;
 }
 .contextual-region .contextual .contextual-links a,
 .contextual-region .contextual .contextual-links a:hover {
   text-decoration: none;
 }
-.no-touch .contextual-region .contextual .contextual-links li a:hover {
+.no-touchevents .contextual-region .contextual .contextual-links li a:hover {
   color: #000;
   background: #f7fcff;
 }
