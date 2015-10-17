@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- *
+ * Provides support for reverse proxies.
  */
 class ReverseProxyMiddleware implements HttpKernelInterface {
 
@@ -48,8 +48,21 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     // Initialize proxy settings.
     if ($this->settings->get('reverse_proxy', FALSE)) {
-      $reverse_proxy_header = $this->settings->get('reverse_proxy_header', 'X_FORWARDED_FOR');
-      $request::setTrustedHeaderName($request::HEADER_CLIENT_IP, $reverse_proxy_header);
+      $ip_header = $this->settings->get('reverse_proxy_header', 'X_FORWARDED_FOR');
+      $request::setTrustedHeaderName($request::HEADER_CLIENT_IP, $ip_header);
+
+      $proto_header = $this->settings->get('reverse_proxy_proto_header', 'X_FORWARDED_PROTO');
+      $request::setTrustedHeaderName($request::HEADER_CLIENT_PROTO, $proto_header);
+
+      $host_header = $this->settings->get('reverse_proxy_host_header', 'X_FORWARDED_HOST');
+      $request::setTrustedHeaderName($request::HEADER_CLIENT_HOST, $host_header);
+
+      $port_header = $this->settings->get('reverse_proxy_port_header', 'X_FORWARDED_PORT');
+      $request::setTrustedHeaderName($request::HEADER_CLIENT_PORT, $port_header);
+
+      $forwarded_header = $this->settings->get('reverse_proxy_forwarded_header', 'FORWARDED');
+      $request::setTrustedHeaderName($request::HEADER_FORWARDED, $forwarded_header);
+
       $proxies = $this->settings->get('reverse_proxy_addresses', array());
       if (count($proxies) > 0) {
         $request::setTrustedProxies($proxies);
