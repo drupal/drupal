@@ -21,12 +21,16 @@ namespace Drupal\entity_test\Entity;
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
- *     "views_data" = "Drupal\views\EntityViewsData"
+ *     "views_data" = "Drupal\views\EntityViewsData",
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
  *   },
  *   base_table = "entity_test_mulrev",
  *   data_table = "entity_test_mulrev_property_data",
  *   revision_table = "entity_test_mulrev_revision",
  *   revision_data_table = "entity_test_mulrev_property_revision",
+ *   admin_permission = "administer entity_test content",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
@@ -39,7 +43,7 @@ namespace Drupal\entity_test\Entity;
  *   links = {
  *     "canonical" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
  *     "delete-form" = "/entity_test/delete/entity_test_mulrev/{entity_test_mulrev}",
- *     "edit-form" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
+ *     "edit-form" = "/entity_test_mulrev/manage/{entity_test_mulrev}/edit",
  *     "revision" = "/entity_test_mulrev/{entity_test_mulrev}/revision/{entity_test_mulrev_revision}/view",
  *   }
  * )

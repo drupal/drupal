@@ -63,26 +63,6 @@ class EntityTestController extends ControllerBase {
   }
 
   /**
-   * Displays the 'Edit existing entity_test' form.
-   *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match object to get entity type from.
-   * @param string $entity_type_id
-   *   The entity type ID.
-   *
-   * @return array
-   *   The processed form for the edited entity.
-   *
-   * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()
-   */
-  public function testEdit(RouteMatchInterface $route_match, $entity_type_id) {
-    $entity = $route_match->getParameter($entity_type_id);
-    $form = $this->entityFormBuilder()->getForm($entity);
-    $form['#title'] = $entity->label();
-    return $form;
-  }
-
-  /**
    * Returns an empty page.
    *
    * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()

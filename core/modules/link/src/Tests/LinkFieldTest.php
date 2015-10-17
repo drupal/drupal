@@ -318,7 +318,7 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       "{$field_name}[0][title]" => $title,
     );
-    $this->drupalPostForm("entity_test/manage/$id", $edit, t('Save'));
+    $this->drupalPostForm("entity_test/manage/$id/edit", $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
 
     $this->renderTestEntity($id);

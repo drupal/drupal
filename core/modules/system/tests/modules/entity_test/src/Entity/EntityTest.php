@@ -28,10 +28,14 @@ use Drupal\user\UserInterface;
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
  *   },
  *   base_table = "entity_test",
+ *   admin_permission = "administer entity_test content",
  *   persistent_cache = FALSE,
  *   list_cache_contexts = { "entity_test_view_grants" },
  *   entity_keys = {
@@ -43,7 +47,7 @@ use Drupal\user\UserInterface;
  *   },
  *   links = {
  *     "canonical" = "/entity_test/{entity_test}",
- *     "edit-form" = "/entity_test/manage/{entity_test}",
+ *     "edit-form" = "/entity_test/manage/{entity_test}/edit",
  *     "delete-form" = "/entity_test/delete/entity_test/{entity_test}",
  *   },
  *   field_ui_base_route = "entity.entity_test.admin_form",

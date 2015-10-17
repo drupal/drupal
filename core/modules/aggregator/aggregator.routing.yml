@@ -49,34 +49,6 @@ aggregator.feed_add:
   options:
     _admin_route: TRUE
 
-entity.aggregator_feed.canonical:
-  path: '/aggregator/sources/{aggregator_feed}'
-  defaults:
-    _entity_view: 'aggregator_feed'
-    _title_callback: '\Drupal\aggregator\Controller\AggregatorController::feedTitle'
-  requirements:
-    _permission: 'access news feeds'
-
-entity.aggregator_feed.edit_form:
-  path: '/aggregator/sources/{aggregator_feed}/configure'
-  defaults:
-    _entity_form: 'aggregator_feed.default'
-    _title: 'Configure'
-  requirements:
-    _permission: 'administer news feeds'
-  options:
-    _admin_route: TRUE
-
-entity.aggregator_feed.delete_form:
-  path: '/aggregator/sources/{aggregator_feed}/delete'
-  defaults:
-    _entity_form: 'aggregator_feed.delete'
-    _title: 'Delete feed'
-  requirements:
-    _permission: 'administer news feeds'
-  options:
-    _admin_route: TRUE
-
 aggregator.page_last:
   path: '/aggregator'
   defaults:

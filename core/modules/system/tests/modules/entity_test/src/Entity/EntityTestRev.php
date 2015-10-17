@@ -18,16 +18,21 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   label = @Translation("Test entity - revisions"),
  *   handlers = {
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
+ *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
- *     "views_data" = "Drupal\views\EntityViewsData"
+ *     "views_data" = "Drupal\views\EntityViewsData",
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
  *   },
  *   base_table = "entity_test_rev",
  *   revision_table = "entity_test_rev_revision",
+ *   admin_permission = "administer entity_test content",
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
@@ -39,7 +44,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   links = {
  *     "canonical" = "/entity_test_rev/manage/{entity_test_rev}",
  *     "delete-form" = "/entity_test/delete/entity_test_rev/{entity_test_rev}",
- *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}",
+ *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}/edit",
  *     "revision" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view",
  *   }
  * )

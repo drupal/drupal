@@ -223,7 +223,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Display edition form.
     // We should now have a 'text format' selector.
-    $this->drupalGet('entity_test/manage/' . $id);
+    $this->drupalGet('entity_test/manage/' . $id . '/edit');
     $this->assertFieldByName("{$field_name}[0][value]", NULL, 'Widget is displayed');
     $this->assertFieldByName("{$field_name}[0][format]", NULL, 'Format selector is displayed');
 

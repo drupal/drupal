@@ -29,7 +29,10 @@ use Drupal\aggregator\FeedInterface;
  *       "default" = "Drupal\aggregator\FeedForm",
  *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",
  *       "delete_items" = "Drupal\aggregator\Form\FeedItemsDeleteForm",
- *     }
+ *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\aggregator\FeedHtmlRouteProvider",
+ *     },
  *   },
  *   links = {
  *     "canonical" = "/aggregator/sources/{aggregator_feed}",

@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\Entity\EntityTestMul.
+ * Contains \Drupal\entity_test\Entity\EntityTestAdminRoutes.
  */
 
 namespace Drupal\entity_test\Entity;
 
 /**
- * Defines the test entity class.
+ * Defines a test entity type with administrative routes.
  *
  * @ContentEntityType(
- *   id = "entity_test_mul",
- *   label = @Translation("Test entity - data table"),
+ *   id = "entity_test_admin_routes",
+ *   label = @Translation("Test entity - admin routes"),
  *   handlers = {
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
@@ -23,11 +23,11 @@ namespace Drupal\entity_test\Entity;
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "entity_test_mul",
- *   data_table = "entity_test_mul_property_data",
+ *   base_table = "entity_test_admin_routes",
+ *   data_table = "entity_test_admin_routes_property_data",
  *   admin_permission = "administer entity_test content",
  *   translatable = TRUE,
  *   entity_keys = {
@@ -38,13 +38,12 @@ namespace Drupal\entity_test\Entity;
  *     "langcode" = "langcode",
  *   },
  *   links = {
- *     "canonical" = "/entity_test_mul/manage/{entity_test_mul}",
- *     "edit-form" = "/entity_test_mul/manage/{entity_test_mul}/edit",
- *     "delete-form" = "/entity_test/delete/entity_test_mul/{entity_test_mul}",
+ *     "canonical" = "/entity_test_admin_routes/manage/{entity_test_admin_routes}",
+ *     "edit-form" = "/entity_test_admin_routes/manage/{entity_test_admin_routes}/edit",
+ *     "delete-form" = "/entity_test/delete/entity_test_admin_routes/{entity_test_admin_routes}",
  *   },
- *   field_ui_base_route = "entity.entity_test_mul.admin_form",
  * )
  */
-class EntityTestMul extends EntityTest {
+class EntityTestAdminRoutes extends EntityTest {
 
 }

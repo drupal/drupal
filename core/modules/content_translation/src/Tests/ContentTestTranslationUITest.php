@@ -27,19 +27,6 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   public static $modules = array('language', 'content_translation', 'entity_test');
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultCacheContexts = [
-    'languages:language_interface',
-    'session',
-    'theme',
-    'url.path',
-    'url.query_args',
-    'user.permissions',
-    'user.roles:authenticated',
-  ];
-
-  /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().
    */
   protected function setUp() {

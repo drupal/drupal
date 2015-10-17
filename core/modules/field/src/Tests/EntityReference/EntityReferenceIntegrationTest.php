@@ -87,7 +87,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Try to post the form again with no modification and check if the field
       // values remain the same.
       $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
-      $this->drupalGet($this->entityType . '/manage/' . $entity->id());
+      $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertFieldByName($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
       $this->assertFieldByName($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
 
@@ -113,7 +113,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Try to post the form again with no modification and check if the field
       // values remain the same.
       $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
-      $this->drupalGet($this->entityType . '/manage/' . $entity->id());
+      $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertFieldByName($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
 
       $this->drupalPostForm(NULL, array(), t('Save'));
@@ -132,7 +132,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
           'type' => $widget_type,
         ))->save();
 
-        $this->drupalPostForm($this->entityType . '/manage/' . $entity->id(), array(), t('Save'));
+        $this->drupalPostForm($this->entityType . '/manage/' . $entity->id() . '/edit', array(), t('Save'));
         $this->assertFieldValues($entity_name, $referenced_entities);
       }
 

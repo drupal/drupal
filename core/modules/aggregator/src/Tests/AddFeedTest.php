@@ -61,8 +61,8 @@ class AddFeedTest extends AggregatorTestBase {
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertResponse(200);
 
-    $result = $this->xpath('//h1');
-    $this->assertEqual((string) $result[0], 'Test feed title alert(123);');
+    $this->assertEscaped('Test feed title <script>alert(123);</script>');
+    $this->assertNoRaw('Test feed title <script>alert(123);</script>');
 
     // Ensure the feed icon title is escaped.
     $this->assertTrue(strpos(str_replace(["\n", "\r"], '', $this->getRawContent()), 'class="feed-icon">  Subscribe to Test feed title &lt;script&gt;alert(123);&lt;/script&gt; feed</a>') !== FALSE);

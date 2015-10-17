@@ -23,10 +23,14 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
- *     "views_data" = "Drupal\views\EntityViewsData"
+ *     "views_data" = "Drupal\views\EntityViewsData",
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
  *   },
  *   base_table = "entity_test_mul_langcode_key",
  *   data_table = "entity_test_mul_langcode_key_field_data",
+ *   admin_permission = "administer entity_test content",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
@@ -38,7 +42,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   },
  *   links = {
  *     "canonical" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",
- *     "edit-form" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",
+ *     "edit-form" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}/edit",
  *     "delete-form" = "/entity_test/delete/entity_test_mul_langcode_key/{entity_test_mul_langcode_key}",
  *   },
  *   field_ui_base_route = "entity.entity_test_mul_langcode_key.admin_form",

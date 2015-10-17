@@ -26,7 +26,7 @@ class EntityFormTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $web_user = $this->drupalCreateUser(array('administer entity_test content'));
+    $web_user = $this->drupalCreateUser(array('administer entity_test content', 'view test entity'));
     $this->drupalLogin($web_user);
 
     // Add a language.
@@ -84,14 +84,14 @@ class EntityFormTest extends WebTestBase {
     $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type)));
 
     $edit['name[0][value]'] = $name2;
-    $this->drupalPostForm($entity_type . '/manage/' . $entity->id(), $edit, t('Save'));
+    $this->drupalPostForm($entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
     $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', array('%entity_type' => $entity_type)));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', array('%entity_type' => $entity_type)));
     $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', array('%entity_type' => $entity_type)));
 
-    $this->drupalGet($entity_type . '/manage/' . $entity->id());
+    $this->drupalGet($entity_type . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, array(), t('Delete'));
     $entity = $this->loadEntityByName($entity_type, $name2);
@@ -125,12 +125,12 @@ class EntityFormTest extends WebTestBase {
     $this->assertEqual($translated_entity->name->value, $name1_ro, format_string('%entity_type: The translation has been added.', array('%entity_type' => $entity_type_id)));
 
     $edit['name[0][value]'] = $name2_ro;
-    $this->drupalPostForm('ro/' . $entity_type_id . '/manage/' . $entity->id(), $edit, t('Save'));
+    $this->drupalPostForm('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
     $this->assertTrue($translated_entity, format_string('%entity_type: Modified translation found in the database.', array('%entity_type' => $entity_type_id)));
     $this->assertEqual($translated_entity->name->value, $name2_ro, format_string('%entity_type: The name of the translation has been modified.', array('%entity_type' => $entity_type_id)));
 
-    $this->drupalGet('ro/' . $entity_type_id . '/manage/' . $entity->id());
+    $this->drupalGet('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, array(), t('Delete Romanian translation'));
     $entity = $this->loadEntityByName($entity_type_id, $name1);
