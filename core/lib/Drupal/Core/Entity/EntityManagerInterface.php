@@ -450,7 +450,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getFormModeOptions($entity_type_id);
 
   /**
-   * Returns an array of view mode options by bundle.
+   * Returns an array of enabled view mode options by bundle.
    *
    * @param string $entity_type_id
    *   The entity type whose view mode options should be returned.
@@ -463,7 +463,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getViewModeOptionsByBundle($entity_type_id, $bundle);
 
   /**
-   * Returns an array of form mode options by bundle.
+   * Returns an array of enabled form mode options by bundle.
    *
    * @param string $entity_type_id
    *   The entity type whose form mode options should be returned.

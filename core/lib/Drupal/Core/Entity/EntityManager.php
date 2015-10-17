@@ -1132,7 +1132,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   }
 
   /**
-   * Returns an array of display mode options by bundle.
+   * Returns an array of enabled display mode options by bundle.
    *
    * @param $display_type
    *   The display type to be retrieved. It can be "view_mode" or "form_mode".
