@@ -15,6 +15,7 @@
       editor.addCommand('drupallink', {
         allowedContent: new CKEDITOR.style({
           element: 'a',
+          styles: {},
           attributes: {
             '!href': '',
             'target': ''
@@ -22,6 +23,7 @@
         }),
         requiredContent: new CKEDITOR.style({
           element: 'a',
+          styles: {},
           attributes: {
             href: ''
           }
