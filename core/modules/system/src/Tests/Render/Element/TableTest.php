@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Theme\TableTest.
+ * Contains \Drupal\system\Tests\Render\Element\TableTest.
  */
 
-namespace Drupal\system\Tests\Theme;
+namespace Drupal\system\Tests\Render\Element;
 
 use Drupal\simpletest\KernelTestBase;
 
