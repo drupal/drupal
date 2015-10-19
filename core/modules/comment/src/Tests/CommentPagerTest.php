@@ -250,7 +250,7 @@ class CommentPagerTest extends CommentTestBase {
     $node = Node::load($node->id());
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned_page = \Drupal::entityManager()->getStorage('comment')
-        ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node);
+        ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node, 'comment');
       $this->assertIdentical($expected_page, $returned_page, format_string('Flat mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
     }
 
@@ -269,7 +269,7 @@ class CommentPagerTest extends CommentTestBase {
     $node = Node::load($node->id());
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned_page = \Drupal::entityManager()->getStorage('comment')
-        ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node);
+        ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node, 'comment');
       $this->assertEqual($expected_page, $returned_page, format_string('Threaded mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
     }
   }

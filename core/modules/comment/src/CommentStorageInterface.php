@@ -54,7 +54,7 @@ interface CommentStorageInterface extends EntityStorageInterface {
    * @return array|null
    *   The page number where first new comment appears. (First page returns 0.)
    */
-  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name = 'comment');
+  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name);
 
   /**
    * Gets the display ordinal or page number for a comment.

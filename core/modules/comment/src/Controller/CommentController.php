@@ -335,7 +335,7 @@ class CommentController extends ControllerBase {
       $node = $this->entityManager->getStorage('node')->load($nid);
       $new = $this->commentManager->getCountNewComments($node);
       $page_number = $this->entityManager()->getStorage('comment')
-        ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node);
+        ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node, $field_name);
       $query = $page_number ? array('page' => $page_number) : NULL;
       $links[$nid] = array(
         'new_comment_count' => (int) $new,
