@@ -14,6 +14,8 @@ namespace Drupal\Core\Render\Element;
  * difference is that it offers themes the possibility to render it differently
  * through a theme suggestion.
  *
+ * @see \Drupal|Core\Render\Element\DropButton
+ *
  * @RenderElement("operations")
  */
 class Operations extends Dropbutton {
