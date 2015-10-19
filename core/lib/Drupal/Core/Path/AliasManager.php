@@ -145,10 +145,8 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
         }
       }
 
-      if (!empty($path_lookups)) {
-        $twenty_four_hours = 60 * 60 * 24;
-        $this->cache->set($this->cacheKey, $path_lookups, $this->getRequestTime() + $twenty_four_hours);
-      }
+      $twenty_four_hours = 60 * 60 * 24;
+      $this->cache->set($this->cacheKey, $path_lookups, $this->getRequestTime() + $twenty_four_hours);
     }
   }
 
@@ -175,7 +173,6 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     // Look for path in storage.
     if ($path = $this->storage->lookupPathSource($alias, $langcode)) {
       $this->lookupMap[$langcode][$path] = $alias;
-      $this->cacheNeedsWriting = TRUE;
       return $path;
     }
 
@@ -216,8 +213,13 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
       // happens if a cache key has been set.
       if ($this->preloadedPathLookups === FALSE) {
         $this->preloadedPathLookups = array();
-        if ($this->cacheKey && $cached = $this->cache->get($this->cacheKey)) {
-          $this->preloadedPathLookups = $cached->data;
+        if ($this->cacheKey) {
+          if ($cached = $this->cache->get($this->cacheKey)) {
+            $this->preloadedPathLookups = $cached->data;
+          }
+          else {
+            $this->cacheNeedsWriting = TRUE;
+          }
         }
       }
 
@@ -242,14 +244,12 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     // Try to load alias from storage.
     if ($alias = $this->storage->lookupPathAlias($path, $langcode)) {
       $this->lookupMap[$langcode][$path] = $alias;
-      $this->cacheNeedsWriting = TRUE;
       return $alias;
     }
 
     // We can't record anything into $this->lookupMap because we didn't find any
     // aliases for this path. Thus cache to $this->noAlias.
     $this->noAlias[$langcode][$path] = TRUE;
-    $this->cacheNeedsWriting = TRUE;
     return $path;
   }
 

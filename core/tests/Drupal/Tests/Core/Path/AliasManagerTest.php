@@ -339,14 +339,10 @@ class AliasManagerTest extends UnitTestCase {
     // Call it twice to test the static cache.
     $this->assertEquals($alias, $this->aliasManager->getAliasByPath($path));
 
-    // This needs to write out the cache.
-    $expected_new_cache = array(
-      $cached_language->getId() => array($path),
-      $language->getId() => array($path),
-    );
-    $this->cache->expects($this->once())
-      ->method('set')
-      ->with($this->cacheKey, $expected_new_cache, (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
+    // There is already a cache entry, so this should not write out to the
+    // cache.
+    $this->cache->expects($this->never())
+      ->method('set');
     $this->aliasManager->writeCache();
   }
 
@@ -441,13 +437,10 @@ class AliasManagerTest extends UnitTestCase {
     // Call it twice to test the static cache.
     $this->assertEquals($path, $this->aliasManager->getAliasByPath($path));
 
-    // This needs to write out the cache.
-    $expected_new_cache = array(
-      $language->getId() => array($cached_path, $path),
-    );
-    $this->cache->expects($this->once())
-      ->method('set')
-      ->with($this->cacheKey, $expected_new_cache, (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
+    // There is already a cache entry, so this should not write out to the
+    // cache.
+    $this->cache->expects($this->never())
+      ->method('set');
     $this->aliasManager->writeCache();
   }
 
@@ -533,13 +526,10 @@ class AliasManagerTest extends UnitTestCase {
     // Call it twice to test the static cache.
     $this->assertEquals($new_alias, $this->aliasManager->getAliasByPath($path));
 
-    // This needs to write out the cache.
-    $expected_new_cache = array(
-      $language->getId() => array($cached_path, $path, $cached_no_alias_path),
-    );
-    $this->cache->expects($this->once())
-      ->method('set')
-      ->with($this->cacheKey, $expected_new_cache, (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
+    // There is already a cache entry, so this should not write out to the
+    // cache.
+    $this->cache->expects($this->never())
+      ->method('set');
     $this->aliasManager->writeCache();
   }
 
