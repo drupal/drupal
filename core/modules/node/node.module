@@ -316,7 +316,8 @@ function node_type_load($name) {
  * @param string $label
  *   (optional) The label for the body instance.
  *
- * @return \Drupal\field\Entity\FieldConfig Body field.
+ * @return \Drupal\field\Entity\FieldConfig
+ *   A Body field object.
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
