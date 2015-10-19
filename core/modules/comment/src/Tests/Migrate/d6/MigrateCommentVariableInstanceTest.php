@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests\Migrate\d6;
 
+use Drupal\comment\CommentManagerInterface;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
@@ -44,21 +45,21 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(0, $node->comment->status);
     $this->assertIdentical('comment', $node->comment->getFieldDefinition()->getName());
     $settings = $node->comment->getFieldDefinition()->getSettings();
-    $this->assertIdentical(4, $settings['default_mode']);
+    $this->assertIdentical(CommentManagerInterface::COMMENT_MODE_THREADED, $settings['default_mode']);
     $this->assertIdentical(50, $settings['per_page']);
-    $this->assertIdentical(0, $settings['anonymous']);
-    $this->assertIdentical(FALSE, $settings['form_location']);
-    $this->assertIdentical(1, $settings['preview']);
+    $this->assertFalse($settings['anonymous']);
+    $this->assertFalse($settings['form_location']);
+    $this->assertTrue($settings['preview']);
 
     $node = Node::create(['type' => 'story']);
     $this->assertIdentical(2, $node->comment_no_subject->status);
     $this->assertIdentical('comment_no_subject', $node->comment_no_subject->getFieldDefinition()->getName());
     $settings = $node->comment_no_subject->getFieldDefinition()->getSettings();
-    $this->assertIdentical(2, $settings['default_mode']);
+    $this->assertIdentical(CommentManagerInterface::COMMENT_MODE_FLAT, $settings['default_mode']);
     $this->assertIdentical(70, $settings['per_page']);
-    $this->assertIdentical(1, $settings['anonymous']);
-    $this->assertIdentical(FALSE, $settings['form_location']);
-    $this->assertIdentical(0, $settings['preview']);
+    $this->assertTrue($settings['anonymous']);
+    $this->assertFalse($settings['form_location']);
+    $this->assertFalse($settings['preview']);
   }
 
 }

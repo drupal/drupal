@@ -84,37 +84,290 @@ $connection->insert('accesslog')
   'timestamp',
 ))
 ->values(array(
-  'aid' => '89',
-  'sid' => 's12XgEKLqGr998aW8pzRB4dCX5SkOVoDm4YO76PPv7g',
-  'title' => 'Appearance',
-  'path' => 'admin/appearance',
-  'url' => 'http://localhost/sandbox7/node/1',
-  'hostname' => '::1',
-  'uid' => '1',
-  'timer' => '922',
-  'timestamp' => '1421843462',
+  'aid' => '92',
+  'sid' => 'a8ksMY2GH4yXK0-PsLNAlCv4zNnapnyCpx4lryZDEfk',
+  'title' => '',
+  'path' => 'node',
+  'url' => 'http://drupal7.local/?q=user/register',
+  'hostname' => '127.0.0.1',
+  'uid' => '0',
+  'timer' => '655',
+  'timestamp' => '1444944970',
 ))
 ->values(array(
-  'aid' => '90',
-  'sid' => 's12XgEKLqGr998aW8pzRB4dCX5SkOVoDm4YO76PPv7g',
+  'aid' => '93',
+  'sid' => 'e89G2redQpxRTIndbV3qH8snVR621DqSQ2s4vciJedA',
+  'title' => '',
+  'path' => 'node',
+  'url' => 'http://drupal7.local/',
+  'hostname' => '127.0.0.1',
+  'uid' => '0',
+  'timer' => '214',
+  'timestamp' => '1444944974',
+))
+->values(array(
+  'aid' => '94',
+  'sid' => 'KkVxQTCiKqKEGNcRs7GYrmXXbEk4szXCHVTknFkbiG0',
+  'title' => 'User account',
+  'path' => 'user/login',
+  'url' => '',
+  'hostname' => '127.0.0.1',
+  'uid' => '0',
+  'timer' => '259',
+  'timestamp' => '1444945094',
+))
+->values(array(
+  'aid' => '95',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'My account',
+  'path' => 'user/login',
+  'url' => 'http://drupal7.local/?q=user/login',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '217',
+  'timestamp' => '1444945097',
+))
+->values(array(
+  'aid' => '96',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'root',
+  'path' => 'user/1',
+  'url' => 'http://drupal7.local/?q=user/login',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '211',
+  'timestamp' => '1444945097',
+))
+->values(array(
+  'aid' => '97',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
   'title' => 'Modules',
   'path' => 'admin/modules',
-  'url' => 'http://localhost/sandbox7/admin/appearance',
-  'hostname' => '::1',
+  'url' => 'http://drupal7.local/user/1',
+  'hostname' => '127.0.0.1',
   'uid' => '1',
-  'timer' => '492',
-  'timestamp' => '1421843474',
+  'timer' => '619',
+  'timestamp' => '1444945104',
 ))
 ->values(array(
-  'aid' => '91',
-  'sid' => 's12XgEKLqGr998aW8pzRB4dCX5SkOVoDm4YO76PPv7g',
+  'aid' => '98',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
   'title' => 'Configuration',
   'path' => 'admin/config',
-  'url' => 'http://localhost/sandbox7/admin/modules',
-  'hostname' => '::1',
+  'url' => 'http://drupal7.local/admin/modules',
+  'hostname' => '127.0.0.1',
   'uid' => '1',
-  'timer' => '180',
-  'timestamp' => '1421843480',
+  'timer' => '273',
+  'timestamp' => '1444945114',
+))
+->values(array(
+  'aid' => '99',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language',
+  'url' => 'http://drupal7.local/admin/config',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '213',
+  'timestamp' => '1444945121',
+))
+->values(array(
+  'aid' => '100',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language/add',
+  'url' => 'http://drupal7.local/admin/config/regional/language',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '148',
+  'timestamp' => '1444945122',
+))
+->values(array(
+  'aid' => '101',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language/add',
+  'url' => 'http://drupal7.local/admin/config/regional/language/add',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '260',
+  'timestamp' => '1444945153',
+))
+->values(array(
+  'aid' => '102',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language/add',
+  'url' => '',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '195',
+  'timestamp' => '1444945160',
+))
+->values(array(
+  'aid' => '103',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language/add',
+  'url' => 'http://drupal7.local/?q=admin/config/regional/language/add',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '177',
+  'timestamp' => '1444945168',
+))
+->values(array(
+  'aid' => '104',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language',
+  'url' => 'http://drupal7.local/?q=admin/config/regional/language/add',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '145',
+  'timestamp' => '1444945168',
+))
+->values(array(
+  'aid' => '105',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language',
+  'url' => '',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '159',
+  'timestamp' => '1444945175',
+))
+->values(array(
+  'aid' => '106',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language',
+  'url' => 'http://drupal7.local/?q=admin/config/regional/language',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '152',
+  'timestamp' => '1444945176',
+))
+->values(array(
+  'aid' => '107',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Languages',
+  'path' => 'admin/config/regional/language',
+  'url' => 'http://drupal7.local/?q=admin/config/regional/language',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '148',
+  'timestamp' => '1444945176',
+))
+->values(array(
+  'aid' => '108',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Structure',
+  'path' => 'admin/structure',
+  'url' => 'http://drupal7.local/admin/config/regional/language',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '156',
+  'timestamp' => '1444945206',
+))
+->values(array(
+  'aid' => '109',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Content types',
+  'path' => 'admin/structure/types',
+  'url' => 'http://drupal7.local/admin/structure',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '154',
+  'timestamp' => '1444945208',
+))
+->values(array(
+  'aid' => '110',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Blog entry',
+  'path' => 'admin/structure/types/manage/blog',
+  'url' => 'http://drupal7.local/admin/structure/types',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '203',
+  'timestamp' => '1444945211',
+))
+->values(array(
+  'aid' => '111',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Parent menu items',
+  'path' => 'admin/structure/menu/parents',
+  'url' => 'http://drupal7.local/admin/structure/types/manage/blog',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '211',
+  'timestamp' => '1444945211',
+))
+->values(array(
+  'aid' => '112',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Blog entry',
+  'path' => 'admin/structure/types/manage/blog',
+  'url' => 'http://drupal7.local/admin/structure/types/manage/blog',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '224',
+  'timestamp' => '1444945236',
+))
+->values(array(
+  'aid' => '113',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Parent menu items',
+  'path' => 'admin/structure/menu/parents',
+  'url' => 'http://drupal7.local/admin/structure/types/manage/blog',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '165',
+  'timestamp' => '1444945237',
+))
+->values(array(
+  'aid' => '114',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Blog entry',
+  'path' => 'admin/structure/types/manage/blog',
+  'url' => '',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '155',
+  'timestamp' => '1444945242',
+))
+->values(array(
+  'aid' => '115',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Parent menu items',
+  'path' => 'admin/structure/menu/parents',
+  'url' => 'http://drupal7.local/?q=admin/structure/types/manage/blog',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '217',
+  'timestamp' => '1444945242',
+))
+->values(array(
+  'aid' => '116',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Blog entry',
+  'path' => 'admin/structure/types/manage/blog',
+  'url' => 'http://drupal7.local/?q=admin/structure/types/manage/blog',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '667',
+  'timestamp' => '1444945246',
+))
+->values(array(
+  'aid' => '117',
+  'sid' => 'FA1BMWZvsAAE1G-OBMzfiJyA12sh588cOKSmEmxFQiA',
+  'title' => 'Content types',
+  'path' => 'admin/structure/types',
+  'url' => 'http://drupal7.local/?q=admin/structure/types/manage/blog',
+  'hostname' => '127.0.0.1',
+  'uid' => '1',
+  'timer' => '149',
+  'timestamp' => '1444945246',
 ))
 ->execute();
 
@@ -428,13 +681,13 @@ $connection->insert('aggregator_feed')
   'title' => 'Know Your Meme',
   'url' => 'http://knowyourmeme.com/newsfeed.rss',
   'refresh' => '900',
-  'checked' => '1387659487',
+  'checked' => '1444944970',
   'queued' => '0',
   'link' => 'http://knowyourmeme.com',
   'description' => 'New items added to the News Feed',
-  'image' => 'http://b.thumbs.redditmedia.com/harEHsUUZVajabtC.png',
-  'hash' => '1c1e3b6c10ce02f226882aca11709051bba61df2b8eac17ceec5bf74048f1954',
-  'etag' => '"213cc1365b96c310e92053c5551f0504"',
+  'image' => '',
+  'hash' => 'e6295b3ba81b24db62b41515494a7e9fb87979ff45045a1c946de5fa5abc9c52',
+  'etag' => '"bad5e20e4993f31c869cffd22f1645b9"',
   'modified' => '0',
   'block' => '5',
 ))
@@ -504,14 +757,104 @@ $connection->insert('aggregator_item')
   'guid',
 ))
 ->values(array(
-  'iid' => '1',
+  'iid' => '2',
   'fid' => '1',
-  'title' => 'This (three) weeks in Drupal Core - January 10th 2014',
-  'link' => 'https://groups.drupal.org/node/395218',
-  'author' => 'larowlan',
-  'description' => "<h2 id='new'>What's new with Drupal 8?</h2>",
-  'timestamp' => '1389297196',
-  'guid' => '395218 at https://groups.drupal.org',
+  'title' => 'Fido, Take the Wheel',
+  'link' => 'http://knowyourmeme.com/videos/127817-dogs',
+  'author' => '',
+  'description' => '<img alt="D70olsu" src="http://i.imgur.com/D70Olsu.jpg?fb" /><p>When little Timmy had too much to drink, the family dog was forced into the role of designated driver.</p>',
+  'timestamp' => '1444860534',
+  'guid' => 'post:18816',
+))
+->values(array(
+  'iid' => '3',
+  'fid' => '1',
+  'title' => 'One Punch Man Anime Premieres in Japan',
+  'link' => 'http://knowyourmeme.com/memes/subcultures/one-punch-man',
+  'author' => '',
+  'description' => '<img alt="49b" src="http://i2.kym-cdn.com/news_feeds/icons/mobile/000/018/819/49b.jpg" /><p>The first two episodes of the much anticipated anime adaptation of <i>One Punch Man</i> were finally aired in Japan this month.</p>',
+  'timestamp' => '1444863415',
+  'guid' => 'post:18819',
+))
+->values(array(
+  'iid' => '4',
+  'fid' => '1',
+  'title' => '’Tis the Season to Be Forever Alone',
+  'link' => 'http://knowyourmeme.com/photos/1029494-forever-alone',
+  'author' => '',
+  'description' => '<img alt="336" src="http://i2.kym-cdn.com/photos/images/newsfeed/001/029/494/336.jpg" />',
+  'timestamp' => '1444864413',
+  'guid' => 'post:18821',
+))
+->values(array(
+  'iid' => '5',
+  'fid' => '1',
+  'title' => 'Legend of Zelda: Symphony of The Goddesses',
+  'link' => 'http://knowyourmeme.com/videos/128124-the-legend-of-zelda',
+  'author' => '',
+  'description' => '<img alt="1a9" src="http://i3.kym-cdn.com/news_feeds/icons/mobile/000/018/824/1a9.jpg" /><p>Rejoice, nerds! This is the music that awaits you in heaven. Check out The Legend of Zelda: Symphony of the Goddesses’ performance on the Late Show with Stephen Colbert.</p>',
+  'timestamp' => '1444934645',
+  'guid' => 'post:18824',
+))
+->values(array(
+  'iid' => '6',
+  'fid' => '1',
+  'title' => '“Your Mom” Jokes',
+  'link' => 'http://knowyourmeme.com/memes/your-mom-jokes',
+  'author' => '',
+  'description' => '<img alt="3bc" src="http://i3.kym-cdn.com/news_feeds/icons/mobile/000/018/823/3bc.jpg" /><p>The earliest recorded example of a maternal insult joke comes from an ancient Babylonian tablet dated back to 1,500 <span class="caps">BCE</span>, which contains an incomplete riddle about a promiscuous mother.</p>',
+  'timestamp' => '1444928716',
+  'guid' => 'post:18823',
+))
+->values(array(
+  'iid' => '7',
+  'fid' => '1',
+  'title' => 'DBZ Voice Actors Dub Over Classic Movies',
+  'link' => 'http://knowyourmeme.com/videos/128169-dragon-ball',
+  'author' => '',
+  'description' => '<img alt="D8c" src="http://i1.kym-cdn.com/news_feeds/icons/mobile/000/018/826/d8c.jpg" /><p>Some of the most recognizable voices behind the characters of Dragon Ball Z gather at The Nerdist studio for a parody dub of famous film scenes from <em>Ace Ventura</em> and <em>Independence Day</em> to <em>Zoolander</em> and <em>Meet the Parents</em>.</p>',
+  'timestamp' => '1444939569',
+  'guid' => 'post:18826',
+))
+->values(array(
+  'iid' => '8',
+  'fid' => '1',
+  'title' => 'Happy Birthday, Cure-chan!',
+  'link' => 'http://knowyourmeme.com/memes/cure-chan',
+  'author' => '',
+  'description' => '<img alt="E8c" src="http://i3.kym-cdn.com/news_feeds/icons/mobile/000/018/825/e8c.jpg" /><p>The archnemesis of <a href="/memes/ebola-chan">Ebola-chan</a> was born one year ago this week.</p>',
+  'timestamp' => '1444938083',
+  'guid' => 'post:18825',
+))
+->values(array(
+  'iid' => '9',
+  'fid' => '1',
+  'title' => 'That Face When Retweets Ain’t Coming In',
+  'link' => 'http://knowyourmeme.com/photos/1029430-my-face-when',
+  'author' => '',
+  'description' => '<img alt="C51" src="http://i2.kym-cdn.com/news_feeds/icons/original/000/018/827/c51.jpg" />',
+  'timestamp' => '1444940736',
+  'guid' => 'post:18827',
+))
+->values(array(
+  'iid' => '10',
+  'fid' => '1',
+  'title' => 'Back to the Future Stars Talk Film’s Predictions',
+  'link' => 'http://knowyourmeme.com/videos/128173-back-to-the-future-day',
+  'author' => '',
+  'description' => '<img alt="944" src="http://i2.kym-cdn.com/news_feeds/icons/mobile/000/018/828/944.jpg" /><p>In honor of next week being the real <a href="/memes/back-to-the-future-day">Back to the Future Day</a>, Christopher Lloyd and Michael J. Fox recently got together (at the prompting of Toyota) to discuss which of the film’s predictions have come to pass in 2015.</p>',
+  'timestamp' => '1444943309',
+  'guid' => 'post:18828',
+))
+->values(array(
+  'iid' => '11',
+  'fid' => '1',
+  'title' => 'Chad Says Beta Things',
+  'link' => 'http://knowyourmeme.com/memes/chad-says-beta-things',
+  'author' => '',
+  'description' => '<img alt="937" src="http://i1.kym-cdn.com/news_feeds/icons/mobile/000/018/829/937.jpg" /><p>This series of awkward Tinder messages sent by a fake <a href="http://knowyourmeme.com/memes/chad-thundercock">Chad</a> Tinder profile has caused a recent surge in popularity of the corn emoji.</p>',
+  'timestamp' => '1444944831',
+  'guid' => 'post:18829',
 ))
 ->execute();
 
@@ -1309,12 +1652,40 @@ $connection->insert('block')
   'theme' => 'seven',
   'status' => '0',
   'weight' => '0',
-  'region' => '',
+  'region' => '-1',
   'custom' => '0',
   'visibility' => '0',
   'pages' => '',
   'title' => 'Mildly amusing limerick of the day',
   'cache' => '-1',
+))
+->values(array(
+  'bid' => '47',
+  'module' => 'aggregator',
+  'delta' => 'feed-1',
+  'theme' => 'bartik',
+  'status' => '0',
+  'weight' => '0',
+  'region' => '-1',
+  'custom' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => '',
+  'cache' => '1',
+))
+->values(array(
+  'bid' => '48',
+  'module' => 'aggregator',
+  'delta' => 'feed-1',
+  'theme' => 'seven',
+  'status' => '0',
+  'weight' => '0',
+  'region' => '-1',
+  'custom' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => '',
+  'cache' => '1',
 ))
 ->execute();
 
@@ -2245,6 +2616,7 @@ $connection->schema()->createTable('date_format_locale', array(
       'type' => 'varchar',
       'not null' => TRUE,
       'length' => '100',
+      'binary' => TRUE,
     ),
     'type' => array(
       'type' => 'varchar',
@@ -7422,19 +7794,6 @@ $connection->schema()->createTable('history', array(
   'mysql_character_set' => 'utf8',
 ));
 
-$connection->insert('history')
-->fields(array(
-  'uid',
-  'nid',
-  'timestamp',
-))
-->values(array(
-  'uid' => '1',
-  'nid' => '1',
-  'timestamp' => '1421727536',
-))
-->execute();
-
 $connection->schema()->createTable('image_effects', array(
   'fields' => array(
     'ieid' => array(
@@ -7673,6 +8032,19 @@ $connection->insert('languages')
   'formula' => '',
   'domain' => '',
   'prefix' => '',
+  'weight' => '0',
+  'javascript' => '',
+))
+->values(array(
+  'language' => 'is',
+  'name' => 'Icelandic',
+  'native' => 'Íslenska',
+  'direction' => '0',
+  'enabled' => '1',
+  'plurals' => '0',
+  'formula' => '',
+  'domain' => '',
+  'prefix' => 'is',
   'weight' => '0',
   'javascript' => '',
 ))
@@ -8105,6 +8477,14 @@ $connection->insert('locales_source')
   'context' => '',
   'version' => 'none',
 ))
+->values(array(
+  'lid' => '48',
+  'location' => 'misc/drupal.js',
+  'textgroup' => 'default',
+  'source' => 'CustomMessage: !customMessage',
+  'context' => '',
+  'version' => 'none',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -8494,7 +8874,7 @@ $connection->insert('menu_links')
   'module' => 'system',
   'hidden' => '1',
   'external' => '0',
-  'has_children' => '0',
+  'has_children' => '1',
   'expanded' => '0',
   'weight' => '0',
   'depth' => '1',
@@ -18581,6 +18961,60 @@ $connection->insert('menu_links')
   'p9' => '0',
   'updated' => '0',
 ))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '474',
+  'plid' => '4',
+  'link_path' => 'filter/tips/%',
+  'router_path' => 'filter/tips/%',
+  'link_title' => 'Compose tips',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '2',
+  'customized' => '0',
+  'p1' => '4',
+  'p2' => '474',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '475',
+  'plid' => '175',
+  'link_path' => 'admin/help/php',
+  'router_path' => 'admin/help/php',
+  'link_title' => 'php',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '175',
+  'p3' => '475',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('menu_router', array(
@@ -18955,7 +19389,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:25:"themes/bartik/bartik.info";s:4:"name";s:6:"bartik";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:25:"themes/bartik/bartik.info";s:4:"name";s:6:"bartik";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:6:"bartik";}',
   'delivery_callback' => '',
@@ -18980,7 +19414,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:7:"garland";}',
   'delivery_callback' => '',
@@ -19030,7 +19464,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:23:"themes/seven/seven.info";s:4:"name";s:5:"seven";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:23:"themes/seven/seven.info";s:4:"name";s:5:"seven";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:5:"seven";}',
   'delivery_callback' => '',
@@ -19055,7 +19489,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => "a:1:{i:0;O:8:\"stdClass\":12:{s:8:\"filename\";s:23:\"themes/stark/stark.info\";s:4:\"name\";s:5:\"stark\";s:4:\"type\";s:5:\"theme\";s:5:\"owner\";s:45:\"themes/engines/phptemplate/phptemplate.engine\";s:6:\"status\";s:1:\"0\";s:9:\"bootstrap\";s:1:\"0\";s:14:\"schema_version\";s:2:\"-1\";s:6:\"weight\";s:1:\"0\";s:4:\"info\";a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.34\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1416429488\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1416429488;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}s:6:\"prefix\";s:11:\"phptemplate\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:6:\"engine\";s:11:\"phptemplate\";}}",
+  'access_arguments' => "a:1:{i:0;O:8:\"stdClass\":12:{s:8:\"filename\";s:23:\"themes/stark/stark.info\";s:4:\"name\";s:5:\"stark\";s:4:\"type\";s:5:\"theme\";s:5:\"owner\";s:45:\"themes/engines/phptemplate/phptemplate.engine\";s:6:\"status\";s:1:\"0\";s:9:\"bootstrap\";s:1:\"0\";s:14:\"schema_version\";s:2:\"-1\";s:6:\"weight\";s:1:\"0\";s:4:\"info\";a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.40\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1444866674\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1444866674;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}s:6:\"prefix\";s:11:\"phptemplate\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:6:\"engine\";s:11:\"phptemplate\";}}",
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:5:"stark";}',
   'delivery_callback' => '',
@@ -22876,6 +23310,31 @@ $connection->insert('menu_router')
   'include_file' => 'modules/help/help.admin.inc',
 ))
 ->values(array(
+  'path' => 'admin/help/php',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:27:"access administration pages";}',
+  'page_callback' => 'help_page',
+  'page_arguments' => 'a:1:{i:0;i:2;}',
+  'delivery_callback' => '',
+  'fit' => '7',
+  'number_parts' => '3',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/help/php',
+  'title' => 'php',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '4',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'modules/help/help.admin.inc',
+))
+->values(array(
   'path' => 'admin/help/rdf',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -24280,7 +24739,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:25:"themes/bartik/bartik.info";s:4:"name";s:6:"bartik";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:25:"themes/bartik/bartik.info";s:4:"name";s:6:"bartik";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_demo',
   'page_arguments' => 'a:1:{i:0;s:6:"bartik";}',
   'delivery_callback' => '',
@@ -24305,7 +24764,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_demo',
   'page_arguments' => 'a:1:{i:0;s:7:"garland";}',
   'delivery_callback' => '',
@@ -24330,7 +24789,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:23:"themes/seven/seven.info";s:4:"name";s:5:"seven";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:23:"themes/seven/seven.info";s:4:"name";s:5:"seven";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_demo',
   'page_arguments' => 'a:1:{i:0;s:5:"seven";}',
   'delivery_callback' => '',
@@ -24355,7 +24814,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => "a:1:{i:0;O:8:\"stdClass\":12:{s:8:\"filename\";s:23:\"themes/stark/stark.info\";s:4:\"name\";s:5:\"stark\";s:4:\"type\";s:5:\"theme\";s:5:\"owner\";s:45:\"themes/engines/phptemplate/phptemplate.engine\";s:6:\"status\";s:1:\"0\";s:9:\"bootstrap\";s:1:\"0\";s:14:\"schema_version\";s:2:\"-1\";s:6:\"weight\";s:1:\"0\";s:4:\"info\";a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.34\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1416429488\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1416429488;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}s:6:\"prefix\";s:11:\"phptemplate\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:6:\"engine\";s:11:\"phptemplate\";}}",
+  'access_arguments' => "a:1:{i:0;O:8:\"stdClass\":12:{s:8:\"filename\";s:23:\"themes/stark/stark.info\";s:4:\"name\";s:5:\"stark\";s:4:\"type\";s:5:\"theme\";s:5:\"owner\";s:45:\"themes/engines/phptemplate/phptemplate.engine\";s:6:\"status\";s:1:\"0\";s:9:\"bootstrap\";s:1:\"0\";s:14:\"schema_version\";s:2:\"-1\";s:6:\"weight\";s:1:\"0\";s:4:\"info\";a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.40\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1444866674\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1444866674;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}s:6:\"prefix\";s:11:\"phptemplate\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:6:\"engine\";s:11:\"phptemplate\";}}",
   'page_callback' => 'block_admin_demo',
   'page_arguments' => 'a:1:{i:0;s:5:"stark";}',
   'delivery_callback' => '',
@@ -24380,7 +24839,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:25:"themes/bartik/bartik.info";s:4:"name";s:6:"bartik";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:25:"themes/bartik/bartik.info";s:4:"name";s:6:"bartik";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:6:"bartik";}',
   'delivery_callback' => '',
@@ -24405,7 +24864,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:7:"garland";}',
   'delivery_callback' => '',
@@ -24455,7 +24914,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:23:"themes/seven/seven.info";s:4:"name";s:5:"seven";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.34";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1416429488";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1416429488;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:23:"themes/seven/seven.info";s:4:"name";s:5:"seven";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}s:6:"prefix";s:11:"phptemplate";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:5:"seven";}',
   'delivery_callback' => '',
@@ -24505,7 +24964,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => "a:1:{i:0;O:8:\"stdClass\":12:{s:8:\"filename\";s:23:\"themes/stark/stark.info\";s:4:\"name\";s:5:\"stark\";s:4:\"type\";s:5:\"theme\";s:5:\"owner\";s:45:\"themes/engines/phptemplate/phptemplate.engine\";s:6:\"status\";s:1:\"0\";s:9:\"bootstrap\";s:1:\"0\";s:14:\"schema_version\";s:2:\"-1\";s:6:\"weight\";s:1:\"0\";s:4:\"info\";a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.34\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1416429488\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1416429488;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}s:6:\"prefix\";s:11:\"phptemplate\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:6:\"engine\";s:11:\"phptemplate\";}}",
+  'access_arguments' => "a:1:{i:0;O:8:\"stdClass\":12:{s:8:\"filename\";s:23:\"themes/stark/stark.info\";s:4:\"name\";s:5:\"stark\";s:4:\"type\";s:5:\"theme\";s:5:\"owner\";s:45:\"themes/engines/phptemplate/phptemplate.engine\";s:6:\"status\";s:1:\"0\";s:9:\"bootstrap\";s:1:\"0\";s:14:\"schema_version\";s:2:\"-1\";s:6:\"weight\";s:1:\"0\";s:4:\"info\";a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.40\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1444866674\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1444866674;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}s:6:\"prefix\";s:11:\"phptemplate\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:6:\"engine\";s:11:\"phptemplate\";}}",
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:5:"stark";}',
   'delivery_callback' => '',
@@ -27351,6 +27810,31 @@ $connection->insert('menu_router')
   'include_file' => 'modules/filter/filter.pages.inc',
 ))
 ->values(array(
+  'path' => 'filter/tips/%',
+  'load_functions' => 'a:1:{i:2;s:18:"filter_format_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'filter_access',
+  'access_arguments' => 'a:1:{i:0;i:2;}',
+  'page_callback' => 'filter_tips_long',
+  'page_arguments' => 'a:1:{i:0;i:2;}',
+  'delivery_callback' => '',
+  'fit' => '6',
+  'number_parts' => '3',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'filter/tips/%',
+  'title' => 'Compose tips',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'modules/filter/filter.pages.inc',
+))
+->values(array(
   'path' => 'forum',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -29545,30 +30029,6 @@ $connection->schema()->createTable('queue', array(
   'mysql_character_set' => 'utf8',
 ));
 
-$connection->insert('queue')
-->fields(array(
-  'item_id',
-  'name',
-  'data',
-  'expire',
-  'created',
-))
-->values(array(
-  'item_id' => '45',
-  'name' => 'update_fetch_tasks',
-  'data' => 'a:8:{s:4:"name";s:4:"date";s:4:"info";a:6:{s:4:"name";s:4:"Date";s:7:"package";s:9:"Date/Time";s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:16:"_info_file_ctime";i:1421694394;}s:9:"datestamp";s:10:"1406653438";s:8:"includes";a:2:{s:4:"date";s:4:"Date";s:8:"date_api";s:8:"Date API";}s:12:"project_type";s:6:"module";s:14:"project_status";b:1;s:10:"sub_themes";a:0:{}s:11:"base_themes";a:0:{}}',
-  'expire' => '0',
-  'created' => '1421843480',
-))
-->values(array(
-  'item_id' => '46',
-  'name' => 'update_fetch_tasks',
-  'data' => 'a:8:{s:4:"name";s:5:"email";s:4:"info";a:6:{s:4:"name";s:5:"Email";s:7:"package";s:6:"Fields";s:7:"version";s:7:"7.x-1.3";s:7:"project";s:5:"email";s:9:"datestamp";s:10:"1397134155";s:16:"_info_file_ctime";i:1421694395;}s:9:"datestamp";s:10:"1397134155";s:8:"includes";a:1:{s:5:"email";s:5:"Email";}s:12:"project_type";s:6:"module";s:14:"project_status";b:1;s:10:"sub_themes";a:0:{}s:11:"base_themes";a:0:{}}',
-  'expire' => '0',
-  'created' => '1421843480',
-))
-->execute();
-
 $connection->schema()->createTable('rdf_mapping', array(
   'fields' => array(
     'type' => array(
@@ -29903,63 +30363,63 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockCacheTestCase',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockHashTestCase',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockHiddenRegionTestCase',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockHTMLIdTestCase',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockInvalidRegionTestCase',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockTemplateSuggestionsUnitTest',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockTestCase',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlockViewModuleDeltaAlterWebTest',
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'BlogTestCase',
@@ -29973,6 +30433,20 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'modules/book/book.test',
   'module' => 'book',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'BootstrapAutoloadTestCase',
+  'type' => 'class',
+  'filename' => 'modules/simpletest/tests/bootstrap.test',
+  'module' => 'simpletest',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'BootstrapDestinationTestCase',
+  'type' => 'class',
+  'filename' => 'modules/simpletest/tests/bootstrap.test',
+  'module' => 'simpletest',
   'weight' => '0',
 ))
 ->values(array(
@@ -30274,6 +30748,13 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'modules/simpletest/tests/common.test',
   'module' => 'simpletest',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'ConfirmFormTest',
+  'type' => 'class',
+  'filename' => 'modules/system/system.test',
+  'module' => 'system',
   'weight' => '0',
 ))
 ->values(array(
@@ -30886,6 +31367,13 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'DateViewsPopupTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/date/tests/date_views_popup.test',
+  'module' => 'date',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'date_sql_handler',
   'type' => 'class',
   'filename' => 'sites/all/modules/date/date_api/date_api_sql.inc',
@@ -31131,6 +31619,13 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'DrupalSetMessageTest',
+  'type' => 'class',
+  'filename' => 'modules/system/system.test',
+  'module' => 'system',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'DrupalStreamWrapperInterface',
   'type' => 'interface',
   'filename' => 'includes/stream_wrappers.inc',
@@ -31190,6 +31685,13 @@ $connection->insert('registry')
   'name' => 'DrupalWebTestCase',
   'type' => 'class',
   'filename' => 'modules/simpletest/drupal_web_test_case.php',
+  'module' => 'simpletest',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EarlyBootstrapTestCase',
+  'type' => 'class',
+  'filename' => 'modules/simpletest/tests/boot.test',
   'module' => 'simpletest',
   'weight' => '0',
 ))
@@ -31768,6 +32270,13 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'FilterDOMSerializeTestCase',
+  'type' => 'class',
+  'filename' => 'modules/filter/filter.test',
+  'module' => 'filter',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'FilterFormatAccessTestCase',
   'type' => 'class',
   'filename' => 'modules/filter/filter.test',
@@ -32042,6 +32551,13 @@ $connection->insert('registry')
 ))
 ->values(array(
   'name' => 'ImageAdminStylesUnitTest',
+  'type' => 'class',
+  'filename' => 'modules/image/image.test',
+  'module' => 'image',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'ImageAdminUiTestCase',
   'type' => 'class',
   'filename' => 'modules/image/image.test',
   'module' => 'image',
@@ -32650,6 +33166,13 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'ModuleImplementsAlterTestCase',
+  'type' => 'class',
+  'filename' => 'modules/simpletest/tests/module.test',
+  'module' => 'simpletest',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'ModuleInstallTestCase',
   'type' => 'class',
   'filename' => 'modules/simpletest/tests/module.test',
@@ -32710,7 +33233,7 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'NLPhoneNumberTestCase',
@@ -32955,7 +33478,7 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'modules/block/block.test',
   'module' => 'block',
-  'weight' => '0',
+  'weight' => '-5',
 ))
 ->values(array(
   'name' => 'NumberFieldTestCase',
@@ -33631,6 +34154,13 @@ $connection->insert('registry')
 ))
 ->values(array(
   'name' => 'SearchNodeAccessTest',
+  'type' => 'class',
+  'filename' => 'modules/search/search.test',
+  'module' => 'search',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'SearchNodeTagTest',
   'type' => 'class',
   'filename' => 'modules/search/search.test',
   'module' => 'search',
@@ -35030,6 +35560,13 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'ViewsPagerTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/date/tests/date_views_pager.test',
+  'module' => 'date',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'ViewsPluginDisplayTestCase',
   'type' => 'class',
   'filename' => 'sites/all/modules/views/tests/plugins/views_plugin_display.test',
@@ -35264,7 +35801,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/ajax.inc',
-  'hash' => 'f5d608554c6b42b976d6a97e1efffe53c657e9fbb77eabb858935bfdf4276491',
+  'hash' => 'a22c8f7345c1f714ea40bbaa1385fa0e3763b389c82656cf6ff3e4d051532ee4',
 ))
 ->values(array(
   'filename' => 'includes/archiver.inc',
@@ -35276,7 +35813,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/batch.inc',
-  'hash' => '059da9e36e1f3717f27840aae73f10dea7d6c8daf16f6520401cc1ca3b4c0388',
+  'hash' => '1fe00f9a25481cd43e19fbd6bd37b7ff9dca79f8405ec3e55ffb011be12ec2c3',
 ))
 ->values(array(
   'filename' => 'includes/batch.queue.inc',
@@ -35284,7 +35821,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/bootstrap.inc',
-  'hash' => '1433438e685f5b982c2259cd3306508c274d6065f63e3e43b6b120f1f7add621',
+  'hash' => '245deaa370fa492dae401e2eee215f771f9ffbba14c1ff50631a6a4b2b3c771e',
 ))
 ->values(array(
   'filename' => 'includes/cache-install.inc',
@@ -35292,15 +35829,15 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/cache.inc',
-  'hash' => 'd01e10e4c18010b6908026f3d71b72717e3272cfb91a528490eba7f339f8dd1b',
+  'hash' => 'ee0bf13c7e067695dffcb9ade3b79fea82a3a8db9e9a422ebfcc91c383aa4b4c',
 ))
 ->values(array(
   'filename' => 'includes/common.inc',
-  'hash' => '91bf90492c571dba1f6ef7db54a96d360579f933d0f3637b5aa33dff1eeda56a',
+  'hash' => 'd64557e1027136d80e66c329133336412c8301b48c6703943494cff1309f934c',
 ))
 ->values(array(
   'filename' => 'includes/database/database.inc',
-  'hash' => '24afaff6e1026bfe315205212cba72951240a16154250e405c4c64724e6e07cc',
+  'hash' => '27f874fb21e1a85c86e0317669e2e26c1c6611a5e913c5bbce4c7aa62734edfe',
 ))
 ->values(array(
   'filename' => 'includes/database/log.inc',
@@ -35308,7 +35845,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/database/mysql/database.inc',
-  'hash' => 'd62a2d8ca103cb3b085e7f8b894a7db14c02f20d0b1ed0bd32f6534a45b4527f',
+  'hash' => 'f021edd0e2b5e315336eb6b5e481b9516c12de78dff2c468be3d7fd0d3672665',
 ))
 ->values(array(
   'filename' => 'includes/database/mysql/install.inc',
@@ -35348,11 +35885,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/database/query.inc',
-  'hash' => '9171653e9710c6c0d20cff865fdead5a580367137ad4cdf81059ecc2eea61c74',
+  'hash' => '4016a397f10f071cac338fd0a9b004296106e42ab2b9db8c7ff0db341658e88f',
 ))
 ->values(array(
   'filename' => 'includes/database/schema.inc',
-  'hash' => 'a98b69d33975e75f7d99cb85b20c36b7fc10e35a588e07b20c1b37500f5876ca',
+  'hash' => '9fecfd13fc1d4056a62d385840dccd052ea0e184dc47101f4bd8f57f10b68174',
 ))
 ->values(array(
   'filename' => 'includes/database/select.inc',
@@ -35364,7 +35901,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/database/sqlite/install.inc',
-  'hash' => '381f3db8c59837d961978ba3097bb6443534ed1659fd713aa563963fa0c42cc5',
+  'hash' => '6620f354aa175a116ba3a0562c980d86cc3b8b481042fc3cc5ed6a4d1a7a6d74',
 ))
 ->values(array(
   'filename' => 'includes/database/sqlite/query.inc',
@@ -35384,7 +35921,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/entity.inc',
-  'hash' => '3080fe3c30991a48f1f314a60d02e841d263a8f222337e5bde3be61afe41ee7a',
+  'hash' => 'e4fc9ff21b165a804d7ac4f036b3b5bd1d3c73da7029bf3f761d4bdee9ae3c96',
 ))
 ->values(array(
   'filename' => 'includes/errors.inc',
@@ -35392,7 +35929,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/file.inc',
-  'hash' => '5ee60833470d5e8d5f2c6c8e7b978ec2e1f3cbf291cb611db1ca560dea98d888',
+  'hash' => '9de0398940bf2db560902736f1832d8b72b3e8b49dbbaba5f94c9331425ee04a',
 ))
 ->values(array(
   'filename' => 'includes/file.mimetypes.inc',
@@ -35416,7 +35953,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/form.inc',
-  'hash' => 'ead5e56f116ba31898d1b73f1dfc19ea57a9a528f87c9497fd60ad5caedfee2b',
+  'hash' => '9b37fe7e5d04b25604bbc63abb6b6d332be14926011533b4449de52d45a86765',
 ))
 ->values(array(
   'filename' => 'includes/graph.inc',
@@ -35428,11 +35965,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/install.core.inc',
-  'hash' => 'a0585c85002e6f3d702dc505584f48b55bc13e24bee749bfe5b718fbce4847e1',
+  'hash' => '733ec6fac8e51747d1c83f266a42e4a0cb6bf31ac50f17f06e37c9e0865f4a38',
 ))
 ->values(array(
   'filename' => 'includes/install.inc',
-  'hash' => '480c3cfd065d3ec00f4465e1b0a0d55d6a8927e78fd6774001c30163a5c648e3',
+  'hash' => '781c54771c14b067bb38d222096f981121d479222fbdea9c433405de561a2881',
 ))
 ->values(array(
   'filename' => 'includes/iso.inc',
@@ -35444,11 +35981,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/language.inc',
-  'hash' => '4dd521af07e0ca7bf97ff145f4bd3a218acf0d8b94964e72f11212bb8af8d66e',
+  'hash' => '4e08f30843a7ccaeea5c041083e9f77d33d57ff002f1ab4f66168e2c683ce128',
 ))
 ->values(array(
   'filename' => 'includes/locale.inc',
-  'hash' => 'b250f375b93ffe3749f946e0ad475065c914af23e388d68e5c5df161590f086a',
+  'hash' => 'f8a3ba7868698e9b43c2ceaebe2cbdcb92d6c68427e817a6e10a76b937b5a127',
 ))
 ->values(array(
   'filename' => 'includes/lock.inc',
@@ -35460,11 +35997,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/menu.inc',
-  'hash' => 'c9ff3c7db04b7e01d0d19b5e47d9fb209799f2ae6584167235b957d22542e526',
+  'hash' => '2ecc6f990dc2d987425c680e27a4ddeec2e8376a2be408b00a144131f41a59ea',
 ))
 ->values(array(
   'filename' => 'includes/module.inc',
-  'hash' => 'ca3f2e6129181bbbc67e5e6058a882047f2152174ec8e95c0ea99ce610ace4d7',
+  'hash' => 'a18bc92e5fc1f2a31a79eace8c6f2436bc15c8f0b332c8b7aaafa3a223746861',
 ))
 ->values(array(
   'filename' => 'includes/pager.inc',
@@ -35480,7 +36017,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/registry.inc',
-  'hash' => 'c225de772f86eebd21b0b52fa8fcc6671e05fa2374cedb3164f7397f27d3c88d',
+  'hash' => 'f47b20859f0fc80bf4bb2849a1282d6c54006957b69da0e5f4691de585ca4cdf',
 ))
 ->values(array(
   'filename' => 'includes/session.inc',
@@ -35496,7 +36033,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/theme.inc',
-  'hash' => '0465fb4ed937123c4bed4a4463601055f9b8fc39ca7787d9952b4f4e300db2b3',
+  'hash' => '507932af124871dd2639ab8eafbbd68f962ef70f44ef1c4fd1a14daf04c53b5e',
 ))
 ->values(array(
   'filename' => 'includes/theme.maintenance.inc',
@@ -35516,7 +36053,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'includes/update.inc',
-  'hash' => '177ce24362efc7f28b384c90a09c3e485396bbd18c3721d4b21e57dd1733bd92',
+  'hash' => '77403195059de797422d9d9202f18548a38558995120c7f9ffb9bd044730a3bc',
 ))
 ->values(array(
   'filename' => 'includes/updater.inc',
@@ -35540,7 +36077,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/block/block.test',
-  'hash' => 'df1b364688b46345523dfcb95c0c48352d6a4edbc66597890d29b9b0d7866e86',
+  'hash' => '40d9de00589211770a85c47d38c8ad61c598ec65d9332128a882eb8750e65a16',
 ))
 ->values(array(
   'filename' => 'modules/blog/blog.test',
@@ -35556,11 +36093,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/comment/comment.module',
-  'hash' => '5a81f5e4b3a35973b3d39ccb9efaee7a8f8cf4ac43e9353e87f2d17a3bed4747',
+  'hash' => 'db858137ff6ce06d87cb3b8f5275bed90c33a6d9aa7d46e7a74524cc2f052309',
 ))
 ->values(array(
   'filename' => 'modules/comment/comment.test',
-  'hash' => '083d47035d3e64d1f6f9f1e12bc13d056511019a9de84183088e58a359ea58b9',
+  'hash' => '0443a4dbc5aef3d64405a7cabf462c8c5e0b24517d89410d261027b85292cd4b',
 ))
 ->values(array(
   'filename' => 'modules/contact/contact.test',
@@ -35584,15 +36121,15 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/field/field.info.class.inc',
-  'hash' => 'a6f2f418552dba0e03f57ee812a6f0f63bbfe4bf81fe805d51ecec47ef84b845',
+  'hash' => 'cf18178e119d43897d3abd882ba3acc0cf59d1ad747663437c57b1ec4d0a4322',
 ))
 ->values(array(
   'filename' => 'modules/field/field.module',
-  'hash' => '2ec1a3ec060504467c3065426a5a1eca8e2c894cb4d4480616bca60fe4b2faf2',
+  'hash' => 'e9359f8cac64b2d81ac067d7da22972116dc10b9b346752a8ef8292943a958c9',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/field_sql_storage/field_sql_storage.test',
-  'hash' => '24b4d2596016ff86071ff3f00d63ff854e847dc58ab64a0afc539bdc1f682ac5',
+  'hash' => '315eedaf2022afc884c35efd3b7c400eddab6ea30bec91924bc82ab5cd3e79f2',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/list/tests/list.test',
@@ -35612,19 +36149,19 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/field/tests/field.test',
-  'hash' => '0c9c6f9396ab8e0685951f4e90f298629c31d2f7970e5b288e674bc146fefa90',
+  'hash' => '5eaad7a933ef8ea05b958056492ce17858cd542111f0fe81dd1a5949ad8f966e',
 ))
 ->values(array(
   'filename' => 'modules/field_ui/field_ui.test',
-  'hash' => 'da42e28d6f32d447b4a6e5b463a2f7d87d6ce32f149de04a98fa8e3f286c9f68',
+  'hash' => 'ded58a83a37cf111834f68fde9c34cddc7f4d36b91f31281e41ed5220c65dac4',
 ))
 ->values(array(
   'filename' => 'modules/file/tests/file.test',
-  'hash' => '5cb7a7a6cc14a6d4269bf4d406a304f77052be7691e0ec9b8e7c5262316d7539',
+  'hash' => '51d79794cbe647b2f5635ca9193b4d63bb9f99db4d9074676a80c55582b02985',
 ))
 ->values(array(
   'filename' => 'modules/filter/filter.test',
-  'hash' => '13330238c7b8d280ff2dd8cfee1c001d5a994ad45e3c9b9c5fdcd963c6080926',
+  'hash' => '268488be9d8e6a4bfa906bbb5bbf1f0df5881c04a421cbefcd7aa4f05fb63ba0',
 ))
 ->values(array(
   'filename' => 'modules/forum/forum.test',
@@ -35636,19 +36173,19 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/image/image.test',
-  'hash' => 'd6ea03d1e3df0e150ed3500b9896984e5c3cd5f28248f2aebecce5b9926eb23b',
+  'hash' => '19459f5be2fb58058a984ef302d6f6defca20207324db25726d06a7743cc2960',
 ))
 ->values(array(
   'filename' => 'modules/locale/locale.test',
-  'hash' => '59fe99927c790699e0d5a7047df7c05eb9ba3ef4c1363a929e7a65115da24f1a',
+  'hash' => '61c6a80ba44ff92e6ba4a350b7c95890368e2f9e029b8f84563df2490a8e93b1',
 ))
 ->values(array(
   'filename' => 'modules/menu/menu.test',
-  'hash' => 'cd187c84aa97dcc228d8a1556ea10640c62f86083034533b6ac6830be610ca2a',
+  'hash' => '51817d6c591c28cf268145c2d39b41f66e453edf42c86472e61b7081da1d86bb',
 ))
 ->values(array(
   'filename' => 'modules/node/node.module',
-  'hash' => '3489bbd7e909b21c54a1bd5e4d4daeafb9bebc6606e48fe1d5e7a6ed935a1a3e',
+  'hash' => 'b594aa316e7d74024d633fb95a6e89a2c6c14cb108a481fd0b2521ec0e3316de',
 ))
 ->values(array(
   'filename' => 'modules/node/node.test',
@@ -35656,7 +36193,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/openid/openid.test',
-  'hash' => '16661e3a940c69cfdabf6ba28ad8f99ae3854dcf43bbac0e823d2f1d32f7cb09',
+  'hash' => '3decf7faf3a9396671d52c6065a31f0ef81828015e0348a0ba9358b618e737a1',
 ))
 ->values(array(
   'filename' => 'modules/path/path.test',
@@ -35672,7 +36209,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/profile/profile.test',
-  'hash' => '6dcc39fcc5b07b56c2aab3eebd8432ffd33ee1d33fe1574ec9e665f8acb15330',
+  'hash' => 'afc23aa58769a84d94c4a6cef7b0ea2c9aa0edfdf2563a34757a1fb4d3d58233',
 ))
 ->values(array(
   'filename' => 'modules/rdf/rdf.test',
@@ -35680,11 +36217,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/search/search.extender.inc',
-  'hash' => 'c40f6569769ff581dbe11d29935c611320178f9a076977423e1d93e7d98013fa',
+  'hash' => '013a6a841cc48a6dc991153fb692b8d1546e56b78d9c95e97e0d7e92296d3481',
 ))
 ->values(array(
   'filename' => 'modules/search/search.test',
-  'hash' => '71ffda1d5c81823aa6f557ca35ba451df2f684856174e25e917f8bf4f0c72453',
+  'hash' => '6512521f8de3a54238c8f337ae0aa105cab2bbc9a1addb5b1ccb755842656913',
 ))
 ->values(array(
   'filename' => 'modules/shortcut/shortcut.test',
@@ -35692,11 +36229,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/drupal_web_test_case.php',
-  'hash' => '2eb60780f843a6713fc2856f601b811ccd26b38f2b5afd845c113f093d97a138',
+  'hash' => 'a4c07ab08d578cc9c4adfb39aaa98270cacc58885c1d61f3a71f207142f4fc0b',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/simpletest.test',
-  'hash' => '8af29b4eaa4942baf69d3210220d855743411ad2b575c9fb12e1b220aa45e3e0',
+  'hash' => '8112284b928297e326a2cb2a029a8ee35490732ce73ab0b54a91e9613a84e951',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/actions.test',
@@ -35704,15 +36241,19 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/ajax.test',
-  'hash' => '692a582ca0164c4374c7567d4c23b2f2c6638f7f88fd16d3a709c7af5e8744de',
+  'hash' => '0581306ba076da005db073036806a4d393a166221cd7171e3e3b1974b7082106',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/batch.test',
   'hash' => '665a621f4d5f819295ca7c53158d586ed98c42d8a8e6db1e67fb332032ec07d5',
 ))
 ->values(array(
+  'filename' => 'modules/simpletest/tests/boot.test',
+  'hash' => '1a7cf3c120a8e544cb251ba049ae598f8b25c0a9c3283e15df07a3a562641799',
+))
+->values(array(
   'filename' => 'modules/simpletest/tests/bootstrap.test',
-  'hash' => '5c6a25807ace61032eb7c5f59b4d57dd426bdd58490629ca37f70954dce33a32',
+  'hash' => '4ccb0841905a34438e5b3acd712d0a1b52b6aa41535d3a64d3e50eff355a5dbe',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/cache.test',
@@ -35720,11 +36261,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/common.test',
-  'hash' => 'fd42e79d21a6807b889f70ec2feaa6034cbe98d947795cd2c0e11c592ada19aa',
+  'hash' => 'aa2449d4ce5109bc9593901f34f74ce9caeea6450539a120afdf7a71f1e35276',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/database_test.test',
-  'hash' => '681e7c84278793f0b0146c89e2e78a3d3705193faab5b98bc88d4b43539a2584',
+  'hash' => '64baa1520d815e049310ae697fa79390b6b0a02fb03d47c64d3caec8d40ab8e9',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/entity_crud.test',
@@ -35744,7 +36285,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/file.test',
-  'hash' => '403e9020898f051c467fe54d72bc0bc0aefb784aabc90849dcf765f09694ead1',
+  'hash' => '25fdee40ceb8c84f08677224db941e251906f2caa185b351de80eba76f20c90b',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/filetransfer.test',
@@ -35752,7 +36293,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/form.test',
-  'hash' => 'b9af9565dbb10327c07365b7cc8c1da394085d1e1fc92d4f7e79fa1d17978a4f',
+  'hash' => '1d932031c1b2e33947c1cb480457f9f6c95b1ee93bab6eab785c2cde290fd9d7',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/graph.test',
@@ -35760,7 +36301,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/image.test',
-  'hash' => '0c0331b7239519aa2ce6cafe4bff8ee078875222531e5bbe1d60e131baaa0eb0',
+  'hash' => 'fbad58b83e40aec654bf66835e30f81b83a76714efc560d73e7be3841ab5e996',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/lock.test',
@@ -35776,7 +36317,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/module.test',
-  'hash' => '35cf0c46b1129a45229fc7b03f7229a99ded19d57dcd751a3a8858d7422ae84e',
+  'hash' => '056de988f33d43c39e62f067af8f449f5192cd27bbbcf358a6e3b0d34d94167c',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/pager.test',
@@ -35800,7 +36341,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/session.test',
-  'hash' => '2619d36051b1cfa9ff53b1960b784a998943167018952e4e11832f2f0324d19c',
+  'hash' => '6416694ef7c79680f99e405468401567357c38abead1e0ce9e232a15e7dcd823',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/tablesort.test',
@@ -35808,7 +36349,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/theme.test',
-  'hash' => '4843ff803a403ceff29ebf6c59ae9175cb0237b91d52305a52501610078ce1c4',
+  'hash' => 'f542bdf4efc342609b8804767b793521c6641ab5cd31a7130865feeef5f2cfa1',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/unicode.test',
@@ -35876,7 +36417,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/upgrade/upgrade.upload.test',
-  'hash' => 'a825081089f33a77a797fa6482e923a17fd90f2696267711a4c0d8a0792b9389',
+  'hash' => '8fc15f53a5ef54b48133a8525fcd384729563ba2d9bd49ab035549d07fabf3c4',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/upgrade/upgrade.user.test',
@@ -35888,7 +36429,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/statistics/statistics.test',
-  'hash' => '3fc1617038ab69ce32a666def03cac5f80532d2e71bad811b4e8b0f75250736c',
+  'hash' => '3fd921d3cc26f9363bba0d6f29efb96c49c88ca51e2e2376b6554afaff8ceeb5',
 ))
 ->values(array(
   'filename' => 'modules/syslog/syslog.test',
@@ -35904,7 +36445,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/system/system.queue.inc',
-  'hash' => 'ef00fd41ca86de386fa134d5bc1d816f9af550cf0e1334a5c0ade3119688ca3c',
+  'hash' => 'a60cff401fc410cd81dc1d105ed66f79396ed7b15fdc3a5c5b80593ad5d4352a',
 ))
 ->values(array(
   'filename' => 'modules/system/system.tar.inc',
@@ -35912,7 +36453,7 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/system/system.test',
-  'hash' => 'ad3c68f2cacfe6a99c065edc9aca05a22bdbc74ff6158e9918255b4633134ab4',
+  'hash' => 'b53fdc9f28a49d9bdd819721a6bc4ae0e8a7b023a415e98672a99453187c1f1e',
 ))
 ->values(array(
   'filename' => 'modules/system/system.updater.inc',
@@ -35944,23 +36485,23 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'modules/user/user.module',
-  'hash' => 'b658c75c17b263a0aa6be903429c14e0fb1c308dd4e9024e369b7e7feb2b5dce',
+  'hash' => '88bb508e0eb658281b085cd07c81808bd9634bba8a2271515c1d68079d58817d',
 ))
 ->values(array(
   'filename' => 'modules/user/user.test',
-  'hash' => 'd27160f1fd04cfb497ff080c7266fcebcd310d2224cfc6aef70035b275d65573',
+  'hash' => '178320fdb9a0c8754f1fa7272f68f536dcb94ae82ce7d0fc6a0f8a476c1f6922',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date.migrate.inc',
-  'hash' => '6e44d2f6c8ae81a42dc545951663f13e22c914efcaaa9c7c7d7da77ee06d4ecd',
+  'hash' => '47ffb48daf97c13ef154cf2ffff577018f02a7091b85dfb39e9c2c89e1da6a5d',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_api/date_api.module',
-  'hash' => '107f1668a3a75f9b18e834f8494fc52d8ccf0d6b231c98bd10b9313cfbe18776',
+  'hash' => 'af2124c5727d839871309b31fe288fe3945d6ef67eb469ddcc02839be98860dc',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_api/date_api_sql.inc',
-  'hash' => '89e92bdb4eb9b348a57d70ddb933c86e81f6e7a7047cd9e77c83a454c00c5a11',
+  'hash' => '5a484b487c13fd6094348e2011c19e72d6c6c9ceb0b0a4143ef5542cd1c495fa',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_repeat/tests/date_repeat.test',
@@ -35980,11 +36521,11 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/tests/date_api.test',
-  'hash' => 'ebaf0427701be69bd3dc8a766528d7347a87ee15c2f69b240188aa5ab1182cbd',
+  'hash' => '280148ca742592a1e22f663fe4d810532b95d09975db0182347a0bbd6917f996',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/tests/date_field.test',
-  'hash' => '785a6cf0afcd4619a58263487e27e130ae0724f532018a5a127f24be1dbb4871',
+  'hash' => 'bae59aee63ed204e27909709e59eeae1a6192e5f7456de2ce2cce06c49732dc4',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/tests/date_migrate.test',
@@ -35992,11 +36533,19 @@ $connection->insert('registry_file')
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/tests/date_timezone.test',
-  'hash' => '760c3e761d122bafd2fab2056362f33424416a1407e7a1423df42acd03f84495',
+  'hash' => '598ac52aa82f79fe90faa401c2c6dc7114295c0321800ea9a9b4058717d00409',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/tests/date_validation.test',
   'hash' => '2e4d27c29192c9d55eb27b985d7e9838702c4324d36ed6e3a85999e9f25ada99',
+))
+->values(array(
+  'filename' => 'sites/all/modules/date/tests/date_views_pager.test',
+  'hash' => 'aceff66e11dd3ea418e9905b28384432f4fe7cf9746e711cf56add73e64336dd',
+))
+->values(array(
+  'filename' => 'sites/all/modules/date/tests/date_views_popup.test',
+  'hash' => '0684ad4977093fd7338eb045f85ceda195e82f50bd33fecbf0dca00e42b0385e',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/email/email.migrate.inc',
@@ -36964,6 +37513,12 @@ $connection->insert('search_dataset')
   'data' => ' a node 1 default examplecom another examplecom 99999999 monday january 19 2015 2215 monday january 19 2015 2215 prefix value120suffix value abc5xyz click here some more text 9 a comment permalink submitted by admin on mon 1192015 2218 this is a comment log in or register to post comments  ',
   'reindex' => '0',
 ))
+->values(array(
+  'sid' => '2',
+  'type' => 'node',
+  'data' => ' the thing about deep space 9  is that it s the absolute best show ever trust me i would know benjamin sisko odo quark ',
+  'reindex' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('search_index', array(
@@ -37194,6 +37749,102 @@ $connection->insert('search_index')
   'type' => 'node',
   'score' => '1',
 ))
+->values(array(
+  'word' => '9',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '26',
+))
+->values(array(
+  'word' => 'about',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '26',
+))
+->values(array(
+  'word' => 'absolute',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'benjamin',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '11',
+))
+->values(array(
+  'word' => 'best',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'deep',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '26',
+))
+->values(array(
+  'word' => 'ever',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'know',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'quark',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '11',
+))
+->values(array(
+  'word' => 'show',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'sisko',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '11',
+))
+->values(array(
+  'word' => 'space',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '26',
+))
+->values(array(
+  'word' => 'that',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'thing',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '26',
+))
+->values(array(
+  'word' => 'trust',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
+->values(array(
+  'word' => 'would',
+  'sid' => '2',
+  'type' => 'node',
+  'score' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('search_node_links', array(
@@ -37295,11 +37946,27 @@ $connection->insert('search_total')
   'count' => '0',
 ))
 ->values(array(
+  'word' => 'about',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'absolute',
+  'count' => '0',
+))
+->values(array(
   'word' => 'admin',
   'count' => '0',
 ))
 ->values(array(
   'word' => 'another',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'benjamin',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'best',
   'count' => '0',
 ))
 ->values(array(
@@ -37315,7 +37982,15 @@ $connection->insert('search_total')
   'count' => '0',
 ))
 ->values(array(
+  'word' => 'deep',
+  'count' => '0',
+))
+->values(array(
   'word' => 'default',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'ever',
   'count' => '0',
 ))
 ->values(array(
@@ -37328,6 +38003,10 @@ $connection->insert('search_total')
 ))
 ->values(array(
   'word' => 'january',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'know',
   'count' => '0',
 ))
 ->values(array(
@@ -37355,11 +38034,27 @@ $connection->insert('search_total')
   'count' => '0',
 ))
 ->values(array(
+  'word' => 'quark',
+  'count' => '0',
+))
+->values(array(
   'word' => 'register',
   'count' => '0',
 ))
 ->values(array(
+  'word' => 'show',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'sisko',
+  'count' => '0',
+))
+->values(array(
   'word' => 'some',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'space',
   'count' => '0',
 ))
 ->values(array(
@@ -37371,7 +38066,19 @@ $connection->insert('search_total')
   'count' => '0',
 ))
 ->values(array(
+  'word' => 'that',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'thing',
+  'count' => '0',
+))
+->values(array(
   'word' => 'this',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'trust',
   'count' => '0',
 ))
 ->values(array(
@@ -37380,6 +38087,10 @@ $connection->insert('search_total')
 ))
 ->values(array(
   'word' => 'value120suffix',
+  'count' => '0',
+))
+->values(array(
+  'word' => 'would',
   'count' => '0',
 ))
 ->execute();
@@ -37431,7 +38142,7 @@ $connection->insert('sequences')
   'value',
 ))
 ->values(array(
-  'value' => '1',
+  'value' => '2',
 ))
 ->execute();
 
@@ -37698,7 +38409,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7004',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:10:"Aggregator";s:11:"description";s:57:"Aggregates syndicated content (RSS, RDF, and Atom feeds).";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"aggregator.test";}s:9:"configure";s:41:"admin/config/services/aggregator/settings";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:14:"aggregator.css";s:33:"modules/aggregator/aggregator.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:10:"Aggregator";s:11:"description";s:57:"Aggregates syndicated content (RSS, RDF, and Atom feeds).";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"aggregator.test";}s:9:"configure";s:41:"admin/config/services/aggregator/settings";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:14:"aggregator.css";s:33:"modules/aggregator/aggregator.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/aggregator/tests/aggregator_test.module',
@@ -37709,7 +38420,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:23:"Aggregator module tests";s:11:"description";s:46:"Support module for aggregator related testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:23:"Aggregator module tests";s:11:"description";s:46:"Support module for aggregator related testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/block/block.module',
@@ -37720,7 +38431,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7009',
   'weight' => '-5',
-  'info' => 'a:13:{s:4:"name";s:5:"Block";s:11:"description";s:140:"Controls the visual building blocks a page is constructed with. Blocks are boxes of content rendered into an area, or region, of a web page.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"block.test";}s:9:"configure";s:21:"admin/structure/block";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:5:"Block";s:11:"description";s:140:"Controls the visual building blocks a page is constructed with. Blocks are boxes of content rendered into an area, or region, of a web page.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"block.test";}s:9:"configure";s:21:"admin/structure/block";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/block/tests/block_test.module',
@@ -37731,7 +38442,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Block test";s:11:"description";s:21:"Provides test blocks.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Block test";s:11:"description";s:21:"Provides test blocks.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/blog/blog.module',
@@ -37742,7 +38453,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:4:"Blog";s:11:"description";s:25:"Enables multi-user blogs.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"blog.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:4:"Blog";s:11:"description";s:25:"Enables multi-user blogs.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"blog.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/book/book.module',
@@ -37753,7 +38464,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:4:"Book";s:11:"description";s:66:"Allows users to create and organize related content in an outline.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"book.test";}s:9:"configure";s:27:"admin/content/book/settings";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"book.css";s:21:"modules/book/book.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:4:"Book";s:11:"description";s:66:"Allows users to create and organize related content in an outline.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"book.test";}s:9:"configure";s:27:"admin/content/book/settings";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"book.css";s:21:"modules/book/book.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/color/color.module',
@@ -37764,7 +38475,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7001',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:5:"Color";s:11:"description";s:70:"Allows administrators to change the color scheme of compatible themes.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"color.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:5:"Color";s:11:"description";s:70:"Allows administrators to change the color scheme of compatible themes.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"color.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/comment/comment.module',
@@ -37775,7 +38486,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7009',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:7:"Comment";s:11:"description";s:57:"Allows users to comment on and discuss published content.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"text";}s:5:"files";a:2:{i:0;s:14:"comment.module";i:1;s:12:"comment.test";}s:9:"configure";s:21:"admin/content/comment";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:11:"comment.css";s:27:"modules/comment/comment.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:7:"Comment";s:11:"description";s:57:"Allows users to comment on and discuss published content.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"text";}s:5:"files";a:2:{i:0;s:14:"comment.module";i:1;s:12:"comment.test";}s:9:"configure";s:21:"admin/content/comment";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:11:"comment.css";s:27:"modules/comment/comment.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/contact/contact.module',
@@ -37786,7 +38497,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7003',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:7:"Contact";s:11:"description";s:61:"Enables the use of both personal and site-wide contact forms.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"contact.test";}s:9:"configure";s:23:"admin/structure/contact";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:7:"Contact";s:11:"description";s:61:"Enables the use of both personal and site-wide contact forms.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"contact.test";}s:9:"configure";s:23:"admin/structure/contact";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/contextual/contextual.module',
@@ -37797,7 +38508,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:16:"Contextual links";s:11:"description";s:75:"Provides contextual links to perform actions related to elements on a page.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"contextual.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:16:"Contextual links";s:11:"description";s:75:"Provides contextual links to perform actions related to elements on a page.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"contextual.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/dashboard/dashboard.module',
@@ -37808,7 +38519,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:9:"Dashboard";s:11:"description";s:136:"Provides a dashboard page in the administrative interface for organizing administrative tasks and tracking information within your site.";s:4:"core";s:3:"7.x";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:5:"files";a:1:{i:0;s:14:"dashboard.test";}s:12:"dependencies";a:1:{i:0;s:5:"block";}s:9:"configure";s:25:"admin/dashboard/customize";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:9:"Dashboard";s:11:"description";s:136:"Provides a dashboard page in the administrative interface for organizing administrative tasks and tracking information within your site.";s:4:"core";s:3:"7.x";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:5:"files";a:1:{i:0;s:14:"dashboard.test";}s:12:"dependencies";a:1:{i:0;s:5:"block";}s:9:"configure";s:25:"admin/dashboard/customize";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/dblog/dblog.module',
@@ -37819,7 +38530,7 @@ $connection->insert('system')
   'bootstrap' => '1',
   'schema_version' => '7002',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:16:"Database logging";s:11:"description";s:47:"Logs and records system events to the database.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"dblog.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:16:"Database logging";s:11:"description";s:47:"Logs and records system events to the database.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"dblog.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/field/field.module',
@@ -37830,7 +38541,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7003',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:5:"Field";s:11:"description";s:57:"Field API to add fields to entities like nodes and users.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:4:{i:0;s:12:"field.module";i:1;s:16:"field.attach.inc";i:2;s:20:"field.info.class.inc";i:3;s:16:"tests/field.test";}s:12:"dependencies";a:1:{i:0;s:17:"field_sql_storage";}s:8:"required";b:1;s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:15:"theme/field.css";s:29:"modules/field/theme/field.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:5:"Field";s:11:"description";s:57:"Field API to add fields to entities like nodes and users.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:4:{i:0;s:12:"field.module";i:1;s:16:"field.attach.inc";i:2;s:20:"field.info.class.inc";i:3;s:16:"tests/field.test";}s:12:"dependencies";a:1:{i:0;s:17:"field_sql_storage";}s:8:"required";b:1;s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:15:"theme/field.css";s:29:"modules/field/theme/field.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/field_sql_storage/field_sql_storage.module',
@@ -37841,7 +38552,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7002',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:17:"Field SQL storage";s:11:"description";s:37:"Stores field data in an SQL database.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:22:"field_sql_storage.test";}s:8:"required";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:17:"Field SQL storage";s:11:"description";s:37:"Stores field data in an SQL database.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:22:"field_sql_storage.test";}s:8:"required";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/list/list.module',
@@ -37852,7 +38563,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7002',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:4:"List";s:11:"description";s:69:"Defines list field types. Use with Options to create selection lists.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:2:{i:0;s:5:"field";i:1;s:7:"options";}s:5:"files";a:1:{i:0;s:15:"tests/list.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:14:{s:4:"name";s:4:"List";s:11:"description";s:69:"Defines list field types. Use with Options to create selection lists.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:2:{i:0;s:5:"field";i:1;s:7:"options";}s:5:"files";a:1:{i:0;s:15:"tests/list.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/list/tests/list_test.module',
@@ -37863,7 +38574,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:9:"List test";s:11:"description";s:41:"Support module for the List module tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:9:"List test";s:11:"description";s:41:"Support module for the List module tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/number/number.module',
@@ -37874,7 +38585,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:6:"Number";s:11:"description";s:28:"Defines numeric field types.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:11:"number.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:14:{s:4:"name";s:6:"Number";s:11:"description";s:28:"Defines numeric field types.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:11:"number.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/options/options.module',
@@ -37885,7 +38596,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:7:"Options";s:11:"description";s:82:"Defines selection, check box and radio button widgets for text and numeric fields.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:12:"options.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:7:"Options";s:11:"description";s:82:"Defines selection, check box and radio button widgets for text and numeric fields.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:12:"options.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/field/modules/text/text.module',
@@ -37896,7 +38607,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7000',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:4:"Text";s:11:"description";s:32:"Defines simple text field types.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:9:"text.test";}s:8:"required";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:14:{s:4:"name";s:4:"Text";s:11:"description";s:32:"Defines simple text field types.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:9:"text.test";}s:8:"required";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'modules/field/tests/field_test.module',
@@ -37907,7 +38618,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:14:"Field API Test";s:11:"description";s:39:"Support module for the Field API tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:5:"files";a:1:{i:0;s:21:"field_test.entity.inc";}s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:14:"Field API Test";s:11:"description";s:39:"Support module for the Field API tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:5:"files";a:1:{i:0;s:21:"field_test.entity.inc";}s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/field_ui/field_ui.module',
@@ -37918,7 +38629,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:8:"Field UI";s:11:"description";s:33:"User interface for the Field API.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:13:"field_ui.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:8:"Field UI";s:11:"description";s:33:"User interface for the Field API.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:13:"field_ui.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/file/file.module',
@@ -37929,7 +38640,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:4:"File";s:11:"description";s:26:"Defines a file field type.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:15:"tests/file.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:14:{s:4:"name";s:4:"File";s:11:"description";s:26:"Defines a file field type.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:15:"tests/file.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'modules/file/tests/file_module_test.module',
@@ -37940,7 +38651,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:9:"File test";s:11:"description";s:53:"Provides hooks for testing File module functionality.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:9:"File test";s:11:"description";s:53:"Provides hooks for testing File module functionality.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/filter/filter.module',
@@ -37951,7 +38662,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7010',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:6:"Filter";s:11:"description";s:43:"Filters content in preparation for display.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"filter.test";}s:8:"required";b:1;s:9:"configure";s:28:"admin/config/content/formats";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:6:"Filter";s:11:"description";s:43:"Filters content in preparation for display.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"filter.test";}s:8:"required";b:1;s:9:"configure";s:28:"admin/config/content/formats";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/forum/forum.module',
@@ -37962,7 +38673,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7012',
   'weight' => '1',
-  'info' => 'a:14:{s:4:"name";s:5:"Forum";s:11:"description";s:27:"Provides discussion forums.";s:12:"dependencies";a:2:{i:0;s:8:"taxonomy";i:1;s:7:"comment";}s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"forum.test";}s:9:"configure";s:21:"admin/structure/forum";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"forum.css";s:23:"modules/forum/forum.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:5:"Forum";s:11:"description";s:27:"Provides discussion forums.";s:12:"dependencies";a:2:{i:0;s:8:"taxonomy";i:1;s:7:"comment";}s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:10:"forum.test";}s:9:"configure";s:21:"admin/structure/forum";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"forum.css";s:23:"modules/forum/forum.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/help/help.module',
@@ -37973,7 +38684,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:4:"Help";s:11:"description";s:35:"Manages the display of online help.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"help.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:4:"Help";s:11:"description";s:35:"Manages the display of online help.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"help.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/image/image.module',
@@ -37984,7 +38695,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7005',
   'weight' => '0',
-  'info' => 'a:15:{s:4:"name";s:5:"Image";s:11:"description";s:34:"Provides image manipulation tools.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"file";}s:5:"files";a:1:{i:0;s:10:"image.test";}s:9:"configure";s:31:"admin/config/media/image-styles";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:15:{s:4:"name";s:5:"Image";s:11:"description";s:34:"Provides image manipulation tools.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"file";}s:5:"files";a:1:{i:0;s:10:"image.test";}s:9:"configure";s:31:"admin/config/media/image-styles";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'modules/image/tests/image_module_test.module',
@@ -37995,7 +38706,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Image test";s:11:"description";s:69:"Provides hook implementations for testing Image module functionality.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:24:"image_module_test.module";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Image test";s:11:"description";s:69:"Provides hook implementations for testing Image module functionality.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:24:"image_module_test.module";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/locale/locale.module',
@@ -38006,7 +38717,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7005',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:6:"Locale";s:11:"description";s:119:"Adds language handling functionality and enables the translation of the user interface to languages other than English.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"locale.test";}s:9:"configure";s:30:"admin/config/regional/language";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:6:"Locale";s:11:"description";s:119:"Adds language handling functionality and enables the translation of the user interface to languages other than English.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"locale.test";}s:9:"configure";s:30:"admin/config/regional/language";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/locale/tests/locale_test.module',
@@ -38017,7 +38728,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"Locale Test";s:11:"description";s:42:"Support module for the locale layer tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"Locale Test";s:11:"description";s:42:"Support module for the locale layer tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/menu/menu.module',
@@ -38028,7 +38739,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7003',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:4:"Menu";s:11:"description";s:60:"Allows administrators to customize the site navigation menu.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"menu.test";}s:9:"configure";s:20:"admin/structure/menu";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:4:"Menu";s:11:"description";s:60:"Allows administrators to customize the site navigation menu.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"menu.test";}s:9:"configure";s:20:"admin/structure/menu";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/node/node.module',
@@ -38037,9 +38748,9 @@ $connection->insert('system')
   'owner' => '',
   'status' => '1',
   'bootstrap' => '0',
-  'schema_version' => '7014',
+  'schema_version' => '7015',
   'weight' => '0',
-  'info' => 'a:15:{s:4:"name";s:4:"Node";s:11:"description";s:66:"Allows content to be submitted to the site and displayed on pages.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:11:"node.module";i:1;s:9:"node.test";}s:8:"required";b:1;s:9:"configure";s:21:"admin/structure/types";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"node.css";s:21:"modules/node/node.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:15:{s:4:"name";s:4:"Node";s:11:"description";s:66:"Allows content to be submitted to the site and displayed on pages.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:11:"node.module";i:1;s:9:"node.test";}s:8:"required";b:1;s:9:"configure";s:21:"admin/structure/types";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"node.css";s:21:"modules/node/node.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/node/tests/node_access_test.module',
@@ -38050,7 +38761,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:24:"Node module access tests";s:11:"description";s:43:"Support module for node permission testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:24:"Node module access tests";s:11:"description";s:43:"Support module for node permission testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/node/tests/node_test.module',
@@ -38061,7 +38772,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:17:"Node module tests";s:11:"description";s:40:"Support module for node related testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:17:"Node module tests";s:11:"description";s:40:"Support module for node related testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/node/tests/node_test_exception.module',
@@ -38072,7 +38783,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:27:"Node module exception tests";s:11:"description";s:50:"Support module for node related exception testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:27:"Node module exception tests";s:11:"description";s:50:"Support module for node related exception testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/openid/openid.module',
@@ -38083,7 +38794,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7000',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:6:"OpenID";s:11:"description";s:48:"Allows users to log into your site using OpenID.";s:7:"version";s:4:"7.37";s:7:"package";s:4:"Core";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"openid.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:6:"OpenID";s:11:"description";s:48:"Allows users to log into your site using OpenID.";s:7:"version";s:4:"7.40";s:7:"package";s:4:"Core";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"openid.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/openid/tests/openid_test.module',
@@ -38094,7 +38805,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:21:"OpenID dummy provider";s:11:"description";s:33:"OpenID provider used for testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:6:"openid";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:21:"OpenID dummy provider";s:11:"description";s:33:"OpenID provider used for testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:6:"openid";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/overlay/overlay.module',
@@ -38105,7 +38816,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:7:"Overlay";s:11:"description";s:59:"Displays the Drupal administration interface in an overlay.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:7:"Overlay";s:11:"description";s:59:"Displays the Drupal administration interface in an overlay.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/path/path.module',
@@ -38116,7 +38827,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:4:"Path";s:11:"description";s:28:"Allows users to rename URLs.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"path.test";}s:9:"configure";s:24:"admin/config/search/path";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:4:"Path";s:11:"description";s:28:"Allows users to rename URLs.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"path.test";}s:9:"configure";s:24:"admin/config/search/path";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/php/php.module',
@@ -38127,7 +38838,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:10:"PHP filter";s:11:"description";s:50:"Allows embedded PHP code/snippets to be evaluated.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:8:"php.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:10:"PHP filter";s:11:"description";s:50:"Allows embedded PHP code/snippets to be evaluated.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:8:"php.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/poll/poll.module',
@@ -38138,7 +38849,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:4:"Poll";s:11:"description";s:95:"Allows your site to capture votes on different topics in the form of multiple choice questions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"poll.test";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"poll.css";s:21:"modules/poll/poll.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:4:"Poll";s:11:"description";s:95:"Allows your site to capture votes on different topics in the form of multiple choice questions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:9:"poll.test";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"poll.css";s:21:"modules/poll/poll.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/profile/profile.module',
@@ -38149,7 +38860,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:7:"Profile";s:11:"description";s:36:"Supports configurable user profiles.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"profile.test";}s:9:"configure";s:27:"admin/config/people/profile";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:7:"Profile";s:11:"description";s:36:"Supports configurable user profiles.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"profile.test";}s:9:"configure";s:27:"admin/config/people/profile";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/rdf/rdf.module',
@@ -38160,7 +38871,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:3:"RDF";s:11:"description";s:148:"Enriches your content with metadata to let other applications (e.g. search engines, aggregators) better understand its relationships and attributes.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:8:"rdf.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:3:"RDF";s:11:"description";s:148:"Enriches your content with metadata to let other applications (e.g. search engines, aggregators) better understand its relationships and attributes.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:8:"rdf.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/rdf/tests/rdf_test.module',
@@ -38171,7 +38882,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:16:"RDF module tests";s:11:"description";s:38:"Support module for RDF module testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:16:"RDF module tests";s:11:"description";s:38:"Support module for RDF module testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/search/search.module',
@@ -38182,7 +38893,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7000',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:6:"Search";s:11:"description";s:36:"Enables site-wide keyword searching.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:19:"search.extender.inc";i:1;s:11:"search.test";}s:9:"configure";s:28:"admin/config/search/settings";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:10:"search.css";s:25:"modules/search/search.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:6:"Search";s:11:"description";s:36:"Enables site-wide keyword searching.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:19:"search.extender.inc";i:1;s:11:"search.test";}s:9:"configure";s:28:"admin/config/search/settings";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:10:"search.css";s:25:"modules/search/search.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/search/tests/search_embedded_form.module',
@@ -38193,7 +38904,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:20:"Search embedded form";s:11:"description";s:59:"Support module for search module testing of embedded forms.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:20:"Search embedded form";s:11:"description";s:59:"Support module for search module testing of embedded forms.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/search/tests/search_extra_type.module',
@@ -38204,7 +38915,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:16:"Test search type";s:11:"description";s:41:"Support module for search module testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:16:"Test search type";s:11:"description";s:41:"Support module for search module testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/search/tests/search_node_tags.module',
@@ -38215,7 +38926,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:21:"Test search node tags";s:11:"description";s:44:"Support module for Node search tags testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:21:"Test search node tags";s:11:"description";s:44:"Support module for Node search tags testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/shortcut/shortcut.module',
@@ -38226,7 +38937,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:8:"Shortcut";s:11:"description";s:60:"Allows users to manage customizable lists of shortcut links.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:13:"shortcut.test";}s:9:"configure";s:36:"admin/config/user-interface/shortcut";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:8:"Shortcut";s:11:"description";s:60:"Allows users to manage customizable lists of shortcut links.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:13:"shortcut.test";}s:9:"configure";s:36:"admin/config/user-interface/shortcut";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/simpletest.module',
@@ -38237,7 +38948,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:7:"Testing";s:11:"description";s:53:"Provides a framework for unit and functional testing.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:49:{i:0;s:15:"simpletest.test";i:1;s:24:"drupal_web_test_case.php";i:2;s:18:"tests/actions.test";i:3;s:15:"tests/ajax.test";i:4;s:16:"tests/batch.test";i:5;s:20:"tests/bootstrap.test";i:6;s:16:"tests/cache.test";i:7;s:17:"tests/common.test";i:8;s:24:"tests/database_test.test";i:9;s:22:"tests/entity_crud.test";i:10;s:32:"tests/entity_crud_hook_test.test";i:11;s:23:"tests/entity_query.test";i:12;s:16:"tests/error.test";i:13;s:15:"tests/file.test";i:14;s:23:"tests/filetransfer.test";i:15;s:15:"tests/form.test";i:16;s:16:"tests/graph.test";i:17;s:16:"tests/image.test";i:18;s:15:"tests/lock.test";i:19;s:15:"tests/mail.test";i:20;s:15:"tests/menu.test";i:21;s:17:"tests/module.test";i:22;s:16:"tests/pager.test";i:23;s:19:"tests/password.test";i:24;s:15:"tests/path.test";i:25;s:19:"tests/registry.test";i:26;s:17:"tests/schema.test";i:27;s:18:"tests/session.test";i:28;s:20:"tests/tablesort.test";i:29;s:16:"tests/theme.test";i:30;s:18:"tests/unicode.test";i:31;s:17:"tests/update.test";i:32;s:17:"tests/xmlrpc.test";i:33;s:26:"tests/upgrade/upgrade.test";i:34;s:34:"tests/upgrade/upgrade.comment.test";i:35;s:33:"tests/upgrade/upgrade.filter.test";i:36;s:32:"tests/upgrade/upgrade.forum.test";i:37;s:33:"tests/upgrade/upgrade.locale.test";i:38;s:31:"tests/upgrade/upgrade.menu.test";i:39;s:31:"tests/upgrade/upgrade.node.test";i:40;s:35:"tests/upgrade/upgrade.taxonomy.test";i:41;s:34:"tests/upgrade/upgrade.trigger.test";i:42;s:39:"tests/upgrade/upgrade.translatable.test";i:43;s:33:"tests/upgrade/upgrade.upload.test";i:44;s:31:"tests/upgrade/upgrade.user.test";i:45;s:36:"tests/upgrade/update.aggregator.test";i:46;s:33:"tests/upgrade/update.trigger.test";i:47;s:31:"tests/upgrade/update.field.test";i:48;s:30:"tests/upgrade/update.user.test";}s:9:"configure";s:41:"admin/config/development/testing/settings";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:7:"Testing";s:11:"description";s:53:"Provides a framework for unit and functional testing.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:50:{i:0;s:15:"simpletest.test";i:1;s:24:"drupal_web_test_case.php";i:2;s:18:"tests/actions.test";i:3;s:15:"tests/ajax.test";i:4;s:16:"tests/batch.test";i:5;s:15:"tests/boot.test";i:6;s:20:"tests/bootstrap.test";i:7;s:16:"tests/cache.test";i:8;s:17:"tests/common.test";i:9;s:24:"tests/database_test.test";i:10;s:22:"tests/entity_crud.test";i:11;s:32:"tests/entity_crud_hook_test.test";i:12;s:23:"tests/entity_query.test";i:13;s:16:"tests/error.test";i:14;s:15:"tests/file.test";i:15;s:23:"tests/filetransfer.test";i:16;s:15:"tests/form.test";i:17;s:16:"tests/graph.test";i:18;s:16:"tests/image.test";i:19;s:15:"tests/lock.test";i:20;s:15:"tests/mail.test";i:21;s:15:"tests/menu.test";i:22;s:17:"tests/module.test";i:23;s:16:"tests/pager.test";i:24;s:19:"tests/password.test";i:25;s:15:"tests/path.test";i:26;s:19:"tests/registry.test";i:27;s:17:"tests/schema.test";i:28;s:18:"tests/session.test";i:29;s:20:"tests/tablesort.test";i:30;s:16:"tests/theme.test";i:31;s:18:"tests/unicode.test";i:32;s:17:"tests/update.test";i:33;s:17:"tests/xmlrpc.test";i:34;s:26:"tests/upgrade/upgrade.test";i:35;s:34:"tests/upgrade/upgrade.comment.test";i:36;s:33:"tests/upgrade/upgrade.filter.test";i:37;s:32:"tests/upgrade/upgrade.forum.test";i:38;s:33:"tests/upgrade/upgrade.locale.test";i:39;s:31:"tests/upgrade/upgrade.menu.test";i:40;s:31:"tests/upgrade/upgrade.node.test";i:41;s:35:"tests/upgrade/upgrade.taxonomy.test";i:42;s:34:"tests/upgrade/upgrade.trigger.test";i:43;s:39:"tests/upgrade/upgrade.translatable.test";i:44;s:33:"tests/upgrade/upgrade.upload.test";i:45;s:31:"tests/upgrade/upgrade.user.test";i:46;s:36:"tests/upgrade/update.aggregator.test";i:47;s:33:"tests/upgrade/update.trigger.test";i:48;s:31:"tests/upgrade/update.field.test";i:49;s:30:"tests/upgrade/update.user.test";}s:9:"configure";s:41:"admin/config/development/testing/settings";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/actions_loop_test.module',
@@ -38248,7 +38959,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:17:"Actions loop test";s:11:"description";s:39:"Support module for action loop testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:17:"Actions loop test";s:11:"description";s:39:"Support module for action loop testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/ajax_forms_test.module',
@@ -38259,7 +38970,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:26:"AJAX form test mock module";s:11:"description";s:25:"Test for AJAX form calls.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:26:"AJAX form test mock module";s:11:"description";s:25:"Test for AJAX form calls.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/ajax_test.module',
@@ -38270,7 +38981,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:9:"AJAX Test";s:11:"description";s:40:"Support module for AJAX framework tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:9:"AJAX Test";s:11:"description";s:40:"Support module for AJAX framework tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/batch_test.module',
@@ -38281,7 +38992,29 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:14:"Batch API test";s:11:"description";s:35:"Support module for Batch API tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:14:"Batch API test";s:11:"description";s:35:"Support module for Batch API tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'modules/simpletest/tests/boot_test_1.module',
+  'name' => 'boot_test_1',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:21:"Early bootstrap tests";s:11:"description";s:39:"A support module for hook_boot testing.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'modules/simpletest/tests/boot_test_2.module',
+  'name' => 'boot_test_2',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:21:"Early bootstrap tests";s:11:"description";s:44:"A support module for hook_boot hook testing.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/common_test.module',
@@ -38292,7 +39025,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:11:"Common Test";s:11:"description";s:32:"Support module for Common tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:15:"common_test.css";s:40:"modules/simpletest/tests/common_test.css";}s:5:"print";a:1:{s:21:"common_test.print.css";s:46:"modules/simpletest/tests/common_test.print.css";}}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:11:"Common Test";s:11:"description";s:32:"Support module for Common tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:15:"common_test.css";s:40:"modules/simpletest/tests/common_test.css";}s:5:"print";a:1:{s:21:"common_test.print.css";s:46:"modules/simpletest/tests/common_test.print.css";}}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/common_test_cron_helper.module',
@@ -38303,7 +39036,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:23:"Common Test Cron Helper";s:11:"description";s:56:"Helper module for CronRunTestCase::testCronExceptions().";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:23:"Common Test Cron Helper";s:11:"description";s:56:"Helper module for CronRunTestCase::testCronExceptions().";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/database_test.module',
@@ -38314,7 +39047,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:13:"Database Test";s:11:"description";s:40:"Support module for Database layer tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:13:"Database Test";s:11:"description";s:40:"Support module for Database layer tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/drupal_autoload_test/drupal_autoload_test.module',
@@ -38325,7 +39058,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:25:"Drupal code registry test";s:11:"description";s:45:"Support module for testing the code registry.";s:5:"files";a:2:{i:0;s:34:"drupal_autoload_test_interface.inc";i:1;s:30:"drupal_autoload_test_class.inc";}s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:25:"Drupal code registry test";s:11:"description";s:45:"Support module for testing the code registry.";s:5:"files";a:2:{i:0;s:34:"drupal_autoload_test_interface.inc";i:1;s:30:"drupal_autoload_test_class.inc";}s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/drupal_system_listing_compatible_test/drupal_system_listing_compatible_test.module',
@@ -38336,7 +39069,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:37:"Drupal system listing compatible test";s:11:"description";s:62:"Support module for testing the drupal_system_listing function.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:37:"Drupal system listing compatible test";s:11:"description";s:62:"Support module for testing the drupal_system_listing function.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/drupal_system_listing_incompatible_test/drupal_system_listing_incompatible_test.module',
@@ -38347,7 +39080,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:39:"Drupal system listing incompatible test";s:11:"description";s:62:"Support module for testing the drupal_system_listing function.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:39:"Drupal system listing incompatible test";s:11:"description";s:62:"Support module for testing the drupal_system_listing function.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/entity_cache_test.module',
@@ -38358,7 +39091,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:17:"Entity cache test";s:11:"description";s:40:"Support module for testing entity cache.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:28:"entity_cache_test_dependency";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:17:"Entity cache test";s:11:"description";s:40:"Support module for testing entity cache.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:28:"entity_cache_test_dependency";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/entity_cache_test_dependency.module',
@@ -38369,7 +39102,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:28:"Entity cache test dependency";s:11:"description";s:51:"Support dependency module for testing entity cache.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:28:"Entity cache test dependency";s:11:"description";s:51:"Support dependency module for testing entity cache.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/entity_crud_hook_test.module',
@@ -38380,7 +39113,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:22:"Entity CRUD Hooks Test";s:11:"description";s:35:"Support module for CRUD hook tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:22:"Entity CRUD Hooks Test";s:11:"description";s:35:"Support module for CRUD hook tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/entity_query_access_test.module',
@@ -38391,7 +39124,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:24:"Entity query access test";s:11:"description";s:49:"Support module for checking entity query results.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:24:"Entity query access test";s:11:"description";s:49:"Support module for checking entity query results.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/error_test.module',
@@ -38402,7 +39135,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Error test";s:11:"description";s:47:"Support module for error and exception testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Error test";s:11:"description";s:47:"Support module for error and exception testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/file_test.module',
@@ -38413,7 +39146,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:9:"File test";s:11:"description";s:39:"Support module for file handling tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:16:"file_test.module";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:9:"File test";s:11:"description";s:39:"Support module for file handling tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:16:"file_test.module";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/filter_test.module',
@@ -38424,7 +39157,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:18:"Filter test module";s:11:"description";s:33:"Tests filter hooks and functions.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:18:"Filter test module";s:11:"description";s:33:"Tests filter hooks and functions.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/form_test.module',
@@ -38435,7 +39168,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:12:"FormAPI Test";s:11:"description";s:34:"Support module for Form API tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:12:"FormAPI Test";s:11:"description";s:34:"Support module for Form API tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/image_test.module',
@@ -38446,7 +39179,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Image test";s:11:"description";s:39:"Support module for image toolkit tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Image test";s:11:"description";s:39:"Support module for image toolkit tests.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/menu_test.module',
@@ -38457,7 +39190,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"Hook menu tests";s:11:"description";s:37:"Support module for menu hook testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"Hook menu tests";s:11:"description";s:37:"Support module for menu hook testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/module_test.module',
@@ -38468,7 +39201,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"Module test";s:11:"description";s:41:"Support module for module system testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"Module test";s:11:"description";s:41:"Support module for module system testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/path_test.module',
@@ -38479,7 +39212,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"Hook path tests";s:11:"description";s:37:"Support module for path hook testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"Hook path tests";s:11:"description";s:37:"Support module for path hook testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/psr_0_test/psr_0_test.module',
@@ -38490,7 +39223,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:16:"PSR-0 Test cases";s:11:"description";s:44:"Test classes to be discovered by simpletest.";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:16:"PSR-0 Test cases";s:11:"description";s:44:"Test classes to be discovered by simpletest.";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/psr_4_test/psr_4_test.module',
@@ -38501,7 +39234,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:16:"PSR-4 Test cases";s:11:"description";s:44:"Test classes to be discovered by simpletest.";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:16:"PSR-4 Test cases";s:11:"description";s:44:"Test classes to be discovered by simpletest.";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/requirements1_test.module',
@@ -38512,7 +39245,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => "a:13:{s:4:\"name\";s:19:\"Requirements 1 Test\";s:11:\"description\";s:80:\"Tests that a module is not installed when it fails hook_requirements('install').\";s:7:\"package\";s:7:\"Testing\";s:7:\"version\";s:4:\"7.37\";s:4:\"core\";s:3:\"7.x\";s:6:\"hidden\";b:1;s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1430973154\";s:5:\"mtime\";i:1437399662;s:12:\"dependencies\";a:0:{}s:3:\"php\";s:5:\"5.2.4\";s:5:\"files\";a:0:{}s:9:\"bootstrap\";i:0;}",
+  'info' => "a:13:{s:4:\"name\";s:19:\"Requirements 1 Test\";s:11:\"description\";s:80:\"Tests that a module is not installed when it fails hook_requirements('install').\";s:7:\"package\";s:7:\"Testing\";s:7:\"version\";s:4:\"7.40\";s:4:\"core\";s:3:\"7.x\";s:6:\"hidden\";b:1;s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1444866674\";s:5:\"mtime\";i:1444866674;s:12:\"dependencies\";a:0:{}s:3:\"php\";s:5:\"5.2.4\";s:5:\"files\";a:0:{}s:9:\"bootstrap\";i:0;}",
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/requirements2_test.module',
@@ -38523,7 +39256,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => "a:13:{s:4:\"name\";s:19:\"Requirements 2 Test\";s:11:\"description\";s:98:\"Tests that a module is not installed when the one it depends on fails hook_requirements('install).\";s:12:\"dependencies\";a:2:{i:0;s:18:\"requirements1_test\";i:1;s:7:\"comment\";}s:7:\"package\";s:7:\"Testing\";s:7:\"version\";s:4:\"7.37\";s:4:\"core\";s:3:\"7.x\";s:6:\"hidden\";b:1;s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1430973154\";s:5:\"mtime\";i:1437399662;s:3:\"php\";s:5:\"5.2.4\";s:5:\"files\";a:0:{}s:9:\"bootstrap\";i:0;}",
+  'info' => "a:13:{s:4:\"name\";s:19:\"Requirements 2 Test\";s:11:\"description\";s:98:\"Tests that a module is not installed when the one it depends on fails hook_requirements('install).\";s:12:\"dependencies\";a:2:{i:0;s:18:\"requirements1_test\";i:1;s:7:\"comment\";}s:7:\"package\";s:7:\"Testing\";s:7:\"version\";s:4:\"7.40\";s:4:\"core\";s:3:\"7.x\";s:6:\"hidden\";b:1;s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1444866674\";s:5:\"mtime\";i:1444866674;s:3:\"php\";s:5:\"5.2.4\";s:5:\"files\";a:0:{}s:9:\"bootstrap\";i:0;}",
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/session_test.module',
@@ -38534,7 +39267,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:12:"Session test";s:11:"description";s:40:"Support module for session data testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:12:"Session test";s:11:"description";s:40:"Support module for session data testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/system_dependencies_test.module',
@@ -38545,7 +39278,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:22:"System dependency test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:19:"_missing_dependency";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:22:"System dependency test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:19:"_missing_dependency";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/system_incompatible_core_version_dependencies_test.module',
@@ -38556,7 +39289,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:50:"System incompatible core version dependencies test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:37:"system_incompatible_core_version_test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:50:"System incompatible core version dependencies test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:37:"system_incompatible_core_version_test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/system_incompatible_core_version_test.module',
@@ -38567,7 +39300,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:37:"System incompatible core version test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"5.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:37:"System incompatible core version test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"5.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/system_incompatible_module_version_dependencies_test.module',
@@ -38578,7 +39311,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:52:"System incompatible module version dependencies test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:46:"system_incompatible_module_version_test (>2.0)";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:52:"System incompatible module version dependencies test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:46:"system_incompatible_module_version_test (>2.0)";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/system_incompatible_module_version_test.module',
@@ -38589,7 +39322,18 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:39:"System incompatible module version test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:39:"System incompatible module version test";s:11:"description";s:47:"Support module for testing system dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'modules/simpletest/tests/system_project_namespace_test.module',
+  'name' => 'system_project_namespace_test',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:13:{s:4:"name";s:29:"System project namespace test";s:11:"description";s:58:"Support module for testing project namespace dependencies.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:13:"drupal:filter";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/system_test.module',
@@ -38600,7 +39344,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"System test";s:11:"description";s:34:"Support module for system testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:18:"system_test.module";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399662;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"System test";s:11:"description";s:34:"Support module for system testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:18:"system_test.module";}s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/taxonomy_test.module',
@@ -38611,7 +39355,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:20:"Taxonomy test module";s:11:"description";s:45:""Tests functions and hooks not used in core".";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:8:"taxonomy";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:20:"Taxonomy test module";s:11:"description";s:45:""Tests functions and hooks not used in core".";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:12:"dependencies";a:1:{i:0;s:8:"taxonomy";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/theme_test.module',
@@ -38622,7 +39366,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Theme test";s:11:"description";s:40:"Support module for theme system testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Theme test";s:11:"description";s:40:"Support module for theme system testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/update_script_test.module',
@@ -38633,7 +39377,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:18:"Update script test";s:11:"description";s:41:"Support module for update script testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:18:"Update script test";s:11:"description";s:41:"Support module for update script testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/update_test_1.module',
@@ -38644,7 +39388,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:34:"Support module for update testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:34:"Support module for update testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/update_test_2.module',
@@ -38655,7 +39399,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:34:"Support module for update testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:34:"Support module for update testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/update_test_3.module',
@@ -38666,7 +39410,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:34:"Support module for update testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:34:"Support module for update testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/url_alter_test.module',
@@ -38677,7 +39421,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"Url_alter tests";s:11:"description";s:45:"A support modules for url_alter hook testing.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"Url_alter tests";s:11:"description";s:45:"A support modules for url_alter hook testing.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/simpletest/tests/xmlrpc_test.module',
@@ -38688,7 +39432,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:12:"XML-RPC Test";s:11:"description";s:75:"Support module for XML-RPC tests according to the validator1 specification.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:12:"XML-RPC Test";s:11:"description";s:75:"Support module for XML-RPC tests according to the validator1 specification.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/statistics/statistics.module',
@@ -38699,7 +39443,7 @@ $connection->insert('system')
   'bootstrap' => '1',
   'schema_version' => '7000',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Statistics";s:11:"description";s:37:"Logs access statistics for your site.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"statistics.test";}s:9:"configure";s:30:"admin/config/system/statistics";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Statistics";s:11:"description";s:37:"Logs access statistics for your site.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:15:"statistics.test";}s:9:"configure";s:30:"admin/config/system/statistics";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/syslog/syslog.module',
@@ -38710,7 +39454,7 @@ $connection->insert('system')
   'bootstrap' => '1',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:6:"Syslog";s:11:"description";s:41:"Logs and records system events to syslog.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"syslog.test";}s:9:"configure";s:32:"admin/config/development/logging";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:6:"Syslog";s:11:"description";s:41:"Logs and records system events to syslog.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"syslog.test";}s:9:"configure";s:32:"admin/config/development/logging";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/system/system.module',
@@ -38718,10 +39462,10 @@ $connection->insert('system')
   'type' => 'module',
   'owner' => '',
   'status' => '1',
-  'bootstrap' => '0',
-  'schema_version' => '7079',
+  'bootstrap' => '1',
+  'schema_version' => '7080',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:6:"System";s:11:"description";s:54:"Handles general site configuration for administrators.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:6:{i:0;s:19:"system.archiver.inc";i:1;s:15:"system.mail.inc";i:2;s:16:"system.queue.inc";i:3;s:14:"system.tar.inc";i:4;s:18:"system.updater.inc";i:5;s:11:"system.test";}s:8:"required";b:1;s:9:"configure";s:19:"admin/config/system";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:6:"System";s:11:"description";s:54:"Handles general site configuration for administrators.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:6:{i:0;s:19:"system.archiver.inc";i:1;s:15:"system.mail.inc";i:2;s:16:"system.queue.inc";i:3;s:14:"system.tar.inc";i:4;s:18:"system.updater.inc";i:5;s:11:"system.test";}s:8:"required";b:1;s:9:"configure";s:19:"admin/config/system";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/system/tests/cron_queue_test.module',
@@ -38732,7 +39476,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"Cron Queue test";s:11:"description";s:41:"Support module for the cron queue runner.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"Cron Queue test";s:11:"description";s:41:"Support module for the cron queue runner.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/taxonomy/taxonomy.module',
@@ -38743,7 +39487,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7011',
   'weight' => '0',
-  'info' => 'a:15:{s:4:"name";s:8:"Taxonomy";s:11:"description";s:38:"Enables the categorization of content.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:7:"options";}s:5:"files";a:2:{i:0;s:15:"taxonomy.module";i:1;s:13:"taxonomy.test";}s:9:"configure";s:24:"admin/structure/taxonomy";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:15:{s:4:"name";s:8:"Taxonomy";s:11:"description";s:38:"Enables the categorization of content.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:7:"options";}s:5:"files";a:2:{i:0;s:15:"taxonomy.module";i:1;s:13:"taxonomy.test";}s:9:"configure";s:24:"admin/structure/taxonomy";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'modules/toolbar/toolbar.module',
@@ -38754,7 +39498,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:7:"Toolbar";s:11:"description";s:99:"Provides a toolbar that shows the top-level administration menu items and links from other modules.";s:4:"core";s:3:"7.x";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:7:"Toolbar";s:11:"description";s:99:"Provides a toolbar that shows the top-level administration menu items and links from other modules.";s:4:"core";s:3:"7.x";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/tracker/tracker.module',
@@ -38765,7 +39509,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7000',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:7:"Tracker";s:11:"description";s:45:"Enables tracking of recent content for users.";s:12:"dependencies";a:1:{i:0;s:7:"comment";}s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"tracker.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:7:"Tracker";s:11:"description";s:45:"Enables tracking of recent content for users.";s:12:"dependencies";a:1:{i:0;s:7:"comment";}s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"tracker.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/translation/tests/translation_test.module',
@@ -38776,7 +39520,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:24:"Content Translation Test";s:11:"description";s:49:"Support module for the content translation tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:24:"Content Translation Test";s:11:"description";s:49:"Support module for the content translation tests.";s:4:"core";s:3:"7.x";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/translation/translation.module',
@@ -38787,7 +39531,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:19:"Content translation";s:11:"description";s:57:"Allows content to be translated into different languages.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:16:"translation.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:19:"Content translation";s:11:"description";s:57:"Allows content to be translated into different languages.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:16:"translation.test";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/trigger/tests/trigger_test.module',
@@ -38798,7 +39542,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:12:"Trigger Test";s:11:"description";s:33:"Support module for Trigger tests.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:12:"Trigger Test";s:11:"description";s:33:"Support module for Trigger tests.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/trigger/trigger.module',
@@ -38809,7 +39553,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7002',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:7:"Trigger";s:11:"description";s:90:"Enables actions to be fired on certain system events, such as when new content is created.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"trigger.test";}s:9:"configure";s:23:"admin/structure/trigger";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:7:"Trigger";s:11:"description";s:90:"Enables actions to be fired on certain system events, such as when new content is created.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:12:"trigger.test";}s:9:"configure";s:23:"admin/structure/trigger";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/update/tests/aaa_update_test.module',
@@ -38820,7 +39564,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"AAA Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"AAA Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/update/tests/bbb_update_test.module',
@@ -38831,7 +39575,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"BBB Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"BBB Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/update/tests/ccc_update_test.module',
@@ -38842,7 +39586,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:15:"CCC Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.37";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:15:"CCC Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"version";s:4:"7.40";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/update/tests/update_test.module',
@@ -38853,7 +39597,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:11:"Update test";s:11:"description";s:41:"Support module for update module testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/update/update.module',
@@ -38864,7 +39608,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7001',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:14:"Update manager";s:11:"description";s:104:"Checks for available updates, and can securely install or update modules and themes via a web interface.";s:7:"version";s:4:"7.37";s:7:"package";s:4:"Core";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"update.test";}s:9:"configure";s:30:"admin/reports/updates/settings";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:14:"Update manager";s:11:"description";s:104:"Checks for available updates, and can securely install or update modules and themes via a web interface.";s:7:"version";s:4:"7.40";s:7:"package";s:4:"Core";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:11:"update.test";}s:9:"configure";s:30:"admin/reports/updates/settings";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/user/tests/user_form_test.module',
@@ -38875,7 +39619,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:22:"User module form tests";s:11:"description";s:37:"Support module for user form testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:22:"User module form tests";s:11:"description";s:37:"Support module for user form testing.";s:7:"package";s:7:"Testing";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'modules/user/user.module',
@@ -38886,7 +39630,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7018',
   'weight' => '0',
-  'info' => 'a:15:{s:4:"name";s:4:"User";s:11:"description";s:47:"Manages the user registration and login system.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:11:"user.module";i:1;s:9:"user.test";}s:8:"required";b:1;s:9:"configure";s:19:"admin/config/people";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"user.css";s:21:"modules/user/user.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:15:{s:4:"name";s:4:"User";s:11:"description";s:47:"Manages the user registration and login system.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:11:"user.module";i:1;s:9:"user.test";}s:8:"required";b:1;s:9:"configure";s:19:"admin/config/people";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"user.css";s:21:"modules/user/user.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'profiles/standard/standard.profile',
@@ -38897,7 +39641,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '1000',
-  'info' => 'a:15:{s:4:"name";s:8:"Standard";s:11:"description";s:51:"Install with commonly used features pre-configured.";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:12:"dependencies";a:21:{i:0;s:5:"block";i:1;s:5:"color";i:2;s:7:"comment";i:3;s:10:"contextual";i:4;s:9:"dashboard";i:5;s:4:"help";i:6;s:5:"image";i:7;s:4:"list";i:8;s:4:"menu";i:9;s:6:"number";i:10;s:7:"options";i:11;s:4:"path";i:12;s:8:"taxonomy";i:13;s:5:"dblog";i:14;s:6:"search";i:15;s:8:"shortcut";i:16;s:7:"toolbar";i:17;s:7:"overlay";i:18;s:8:"field_ui";i:19;s:4:"file";i:20;s:3:"rdf";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:5:"mtime";i:1437399663;s:7:"package";s:5:"Other";s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;s:6:"hidden";b:1;s:8:"required";b:1;s:17:"distribution_name";s:6:"Drupal";}',
+  'info' => 'a:15:{s:4:"name";s:8:"Standard";s:11:"description";s:51:"Install with commonly used features pre-configured.";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:12:"dependencies";a:21:{i:0;s:5:"block";i:1;s:5:"color";i:2;s:7:"comment";i:3;s:10:"contextual";i:4;s:9:"dashboard";i:5;s:4:"help";i:6;s:5:"image";i:7;s:4:"list";i:8;s:4:"menu";i:9;s:6:"number";i:10;s:7:"options";i:11;s:4:"path";i:12;s:8:"taxonomy";i:13;s:5:"dblog";i:14;s:6:"search";i:15;s:8:"shortcut";i:16;s:7:"toolbar";i:17;s:7:"overlay";i:18;s:8:"field_ui";i:19;s:4:"file";i:20;s:3:"rdf";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:5:"mtime";i:1444866674;s:7:"package";s:5:"Other";s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;s:6:"hidden";b:1;s:8:"required";b:1;s:17:"distribution_name";s:6:"Drupal";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/ctools/ctools.module',
@@ -38919,7 +39663,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7004',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:4:"Date";s:11:"description";s:33:"Makes date/time fields available.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:5:"files";a:7:{i:0;s:16:"date.migrate.inc";i:1;s:19:"tests/date_api.test";i:2;s:15:"tests/date.test";i:3;s:21:"tests/date_field.test";i:4;s:23:"tests/date_migrate.test";i:5;s:26:"tests/date_validation.test";i:6;s:24:"tests/date_timezone.test";}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:14:{s:4:"name";s:4:"Date";s:11:"description";s:33:"Makes date/time fields available.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:5:"files";a:9:{i:0;s:16:"date.migrate.inc";i:1;s:19:"tests/date_api.test";i:2;s:15:"tests/date.test";i:3;s:21:"tests/date_field.test";i:4;s:23:"tests/date_migrate.test";i:5;s:26:"tests/date_validation.test";i:6;s:24:"tests/date_timezone.test";i:7;s:27:"tests/date_views_pager.test";i:8;s:27:"tests/date_views_popup.test";}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_all_day/date_all_day.module',
@@ -38930,7 +39674,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => "a:12:{s:4:\"name\";s:12:\"Date All Day\";s:11:\"description\";s:142:\"Adds 'All Day' functionality to date fields, including an 'All Day' theme and 'All Day' checkboxes for the Date select and Date popup widgets.\";s:12:\"dependencies\";a:2:{i:0;s:8:\"date_api\";i:1;s:4:\"date\";}s:7:\"package\";s:9:\"Date/Time\";s:4:\"core\";s:3:\"7.x\";s:7:\"version\";s:7:\"7.x-2.8\";s:7:\"project\";s:4:\"date\";s:9:\"datestamp\";s:10:\"1406653438\";s:5:\"mtime\";i:1406653438;s:3:\"php\";s:5:\"5.2.4\";s:5:\"files\";a:0:{}s:9:\"bootstrap\";i:0;}",
+  'info' => "a:12:{s:4:\"name\";s:12:\"Date All Day\";s:11:\"description\";s:142:\"Adds 'All Day' functionality to date fields, including an 'All Day' theme and 'All Day' checkboxes for the Date select and Date popup widgets.\";s:12:\"dependencies\";a:2:{i:0;s:8:\"date_api\";i:1;s:4:\"date\";}s:7:\"package\";s:9:\"Date/Time\";s:4:\"core\";s:3:\"7.x\";s:7:\"version\";s:7:\"7.x-2.9\";s:7:\"project\";s:4:\"date\";s:9:\"datestamp\";s:10:\"1441727353\";s:5:\"mtime\";i:1441727353;s:3:\"php\";s:5:\"5.2.4\";s:5:\"files\";a:0:{}s:9:\"bootstrap\";i:0;}",
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_api/date_api.module',
@@ -38941,7 +39685,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7001',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:8:"Date API";s:11:"description";s:45:"A Date API that can be used by other modules.";s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"date.css";s:40:"sites/all/modules/date/date_api/date.css";}}s:5:"files";a:2:{i:0;s:15:"date_api.module";i:1;s:16:"date_api_sql.inc";}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:12:"dependencies";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:8:"Date API";s:11:"description";s:45:"A Date API that can be used by other modules.";s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:8:"date.css";s:40:"sites/all/modules/date/date_api/date.css";}}s:5:"files";a:2:{i:0;s:15:"date_api.module";i:1;s:16:"date_api_sql.inc";}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:12:"dependencies";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_context/date_context.module',
@@ -38952,7 +39696,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:12:"Date Context";s:11:"description";s:99:"Adds an option to the Context module to set a context condition based on the value of a date field.";s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:12:"dependencies";a:2:{i:0;s:4:"date";i:1;s:7:"context";}s:5:"files";a:2:{i:0;s:19:"date_context.module";i:1;s:39:"plugins/date_context_date_condition.inc";}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:12:"Date Context";s:11:"description";s:99:"Adds an option to the Context module to set a context condition based on the value of a date field.";s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:12:"dependencies";a:2:{i:0;s:4:"date";i:1;s:7:"context";}s:5:"files";a:2:{i:0;s:19:"date_context.module";i:1;s:39:"plugins/date_context_date_condition.inc";}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_migrate/date_migrate.module',
@@ -38963,7 +39707,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:14:"Date Migration";s:11:"description";s:73:"Obsolete data migration module. Disable if no other modules depend on it.";s:4:"core";s:3:"7.x";s:7:"package";s:9:"Date/Time";s:6:"hidden";b:1;s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:14:"Date Migration";s:11:"description";s:73:"Obsolete data migration module. Disable if no other modules depend on it.";s:4:"core";s:3:"7.x";s:7:"package";s:9:"Date/Time";s:6:"hidden";b:1;s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_migrate/date_migrate_example/date_migrate_example.module',
@@ -38974,7 +39718,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"core";s:3:"7.x";s:12:"dependencies";a:5:{i:0;s:4:"date";i:1;s:11:"date_repeat";i:2;s:17:"date_repeat_field";i:3;s:8:"features";i:4;s:7:"migrate";}s:11:"description";s:42:"Examples of migrating with the Date module";s:8:"features";a:2:{s:5:"field";a:8:{i:0;s:30:"node-date_migrate_example-body";i:1;s:36:"node-date_migrate_example-field_date";i:2;s:42:"node-date_migrate_example-field_date_range";i:3;s:43:"node-date_migrate_example-field_date_repeat";i:4;s:41:"node-date_migrate_example-field_datestamp";i:5;s:47:"node-date_migrate_example-field_datestamp_range";i:6;s:40:"node-date_migrate_example-field_datetime";i:7;s:46:"node-date_migrate_example-field_datetime_range";}s:4:"node";a:1:{i:0;s:20:"date_migrate_example";}}s:5:"files";a:1:{i:0;s:32:"date_migrate_example.migrate.inc";}s:4:"name";s:22:"Date Migration Example";s:7:"package";s:8:"Features";s:7:"project";s:4:"date";s:7:"version";s:7:"7.x-2.8";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"core";s:3:"7.x";s:12:"dependencies";a:5:{i:0;s:4:"date";i:1;s:11:"date_repeat";i:2;s:17:"date_repeat_field";i:3;s:8:"features";i:4;s:7:"migrate";}s:11:"description";s:42:"Examples of migrating with the Date module";s:8:"features";a:2:{s:5:"field";a:8:{i:0;s:30:"node-date_migrate_example-body";i:1;s:36:"node-date_migrate_example-field_date";i:2;s:42:"node-date_migrate_example-field_date_range";i:3;s:43:"node-date_migrate_example-field_date_repeat";i:4;s:41:"node-date_migrate_example-field_datestamp";i:5;s:47:"node-date_migrate_example-field_datestamp_range";i:6;s:40:"node-date_migrate_example-field_datetime";i:7;s:46:"node-date_migrate_example-field_datetime_range";}s:4:"node";a:1:{i:0;s:20:"date_migrate_example";}}s:5:"files";a:1:{i:0;s:32:"date_migrate_example.migrate.inc";}s:4:"name";s:22:"Date Migration Example";s:7:"package";s:8:"Features";s:7:"project";s:4:"date";s:7:"version";s:7:"7.x-2.9";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_popup/date_popup.module',
@@ -38985,7 +39729,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:10:"Date Popup";s:11:"description";s:84:"Enables jquery popup calendars and time entry widgets for selecting dates and times.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:9:"configure";s:28:"admin/config/date/date_popup";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:25:"themes/datepicker.1.7.css";s:59:"sites/all/modules/date/date_popup/themes/datepicker.1.7.css";}}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:14:{s:4:"name";s:10:"Date Popup";s:11:"description";s:84:"Enables jquery popup calendars and time entry widgets for selecting dates and times.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:9:"configure";s:28:"admin/config/date/date_popup";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:25:"themes/datepicker.1.7.css";s:59:"sites/all/modules/date/date_popup/themes/datepicker.1.7.css";}}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_repeat/date_repeat.module',
@@ -38996,7 +39740,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:15:"Date Repeat API";s:11:"description";s:73:"A Date Repeat API to calculate repeating dates and times from iCal rules.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:5:"files";a:2:{i:0;s:22:"tests/date_repeat.test";i:1;s:27:"tests/date_repeat_form.test";}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:15:"Date Repeat API";s:11:"description";s:73:"A Date Repeat API to calculate repeating dates and times from iCal rules.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:5:"files";a:2:{i:0;s:22:"tests/date_repeat.test";i:1;s:27:"tests/date_repeat_form.test";}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_repeat_field/date_repeat_field.module',
@@ -39007,7 +39751,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:17:"Date Repeat Field";s:11:"description";s:97:"Creates the option of Repeating date fields and manages Date fields that use the Date Repeat API.";s:12:"dependencies";a:3:{i:0;s:8:"date_api";i:1;s:4:"date";i:2;s:11:"date_repeat";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:21:"date_repeat_field.css";s:62:"sites/all/modules/date/date_repeat_field/date_repeat_field.css";}}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:17:"Date Repeat Field";s:11:"description";s:97:"Creates the option of Repeating date fields and manages Date fields that use the Date Repeat API.";s:12:"dependencies";a:3:{i:0;s:8:"date_api";i:1;s:4:"date";i:2;s:11:"date_repeat";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:21:"date_repeat_field.css";s:62:"sites/all/modules/date/date_repeat_field/date_repeat_field.css";}}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_tools/date_tools.module',
@@ -39018,7 +39762,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Date Tools";s:11:"description";s:52:"Tools to import and auto-create dates and calendars.";s:12:"dependencies";a:1:{i:0;s:4:"date";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:9:"configure";s:23:"admin/config/date/tools";s:5:"files";a:1:{i:0;s:21:"tests/date_tools.test";}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+  'info' => 'a:13:{s:4:"name";s:10:"Date Tools";s:11:"description";s:52:"Tools to import and auto-create dates and calendars.";s:12:"dependencies";a:1:{i:0;s:4:"date";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"7.x";s:9:"configure";s:23:"admin/config/date/tools";s:5:"files";a:1:{i:0;s:21:"tests/date_tools.test";}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_views/date_views.module',
@@ -39029,7 +39773,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:10:"Date Views";s:11:"description";s:57:"Views integration for date fields and date functionality.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:2:{i:0;s:8:"date_api";i:1;s:5:"views";}s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:5:"files";a:6:{i:0;s:40:"includes/date_views_argument_handler.inc";i:1;s:47:"includes/date_views_argument_handler_simple.inc";i:2;s:38:"includes/date_views_filter_handler.inc";i:3;s:45:"includes/date_views_filter_handler_simple.inc";i:4;s:29:"includes/date_views.views.inc";i:5;s:36:"includes/date_views_plugin_pager.inc";}s:7:"version";s:7:"7.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1406653438";s:5:"mtime";i:1406653438;s:9:"bootstrap";i:0;}',
+  'info' => 'a:12:{s:4:"name";s:10:"Date Views";s:11:"description";s:57:"Views integration for date fields and date functionality.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:2:{i:0;s:8:"date_api";i:1;s:5:"views";}s:4:"core";s:3:"7.x";s:3:"php";s:3:"5.2";s:5:"files";a:6:{i:0;s:40:"includes/date_views_argument_handler.inc";i:1;s:47:"includes/date_views_argument_handler_simple.inc";i:2;s:38:"includes/date_views_filter_handler.inc";i:3;s:45:"includes/date_views_filter_handler_simple.inc";i:4;s:29:"includes/date_views.views.inc";i:5;s:36:"includes/date_views_plugin_pager.inc";}s:7:"version";s:7:"7.x-2.9";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1441727353";s:5:"mtime";i:1441727353;s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/email/email.module',
@@ -39051,7 +39795,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '7001',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:4:"Link";s:11:"description";s:32:"Defines simple link field types.";s:4:"core";s:3:"7.x";s:7:"package";s:6:"Fields";s:5:"files";a:10:{i:0;s:11:"link.module";i:1;s:16:"link.migrate.inc";i:2;s:15:"tests/link.test";i:3;s:25:"tests/link.attribute.test";i:4;s:20:"tests/link.crud.test";i:5;s:28:"tests/link.crud_browser.test";i:6;s:21:"tests/link.token.test";i:7;s:24:"tests/link.validate.test";i:8;s:44:"views/link_views_handler_argument_target.inc";i:9;s:44:"views/link_views_handler_filter_protocol.inc";}s:7:"version";s:7:"7.x-1.3";s:7:"project";s:4:"link";s:9:"datestamp";s:10:"1413924830";s:5:"mtime";i:1437399663;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+  'info' => 'a:14:{s:4:"name";s:4:"Link";s:11:"description";s:32:"Defines simple link field types.";s:4:"core";s:3:"7.x";s:7:"package";s:6:"Fields";s:5:"files";a:10:{i:0;s:11:"link.module";i:1;s:16:"link.migrate.inc";i:2;s:15:"tests/link.test";i:3;s:25:"tests/link.attribute.test";i:4;s:20:"tests/link.crud.test";i:5;s:28:"tests/link.crud_browser.test";i:6;s:21:"tests/link.token.test";i:7;s:24:"tests/link.validate.test";i:8;s:44:"views/link_views_handler_argument_target.inc";i:9;s:44:"views/link_views_handler_filter_protocol.inc";}s:7:"version";s:7:"7.x-1.3";s:7:"project";s:4:"link";s:9:"datestamp";s:10:"1413924830";s:5:"mtime";i:1413924830;s:12:"dependencies";a:0:{}s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/phone/phone.module',
@@ -39095,7 +39839,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1437399663;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}',
+  'info' => 'a:18:{s:4:"name";s:6:"Bartik";s:11:"description";s:48:"A flexible, recolorable theme with many regions.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:3:{s:14:"css/layout.css";s:28:"themes/bartik/css/layout.css";s:13:"css/style.css";s:27:"themes/bartik/css/style.css";s:14:"css/colors.css";s:28:"themes/bartik/css/colors.css";}s:5:"print";a:1:{s:13:"css/print.css";s:27:"themes/bartik/css/print.css";}}s:7:"regions";a:17:{s:6:"header";s:6:"Header";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:11:"highlighted";s:11:"Highlighted";s:8:"featured";s:8:"Featured";s:7:"content";s:7:"Content";s:13:"sidebar_first";s:13:"Sidebar first";s:14:"sidebar_second";s:14:"Sidebar second";s:14:"triptych_first";s:14:"Triptych first";s:15:"triptych_middle";s:15:"Triptych middle";s:13:"triptych_last";s:13:"Triptych last";s:18:"footer_firstcolumn";s:19:"Footer first column";s:19:"footer_secondcolumn";s:20:"Footer second column";s:18:"footer_thirdcolumn";s:19:"Footer third column";s:19:"footer_fourthcolumn";s:20:"Footer fourth column";s:6:"footer";s:6:"Footer";}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"0";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:28:"themes/bartik/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}',
 ))
 ->values(array(
   'filename' => 'themes/garland/garland.info',
@@ -39106,7 +39850,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1437399663;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}',
+  'info' => 'a:18:{s:4:"name";s:7:"Garland";s:11:"description";s:111:"A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:8:"settings";a:1:{s:13:"garland_width";s:5:"fluid";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:9:{s:13:"sidebar_first";s:12:"Left sidebar";s:14:"sidebar_second";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";s:11:"highlighted";s:11:"Highlighted";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";}s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:14:"regions_hidden";a:2:{i:0;s:8:"page_top";i:1;s:11:"page_bottom";}s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}',
 ))
 ->values(array(
   'filename' => 'themes/seven/seven.info',
@@ -39117,7 +39861,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.37";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1430973154";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1437399663;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}',
+  'info' => 'a:18:{s:4:"name";s:5:"Seven";s:11:"description";s:65:"A simple one-column, tableless, fluid width administration theme.";s:7:"package";s:4:"Core";s:7:"version";s:4:"7.40";s:4:"core";s:3:"7.x";s:11:"stylesheets";a:1:{s:6:"screen";a:2:{s:9:"reset.css";s:22:"themes/seven/reset.css";s:9:"style.css";s:22:"themes/seven/style.css";}}s:8:"settings";a:1:{s:20:"shortcut_module_link";s:1:"1";}s:7:"regions";a:5:{s:7:"content";s:7:"Content";s:4:"help";s:4:"Help";s:8:"page_top";s:8:"Page top";s:11:"page_bottom";s:11:"Page bottom";s:13:"sidebar_first";s:13:"First sidebar";}s:14:"regions_hidden";a:3:{i:0;s:13:"sidebar_first";i:1;s:8:"page_top";i:2;s:11:"page_bottom";}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1444866674";s:6:"engine";s:11:"phptemplate";s:8:"features";a:9:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";i:4;s:17:"node_user_picture";i:5;s:20:"comment_user_picture";i:6;s:25:"comment_user_verification";i:7;s:9:"main_menu";i:8;s:14:"secondary_menu";}s:10:"screenshot";s:27:"themes/seven/screenshot.png";s:3:"php";s:5:"5.2.4";s:7:"scripts";a:0:{}s:5:"mtime";i:1444866674;s:28:"overlay_supplemental_regions";a:1:{i:0;s:8:"page_top";}}',
 ))
 ->values(array(
   'filename' => 'themes/stark/stark.info',
@@ -39128,7 +39872,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => "a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.37\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1430973154\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1437399663;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}",
+  'info' => "a:17:{s:4:\"name\";s:5:\"Stark\";s:11:\"description\";s:208:\"This theme demonstrates Drupal's default HTML markup and CSS styles. To learn how to build your own theme and override Drupal's default code, see the <a href=\"http://drupal.org/theme-guide\">Theming Guide</a>.\";s:7:\"package\";s:4:\"Core\";s:7:\"version\";s:4:\"7.40\";s:4:\"core\";s:3:\"7.x\";s:11:\"stylesheets\";a:1:{s:3:\"all\";a:1:{s:10:\"layout.css\";s:23:\"themes/stark/layout.css\";}}s:7:\"project\";s:6:\"drupal\";s:9:\"datestamp\";s:10:\"1444866674\";s:6:\"engine\";s:11:\"phptemplate\";s:7:\"regions\";a:9:{s:13:\"sidebar_first\";s:12:\"Left sidebar\";s:14:\"sidebar_second\";s:13:\"Right sidebar\";s:7:\"content\";s:7:\"Content\";s:6:\"header\";s:6:\"Header\";s:6:\"footer\";s:6:\"Footer\";s:11:\"highlighted\";s:11:\"Highlighted\";s:4:\"help\";s:4:\"Help\";s:8:\"page_top\";s:8:\"Page top\";s:11:\"page_bottom\";s:11:\"Page bottom\";}s:8:\"features\";a:9:{i:0;s:4:\"logo\";i:1;s:7:\"favicon\";i:2;s:4:\"name\";i:3;s:6:\"slogan\";i:4;s:17:\"node_user_picture\";i:5;s:20:\"comment_user_picture\";i:6;s:25:\"comment_user_verification\";i:7;s:9:\"main_menu\";i:8;s:14:\"secondary_menu\";}s:10:\"screenshot\";s:27:\"themes/stark/screenshot.png\";s:3:\"php\";s:5:\"5.2.4\";s:7:\"scripts\";a:0:{}s:5:\"mtime\";i:1444866674;s:14:\"regions_hidden\";a:2:{i:0;s:8:\"page_top\";i:1;s:11:\"page_bottom\";}s:28:\"overlay_supplemental_regions\";a:1:{i:0;s:8:\"page_top\";}}",
 ))
 ->execute();
 
@@ -39902,8 +40646,8 @@ $connection->insert('users')
   'signature' => '',
   'signature_format' => NULL,
   'created' => '0',
-  'access' => '0',
-  'login' => '0',
+  'access' => '1444945097',
+  'login' => '1444945097',
   'status' => '1',
   'timezone' => NULL,
   'language' => '',
@@ -39997,7 +40741,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'additional_settings__active_tab_blog',
-  'value' => 's:15:"edit-submission";',
+  'value' => 's:13:"edit-workflow";',
 ))
 ->values(array(
   'name' => 'additional_settings__active_tab_book',
@@ -40066,6 +40810,42 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'book_child_type',
   'value' => 's:4:"book";',
+))
+->values(array(
+  'name' => 'cache_flush_cache',
+  'value' => 'i:1444944970;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_block',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_field',
+  'value' => 'i:1444944970;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_filter',
+  'value' => 'i:1444944970;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_form',
+  'value' => 'i:1444944970;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_image',
+  'value' => 'i:1444944970;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_menu',
+  'value' => 'i:1444944970;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_page',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'cache_flush_cache_path',
+  'value' => 'i:1444944970;',
 ))
 ->values(array(
   'name' => 'cache_lifetime',
@@ -40261,11 +41041,11 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'cron_last',
-  'value' => 'i:1441286523;',
+  'value' => 'i:1444944970;',
 ))
 ->values(array(
   'name' => 'css_js_query_string',
-  'value' => 's:6:"nu3rtz";',
+  'value' => 's:6:"nwa6nq";',
 ))
 ->values(array(
   'name' => 'ctools_last_cron',
@@ -40286,6 +41066,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'default_nodes_main',
   'value' => 's:2:"10";',
+))
+->values(array(
+  'name' => 'drupal_css_cache_files',
+  'value' => 'a:10:{s:64:"823ba1006db72809515d2221cd02ec1075d7b49b0c07f49307b3a7930bfdd9e4";s:64:"public://css/css_xE-rWrJf-fncB6ztZfd2huxqgxu4WO-qwma6Xer30m4.css";s:64:"039ba69b25efd672767c5ee21b686a2cdaa496c5fb210693b88f81cc556db518";s:64:"public://css/css_M8BpLSgFJ1ipHW-ZwVd6p7yRHsT3q23ohYErZrFJ1xA.css";s:64:"568f3bca87830de88c7b44e71808ac7f33f4cdf273ed3bf3d2532bd48f084b06";s:64:"public://css/css_NRg0AX3iY_x0OX3_WzcWp90JnwurHRvZn6i75GL0rRI.css";s:64:"586e4d641f74d0fbdea2ecffe62294e983c5961df8d0128aab1c561505f6b35a";s:64:"public://css/css_2THG1eGiBIizsWFeexsNe1iDifJ00QRS9uSd03rY9co.css";s:64:"cb9f93e666a396bb3eb14c5fd16f7ebd1cdd0067733eb0a2ab1b294b6f14f76f";s:64:"public://css/css_1kF33EODTO5gDyEbdpAfYzMKbjG3ottD1s5np0BNI8U.css";s:64:"35337ea541d4968f58917d83eaa9e495d5a38bb0aaf23bc714650d3c71fc275a";s:64:"public://css/css_LJ87GFKz9ZFt2bWZ4pMV8e2o8w_790Mbwcd7C-RKri0.css";s:64:"592db66916e1dd3416cbe95bcb34a5a68775eb0b7cf95e4c858671de35290cc9";s:64:"public://css/css_LS9OUalDR9-d_lCAvF3yUWjNU6yF8ZBm84jEPRvoyuQ.css";s:64:"fe9fca5a618e55058e69458a65b2edb4e958c16c13e1d1526c4dc0c0e782b483";s:64:"public://css/css_WWafHiT44xXp69Ucog34hgXKsZRScJzl3S17Xg7evtM.css";s:64:"ebb3f433ad4107b1ac31e9d7de0f9a5d399040e9f82b6364211dcfaadea158c0";s:64:"public://css/css_Nv0ct-zkzztuah_LbaPFF8ZkdSEk-LxBtTWMm9mN_F8.css";s:64:"032d72e2b3124645b11e59c23005327dc2b450af6aaa6bf3cad34a6a65a9d774";s:64:"public://css/css_ZDWl28hdmeinIcKg-HMrN6uKD0nTMld5NlXLmm5MH2U.css";}',
 ))
 ->values(array(
   'name' => 'drupal_http_request_fails',
@@ -40376,12 +41160,16 @@ $connection->insert('variable')
   'value' => 'i:1421694923;',
 ))
 ->values(array(
+  'name' => 'javascript_parsed',
+  'value' => 'a:17:{i:0;s:14:"misc/drupal.js";i:1;s:14:"misc/jquery.js";i:2;s:19:"misc/jquery.once.js";i:3;s:32:"modules/contextual/contextual.js";i:4;s:21:"misc/jquery.cookie.js";i:5;s:26:"modules/toolbar/toolbar.js";i:6;s:19:"misc/tableheader.js";i:7;s:12:"misc/form.js";i:8;s:16:"misc/collapse.js";i:9;s:17:"misc/tabledrag.js";s:10:"refresh:is";s:7:"waiting";i:10;s:20:"misc/machine-name.js";i:11;s:16:"misc/textarea.js";i:12;s:36:"modules/comment/comment-node-form.js";i:13;s:26:"modules/menu/menu.admin.js";i:14;s:21:"misc/vertical-tabs.js";i:15;s:29:"modules/node/content_types.js";}',
+))
+->values(array(
   'name' => 'language_content_type_article',
   'value' => 's:1:"0";',
 ))
 ->values(array(
   'name' => 'language_content_type_blog',
-  'value' => 's:1:"0";',
+  'value' => 's:1:"2";',
 ))
 ->values(array(
   'name' => 'language_content_type_book',
@@ -40398,6 +41186,14 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'language_content_type_test_content_type',
   'value' => 's:1:"0";',
+))
+->values(array(
+  'name' => 'language_count',
+  'value' => 'i:2;',
+))
+->values(array(
+  'name' => 'language_default',
+  'value' => 'O:8:"stdClass":11:{s:8:"language";s:2:"en";s:4:"name";s:7:"English";s:6:"native";s:7:"English";s:9:"direction";s:1:"0";s:7:"enabled";i:1;s:7:"plurals";s:1:"0";s:7:"formula";s:0:"";s:6:"domain";s:0:"";s:6:"prefix";s:0:"";s:6:"weight";s:1:"0";s:10:"javascript";s:0:"";}',
 ))
 ->values(array(
   'name' => 'language_negotiation_language',
@@ -40501,7 +41297,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'node_cron_last',
-  'value' => 's:10:"1421727515";',
+  'value' => 's:10:"1441306832";',
 ))
 ->values(array(
   'name' => 'node_options_article',
@@ -40700,6 +41496,10 @@ $connection->insert('variable')
   'value' => 'i:0;',
 ))
 ->values(array(
+  'name' => 'statistics_day_timestamp',
+  'value' => 'i:1444944970;',
+))
+->values(array(
   'name' => 'statistics_enable_access_log',
   'value' => 'i:1;',
 ))
@@ -40734,6 +41534,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'tracker_batch_size',
   'value' => 'i:999;',
+))
+->values(array(
+  'name' => 'update_last_check',
+  'value' => 'i:1444944973;',
 ))
 ->values(array(
   'name' => 'user_admin_role',

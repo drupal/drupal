@@ -13,11 +13,14 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 /**
  * Tests migration of aggregator items.
  *
- * @group aggregator
+ * @group migrate_drupal_7
  */
 class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
 
-  public static $modules = array('aggregator');
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}
@@ -34,17 +37,27 @@ class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
    * Test Drupal 7 aggregator item migration to Drupal 8.
    */
   public function testAggregatorItem() {
-    /** @var \Drupal\aggregator\Entity\Item $item */
-    $item = Item::load(1);
-    $this->assertIdentical('1', $item->id());
-    $this->assertIdentical('1', $item->getFeedId());
-    $this->assertIdentical('This (three) weeks in Drupal Core - January 10th 2014', $item->label());
-    $this->assertIdentical('larowlan', $item->getAuthor());
-    $this->assertIdentical("<h2 id='new'>What's new with Drupal 8?</h2>", $item->getDescription());
-    $this->assertIdentical('https://groups.drupal.org/node/395218', $item->getLink());
-    $this->assertIdentical('1389297196', $item->getPostedTime());
-    $this->assertIdentical('en', $item->language()->getId());
-    $this->assertIdentical('395218 at https://groups.drupal.org', $item->getGuid());
+    // Since the feed items can change as the fixture is updated normally,
+    // assert all migrated feed items against the values in the fixture.
+    $items = $this->sourceDatabase
+      ->select('aggregator_item', 'ai')
+      ->fields('ai')
+      ->execute();
+
+    foreach ($items as $original) {
+      /** @var \Drupal\aggregator\ItemInterface $item */
+      $item = Item::load($original->iid);
+      $this->assertIdentical($original->fid, $item->getFeedId());
+      $this->assertIdentical($original->title, $item->label());
+      // If $original->author is an empty string, getAuthor() returns NULL so
+      // we need to use assertEqual() here.
+      $this->assertEqual($original->author, $item->getAuthor());
+      $this->assertIdentical($original->description, $item->getDescription());
+      $this->assertIdentical($original->link, $item->getLink());
+      $this->assertIdentical($original->timestamp, $item->getPostedTime());
+      $this->assertIdentical('en', $item->language()->getId());
+      $this->assertIdentical($original->guid, $item->getGuid());
+    }
   }
 
 }

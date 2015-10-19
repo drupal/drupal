@@ -103,6 +103,20 @@ $connection->insert('actions')
   'description' => 'Unpublish comment',
 ))
 ->values(array(
+  'aid' => 'imagecache_flush_action',
+  'type' => 'node',
+  'callback' => 'imagecache_flush_action',
+  'parameters' => '',
+  'description' => "ImageCache: Flush ALL presets for this node's filefield images",
+))
+->values(array(
+  'aid' => 'imagecache_generate_all_action',
+  'type' => 'node',
+  'callback' => 'imagecache_generate_all_action',
+  'parameters' => '',
+  'description' => "ImageCache: Generate ALL presets for this node's filefield images",
+))
+->values(array(
   'aid' => 'node_make_sticky_action',
   'type' => 'node',
   'callback' => 'node_make_sticky_action',
@@ -853,6 +867,21 @@ $connection->insert('blocks')
   'pages' => '',
   'title' => '',
   'cache' => '5',
+))
+->values(array(
+  'bid' => '21',
+  'module' => 'locale',
+  'delta' => '0',
+  'theme' => 'garland',
+  'status' => '0',
+  'weight' => '0',
+  'region' => '',
+  'custom' => '0',
+  'throttle' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => '',
+  'cache' => '-1',
 ))
 ->execute();
 
@@ -1641,6 +1670,14 @@ $connection->schema()->createTable('comments', array(
   'primary key' => array(
     'cid',
   ),
+  'indexes' => array(
+    'pid' => array(
+      'pid',
+    ),
+    'comment_uid' => array(
+      'uid',
+    ),
+  ),
   'mysql_character_set' => 'utf8',
 ));
 
@@ -1932,6 +1969,11 @@ $connection->schema()->createTable('content_field_multivalue', array(
     'vid',
     'delta',
   ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
+  ),
   'mysql_character_set' => 'utf8',
 ));
 
@@ -1986,6 +2028,11 @@ $connection->schema()->createTable('content_field_test', array(
   ),
   'primary key' => array(
     'vid',
+  ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -2053,6 +2100,11 @@ $connection->schema()->createTable('content_field_test_text_single_checkbox', ar
   ),
   'primary key' => array(
     'vid',
+  ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -2122,6 +2174,11 @@ $connection->schema()->createTable('content_field_test_two', array(
   'primary key' => array(
     'vid',
     'delta',
+  ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -2302,7 +2359,7 @@ $connection->schema()->createTable('content_node_field', array(
     'locked' => array(
       'type' => 'int',
       'not null' => TRUE,
-      'size' => 'normal',
+      'size' => 'tiny',
       'default' => '0',
     ),
   ),
@@ -3105,6 +3162,11 @@ $connection->schema()->createTable('content_type_story', array(
   ),
   'primary key' => array(
     'vid',
+  ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -7992,6 +8054,7245 @@ $connection->insert('imagecache_preset')
 ->values(array(
   'presetid' => '2',
   'presetname' => 'big_blue_cheese',
+))
+->execute();
+
+$connection->schema()->createTable('languages', array(
+  'fields' => array(
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '12',
+      'default' => '',
+    ),
+    'name' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '64',
+      'default' => '',
+    ),
+    'native' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '64',
+      'default' => '',
+    ),
+    'direction' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'enabled' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'plurals' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'formula' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'domain' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'prefix' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'weight' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'javascript' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+  ),
+  'primary key' => array(
+    'language',
+  ),
+  'indexes' => array(
+    'list' => array(
+      'weight',
+      'name',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('languages')
+->fields(array(
+  'language',
+  'name',
+  'native',
+  'direction',
+  'enabled',
+  'plurals',
+  'formula',
+  'domain',
+  'prefix',
+  'weight',
+  'javascript',
+))
+->values(array(
+  'language' => 'en',
+  'name' => 'English',
+  'native' => 'English',
+  'direction' => '0',
+  'enabled' => '1',
+  'plurals' => '0',
+  'formula' => '',
+  'domain' => '',
+  'prefix' => '',
+  'weight' => '0',
+  'javascript' => '',
+))
+->values(array(
+  'language' => 'fr',
+  'name' => 'French',
+  'native' => 'Français',
+  'direction' => '0',
+  'enabled' => '1',
+  'plurals' => '2',
+  'formula' => '($n>1)',
+  'domain' => '',
+  'prefix' => 'fr',
+  'weight' => '0',
+  'javascript' => '',
+))
+->execute();
+
+$connection->schema()->createTable('locales_source', array(
+  'fields' => array(
+    'lid' => array(
+      'type' => 'serial',
+      'not null' => TRUE,
+      'size' => 'normal',
+    ),
+    'location' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'textgroup' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => 'default',
+    ),
+    'source' => array(
+      'type' => 'blob',
+      'not null' => TRUE,
+      'size' => 'normal',
+    ),
+    'version' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '20',
+      'default' => 'none',
+    ),
+  ),
+  'primary key' => array(
+    'lid',
+  ),
+  'indexes' => array(
+    'source' => array(
+      array(
+        'source',
+        '30',
+      ),
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('locales_source')
+->fields(array(
+  'lid',
+  'location',
+  'textgroup',
+  'source',
+  'version',
+))
+->values(array(
+  'lid' => '1',
+  'location' => 'misc/drupal.js',
+  'textgroup' => 'default',
+  'source' => 'Unspecified error',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '2',
+  'location' => 'misc/drupal.js',
+  'textgroup' => 'default',
+  'source' => 'An error occurred. \n@uri\n@text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '3',
+  'location' => 'misc/drupal.js',
+  'textgroup' => 'default',
+  'source' => 'An error occurred. \n@uri\n(no information available).',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '4',
+  'location' => 'misc/drupal.js',
+  'textgroup' => 'default',
+  'source' => 'An HTTP error @status occurred. \n@uri',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '5',
+  'location' => 'content.module:21',
+  'textgroup' => 'default',
+  'source' => 'The content module, a required component of the Content Construction Kit (CCK), allows administrators to associate custom fields with content types. In Drupal, content types are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Using the content module (and the other helper modules included in CCK), custom fields beyond the default "Title" and "Body" may be added. CCK features are accessible through tabs on the <a href="@content-types">content types administration page</a>. (See the <a href="@node-help">node module help page</a> for more information about content types.)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '6',
+  'location' => 'content.module:22',
+  'textgroup' => 'default',
+  'source' => 'When adding a custom field to a content type, you determine its type (whether it will contain text, numbers, or references to other objects) and how it will be displayed (either as a text field or area, a select box, checkbox, radio button, or autocompleting field). A field may have multiple values (i.e., a "person" may have multiple e-mail addresses) or a single value (i.e., an "employee" has a single employee identification number). As you add and edit fields, CCK automatically adjusts the structure of the database as necessary. CCK also provides a number of other features, including intelligent caching for your custom data, an import and export facility for content type definitions, and integration with other contributed modules.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '7',
+  'location' => 'content.module:23',
+  'textgroup' => 'default',
+  'source' => 'Custom field types are provided by a set of optional modules included with CCK (each module provides a different type). The <a href="@modules">modules page</a> allows you to enable or disable CCK components. A default installation of CCK includes:',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '8',
+  'location' => 'content.module:25',
+  'textgroup' => 'default',
+  'source' => '<em>number</em>, which adds numeric field types, in integer, decimal or floating point form. You may define a set of allowed inputs, or specify an allowable range of values. A variety of common formats for displaying numeric data are available.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '9',
+  'location' => 'content.module:26',
+  'textgroup' => 'default',
+  'source' => "<em>text</em>, which adds text field types. A text field may contain plain text only, or optionally, may use Drupal's input format filters to securely manage rich text input. Text input fields may be either a single line (text field), multiple lines (text area), or for greater input control, a select box, checkbox, or radio buttons. If desired, CCK can validate the input to a set of allowed values.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '10',
+  'location' => 'content.module:27',
+  'textgroup' => 'default',
+  'source' => '<em>nodereference</em>, which creates custom references between Drupal nodes. By adding a <em>nodereference</em> field and two different content types, for instance, you can easily create complex parent/child relationships between data (multiple "employee" nodes may contain a <em>nodereference</em> field linking to an "employer" node).',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '11',
+  'location' => 'content.module:28',
+  'textgroup' => 'default',
+  'source' => "<em>userreference</em>, which creates custom references to your sites' user accounts. By adding a <em>userreference</em> field, you can create complex relationships between your site's users and posts. To track user involvement in a post beyond Drupal's standard <em>Authored by</em> field, for instance, add a <em>userreference</em> field named \"Edited by\" to a content type to store a link to an editor's user account page.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '12',
+  'location' => 'content.module:29',
+  'textgroup' => 'default',
+  'source' => '<em>fieldgroup</em>, which creates collapsible fieldsets to hold a group of related fields. A fieldset may either be open or closed by default. The order of your fieldsets, and the order of fields within a fieldset, is managed via a drag-and-drop interface provided by content module.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '13',
+  'location' => 'content.module:31',
+  'textgroup' => 'default',
+  'source' => 'For more information, see the online handbook entry for <a href="@handbook-cck">CCK</a> or the <a href="@project-cck">CCK project page</a>.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '14',
+  'location' => 'theme/theme.inc:111',
+  'textgroup' => 'default',
+  'source' => "Configure how this content type's fields and field labels should be displayed when it's viewed in teaser and full-page mode.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '15',
+  'location' => 'theme/theme.inc:114',
+  'textgroup' => 'default',
+  'source' => "Configure how this content type's fields should be displayed when it's rendered in the following contexts.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '16',
+  'location' => 'content.module:48',
+  'textgroup' => 'default',
+  'source' => 'Control the order of fields in the input form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '17',
+  'location' => 'content.module:486,  modules/content_multigroup/content_multigroup.module:1422',
+  'textgroup' => 'default',
+  'source' => 'This field is required.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '18',
+  'location' => 'content.module:490',
+  'textgroup' => 'default',
+  'source' => '!title: !required',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '19',
+  'location' => 'content.module:493,  modules/content_multigroup/content_multigroup.module:1434',
+  'textgroup' => 'default',
+  'source' => 'Order',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '20',
+  'location' => 'content.module:1640',
+  'textgroup' => 'default',
+  'source' => 'RSS Item',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '21',
+  'location' => 'content.module:1897',
+  'textgroup' => 'default',
+  'source' => 'Search Index',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '22',
+  'location' => 'content.module:1901',
+  'textgroup' => 'default',
+  'source' => 'Search Result',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '23',
+  'location' => 'content.module:2363',
+  'textgroup' => 'default',
+  'source' => 'Language',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '24',
+  'location' => 'content.module:2377',
+  'textgroup' => 'default',
+  'source' => 'Taxonomy',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '25',
+  'location' => 'content.module:2408',
+  'textgroup' => 'default',
+  'source' => 'File attachments',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '26',
+  'location' => 'content.module:600',
+  'textgroup' => 'default',
+  'source' => 'Updating field type %type with module %module.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '27',
+  'location' => 'content.module:607',
+  'textgroup' => 'default',
+  'source' => 'Updating widget type %type with module %module.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '28',
+  'location' => 'content.module:63',
+  'textgroup' => 'default',
+  'source' => 'Use PHP input for field settings (dangerous - grant with care)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '29',
+  'location' => 'content.module:104',
+  'textgroup' => 'default',
+  'source' => 'Manage fields',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '30',
+  'location' => 'content.module:113',
+  'textgroup' => 'default',
+  'source' => 'Display fields',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '31',
+  'location' => 'content.module:143',
+  'textgroup' => 'default',
+  'source' => 'General',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '32',
+  'location' => 'content.module:149',
+  'textgroup' => 'default',
+  'source' => 'Advanced',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '33',
+  'location' => 'content.module:144',
+  'textgroup' => 'default',
+  'source' => 'Remove field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '34',
+  'location' => 'content.info:0,  includes/content.rules.inc:19;200,  includes/views/content.views.inc:178;254',
+  'textgroup' => 'default',
+  'source' => 'Content',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '35',
+  'location' => 'content.info:0',
+  'textgroup' => 'default',
+  'source' => 'Allows administrators to define new content types.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '36',
+  'location' => 'content.info:0,  modules/content_copy/content_copy.info:0,  modules/content_multigroup/content_multigroup.info:0,  modules/content_permissions/content_permissions.info:0',
+  'textgroup' => 'default',
+  'source' => 'CCK',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '37',
+  'location' => 'modules/text/text.module:41,  modules/text/text.info:0',
+  'textgroup' => 'default',
+  'source' => 'Text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '38',
+  'location' => 'examples/example_field.php:178',
+  'textgroup' => 'default',
+  'source' => 'The possible values this field can contain. Enter one value per line, in the format key|label. The key is the value that will be stored in the database and it must match the field storage type, %type. The label is optional and the key will be used as the label if no label is specified.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '39',
+  'location' => 'examples/example_field.php:484',
+  'textgroup' => 'default',
+  'source' => 'Text area',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '40',
+  'location' => 'includes/content.admin.inc:148;164;790,  modules/fieldgroup/fieldgroup.module:236',
+  'textgroup' => 'default',
+  'source' => 'Remove',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '41',
+  'location' => 'content.module:1868',
+  'textgroup' => 'default',
+  'source' => 'Basic',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '42',
+  'location' => 'content.module:1635 modules/nodereference/nodereference.module:215',
+  'textgroup' => 'default',
+  'source' => 'Teaser',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '43',
+  'location' => 'content.module:1636 modules/nodereference/nodereference.module:210',
+  'textgroup' => 'default',
+  'source' => 'Full node',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '44',
+  'location' => 'content.module:1881;1884',
+  'textgroup' => 'default',
+  'source' => 'RSS',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '45',
+  'location' => 'content.module:1894',
+  'textgroup' => 'default',
+  'source' => 'Search',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '46',
+  'location' => 'content.module:2349;2356',
+  'textgroup' => 'default',
+  'source' => 'Node module form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '47',
+  'location' => 'content.module:2364',
+  'textgroup' => 'default',
+  'source' => 'Locale module form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '48',
+  'location' => 'content.module:2370',
+  'textgroup' => 'default',
+  'source' => 'Menu settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '49',
+  'location' => 'content.module:2371',
+  'textgroup' => 'default',
+  'source' => 'Menu module form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '50',
+  'location' => 'content.module:2378',
+  'textgroup' => 'default',
+  'source' => 'Taxonomy module form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '51',
+  'location' => 'content.module:2384',
+  'textgroup' => 'default',
+  'source' => 'Book',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '52',
+  'location' => 'content.module:2385',
+  'textgroup' => 'default',
+  'source' => 'Book module form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '53',
+  'location' => 'content.module:2391',
+  'textgroup' => 'default',
+  'source' => 'Poll title',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '54',
+  'location' => 'content.module:2392',
+  'textgroup' => 'default',
+  'source' => 'Poll module title.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '55',
+  'location' => 'content.module:2396',
+  'textgroup' => 'default',
+  'source' => 'Poll choices',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '56',
+  'location' => 'content.module:2397',
+  'textgroup' => 'default',
+  'source' => 'Poll module choices.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '57',
+  'location' => 'content.module:2401',
+  'textgroup' => 'default',
+  'source' => 'Poll settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '58',
+  'location' => 'content.module:2402',
+  'textgroup' => 'default',
+  'source' => 'Poll module settings.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '59',
+  'location' => 'content.module:2409',
+  'textgroup' => 'default',
+  'source' => 'Upload module form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '60',
+  'location' => 'content.module:557;564;0 includes/content.crud.inc:591;629',
+  'textgroup' => 'default',
+  'source' => 'content',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '61',
+  'location' => 'content.module:103 modules/content_copy/content_copy.module:125',
+  'textgroup' => 'default',
+  'source' => 'Fields',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '62',
+  'location' => 'content.install:236',
+  'textgroup' => 'default',
+  'source' => "Updates for CCK-related modules are not run until the modules are enabled on the <a href=\"@admin-modules-path\">administer modules page</a>. When you enable them, you'll need to return to <a href=\"@update-php\">update.php</a> and run the remaining updates.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '63',
+  'location' => 'content.install:239',
+  'textgroup' => 'default',
+  'source' => '!module.module has updates but cannot be updated because content.module is not enabled.<br />If and when content.module is enabled, you will need to re-run the update script. You will continue to see this message until the module is enabled and updates are run.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '64',
+  'location' => 'content.install:244',
+  'textgroup' => 'default',
+  'source' => '!module.module has updates and is available in the modules folder but is not enabled.<br />If and when it is enabled, you will need to re-run the update script. You will continue to see this message until the module is enabled and updates are run.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '65',
+  'location' => 'content.install:251',
+  'textgroup' => 'default',
+  'source' => 'Some updates are still pending. Please return to <a href="@update-php">update.php</a> and run the remaining updates.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '66',
+  'location' => '(duplicate) content.install:10',
+  'textgroup' => 'default',
+  'source' => 'CCK - No Views integration',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '67',
+  'location' => '(duplicate) content.install:11',
+  'textgroup' => 'default',
+  'source' => 'CCK integration with Views module requires Views 6.x-2.0-rc2 or greater.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '68',
+  'location' => 'includes/content.admin.inc:16;212',
+  'textgroup' => 'default',
+  'source' => 'Name',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '69',
+  'location' => 'includes/content.admin.inc:16;212',
+  'textgroup' => 'default',
+  'source' => 'Type',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '70',
+  'location' => 'includes/content.admin.inc:16 modules/fieldgroup/fieldgroup.module:156',
+  'textgroup' => 'default',
+  'source' => 'Description',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '71',
+  'location' => 'includes/content.admin.inc:16;212',
+  'textgroup' => 'default',
+  'source' => 'Operations',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '72',
+  'location' => 'includes/content.admin.inc:30',
+  'textgroup' => 'default',
+  'source' => 'edit',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '73',
+  'location' => 'includes/content.admin.inc:34',
+  'textgroup' => 'default',
+  'source' => 'manage fields',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '74',
+  'location' => 'includes/content.admin.inc:37',
+  'textgroup' => 'default',
+  'source' => 'delete',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '75',
+  'location' => 'includes/content.admin.inc:48',
+  'textgroup' => 'default',
+  'source' => 'No content types available.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '76',
+  'location' => 'includes/content.admin.inc:55',
+  'textgroup' => 'default',
+  'source' => '» Add a new content type',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '77',
+  'location' => 'includes/content.admin.inc:64;602;856',
+  'textgroup' => 'default',
+  'source' => 'Field name',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '78',
+  'location' => 'includes/content.admin.inc:64;632;643;862',
+  'textgroup' => 'default',
+  'source' => 'Field type',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '79',
+  'location' => 'includes/content.admin.inc:64',
+  'textgroup' => 'default',
+  'source' => 'Used in',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '80',
+  'location' => 'includes/content.admin.inc:71',
+  'textgroup' => 'default',
+  'source' => '@field_name (Locked)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '81',
+  'location' => 'includes/content.admin.inc:87',
+  'textgroup' => 'default',
+  'source' => 'No fields have been defined for any content type yet.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '82',
+  'location' => 'includes/content.admin.inc:106',
+  'textgroup' => 'default',
+  'source' => 'This content type has inactive fields. Inactive fields are not included in lists of available fields until their modules are enabled.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '83',
+  'location' => 'includes/content.admin.inc:108',
+  'textgroup' => 'default',
+  'source' => '!field (!field_name) is an inactive !field_type field that uses a !widget_type widget.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '84',
+  'location' => 'includes/content.admin.inc:147;163',
+  'textgroup' => 'default',
+  'source' => 'Configure',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '85',
+  'location' => 'includes/content.admin.inc:181',
+  'textgroup' => 'default',
+  'source' => 'Locked',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '86',
+  'location' => 'includes/content.admin.inc:237',
+  'textgroup' => 'default',
+  'source' => '- Select a field type -',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '87',
+  'location' => 'includes/content.admin.inc:238',
+  'textgroup' => 'default',
+  'source' => '- Select a widget -',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '88',
+  'location' => 'includes/content.admin.inc:212;413;623;850,  modules/fieldgroup/fieldgroup.module:121',
+  'textgroup' => 'default',
+  'source' => 'Label',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '89',
+  'location' => 'includes/content.admin.inc:253',
+  'textgroup' => 'default',
+  'source' => 'Field name (a-z, 0-9, _)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '90',
+  'location' => 'includes/content.admin.inc:258',
+  'textgroup' => 'default',
+  'source' => 'Type of data to store.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '91',
+  'location' => 'includes/content.admin.inc:263;295',
+  'textgroup' => 'default',
+  'source' => 'Form element to edit the data.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '92',
+  'location' => 'includes/content.admin.inc:279',
+  'textgroup' => 'default',
+  'source' => '- Select an existing field -',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '93',
+  'location' => 'includes/content.admin.inc:290',
+  'textgroup' => 'default',
+  'source' => 'Field to share',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '94',
+  'location' => 'includes/content.admin.inc:324',
+  'textgroup' => 'default',
+  'source' => 'Group name (a-z, 0-9, _)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '95',
+  'location' => 'includes/content.admin.inc:201;402,  modules/fieldgroup/fieldgroup.module:110;363',
+  'textgroup' => 'default',
+  'source' => 'Save',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '96',
+  'location' => 'includes/content.admin.inc:365',
+  'textgroup' => 'default',
+  'source' => 'Add new field: you need to provide a label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '97',
+  'location' => 'includes/content.admin.inc:370',
+  'textgroup' => 'default',
+  'source' => 'Add new field: you need to provide a field name.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '98',
+  'location' => 'includes/content.admin.inc:384',
+  'textgroup' => 'default',
+  'source' => 'Add new field: the field name %field_name is invalid. The name must include only lowercase unaccentuated letters, numbers, and underscores.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '99',
+  'location' => 'includes/content.admin.inc:387',
+  'textgroup' => 'default',
+  'source' => "Add new field: the field name %field_name is too long. The name is limited to 32 characters, including the 'field_' prefix.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '100',
+  'location' => 'includes/content.admin.inc:391',
+  'textgroup' => 'default',
+  'source' => "Add new field: the name 'field_instance' is a reserved name.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '101',
+  'location' => 'includes/content.admin.inc:403',
+  'textgroup' => 'default',
+  'source' => 'Add new field: the field name %field_name already exists.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '102',
+  'location' => 'includes/content.admin.inc:409',
+  'textgroup' => 'default',
+  'source' => 'Add new field: you need to select a field type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '103',
+  'location' => 'includes/content.admin.inc:414',
+  'textgroup' => 'default',
+  'source' => 'Add new field: you need to select a widget.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '104',
+  'location' => 'includes/content.admin.inc:420',
+  'textgroup' => 'default',
+  'source' => 'Add new field: invalid widget.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '105',
+  'location' => 'includes/content.admin.inc:441',
+  'textgroup' => 'default',
+  'source' => 'Add existing field: you need to provide a label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '106',
+  'location' => 'includes/content.admin.inc:446',
+  'textgroup' => 'default',
+  'source' => 'Add existing field: you need to select a field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '107',
+  'location' => 'includes/content.admin.inc:451',
+  'textgroup' => 'default',
+  'source' => 'Add existing field: you need to select a widget.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '108',
+  'location' => 'includes/content.admin.inc:457',
+  'textgroup' => 'default',
+  'source' => 'Add existing field: invalid widget.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '109',
+  'location' => 'includes/content.admin.inc:745',
+  'textgroup' => 'default',
+  'source' => 'There was a problem creating field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '110',
+  'location' => 'includes/content.admin.inc:518',
+  'textgroup' => 'default',
+  'source' => 'The field %label cannot be added to a content type because it is locked.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '111',
+  'location' => 'includes/content.admin.inc:550',
+  'textgroup' => 'default',
+  'source' => 'There was a problem adding field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '112',
+  'location' => 'includes/content.admin.inc:571',
+  'textgroup' => 'default',
+  'source' => 'There are no fields configured for this content type. You can add new fields on the <a href="@link">Manage fields</a> page.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '113',
+  'location' => 'includes/content.admin.inc:319;360',
+  'textgroup' => 'default',
+  'source' => 'Above',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '114',
+  'location' => 'includes/content.admin.inc:320',
+  'textgroup' => 'default',
+  'source' => 'Inline',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '115',
+  'location' => 'includes/content.admin.inc:618;661',
+  'textgroup' => 'default',
+  'source' => 'Include',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '116',
+  'location' => 'includes/content.admin.inc:618;661,  theme/content-admin-display-overview-form.tpl.php:17',
+  'textgroup' => 'default',
+  'source' => 'Exclude',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '117',
+  'location' => 'includes/content.admin.inc:364',
+  'textgroup' => 'default',
+  'source' => 'no styling',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '118',
+  'location' => 'includes/content.admin.inc:365',
+  'textgroup' => 'default',
+  'source' => 'simple',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '119',
+  'location' => 'includes/content.admin.inc:366',
+  'textgroup' => 'default',
+  'source' => 'fieldset',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '120',
+  'location' => 'includes/content.admin.inc:367',
+  'textgroup' => 'default',
+  'source' => 'fieldset - collapsible',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '121',
+  'location' => 'includes/content.admin.inc:368',
+  'textgroup' => 'default',
+  'source' => 'fieldset - collapsed',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '122',
+  'location' => 'includes/content.admin.inc:460',
+  'textgroup' => 'default',
+  'source' => 'Your settings have been saved.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '123',
+  'location' => 'includes/content.admin.inc:760',
+  'textgroup' => 'default',
+  'source' => '@type: @field (@label)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '124',
+  'location' => 'includes/content.admin.inc:597',
+  'textgroup' => 'default',
+  'source' => 'Edit basic information',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '125',
+  'location' => 'includes/content.admin.inc:792',
+  'textgroup' => 'default',
+  'source' => 'The machine-readable name of the field. This name cannot be changed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '126',
+  'location' => 'includes/content.admin.inc:626',
+  'textgroup' => 'default',
+  'source' => 'A human-readable name to be used as the label for this field in the %type content type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '127',
+  'location' => 'includes/content.admin.inc:646',
+  'textgroup' => 'default',
+  'source' => 'The type of data you would like to store in the database with this field. This option cannot be changed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '128',
+  'location' => 'includes/content.admin.inc:651;869',
+  'textgroup' => 'default',
+  'source' => 'Widget type',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '129',
+  'location' => 'includes/content.admin.inc:655',
+  'textgroup' => 'default',
+  'source' => 'The type of form element you would like to present to the user when creating this field in the %type content type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '130',
+  'location' => 'includes/content.admin.inc:669',
+  'textgroup' => 'default',
+  'source' => 'Continue',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '131',
+  'location' => 'includes/content.admin.inc:854',
+  'textgroup' => 'default',
+  'source' => 'Updated basic settings for field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '132',
+  'location' => 'includes/content.admin.inc:858',
+  'textgroup' => 'default',
+  'source' => 'There was a problem updating the basic settings for field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '133',
+  'location' => 'includes/content.admin.inc:786',
+  'textgroup' => 'default',
+  'source' => 'Are you sure you want to remove the field %field?',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '134',
+  'location' => 'includes/content.admin.inc:789',
+  'textgroup' => 'default',
+  'source' => 'If you have any content left in this field, it will be lost. This action cannot be undone.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '135',
+  'location' => 'includes/content.admin.inc:790 modules/fieldgroup/fieldgroup.module:236',
+  'textgroup' => 'default',
+  'source' => 'Cancel',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '136',
+  'location' => 'includes/content.admin.inc:894',
+  'textgroup' => 'default',
+  'source' => 'This field is <strong>locked</strong> and cannot be removed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '137',
+  'location' => 'includes/content.admin.inc:808',
+  'textgroup' => 'default',
+  'source' => 'Removed field %field from %type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '138',
+  'location' => 'includes/content.admin.inc:813',
+  'textgroup' => 'default',
+  'source' => 'There was a problem deleting %field from %type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '139',
+  'location' => 'includes/content.admin.inc:939',
+  'textgroup' => 'default',
+  'source' => 'The field %field is locked and cannot be edited.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '140',
+  'location' => 'includes/content.admin.inc:846',
+  'textgroup' => 'default',
+  'source' => '%type basic information',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '141',
+  'location' => 'includes/content.admin.inc:876',
+  'textgroup' => 'default',
+  'source' => 'Change basic information',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '142',
+  'location' => 'includes/content.admin.inc:882',
+  'textgroup' => 'default',
+  'source' => '%type settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '143',
+  'location' => 'includes/content.admin.inc:883',
+  'textgroup' => 'default',
+  'source' => 'These settings apply only to the %field field as it appears in the %type content type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '144',
+  'location' => 'includes/content.admin.inc:897 modules/fieldgroup/fieldgroup.module:143',
+  'textgroup' => 'default',
+  'source' => 'Help text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '145',
+  'location' => 'includes/content.admin.inc:900',
+  'textgroup' => 'default',
+  'source' => 'Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '146',
+  'location' => 'includes/content.admin.inc:908',
+  'textgroup' => 'default',
+  'source' => 'Default value',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '147',
+  'location' => 'examples/example_field.php:182 includes/content.admin.inc:930,  modules/number/number.module:137 modules/text/text.module:96',
+  'textgroup' => 'default',
+  'source' => 'PHP code',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '148',
+  'location' => 'includes/content.admin.inc:1083;1238,  includes/content.rules.inc:93',
+  'textgroup' => 'default',
+  'source' => "'@column' => value for @column",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '149',
+  'location' => 'includes/content.admin.inc:1085;1240,  includes/content.rules.inc:95',
+  'textgroup' => 'default',
+  'source' => "return array(\n  0 => array(@columns),\n  // You'll usually want to stop here. Provide more values\n  // if you want your 'default value' to be multi-valued:\n  1 => array(@columns),\n  2 => ...\n);",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '150',
+  'location' => 'examples/example_field.php:188 includes/content.admin.inc:951;964,  modules/number/number.module:144;153 modules/text/text.module:103;112',
+  'textgroup' => 'default',
+  'source' => 'Code',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '151',
+  'location' => 'includes/content.admin.inc:1093',
+  'textgroup' => 'default',
+  'source' => 'Advanced usage only: PHP code that returns a default value. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>!sample</pre>To figure out the expected format, you can use the <em>devel load</em> tab provided by <a href="@link_devel">devel module</a> on a %type content page.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '152',
+  'location' => 'includes/content.admin.inc:965 modules/number/number.module:154,  modules/text/text.module:113',
+  'textgroup' => 'default',
+  'source' => '&lt;none&gt;',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '153',
+  'location' => 'includes/content.admin.inc:966 modules/number/number.module:155,  modules/text/text.module:114',
+  'textgroup' => 'default',
+  'source' => "You're not allowed to input PHP code.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '154',
+  'location' => 'includes/content.admin.inc:966',
+  'textgroup' => 'default',
+  'source' => 'This PHP code was set by an administrator and will override any value specified above.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '155',
+  'location' => 'includes/content.admin.inc:973',
+  'textgroup' => 'default',
+  'source' => 'Global settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '156',
+  'location' => 'includes/content.admin.inc:974',
+  'textgroup' => 'default',
+  'source' => 'These settings apply to the %field field in every content type in which it appears.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '157',
+  'location' => 'includes/content.admin.inc:978',
+  'textgroup' => 'default',
+  'source' => 'Required',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '158',
+  'location' => 'includes/content.admin.inc:1119',
+  'textgroup' => 'default',
+  'source' => 'Maximum number of values users can enter for this field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '159',
+  'location' => 'includes/content.admin.inc:1121',
+  'textgroup' => 'default',
+  'source' => "'Unlimited' will provide an 'Add more' button so the users can add as many values as they like.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '160',
+  'location' => 'includes/content.admin.inc:986',
+  'textgroup' => 'default',
+  'source' => 'Warning! Changing this setting after data has been created could result in the loss of data!',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '161',
+  'location' => 'includes/content.admin.inc:983',
+  'textgroup' => 'default',
+  'source' => 'Number of values',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '162',
+  'location' => 'includes/content.admin.inc:984',
+  'textgroup' => 'default',
+  'source' => 'Unlimited',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '163',
+  'location' => 'includes/content.admin.inc:1001',
+  'textgroup' => 'default',
+  'source' => 'Save field settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '164',
+  'location' => 'includes/content.admin.inc:1281',
+  'textgroup' => 'default',
+  'source' => "The PHP code for 'default value' returned @value, which is invalid.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '165',
+  'location' => 'includes/content.admin.inc:1135',
+  'textgroup' => 'default',
+  'source' => 'The default value is invalid.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '166',
+  'location' => 'includes/content.admin.inc:547',
+  'textgroup' => 'default',
+  'source' => 'Added field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '167',
+  'location' => 'includes/content.admin.inc:1158',
+  'textgroup' => 'default',
+  'source' => 'Saved field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '168',
+  'location' => 'includes/content.admin.inc:1463',
+  'textgroup' => 'default',
+  'source' => 'Processing',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '169',
+  'location' => 'includes/content.admin.inc:1464',
+  'textgroup' => 'default',
+  'source' => 'The update has encountered an error.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '170',
+  'location' => 'includes/content.admin.inc:1478',
+  'textgroup' => 'default',
+  'source' => 'The database has been altered and data has been migrated or deleted.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '171',
+  'location' => 'includes/content.admin.inc:1481',
+  'textgroup' => 'default',
+  'source' => 'An error occurred and database alteration did not complete.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '172',
+  'location' => 'includes/content.admin.inc:1584',
+  'textgroup' => 'default',
+  'source' => 'Processing %title',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '173',
+  'location' => 'includes/content.admin.inc:1849',
+  'textgroup' => 'default',
+  'source' => '%name must be an integer.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '174',
+  'location' => 'includes/content.admin.inc:1859',
+  'textgroup' => 'default',
+  'source' => '%name must be a positive integer.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '175',
+  'location' => 'includes/content.admin.inc:1869',
+  'textgroup' => 'default',
+  'source' => '%name must be a number.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '176',
+  'location' => 'includes/content.admin.inc:1482',
+  'textgroup' => 'default',
+  'source' => '1 item successfully processed:',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '177',
+  'location' => 'includes/content.admin.inc:1482',
+  'textgroup' => 'default',
+  'source' => '@count items successfully processed:',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '178',
+  'location' => 'includes/content.crud.inc:591',
+  'textgroup' => 'default',
+  'source' => 'Content fields table %old_name has been renamed to %new_name and field instances have been updated.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '179',
+  'location' => 'includes/content.crud.inc:629',
+  'textgroup' => 'default',
+  'source' => 'The content fields table %name has been deleted.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '180',
+  'location' => 'includes/content.node_form.inc:206',
+  'textgroup' => 'default',
+  'source' => 'Add another item',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '181',
+  'location' => 'includes/content.panels.inc:21;35',
+  'textgroup' => 'default',
+  'source' => 'Content field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '182',
+  'location' => 'includes/content.panels.inc:38',
+  'textgroup' => 'default',
+  'source' => 'A content field from the referenced node.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '183',
+  'location' => 'includes/content.panels.inc:39,  modules/fieldgroup/fieldgroup.panels.inc:31',
+  'textgroup' => 'default',
+  'source' => 'Node',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '184',
+  'location' => 'includes/content.panels.inc:40,  modules/fieldgroup/fieldgroup.panels.inc:32',
+  'textgroup' => 'default',
+  'source' => 'Node context',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '185',
+  'location' => 'includes/content.panels.inc:52',
+  'textgroup' => 'default',
+  'source' => 'Block title',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '186',
+  'location' => 'includes/content.panels.inc:55',
+  'textgroup' => 'default',
+  'source' => 'Hidden',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '187',
+  'location' => 'includes/content.panels.inc:57',
+  'textgroup' => 'default',
+  'source' => 'Configure how the label is going to be displayed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '188',
+  'location' => 'includes/content.panels.inc:73',
+  'textgroup' => 'default',
+  'source' => 'Field / Formatter',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '189',
+  'location' => 'includes/content.panels.inc:76',
+  'textgroup' => 'default',
+  'source' => 'Select a field and formatter.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '190',
+  'location' => 'includes/content.panels.inc:92',
+  'textgroup' => 'default',
+  'source' => '"@s" field @name',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '191',
+  'location' => 'includes/content.rules.inc:15',
+  'textgroup' => 'default',
+  'source' => 'Populate a field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '192',
+  'location' => 'includes/content.rules.inc:23;212',
+  'textgroup' => 'default',
+  'source' => 'You should make sure that the used field exists in the given content type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '193',
+  'location' => 'includes/content.admin.inc:413',
+  'textgroup' => 'default',
+  'source' => 'Field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '194',
+  'location' => 'includes/content.rules.inc:56',
+  'textgroup' => 'default',
+  'source' => 'Select the machine-name of the field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '195',
+  'location' => 'includes/content.rules.inc:84',
+  'textgroup' => 'default',
+  'source' => 'Advanced: Specify the fields value with PHP code',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '196',
+  'location' => 'includes/content.rules.inc:102',
+  'textgroup' => 'default',
+  'source' => "Advanced usage only: PHP code that returns the value to set. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>!sample</pre>Using <a href=\"@link_devel\">devel.module's</a> 'devel load' tab on a content page might help you figure out the expected format.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '197',
+  'location' => 'includes/content.rules.inc:130',
+  'textgroup' => 'default',
+  'source' => 'You have to return the default value in the expected format.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '198',
+  'location' => 'includes/content.rules.inc:181',
+  'textgroup' => 'default',
+  'source' => "Populate @node's field '@field'",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '199',
+  'location' => 'includes/content.rules.inc:198',
+  'textgroup' => 'default',
+  'source' => 'Field has value',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '200',
+  'location' => 'includes/content.rules.inc:203',
+  'textgroup' => 'default',
+  'source' => 'You should make sure that the used field exists in the given content type. The condition returns TRUE, if the selected field has the given value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '201',
+  'location' => 'includes/content.rules.inc:207',
+  'textgroup' => 'default',
+  'source' => 'Field has changed',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '202',
+  'location' => 'includes/content.rules.inc:209',
+  'textgroup' => 'default',
+  'source' => 'Content containing changes',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '203',
+  'location' => 'includes/content.rules.inc:210',
+  'textgroup' => 'default',
+  'source' => 'Content not containing changes',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '204',
+  'location' => 'includes/content.rules.inc:249',
+  'textgroup' => 'default',
+  'source' => "@node's field '@field' has value",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '205',
+  'location' => 'includes/content.rules.inc:269',
+  'textgroup' => 'default',
+  'source' => 'Select the machine-name of the field to look at.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '206',
+  'location' => 'includes/content.rules.inc:275',
+  'textgroup' => 'default',
+  'source' => "@node's field '@field' has been changed",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '207',
+  'location' => 'includes/content.token.inc:12;15',
+  'textgroup' => 'default',
+  'source' => 'Token',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '208',
+  'location' => 'includes/content.token.inc:60',
+  'textgroup' => 'default',
+  'source' => 'Referenced node ID',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '209',
+  'location' => 'includes/content.token.inc:61',
+  'textgroup' => 'default',
+  'source' => 'Referenced node title',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '210',
+  'location' => 'includes/content.token.inc:83',
+  'textgroup' => 'default',
+  'source' => 'Referenced node unfiltered title. WARNING - raw user input.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '211',
+  'location' => 'includes/content.token.inc:84',
+  'textgroup' => 'default',
+  'source' => 'Formatted html link to the referenced node.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '212',
+  'location' => 'includes/content.token.inc:85',
+  'textgroup' => 'default',
+  'source' => 'Relative path alias to the referenced node.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '213',
+  'location' => 'includes/content.token.inc:86',
+  'textgroup' => 'default',
+  'source' => 'Absolute path alias to the referenced node.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '214',
+  'location' => 'includes/content.token.inc:86',
+  'textgroup' => 'default',
+  'source' => 'Raw number value',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '215',
+  'location' => 'includes/content.token.inc:87',
+  'textgroup' => 'default',
+  'source' => 'Formatted number value',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '216',
+  'location' => 'includes/content.token.inc:110',
+  'textgroup' => 'default',
+  'source' => 'Raw, unfiltered text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '217',
+  'location' => 'includes/content.token.inc:111',
+  'textgroup' => 'default',
+  'source' => 'Formatted and filtered text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '218',
+  'location' => 'includes/content.token.inc:133',
+  'textgroup' => 'default',
+  'source' => 'Referenced user ID',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '219',
+  'location' => 'includes/content.token.inc:134',
+  'textgroup' => 'default',
+  'source' => 'Referenced user name',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '220',
+  'location' => 'includes/content.token.inc:135',
+  'textgroup' => 'default',
+  'source' => 'Formatted HTML link to referenced user',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '221',
+  'location' => 'includes/content.token.inc:164',
+  'textgroup' => 'default',
+  'source' => 'Relative path alias to the referenced user.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '222',
+  'location' => 'includes/content.token.inc:165',
+  'textgroup' => 'default',
+  'source' => 'Absolute path alias to the referenced user.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '223',
+  'location' => 'includes/views/content.views.inc:245;261',
+  'textgroup' => 'default',
+  'source' => '@label (!name)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '224',
+  'location' => 'includes/views/content.views.inc:249',
+  'textgroup' => 'default',
+  'source' => '@label (!name) - !column',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '225',
+  'location' => 'includes/views/content.views.inc:250',
+  'textgroup' => 'default',
+  'source' => '@label-truncated - !column',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '226',
+  'location' => 'includes/content.views.inc:93',
+  'textgroup' => 'default',
+  'source' => 'Appears in: @types',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '227',
+  'location' => 'includes/views/handlers/content_handler_field.inc:59',
+  'textgroup' => 'default',
+  'source' => 'None',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '228',
+  'location' => 'includes/views/handlers/content_handler_field.inc:60',
+  'textgroup' => 'default',
+  'source' => 'Widget label (@label)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '229',
+  'location' => 'includes/views/handlers/content_handler_field.inc:61',
+  'textgroup' => 'default',
+  'source' => 'Custom',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '230',
+  'location' => 'includes/views/handlers/content_handler_field.inc:67',
+  'textgroup' => 'default',
+  'source' => 'Custom label',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '231',
+  'location' => 'includes/content.views.inc:291',
+  'textgroup' => 'default',
+  'source' => 'Format',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '232',
+  'location' => 'includes/content.views.inc:372',
+  'textgroup' => 'default',
+  'source' => 'Group multiple values',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '233',
+  'location' => 'includes/views/handlers/content_handler_field_multiple.inc:61',
+  'textgroup' => 'default',
+  'source' => 'If unchecked, each item in the field will create a new row, which may appear to cause duplicates. This setting is not compatible with click-sorting in table displays.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '234',
+  'location' => 'includes/content.views.inc:378',
+  'textgroup' => 'default',
+  'source' => 'Show @count value(s)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '235',
+  'location' => 'includes/content.views.inc:387',
+  'textgroup' => 'default',
+  'source' => 'starting from @count',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '236',
+  'location' => 'includes/content.views.inc:396',
+  'textgroup' => 'default',
+  'source' => 'Reversed (start from last values)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '237',
+  'location' => 'includes/views/handlers/content_handler_relationship.inc:40,  includes/views/handlers/content_handler_sort.inc:41',
+  'textgroup' => 'default',
+  'source' => 'All',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '238',
+  'location' => 'includes/views/handlers/content_handler_relationship.inc:48,  includes/views/handlers/content_handler_sort.inc:49',
+  'textgroup' => 'default',
+  'source' => 'Delta',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '239',
+  'location' => 'includes/views/handlers/content_handler_relationship.inc:49',
+  'textgroup' => 'default',
+  'source' => 'The delta allows you to select which item in a multiple value field to key the relationship off of. Select "1" to use the first item, "2" for the second item, and so on. If you select "All", each item in the field will create a new row, which may appear to cause duplicates.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '240',
+  'location' => 'includes/views/handlers/content_handler_sort.inc:50',
+  'textgroup' => 'default',
+  'source' => 'The delta allows you to select which item in a multiple value field will be used for sorting. Select "1" to use the first item, "2" for the second item, and so on. If you select "All", each item in the field will create a new row, which may appear to cause duplicates.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '241',
+  'location' => 'modules/content_copy/content_copy_export_form.tpl.php:9,  modules/content_copy/content_copy.module:191;38',
+  'textgroup' => 'default',
+  'source' => 'Export',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '242',
+  'location' => 'modules/content_copy/content_copy.module:97',
+  'textgroup' => 'default',
+  'source' => 'This form will process a content type and one or more fields from that type and export the settings. The export created by this process can be copied and pasted as an import into the current or any other database. The import will add the fields to into an existing content type or create a new content type that includes the selected fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '243',
+  'location' => 'modules/content_copy/content_copy.module:103',
+  'textgroup' => 'default',
+  'source' => 'Types',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '244',
+  'location' => 'modules/content_copy/content_copy.module:107',
+  'textgroup' => 'default',
+  'source' => 'Select the content type to export.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '245',
+  'location' => 'modules/content_copy/content_copy.module:175',
+  'textgroup' => 'default',
+  'source' => 'Export data',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '246',
+  'location' => 'modules/content_copy/content_copy.module:180',
+  'textgroup' => 'default',
+  'source' => 'Copy the export text and paste it into another content type using the import function.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '247',
+  'location' => 'modules/content_copy/content_copy.module:184',
+  'textgroup' => 'default',
+  'source' => 'Content types',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '248',
+  'location' => 'modules/content_copy/content_copy.module:308',
+  'textgroup' => 'default',
+  'source' => 'Content type',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '249',
+  'location' => 'modules/content_copy/content_copy.module:309',
+  'textgroup' => 'default',
+  'source' => 'Select the content type to import these fields into.<br/>Select &lt;Create&gt; to create a new content type to contain the fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '250',
+  'location' => 'modules/content_copy/content_copy.module:314',
+  'textgroup' => 'default',
+  'source' => 'Import data',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '251',
+  'location' => 'modules/content_copy/content_copy.module:316',
+  'textgroup' => 'default',
+  'source' => 'Paste the text created by a content export into this field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '252',
+  'location' => 'modules/content_copy/content_copy.module:320;46',
+  'textgroup' => 'default',
+  'source' => 'Import',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '253',
+  'location' => 'modules/content_copy/content_copy.module:328',
+  'textgroup' => 'default',
+  'source' => 'A file has been pre-loaded for import.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '254',
+  'location' => 'modules/content_copy/content_copy.module:354',
+  'textgroup' => 'default',
+  'source' => 'The import data is not valid import text.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '255',
+  'location' => 'modules/content_copy/content_copy.module:403',
+  'textgroup' => 'default',
+  'source' => 'The following modules must be enabled for this import to work: %modules.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '256',
+  'location' => 'modules/content_copy/content_copy.module:411',
+  'textgroup' => 'default',
+  'source' => 'The content type %type already exists in this database.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '257',
+  'location' => 'modules/content_copy/content_copy.module:418',
+  'textgroup' => 'default',
+  'source' => 'Exiting. No import performed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '258',
+  'location' => 'modules/content_copy/content_copy.module:442',
+  'textgroup' => 'default',
+  'source' => 'An error has occurred adding the content type %type.<br/>Please check the errors displayed for more details.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '259',
+  'location' => 'modules/content_copy/content_copy.module:467',
+  'textgroup' => 'default',
+  'source' => 'The imported field %field_label (%field_name) was not added to %type because that field already exists in %type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '260',
+  'location' => 'modules/content_copy/content_copy.module:476',
+  'textgroup' => 'default',
+  'source' => 'The field %field_label (%field_name) was added to the content type %type.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '261',
+  'location' => 'modules/content_copy/content_copy.module:0',
+  'textgroup' => 'default',
+  'source' => 'content_copy',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '262',
+  'location' => 'modules/content_copy/content_copy.info:0',
+  'textgroup' => 'default',
+  'source' => 'Content Copy',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '263',
+  'location' => 'modules/content_copy/content_copy.info:0',
+  'textgroup' => 'default',
+  'source' => 'Enables ability to import/export field definitions.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '264',
+  'location' => 'modules/content_multigroup/content_multigroup.module:12',
+  'textgroup' => 'default',
+  'source' => 'The fields in a Standard group are independent of each other and each can have either single or multiple values. The fields in a Multigroup are treated as a repeating collection of single value fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '265',
+  'location' => 'modules/content_multigroup/content_multigroup.module:65;135',
+  'textgroup' => 'default',
+  'source' => 'Multigroup',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '266',
+  'location' => 'modules/content_multigroup/content_multigroup.module:134',
+  'textgroup' => 'default',
+  'source' => 'Standard',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '267',
+  'location' => 'modules/content_multigroup/content_multigroup.module:138',
+  'textgroup' => 'default',
+  'source' => 'Type of group.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '268',
+  'location' => 'modules/content_multigroup/content_multigroup.module:215',
+  'textgroup' => 'default',
+  'source' => 'The field %field has been updated to use %multiple values, to match the multiple value setting of the Multigroup %group.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '269',
+  'location' => 'modules/content_multigroup/content_multigroup.module:248',
+  'textgroup' => 'default',
+  'source' => 'This change is not allowed. The field %field already has %multiple values in the database but the group %group only allows %group_max. Making this change would result in the loss of data.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '270',
+  'location' => 'modules/content_multigroup/content_multigroup.module:272',
+  'textgroup' => 'default',
+  'source' => 'This change is not allowed. The field %field handles multiple values differently than the Content module. Making this change could result in the loss of data.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '271',
+  'location' => 'modules/content_multigroup/content_multigroup.module:287',
+  'textgroup' => 'default',
+  'source' => 'You are moving the field %field into a Multigroup.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '272',
+  'location' => 'modules/content_multigroup/content_multigroup.module:320',
+  'textgroup' => 'default',
+  'source' => 'This change is not allowed. The field %field already has data created and uses a widget that stores data differently in a Standard group than in a Multigroup. Making this change could result in the loss of data.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '273',
+  'location' => 'modules/content_multigroup/content_multigroup.module:334',
+  'textgroup' => 'default',
+  'source' => 'You are moving the field %field out of a Multigroup.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '274',
+  'location' => 'modules/content_multigroup/content_multigroup.module:369',
+  'textgroup' => 'default',
+  'source' => 'Simple',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '275',
+  'location' => 'modules/content_multigroup/content_multigroup.module:370',
+  'textgroup' => 'default',
+  'source' => 'Fieldset',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '276',
+  'location' => 'modules/content_multigroup/content_multigroup.module:371',
+  'textgroup' => 'default',
+  'source' => 'Horizontal line',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '277',
+  'location' => 'modules/content_multigroup/content_multigroup.module:372',
+  'textgroup' => 'default',
+  'source' => 'Table - Single column',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '278',
+  'location' => 'modules/content_multigroup/content_multigroup.module:373',
+  'textgroup' => 'default',
+  'source' => 'Table - Multiple columns',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '279',
+  'location' => 'modules/content_multigroup/content_multigroup.module:384',
+  'textgroup' => 'default',
+  'source' => '[Subgroup format]',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '280',
+  'location' => 'modules/content_multigroup/content_multigroup.module:461',
+  'textgroup' => 'default',
+  'source' => 'Multigroup settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '281',
+  'location' => 'modules/content_multigroup/content_multigroup.module:476',
+  'textgroup' => 'default',
+  'source' => 'Multiple columns',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '282',
+  'location' => 'modules/content_multigroup/content_multigroup.module:478',
+  'textgroup' => 'default',
+  'source' => 'Enable this option to render each field on a separate column on the node edit form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '283',
+  'location' => 'modules/content_multigroup/content_multigroup.module:485',
+  'textgroup' => 'default',
+  'source' => 'Enable this option to require a minimum of one collection of fields in this Multigroup.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '284',
+  'location' => 'modules/content_multigroup/content_multigroup.module:488',
+  'textgroup' => 'default',
+  'source' => 'Number of times to repeat the collection of Multigroup fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '285',
+  'location' => 'modules/content_multigroup/content_multigroup.module:489',
+  'textgroup' => 'default',
+  'source' => "'Unlimited' will provide an 'Add more' button so the users can add items as many times as they like.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '286',
+  'location' => 'modules/content_multigroup/content_multigroup.module:490',
+  'textgroup' => 'default',
+  'source' => 'All fields in this group will automatically be set to allow this number of values.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '287',
+  'location' => 'modules/content_multigroup/content_multigroup.module:495',
+  'textgroup' => 'default',
+  'source' => 'Number of repeats',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '288',
+  'location' => 'modules/content_multigroup/content_multigroup.module:503',
+  'textgroup' => 'default',
+  'source' => 'Labels',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '289',
+  'location' => 'modules/content_multigroup/content_multigroup.module:504',
+  'textgroup' => 'default',
+  'source' => "Labels for each subgroup of fields. Labels can be hidden or shown in various contexts using the 'Display fields' screen.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '290',
+  'location' => 'modules/content_multigroup/content_multigroup.module:512',
+  'textgroup' => 'default',
+  'source' => 'Subgroup %number label',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '291',
+  'location' => 'modules/content_multigroup/content_multigroup.module:539',
+  'textgroup' => 'default',
+  'source' => 'The field %field in this group already has %multiple values in the database. To prevent the loss of data you cannot set the number of Multigroup values to less than this.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '292',
+  'location' => 'modules/content_multigroup/content_multigroup.module:932',
+  'textgroup' => 'default',
+  'source' => '!name field is required in group @group.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '293',
+  'location' => 'modules/content_multigroup/content_multigroup.module:946',
+  'textgroup' => 'default',
+  'source' => 'Group @name requires one collection of fields minimum.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '294',
+  'location' => 'modules/content_multigroup/content_multigroup.module:1145',
+  'textgroup' => 'default',
+  'source' => 'Add more values',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '295',
+  'location' => 'modules/content_multigroup/content_multigroup.module:0',
+  'textgroup' => 'default',
+  'source' => 'content_multigroup',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '296',
+  'location' => 'modules/content_multigroup/content_multigroup.info:0',
+  'textgroup' => 'default',
+  'source' => 'Content Multigroup',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '297',
+  'location' => 'modules/content_multigroup/content_multigroup.info:0',
+  'textgroup' => 'default',
+  'source' => 'Combine multiple CCK fields into repeating field collections that work in unison.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '298',
+  'location' => 'modules/content_permissions/content_permissions.module:10',
+  'textgroup' => 'default',
+  'source' => 'edit ',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '299',
+  'location' => 'modules/content_permissions/content_permissions.module:10;11',
+  'textgroup' => 'default',
+  'source' => 'field_name',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '300',
+  'location' => 'modules/content_permissions/content_permissions.module:11',
+  'textgroup' => 'default',
+  'source' => 'view ',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '301',
+  'location' => 'modules/content_permissions/content_permissions.module:0',
+  'textgroup' => 'default',
+  'source' => 'content_permissions',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '302',
+  'location' => 'modules/content_permissions/content_permissions.install:9',
+  'textgroup' => 'default',
+  'source' => 'Please <a href="!url">configure your field permissions</a> immediately. All fields are inaccessible by default.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '303',
+  'location' => 'modules/content_permissions/content_permissions.info:0',
+  'textgroup' => 'default',
+  'source' => 'Content Permissions',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '304',
+  'location' => 'modules/content_permissions/content_permissions.info:0',
+  'textgroup' => 'default',
+  'source' => 'Set field-level permissions for CCK fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '305',
+  'location' => 'modules/fieldgroup/fieldgroup.panels.inc:10;27',
+  'textgroup' => 'default',
+  'source' => 'Content fieldgroup',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '306',
+  'location' => 'modules/fieldgroup/fieldgroup.panels.inc:30',
+  'textgroup' => 'default',
+  'source' => 'All fields from a fieldgroup on the referenced node.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '307',
+  'location' => 'modules/fieldgroup/fieldgroup.panels.inc:91',
+  'textgroup' => 'default',
+  'source' => '@group_label (@group_type_name)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '308',
+  'location' => 'modules/fieldgroup/fieldgroup.panels.inc:102,  modules/fieldgroup/fieldgroup.info:0',
+  'textgroup' => 'default',
+  'source' => 'Fieldgroup',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '309',
+  'location' => 'modules/fieldgroup/fieldgroup.panels.inc:112',
+  'textgroup' => 'default',
+  'source' => 'Text to display if group has no data. Note that title will not display unless overridden.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '310',
+  'location' => 'modules/fieldgroup/fieldgroup.panels.inc:128',
+  'textgroup' => 'default',
+  'source' => '"@s" fieldgroup @name',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '311',
+  'location' => 'modules/fieldgroup/fieldgroup.module:124',
+  'textgroup' => 'default',
+  'source' => 'Form settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '312',
+  'location' => 'modules/fieldgroup/fieldgroup.module:125',
+  'textgroup' => 'default',
+  'source' => 'These settings apply to the group in the node editing form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '313',
+  'location' => 'modules/fieldgroup/fieldgroup.module:129',
+  'textgroup' => 'default',
+  'source' => 'Style',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '314',
+  'location' => 'modules/fieldgroup/fieldgroup.module:132',
+  'textgroup' => 'default',
+  'source' => 'always open',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '315',
+  'location' => 'modules/fieldgroup/fieldgroup.module:133',
+  'textgroup' => 'default',
+  'source' => 'collapsible',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '316',
+  'location' => 'modules/fieldgroup/fieldgroup.module:134',
+  'textgroup' => 'default',
+  'source' => 'collapsed',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '317',
+  'location' => 'modules/fieldgroup/fieldgroup.module:142',
+  'textgroup' => 'default',
+  'source' => 'Instructions to present to the user on the editing form.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '318',
+  'location' => 'modules/fieldgroup/fieldgroup.module:147',
+  'textgroup' => 'default',
+  'source' => 'Display settings',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '319',
+  'location' => 'modules/fieldgroup/fieldgroup.module:148',
+  'textgroup' => 'default',
+  'source' => 'These settings apply to the group on node display.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '320',
+  'location' => 'modules/fieldgroup/fieldgroup.module:155',
+  'textgroup' => 'default',
+  'source' => 'A description of the group.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '321',
+  'location' => 'modules/fieldgroup/fieldgroup.module:200',
+  'textgroup' => 'default',
+  'source' => 'Are you sure you want to remove the group %label?',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '322',
+  'location' => 'modules/fieldgroup/fieldgroup.module:202',
+  'textgroup' => 'default',
+  'source' => 'This action cannot be undone.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '323',
+  'location' => 'modules/fieldgroup/fieldgroup.module:211',
+  'textgroup' => 'default',
+  'source' => 'The group %group_name has been removed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '324',
+  'location' => 'modules/fieldgroup/fieldgroup.module:293,  modules/nodereference/nodereference.module:544,  modules/userreference/userreference.module:439',
+  'textgroup' => 'default',
+  'source' => 'none',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '325',
+  'location' => 'modules/fieldgroup/fieldgroup.module:353',
+  'textgroup' => 'default',
+  'source' => 'You need to provide a label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '326',
+  'location' => 'modules/fieldgroup/fieldgroup.module:358',
+  'textgroup' => 'default',
+  'source' => 'You need to provide a group name.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '327',
+  'location' => 'modules/fieldgroup/fieldgroup.module:372',
+  'textgroup' => 'default',
+  'source' => 'The group name %group_name is invalid. The name must include only lowercase unaccentuated letters, numbers, and underscores.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '328',
+  'location' => 'modules/fieldgroup/fieldgroup.module:375',
+  'textgroup' => 'default',
+  'source' => "The group name %group_name is too long. The name is limited to 32 characters, including the 'group_' prefix.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '329',
+  'location' => 'modules/fieldgroup/fieldgroup.module:381',
+  'textgroup' => 'default',
+  'source' => 'The group name %group_name already exists.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '330',
+  'location' => 'modules/fieldgroup/fieldgroup.module:400;403',
+  'textgroup' => 'default',
+  'source' => 'Add new group:',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '331',
+  'location' => 'modules/fieldgroup/fieldgroup.module:418',
+  'textgroup' => 'default',
+  'source' => 'Add new group: you need to provide a label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '332',
+  'location' => 'modules/fieldgroup/fieldgroup.module:419',
+  'textgroup' => 'default',
+  'source' => 'Add new group: you need to provide a group name.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '333',
+  'location' => 'modules/fieldgroup/fieldgroup.module:648',
+  'textgroup' => 'default',
+  'source' => 'Standard group',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '334',
+  'location' => 'modules/fieldgroup/fieldgroup.module:39;46',
+  'textgroup' => 'default',
+  'source' => 'Edit group',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '335',
+  'location' => 'modules/fieldgroup/fieldgroup.module:0',
+  'textgroup' => 'default',
+  'source' => 'fieldgroup',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '336',
+  'location' => 'modules/fieldgroup/fieldgroup.info:0',
+  'textgroup' => 'default',
+  'source' => 'Create display groups for CCK fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '337',
+  'location' => 'modules/nodereference/nodereference.rules.inc:15',
+  'textgroup' => 'default',
+  'source' => 'Load a referenced node',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '338',
+  'location' => 'modules/nodereference/nodereference.rules.inc:19',
+  'textgroup' => 'default',
+  'source' => 'Content containing the node reference field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '339',
+  'location' => 'modules/nodereference/nodereference.rules.inc:25',
+  'textgroup' => 'default',
+  'source' => 'Referenced content',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '340',
+  'location' => 'modules/nodereference/nodereference.rules.inc:29',
+  'textgroup' => 'default',
+  'source' => 'Note that if the field has multiple values, only the first content node will be loaded.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '341',
+  'location' => 'modules/nodereference/nodereference.rules.inc:50',
+  'textgroup' => 'default',
+  'source' => 'There are no nodereference fields defined.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '342',
+  'location' => 'modules/nodereference/nodereference.module:60',
+  'textgroup' => 'default',
+  'source' => 'Node reference',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '343',
+  'location' => 'modules/nodereference/nodereference.module:61',
+  'textgroup' => 'default',
+  'source' => 'Store the ID of a related node as an integer value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '344',
+  'location' => 'modules/nodereference/nodereference.module:75',
+  'textgroup' => 'default',
+  'source' => 'Content types that can be referenced',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '345',
+  'location' => 'modules/nodereference/nodereference.module:87,  modules/userreference/userreference.module:84',
+  'textgroup' => 'default',
+  'source' => 'Default Views',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '346',
+  'location' => 'modules/nodereference/nodereference.module:90,  modules/userreference/userreference.module:87',
+  'textgroup' => 'default',
+  'source' => 'Existing Views',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '347',
+  'location' => 'modules/nodereference/nodereference.module:97',
+  'textgroup' => 'default',
+  'source' => 'Advanced - Nodes that can be referenced (View)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '348',
+  'location' => 'modules/nodereference/nodereference.module:104',
+  'textgroup' => 'default',
+  'source' => 'View used to select the nodes',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '349',
+  'location' => 'modules/nodereference/nodereference.module:107',
+  'textgroup' => 'default',
+  'source' => '<p>Choose the "Views module" view that selects the nodes that can be referenced.<br />Note:</p>',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '350',
+  'location' => 'modules/nodereference/nodereference.module:108;121',
+  'textgroup' => 'default',
+  'source' => "<ul><li>Only views that have fields will work for this purpose.</li><li>This will discard the \"Content types\" settings above. Use the view's \"filters\" section instead.</li><li>Use the view's \"fields\" section to display additional informations about candidate nodes on node creation/edition form.</li><li>Use the view's \"sort criteria\" section to determine the order in which candidate nodes will be displayed.</li></ul>",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '351',
+  'location' => 'modules/nodereference/nodereference.module:112,  modules/userreference/userreference.module:109',
+  'textgroup' => 'default',
+  'source' => 'View arguments',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '352',
+  'location' => 'modules/nodereference/nodereference.module:115,  modules/userreference/userreference.module:112',
+  'textgroup' => 'default',
+  'source' => 'Provide a comma separated list of arguments to pass to the view.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '353',
+  'location' => 'modules/nodereference/nodereference.module:120',
+  'textgroup' => 'default',
+  'source' => '<p>The list of nodes that can be referenced can be based on a "Views module" view but no appropriate views were found. <br />Note:</p>',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '354',
+  'location' => 'modules/nodereference/nodereference.module:205,  modules/userreference/userreference.module:184',
+  'textgroup' => 'default',
+  'source' => '%name: invalid input.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '355',
+  'location' => 'modules/nodereference/nodereference.module:217',
+  'textgroup' => 'default',
+  'source' => "%name: this post can't be referenced.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '356',
+  'location' => 'modules/nodereference/nodereference.module:242',
+  'textgroup' => 'default',
+  'source' => 'Title (link)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '357',
+  'location' => 'modules/nodereference/nodereference.module:247',
+  'textgroup' => 'default',
+  'source' => 'Title (no link)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '358',
+  'location' => 'modules/nodereference/nodereference.module:303,  modules/optionwidgets/optionwidgets.module:62,  modules/userreference/userreference.module:198',
+  'textgroup' => 'default',
+  'source' => 'Select list',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '359',
+  'location' => 'modules/optionwidgets/optionwidgets.module:70',
+  'textgroup' => 'default',
+  'source' => 'Check boxes/radio buttons',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '360',
+  'location' => 'modules/nodereference/nodereference.module:311,  modules/userreference/userreference.module:206',
+  'textgroup' => 'default',
+  'source' => 'Autocomplete text field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '361',
+  'location' => 'modules/nodereference/nodereference.module:417,  modules/userreference/userreference.module:343',
+  'textgroup' => 'default',
+  'source' => 'Autocomplete matching',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '362',
+  'location' => 'modules/nodereference/nodereference.module:420,  modules/userreference/userreference.module:346',
+  'textgroup' => 'default',
+  'source' => 'Starts with',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '363',
+  'location' => 'modules/nodereference/nodereference.module:421,  modules/userreference/userreference.module:347',
+  'textgroup' => 'default',
+  'source' => 'Contains',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '364',
+  'location' => 'modules/nodereference/nodereference.module:423',
+  'textgroup' => 'default',
+  'source' => 'Select the method used to collect autocomplete suggestions. Note that <em>Contains</em> can cause performance issues on sites with thousands of nodes.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '365',
+  'location' => 'modules/nodereference/nodereference.module:671',
+  'textgroup' => 'default',
+  'source' => '%name: title mismatch. Please check your selection.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '366',
+  'location' => 'modules/nodereference/nodereference.module:678',
+  'textgroup' => 'default',
+  'source' => '%name: found no valid post with that title.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '367',
+  'location' => 'modules/nodereference/nodereference.module:15',
+  'textgroup' => 'default',
+  'source' => 'Nodereference autocomplete',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '368',
+  'location' => 'modules/nodereference/nodereference.module:0',
+  'textgroup' => 'default',
+  'source' => 'nodereference',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '369',
+  'location' => 'modules/nodereference/nodereference.info:0',
+  'textgroup' => 'default',
+  'source' => 'Node Reference',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '370',
+  'location' => 'modules/nodereference/nodereference.info:0',
+  'textgroup' => 'default',
+  'source' => 'Defines a field type for referencing one node from another.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '371',
+  'location' => 'modules/number/number.module:41',
+  'textgroup' => 'default',
+  'source' => 'Integer',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '372',
+  'location' => 'modules/number/number.module:42',
+  'textgroup' => 'default',
+  'source' => 'Store a number in the database as an integer.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '373',
+  'location' => 'modules/number/number.module:49',
+  'textgroup' => 'default',
+  'source' => 'Decimal',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '374',
+  'location' => 'modules/number/number.module:50',
+  'textgroup' => 'default',
+  'source' => 'Store a number in the database in a fixed decimal format.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '375',
+  'location' => 'modules/number/number.module:57',
+  'textgroup' => 'default',
+  'source' => 'Float',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '376',
+  'location' => 'modules/number/number.module:58',
+  'textgroup' => 'default',
+  'source' => 'Store a number in the database in a floating point format.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '377',
+  'location' => 'modules/number/number.module:76',
+  'textgroup' => 'default',
+  'source' => 'Minimum',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '378',
+  'location' => 'modules/number/number.module:81',
+  'textgroup' => 'default',
+  'source' => 'Maximum',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '379',
+  'location' => 'modules/number/number.module:88',
+  'textgroup' => 'default',
+  'source' => 'Precision',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '380',
+  'location' => 'modules/number/number.module:89',
+  'textgroup' => 'default',
+  'source' => 'The total number of digits to store in the database, including those to the right of the decimal.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '381',
+  'location' => 'modules/number/number.module:95',
+  'textgroup' => 'default',
+  'source' => 'Scale',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '382',
+  'location' => 'modules/number/number.module:96',
+  'textgroup' => 'default',
+  'source' => 'The number of digits to the right of the decimal.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '383',
+  'location' => 'modules/number/number.module:102',
+  'textgroup' => 'default',
+  'source' => 'Decimal marker',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '384',
+  'location' => 'modules/number/number.module:103',
+  'textgroup' => 'default',
+  'source' => 'The character users will input to mark the decimal point in forms.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '385',
+  'location' => 'modules/number/number.module:109',
+  'textgroup' => 'default',
+  'source' => 'Prefix',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '386',
+  'location' => 'modules/number/number.module:112',
+  'textgroup' => 'default',
+  'source' => 'Define a string that should be prefixed to the value, like $ or €. Leave blank for none. Separate singular and plural values with a pipe (pound|pounds).',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '387',
+  'location' => 'modules/number/number.module:116',
+  'textgroup' => 'default',
+  'source' => 'Suffix',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '388',
+  'location' => 'modules/number/number.module:119',
+  'textgroup' => 'default',
+  'source' => 'Define a string that should suffixed to the value, like m², m/s², kb/s. Leave blank for none. Separate singular and plural values with a pipe (pound|pounds).',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '389',
+  'location' => 'modules/number/number.module:123 modules/text/text.module:82',
+  'textgroup' => 'default',
+  'source' => 'Allowed values',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '390',
+  'location' => 'examples/example_field.php:174 modules/number/number.module:129,  modules/text/text.module:88',
+  'textgroup' => 'default',
+  'source' => 'Allowed values list',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '391',
+  'location' => 'modules/number/number.module:116,  modules/text/text.module:81',
+  'textgroup' => 'default',
+  'source' => 'The possible values this field can contain. Enter one value per line, in the format key|label. The key is the value that will be stored in the database, and it must match the field storage type (%type). The label is optional, and the key will be used as the label if no label is specified.<br />Allowed HTML tags: @tags',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '392',
+  'location' => 'examples/example_field.php:191 modules/number/number.module:147,  modules/text/text.module:106',
+  'textgroup' => 'default',
+  'source' => 'Advanced usage only: PHP code that returns a keyed array of allowed values. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the array returned by this code will override the allowed values list above.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '393',
+  'location' => 'modules/number/number.module:155 modules/text/text.module:114',
+  'textgroup' => 'default',
+  'source' => 'This PHP code was set by an administrator and will override the allowed values list above.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '394',
+  'location' => 'modules/number/number.module:178,  modules/text/text.module:132',
+  'textgroup' => 'default',
+  'source' => '@label (!name) - Allowed values',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '395',
+  'location' => 'modules/number/number.module:162',
+  'textgroup' => 'default',
+  'source' => '"Minimum" must be a number.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '396',
+  'location' => 'modules/number/number.module:165',
+  'textgroup' => 'default',
+  'source' => '"Maximum" must be a number.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '397',
+  'location' => 'modules/number/number.module:219',
+  'textgroup' => 'default',
+  'source' => '%name: the value may be no smaller than %min.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '398',
+  'location' => 'modules/number/number.module:222',
+  'textgroup' => 'default',
+  'source' => '%name: the value may be no larger than %max.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '399',
+  'location' => 'modules/number/number.module:235,  modules/text/text.module:156',
+  'textgroup' => 'default',
+  'source' => '%name: illegal value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '400',
+  'location' => 'modules/number/number.module:263',
+  'textgroup' => 'default',
+  'source' => 'unformatted',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '401',
+  'location' => 'examples/example_field.php:476 examples/simple_field.php:400,  modules/number/number.module:342 modules/text/text.module:264',
+  'textgroup' => 'default',
+  'source' => 'Text field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '402',
+  'location' => 'modules/number/number.module:512',
+  'textgroup' => 'default',
+  'source' => 'Only numbers and decimals are allowed in %field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '403',
+  'location' => 'modules/number/number.module:535',
+  'textgroup' => 'default',
+  'source' => 'Only numbers are allowed in %field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '404',
+  'location' => 'modules/number/number.module:559',
+  'textgroup' => 'default',
+  'source' => 'Only numbers and the decimal character (%decimal) are allowed in %field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '405',
+  'location' => 'modules/number/number.module:0',
+  'textgroup' => 'default',
+  'source' => 'number',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '406',
+  'location' => 'modules/number/number.info:0',
+  'textgroup' => 'default',
+  'source' => 'Number',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '407',
+  'location' => 'modules/number/number.info:0',
+  'textgroup' => 'default',
+  'source' => 'Defines numeric field types.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '408',
+  'location' => 'modules/optionwidgets/optionwidgets.module:19',
+  'textgroup' => 'default',
+  'source' => 'Create a list of options as a list in <strong>Allowed values list</strong> or as an array in PHP code. These values will be the same for %field in all content types.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '409',
+  'location' => 'modules/optionwidgets/optionwidgets.module:12',
+  'textgroup' => 'default',
+  'source' => "For a 'single on/off checkbox' widget, define the 'off' value first, then the 'on' value in the <strong>Allowed values</strong> section. Note that the checkbox will be labeled with the label of the 'on' value.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '410',
+  'location' => 'modules/optionwidgets/optionwidgets.module:15',
+  'textgroup' => 'default',
+  'source' => "The 'checkboxes/radio buttons' widget will display checkboxes if the multiple values option is selected for this field, otherwise radios will be displayed.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '411',
+  'location' => 'modules/optionwidgets/optionwidgets.module:37',
+  'textgroup' => 'default',
+  'source' => "You need to specify the 'allowed values' for this field.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '412',
+  'location' => 'modules/optionwidgets/optionwidgets.module:78',
+  'textgroup' => 'default',
+  'source' => 'Single on/off checkbox',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '413',
+  'location' => 'modules/optionwidgets/optionwidgets.module:331',
+  'textgroup' => 'default',
+  'source' => '%name: this field cannot hold more that @count values.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '414',
+  'location' => 'modules/optionwidgets/optionwidgets.module:364',
+  'textgroup' => 'default',
+  'source' => 'N/A',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '415',
+  'location' => 'modules/optionwidgets/optionwidgets.module:420',
+  'textgroup' => 'default',
+  'source' => '- None -',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '416',
+  'location' => 'modules/optionwidgets/optionwidgets.module:0',
+  'textgroup' => 'default',
+  'source' => 'optionwidgets',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '417',
+  'location' => 'modules/optionwidgets/optionwidgets.info:0',
+  'textgroup' => 'default',
+  'source' => 'Option Widgets',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '418',
+  'location' => 'modules/optionwidgets/optionwidgets.info:0',
+  'textgroup' => 'default',
+  'source' => 'Defines selection, check box and radio button widgets for text and numeric fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '419',
+  'location' => 'modules/text/text.module:50',
+  'textgroup' => 'default',
+  'source' => 'Store text in the database.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '420',
+  'location' => 'examples/example_field.php:158;388 examples/simple_field.php:332,  modules/text/text.module:66;209,  modules/userreference/userreference.module:151',
+  'textgroup' => 'default',
+  'source' => 'Plain text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '421',
+  'location' => 'examples/example_field.php:158 modules/text/text.module:66',
+  'textgroup' => 'default',
+  'source' => 'Filtered text (user selects input format)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '422',
+  'location' => 'examples/example_field.php:161 modules/text/text.module:69',
+  'textgroup' => 'default',
+  'source' => 'Text processing',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '423',
+  'location' => 'examples/example_field.php:167 examples/simple_field.php:164,  modules/text/text.module:75',
+  'textgroup' => 'default',
+  'source' => 'Maximum length',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '424',
+  'location' => 'examples/example_field.php:170 examples/simple_field.php:167,  modules/text/text.module:78',
+  'textgroup' => 'default',
+  'source' => 'The maximum length of the field in characters. Leave blank for an unlimited size.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '425',
+  'location' => 'modules/text/text.module:159',
+  'textgroup' => 'default',
+  'source' => '%name: the value may not be longer than %max characters.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '426',
+  'location' => 'examples/example_field.php:383 examples/simple_field.php:327,  modules/text/text.module:204 modules/userreference/userreference.module:146',
+  'textgroup' => 'default',
+  'source' => 'Default',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '427',
+  'location' => 'examples/example_field.php:393 modules/text/text.module:214',
+  'textgroup' => 'default',
+  'source' => 'Trimmed',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '428',
+  'location' => 'modules/text/text.module:272',
+  'textgroup' => 'default',
+  'source' => 'Text area (multiple rows)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '429',
+  'location' => 'modules/text/text.module:316',
+  'textgroup' => 'default',
+  'source' => 'Size of textfield',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '430',
+  'location' => 'examples/example_field.php:551 examples/simple_field.php:430,  modules/text/text.module:324',
+  'textgroup' => 'default',
+  'source' => 'Rows',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '431',
+  'location' => 'modules/text/text.module:0',
+  'textgroup' => 'default',
+  'source' => 'text',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '432',
+  'location' => 'modules/text/text.info:0',
+  'textgroup' => 'default',
+  'source' => 'Defines simple text field types.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '433',
+  'location' => 'modules/userreference/userreference.rules.inc:15',
+  'textgroup' => 'default',
+  'source' => 'Load a referenced user',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '434',
+  'location' => 'modules/userreference/userreference.rules.inc:19',
+  'textgroup' => 'default',
+  'source' => 'Content containing the user reference field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '435',
+  'location' => 'modules/userreference/userreference.rules.inc:25',
+  'textgroup' => 'default',
+  'source' => 'Referenced user',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '436',
+  'location' => 'modules/userreference/userreference.rules.inc:29',
+  'textgroup' => 'default',
+  'source' => 'Note that if the field has multiple values, only the first user will be loaded.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '437',
+  'location' => 'modules/userreference/userreference.rules.inc:52',
+  'textgroup' => 'default',
+  'source' => 'There are no userreference fields defined.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '438',
+  'location' => 'modules/userreference/userreference.module:52',
+  'textgroup' => 'default',
+  'source' => 'User reference',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '439',
+  'location' => 'modules/userreference/userreference.module:53',
+  'textgroup' => 'default',
+  'source' => 'Store the ID of a related user as an integer value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '440',
+  'location' => 'modules/userreference/userreference.module:67',
+  'textgroup' => 'default',
+  'source' => 'User roles that can be referenced',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '441',
+  'location' => 'modules/userreference/userreference.module:73',
+  'textgroup' => 'default',
+  'source' => 'User status that can be referenced',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '442',
+  'location' => 'modules/userreference/userreference.module:75',
+  'textgroup' => 'default',
+  'source' => 'Active',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '443',
+  'location' => 'modules/userreference/userreference.module:75',
+  'textgroup' => 'default',
+  'source' => 'Blocked',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '444',
+  'location' => 'modules/userreference/userreference.module:94',
+  'textgroup' => 'default',
+  'source' => 'Advanced - Users that can be referenced (View)',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '445',
+  'location' => 'modules/userreference/userreference.module:101',
+  'textgroup' => 'default',
+  'source' => 'View used to select the users',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '446',
+  'location' => 'modules/userreference/userreference.module:104',
+  'textgroup' => 'default',
+  'source' => '<p>Choose the "Views module" view that selects the users that can be referenced.<br />Note:</p>',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '447',
+  'location' => 'modules/userreference/userreference.module:105;118',
+  'textgroup' => 'default',
+  'source' => "<ul><li>Only views that have fields will work for this purpose.</li><li>This will discard the \"Referenceable Roles\" and \"Referenceable Status\" settings above. Use the view's \"filters\" section instead.</li><li>Use the view's \"fields\" section to display additional informations about candidate users on user creation/edition form.</li><li>Use the view's \"sort criteria\" section to determine the order in which candidate users will be displayed.</li></ul>",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '448',
+  'location' => 'modules/userreference/userreference.module:117',
+  'textgroup' => 'default',
+  'source' => '<p>The list of user that can be referenced can be based on a "Views module" view but no appropriate views were found. <br />Note:</p>',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '449',
+  'location' => 'modules/userreference/userreference.module:196',
+  'textgroup' => 'default',
+  'source' => '%name: invalid user.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '450',
+  'location' => 'modules/userreference/userreference.module:349',
+  'textgroup' => 'default',
+  'source' => 'Select the method used to collect autocomplete suggestions. Note that <em>Contains</em> can cause performance issues on sites with thousands of users.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '451',
+  'location' => 'modules/userreference/userreference.module:357',
+  'textgroup' => 'default',
+  'source' => 'Reverse link',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '452',
+  'location' => 'modules/userreference/userreference.module:359',
+  'textgroup' => 'default',
+  'source' => 'If selected, a reverse link back to the referencing node will displayed on the referenced user record.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '453',
+  'location' => 'modules/userreference/userreference.module:594',
+  'textgroup' => 'default',
+  'source' => '%name: found no valid user with that name.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '454',
+  'location' => 'modules/userreference/userreference.module:887',
+  'textgroup' => 'default',
+  'source' => 'Related content',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '455',
+  'location' => 'modules/userreference/userreference.module:15',
+  'textgroup' => 'default',
+  'source' => 'Userreference autocomplete',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '456',
+  'location' => 'modules/userreference/userreference.module:0',
+  'textgroup' => 'default',
+  'source' => 'userreference',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '457',
+  'location' => 'modules/userreference/userreference.info:0',
+  'textgroup' => 'default',
+  'source' => 'User Reference',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '458',
+  'location' => 'modules/userreference/userreference.info:0',
+  'textgroup' => 'default',
+  'source' => 'Defines a field type for referencing a user from a node.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '459',
+  'location' => 'includes/content.admin.inc:212',
+  'textgroup' => 'default',
+  'source' => 'Weight',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '460',
+  'location' => 'theme/content-admin-field-overview-form.tpl.php:53',
+  'textgroup' => 'default',
+  'source' => 'Add',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '461',
+  'location' => 'theme/content-admin-field-overview-form.tpl.php:59',
+  'textgroup' => 'default',
+  'source' => 'New field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '462',
+  'location' => 'theme/content-admin-field-overview-form.tpl.php:72',
+  'textgroup' => 'default',
+  'source' => 'Existing field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '463',
+  'location' => 'theme/content-admin-field-overview-form.tpl.php:84',
+  'textgroup' => 'default',
+  'source' => 'New group',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '464',
+  'location' => 'theme/theme.inc:11',
+  'textgroup' => 'default',
+  'source' => 'Add fields and groups to the content type, and arrange them on content display and input forms.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '465',
+  'location' => 'theme/theme.inc:13',
+  'textgroup' => 'default',
+  'source' => 'You can add a field to a group by dragging it below and to the right of the group.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '466',
+  'location' => 'theme/theme.inc:16',
+  'textgroup' => 'default',
+  'source' => 'Note: Installing the <a href="!adv_help">Advanced help</a> module will let you access more and better help.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '467',
+  'location' => 'theme/theme.inc:116',
+  'textgroup' => 'default',
+  'source' => "Use the 'Exclude' checkbox to exclude an item from the !content value passed to the node template.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '468',
+  'location' => 'theme/content-edit.js:0',
+  'textgroup' => 'default',
+  'source' => 'Remove this item',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '469',
+  'location' => 'content.module:156 includes/content.admin.inc:528',
+  'textgroup' => 'default',
+  'source' => 'Add field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '470',
+  'location' => 'examples/example_field.php:278 modules/number/number.module:228,  modules/text/text.module:160',
+  'textgroup' => 'default',
+  'source' => 'Illegal value for %name.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '471',
+  'location' => 'examples/example_field.php:287 examples/simple_field.php:231,  modules/text/text.module:169',
+  'textgroup' => 'default',
+  'source' => '%label is longer than %max characters.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '472',
+  'location' => 'examples/example_field.php:560 examples/simple_field.php:438,  modules/text/text.module:333',
+  'textgroup' => 'default',
+  'source' => '"Rows" must be a positive integer.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '473',
+  'location' => 'modules/number/number.module:133 modules/text/text.module:92',
+  'textgroup' => 'default',
+  'source' => 'The possible values this field can contain. Enter one value per line, in the format key|label. The key is the value that will be stored in the database and it must match the field storage type, %type. The label is optional and the key will be used as the label if no label is specified.<br />Allowed HTML tags: @tags',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '474',
+  'location' => 'includes/content.admin.inc:33',
+  'textgroup' => 'default',
+  'source' => 'add field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '475',
+  'location' => 'includes/content.admin.inc:112;291',
+  'textgroup' => 'default',
+  'source' => 'There are no fields configured for this content type. You can !link.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '476',
+  'location' => 'includes/content.admin.inc:113;292',
+  'textgroup' => 'default',
+  'source' => 'Add a new field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '477',
+  'location' => 'includes/content.admin.inc:137',
+  'textgroup' => 'default',
+  'source' => 'To change the order of a field, grab a drag-and-drop handle under the Label column and drag the field to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the Save button at the bottom of the page.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '478',
+  'location' => 'includes/content.admin.inc:477',
+  'textgroup' => 'default',
+  'source' => 'No field modules are enabled. You need to <a href="!modules_url">enable one</a>, such as text.module, before you can add new fields.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '479',
+  'location' => 'includes/content.admin.inc:519',
+  'textgroup' => 'default',
+  'source' => 'Add existing field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '480',
+  'location' => 'includes/content.admin.inc:590',
+  'textgroup' => 'default',
+  'source' => 'Create new field',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '481',
+  'location' => 'includes/content.admin.inc:606',
+  'textgroup' => 'default',
+  'source' => 'The machine-readable name of the field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '482',
+  'location' => 'includes/content.admin.inc:610',
+  'textgroup' => 'default',
+  'source' => 'This name cannot be changed.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '483',
+  'location' => 'includes/content.admin.inc:618',
+  'textgroup' => 'default',
+  'source' => "This name cannot be changed later! The name will be prefixed with 'field_' and can include lowercase unaccented letters, numbers, and underscores. The length of the name, including the prefix, is limited to no more than 32 letters.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '484',
+  'location' => 'includes/content.admin.inc:636',
+  'textgroup' => 'default',
+  'source' => 'The type of data you would like to store in the database with this field.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '485',
+  'location' => 'includes/content.admin.inc:692',
+  'textgroup' => 'default',
+  'source' => 'The field name %field_name is invalid. The name must include only lowercase unaccentuated letters, numbers, and underscores.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '486',
+  'location' => 'includes/content.admin.inc:695',
+  'textgroup' => 'default',
+  'source' => "The field name %field_name is too long. The name is limited to 32 characters, including the 'field_' prefix.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '487',
+  'location' => 'includes/content.admin.inc:706',
+  'textgroup' => 'default',
+  'source' => 'The field name %field_name already exists.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '488',
+  'location' => 'includes/content.admin.inc:709',
+  'textgroup' => 'default',
+  'source' => "The name 'field_instance' is a reserved name.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '489',
+  'location' => 'includes/content.admin.inc:741',
+  'textgroup' => 'default',
+  'source' => 'Created field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '490',
+  'location' => 'includes/content.admin.inc:754',
+  'textgroup' => 'default',
+  'source' => 'Update field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '491',
+  'location' => 'includes/content.admin.inc:758',
+  'textgroup' => 'default',
+  'source' => 'There was a problem updating field %label.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '492',
+  'location' => 'includes/content.admin.inc:955',
+  'textgroup' => 'default',
+  'source' => "Advanced usage only: PHP code that returns a default value. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>!sample</pre>Using !link_devel's 'devel load' tab on a %type content page might help you figure out the expected format.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '493',
+  'location' => 'includes/content.admin.inc:986',
+  'textgroup' => 'default',
+  'source' => "Select a specific number of values for this field, or 'Unlimited' to provide an 'Add more' button so the users can add as many values as they like.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '494',
+  'location' => 'includes/content.admin.inc:1131',
+  'textgroup' => 'default',
+  'source' => 'The default value PHP code created @value which is invalid.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '495',
+  'location' => 'includes/content.token.inc:62',
+  'textgroup' => 'default',
+  'source' => 'Formatted HTML link to the node',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '496',
+  'location' => 'modules/number/number.module:222',
+  'textgroup' => 'default',
+  'source' => 'The value of %name may be no smaller than %min.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '497',
+  'location' => 'modules/number/number.module:225',
+  'textgroup' => 'default',
+  'source' => 'The value of %name may be no larger than %max.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '498',
+  'location' => 'modules/number/number.module:476',
+  'textgroup' => 'default',
+  'source' => 'Only numbers and decimals are allowed in %field. %start was changed to %value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '499',
+  'location' => 'modules/number/number.module:494',
+  'textgroup' => 'default',
+  'source' => 'Only numbers are allowed in %field. %start was changed to %value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '500',
+  'location' => 'modules/number/number.module:513',
+  'textgroup' => 'default',
+  'source' => 'Only numbers and the decimal character (%decimal) are allowed in %field. %start was changed to %value.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '501',
+  'location' => 'modules/optionwidgets/optionwidgets.module:10',
+  'textgroup' => 'default',
+  'source' => 'Create a list of options as a list in <strong>Allowed values</strong> or as an array in PHP code. These values will be the same for %field in all content types.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '502',
+  'location' => 'misc/tabledrag.js',
+  'textgroup' => 'default',
+  'source' => 'Drag to re-order',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '503',
+  'location' => 'misc/tabledrag.js',
+  'textgroup' => 'default',
+  'source' => 'Changes made in this table will not be saved until the form is submitted.',
+  'version' => 'none',
+))
+->execute();
+
+$connection->schema()->createTable('locales_target', array(
+  'fields' => array(
+    'lid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'translation' => array(
+      'type' => 'blob',
+      'not null' => TRUE,
+      'size' => 'normal',
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '12',
+      'default' => '',
+    ),
+    'plid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'plural' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'language',
+    'lid',
+    'plural',
+  ),
+  'indexes' => array(
+    'lid' => array(
+      'lid',
+    ),
+    'plid' => array(
+      'plid',
+    ),
+    'plural' => array(
+      'plural',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('locales_target')
+->fields(array(
+  'lid',
+  'translation',
+  'language',
+  'plid',
+  'plural',
+))
+->values(array(
+  'lid' => '5',
+  'translation' => "Le module Content, composant obligatoire du kit CCK (Content Construction Kit) permet aux administrateurs d'associer des champs personnalisés à des types de contenus. Au sein de Drupal, les types de contenus servent à définir les caractéristiques d'une publication, y compris le titre et la description des champs affichés sur ses pages \"ajouter\" et \"éditer\". Le module Content (et les modules auxiliaires inclus dans CCK) permet d'ajouter des champs personnalisés en plus des champs par défaut \"Titre\" et \"Corps\". Les fonctionnalités de CCK sont accessible via différents onglets sur la <a href=\"@content-types\">page d'administration des types de contenus</a>. (Voir la <a href=\"@node-help\">page d'aide du module Node</a> pour plus d'informations sur les types de contenus).",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '6',
+  'translation' => "Lorsque vous ajoutez un champ personnalisé à un type de contenu, vous déterminez son type (c'est-à-dire s'il doit contenir du texte, des nombres ou des références à d'autres objets) et la façon dont il doit être affiché (en tant que champ ou zone de texte, liste de sélection, case à cocher, bouton radio, ou champ à auto-complètement). Un champ peut présenter plusieurs valeurs (par exemple, une \"personne\" peut disposer de plusieurs adresses courriel) ou une seule (par exemple, un \"employé\" possède un numéro d'identification unique). À mesure que vous ajoutez et modifiez des champs, CCK ajuste automatiquement la structure de la base de données en fonction. CCK propose également un certain nombre d'autres fonctionnalités, par exemple un cache intelligent pour vos données personnalisées, des fonctionnalités d'import et d'export pour les définitions de types de contenus, ainsi qu'une intégration à d'autres modules provenant des contributions.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '7',
+  'translation' => "Des types de champs personnalisés sont proposés par plusieurs modules optionnels inclus dans CCK (chaque module fournissant un type différent). La <a href=\"@modules\">page des modules</a> vous permet d'activer ou de désactiver des composants CCK. Une installation par défaut de CCK inclut :",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '8',
+  'translation' => "<em>Number</em>, qui ajoute des types de champs numériques (formats entier, décimal ou réel à virgule flottante). Vous pouvez définir un jeu ou un intervalle de valeurs autorisées. Divers formats sont disponibles pour l'affichage des données numériques.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '9',
+  'translation' => "<em>Text</em>, qui ajoute des types de champs de texte. Un champ texte peut contenir du texte brut uniquement ou, optionnellement, utiliser les filtres des formats d'entrée que propose Drupal pour gérer en toute sécurité des textes enrichis. Les champs de saisie de texte peuvent être constitués d'une seule ligne (champ texte), de plusieurs lignes (zone de texte) ou, pour un meilleur contrôle des valeurs saisies, une liste de sélection, des cases à cocher ou des boutons radio. Si besoin, CCK peut valider les saisies sur la base d'un ensemble de valeurs autorisées.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '10',
+  'translation' => '<em>Node Reference</em>, qui crée des références personnalisées entre nœuds de Drupal. En ajoutant, par exemple, un champ <em>nodereference</em> et deux types de contenus différents, vous pouvez facilement créer des relations complexes de type parent/enfant entre données (par exemple plusieurs nœuds "employé" peuvent présenter un champ <em>nodereference</em> pointant vers un même nœud "employeur").',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '11',
+  'translation' => "<em>User reference</em>, qui crée des références personnalisées vers les comptes des utilisateurs de votre site. En ajoutant un champ <em>userreference</em>, vous pouvez créer des relations complexes entre les utilisateurs de votre site et des publications. Ainsi, pour tracer l'implication d'un utilisateur dans une publication (au delà du champ Drupal standard <em>Écrit par</em>), vous pouvez ajouter à un type de contenu un champ <em>userreference</em> intitulé \"Édité par\" pour enregistrer un lien vers la page du compte utilisateur ayant édité la publication.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '12',
+  'translation' => "<em>Fieldgroup</em>, qui crée des groupes de champs liés. Les groupe de champ peuvent être repliés, et vous pouvez choisir qu'ils soient dépliés ou repliés par défaut. L'ordre des groupes de champs, ainsi que l'ordre des champs au sein d'un groupe, est géré grâce à l'interface par glisser-déposer fournie par le module Content.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '13',
+  'translation' => "Pour plus d'informations, reportez-vous à l'entrée de manuel en ligne relative à <a href=\"@handbook-cck\">CCK</a> ou à la <a href=\"@project-cck\">page du projet CCK</a>.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '14',
+  'translation' => 'Configurez ici la manière dont les champs et étiquettes de champs de ce type de contenu doivent être affichées, lorsque le contenu est vu en mode résumé ou en pleine page.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '15',
+  'translation' => "Configurez ici la façon dont les champs de ce type de contenu doivent être affichés lorsqu'il est rendu dans les contextes suivants.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '16',
+  'translation' => "Contrôlez ici l'ordre des champs dans le formulaire de saisie.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '17',
+  'translation' => 'Ce champ est obligatoire.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '18',
+  'translation' => '!title : !required',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '19',
+  'translation' => 'Ordre',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '20',
+  'translation' => 'Élément de flux RSS',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '21',
+  'translation' => 'Index de recherche',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '22',
+  'translation' => 'Résultat de recherche',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '23',
+  'translation' => 'Langue',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '24',
+  'translation' => 'Taxonomie',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '25',
+  'translation' => 'Fichiers attachés',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '26',
+  'translation' => 'Mise à jour du type de champ %type avec le module %module.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '27',
+  'translation' => 'Mise à jour du type de widget %widget avec le module %module.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '28',
+  'translation' => "Utiliser du code PHP pour le paramétrage des champs (dangereux - à n'autoriser qu'avec précautions)",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '29',
+  'translation' => 'Gérer les champs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '30',
+  'translation' => 'Afficher les champs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '31',
+  'translation' => 'Général',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '32',
+  'translation' => 'Avancé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '33',
+  'translation' => 'Supprimer un champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '34',
+  'translation' => 'Content',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '35',
+  'translation' => 'Permet aux administrateurs de définir des nouveaux types de contenu.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '36',
+  'translation' => 'CCK',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '37',
+  'translation' => 'Texte',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '38',
+  'translation' => "Les valeurs possibles pour ce champ. Saisissez une valeur par ligne, sous la forme <em>clé|libellé</em>. La clé est la valeur enregistrée dans la base de données, et elle doit correspondre au type de stockage du champ, %type. Le libellé est optionnel et, s'il n'est pas spécifié, la clé sera utilisée comme libellé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '39',
+  'translation' => 'Zone de texte',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '40',
+  'translation' => 'Ôter',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '41',
+  'translation' => 'Basique',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '42',
+  'translation' => 'Résumé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '43',
+  'translation' => 'Nœud complet',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '44',
+  'translation' => 'RSS',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '45',
+  'translation' => 'Recherche',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '46',
+  'translation' => 'Formulaire du module node.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '47',
+  'translation' => 'Formulaire du module locale.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '48',
+  'translation' => 'Paramètres du menu',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '49',
+  'translation' => 'Formulaire du module menu.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '50',
+  'translation' => 'Formulaire du module taxonomy.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '51',
+  'translation' => 'Livre',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '52',
+  'translation' => 'Formulaire du module livre (book).',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '53',
+  'translation' => 'Titre du sondage',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '54',
+  'translation' => 'Titre du module sondage (Poll)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '55',
+  'translation' => 'Choix du sondage',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '56',
+  'translation' => 'Choix du module sondage (poll).',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '57',
+  'translation' => 'Paramètrage du sondage',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '58',
+  'translation' => 'Paramètres du module sondage (poll).',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '59',
+  'translation' => 'Formulaire du module upload.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '60',
+  'translation' => 'contenu',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '61',
+  'translation' => 'Champs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '62',
+  'translation' => "Les mises à jour des modules liés à CCK ne sont pas exécutées tant que les modules ne sont pas activés sur la  <a href=\"@admin-modules-path\">page d'administration des modules</a>. Lorsque vous les activerez, vous devrez retourner sur la page <a href=\"@update-php\">update.php</a> et exécuter les mises à jour restantes.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '63',
+  'translation' => "!module.module possède des mises à jour mais ne peut pas être mis à jour car content.module n'est pas activé.<br /> Le cas échéant, lors de l'activation de content.module, vous devrez exécuter à nouveau le script de mise à jour. Vous continuerez à voir ce message jusqu'à ce que le module soit activé et les mises à jour exécutées.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '64',
+  'translation' => "!module.module possède des mises à jour et est disponible dans le répertoire des modules, mais n'est pas activé.<br /> Le cas échéant, lorsque vous l'aurez activé, vous devrez ré-exécuter le script de mise à jour. Vous continuerez à voir ce message jusqu'à l'activation du module et l'exécution des mises à jour. ",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '65',
+  'translation' => 'Des mises à jour sont toujours en attente. Veuillez retourner sur <a href="@update-php">update.php</a> et exécuter les mises à jour restarntes.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '66',
+  'translation' => 'CCK - Aucune Intégration aux Vues',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '67',
+  'translation' => 'L"intégration de CCK avec le module Views requiert Views 6.x-2.0-rc2 ou une version supérieure.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '68',
+  'translation' => 'Nom',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '69',
+  'translation' => 'Type',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '70',
+  'translation' => 'Description',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '71',
+  'translation' => 'Opérations',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '72',
+  'translation' => 'éditer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '73',
+  'translation' => 'gérer les champs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '74',
+  'translation' => 'supprimer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '75',
+  'translation' => 'Aucun type de contenu disponible.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '76',
+  'translation' => '» Ajouter un nouveau type de contenu',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '77',
+  'translation' => 'Nom du champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '78',
+  'translation' => 'Type de champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '79',
+  'translation' => 'Utilisé dans',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '80',
+  'translation' => '@field_name (Verrouillé)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '81',
+  'translation' => "Aucun champ n'est pour l'instant défini sur l'ensemble des types de contenu.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '82',
+  'translation' => "Ce type de contenu possède des champs inactifs. Les champs inactifs ne sont pas inclus dans la liste de champs disponibles, jusqu'à l'activation des modules correspondants.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '83',
+  'translation' => '!field (!field_name) est un champ inactif de type !field_type, qui utilise un widget de type !widget_type.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '84',
+  'translation' => 'Configurer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '85',
+  'translation' => 'Verrouillé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '86',
+  'translation' => '- Sélectionnez un type de champ -',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '87',
+  'translation' => '- Sélectionnez un widget -',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '88',
+  'translation' => 'Étiquette',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '89',
+  'translation' => 'Nom du champ (a-z, 0-9, _)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '90',
+  'translation' => 'Type de données à stocker.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '91',
+  'translation' => "Elément du formulaire pour l'édition des données.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '92',
+  'translation' => '- Sélectionnez un champ existant -',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '93',
+  'translation' => 'Champ à partager',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '94',
+  'translation' => 'Nom du groupe (a-z, 0-9, _)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '95',
+  'translation' => 'Enregistrer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '96',
+  'translation' => 'Ajouter un nouveau champ : vous devez fournir une étiquette.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '97',
+  'translation' => 'Ajouter un nouveau champ : vous devez fournir un nom de champ.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '98',
+  'translation' => "Ajouter un nouveau champ : le nom de champ %field_name n'est pas valide. Le nom doit seulement contenir des lettre minuscules non accentuées, des nombres, et des underscores. ",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '99',
+  'translation' => "Ajouter un nouveau champ : le nom de champ %field_name est trop long. Le nom est limité à 32 caractères, en comptant le préfixe 'field_'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '100',
+  'translation' => "Ajouter un nouveau champ : le nom 'field_instance' est un nom réservé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '101',
+  'translation' => 'Ajouter un nouveau champ : le nom du champ %field_name existe déjà.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '102',
+  'translation' => 'Ajouter un nouveau champ : vous devez sélectionner un type de champ.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '103',
+  'translation' => 'Ajouter un nouveau champ : vous devez sélectionner un widget.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '104',
+  'translation' => 'Ajouter un nouveau champ : widget non valide.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '105',
+  'translation' => 'Ajouter un champ existant : vous devez fournir une étiquette.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '106',
+  'translation' => 'Ajouter un champ existant : vous devez sélectionner un champ.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '107',
+  'translation' => 'Ajouter un champ existant: vous devez sélectionner un widget.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '108',
+  'translation' => 'Ajouter un champ existant : widget non valide.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '109',
+  'translation' => "Un problème est survenu à la création du champ '%label'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '110',
+  'translation' => "Le champ %label n'a pas pu être ajouté au type de contenu car il est verrouillé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '111',
+  'translation' => "Un problème est survenu lors de l'ajout du champ '%label'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '112',
+  'translation' => "Il n'y a aucun champ configuré pour ce type de contenu. Vous pouvez ajouter de nouveaux champs sur la page <a href=\"@link\">Gérer les champs</a>.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '113',
+  'translation' => 'Au dessus',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '114',
+  'translation' => 'Sur la même ligne',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '115',
+  'translation' => 'Inclure',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '116',
+  'translation' => 'Exclure',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '117',
+  'translation' => 'aucune mise en forme',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '118',
+  'translation' => 'simple',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '119',
+  'translation' => 'groupe de champs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '120',
+  'translation' => 'groupe de champs - repliable',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '121',
+  'translation' => 'groupe de champs - replié',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '122',
+  'translation' => 'Vos paramètres ont été enregistrés.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '123',
+  'translation' => '@type : @field (@label)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '124',
+  'translation' => 'Éditer les informations de base',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '125',
+  'translation' => 'Le nom lisible par une machine du champ. Ce nom ne peut être changé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '126',
+  'translation' => "Nom lisible par une personne, destiné à servir d'étiquette pour ce champ au sein du type de contenu '%type'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '127',
+  'translation' => 'Type de données que vous souhaitez enregistrer, par le biais de ce champ, dans la base de données. Cette option ne peut être modifiée.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '128',
+  'translation' => 'Type de widget',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '129',
+  'translation' => "Type d'élément de formulaire que vous souhaitez présenter à l'utilisateur lorsqu'il renseigne ce champ dans le type de contenu '%type'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '130',
+  'translation' => 'Continuer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '131',
+  'translation' => 'Les paramètres basiques du champ %label ont été mis à jour.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '132',
+  'translation' => 'Un problème a été rencontré lors de la mise à jour des paramètres basiques du champ %label.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '133',
+  'translation' => "Êtes-vous certain de vouloir enlever le champ '%field' ?",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '134',
+  'translation' => 'Si vous avez encore du contenu dans ce champ, il sera perdu. Cette action est irréversible.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '135',
+  'translation' => 'Annuler',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '136',
+  'translation' => 'Ce champ est <strong>verrouillé</strong> et ne peut être supprimé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '137',
+  'translation' => "Le champ '%field' de '%type' a été enlevé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '138',
+  'translation' => "Un problème est survenu à la suppression du champ '%field' du type '%type'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '139',
+  'translation' => 'Le champ %field est verouillé et ne peut être édité.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '140',
+  'translation' => "Informations de base pour '%type'",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '141',
+  'translation' => 'Modifier les informations de base',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '142',
+  'translation' => "Paramètres de '%type'",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '143',
+  'translation' => "Ces paramètres ne s'applique qu'au champ '%field' tel qu'il apparaît dans le type contenu '%type'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '144',
+  'translation' => "Texte d'aide",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '145',
+  'translation' => "Instructions à présenter à l'utilisateur sous ce champ, dans le formulaire d'édition.<br />Balises HTML autorisées : @tags",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '146',
+  'translation' => 'Valeur par défaut',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '147',
+  'translation' => 'Code PHP',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '148',
+  'translation' => "'@column' => valeur de @column",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '149',
+  'translation' => "return array(\n  0 => array(@columns),\n  // Vous voudrez vous arrêter là dans la plupart des cas. Fournir plus de valeurs\n  // si vous souhaitez que votre 'valeur par défaut' ait des valeurs multiples :\n  1 => array(@columns),\n  2 => ...\n);",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '150',
+  'translation' => 'Code',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '151',
+  'translation' => "Usage avancé seulement : code PHP retournant une valeur par défaut. Ne doit pas contenir les délimiteurs &lt;?php ?&gt;. Si ce champ est rempli, la valeur retournée par ce code écrasera toute valeur spécifiée ci-dessus. Format attendu : <pre>!sample</pre>. Pour vous faire une idée du format attendu, vous pouvez utiliser l'onglet <em>devel load</em> fourni par <a href=\"@link_devel\">le module devel</a> sur une page de contenu de type  %type.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '152',
+  'translation' => '&lt;aucun&gt;',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '153',
+  'translation' => "Vous n'êtes pas autorisé à saisir du code PHP.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '154',
+  'translation' => 'Ce code PHP a été inséré par un administrateur et supplantera toute valeur spécifiée ci-dessus.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '155',
+  'translation' => 'Paramètres globaux',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '156',
+  'translation' => "Ces paramètres s'appliquent au champ '%field' dans tous les types de contenu où il apparaît.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '157',
+  'translation' => 'Obligatoire',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '158',
+  'translation' => "Le nombre maximum de valeurs qu'un utilisateur peut entrer pour ce champ.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '159',
+  'translation' => "'Illimité' fournira un bouton 'Ajouter plus' pour que les utilisateurs puissent ajouter autant de valeurs qu'ils le souhaitent.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '160',
+  'translation' => 'Attention ! Changer ce paramètre alors que des données ont déjà été créées peut conduire à perdre des données !',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '161',
+  'translation' => 'Nombre de valeurs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '162',
+  'translation' => 'Illimité',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '163',
+  'translation' => 'Enregistrer les paramètres du champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '164',
+  'translation' => "Le code PHP pour la 'valeur par défaut' a retourné @value, qui n'est pas valide.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '165',
+  'translation' => 'La valeur par défaut est invalide.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '166',
+  'translation' => "Le champ '%label' a été ajouté.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '167',
+  'translation' => "Champ '%label' enregistré.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '168',
+  'translation' => 'Exécution',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '169',
+  'translation' => 'La mise à jour a échoué.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '170',
+  'translation' => 'La base de données a été modifiée et des données ont été déplacées ou supprimées.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '171',
+  'translation' => 'Une erreur est survenue et a interrompu la modification de la base de données.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '172',
+  'translation' => "'%title' en cours de traitement",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '173',
+  'translation' => '%name doit être un entier.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '174',
+  'translation' => '%name doit être un entier positif.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '175',
+  'translation' => '%name doit être un nombre.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '176',
+  'translation' => '1 élément traité avec succès&nbsp:',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '177',
+  'translation' => '@count éléments traités avec succès&nbsp:',
+  'language' => 'fr',
+  'plid' => '176',
+  'plural' => '1',
+))
+->values(array(
+  'lid' => '178',
+  'translation' => "La table de champs a été renommée de '%old_name' à '%new_name' et les instances des champs ont été mises à jour.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '179',
+  'translation' => "La table de champs '%name' a été supprimée.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '180',
+  'translation' => 'Ajouter un autre élément',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '181',
+  'translation' => 'Contenu du champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '182',
+  'translation' => 'Un champ de contenu du node référencé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '183',
+  'translation' => 'Noeud',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '184',
+  'translation' => 'Contexte du noeud',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '185',
+  'translation' => 'Titre du bloc',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '186',
+  'translation' => 'Caché',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '187',
+  'translation' => "Configurer la manière dont l'étiquette est affichée.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '188',
+  'translation' => 'Champ / Formateur',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '189',
+  'translation' => 'Sélectionner un champ et un formateur.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '190',
+  'translation' => '"@s" champ @name',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '191',
+  'translation' => 'Remplir un champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '192',
+  'translation' => 'Vous devez vous assurer que le champ existe pour le type de contenu donné.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '193',
+  'translation' => 'Champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '194',
+  'translation' => 'Sélectionnez le nom-machine du champ.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '195',
+  'translation' => 'Avancé : Préciser les valeurs des champs avec du code PHP',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '196',
+  'translation' => "Usage avancé seulement : code PHP retournant la valeur à définir. Ne doit pas contenir les délimiteurs &lt;?php ?&gt;. Si ce champ est rempli, la valeur retournée par ce code écrasera toute valeur spécifiée ci-dessus. Format attendu : <pre>!sample</pre>. Pour vous faire une idée du format attendu, vous pouvez utiliser l'onglet <em>devel load</em> fourni par <a href=\"@link_devel\">le module devel</a> sur une page de contenu de type  %type.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '197',
+  'translation' => 'Vous devez retourner la valeur par défaut dans le format attendu.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '198',
+  'translation' => "Remplir le champ '@field' de @node",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '199',
+  'translation' => 'Le champ possède une valeur',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '200',
+  'translation' => 'Vous devez vous assurer que le champ utilisé existe dans le type de contenu donné. La condition retourne TRUE, si le champ sélectionné possède la valeur donnée.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '201',
+  'translation' => 'Le champ a été modifié',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '202',
+  'translation' => 'Contenu contenant des modifications',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '203',
+  'translation' => 'Contenu ne contenant pas de modification',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '204',
+  'translation' => "Le champ '@field' de @node possède une valeur",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '205',
+  'translation' => 'Sélectionnez le nom-machine du champ à voir.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '206',
+  'translation' => "Le champ '@field' de @node a été modifié",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '207',
+  'translation' => 'Jeton (Token)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '208',
+  'translation' => 'Identifiant du nœud référencé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '209',
+  'translation' => 'Titre du nœud référencé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '210',
+  'translation' => 'Titre non filtré du noeud référencé. ATTENTION - saisie brute utilisateur.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '211',
+  'translation' => 'Lien html formaté vers le noeud référencé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '212',
+  'translation' => 'Alias de chemin relatif vers le noeud référencé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '213',
+  'translation' => 'Alias de chemin absolu vers le noeud référencé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '214',
+  'translation' => 'Valeur numérique brute',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '215',
+  'translation' => 'Valeur numérique mise en forme',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '216',
+  'translation' => 'Texte brut, non filtré',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '217',
+  'translation' => 'Texte filtré et mis en forme',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '218',
+  'translation' => "Identifiant de l'utilisateur référencé",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '219',
+  'translation' => "Nom de l'utilisateur référencé",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '220',
+  'translation' => "Lien HTML mis en forme vers l'utilisateur référencé",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '221',
+  'translation' => "Alias de chemin relatif vers l'utilisateur référencé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '222',
+  'translation' => "Alias de chemin absolu vers l'utilisateur référencé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '223',
+  'translation' => '@label (!name)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '224',
+  'translation' => '@label (!name) - !column',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '225',
+  'translation' => '@label-truncated - !column',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '226',
+  'translation' => 'Apparaît dans : @types',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '227',
+  'translation' => 'Aucun',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '228',
+  'translation' => 'Étiquette du widget (@label)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '229',
+  'translation' => 'Personnalisé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '230',
+  'translation' => 'Étiquette personnalisée',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '231',
+  'translation' => 'Format',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '232',
+  'translation' => 'Grouper plusieurs valeurs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '233',
+  'translation' => "Si non coché, chaque élément du champ créera une nouvelle ligne, ce qui pourrait apparemment entraîner des doublons. Ce paramètre n'est pas compatible avec le tri par clic dans l'affichage du tableau. ",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '234',
+  'translation' => 'Afficher @count valeur(s)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '235',
+  'translation' => 'en commençant à @count',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '236',
+  'translation' => 'Inversé (commencer à partir des dernières valeurs)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '237',
+  'translation' => 'Tous / Toutes',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '238',
+  'translation' => 'Delta',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '239',
+  'translation' => "Le delta vous permet de sélectionner quel élément d'un champ à valeur multiple sera la clé de la relation. Sélectionnez \"1\" pour utiliser le premier élément, \"2\" pour le second et ainsi de suite. Si vous sélectionnez \"Tous\", chaque élément du champ créera une nouvelle ligne, ce qui pourrait causer des doublons.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '240',
+  'translation' => "Le delta vous permet de sélectionner quel élément d'un champ à valeur multiple sera utilisé pour les tris. Sélectionnez \"1\" pour utiliser le premier élément, \"2\" pour le second et ainsi de suite. Si vous sélectionnez \"Tous\", chaque élément du champ créera une nouvelle ligne, ce qui pourrait causer des doublons.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '241',
+  'translation' => 'Exporter',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '242',
+  'translation' => "Ce formulaire traitera un type de contenu et un ou plusieurs champs de ce type, pour en exporter les paramètres. Le code d'export ainsi généré peut être copié et collé dans la page d'import, vers la base de données courante ou vers une autre base de données. L'opération d'import ajoutera les champs à un type de contenu existant ou créera un nouveau type de contenu intégrant les champs sélectionnés.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '243',
+  'translation' => 'Types',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '244',
+  'translation' => 'Sélectionner le type de contenu à exporter.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '245',
+  'translation' => 'Données exportée',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '246',
+  'translation' => "Copiez le texte exporté et collez-le dans le type de contenu de votre choix, à l'aide de la fonction d'import.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '247',
+  'translation' => 'Types de contenu',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '248',
+  'translation' => 'Type de contenu',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '249',
+  'translation' => 'Séléctionnez le type de contenu dans lequel importer ces champs.<br />Sélectionnez &lt;Créer&gt; pour créer un nouveau type de contenu qui contiendra ces champs.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '250',
+  'translation' => 'Données à importer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '251',
+  'translation' => 'Collez dans ce champ le texte créé par un export de contenu.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '252',
+  'translation' => 'Importer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '253',
+  'translation' => "Un fichier a été préchargé pour l'import.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '254',
+  'translation' => "Les données d'import ne sont valides.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '255',
+  'translation' => "Les modules suivants doivent être activés pour que l'import fonctionne : '%modules'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '256',
+  'translation' => "Le type de contenu '%type' existe déjà dans cette base de données.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '257',
+  'translation' => "Abandon. L'import n'a pas été réalisé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '258',
+  'translation' => "Une erreur s'est produite lors de l'ajout du nouveau type de contenu %type.<br> Veuillez vérifier les erreurs affichées pour plus de détails.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '259',
+  'translation' => "Le champ importé '%field_label' (%field_name) n'a pas été ajouté à '%type' car ce champ existe déjà.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '260',
+  'translation' => "Le champ importé '%field_label' (%field_name) a été ajouté au type de contenu '%type'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '261',
+  'translation' => 'content_copy',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '262',
+  'translation' => 'Content Copy',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '263',
+  'translation' => "Permet d'importer et d'exporter des définitions de champs.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '264',
+  'translation' => "Les champs d'un groupe Standard sont indépendants les uns des autres, et chacun peut soit avoir une valeur unique, soit des valeurs multiples. Les champs d'un Multigroupe sont traités comme une ensemble répétable de champs à valeurs uniques.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '265',
+  'translation' => 'Multigroupe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '266',
+  'translation' => 'Standard',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '267',
+  'translation' => 'Type de groupe.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '268',
+  'translation' => "Le champ %field a été mis à jour pour l'utilisation de valeurs %multiple, afin de correspondre au paramètre de valeur multipe du Multigroup %group.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '269',
+  'translation' => "Cette modification n'est pas autorisée. Le champ %field possède déjà des valeurs multiples dans la base de données, mais le groupe %group en autorise seulement %group_max. Effectuer cette modification pourrait entraîner la perte de données. ",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '270',
+  'translation' => "Cette modification n'est pas autorisée. Le champ %field manipule les valeurs multiples différemment du module Content. Effectuer cette modification pourrait entraîner la perte de données. ",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '271',
+  'translation' => "Vous êtes en train d'inclure le champ %field dans un Multigroupe",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '272',
+  'translation' => "Cette modification n'est pas autorisée. Le champ %field possède déjà des données créées, et utilise un widget qui stocke les données différemment dans un groupe Standard que dans un Multigroupe. Effectuer ce changement pourrait entraîner la perte de données.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '273',
+  'translation' => "Vous êtes en train de retirer le champ %field d'un Multigroupe",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '274',
+  'translation' => 'Simple',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '275',
+  'translation' => 'Groupe de champs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '276',
+  'translation' => 'Ligne horizontale',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '277',
+  'translation' => 'Tableau - Colonne unique',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '278',
+  'translation' => 'Tableau - Colonnes multiples',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '279',
+  'translation' => '[Format du sous-groupe]',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '280',
+  'translation' => 'Paramètres multigroupe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '281',
+  'translation' => 'Colonnes multiples',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '282',
+  'translation' => "Activez cette option pour rendre chaque champs dans une colonne disctincte sur le formulaire d'édition de noeud.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '283',
+  'translation' => "Activez cette option pour rendre obligatoire un minimum d'une collection de champs dans ce Multigroupe.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '284',
+  'translation' => "Nombre de fois où répéter l'ensemble Multigroupe de champs.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '285',
+  'translation' => "'Illimité' fournira un bouton 'Ajouter plus' pour que les utilisateurs puissent ajouter des éléments autant de fois qu'ils le souhaitent.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '286',
+  'translation' => 'Tous les champs de ce groupe seront automatiquement paramétrés pour autoriser ce nombre de valeurs.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '287',
+  'translation' => 'Nombre de répétitions',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '288',
+  'translation' => 'Etiquettes',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '289',
+  'translation' => "Etiquettes pour chaque sous-groupe de champs. Les étiquettes peuvent être cachées ou affichées dans des contextes divers en utilisant l'écran 'Afficher les champs'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '290',
+  'translation' => 'Etiquette du sous-groupe %number',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '291',
+  'translation' => 'Le champ %field dans ce groupe possède déjà %multiple valeurs dans la base de données. Pour éviter la perte de données, vous ne pouvez définir le nombre de valeurs du Multigroupe à une valeur inférieure.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '292',
+  'translation' => 'Le champ !name est obligatoire dans le groupe @group.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '293',
+  'translation' => 'Le groupe @name requiert au minimum un groupe de champs.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '294',
+  'translation' => 'Ajouter plus de valeurs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '295',
+  'translation' => 'content_multigroup',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '296',
+  'translation' => 'Contenu Multigroupe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '297',
+  'translation' => "Combinez de multiples champs CCK au sein de collections de champs qui fonctionnent à l'unisson.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '298',
+  'translation' => 'éditer',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '299',
+  'translation' => 'field_name',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '300',
+  'translation' => 'voir',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '301',
+  'translation' => 'content_permissions',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '302',
+  'translation' => 'Veuillez <a href="!url">configurer vos permissions sur les champs</a> immédiatement. Tous les champs sont inaccessibles par défaut.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '303',
+  'translation' => 'Permissions sur les Contenus',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '304',
+  'translation' => 'Définit un niveau de permission par champ pour les champs CCK.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '305',
+  'translation' => 'Contenu du groupe de champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '306',
+  'translation' => "Tous les champs d'un groupe de champs sur le node référencé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '307',
+  'translation' => '@group_label (@group_type_name)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '308',
+  'translation' => 'Fieldgroup',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '309',
+  'translation' => "Texte à afficher si un groupe n'a pas de données. Notez que le titre ne s'affichera pas sauf s'il est surclassé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '310',
+  'translation' => '"@s" groupe de champs @name',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '311',
+  'translation' => 'Paramètres du formulaire',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '312',
+  'translation' => "Ces paramètres s'appliquent au groupe dans le formulaire d'édition de nœud.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '313',
+  'translation' => 'Style',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '314',
+  'translation' => 'toujours déplié',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '315',
+  'translation' => 'repliable',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '316',
+  'translation' => 'replié',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '317',
+  'translation' => "Instructions à présenter à l'utilisateur dans le formulaire d'édition.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '318',
+  'translation' => "Paramètres d'affichage",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '319',
+  'translation' => "Ces paramètres s'appliquent au groupe à l'affichage du nœud.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '320',
+  'translation' => 'Description du groupe.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '321',
+  'translation' => "Êtes-vous sûr(e) de vouloir supprimer le groupe '%label' ?",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '322',
+  'translation' => 'Cette action est irréversible.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '323',
+  'translation' => "Le groupe '%group_name' a été supprimé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '324',
+  'translation' => 'aucun',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '325',
+  'translation' => 'Vous devez fournir une étiquette.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '326',
+  'translation' => 'Vous devez fournir un nom de groupe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '327',
+  'translation' => "Le nom de groupe %group_name n'est pas valide. Le nom ne doit contenir que des lettres sans accents, des nombres, et des underscores.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '328',
+  'translation' => "Le nom de groupe %group_name est trop long. Le nom est limité à 32 caractères, le préfixe 'group_' compris.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '329',
+  'translation' => 'Le nom de groupe %group_name existe déjà.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '330',
+  'translation' => 'Ajouter un nouveau groupe :',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '331',
+  'translation' => 'Ajouter un nouveau groupe : vous devez fournir une étiquette.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '332',
+  'translation' => 'Ajouter un nouveau groupe : vous devez fournir un nom de groupe.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '333',
+  'translation' => 'Groupe standard',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '334',
+  'translation' => 'Éditer le groupe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '335',
+  'translation' => 'fieldgroup',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '336',
+  'translation' => "Créée des groupes d'affichage pour les champs CCK.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '337',
+  'translation' => 'Charge un noeud référencé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '338',
+  'translation' => 'Contenu contenant le champ node reference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '339',
+  'translation' => 'Contenu référencé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '340',
+  'translation' => 'Notez que si le champs possède des valeurs multiples, seul le premier contenu sera chargé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '341',
+  'translation' => "Il n'y a aucun champ  nodereference défini.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '342',
+  'translation' => 'Node référence',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '343',
+  'translation' => "Stocker l'ID du noeud lié en tant que valeur entière.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '344',
+  'translation' => 'Types de contenu pouvant être référencés',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '345',
+  'translation' => 'Vues par défaut',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '346',
+  'translation' => 'Vues éxistantes',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '347',
+  'translation' => 'Avancé - Nœuds pouvant être référencés (Vue)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '348',
+  'translation' => 'Vue utilisée pour sélectionner les noeuds',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '349',
+  'translation' => '<p>Choisissez la vue du "module Views" qui sélectionne les noeuds pouvant être référencés.<br />Note :</p>',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '350',
+  'translation' => "<ul><li>Seules les vues qui possèdent des champs fonctionneront à cet effet.</li><li>Ceci annulera les paramètres \"Types de contenu\" ci-dessus. Utilisez la section \"filtres\" de la vue à la place.</li><li>Utilisez la section \"champs\" de la vue pour afficher des informations supplémentaires à propos des noeuds candidats sur le formulaire de création/édition.</li><li>Utilisez la section \"critère de tri\" de la vue pour déterminer l'ordre dans lequel les noeuds candidats seront affichés.</li></ul>",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '351',
+  'translation' => 'Arguments de la vue',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '352',
+  'translation' => "Fournit une liste d'arguments, séparés par des virgules, à transmettre à la vue.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '353',
+  'translation' => "<p>La liste des noeuds pouvant être référencés peut s'appuyer sur une vue du \"module Views\" mais aucune vue appropriée n'a été trouvée. <br />Note :</p>",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '354',
+  'translation' => '%name : saisie non valide.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '355',
+  'translation' => '%name : ce contenu ne peut être référencé.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '356',
+  'translation' => 'Titre (avec lien)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '357',
+  'translation' => 'Titre (sans lien)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '358',
+  'translation' => 'Liste de sélection',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '359',
+  'translation' => 'Cases à cocher/boutons radio',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '360',
+  'translation' => 'Champ texte à auto-complètement',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '361',
+  'translation' => "Correspondance de l'autocomplétion",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '362',
+  'translation' => 'Commence par',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '363',
+  'translation' => 'Contient',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '364',
+  'translation' => "Séléctionnez la méthode utilisée pour collecter les suggestions de l'autocomplétion. Notez que <em>Contient</em> peut engendrer des problèmes de performances sur des sites avec des milliers de noeuds",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '365',
+  'translation' => '%name : différence de titre. Veuillez vérifier votre sélection.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '366',
+  'translation' => "%name : aucun contenu valide n'a été trouvé pour ce titre.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '367',
+  'translation' => 'Autocomplétion de nodereference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '368',
+  'translation' => 'nodereference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '369',
+  'translation' => 'Node Reference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '370',
+  'translation' => 'Définit un type de champ pour référencer un noeud depuis un autre noeud.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '371',
+  'translation' => 'Entier',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '372',
+  'translation' => 'Stocke un nombre dans la base de données en format entier.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '373',
+  'translation' => 'Décimal',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '374',
+  'translation' => 'Stocke un nombre dans la base de données en format décimal fixe.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '375',
+  'translation' => 'Réel (Float)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '376',
+  'translation' => 'Stocke un nombre dans la base de données en format réel.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '377',
+  'translation' => 'Minimum',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '378',
+  'translation' => 'Maximum',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '379',
+  'translation' => 'Précision',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '380',
+  'translation' => 'Le nombre total de chiffres à stocker dans la base de données, en incluant ceux à droite de la virgule.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '381',
+  'translation' => 'Echelle',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '382',
+  'translation' => 'Le nombre de chiffres à droite de la virgule',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '383',
+  'translation' => 'Séparateur de décimales',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '384',
+  'translation' => 'Le caractère que les utilisateurs saisiront pour séparer les décimales dans les formulaires.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '385',
+  'translation' => 'Préfixe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '386',
+  'translation' => 'Définissez une chaîne de caractères à utiliser pour préfixer la valeur, par exemple $ ou €. Laissez vide pour ne rien afficher de plus. Séparez les valeurs singulier et pluriel par une barre verticale (euro|euros).',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '387',
+  'translation' => 'Suffixe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '388',
+  'translation' => 'Définissez une chaîne qui sera ajoutée en suffixe à la valeur, comme m², m/s², kb/s. Laisser vide pour aucun suffixe. Séparez les singulier et pluriel avec un pipe (mètre|mètres).',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '389',
+  'translation' => 'Valeurs autorisées',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '390',
+  'translation' => 'Liste des valeurs autorisées',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '391',
+  'translation' => "Les valeurs possibles que ce champ peut contenir. Entrez une valeur par ligne, sous la forme clé|étiquette. La clé est une valeur qui sera stocker dans la base de données, elle doit correspondre au type de champ défini (%type). L'étiquette est optionnelle, si elle n'est pas précisée, la clé sera utilisée également comme étiquette.<br />Balises HTML autorisées : @tags",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '392',
+  'translation' => 'Pour usage avancé seulement : code PHP fournissant un tableau par clé des valeurs autorisées. Ne doit pas inclure les délimiteurs &lt;?php ?&gt;. Si ce champ est rempli, le tableau renvoyé par le code prendra le pas sur la liste des valeurs autorisées apparaissant ci-dessus.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '393',
+  'translation' => 'Ce code PHP a été saisi par un administrateur et supplantera la liste des valeurs permises ci-dessus.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '394',
+  'translation' => '@label (!name) - Valeurs autorisées',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '395',
+  'translation' => '"Minimum" doit être un nombre.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '396',
+  'translation' => '"Maximum" doit être un nombre.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '397',
+  'translation' => '%name : la valeur ne peut être inférieure à %min.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '398',
+  'translation' => '%name : la valeur ne peut être supérieure à %max.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '399',
+  'translation' => '%name : valeur illégale.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '400',
+  'translation' => 'non mis en forme',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '401',
+  'translation' => 'Champ texte',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '402',
+  'translation' => 'Seuls les nombres et les décimaux sont autorisés dans %field.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '403',
+  'translation' => 'Seuls les nombres sont autorisés dans %field.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '404',
+  'translation' => 'Seuls les nombres et le caractère décimal (%decimal) sont autorisés dans %field.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '405',
+  'translation' => 'nombre',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '406',
+  'translation' => 'Nombre',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '407',
+  'translation' => 'Définit des types de champs numériques.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '408',
+  'translation' => "Créez une liste d'options en tant que liste dans la <strong>Liste des valeurs autorisées</strong>, ou en tant que tableau en code PHP. Ces valeurs seront les mêmes pour le champ %field au sein de tous les types de contenu.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '409',
+  'translation' => "Pour un widget 'case à cocher oui/non', définissez la valeur 'non' en premier, puis la valeur 'oui', dans la section <strong>Valeurs autorisées</strong>. Notez que la case à cocher sera étiquetée avec l'étiquette de la valeur du 'oui'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '410',
+  'translation' => "Le widget 'cases à cocher/boutons radio' affichera des cases à cocher si l'option valeurs multiples est sélectionnées pour ce champ, autrement, des boutons radio seront affichés.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '411',
+  'translation' => "Vous devez préciser les 'valeurs autorisées' pour ce champ.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '412',
+  'translation' => 'Case à cocher on/off unique',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '413',
+  'translation' => '%name : ce champ ne peut contenir plus de @count valeurs.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '414',
+  'translation' => 'N/A',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '415',
+  'translation' => '- Aucun -',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '416',
+  'translation' => 'optionwidgets',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '417',
+  'translation' => 'Option Widgets',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '418',
+  'translation' => 'Définit des widgets de liste déroulante, case à cocher et bouton radio pour des champs texte et numériques.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '419',
+  'translation' => 'Enregistre le texte dans la base de données.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '420',
+  'translation' => 'Texte simple',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '421',
+  'translation' => "Texte filtré (l'utilisateur choisit le format d'entrée)",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '422',
+  'translation' => 'Traitement du texte',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '423',
+  'translation' => 'Taille maximale',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '424',
+  'translation' => 'La taille maximale des champs, en caractères. Laisser vide pour ne pas limiter la taille.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '425',
+  'translation' => '%name : la valeur ne doit pas dépasser %max caractères.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '426',
+  'translation' => 'Par défaut',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '427',
+  'translation' => 'Coupé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '428',
+  'translation' => 'Zone de texte (plusieurs lignes)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '429',
+  'translation' => 'Taille du champ texte',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '430',
+  'translation' => 'Rangées',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '431',
+  'translation' => 'texte',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '432',
+  'translation' => 'Définit les types de champs en texte simple.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '433',
+  'translation' => 'Charge un utilisateur référencé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '434',
+  'translation' => 'Contenu contenant le champ userrefernece',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '435',
+  'translation' => 'Utilisateur référencé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '436',
+  'translation' => 'Noter que si le champ possède des valeurs multiples, seul le premier utilisateur sera chargé',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '437',
+  'translation' => "Il n'y a aucun champ userreference défini",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '438',
+  'translation' => 'User reference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '439',
+  'translation' => "Stocke l'ID d'un utilisateur lié sous forme d'entier",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '440',
+  'translation' => 'Rôles utilisateur pouvant être référencés',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '441',
+  'translation' => 'Statuts utilisateur pouvant être référencés',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '442',
+  'translation' => 'Actif',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '443',
+  'translation' => 'Bloqué',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '444',
+  'translation' => 'Avancé - Utilisateurs pouvant être référencés (Vue)',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '445',
+  'translation' => 'Vue utilisée pour sélectionner les utilisateurs',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '446',
+  'translation' => '<p>Choisissez la vue du "module Views" qui sélectionne les utilisateurs pouvant être référencés.<br />Note :</p>',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '447',
+  'translation' => "<ul><li>Seules les vues qui possèdent des champs fonctionneront à cet effet.</li><li>Ceci annulera les paramètres \"Rôles Référençables\" et \"Statut Référençable\" ci-dessus. Utilisez la section \"filtres\" de la vue à la place.</li><li>Utilisez la section \"champs\" de la vue pour afficher des informations supplémentaires à propos des utilisateurs candidats sur le formulaire de création/édition.</li><li>Utilisez la section \"critère de tri\" de la vue pour déterminer l'ordre dans lequel les utilisateurs candidats seront affichés.</li></ul>",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '448',
+  'translation' => "<p>La liste d'utilisateurs pouvant être référencés peut s'appueyr sur une vue du \"module Views\", mais aucune vue appropriée n'a été trouvée. <br />Note :</p>",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '449',
+  'translation' => '%name : utilisateur invalide.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '450',
+  'translation' => "Séléctionnez la méthode utilisée pour collecter les suggestions de l'autocomplétion. Notez que <em>Contient</em> peut engendrer des problèmes de performances sur des sites avec des milliers d'utilisateurs.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '451',
+  'translation' => 'Lien retour',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '452',
+  'translation' => "Si cette option est sélectionnée, un lien réciproque vers le nœud référençant sera affiché dans l'enregistrement utilisateur référencé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '453',
+  'translation' => "%name : nous n'avons pas trouvé d'utilisateur valide pour ce nom.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '454',
+  'translation' => 'Contenu lié',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '455',
+  'translation' => 'Autocomplétion Userreference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '456',
+  'translation' => 'userreference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '457',
+  'translation' => 'User Reference',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '458',
+  'translation' => 'Définit un type de champ pour référencer un utilisateur depuis un noeud.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '459',
+  'translation' => 'Poids',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '460',
+  'translation' => 'Ajouter',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '461',
+  'translation' => 'Nouveau champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '462',
+  'translation' => 'Champ existant',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '463',
+  'translation' => 'Nouveau groupe',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '464',
+  'translation' => "Ajouter des champs et des groupes au type de contenu, et les paramétrer pour l'affichage du contenu et les formulaires de saisie.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '465',
+  'translation' => 'Vous pouvez ajouter un champ à un groupe en le faisant glisser ci-dessous et à la droite du groupe.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '466',
+  'translation' => "Note : l'installation du module <a href=\"!adv_help\">Aide avancée (Advanced help)</a> vous permettra d'accéder à plus d'aide, et de meilleure qualité.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '467',
+  'translation' => "Utiliser la case à cocher 'Exclure' pour exclure un élément de la valeur de !content transmis au gabarit du node.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '468',
+  'translation' => 'Supprimer cet élément',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '469',
+  'translation' => 'Ajouter un champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '470',
+  'translation' => "Valeur illégale pour le champ '%name'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '471',
+  'translation' => "La longueur de '%label' dépasse %max caractères.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '472',
+  'translation' => "Le champ 'Rangées' doit être un entier positif.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '473',
+  'translation' => "Les valeurs que ce champ peut contenir. Saisissez une valeur par ligne, au format clé|libellé. La clé est la valeur qui sera enregistrée dans la base de données et elle doit correspondre au type définit pour le champ dans la base, '%type'. Le libellé est optionnel et, si aucune valeur n'est spécifiée, la clé sera utilisée comme libellé.<br />Balises HTML autorisées : @tags",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '474',
+  'translation' => 'ajouter un champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '475',
+  'translation' => "Il n'y a aucun champ configuré pour ce type de contenu. Vous pouvez néanmoins dès maintenant !link.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '476',
+  'translation' => 'ajouter un nouveau champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '477',
+  'translation' => "Pour changer l'ordre d'un champ, utilisez la poignée qui figure sous la colonne Étiquette et faites glisser le champ jusqu'à l'emplacement désiré. Pour manipuler la poignée (l'icône en forme de croix), cliquez sur l'icône et maintenez enfoncé le bouton de la souris. N'oubliez pas que vos modifications ne seront prises en compte que lorsque vous aurez cliqué sur le bouton <em>Enregistrer</em> qui figure en base de page.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '478',
+  'translation' => "Aucun module de champs n'est activé. Vous devez en <a href=\"!modules_url\">activer un</a>, par exemple le module Text, avant de pouvoir ajouter des champs.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '479',
+  'translation' => 'Ajouter un champ existant',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '480',
+  'translation' => 'Créer un nouveau champ',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '481',
+  'translation' => 'Nom du champ, lisible par une machine.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '482',
+  'translation' => ' Ce nom ne peut être modifié.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '483',
+  'translation' => " Ce nom ne pourra pas être modifié par la suite ! Le nom sera préfixé par 'field_' et peut inclure des lettres minuscules non accentués, des nombres et des caractères \"espace souligné\". La longueur du nom, y compris le préfixe, est limitée à un total de 32 caractères.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '484',
+  'translation' => 'Type de données que vous souhaitez enregistrer, par le biais de ce champ, dans la base de données.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '485',
+  'translation' => "Le nom de champ '%field_name' est invalide. Le nom ne doit comporter que des lettres minuscules non accentuées, des nombres ou des espaces soulignés.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '486',
+  'translation' => "Le nom de champ '%field_name' est trop long. La longueur du nom est limitée à 32 caractères, y compris le préfixe 'field_'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '487',
+  'translation' => "Le nom de champ '%field_name' existe déjà.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '488',
+  'translation' => "Le nom 'field_instance' est un nom réservé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '489',
+  'translation' => "Le champ '%label' a été créé.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '490',
+  'translation' => "Mettre à jour le champ '%label'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '491',
+  'translation' => "Un problème est survenu à la mise à jour du champ '%label'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '492',
+  'translation' => "Réservé à une utilisation avancée : code PHP renvoyant la valeur par défaut du champ. Ne doit pas inclure les délimiteurs &lt;?php ?&gt;. Si ce champ est renseigné, la valeur renvoyée par le code supplante toute valeur indiquée ci-desus. Format attendu : <pre>!sample</pre> Vous pouvez utiliser l'onglet 'devel load' du module !link_devel sur un nœud de type '%type' pour mieux comprendre le format attendu.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '493',
+  'translation' => "Choisissez un nombre de valeurs pour ce champ, ou 'Illimité' pour proposer un bouton 'Ajouter' aux utilisateurs, de sorte qu'ils peuvent insérer autant de valeurs qu'ils le souhaitent.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '494',
+  'translation' => 'Le code PHP de valeur par défaut a créé @value, qui est invalide.',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '495',
+  'translation' => 'Lien HTML mis en forme vers le nœud',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '496',
+  'translation' => "La valeur de '%name 'ne peut être plus petite que %min.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '497',
+  'translation' => "La valeur de '%name' ne peut pas être plus grande que %max.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '498',
+  'translation' => "Seuls des nombres et des décimaux sont autorisés dans '%field'. La valeur saisie, '%start', a été modifié en '%value'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '499',
+  'translation' => "Seuls des nombres sont autorisés dans '%field'. La valeur saisie, '%start', a été modifié en '%value'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '500',
+  'translation' => "Seuls des nombres et le marqueur décimal (%decimal) sont autorisés dans '%field'. La valeur saisie, '%start', a été modifié en '%value'.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+))
+->values(array(
+  'lid' => '501',
+  'translation' => "Créez une liste d'options en tant que liste dans les <strong>Valeurs permises</strong> ou en tant que tableau dans le code PHP. Ces valeurs seront identiques pour '%field' dans tous les types de contenus.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
 ))
 ->execute();
 
@@ -13478,6 +20779,276 @@ $connection->insert('menu_links')
   'p9' => '0',
   'updated' => '0',
 ))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '397',
+  'plid' => '0',
+  'link_path' => 'system/files/imagecache',
+  'router_path' => 'system/files/imagecache',
+  'link_title' => '',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '397',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '398',
+  'plid' => '167',
+  'link_path' => 'admin/settings/imageapi',
+  'router_path' => 'admin/settings/imageapi',
+  'link_title' => 'ImageAPI',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:19:"Configure ImageAPI.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '167',
+  'p3' => '398',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '399',
+  'plid' => '167',
+  'link_path' => 'admin/settings/language',
+  'router_path' => 'admin/settings/language',
+  'link_title' => 'Languages',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:55:"Configure languages for content and the user interface.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '167',
+  'p3' => '399',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '400',
+  'plid' => '166',
+  'link_path' => 'admin/build/translate',
+  'router_path' => 'admin/build/translate',
+  'link_title' => 'Translate interface',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:59:"Translate the built in interface and optionally other text.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '166',
+  'p3' => '400',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '401',
+  'plid' => '399',
+  'link_path' => 'admin/settings/language/delete/%',
+  'router_path' => 'admin/settings/language/delete/%',
+  'link_title' => 'Confirm',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '167',
+  'p3' => '399',
+  'p4' => '401',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '402',
+  'plid' => '0',
+  'link_path' => 'core/modules/simpletest/files/imagecache',
+  'router_path' => 'core/modules/simpletest/files/imagecache',
+  'link_title' => '',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '402',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '403',
+  'plid' => '400',
+  'link_path' => 'admin/build/translate/delete/%',
+  'router_path' => 'admin/build/translate/delete/%',
+  'link_title' => 'Delete string',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '166',
+  'p3' => '400',
+  'p4' => '403',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '404',
+  'plid' => '399',
+  'link_path' => 'admin/settings/language/edit/%',
+  'router_path' => 'admin/settings/language/edit/%',
+  'link_title' => 'Edit language',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '167',
+  'p3' => '399',
+  'p4' => '404',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '405',
+  'plid' => '400',
+  'link_path' => 'admin/build/translate/edit/%',
+  'router_path' => 'admin/build/translate/edit/%',
+  'link_title' => 'Edit string',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '144',
+  'p2' => '166',
+  'p3' => '400',
+  'p4' => '405',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '406',
+  'plid' => '0',
+  'link_path' => 'admin/content/node-type/test-planet/fields/field_test_text_single_checkbox/remove',
+  'router_path' => 'admin/content/node-type/test-planet/fields/field_test_text_single_checkbox/remove',
+  'link_title' => 'Remove field',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '406',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('menu_router', array(
@@ -13785,7 +21356,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:10:"bluemarine";}',
   'fit' => '31',
@@ -13807,7 +21378,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:9:"chameleon";}',
   'fit' => '31',
@@ -13829,7 +21400,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:7:"garland";}',
   'fit' => '31',
@@ -13873,7 +21444,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:6:"marvin";}',
   'fit' => '31',
@@ -13895,7 +21466,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:8:"minnelli";}',
   'fit' => '31',
@@ -13917,7 +21488,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:10:"pushbutton";}',
   'fit' => '31',
@@ -14621,7 +22192,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:10:"bluemarine";}',
   'fit' => '31',
@@ -14643,7 +22214,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:9:"chameleon";}',
   'fit' => '31',
@@ -14665,7 +22236,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:7:"garland";}',
   'fit' => '31',
@@ -14709,7 +22280,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:6:"marvin";}',
   'fit' => '31',
@@ -14731,7 +22302,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:8:"minnelli";}',
   'fit' => '31',
@@ -14753,7 +22324,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:10:"pushbutton";}',
   'fit' => '31',
@@ -14769,6 +22340,160 @@ $connection->insert('menu_router')
   'position' => '',
   'weight' => '0',
   'file' => 'modules/system/system.admin.inc',
+))
+->values(array(
+  'path' => 'admin/build/translate',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:1:{i:0;s:32:"locale_translate_overview_screen";}',
+  'fit' => '7',
+  'number_parts' => '3',
+  'tab_parent' => '',
+  'tab_root' => 'admin/build/translate',
+  'title' => 'Translate interface',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '6',
+  'block_callback' => '',
+  'description' => 'Translate the built in interface and optionally other text.',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/build/translate/delete/%',
+  'load_functions' => 'a:1:{i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:2:{i:0;s:28:"locale_translate_delete_page";i:1;i:4;}',
+  'fit' => '30',
+  'number_parts' => '5',
+  'tab_parent' => '',
+  'tab_root' => 'admin/build/translate/delete/%',
+  'title' => 'Delete string',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/build/translate/edit/%',
+  'load_functions' => 'a:1:{i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:3:{i:0;s:15:"drupal_get_form";i:1;s:26:"locale_translate_edit_form";i:2;i:4;}',
+  'fit' => '30',
+  'number_parts' => '5',
+  'tab_parent' => '',
+  'tab_root' => 'admin/build/translate/edit/%',
+  'title' => 'Edit string',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/build/translate/export',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:1:{i:0;s:30:"locale_translate_export_screen";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/build/translate',
+  'tab_root' => 'admin/build/translate',
+  'title' => 'Export',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '30',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/build/translate/import',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:2:{i:0;s:15:"drupal_get_form";i:1;s:28:"locale_translate_import_form";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/build/translate',
+  'tab_root' => 'admin/build/translate',
+  'title' => 'Import',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '20',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/build/translate/overview',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:1:{i:0;s:32:"locale_translate_overview_screen";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/build/translate',
+  'tab_root' => 'admin/build/translate',
+  'title' => 'Overview',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '136',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/build/translate/search',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:1:{i:0;s:28:"locale_translate_seek_screen";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/build/translate',
+  'tab_root' => 'admin/build/translate',
+  'title' => 'Search',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '10',
+  'file' => '',
 ))
 ->values(array(
   'path' => 'admin/by-module',
@@ -17609,6 +25334,50 @@ $connection->insert('menu_router')
   'file' => 'sites/all/modules/cck/includes/content.admin.inc',
 ))
 ->values(array(
+  'path' => 'admin/content/node-type/test-planet/fields/field_test_text_single_checkbox',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:23:"content_field_edit_form";i:1;s:11:"test_planet";i:2;s:31:"field_test_text_single_checkbox";}',
+  'fit' => '63',
+  'number_parts' => '6',
+  'tab_parent' => 'admin/content/node-type/test-planet/fields',
+  'tab_root' => 'admin/content/node-type/test-planet',
+  'title' => 'Text Single Checkbox Field',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/test-planet/fields/field_test_text_single_checkbox/remove',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:25:"content_field_remove_form";i:1;s:11:"test_planet";i:2;s:31:"field_test_text_single_checkbox";}',
+  'fit' => '127',
+  'number_parts' => '7',
+  'tab_parent' => '',
+  'tab_root' => 'admin/content/node-type/test-planet/fields/field_test_text_single_checkbox/remove',
+  'title' => 'Remove field',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
   'path' => 'admin/content/node-type/test-story',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -18951,6 +26720,160 @@ $connection->insert('menu_router')
   'file' => 'modules/system/system.admin.inc',
 ))
 ->values(array(
+  'path' => 'admin/settings/imageapi',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"administer imageapi";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:1:{i:0;s:17:"imageapi_settings";}',
+  'fit' => '7',
+  'number_parts' => '3',
+  'tab_parent' => '',
+  'tab_root' => 'admin/settings/imageapi',
+  'title' => 'ImageAPI',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '6',
+  'block_callback' => '',
+  'description' => 'Configure ImageAPI.',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/settings/language',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:20:"administer languages";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:2:{i:0;s:15:"drupal_get_form";i:1;s:30:"locale_languages_overview_form";}',
+  'fit' => '7',
+  'number_parts' => '3',
+  'tab_parent' => '',
+  'tab_root' => 'admin/settings/language',
+  'title' => 'Languages',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '6',
+  'block_callback' => '',
+  'description' => 'Configure languages for content and the user interface.',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/settings/language/add',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:20:"administer languages";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:1:{i:0;s:27:"locale_languages_add_screen";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/settings/language',
+  'tab_root' => 'admin/settings/language',
+  'title' => 'Add language',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '5',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/settings/language/configure',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:20:"administer languages";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:2:{i:0;s:15:"drupal_get_form";i:1;s:31:"locale_languages_configure_form";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/settings/language',
+  'tab_root' => 'admin/settings/language',
+  'title' => 'Configure',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '10',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/settings/language/delete/%',
+  'load_functions' => 'a:1:{i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:20:"administer languages";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:3:{i:0;s:15:"drupal_get_form";i:1;s:28:"locale_languages_delete_form";i:2;i:4;}',
+  'fit' => '30',
+  'number_parts' => '5',
+  'tab_parent' => '',
+  'tab_root' => 'admin/settings/language/delete/%',
+  'title' => 'Confirm',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/settings/language/edit/%',
+  'load_functions' => 'a:1:{i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:20:"administer languages";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:3:{i:0;s:15:"drupal_get_form";i:1;s:26:"locale_languages_edit_form";i:2;i:4;}',
+  'fit' => '30',
+  'number_parts' => '5',
+  'tab_parent' => '',
+  'tab_root' => 'admin/settings/language/edit/%',
+  'title' => 'Edit language',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'admin/settings/language/overview',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:20:"administer languages";}',
+  'page_callback' => 'locale_inc_callback',
+  'page_arguments' => 'a:2:{i:0;s:15:"drupal_get_form";i:1;s:30:"locale_languages_overview_form";}',
+  'fit' => '15',
+  'number_parts' => '4',
+  'tab_parent' => 'admin/settings/language',
+  'tab_root' => 'admin/settings/language',
+  'title' => 'List',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '136',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
   'path' => 'admin/settings/logging',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -19963,6 +27886,28 @@ $connection->insert('menu_router')
   'file' => 'sites/all/modules/cck/includes/content.node_form.inc',
 ))
 ->values(array(
+  'path' => 'core/modules/simpletest/files/imagecache',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => '_imagecache_menu_access_public_files',
+  'access_arguments' => 'a:0:{}',
+  'page_callback' => 'imagecache_cache',
+  'page_arguments' => 'a:0:{}',
+  'fit' => '31',
+  'number_parts' => '5',
+  'tab_parent' => '',
+  'tab_root' => 'core/modules/simpletest/files/imagecache',
+  'title' => '',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
   'path' => 'email/%/%',
   'load_functions' => 'a:2:{i:1;s:9:"node_load";i:2;N;}',
   'to_arg_functions' => '',
@@ -20447,6 +28392,28 @@ $connection->insert('menu_router')
   'file' => '',
 ))
 ->values(array(
+  'path' => 'node/%/translate',
+  'load_functions' => 'a:1:{i:1;s:9:"node_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => '_translation_tab_access',
+  'access_arguments' => 'a:1:{i:0;i:1;}',
+  'page_callback' => 'translation_node_overview',
+  'page_arguments' => 'a:1:{i:0;i:1;}',
+  'fit' => '5',
+  'number_parts' => '3',
+  'tab_parent' => 'node/%',
+  'tab_root' => 'node/%',
+  'title' => 'Translate',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '2',
+  'file' => 'modules/translation/translation.pages.inc',
+))
+->values(array(
   'path' => 'node/%/view',
   'load_functions' => 'a:1:{i:1;s:9:"node_load";}',
   'to_arg_functions' => '',
@@ -20767,6 +28734,28 @@ $connection->insert('menu_router')
   'tab_parent' => '',
   'tab_root' => 'system/files',
   'title' => 'File download',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
+->values(array(
+  'path' => 'system/files/imagecache',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => '1',
+  'access_arguments' => 'a:0:{}',
+  'page_callback' => 'imagecache_cache_private',
+  'page_arguments' => 'a:0:{}',
+  'fit' => '7',
+  'number_parts' => '3',
+  'tab_parent' => '',
+  'tab_root' => 'system/files/imagecache',
+  'title' => '',
   'title_callback' => 't',
   'title_arguments' => '',
   'type' => '4',
@@ -21577,6 +29566,14 @@ $connection->schema()->createTable('node_comment_statistics', array(
   ),
   'primary key' => array(
     'nid',
+  ),
+  'indexes' => array(
+    'comment_count' => array(
+      'comment_count',
+    ),
+    'last_comment_uid' => array(
+      'last_comment_uid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -22857,7 +30854,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"Aggregator";s:11:"description";s:57:"Aggregates syndicated content (RSS, RDF, and Atom feeds).";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Aggregator";s:11:"description";s:57:"Aggregates syndicated content (RSS, RDF, and Atom feeds).";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/block/block.module',
@@ -22869,7 +30866,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:5:"Block";s:11:"description";s:62:"Controls the boxes that are displayed around the main content.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Block";s:11:"description";s:62:"Controls the boxes that are displayed around the main content.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/blog/blog.module',
@@ -22881,7 +30878,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Blog";s:11:"description";s:69:"Enables keeping easily and regularly updated user web pages or blogs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Blog";s:11:"description";s:69:"Enables keeping easily and regularly updated user web pages or blogs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/blogapi/blogapi.module',
@@ -22893,7 +30890,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"Blog API";s:11:"description";s:79:"Allows users to post content using applications that support XML-RPC blog APIs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Blog API";s:11:"description";s:79:"Allows users to post content using applications that support XML-RPC blog APIs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/book/book.module',
@@ -22905,7 +30902,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Book";s:11:"description";s:63:"Allows users to structure site pages in a hierarchy or outline.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Book";s:11:"description";s:63:"Allows users to structure site pages in a hierarchy or outline.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/color/color.module',
@@ -22917,7 +30914,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:5:"Color";s:11:"description";s:61:"Allows the user to change the color scheme of certain themes.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Color";s:11:"description";s:61:"Allows the user to change the color scheme of certain themes.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/comment/comment.module',
@@ -22927,9 +30924,9 @@ $connection->insert('system')
   'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '6001',
+  'schema_version' => '6005',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Comment";s:11:"description";s:57:"Allows users to comment on and discuss published content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Comment";s:11:"description";s:57:"Allows users to comment on and discuss published content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/contact/contact.module',
@@ -22941,7 +30938,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Contact";s:11:"description";s:61:"Enables the use of both personal and site-wide contact forms.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Contact";s:11:"description";s:61:"Enables the use of both personal and site-wide contact forms.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/dblog/dblog.module',
@@ -22953,7 +30950,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:16:"Database logging";s:11:"description";s:47:"Logs and records system events to the database.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:16:"Database logging";s:11:"description";s:47:"Logs and records system events to the database.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/filter/filter.module',
@@ -22965,7 +30962,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Filter";s:11:"description";s:60:"Handles the filtering of content in preparation for display.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Filter";s:11:"description";s:60:"Handles the filtering of content in preparation for display.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/forum/forum.module',
@@ -22977,7 +30974,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:5:"Forum";s:11:"description";s:50:"Enables threaded discussions about general topics.";s:12:"dependencies";a:2:{i:0;s:8:"taxonomy";i:1;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Forum";s:11:"description";s:50:"Enables threaded discussions about general topics.";s:12:"dependencies";a:2:{i:0;s:8:"taxonomy";i:1;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/help/help.module',
@@ -22989,19 +30986,19 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Help";s:11:"description";s:35:"Manages the display of online help.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Help";s:11:"description";s:35:"Manages the display of online help.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/locale/locale.module',
   'name' => 'locale',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '-1',
+  'schema_version' => '6007',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Locale";s:11:"description";s:119:"Adds language handling functionality and enables the translation of the user interface to languages other than English.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Locale";s:11:"description";s:119:"Adds language handling functionality and enables the translation of the user interface to languages other than English.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/menu/menu.module',
@@ -23013,7 +31010,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Menu";s:11:"description";s:60:"Allows administrators to customize the site navigation menu.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Menu";s:11:"description";s:60:"Allows administrators to customize the site navigation menu.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/node/node.module',
@@ -23025,7 +31022,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Node";s:11:"description";s:66:"Allows content to be submitted to the site and displayed on pages.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Node";s:11:"description";s:66:"Allows content to be submitted to the site and displayed on pages.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/openid/openid.module',
@@ -23037,7 +31034,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"OpenID";s:11:"description";s:48:"Allows users to log into your site using OpenID.";s:7:"version";s:4:"6.35";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"OpenID";s:11:"description";s:48:"Allows users to log into your site using OpenID.";s:7:"version";s:4:"6.37";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/path/path.module',
@@ -23049,7 +31046,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Path";s:11:"description";s:28:"Allows users to rename URLs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Path";s:11:"description";s:28:"Allows users to rename URLs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/php/php.module',
@@ -23061,7 +31058,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"PHP filter";s:11:"description";s:50:"Allows embedded PHP code/snippets to be evaluated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"PHP filter";s:11:"description";s:50:"Allows embedded PHP code/snippets to be evaluated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/ping/ping.module',
@@ -23073,7 +31070,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Ping";s:11:"description";s:51:"Alerts other sites when your site has been updated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Ping";s:11:"description";s:51:"Alerts other sites when your site has been updated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/poll/poll.module',
@@ -23085,7 +31082,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Poll";s:11:"description";s:95:"Allows your site to capture votes on different topics in the form of multiple choice questions.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Poll";s:11:"description";s:95:"Allows your site to capture votes on different topics in the form of multiple choice questions.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/profile/profile.module',
@@ -23097,7 +31094,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Profile";s:11:"description";s:36:"Supports configurable user profiles.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Profile";s:11:"description";s:36:"Supports configurable user profiles.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/search/search.module',
@@ -23109,7 +31106,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Search";s:11:"description";s:36:"Enables site-wide keyword searching.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Search";s:11:"description";s:36:"Enables site-wide keyword searching.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/statistics/statistics.module',
@@ -23121,7 +31118,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"Statistics";s:11:"description";s:37:"Logs access statistics for your site.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Statistics";s:11:"description";s:37:"Logs access statistics for your site.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/syslog/syslog.module',
@@ -23133,7 +31130,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Syslog";s:11:"description";s:41:"Logs and records system events to syslog.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Syslog";s:11:"description";s:41:"Logs and records system events to syslog.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/system/system.module',
@@ -23145,7 +31142,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6055',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"System";s:11:"description";s:54:"Handles general site configuration for administrators.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"System";s:11:"description";s:54:"Handles general site configuration for administrators.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/taxonomy/taxonomy.module',
@@ -23157,7 +31154,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"Taxonomy";s:11:"description";s:38:"Enables the categorization of content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Taxonomy";s:11:"description";s:38:"Enables the categorization of content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/throttle/throttle.module',
@@ -23169,7 +31166,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"Throttle";s:11:"description";s:66:"Handles the auto-throttling mechanism, to control site congestion.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Throttle";s:11:"description";s:66:"Handles the auto-throttling mechanism, to control site congestion.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/tracker/tracker.module',
@@ -23181,19 +31178,19 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Tracker";s:11:"description";s:43:"Enables tracking of recent posts for users.";s:12:"dependencies";a:1:{i:0;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Tracker";s:11:"description";s:43:"Enables tracking of recent posts for users.";s:12:"dependencies";a:1:{i:0;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/translation/translation.module',
   'name' => 'translation',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '-1',
+  'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:19:"Content translation";s:11:"description";s:57:"Allows content to be translated into different languages.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:19:"Content translation";s:11:"description";s:57:"Allows content to be translated into different languages.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/trigger/trigger.module',
@@ -23205,7 +31202,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Trigger";s:11:"description";s:90:"Enables actions to be fired on certain system events, such as when new content is created.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Trigger";s:11:"description";s:90:"Enables actions to be fired on certain system events, such as when new content is created.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/update/update.module',
@@ -23217,7 +31214,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:13:"Update status";s:11:"description";s:88:"Checks the status of available updates for Drupal and your installed modules and themes.";s:7:"version";s:4:"6.35";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:13:"Update status";s:11:"description";s:88:"Checks the status of available updates for Drupal and your installed modules and themes.";s:7:"version";s:4:"6.37";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/upload/upload.module',
@@ -23229,7 +31226,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Upload";s:11:"description";s:51:"Allows users to upload and attach files to content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Upload";s:11:"description";s:51:"Allows users to upload and attach files to content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/user/user.module',
@@ -23241,7 +31238,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"User";s:11:"description";s:47:"Manages the user registration and login system.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"User";s:11:"description";s:47:"Manages the user registration and login system.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/content.module',
@@ -23251,9 +31248,9 @@ $connection->insert('system')
   'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '6001',
+  'schema_version' => '6010',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Content";s:11:"description";s:50:"Allows administrators to define new content types.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Content";s:11:"description";s:50:"Allows administrators to define new content types.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/content_copy/content_copy.module',
@@ -23265,7 +31262,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:12:"Content Copy";s:11:"description";s:51:"Enables ability to import/export field definitions.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:12:"Content Copy";s:11:"description";s:51:"Enables ability to import/export field definitions.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/content_permissions/content_permissions.module',
@@ -23277,7 +31274,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:19:"Content Permissions";s:11:"description";s:43:"Set field-level permissions for CCK fields.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:19:"Content Permissions";s:11:"description";s:43:"Set field-level permissions for CCK fields.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/fieldgroup/fieldgroup.module',
@@ -23289,7 +31286,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"Fieldgroup";s:11:"description";s:37:"Create display groups for CCK fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Fieldgroup";s:11:"description";s:37:"Create display groups for CCK fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/nodereference/nodereference.module',
@@ -23301,7 +31298,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"Node Reference";s:11:"description";s:59:"Defines a field type for referencing one node from another.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"Node Reference";s:11:"description";s:59:"Defines a field type for referencing one node from another.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/number/number.module',
@@ -23313,7 +31310,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Number";s:11:"description";s:28:"Defines numeric field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Number";s:11:"description";s:28:"Defines numeric field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/optionwidgets/optionwidgets.module',
@@ -23325,7 +31322,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"Option Widgets";s:11:"description";s:82:"Defines selection, check box and radio button widgets for text and numeric fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"Option Widgets";s:11:"description";s:82:"Defines selection, check box and radio button widgets for text and numeric fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/text/text.module',
@@ -23337,7 +31334,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6003',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Text";s:11:"description";s:32:"Defines simple text field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Text";s:11:"description";s:32:"Defines simple text field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/userreference/userreference.module',
@@ -23349,7 +31346,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"User Reference";s:11:"description";s:56:"Defines a field type for referencing a user from a node.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"User Reference";s:11:"description";s:56:"Defines a field type for referencing a user from a node.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date/date.module',
@@ -23580,6 +31577,30 @@ $connection->insert('system')
   'info' => 'a:10:{s:4:"name";s:8:"ImageAPI";s:11:"description";s:38:"ImageAPI supporting multiple toolkits.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.1";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1305563215";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}}',
 ))
 ->values(array(
+  'filename' => 'sites/all/modules/imageapi/imageapi_gd.module',
+  'name' => 'imageapi_gd',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'throttle' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => "a:10:{s:4:\"name\";s:12:\"ImageAPI GD2\";s:11:\"description\";s:49:\"Uses PHP's built-in GD2 image processing support.\";s:7:\"package\";s:10:\"ImageCache\";s:4:\"core\";s:3:\"6.x\";s:7:\"version\";s:8:\"6.x-1.10\";s:7:\"project\";s:8:\"imageapi\";s:9:\"datestamp\";s:10:\"1305563215\";s:12:\"dependencies\";a:0:{}s:10:\"dependents\";a:0:{}s:3:\"php\";s:5:\"4.3.5\";}",
+))
+->values(array(
+  'filename' => 'sites/all/modules/imageapi/imageapi_imagemagick.module',
+  'name' => 'imageapi_imagemagick',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'throttle' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:10:{s:4:"name";s:20:"ImageAPI ImageMagick";s:11:"description";s:33:"Command Line ImageMagick support.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1305563215";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+))
+->values(array(
   'filename' => 'sites/all/modules/imagecache/imagecache.module',
   'name' => 'imagecache',
   'type' => 'module',
@@ -23589,7 +31610,19 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"ImageAPI";s:11:"description";s:38:"ImageAPI supporting multiple toolkits.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.1";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1305563215";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}}',
+  'info' => 'a:10:{s:4:"name";s:10:"ImageCache";s:11:"description";s:36:"Dynamic image manipulator and cache.";s:7:"package";s:10:"ImageCache";s:12:"dependencies";a:1:{i:0;s:8:"imageapi";}s:4:"core";s:3:"6.x";s:7:"version";s:11:"6.x-2.0-rc1";s:7:"project";s:10:"imagecache";s:9:"datestamp";s:10:"1337742655";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/imagecache/imagecache_ui.module',
+  'name' => 'imagecache_ui',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'throttle' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:10:{s:4:"name";s:13:"ImageCache UI";s:11:"description";s:26:"ImageCache User Interface.";s:12:"dependencies";a:2:{i:0;s:10:"imagecache";i:1;s:8:"imageapi";}s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:7:"version";s:11:"6.x-2.0-rc1";s:7:"project";s:10:"imagecache";s:9:"datestamp";s:10:"1337742655";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imagefield/imagefield.module',
@@ -23697,7 +31730,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/chameleon/chameleon.info',
@@ -23709,7 +31742,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/chameleon/marvin/marvin.info',
@@ -23721,7 +31754,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/garland/garland.info',
@@ -23733,7 +31766,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/garland/minnelli/minnelli.info',
@@ -23745,7 +31778,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}',
+  'info' => 'a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}',
 ))
 ->values(array(
   'filename' => 'themes/pushbutton/pushbutton.info',
@@ -23757,7 +31790,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.35";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1426707431";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.37";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1440020160";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->execute();
 
@@ -24367,8 +32400,8 @@ $connection->insert('users')
   'signature' => '',
   'signature_format' => '0',
   'created' => '0',
-  'access' => '0',
-  'login' => '0',
+  'access' => '1444943005',
+  'login' => '1444943005',
   'status' => '1',
   'timezone' => NULL,
   'language' => '',
@@ -24668,7 +32701,19 @@ $connection->insert('variable')
   'value' => 'i:0;',
 ))
 ->values(array(
+  'name' => 'comment_anonymous_company',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_anonymous_employee',
+  'value' => 'i:0;',
+))
+->values(array(
   'name' => 'comment_anonymous_page',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_anonymous_sponsor',
   'value' => 'i:0;',
 ))
 ->values(array(
@@ -24676,68 +32721,224 @@ $connection->insert('variable')
   'value' => 'i:1;',
 ))
 ->values(array(
+  'name' => 'comment_anonymous_test_event',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_anonymous_test_page',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_anonymous_test_planet',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_anonymous_test_story',
+  'value' => 'i:0;',
+))
+->values(array(
   'name' => 'comment_article',
   'value' => 's:1:"2";',
 ))
 ->values(array(
   'name' => 'comment_controls_article',
-  'value' => 's:1:"3";',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'comment_controls_company',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'comment_controls_employee',
+  'value' => 'i:3;',
 ))
 ->values(array(
   'name' => 'comment_controls_page',
   'value' => 's:1:"3";',
 ))
 ->values(array(
+  'name' => 'comment_controls_sponsor',
+  'value' => 'i:3;',
+))
+->values(array(
   'name' => 'comment_controls_story',
-  'value' => 's:1:"3";',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'comment_controls_test_event',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'comment_controls_test_page',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'comment_controls_test_planet',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'comment_controls_test_story',
+  'value' => 'i:3;',
 ))
 ->values(array(
   'name' => 'comment_default_mode_article',
-  'value' => 's:1:"4";',
+  'value' => 'i:4;',
+))
+->values(array(
+  'name' => 'comment_default_mode_company',
+  'value' => 'i:4;',
+))
+->values(array(
+  'name' => 'comment_default_mode_employee',
+  'value' => 'i:4;',
 ))
 ->values(array(
   'name' => 'comment_default_mode_page',
   'value' => 's:1:"4";',
 ))
 ->values(array(
+  'name' => 'comment_default_mode_sponsor',
+  'value' => 'i:4;',
+))
+->values(array(
   'name' => 'comment_default_mode_story',
   'value' => 's:1:"2";',
 ))
 ->values(array(
+  'name' => 'comment_default_mode_test_event',
+  'value' => 'i:4;',
+))
+->values(array(
+  'name' => 'comment_default_mode_test_page',
+  'value' => 'i:4;',
+))
+->values(array(
+  'name' => 'comment_default_mode_test_planet',
+  'value' => 'i:4;',
+))
+->values(array(
+  'name' => 'comment_default_mode_test_story',
+  'value' => 'i:4;',
+))
+->values(array(
   'name' => 'comment_default_order_article',
-  'value' => 's:1:"1";',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_order_company',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_order_employee',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_default_order_page',
   'value' => 's:1:"1";',
 ))
 ->values(array(
+  'name' => 'comment_default_order_sponsor',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'comment_default_order_story',
-  'value' => 's:1:"1";',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_order_test_event',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_order_test_page',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_order_test_planet',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_order_test_story',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_default_per_page_article',
-  'value' => 's:2:"50";',
+  'value' => 'i:50;',
+))
+->values(array(
+  'name' => 'comment_default_per_page_company',
+  'value' => 'i:50;',
+))
+->values(array(
+  'name' => 'comment_default_per_page_employee',
+  'value' => 'i:50;',
 ))
 ->values(array(
   'name' => 'comment_default_per_page_page',
   'value' => 's:2:"50";',
 ))
 ->values(array(
+  'name' => 'comment_default_per_page_sponsor',
+  'value' => 'i:50;',
+))
+->values(array(
   'name' => 'comment_default_per_page_story',
-  'value' => 's:2:"70";',
+  'value' => 'i:70;',
+))
+->values(array(
+  'name' => 'comment_default_per_page_test_event',
+  'value' => 'i:50;',
+))
+->values(array(
+  'name' => 'comment_default_per_page_test_page',
+  'value' => 'i:50;',
+))
+->values(array(
+  'name' => 'comment_default_per_page_test_planet',
+  'value' => 'i:50;',
+))
+->values(array(
+  'name' => 'comment_default_per_page_test_story',
+  'value' => 'i:50;',
 ))
 ->values(array(
   'name' => 'comment_form_location_article',
-  'value' => 's:1:"0";',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_form_location_company',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_form_location_employee',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'comment_form_location_page',
   'value' => 's:1:"0";',
 ))
 ->values(array(
+  'name' => 'comment_form_location_sponsor',
+  'value' => 'i:0;',
+))
+->values(array(
   'name' => 'comment_form_location_story',
-  'value' => 's:1:"0";',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_form_location_test_event',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_form_location_test_page',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_form_location_test_planet',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_form_location_test_story',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'comment_page',
@@ -24745,15 +32946,43 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_preview_article',
-  'value' => 's:1:"1";',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_preview_company',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_preview_employee',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_preview_page',
   'value' => 's:1:"1";',
 ))
 ->values(array(
+  'name' => 'comment_preview_sponsor',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'comment_preview_story',
-  'value' => 's:1:"0";',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_preview_test_event',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_preview_test_page',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_preview_test_planet',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_preview_test_story',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_story',
@@ -24761,15 +32990,43 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_subject_field_article',
-  'value' => 's:1:"1";',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_company',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_employee',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_subject_field_page',
-  'value' => 's:1:"1";',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_sponsor',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_subject_field_story',
-  'value' => 's:1:"0";',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_subject_field_test_event',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_test_page',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_test_planet',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_test_story',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'configurable_timezones',
@@ -24793,7 +33050,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'content_schema_version',
-  'value' => 's:4:"6010";',
+  'value' => 'i:6009;',
 ))
 ->values(array(
   'name' => 'cron_threshold_error',
@@ -24805,7 +33062,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'css_js_query_string',
-  'value' => 's:20:"AkMTxRZndiw700000000";',
+  'value' => 's:20:"SAkMTxRZndiw70000000";',
 ))
 ->values(array(
   'name' => 'date:story:4:field_test_datestamp_fromto',
@@ -25096,6 +33353,10 @@ $connection->insert('variable')
   'value' => 'i:1;',
 ))
 ->values(array(
+  'name' => 'event_nodeapi_article',
+  'value' => 's:5:"never";',
+))
+->values(array(
   'name' => 'event_nodeapi_event',
   'value' => 's:3:"all";',
 ))
@@ -25153,7 +33414,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'form_build_id_article',
-  'value' => 's:48:"form-uujdfNoFjx9PnvEkSoFnanxF1waDx_AikUQLRTGGdvQ";',
+  'value' => 's:48:"form-mXZfFJxcCFGB80PPYtNOuwYbho6-xKTvrRLb3TAMkic";',
 ))
 ->values(array(
   'name' => 'forum_block_num_0',
@@ -25186,6 +33447,22 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'image_toolkit',
   'value' => 's:2:"gd";',
+))
+->values(array(
+  'name' => 'javascript_parsed',
+  'value' => 'a:0:{}',
+))
+->values(array(
+  'name' => 'language_content_type_article',
+  'value' => 's:1:"2";',
+))
+->values(array(
+  'name' => 'language_count',
+  'value' => 'i:2;',
+))
+->values(array(
+  'name' => 'language_default',
+  'value' => 'O:8:"stdClass":11:{s:8:"language";s:2:"en";s:4:"name";s:7:"English";s:6:"native";s:7:"English";s:9:"direction";s:1:"0";s:7:"enabled";i:1;s:7:"plurals";s:1:"0";s:7:"formula";s:0:"";s:6:"domain";s:0:"";s:6:"prefix";s:0:"";s:6:"weight";s:1:"0";s:10:"javascript";s:0:"";}',
 ))
 ->values(array(
   'name' => 'locale_cache_strings',
