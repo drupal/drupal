@@ -39895,9 +39895,9 @@ $connection->insert('users')
 ))
 ->values(array(
   'uid' => '1',
-  'name' => 'root',
+  'name' => 'admin',
   'pass' => '$S$D/HVkgCg1Hvi7DN5KVSgNl.2C5g8W6oe/OoIRMUlyjkmPugQRhoB',
-  'mail' => '',
+  'mail' => 'admin@local.host',
   'theme' => '',
   'signature' => '',
   'signature_format' => NULL,

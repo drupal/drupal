@@ -188,6 +188,15 @@ class Row {
   }
 
   /**
+   * Clones the row with an empty set of destination values.
+   *
+   * @return static
+   */
+  public function cloneWithoutDestination() {
+    return (new static($this->getSource(), $this->sourceIds, $this->isStub()))->freezeSource();
+  }
+
+  /**
    * Tests if destination property exists.
    *
    * @param array|string $property

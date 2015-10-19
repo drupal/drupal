@@ -109,6 +109,17 @@ class EntityContentBase extends Entity {
    *   The row object to update from.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
+    // If the migration has specified a list of properties to be overwritten,
+    // clone the row with an empty set of destination values, and re-add only
+    // the specified properties.
+    if (isset($this->configuration['overwrite_properties'])) {
+      $clone = $row->cloneWithoutDestination();
+      foreach ($this->configuration['overwrite_properties'] as $property) {
+        $clone->setDestinationProperty($property, $row->getDestinationProperty($property));
+      }
+      $row = $clone;
+    }
+
     foreach ($row->getDestination() as $field_name => $values) {
       $field = $entity->$field_name;
       if ($field instanceof TypedDataInterface) {

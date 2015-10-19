@@ -10,6 +10,13 @@ migrate_plugin:
 migrate_destination:
   type: migrate_plugin
   label: 'Destination'
+  mapping:
+    overwrite_properties:
+      type: sequence
+      label: 'Properties to overwrite'
+      sequence:
+        type: string
+        label: 'Property'
 
 migrate_source:
   type: migrate_plugin
