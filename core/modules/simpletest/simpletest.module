@@ -178,7 +178,9 @@ function simpletest_run_tests($test_list) {
 function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames) {
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
   $ret = simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file);
-  if ($ret) {
+  // A return value of 0 = passed test, 1 = failed test, > 1 indicates segfault
+  // timeout, or other type of failure.
+  if ($ret > 1) {
     // Something broke during the execution of phpunit.
     // Return an error record of all failed classes.
     $rows[] = [
