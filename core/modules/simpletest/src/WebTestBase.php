@@ -680,14 +680,11 @@ abstract class WebTestBase extends TestBase {
     // Initialize user 1 and session name.
     $this->initUserSession();
 
-    // Get parameters for install_drupal() before removing global variables.
-    $parameters = $this->installParameters();
-
     // Prepare the child site settings.
     $this->prepareSettings();
 
     // Execute the non-interactive installer.
-    $this->doInstall($parameters);
+    $this->doInstall();
 
     // Import new settings.php written by the installer.
     $this->initSettings();
@@ -711,12 +708,9 @@ abstract class WebTestBase extends TestBase {
   /**
    * Execute the non-interactive installer.
    *
-   * @param array $parameters
-   *   Parameters to pass to install_drupal().
-   *
    * @see install_drupal()
    */
-  protected function doInstall(array $parameters = []) {
+  protected function doInstall() {
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($this->classLoader, $this->installParameters());
   }
