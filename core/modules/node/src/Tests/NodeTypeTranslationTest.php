@@ -29,11 +29,18 @@ class NodeTypeTranslationTest extends WebTestBase {
   );
 
   /**
+   * The default language code to use in this test.
+   *
+   * @var array
+   */
+  protected $defaultLangcode = 'fr';
+
+  /**
    * Languages to enable.
    *
    * @var array
    */
-  protected $langcodes = array('fr');
+  protected $additionalLangcodes = ['es'];
 
   /**
    * Administrator user for tests.
@@ -56,9 +63,24 @@ class NodeTypeTranslationTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser($admin_permissions);
 
     // Add languages.
-    foreach ($this->langcodes as $langcode) {
+    foreach ($this->additionalLangcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Install Drupal in a language other than English for this test. This is not
+   * needed to test the node type translation itself but acts as a regression
+   * test.
+   *
+   * @see https://www.drupal.org/node/2584603
+   */
+  protected function installParameters() {
+    $parameters = parent::installParameters();
+    $parameters['parameters']['langcode'] = $this->defaultLangcode;
+    return $parameters;
   }
 
   /**
@@ -71,14 +93,13 @@ class NodeTypeTranslationTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => $type, 'name' => $name));
 
     // Translate the node type name.
-    $langcode = $this->langcodes[0];
+    $langcode = $this->additionalLangcodes[0];
     $translated_name = $langcode . '-' . $name;
     $edit = array(
       "translation[config_names][node.type.$type][name]" => $translated_name,
     );
 
     // Edit the title label to avoid having an exception when we save the translation.
-    $this->drupalPostForm("admin/structure/types/manage/$type", array('title_label' => 'Edited title'), t('Save content type'));
     $this->drupalPostForm("admin/structure/types/manage/$type/translate/$langcode/add", $edit, t('Save translation'));
 
     // Check the name is translated without admin theme for editing.
@@ -100,7 +121,7 @@ class NodeTypeTranslationTest extends WebTestBase {
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(array('type' => $type, 'name' => $name));
-    $langcode = $this->langcodes[0];
+    $langcode = $this->additionalLangcodes[0];
 
     // Edit the title label for it to be displayed on the translation form.
     $this->drupalPostForm("admin/structure/types/manage/$type", array('title_label' => 'Edited title'), t('Save content type'));
