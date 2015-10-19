@@ -887,7 +887,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
 /**
  * Constructs a drupal_render() style array from an array of loaded users.
  *
- * @param \Drupal\user\UserInterface[] $account
+ * @param \Drupal\user\UserInterface[] $accounts
  *   An array of user accounts as returned by User::loadMultiple().
  * @param string $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser', etc. Defaults to 'teaser.'
@@ -1189,7 +1189,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
  *   language.
  *
  * @return array
- *   An array containint various information about the message.
+ *   An array containing various information about the message.
  *   See \Drupal\Core\Mail\MailManagerInterface::mail() for details.
  *
  * @see user_mail_tokens()
