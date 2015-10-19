@@ -585,8 +585,11 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
     parent::calculateDependencies();
     $this->calculatePluginDependencies($this->getSourcePlugin());
     $this->calculatePluginDependencies($this->getDestinationPlugin());
-    // Add dependencies on required migration dependencies.
-    foreach ($this->getMigrationDependencies()['required'] as $dependency) {
+
+    // Add hard dependencies on required migrations.
+    $dependencies = $this->getEntityManager()->getStorage($this->entityTypeId)
+      ->getVariantIds($this->getMigrationDependencies()['required']);
+    foreach ($dependencies as $dependency) {
       $this->addDependency('config', $this->getEntityType()->getConfigPrefix() . '.' . $dependency);
     }
 

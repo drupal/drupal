@@ -92,7 +92,7 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
    * @return string[]
    *   The expanded list of IDs.
    */
-  protected function getVariantIds(array $ids) {
+  public function getVariantIds(array $ids) {
     // Re-index the array numerically, since we need to limit the loop by size.
     $ids = array_values($ids);
 
