@@ -7,7 +7,14 @@ builder:
 source:
   plugin: d6_term_node
 process:
-  nid: nid
+  nid:
+    -
+      plugin: migration
+      migration: d6_node:*
+      source: nid
+    -
+      plugin: skip_on_empty
+      method: row
   type: type
   # The actual field name is dynamic and will be added by the builder.
 destination:

@@ -7,6 +7,9 @@
 
 namespace Drupal\taxonomy\Tests\Migrate\d6;
 
+use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
@@ -30,13 +33,14 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
     $this->installSchema('node', ['node_access']);
     $this->migrateContent();
     $this->migrateTaxonomy();
-    $this->executeMigrations(['d6_term_node:*']);
   }
 
   /**
    * Tests the Drupal 6 term-node association to Drupal 8 migration.
    */
   public function testTermNode() {
+    $this->executeMigrations(['d6_term_node:*']);
+
     $this->container->get('entity.manager')
       ->getStorage('node')
       ->resetCache([1, 2]);
@@ -49,6 +53,22 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(2, count($node->vocabulary_2_i_1_));
     $this->assertIdentical('2', $node->vocabulary_2_i_1_[0]->target_id);
     $this->assertIdentical('3', $node->vocabulary_2_i_1_[1]->target_id);
+  }
+
+  /**
+   * Tests that term associations are ignored when they belong to nodes which
+   * were not migrated.
+   */
+  public function testSkipNonExistentNode() {
+    // Node 2 is migrated by d6_node__story, but we need to pretend that it
+    // failed, so record that in the map table.
+    $this->mockFailure('d6_node__story', ['nid' => 2]);
+
+    // d6_term_node__2 should skip over node 2 (a.k.a. revision 3) because,
+    // according to the map table, it failed.
+    $migration = Migration::load('d6_term_node__2');
+    $this->executeMigration($migration);
+    $this->assertNull($migration->getIdMap()->lookupDestinationId(['vid' => 3])[0]);
   }
 
 }
