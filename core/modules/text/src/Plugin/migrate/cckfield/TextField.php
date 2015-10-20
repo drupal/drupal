@@ -38,35 +38,55 @@ class TextField extends CckFieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
-    $process = array(
-      array(
-        'plugin' => 'iterator',
-        'source' => $field_name,
-        // See \Drupal\migrate_drupal\Plugin\migrate\source\d6\User::baseFields(),
-        // signature_format for an example of the YAML that represents this
-        // process array.
-        'process' => [
-          'value' => 'value',
-          'format' => [
-            [
-              'plugin' => 'static_map',
-              'bypass' => TRUE,
-              'source' => 'format',
-              'map' => [0 => NULL],
+  public function processCckFieldValues(MigrationInterface $migration, $field_name, $field_info) {
+    if ($field_info['widget_type'] == 'optionwidgets_onoff') {
+      $process = [
+        'value' => [
+          'plugin' => 'static_map',
+          'source' => 'value',
+          'default_value' => 0,
+        ],
+      ];
+
+      $checked_value = explode("\n", $field_info['global_settings']['allowed_values'])[1];
+      if (strpos($checked_value, '|') !== FALSE) {
+        $checked_value = substr($checked_value, 0, strpos($checked_value, '|'));
+      }
+      $process['value']['map'][$checked_value] = 1;
+    }
+    else {
+      // See \Drupal\migrate_drupal\Plugin\migrate\source\d6\User::baseFields(),
+      // signature_format for an example of the YAML that represents this
+      // process array.
+      $process = [
+        'value' => 'value',
+        'format' => [
+          [
+            'plugin' => 'static_map',
+            'bypass' => TRUE,
+            'source' => 'format',
+            'map' => [0 => NULL],
+          ],
+          [
+            'plugin' => 'skip_on_empty',
+            'method' => 'process',
+          ],
+          [
+            'plugin' => 'migration',
+            'migration' => [
+              'd6_filter_format',
+              'd7_filter_format',
             ],
-            [
-              'plugin' => 'skip_on_empty',
-              'method' => 'process',
-            ],
-            [
-              'plugin' => 'migration',
-              'migration' => 'd6_filter_format',
-              'source' => 'format',
-            ],
+            'source' => 'format',
           ],
         ],
-      ),
+      ];
+    }
+
+    $process = array(
+      'plugin' => 'iterator',
+      'source' => $field_name,
+      'process' => $process,
     );
     $migration->setProcessOfProperty($field_name, $process);
   }

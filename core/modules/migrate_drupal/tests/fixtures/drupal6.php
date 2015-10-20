@@ -2599,6 +2599,18 @@ $connection->insert('content_node_field')
   'locked' => '0',
 ))
 ->values(array(
+  'field_name' => 'field_test_text_single_checkbox2',
+  'type' => 'text',
+  'global_settings' => "a:4:{s:15:\"text_processing\";s:1:\"0\";s:10:\"max_length\";s:0:\"\";s:14:\"allowed_values\";s:10:\"Off\r\nHello\";s:18:\"allowed_values_php\";s:0:\"\";}",
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'text',
+  'db_columns' => 'a:1:{s:5:"value";a:5:{s:4:"type";s:4:"text";s:4:"size";s:3:"big";s:8:"not null";b:0;s:8:"sortable";b:1;s:5:"views";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_test_three',
   'type' => 'number_decimal',
   'global_settings' => 'a:9:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:3:"600";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:7:"decimal";s:1:".";}',
@@ -2945,6 +2957,18 @@ $connection->insert('content_node_field_instance')
   'widget_active' => '1',
 ))
 ->values(array(
+  'field_name' => 'field_test_text_single_checkbox2',
+  'type_name' => 'story',
+  'weight' => '19',
+  'label' => 'Text Single Checkbox Field 2',
+  'widget_type' => 'optionwidgets_onoff',
+  'widget_settings' => 'a:2:{s:13:"default_value";a:1:{i:0;a:1:{s:5:"value";N;}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => 'Checkbox that uses keys only and no label.',
+  'widget_module' => 'optionwidgets',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_test_three',
   'type_name' => 'story',
   'weight' => '2',
@@ -3159,6 +3183,11 @@ $connection->schema()->createTable('content_type_story', array(
       'not null' => FALSE,
       'size' => 'normal',
     ),
+    'field_test_text_single_checkbox2_value' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'big',
+    ),
   ),
   'primary key' => array(
     'vid',
@@ -3199,6 +3228,7 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid',
   'field_test_imagefield_list',
   'field_test_imagefield_data',
+  'field_test_text_single_checkbox2_value',
 ))
 ->values(array(
   'nid' => '1',
@@ -3227,6 +3257,7 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
+  'field_test_text_single_checkbox2_value' => 'Hello',
 ))
 ->values(array(
   'nid' => '1',
@@ -3255,6 +3286,7 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
+  'field_test_text_single_checkbox2_value' => NULL,
 ))
 ->values(array(
   'nid' => '2',
@@ -3283,6 +3315,7 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
+  'field_test_text_single_checkbox2_value' => NULL,
 ))
 ->values(array(
   'nid' => '2',
@@ -3311,6 +3344,7 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
+  'field_test_text_single_checkbox2_value' => NULL,
 ))
 ->values(array(
   'nid' => '9',
@@ -3339,6 +3373,7 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
+  'field_test_text_single_checkbox2_value' => NULL,
 ))
 ->execute();
 
@@ -24619,6 +24654,50 @@ $connection->insert('menu_router')
   'number_parts' => '7',
   'tab_parent' => '',
   'tab_root' => 'admin/content/node-type/story/fields/field_test_text_single_checkbox/remove',
+  'title' => 'Remove field',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/story/fields/field_test_text_single_checkbox2',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:23:"content_field_edit_form";i:1;s:5:"story";i:2;s:32:"field_test_text_single_checkbox2";}',
+  'fit' => '63',
+  'number_parts' => '6',
+  'tab_parent' => 'admin/content/node-type/story/fields',
+  'tab_root' => 'admin/content/node-type/story',
+  'title' => 'Text Single Checkbox Field 2',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/story/fields/field_test_text_single_checkbox2/remove',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:25:"content_field_remove_form";i:1;s:5:"story";i:2;s:32:"field_test_text_single_checkbox2";}',
+  'fit' => '127',
+  'number_parts' => '7',
+  'tab_parent' => '',
+  'tab_root' => 'admin/content/node-type/story/fields/field_test_text_single_checkbox2/remove',
   'title' => 'Remove field',
   'title_callback' => 't',
   'title_arguments' => '',
