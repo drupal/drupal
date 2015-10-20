@@ -8,6 +8,7 @@
 namespace Drupal\page_cache\StackMiddleware;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
@@ -206,25 +207,55 @@ class PageCache implements HttpKernelInterface {
    *   A response object.
    */
   protected function fetch(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+    /** @var \Symfony\Component\HttpFoundation\Response $response */
     $response = $this->httpKernel->handle($request, $type, $catch);
 
-    // Currently it is not possible to cache some types of responses. Therefore
-    // exclude binary file responses (generated files, e.g. images with image
-    // styles) and streamed responses (files directly read from the disk).
-    // see: https://github.com/symfony/symfony/issues/9128#issuecomment-25088678
+    // Drupal's primary cache invalidation architecture is cache tags: any
+    // response that varies by a configuration value or data in a content
+    // entity should have cache tags, to allow for instant cache invalidation
+    // when that data is updated. However, HTTP does not standardize how to
+    // encode cache tags in a response. Different CDNs implement their own
+    // approaches, and configurable reverse proxies (e.g., Varnish) allow for
+    // custom implementations. To keep Drupal's internal page cache simple, we
+    // only cache CacheableResponseInterface responses, since those provide a
+    // defined API for retrieving cache tags. For responses that do not
+    // implement CacheableResponseInterface, there's no easy way to distinguish
+    // responses that truly don't depend on any site data from responses that
+    // contain invalidation information customized to a particular proxy or
+    // CDN.
+    // - Drupal modules are encouraged to use CacheableResponseInterface
+    //   responses where possible and to leave the encoding of that information
+    //   into response headers to the corresponding proxy/CDN integration
+    //   modules.
+    // - Custom applications that wish to provide internal page cache support
+    //   for responses that do not implement CacheableResponseInterface may do
+    //   so by replacing/extending this middleware service or adding another
+    //   one.
+    if (!$response instanceof CacheableResponseInterface) {
+      return $response;
+    }
+
+    // Currently it is not possible to cache binary file or streamed responses:
+    // https://github.com/symfony/symfony/issues/9128#issuecomment-25088678.
+    // Therefore exclude them, even for subclasses that implement
+    // CacheableResponseInterface.
     if ($response instanceof BinaryFileResponse || $response instanceof StreamedResponse) {
       return $response;
     }
 
+    // Allow policy rules to further restrict which responses to cache.
     if ($this->responsePolicy->check($response, $request) === ResponsePolicyInterface::DENY) {
       return $response;
     }
 
-    // Use the actual timestamp from an Expires header, if available.
+    // The response passes all of the above checks, so cache it.
+    // - Get the tags from CacheableResponseInterface per the earlier comments.
+    // - Get the time expiration from the Expires header, rather than the
+    //   interface, but see https://www.drupal.org/node/2352009 about possibly
+    //   changing that.
+    $tags = $response->getCacheableMetadata()->getCacheTags();
     $date = $response->getExpires()->getTimestamp();
     $expire = ($date > time()) ? $date : Cache::PERMANENT;
-
-    $tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
     $this->set($request, $response, $expire, $tags);
 
     // Mark response as a cache miss.

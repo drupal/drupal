@@ -806,6 +806,10 @@ abstract class WebTestBase extends TestBase {
     // TestBase::restoreEnvironment() will delete the entire site directory.
     // Not using File API; a potential error must trigger a PHP warning.
     chmod(DRUPAL_ROOT . '/' . $this->siteDirectory, 0777);
+
+    // During tests, cacheable responses should get the debugging cacheability
+    // headers by default.
+    $this->setContainerParameter('http.response.debug_cacheability_headers', TRUE);
   }
 
   /**
@@ -3011,6 +3015,20 @@ abstract class WebTestBase extends TestBase {
   protected function assertNoCacheTag($cache_tag) {
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
     $this->assertFalse(in_array($cache_tag, $cache_tags), "'" . $cache_tag . "' is absent in the X-Drupal-Cache-Tags header.");
+  }
+
+  /**
+   * Enables/disables the cacheability headers.
+   *
+   * Sets the http.response.debug_cacheability_headers container parameter.
+   *
+   * @param bool $value
+   *   (optional) Whether the debugging cacheability headers should be sent.
+   */
+  protected function setHttpResponseDebugCacheabilityHeaders($value = TRUE) {
+    $this->setContainerParameter('http.response.debug_cacheability_headers', $value);
+    $this->rebuildContainer();
+    $this->resetAll();
   }
 
 }

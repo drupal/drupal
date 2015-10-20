@@ -16,6 +16,7 @@ parameters:
       tags: []
   factory.keyvalue:
     default: keyvalue.database
+  http.response.debug_cacheability_headers: false
   factory.keyvalue.expirable:
     default: keyvalue.expirable.database
   filter_protocols:
@@ -1070,7 +1071,7 @@ services:
     class: Drupal\Core\EventSubscriber\FinishResponseSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@language_manager', '@config.factory', '@page_cache_request_policy', '@page_cache_response_policy', '@cache_contexts_manager']
+    arguments: ['@language_manager', '@config.factory', '@page_cache_request_policy', '@page_cache_response_policy', '@cache_contexts_manager', '%http.response.debug_cacheability_headers%']
   response_generator_subscriber:
     class: Drupal\Core\EventSubscriber\ResponseGeneratorSubscriber
     tags:

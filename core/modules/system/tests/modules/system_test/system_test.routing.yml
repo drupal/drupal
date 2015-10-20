@@ -137,6 +137,13 @@ system_test.respond_response:
   requirements:
     _access: 'TRUE'
 
+system_test.respond_public_response:
+  path: '/system-test/respond-public-response'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithPublicResponse'
+  requirements:
+    _access: 'TRUE'
+
 system_test.respond_cacheable_response:
   path: '/system-test/respond-cacheable-reponse'
   defaults:

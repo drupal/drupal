@@ -91,6 +91,18 @@ class RouterTest extends WebTestBase {
     $headers = $this->drupalGetHeaders();
     $this->assertEqual($headers['x-drupal-cache-contexts'], 'user.roles');
     $this->assertEqual($headers['x-drupal-cache-tags'], '');
+
+    // Finally, verify that the X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags
+    // headers are not sent when their container parameter is set to FALSE.
+    $this->drupalGet('router_test/test18');
+    $headers = $this->drupalGetHeaders();
+    $this->assertTrue(isset($headers['x-drupal-cache-contexts']));
+    $this->assertTrue(isset($headers['x-drupal-cache-tags']));
+    $this->setHttpResponseDebugCacheabilityHeaders(FALSE);
+    $this->drupalGet('router_test/test18');
+    $headers = $this->drupalGetHeaders();
+    $this->assertFalse(isset($headers['x-drupal-cache-contexts']));
+    $this->assertFalse(isset($headers['x-drupal-cache-tags']));
   }
 
   /**
