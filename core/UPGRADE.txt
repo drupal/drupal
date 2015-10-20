@@ -1,17 +1,24 @@
 INTRODUCTION
 ------------
-This document describes how to:
+This document describes how to update your Drupal site between 8.x.x minor and
+patch versions; for example, from 8.1.2 to 8.1.3, or from 8.3.5 to 8.4.0.
 
-  * Update your Drupal site from one minor 8.x version to another minor 8.x
-    version; for example, from 8.8 to 8.9, or from 8.6 to 8.10.
-
-  * Migrate your Drupal site to version 8.x.
+To upgrade from a previous major version (for example, Drupal 6 or 7), the
+process involves importing site configuration and content from your old site
+into a new Drupal 8 site. The tools and process are currently experimental,
+rather than being fully supported, so be sure to test in a development
+environment. You will need to use the contributed Drupal Upgrade module
+(https://www.drupal.org/project/migrate_upgrade), as well as the core Migrate
+and Migrate Drupal modules. See https://www.drupal.org/upgrade/migrate for
+details, and https://www.drupal.org/node/2167633 for known issues.
 
 First steps and definitions:
 
-  * If you are upgrading to Drupal version x.y, then x is known as the major
-    version number, and y is known as the minor version number. The download
-    file will be named drupal-x.y.tar.gz (or drupal-x.y.zip).
+  * If you are upgrading to Drupal version x.y.z, then x is known as the major
+    version number, y is known as the minor version number, and z is known as
+    the patch version number. The download file will be named
+    drupal-x.y.z.tar.gz (or drupal-x.y.z.zip). Previous Drupal versions used
+    only x.y (MAJOR.MINOR) to designate their versions.
 
   * All directories mentioned in this document are relative to the directory of
     your Drupal installation.
@@ -46,9 +53,9 @@ If you encounter errors during this process,
 More in-depth information on upgrading can be found at
 https://www.drupal.org/upgrade
 
-MINOR VERSION UPDATES
----------------------
-To update from one minor 8.x version of Drupal to any later 8.x version, after
+MINOR AND PATCH VERSION UPDATES
+-------------------------------
+To update from one 8.x.x version of Drupal to any later 8.x.x version, after
 following the instructions in the INTRODUCTION section at the top of this file:
 
 1. Log in as a user with the permission "Administer software updates".
@@ -87,20 +94,20 @@ following the instructions in the INTRODUCTION section at the top of this file:
    this page you can scroll down or use the filter to find your version and its
    release notes.
 
-4. Download the latest Drupal 8.x release from https://www.drupal.org to a
+4. Download the latest Drupal 8.x.x release from https://www.drupal.org to a
    directory outside of your web root. Extract the archive and copy the files
    into your Drupal directory.
 
    On a typical Unix/Linux command line, use the following commands to download
    and extract:
 
-     wget https://www.drupal.org/files/projects/drupal-x.y.tar.gz
-     tar -zxvf drupal-x.y.tar.gz
+     wget https://www.drupal.org/files/projects/drupal-x.y.z.tar.gz
+     tar -zxvf drupal-x.y.z.tar.gz
 
-   This creates a new directory drupal-x.y/ containing all Drupal files and
+   This creates a new directory drupal-x.y.z/ containing all Drupal files and
    directories. Copy the files into your Drupal installation directory:
 
-     cp -R drupal-x.y/* drupal-x.y/.htaccess /path/to/your/installation
+     cp -R drupal-x.y.z/* drupal-x.y.z/.htaccess /path/to/your/installation
 
    If you do not have command line access to your server, download the archive
    from https://www.drupal.org using your web browser, extract it, and then use
@@ -135,10 +142,3 @@ following the instructions in the INTRODUCTION section at the top of this file:
    Disable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
-MAJOR VERSION MIGRATION
------------------------
-Upgrading from a prior major version of Drupal to Drupal 8.x is not possible.
-The process now requires a migration to a Drupal 8.x site, using the Migrate
-module in Drupal core.
-
-Note that migration support in Drupal 8 is currently only partially implemented.
