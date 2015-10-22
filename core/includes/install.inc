@@ -210,7 +210,6 @@ function drupal_get_database_types() {
  *   @endcode
  *   gets dumped as:
  *   @code
- *   $config_directories['active'] = 'config_hash/active';
  *   $config_directories['sync'] = 'config_hash/sync'
  *   @endcode
  */
@@ -524,8 +523,7 @@ function drupal_install_config_directories() {
  * Ensures that the config directory exists and is writable, or can be made so.
  *
  * @param string $type
- *   Type of config directory to return. Drupal core provides 'active' and
- *   'sync'.
+ *   Type of config directory to return. Drupal core provides 'sync'.
  *
  * @return bool
  *   TRUE if the config directory exists and is writable.
