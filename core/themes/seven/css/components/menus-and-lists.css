@@ -34,6 +34,7 @@ ul.inline li {
 [dir="rtl"] ul.links li,
 [dir="rtl"] ul.inline li {
   padding-left: 1em;
+  padding-right: 0;
 }
 ul.inline li {
   display: inline;

@@ -34,6 +34,12 @@
   margin: 0;
   padding: 0;
 }
+/* This is required to win over specificity of [dir="rtl"] ul */
+[dir="rtl"] .ckeditor-toolbar ul,
+[dir="rtl"] .ckeditor-toolbar-disabled ul {
+  margin-right: 0;
+}
+
 .ckeditor-row {
   padding: 2px 0 3px;
   border-radius: 3px;
@@ -121,12 +127,18 @@
   box-sizing: border-box;
 }
 .ckeditor-toolbar-disabled .ckeditor-toolbar-available {
-  float: left;
+  float: left; /* LTR */
   width: 80%;
 }
-.ckeditor-toolbar-disabled .ckeditor-toolbar-dividers {
+[dir="rtl"] .ckeditor-toolbar-disabled .ckeditor-toolbar-available {
   float: right;
+}
+.ckeditor-toolbar-disabled .ckeditor-toolbar-dividers {
+  float: right; /* LTR */
   width: 20%;
+}
+[dir="rtl"] .ckeditor-toolbar-disabled .ckeditor-toolbar-dividers {
+  float: left;
 }
 .ckeditor-toolbar-disabled .ckeditor-buttons li a,
 .ckeditor-toolbar .ckeditor-buttons,

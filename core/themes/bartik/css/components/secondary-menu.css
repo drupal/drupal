@@ -8,6 +8,8 @@
 }
 [dir="rtl"] .region-secondary-menu .menu {
   text-align: left;
+  margin-right: 10px; /* required to win over specificity of [dir="rtl"] ul.menu */
+  margin-left: 10px;
 }
 .region-secondary-menu .menu-item {
   margin: 0;

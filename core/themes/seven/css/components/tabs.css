@@ -257,6 +257,12 @@ li.tabs__tab a {
   margin-left: 0;
   margin-right: -1px;
 }
+/* This is required to win over specificity of [dir="rtl"] .tabs.secondary .tabs__tab */
+[dir="rtl"] .views-displays .tabs.secondary li,
+[dir="rtl"] .views-displays .tabs.secondary li.is-active {
+  padding-left: 0;
+  padding-right: 0;
+}
 .tabs.secondary .tabs__tab + .tabs__tab {
   border-top: 1px solid #d9d8d4;
 }
@@ -270,6 +276,11 @@ li.tabs__tab a {
   border-right: 2px solid #004f80;
   padding-right: 15px;
 }
+/* This is required to win over specificity of [dir="rtl"] .tabs.secondary .tabs__tab.is-active */
+[dir="rtl"] .views-displays .tabs.secondary li.is-active {
+  border: 0 none;
+  padding-right: 0;
+}
 .tabs.secondary .tabs__tab:hover,
 .tabs.secondary .tabs__tab:focus {
   color: #008ee6;
@@ -282,10 +293,25 @@ li.tabs__tab a {
   border-right: 2px solid #008ee6;
   padding-right: 15px;
 }
+/* This is required to win over specificity of [dir="rtl"] .tabs.secondary .tabs__tab:hover */
+[dir="rtl"] .views-displays .tabs li.tabs__tab:hover {
+  border: 0 none;
+  padding-right: 0;
+}
 .tabs.secondary a {
   background-color: transparent;
   padding: 7px 13px 5px;
   text-decoration: none;
+}
+/* This is required to win over specificity of [dir="rtl"] li.tabs__tab a */
+[dir="rtl"] .tabs.secondary a {
+  padding-left: 13px;
+  padding-right: 13px;
+}
+/* This is required to win over specificity of [dir="rtl"] .tabs.secondary a */
+[dir="rtl"] .views-displays .tabs.secondary a {
+  padding-left: 7px;
+  padding-right: 7px;
 }
 .tabs.secondary .is-active a {
   color: #004f80;

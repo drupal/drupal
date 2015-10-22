@@ -108,6 +108,10 @@ th.is-active > a:focus:after {
 td .item-list ul {
   margin: 0;
 }
+/* This is required to win over specificity of [dir="rtl"] .item-list ul */
+[dir="rtl"] td .item-list ul {
+  margin: 0;
+}
 td.is-active {
   background: none;
 }
