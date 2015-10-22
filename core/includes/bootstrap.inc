@@ -304,8 +304,8 @@ function drupal_get_path($type, $name) {
  *   - 'context' (defaults to the empty context): The context the source string
  *     belongs to.
  *
- * @return
- *   The translated string.
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+ *   An object that, when cast to a string, will yield the translated string.
  *
  * @see \Drupal\Component\Utility\SafeMarkup::format()
  * @ingroup sanitization

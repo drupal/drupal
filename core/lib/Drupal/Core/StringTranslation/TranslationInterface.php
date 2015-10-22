@@ -34,7 +34,7 @@ interface TranslationInterface {
    *   - 'context': The context the source string belongs to.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The translated string.
+   *   An object that, when cast to a string, will yield the translated string.
    *
    * @see \Drupal\Component\Utility\SafeMarkup::format()
    */
