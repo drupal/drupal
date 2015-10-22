@@ -71,7 +71,7 @@ class Tasks extends InstallTasks {
       }
       catch (\Exception $e) {
         // Detect utf8mb4 incompability.
-        if ($e->getCode() == Connection::UNSUPPORTED_CHARSET) {
+        if ($e->getCode() == Connection::UNSUPPORTED_CHARSET || ($e->getCode() == Connection::SQLSTATE_SYNTAX_ERROR && $e->errorInfo[1] == Connection::UNKNOWN_CHARSET)) {
           $this->fail(t('Your MySQL server and PHP MySQL driver must support utf8mb4 character encoding. Make sure to use a database system that supports this (such as MySQL/MariaDB/Percona 5.5.3 and up), and that the utf8mb4 character set is compiled in. See the <a href=":documentation" target="_blank">MySQL documentation</a> for more information.', array(':documentation' => 'https://dev.mysql.com/doc/refman/5.0/en/cannot-initialize-character-set.html')));
           $info = Database::getConnectionInfo();
           $info_copy = $info;
