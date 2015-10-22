@@ -330,11 +330,14 @@ class MigrateExecutable implements MigrateExecutableInterface {
     foreach ($id_map as $map_row) {
       $destination_key = $id_map->currentDestination();
       if ($destination_key) {
-        $this->getEventDispatcher()
-          ->dispatch(MigrateEvents::PRE_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
-        $destination->rollback($destination_key);
-        $this->getEventDispatcher()
-          ->dispatch(MigrateEvents::POST_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+        $map_row = $id_map->getRowByDestination($destination_key);
+        if ($map_row['rollback_action'] == MigrateIdMapInterface::ROLLBACK_DELETE) {
+          $this->getEventDispatcher()
+            ->dispatch(MigrateEvents::PRE_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+          $destination->rollback($destination_key);
+          $this->getEventDispatcher()
+            ->dispatch(MigrateEvents::POST_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+        }
         // We're now done with this row, so remove it from the map.
         $id_map->deleteDestination($destination_key);
       }
