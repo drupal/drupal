@@ -6,6 +6,7 @@
 
 namespace Drupal\error_service_test;
 
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -29,8 +30,9 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
    *   The wrapper HTTP kernel.
    */
-  public function __construct(HttpKernelInterface $app) {
+  public function __construct(HttpKernelInterface $app, Settings $settings) {
     $this->app = $app;
+    $this->settings = $settings;
   }
 
   /**
@@ -61,7 +63,20 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
       throw new \Exception('Deforestation');
     }
 
-    return $this->app->handle($request, $type, $catch);
+    if ($this->settings->get('teapots', FALSE) && class_exists('\TypeError')) {
+      try {
+        $return = $this->app->handle($request, $type, $catch);
+      }
+      catch (\TypeError $e) {
+        header('HTTP/1.1 418 I\'m a teapot');
+        print('Oh oh, flying teapots');
+        exit;
+      }
+    }
+    else {
+      $return = $this->app->handle($request, $type, $catch);
+    }
+    return $return;
   }
 
 }
