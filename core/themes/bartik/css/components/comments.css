@@ -108,10 +108,10 @@
 .comment__content nav {
   padding-top: 1px;
 }
-.comment .indented {
+.indented {
   margin-left: 40px; /* LTR */
 }
-[dir="rtl"] .comment .indented {
+[dir="rtl"] .indented {
   margin-right: 40px;
   margin-left: 0;
 }
