@@ -884,6 +884,10 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  * @return string|\Drupal\Component\Render\MarkupInterface
  *   The rendered HTML of all children of the element.
  *
+ * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Avoid early
+ *   rendering when possible or loop through the elements and render them as
+ *   they are available.
+ *
  * @see drupal_render()
  */
 function drupal_render_children(&$element, $children_keys = NULL) {
