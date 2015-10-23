@@ -349,7 +349,7 @@ function format_string($string, array $args) {
  * @param $text
  *   The text to check.
  *
- * @return
+ * @return bool
  *   TRUE if the text is valid UTF-8, FALSE if not.
  *
  * @see \Drupal\Component\Utility\Unicode::validateUtf8()
@@ -582,7 +582,7 @@ function _drupal_exception_handler($exception) {
   catch (\Throwable $error) {
     _drupal_exception_handler_additional($exception, $error);
   }
-  // In order to be compatibile with PHP 5 we also catch regular Exceptions.
+  // In order to be compatible with PHP 5 we also catch regular Exceptions.
   catch (\Exception $exception2) {
     _drupal_exception_handler_additional($exception, $exception2);
   }
@@ -998,7 +998,7 @@ function _drupal_shutdown_function() {
   catch (\Throwable $error) {
     _drupal_shutdown_function_handle_exception($error);
   }
-  // In order to be compatibile with PHP 5 we also catch regular Exceptions.
+  // In order to be compatible with PHP 5 we also catch regular Exceptions.
   catch (\Exception $exception) {
     _drupal_shutdown_function_handle_exception($exception);
   }
