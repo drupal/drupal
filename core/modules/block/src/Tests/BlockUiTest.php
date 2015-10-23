@@ -207,7 +207,6 @@ class BlockUiTest extends WebTestBase {
     $this->assertTrue(!empty($elements), 'The context-aware test block appears.');
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware');
     $this->assertTrue(!empty($definition), 'The context-aware test block exists.');
-
     $edit = [
       'region' => 'content',
       'settings[context_mapping][user]' => '@block_test.multiple_static_context:user2',
@@ -217,6 +216,15 @@ class BlockUiTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText('Test context-aware block');
     $this->assertRaw($expected_text);
+
+    // Test context mapping allows empty selection for optional contexts.
+    $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
+    $edit = [
+      'settings[context_mapping][user]' => '',
+    ];
+    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->drupalGet('');
+    $this->assertText('No context mapping selected.');
   }
 
   /**
