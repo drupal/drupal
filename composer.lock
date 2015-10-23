@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8c9fdf621ce53640f24b24749e59717c",
+    "hash": "2be29019515c847055593ea41b88475d",
     "content-hash": "f38613812a285c03a1a18458384fe0b1",
     "packages": [
         {
@@ -2004,7 +2004,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/47bb3388cfeae41a38087ac8465a7d08fa92ea2e",
+                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/6bfcdcfe0aab6c11dcccfbd28dea01a592afd5b3",
                 "reference": "47bb3388cfeae41a38087ac8465a7d08fa92ea2e",
                 "shasum": ""
             },
@@ -2584,6 +2584,63 @@
                 "scraper"
             ],
             "time": "2015-08-29 16:16:56"
+        },
+        {
+            "name": "jcalderonzumba/gastonjs",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jcalderonzumba/gastonjs.git",
+                "reference": "5e231b4df98275c404e1371fc5fadd34f6a121ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jcalderonzumba/gastonjs/zipball/5e231b4df98275c404e1371fc5fadd34f6a121ad",
+                "reference": "5e231b4df98275c404e1371fc5fadd34f6a121ad",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~5.0|~6.0",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6",
+                "silex/silex": "~1.2",
+                "symfony/phpunit-bridge": "~2.7",
+                "symfony/process": "~2.1"
+            },
+            "type": "phantomjs-api",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zumba\\GastonJS\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Juan Francisco Calderón Zumba",
+                    "email": "juanfcz@gmail.com",
+                    "homepage": "http://github.com/jcalderonzumba"
+                }
+            ],
+            "description": "PhantomJS API based server for webpage automation",
+            "homepage": "https://github.com/jcalderonzumba/gastonjs",
+            "keywords": [
+                "api",
+                "automation",
+                "browser",
+                "headless",
+                "phantomjs"
+            ],
+            "time": "2015-10-07 11:40:41"
         },
         {
             "name": "mikey179/vfsStream",
@@ -3672,6 +3729,7 @@
         "composer/semver": 0,
         "behat/mink": 0,
         "behat/mink-goutte-driver": 0,
+        "jcalderonzumba/gastonjs": 20,
         "mikey179/vfsstream": 0,
         "phpunit/phpunit": 0,
         "symfony/css-selector": 0

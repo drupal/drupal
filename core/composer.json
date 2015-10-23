@@ -34,6 +34,7 @@
   "require-dev": {
     "behat/mink": "~1.6",
     "behat/mink-goutte-driver": "~1.2",
+    "jcalderonzumba/gastonjs": "^1.1@dev",
     "mikey179/vfsStream": "~1.2",
     "phpunit/phpunit": "~4.8",
     "symfony/css-selector": "2.7.*"
