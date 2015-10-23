@@ -26,7 +26,7 @@ class InstallerTranslationTest extends InstallerTestBase {
   protected $langcode = 'de';
 
   /**
-   * Overrides InstallerTest::setUpLanguage().
+   * {@inheritdoc}
    */
   protected function setUpLanguage() {
     // Place a custom local translation in the translations directory.

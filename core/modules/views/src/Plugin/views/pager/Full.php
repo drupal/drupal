@@ -26,7 +26,7 @@ use Drupal\Core\Form\FormStateInterface;
 class Full extends SqlBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\SqlBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -41,7 +41,7 @@ class Full extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\SqlBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -69,7 +69,7 @@ class Full extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::summaryTitle().
+   * {@inheritdoc}
    */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {

@@ -90,7 +90,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   }
 
   /**
-   * Implements ArrayAccess::offsetGet().
+   * {@inheritdoc}
    */
   public function offsetGet($name) {
     if (isset($this->storage[$name])) {
@@ -99,7 +99,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   }
 
   /**
-   * Implements ArrayAccess::offsetSet().
+   * {@inheritdoc}
    */
   public function offsetSet($name, $value) {
     $this->storage[$name] = $this->createAttributeValue($name, $value);
@@ -151,14 +151,14 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   }
 
   /**
-   * Implements ArrayAccess::offsetUnset().
+   * {@inheritdoc}
    */
   public function offsetUnset($name) {
     unset($this->storage[$name]);
   }
 
   /**
-   * Implements ArrayAccess::offsetExists().
+   * {@inheritdoc}
    */
   public function offsetExists($name) {
     return isset($this->storage[$name]);
@@ -324,7 +324,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   }
 
   /**
-   * Implements IteratorAggregate::getIterator().
+   * {@inheritdoc}
    */
   public function getIterator() {
     return new \ArrayIterator($this->storage);

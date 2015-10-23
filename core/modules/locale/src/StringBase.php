@@ -67,14 +67,14 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::getId().
+   * {@inheritdoc}
    */
   public function getId() {
     return isset($this->lid) ? $this->lid : NULL;
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::setId().
+   * {@inheritdoc}
    */
   public function setId($lid) {
     $this->lid = $lid;
@@ -82,14 +82,14 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::getVersion().
+   * {@inheritdoc}
    */
   public function getVersion() {
     return isset($this->version) ? $this->version : NULL;
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::setVersion().
+   * {@inheritdoc}
    */
   public function setVersion($version) {
     $this->version = $version;
@@ -97,14 +97,14 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::getPlurals().
+   * {@inheritdoc}
    */
   public function getPlurals() {
     return explode(LOCALE_PLURAL_DELIMITER, $this->getString());
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::setPlurals().
+   * {@inheritdoc}
    */
   public function setPlurals($plurals) {
     $this->setString(implode(LOCALE_PLURAL_DELIMITER, $plurals));
@@ -112,14 +112,14 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::getStorage().
+   * {@inheritdoc}
    */
   public function getStorage() {
     return isset($this->storage) ? $this->storage : NULL;
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::setStorage().
+   * {@inheritdoc}
    */
   public function setStorage($storage) {
     $this->storage = $storage;
@@ -127,7 +127,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::setValues().
+   * {@inheritdoc}
    */
   public function setValues(array $values, $override = TRUE) {
     foreach ($values as $key => $value) {
@@ -139,7 +139,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::getValues().
+   * {@inheritdoc}
    */
   public function getValues(array $fields) {
     $values = array();
@@ -152,7 +152,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::getLocation().
+   * {@inheritdoc}
    */
   public function getLocations($check_only = FALSE) {
     if (!isset($this->locations) && !$check_only) {
@@ -165,7 +165,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::addLocation().
+   * {@inheritdoc}
    */
   public function addLocation($type, $name) {
     $this->locations[$type][$name] = TRUE;
@@ -173,7 +173,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringInterface::hasLocation().
+   * {@inheritdoc}
    */
   public function hasLocation($type, $name) {
     $locations = $this->getLocations();
@@ -181,7 +181,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\LocaleString::save().
+   * {@inheritdoc}
    */
   public function save() {
     if ($storage = $this->getStorage()) {
@@ -194,7 +194,7 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
-   * Implements Drupal\locale\LocaleString::delete().
+   * {@inheritdoc}
    */
   public function delete() {
     if (!$this->isNew()) {

@@ -24,70 +24,70 @@ namespace Drupal\Core\Config;
 class NullStorage implements StorageInterface {
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::exists().
+   * {@inheritdoc}
    */
   public function exists($name) {
     return FALSE;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::read().
+   * {@inheritdoc}
    */
   public function read($name) {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::readMultiple().
+   * {@inheritdoc}
    */
   public function readMultiple(array $names) {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::write().
+   * {@inheritdoc}
    */
   public function write($name, array $data) {
     return FALSE;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($name) {
     return FALSE;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::rename().
+   * {@inheritdoc}
    */
   public function rename($name, $new_name) {
     return FALSE;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::encode().
+   * {@inheritdoc}
    */
   public function encode($data) {
     return $data;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::decode().
+   * {@inheritdoc}
    */
   public function decode($raw) {
     return $raw;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::listAll().
+   * {@inheritdoc}
    */
   public function listAll($prefix = '') {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll($prefix = '') {
     return FALSE;

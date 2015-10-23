@@ -80,7 +80,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   protected $protected_property;
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
+   * {@inheritdoc}
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     \Drupal::state()->set('config_entity_sort', TRUE);

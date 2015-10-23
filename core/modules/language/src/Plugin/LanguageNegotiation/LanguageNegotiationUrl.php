@@ -101,7 +101,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     $config = $this->config->get('language.negotiation')->get('url');
@@ -121,7 +121,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processOutbound().
+   * {@inheritdoc}
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     $url_scheme = 'http';

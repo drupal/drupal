@@ -25,7 +25,7 @@ use Drupal\views\ManyToOneHelper;
 class StringArgument extends ArgumentPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

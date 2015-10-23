@@ -36,7 +36,7 @@ class TestLazyPluginCollection extends LazyPluginCollection {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\LazyPluginCollection::initializePlugin().
+   * {@inheritdoc}
    */
   protected function initializePlugin($instance_id) {
     $this->pluginInstances[$instance_id] = $this->manager->createInstance($instance_id, array());

@@ -61,7 +61,7 @@ class ContentEntityNormalizer extends NormalizerBase {
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
+   * {@inheritdoc}
    */
   public function normalize($entity, $format = NULL, array $context = array()) {
     $context += array(

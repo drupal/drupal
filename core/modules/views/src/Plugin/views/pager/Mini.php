@@ -37,7 +37,7 @@ class Mini extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::summaryTitle().
+   * {@inheritdoc}
    */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
@@ -47,7 +47,7 @@ class Mini extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\SqlBase::query().
+   * {@inheritdoc}
    */
   public function query() {
     parent::query();
@@ -64,14 +64,14 @@ class Mini extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::useCountQuery().
+   * {@inheritdoc}
    */
   public function useCountQuery() {
     return FALSE;
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::postExecute().
+   * {@inheritdoc}
    */
   public function postExecute(&$result) {
     // In query() one more item might have been retrieved than necessary. If so,

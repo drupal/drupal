@@ -44,7 +44,7 @@ class DatabaseBackend implements FloodInterface {
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::register().
+   * {@inheritdoc}
    */
   public function register($name, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
@@ -61,7 +61,7 @@ class DatabaseBackend implements FloodInterface {
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::clear().
+   * {@inheritdoc}
    */
   public function clear($name, $identifier = NULL) {
     if (!isset($identifier)) {
@@ -74,7 +74,7 @@ class DatabaseBackend implements FloodInterface {
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::isAllowed().
+   * {@inheritdoc}
    */
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
@@ -91,7 +91,7 @@ class DatabaseBackend implements FloodInterface {
   }
 
   /**
-   * Implements Drupal\Core\Flood\FloodInterface::garbageCollection().
+   * {@inheritdoc}
    */
   public function garbageCollection() {
     return $this->connection->delete('flood')

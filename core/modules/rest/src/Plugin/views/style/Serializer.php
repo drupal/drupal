@@ -29,12 +29,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class Serializer extends StylePluginBase implements CacheableDependencyInterface {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase::$usesRowPlugin.
+   * {@inheritdoc}
    */
   protected $usesRowPlugin = TRUE;
 
   /**
-   * Overrides Drupal\views\Plugin\views\style\StylePluginBase::$usesFields.
+   * {@inheritdoc}
    */
   protected $usesGrouping = FALSE;
 

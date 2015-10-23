@@ -167,7 +167,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::get().
+   * {@inheritdoc}
    */
   public function get($property_name, $langcode = NULL) {
     if (property_exists($this->storage, $property_name)) {
@@ -178,14 +178,14 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setStatus().
+   * {@inheritdoc}
    */
   public function setStatus($status) {
     return $this->storage->setStatus($status);
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::set().
+   * {@inheritdoc}
    */
   public function set($property_name, $value, $notify = TRUE) {
     if (property_exists($this->storage, $property_name)) {
@@ -941,21 +941,21 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->storage->id();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::uuid().
+   * {@inheritdoc}
    */
   public function uuid() {
     return $this->storage->uuid();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::isNew().
+   * {@inheritdoc}
    */
   public function isNew() {
     return $this->storage->isNew();
@@ -969,7 +969,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::bundle().
+   * {@inheritdoc}
    */
   public function bundle() {
     return $this->storage->bundle();
@@ -983,7 +983,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     return $this->storage->createDuplicate();
@@ -1011,21 +1011,21 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::delete().
+   * {@inheritdoc}
    */
   public function delete() {
     return $this->storage->delete();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::save().
+   * {@inheritdoc}
    */
   public function save() {
     return $this->storage->save();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::uri().
+   * {@inheritdoc}
    */
   public function urlInfo($rel = 'edit-form', array $options = []) {
     return $this->storage->urlInfo($rel, $options);
@@ -1039,14 +1039,14 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::label().
+   * {@inheritdoc}
    */
   public function label() {
     return $this->storage->label();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::enforceIsNew().
+   * {@inheritdoc}
    */
   public function enforceIsNew($value = TRUE) {
     return $this->storage->enforceIsNew($value);
@@ -1074,21 +1074,21 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::enable().
+   * {@inheritdoc}
    */
   public function enable() {
     return $this->storage->enable();
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::disable().
+   * {@inheritdoc}
    */
   public function disable() {
     return $this->storage->disable();
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::status().
+   * {@inheritdoc}
    */
   public function status() {
     return $this->storage->status();

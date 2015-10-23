@@ -73,7 +73,7 @@ class Language extends TypedData {
   }
 
   /**
-   * Overrides TypedData::getString().
+   * {@inheritdoc}
    */
   public function getString() {
     $language = $this->getValue();

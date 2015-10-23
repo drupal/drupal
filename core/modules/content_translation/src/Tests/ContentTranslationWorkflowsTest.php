@@ -49,7 +49,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationTestBase::getEditorPermissions().
+   * {@inheritdoc}
    */
   protected function getEditorPermissions() {
     return array('administer entity_test content');

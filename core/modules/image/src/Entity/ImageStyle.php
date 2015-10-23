@@ -94,7 +94,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   protected $effectsCollection;
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->name;

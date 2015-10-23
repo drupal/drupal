@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 class ArgumentDefaultTest extends ArgumentDefaultPluginBase {
 
   /**
-   * Overrides Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();

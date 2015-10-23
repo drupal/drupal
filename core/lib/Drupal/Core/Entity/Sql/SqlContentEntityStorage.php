@@ -684,7 +684,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityStorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete(array $entities) {
     if (!$entities) {

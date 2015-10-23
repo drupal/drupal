@@ -26,7 +26,7 @@ use Drupal\views\Plugin\views\field\NumericField;
 class MappingTest extends Mapping {
 
   /**
-   * Overrides Drupal\views\Plugin\views\style\Mapping::defineMapping().
+   * {@inheritdoc}
    */
   protected function defineMapping() {
     return array(

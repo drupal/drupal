@@ -49,7 +49,7 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Implements Drupal\Core\Updater\UpdaterInterface::isInstalled().
+   * {@inheritdoc}
    */
   public function isInstalled() {
     // Check if the module exists in the file system, regardless of whether it
@@ -59,7 +59,7 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Implements Drupal\Core\Updater\UpdaterInterface::canUpdateDirectory().
+   * {@inheritdoc}
    */
   public static function canUpdateDirectory($directory) {
     $info = static::getExtensionInfo($directory);
@@ -106,7 +106,7 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Updater\Updater::postInstallTasks().
+   * {@inheritdoc}
    */
   public function postInstallTasks() {
     // Since this is being called outsite of the primary front controller,
@@ -137,7 +137,7 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Updater\Updater::postUpdateTasks().
+   * {@inheritdoc}
    */
   public function postUpdateTasks() {
     // We don't want to check for DB updates here, we do that once for all

@@ -25,7 +25,7 @@ class QueryTest extends UITestBase {
   public static $testViews = array('test_view');
 
   /**
-   * Overrides \Drupal\views\Tests\ViewTestBase::viewsData().
+   * {@inheritdoc}
    */
   protected function viewsData() {
     $data = parent::viewsData();

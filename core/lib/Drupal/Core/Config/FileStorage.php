@@ -80,7 +80,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::exists().
+   * {@inheritdoc}
    */
   public function exists($name) {
     return file_exists($this->getFilePath($name));
@@ -146,7 +146,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($name) {
     if (!$this->exists($name)) {
@@ -160,7 +160,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::rename().
+   * {@inheritdoc}
    */
   public function rename($name, $new_name) {
     $status = @rename($this->getFilePath($name), $this->getFilePath($new_name));
@@ -171,14 +171,14 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::encode().
+   * {@inheritdoc}
    */
   public function encode($data) {
     return Yaml::encode($data);
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::decode().
+   * {@inheritdoc}
    */
   public function decode($raw) {
     $data = Yaml::decode($raw);
@@ -190,7 +190,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::listAll().
+   * {@inheritdoc}
    */
   public function listAll($prefix = '') {
     $dir = $this->getCollectionDirectory();
@@ -216,7 +216,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll($prefix = '') {
     $success = TRUE;

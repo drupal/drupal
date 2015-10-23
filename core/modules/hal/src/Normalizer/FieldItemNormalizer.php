@@ -23,7 +23,7 @@ class FieldItemNormalizer extends NormalizerBase {
   protected $supportedInterfaceOrClass = 'Drupal\Core\Field\FieldItemInterface';
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
+   * {@inheritdoc}
    */
   public function normalize($field_item, $format = NULL, array $context = array()) {
     $values = $field_item->toArray();
@@ -42,7 +42,7 @@ class FieldItemNormalizer extends NormalizerBase {
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
+   * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = array()) {
     if (!isset($context['target_instance'])) {

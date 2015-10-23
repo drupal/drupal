@@ -166,7 +166,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $validationRequired = FALSE;
 
   /**
-   * Overrides Entity::__construct().
+   * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = array()) {
     $this->entityTypeId = $entity_type;
@@ -998,7 +998,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Overrides Entity::createDuplicate().
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {

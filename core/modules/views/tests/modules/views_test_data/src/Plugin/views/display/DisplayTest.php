@@ -33,15 +33,14 @@ class DisplayTest extends DisplayPluginBase {
   protected $usesAttachments = TRUE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
+   * {@inheritdoc}
    */
   public function getType() {
     return 'test';
   }
 
   /**
-   * Overrides
-   * Drupal\views\Plugin\views\display\DisplayPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();

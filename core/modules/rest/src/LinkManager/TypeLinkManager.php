@@ -70,7 +70,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   }
 
   /**
-   * Implements \Drupal\rest\LinkManager\TypeLinkManagerInterface::getTypeInternalIds().
+   * {@inheritdoc}
    */
   public function getTypeInternalIds($type_uri, $context = array()) {
     $types = $this->getTypes($context);

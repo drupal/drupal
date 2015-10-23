@@ -75,7 +75,7 @@ class BooleanOperator extends FilterPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\filter\FilterPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

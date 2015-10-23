@@ -19,7 +19,7 @@ use Drupal\views\Views;
 class GroupByNumeric extends SortPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

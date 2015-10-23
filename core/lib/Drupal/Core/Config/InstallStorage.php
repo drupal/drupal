@@ -129,7 +129,7 @@ class InstallStorage extends FileStorage {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::listAll().
+   * {@inheritdoc}
    */
   public function listAll($prefix = '') {
     $names = array_keys($this->getAllFolders());

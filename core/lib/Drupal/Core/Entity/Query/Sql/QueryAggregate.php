@@ -23,7 +23,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   protected $sqlExpressions = array();
 
   /**
-   * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     return $this
@@ -39,7 +39,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Query\Sql::prepare().
+   * {@inheritdoc}
    */
   public function prepare() {
     parent::prepare();
@@ -49,7 +49,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::conditionAggregateGroupFactory().
+   * {@inheritdoc}
    */
   public function conditionAggregateGroupFactory($conjunction = 'AND') {
     $class = static::getClass($this->namespaces, 'ConditionAggregate');
@@ -57,14 +57,14 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\QueryBase::exists().
+   * {@inheritdoc}
    */
   public function existsAggregate($field, $function, $langcode = NULL) {
     return $this->conditionAggregate->exists($field, $function, $langcode);
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\QueryBase::notExists().
+   * {@inheritdoc}
    */
   public function notExistsAggregate($field, $function, $langcode = NULL) {
     return $this->conditionAggregate->notExists($field, $function, $langcode);

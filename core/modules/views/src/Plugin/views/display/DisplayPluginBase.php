@@ -59,7 +59,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   protected $extenders = [];
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

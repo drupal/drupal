@@ -46,7 +46,7 @@ use Drupal\views\ViewExecutable;
 abstract class StylePluginBase extends PluginBase {
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

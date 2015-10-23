@@ -53,7 +53,7 @@ class FieldWebTest extends HandlerTestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewTestBase::viewsData().
+   * {@inheritdoc}
    */
   protected function viewsData() {
     $data = parent::viewsData();

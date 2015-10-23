@@ -128,7 +128,7 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\Formula::getFormula().
+   * {@inheritdoc}
    */
   public function getFormula() {
     $this->formula = $this->getDateFormat($this->argFormat);

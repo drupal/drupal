@@ -30,22 +30,22 @@ namespace Drupal\views\Plugin\views\display;
 class EntityReference extends DisplayPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$useAJAX.
+   * {@inheritdoc}
    */
   protected $usesAJAX = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesPager.
+   * {@inheritdoc}
    */
   protected $usesPager = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesAttachments.
+   * {@inheritdoc}
    */
   protected $usesAttachments = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -79,21 +79,21 @@ class EntityReference extends DisplayPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getType().
+   * {@inheritdoc}
    */
   public function getType() {
     return 'entity_reference';
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     return $this->view->render($this->display['id']);
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::render().
+   * {@inheritdoc}
    */
   public function render() {
     if (!empty($this->view->result) && $this->view->style_plugin->evenEmpty()) {
@@ -103,14 +103,14 @@ class EntityReference extends DisplayPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::usesExposed().
+   * {@inheritdoc}
    */
   public function usesExposed() {
     return FALSE;
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::query().
+   * {@inheritdoc}
    */
   public function query() {
     if (!empty($this->view->live_preview)) {
@@ -157,7 +157,7 @@ class EntityReference extends DisplayPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::validate().
+   * {@inheritdoc}
    */
   public function validate() {
     $errors = parent::validate();

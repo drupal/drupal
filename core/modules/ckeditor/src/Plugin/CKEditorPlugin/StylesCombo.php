@@ -23,14 +23,14 @@ use Drupal\editor\Entity\Editor;
 class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface {
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::isInternal().
+   * {@inheritdoc}
    */
   public function isInternal() {
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getFile().
+   * {@inheritdoc}
    */
   public function getFile() {
     // This plugin is already part of Drupal core's CKEditor build.
@@ -38,7 +38,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getConfig().
+   * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
     $config = array();
@@ -52,7 +52,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginButtonsInterface::getButtons().
+   * {@inheritdoc}
    */
   public function getButtons() {
     return array(
@@ -70,7 +70,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginConfigurableInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     // Defaults.

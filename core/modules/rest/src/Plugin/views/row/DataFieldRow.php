@@ -27,7 +27,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 class DataFieldRow extends RowPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::$usesFields.
+   * {@inheritdoc}
    */
   protected $usesFields = TRUE;
 
@@ -46,7 +46,7 @@ class DataFieldRow extends RowPluginBase {
   protected $rawOutputOptions = array();
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -62,7 +62,7 @@ class DataFieldRow extends RowPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -72,7 +72,7 @@ class DataFieldRow extends RowPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -118,7 +118,7 @@ class DataFieldRow extends RowPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::validateOptionsForm().
+   * {@inheritdoc}
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Collect an array of aliases to validate.
@@ -132,7 +132,7 @@ class DataFieldRow extends RowPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($row) {
     $output = array();

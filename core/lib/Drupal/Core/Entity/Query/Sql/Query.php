@@ -78,7 +78,7 @@ class Query extends QueryBase implements QueryInterface {
 
 
   /**
-   * Implements \Drupal\Core\Entity\Query\QueryInterface::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     return $this

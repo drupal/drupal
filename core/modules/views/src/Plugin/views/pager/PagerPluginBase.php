@@ -37,7 +37,7 @@ abstract class PagerPluginBase extends PluginBase {
   var $total_items = 0;
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

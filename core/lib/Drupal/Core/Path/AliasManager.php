@@ -254,7 +254,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::cacheClear().
+   * {@inheritdoc}
    */
   public function cacheClear($source = NULL) {
     if ($source) {

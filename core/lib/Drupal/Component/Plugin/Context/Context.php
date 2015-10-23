@@ -44,7 +44,7 @@ class Context implements ContextInterface {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::getContextValue().
+   * {@inheritdoc}
    */
   public function getContextValue() {
     // Support optional contexts.
@@ -71,14 +71,14 @@ class Context implements ContextInterface {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::getContextDefinition().
+   * {@inheritdoc}
    */
   public function getContextDefinition() {
     return $this->contextDefinition;
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::getConstraints().
+   * {@inheritdoc}
    */
   public function getConstraints() {
     if (empty($this->contextDefinition['class'])) {
@@ -88,7 +88,7 @@ class Context implements ContextInterface {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::validate().
+   * {@inheritdoc}
    */
   public function validate() {
     $validator = Validation::createValidatorBuilder()

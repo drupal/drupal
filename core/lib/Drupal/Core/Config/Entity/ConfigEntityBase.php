@@ -111,7 +111,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   protected $trustedData = FALSE;
 
   /**
-   * Overrides Entity::__construct().
+   * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);

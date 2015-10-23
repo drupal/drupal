@@ -40,7 +40,7 @@ class ResourcePluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::getInstance().
+   * {@inheritdoc}
    */
   public function getInstance(array $options){
     if (isset($options['id'])) {

@@ -24,12 +24,12 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 class DataEntityRow extends RowPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\row\RowPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($row) {
     return $row->_entity;

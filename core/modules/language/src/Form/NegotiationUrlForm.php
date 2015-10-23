@@ -136,7 +136,7 @@ class NegotiationUrlForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $languages = $this->languageManager->getLanguages();

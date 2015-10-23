@@ -57,28 +57,28 @@ class XmlEncoder implements EncoderInterface, DecoderInterface {
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::encode().
+   * {@inheritdoc}
    */
   public function encode($data, $format, array $context = array()){
     return $this->getBaseEncoder()->encode($data, $format, $context);
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsEncoding().
+   * {@inheritdoc}
    */
   public function supportsEncoding($format) {
     return in_array($format, static::$format);
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::decode().
+   * {@inheritdoc}
    */
   public function decode($data, $format, array $context = array()){
     return $this->getBaseEncoder()->decode($data, $format, $context);
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsDecoding().
+   * {@inheritdoc}
    */
   public function supportsDecoding($format) {
     return in_array($format, static::$format);

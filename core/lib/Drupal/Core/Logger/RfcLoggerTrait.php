@@ -20,63 +20,63 @@ namespace Drupal\Core\Logger;
 trait RfcLoggerTrait {
 
   /**
-   * Implements \Psr\Log\LoggerInterface::emergency()
+   * {@inheritdoc}
    */
   public function emergency($message, array $context = array()) {
     $this->log(RfcLogLevel::EMERGENCY, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::alert()
+   * {@inheritdoc}
    */
   public function alert($message, array $context = array()) {
     $this->log(RfcLogLevel::ALERT, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::critical()
+   * {@inheritdoc}
    */
   public function critical($message, array $context = array()) {
     $this->log(RfcLogLevel::CRITICAL, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::error()
+   * {@inheritdoc}
    */
   public function error($message, array $context = array()) {
     $this->log(RfcLogLevel::ERROR, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::warning()
+   * {@inheritdoc}
    */
   public function warning($message, array $context = array()) {
     $this->log(RfcLogLevel::WARNING, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::notice()
+   * {@inheritdoc}
    */
   public function notice($message, array $context = array()) {
     $this->log(RfcLogLevel::NOTICE, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::info()
+   * {@inheritdoc}
    */
   public function info($message, array $context = array()) {
     $this->log(RfcLogLevel::INFO, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::debug()
+   * {@inheritdoc}
    */
   public function debug($message, array $context = array()) {
     $this->log(RfcLogLevel::DEBUG, $message, $context);
   }
 
   /**
-   * Implements \Psr\Log\LoggerInterface::log()
+   * {@inheritdoc}
    */
   abstract public function log($level, $message, array $context = array());
 

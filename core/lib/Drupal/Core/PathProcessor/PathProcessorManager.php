@@ -67,7 +67,7 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     $processors = $this->getInbound();
@@ -106,7 +106,7 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
+   * {@inheritdoc}
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     $processors = $this->getOutbound();

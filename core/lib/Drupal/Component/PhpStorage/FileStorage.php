@@ -33,14 +33,14 @@ class FileStorage implements PhpStorageInterface {
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::exists().
+   * {@inheritdoc}
    */
   public function exists($name) {
     return file_exists($this->getFullPath($name));
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::load().
+   * {@inheritdoc}
    */
   public function load($name) {
     // The FALSE returned on failure is enough for the caller to handle this,
@@ -49,7 +49,7 @@ class FileStorage implements PhpStorageInterface {
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::save().
+   * {@inheritdoc}
    */
   public function save($name, $code) {
     $path = $this->getFullPath($name);
@@ -183,7 +183,7 @@ EOF;
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($name) {
     $path = $this->getFullPath($name);
@@ -201,14 +201,14 @@ EOF;
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::writeable().
+   * {@inheritdoc}
    */
   public function writeable() {
     return TRUE;
   }
 
   /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll() {
     return $this->unlink($this->directory);

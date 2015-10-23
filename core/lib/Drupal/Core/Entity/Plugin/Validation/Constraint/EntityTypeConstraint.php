@@ -35,14 +35,14 @@ class EntityTypeConstraint extends Constraint {
   public $type;
 
   /**
-   * Overrides Constraint::getDefaultOption().
+   * {@inheritdoc}
    */
   public function getDefaultOption() {
     return 'type';
   }
 
   /**
-   * Overrides Constraint::getRequiredOptions().
+   * {@inheritdoc}
    */
   public function getRequiredOptions() {
     return array('type');

@@ -59,7 +59,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::rowStyleOptions().
+   * {@inheritdoc}
    */
   protected function rowStyleOptions() {
     $options = array();
@@ -72,7 +72,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
+   * {@inheritdoc}
    */
   protected function defaultDisplayOptions() {
     $display_options = parent::defaultDisplayOptions();
@@ -110,7 +110,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayFiltersUser().
+   * {@inheritdoc}
    */
   protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
     $filters = parent::defaultDisplayFiltersUser($form, $form_state);

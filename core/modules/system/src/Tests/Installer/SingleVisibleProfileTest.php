@@ -49,7 +49,7 @@ class SingleVisibleProfileTest extends InstallerTestBase {
   }
 
   /**
-   * Overrides InstallerTest::setUpProfile().
+   * {@inheritdoc}
    */
   protected function setUpProfile() {
     // This step is skipped, because there is only one visible profile.

@@ -39,7 +39,7 @@ class FieldKernelTest extends ViewKernelTestBase {
   );
 
   /**
-   * Overrides Drupal\views\Tests\ViewTestBase::viewsData().
+   * {@inheritdoc}
    */
   protected function viewsData() {
     $data = parent::viewsData();

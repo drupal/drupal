@@ -65,7 +65,7 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
   }
 
   /**
-   * Implements Drupal\Core\Executable\ExecutableManagerInterface::execute().
+   * {@inheritdoc}
    */
   public function execute(ExecutableInterface $condition) {
     $result = $condition->evaluate();

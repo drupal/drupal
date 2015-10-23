@@ -67,7 +67,7 @@ class Entity extends TokenizeAreaPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\area\AreaPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

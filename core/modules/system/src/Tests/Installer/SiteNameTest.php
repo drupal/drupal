@@ -24,7 +24,7 @@ class SiteNameTest extends WebTestBase {
   protected $siteName;
 
   /**
-   * Overrides \Drupal\simpletest\WebTestBase::installParameters().
+   * {@inheritdoc}
    */
   protected function installParameters() {
     $this->siteName = $this->randomMachineName();

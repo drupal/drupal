@@ -36,7 +36,7 @@ use Drupal\views\Plugin\views\PluginBase;
 abstract class ExposedFormPluginBase extends PluginBase implements CacheableDependencyInterface {
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

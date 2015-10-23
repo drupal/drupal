@@ -38,14 +38,14 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   const RENDER_EMPTY_ATTRIBUTE = FALSE;
 
   /**
-   * Implements ArrayAccess::offsetGet().
+   * {@inheritdoc}
    */
   public function offsetGet($offset) {
     return $this->value[$offset];
   }
 
   /**
-   * Implements ArrayAccess::offsetSet().
+   * {@inheritdoc}
    */
   public function offsetSet($offset, $value) {
     if (isset($offset)) {
@@ -57,14 +57,14 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   }
 
   /**
-   * Implements ArrayAccess::offsetUnset().
+   * {@inheritdoc}
    */
   public function offsetUnset($offset) {
     unset($this->value[$offset]);
   }
 
   /**
-   * Implements ArrayAccess::offsetExists().
+   * {@inheritdoc}
    */
   public function offsetExists($offset) {
     return isset($this->value[$offset]);
@@ -80,7 +80,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   }
 
   /**
-   * Implements IteratorAggregate::getIterator().
+   * {@inheritdoc}
    */
   public function getIterator() {
     return new \ArrayIterator($this->value);

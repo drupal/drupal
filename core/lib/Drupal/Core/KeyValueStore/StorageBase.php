@@ -20,21 +20,21 @@ abstract class StorageBase implements KeyValueStoreInterface {
   protected $collection;
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::__construct().
+   * {@inheritdoc}
    */
   public function __construct($collection) {
     $this->collection = $collection;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getCollectionName().
+   * {@inheritdoc}
    */
   public function getCollectionName() {
     return $this->collection;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
+   * {@inheritdoc}
    */
   public function get($key, $default = NULL) {
     $values = $this->getMultiple(array($key));
@@ -42,7 +42,7 @@ abstract class StorageBase implements KeyValueStoreInterface {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setMultiple().
+   * {@inheritdoc}
    */
   public function setMultiple(array $data) {
     foreach ($data as $key => $value) {
@@ -51,7 +51,7 @@ abstract class StorageBase implements KeyValueStoreInterface {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($key) {
     $this->deleteMultiple(array($key));

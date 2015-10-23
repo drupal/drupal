@@ -34,7 +34,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::get().
+   * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
     if (isset($this->cache[$cid])) {
@@ -46,7 +46,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
+   * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
     $ret = array();
@@ -104,7 +104,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::set().
+   * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache Tags must be strings.');
@@ -130,28 +130,28 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($cid) {
     unset($this->cache[$cid]);
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $cids) {
     $this->cache = array_diff_key($this->cache, array_flip($cids));
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll() {
     $this->cache = array();
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
+   * {@inheritdoc}
    */
   public function invalidate($cid) {
     if (isset($this->cache[$cid])) {
@@ -160,7 +160,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
+   * {@inheritdoc}
    */
   public function invalidateMultiple(array $cids) {
     foreach ($cids as $cid) {
@@ -180,7 +180,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
+   * {@inheritdoc}
    */
   public function invalidateAll() {
     foreach ($this->cache as $cid => $item) {
@@ -189,7 +189,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection()
+   * {@inheritdoc}
    */
   public function garbageCollection() {
   }

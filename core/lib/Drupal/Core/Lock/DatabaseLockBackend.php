@@ -38,7 +38,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::acquire().
+   * {@inheritdoc}
    */
   public function acquire($name, $timeout = 30.0) {
     // Insure that the timeout is at least 1 ms.
@@ -92,7 +92,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::lockMayBeAvailable().
+   * {@inheritdoc}
    */
   public function lockMayBeAvailable($name) {
     $lock = $this->database->query('SELECT expire, value FROM {semaphore} WHERE name = :name', array(':name' => $name))->fetchAssoc();
@@ -115,7 +115,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::release().
+   * {@inheritdoc}
    */
   public function release($name) {
     unset($this->locks[$name]);
@@ -126,7 +126,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Implements Drupal\Core\Lock\LockBackedInterface::releaseAll().
+   * {@inheritdoc}
    */
   public function releaseAll($lock_id = NULL) {
     // Only attempt to release locks if any were acquired.

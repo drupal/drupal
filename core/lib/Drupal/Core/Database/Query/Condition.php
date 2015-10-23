@@ -66,7 +66,7 @@ class Condition implements ConditionInterface, \Countable {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
+   * {@inheritdoc}
    */
   public function condition($field, $value = NULL, $operator = '=') {
     if (empty($operator)) {
@@ -88,7 +88,7 @@ class Condition implements ConditionInterface, \Countable {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
+   * {@inheritdoc}
    */
   public function where($snippet, $args = array()) {
     $this->conditions[] = array(
@@ -102,42 +102,42 @@ class Condition implements ConditionInterface, \Countable {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
+   * {@inheritdoc}
    */
   public function isNull($field) {
     return $this->condition($field, NULL, 'IS NULL');
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
+   * {@inheritdoc}
    */
   public function isNotNull($field) {
     return $this->condition($field, NULL, 'IS NOT NULL');
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
+   * {@inheritdoc}
    */
   public function exists(SelectInterface $select) {
     return $this->condition('', $select, 'EXISTS');
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
+   * {@inheritdoc}
    */
   public function notExists(SelectInterface $select) {
     return $this->condition('', $select, 'NOT EXISTS');
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
+   * {@inheritdoc}
    */
   public function &conditions() {
     return $this->conditions;
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
+   * {@inheritdoc}
    */
   public function arguments() {
     // If the caller forgot to call compile() first, refuse to run.
@@ -148,7 +148,7 @@ class Condition implements ConditionInterface, \Countable {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
+   * {@inheritdoc}
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     // Re-compile if this condition changed or if we are compiled against a
@@ -247,7 +247,7 @@ class Condition implements ConditionInterface, \Countable {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
+   * {@inheritdoc}
    */
   public function compiled() {
     return !$this->changed;

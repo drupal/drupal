@@ -25,7 +25,7 @@ class DrupalTranslator implements TranslatorInterface {
   protected $locale;
 
   /**
-   * Implements \Symfony\Component\Translation\TranslatorInterface::trans().
+   * {@inheritdoc}
    */
   public function trans($id, array $parameters = array(), $domain = NULL, $locale = NULL) {
     // If a TranslatableMarkup object is passed in as $id, return it since the
@@ -34,7 +34,7 @@ class DrupalTranslator implements TranslatorInterface {
   }
 
   /**
-   * Implements \Symfony\Component\Translation\TranslatorInterface::transChoice().
+   * {@inheritdoc}
    */
   public function transChoice($id, $number, array $parameters = array(), $domain = NULL, $locale = NULL) {
     // Violation messages can separated singular and plural versions by "|".
@@ -58,14 +58,14 @@ class DrupalTranslator implements TranslatorInterface {
   }
 
   /**
-   * Implements \Symfony\Component\Translation\TranslatorInterface::setLocale().
+   * {@inheritdoc}
    */
   public function setLocale($locale) {
     $this->locale = $locale;
   }
 
   /**
-   * Implements \Symfony\Component\Translation\TranslatorInterface::getLocale().
+   * {@inheritdoc}
    */
   public function getLocale() {
     return $this->locale ? $this->locale : \Drupal::languageManager()->getCurrentLanguage()->getId();

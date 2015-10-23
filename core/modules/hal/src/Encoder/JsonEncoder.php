@@ -24,14 +24,14 @@ class JsonEncoder extends SymfonyJsonEncoder {
   protected $format = 'hal_json';
 
   /**
-   * Overrides \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsEncoding()
+   * {@inheritdoc}
    */
   public function supportsEncoding($format) {
     return $format == $this->format;
   }
 
   /**
-   * Overrides \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsDecoding()
+   * {@inheritdoc}
    */
   public function supportsDecoding($format) {
     return $format == $this->format;

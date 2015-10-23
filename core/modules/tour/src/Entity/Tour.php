@@ -88,7 +88,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
   protected $tips = array();
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::__construct();
+   * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);

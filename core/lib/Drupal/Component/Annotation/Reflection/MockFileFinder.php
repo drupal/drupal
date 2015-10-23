@@ -26,7 +26,7 @@ class MockFileFinder implements ClassFinderInterface {
   protected $filename;
 
   /**
-   * Implements Doctrine\Common\Reflection\ClassFinderInterface::findFile().
+   * {@inheritdoc}
    */
   public function findFile($class) {
     return $this->filename;

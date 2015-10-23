@@ -43,7 +43,7 @@ class FilterTest extends FilterPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\filter\FilterPluginBase::query().
+   * {@inheritdoc}
    */
   public function query() {
     // Call the parent if this option is enabled.

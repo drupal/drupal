@@ -74,7 +74,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoStreamInterface::open().
+   * {@inheritdoc}
    */
   public function open() {
     // Open in write mode. Will overwrite the stream if it already exists.
@@ -123,14 +123,14 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoWriterInterface::writeItem().
+   * {@inheritdoc}
    */
   public function writeItem(PoItem $item) {
     $this->write($item);
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoWriterInterface::writeItems().
+   * {@inheritdoc}
    */
   public function writeItems(PoReaderInterface $reader, $count = -1) {
     $forever = $count == -1;
@@ -153,7 +153,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoStreamInterface::setURI().
+   * {@inheritdoc}
    */
   public function setURI($uri) {
     $this->_uri = $uri;

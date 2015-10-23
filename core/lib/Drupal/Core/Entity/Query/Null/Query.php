@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Query\Sql\ConditionAggregate;
 class Query extends QueryBase implements QueryInterface, QueryAggregateInterface {
 
   /**
-   * Implements \Drupal\Core\Entity\Query\QueryInterface::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     if ($this->count) {

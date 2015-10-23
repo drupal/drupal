@@ -16,7 +16,7 @@ use Drupal\Core\Config\Config;
 class ConfigTestStorage extends ConfigEntityStorage {
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityStorage::importCreate().
+   * {@inheritdoc}
    */
   public function importCreate($name, Config $new_config, Config $old_config) {
     // Set a global value we can check in test code.
@@ -26,7 +26,7 @@ class ConfigTestStorage extends ConfigEntityStorage {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityStorage::importUpdate().
+   * {@inheritdoc}
    */
   public function importUpdate($name, Config $new_config, Config $old_config) {
     // Set a global value we can check in test code.
@@ -36,7 +36,7 @@ class ConfigTestStorage extends ConfigEntityStorage {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityStorage::importDelete().
+   * {@inheritdoc}
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
     // Set a global value we can check in test code.

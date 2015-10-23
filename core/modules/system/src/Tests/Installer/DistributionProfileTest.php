@@ -45,7 +45,7 @@ class DistributionProfileTest extends InstallerTestBase {
   }
 
   /**
-   * Overrides InstallerTest::setUpLanguage().
+   * {@inheritdoc}
    */
   protected function setUpLanguage() {
     // Verify that the distribution name appears.
@@ -59,7 +59,7 @@ class DistributionProfileTest extends InstallerTestBase {
   }
 
   /**
-   * Overrides InstallerTest::setUpProfile().
+   * {@inheritdoc}
    */
   protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.

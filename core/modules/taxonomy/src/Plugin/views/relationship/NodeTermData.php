@@ -60,7 +60,7 @@ class NodeTermData extends RelationshipPluginBase  {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\relationship\RelationshipPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

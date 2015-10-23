@@ -185,7 +185,7 @@ class Extension implements \Serializable {
   }
 
   /**
-   * Implements Serializable::unserialize().
+   * {@inheritdoc}
    */
   public function unserialize($data) {
     $data = unserialize($data);

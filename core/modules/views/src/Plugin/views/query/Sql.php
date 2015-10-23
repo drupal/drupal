@@ -112,7 +112,7 @@ class Sql extends QueryPluginBase {
   protected $noDistinct;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -1687,7 +1687,7 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::getDateField().
+   * {@inheritdoc}
    */
   public function getDateField($field) {
     $db_type = Database::getConnection()->databaseType();
@@ -1722,7 +1722,7 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::setupTimezone().
+   * {@inheritdoc}
    */
   public function setupTimezone() {
     $timezone = drupal_get_user_timezone();

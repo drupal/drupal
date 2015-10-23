@@ -30,7 +30,7 @@ use Drupal\Core\Session\AccountInterface;
 class Role extends AccessPluginBase implements CacheableDependencyInterface {
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

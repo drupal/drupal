@@ -20,7 +20,7 @@ use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 class LlamaButton extends Llama implements CKEditorPluginButtonsInterface {
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginButtonsInterface::getButtons().
+   * {@inheritdoc}
    */
   function getButtons() {
     return array(
@@ -31,7 +31,7 @@ class LlamaButton extends Llama implements CKEditorPluginButtonsInterface {
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getFile().
+   * {@inheritdoc}
    */
   function getFile() {
     return drupal_get_path('module', 'ckeditor_test') . '/js/llama_button.js';

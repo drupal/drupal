@@ -21,7 +21,7 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
 class Current extends BooleanOperator {
 
   /**
-   * Overrides Drupal\views\Plugin\views\filter\BooleanOperator::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

@@ -34,7 +34,7 @@ class ManyToOne extends InOperator {
   var $helper = NULL;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\filter\InOperator::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

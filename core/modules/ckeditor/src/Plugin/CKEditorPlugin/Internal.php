@@ -75,14 +75,14 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::isInternal().
+   * {@inheritdoc}
    */
   public function isInternal() {
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getFile().
+   * {@inheritdoc}
    */
   public function getFile() {
     // This plugin is already part of Drupal core's CKEditor build.
@@ -90,7 +90,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getConfig().
+   * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
     // Reasonable defaults that provide expected basic behavior.
@@ -123,7 +123,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginButtonsInterface::getButtons().
+   * {@inheritdoc}
    */
   public function getButtons() {
     $button = function($name, $direction = 'ltr') {

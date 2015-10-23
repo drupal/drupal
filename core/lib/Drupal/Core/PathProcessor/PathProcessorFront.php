@@ -36,7 +36,7 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     if ($path === '/') {
@@ -46,7 +46,7 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
+   * {@inheritdoc}
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     // The special path '<front>' links to the default front page.
