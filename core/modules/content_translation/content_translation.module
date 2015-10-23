@@ -534,7 +534,7 @@ function content_translation_form_language_content_settings_form_alter(array &$f
 }
 
 /**
- * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
+ * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
  */
 function content_translation_preprocess_language_content_settings_table(&$variables) {
   module_load_include('inc', 'content_translation', 'content_translation.admin');
