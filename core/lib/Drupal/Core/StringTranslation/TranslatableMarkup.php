@@ -101,7 +101,7 @@ class TranslatableMarkup extends FormattableMarkup {
   /**
    * Gets a specific option from this translated string.
    *
-   * @param $name
+   * @param string $name
    *   Option name.
    *
    * @return mixed
