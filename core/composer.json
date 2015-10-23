@@ -89,6 +89,7 @@
     "drupal/help": "self.version",
     "drupal/history": "self.version",
     "drupal/image": "self.version",
+    "drupal/inline_form_errors": "self.version",
     "drupal/language": "self.version",
     "drupal/link": "self.version",
     "drupal/locale": "self.version",
