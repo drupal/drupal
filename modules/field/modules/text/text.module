@@ -223,11 +223,13 @@ function text_field_formatter_settings_form($field, $instance, $view_mode, $form
 
   if (strpos($display['type'], '_trimmed') !== FALSE) {
     $element['trim_length'] = array(
-      '#title' => t('Trim length'),
+      '#title' => t('Trimmed limit'),
       '#type' => 'textfield',
+      '#field_suffix' => t('characters'),
       '#size' => 10,
       '#default_value' => $settings['trim_length'],
       '#element_validate' => array('element_validate_integer_positive'),
+      '#description' => t('If the summary is not set, the trimmed %label field will be shorter than this character limit.', array('%label' => $instance['label'])),
       '#required' => TRUE,
     );
   }
@@ -245,7 +247,7 @@ function text_field_formatter_settings_summary($field, $instance, $view_mode) {
   $summary = '';
 
   if (strpos($display['type'], '_trimmed') !== FALSE) {
-    $summary = t('Trim length') . ': ' . check_plain($settings['trim_length']);
+    $summary = t('Trimmed limit: @trim_length characters', array('@trim_length' => $settings['trim_length']));
   }
 
   return $summary;

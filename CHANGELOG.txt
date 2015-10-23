@@ -1,6 +1,8 @@
 
 Drupal 7.42, xxxx-xx-xx (development version)
 -----------------------
+- Improved the description of the "Trimmed" format option on text fields
+  (translatable string change, and minor UI and data structure change).
 
 Drupal 7.41, 2015-10-21
 -----------------------
