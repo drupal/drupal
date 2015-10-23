@@ -1546,10 +1546,10 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Retrieves a Drupal path or an absolute path and JSON decode the result.
+   * Retrieves a Drupal path or an absolute path and JSON decodes the result.
    *
-   * @param string $path
-   *   Path to request AJAX from.
+   * @param \Drupal\Core\Url|string $path
+   *   Drupal path or URL to request AJAX from.
    * @param array $options
    *   Array of URL options.
    * @param array $headers
@@ -1557,7 +1557,6 @@ abstract class WebTestBase extends TestBase {
    *
    * @return array
    *   Decoded json.
-   * Requests a Drupal path in JSON format, and JSON decodes the response.
    */
   protected function drupalGetJSON($path, array $options = array(), array $headers = array()) {
     return Json::decode($this->drupalGetWithFormat($path, 'json', $options, $headers));
@@ -1566,8 +1565,8 @@ abstract class WebTestBase extends TestBase {
   /**
    * Retrieves a Drupal path or an absolute path for a given format.
    *
-   * @param string $path
-   *   Path to request AJAX from.
+   * @param \Drupal\Core\Url|string $path
+   *   Drupal path or URL to request given format from.
    * @param string $format
    *   The wanted request format.
    * @param array $options
@@ -1584,7 +1583,17 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Requests a Drupal path in drupal_ajax format and JSON-decodes the response.
+   * Requests a path or URL in drupal_ajax format and JSON-decodes the response.
+   *
+   * @param \Drupal\Core\Url|string $path
+   *   Drupal path or URL to request from.
+   * @param array $options
+   *   Array of URL options.
+   * @param array $headers
+   *   Array of headers.
+   *
+   * @return array
+   *   Decoded JSON.
    */
   protected function drupalGetAjax($path, array $options = array(), array $headers = array()) {
     if (!isset($options['query'][MainContentViewSubscriber::WRAPPER_FORMAT])) {
@@ -1594,7 +1603,17 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Requests a Drupal path as if it is a XMLHttpRequest.
+   * Requests a Drupal path or an absolute path as if it is a XMLHttpRequest.
+   *
+   * @param \Drupal\Core\Url|string $path
+   *   Drupal path or URL to request from.
+   * @param array $options
+   *   Array of URL options.
+   * @param array $headers
+   *   Array of headers.
+   *
+   * @return string
+   *   The retrieved content.
    */
   protected function drupalGetXHR($path, array $options = array(), array $headers = array()) {
     $headers[] = 'X-Requested-With: XMLHttpRequest';
@@ -1606,7 +1625,7 @@ abstract class WebTestBase extends TestBase {
    *
    * It will be done as usual POST request with SimpleBrowser.
    *
-   * @param $path
+   * @param \Drupal\Core\Url|string $path
    *   Location of the post form. Either a Drupal path or an absolute path or
    *   NULL to post to the current page. For multi-stage forms you can set the
    *   path to NULL and have it post to the last received page. Example:
@@ -1796,7 +1815,7 @@ abstract class WebTestBase extends TestBase {
    * update $this->content via drupalProcessAjaxResponse(). It also returns
    * the array of AJAX commands received.
    *
-   * @param $path
+   * @param \Drupal\Core\Url|string $path
    *   Location of the form containing the Ajax enabled element to test. Can be
    *   either a Drupal path or an absolute path or NULL to use the current page.
    * @param $edit
@@ -2057,9 +2076,8 @@ abstract class WebTestBase extends TestBase {
   /**
    * Perform a POST HTTP request.
    *
-   * @param string $path
-   *   Drupal path where the request should be POSTed to. Will be transformed
-   *   into an absolute path automatically.
+   * @param string|\Drupal\Core\Url $path
+   *   Drupal path or absolute path where the request should be POSTed.
    * @param string $accept
    *   The value for the "Accept" header. Usually either 'application/json' or
    *   'application/vnd.drupal-ajax'.
@@ -2092,9 +2110,8 @@ abstract class WebTestBase extends TestBase {
   /**
    * Performs a POST HTTP request with a specific format.
    *
-   * @param string $path
-   *   Drupal path where the request should be POSTed to. Will be transformed
-   *   into an absolute path automatically.
+   * @param string|\Drupal\Core\Url $path
+   *   Drupal path or absolute path where the request should be POSTed.
    * @param string $format
    *   The request format.
    * @param array $post
