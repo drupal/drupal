@@ -263,9 +263,9 @@ function drupal_get_path($type, $name) {
  * that figure out what text needs to be translated work off t() -- the text
  * inside t() calls is added to the database of strings to be translated.
  * These strings are expected to be in English, so the first argument should
- * always be in English. To enable a fully-translatable site, it is important
- * that all human-readable text that will be displayed on the site or sent to
- * a user is passed through the t() function, or a related function. See the
+ * always be in English. To allow the site to be localized, it is important that
+ * all human-readable text that will be displayed on the site or sent to a user
+ * is passed through the t() function, or a related function. See the
  * @link https://www.drupal.org/node/322729 Localization API @endlink pages for
  * more information, including recommendations on how to break up or not
  * break up strings for translation.
