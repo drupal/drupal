@@ -88,7 +88,6 @@ class LibraryDiscoveryCollector extends CacheCollector {
     return $this->storage[$key];
   }
 
-
   /**
    * Returns the library definitions for a given extension.
    *
@@ -172,4 +171,13 @@ class LibraryDiscoveryCollector extends CacheCollector {
     }
     return $library_definition;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function reset() {
+    parent::reset();
+    $this->cid = NULL;
+  }
+
 }
