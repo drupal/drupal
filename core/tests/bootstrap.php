@@ -80,6 +80,13 @@ function drupal_phpunit_get_extension_namespaces($dirs) {
   return $namespaces;
 }
 
+// We define the COMPOSER_INSTALL constant, so that PHPUnit knows where to
+// autoload from. This is needed for tests run in isolation mode, because
+// phpunit.xml.dist is located in a non-default directory relative to the
+// PHPUnit executable.
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+  define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../autoload.php');
+}
 // Start with classes in known locations.
 $loader = require __DIR__ . '/../../autoload.php';
 $loader->add('Drupal\\Tests', __DIR__);
