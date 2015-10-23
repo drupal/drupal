@@ -145,6 +145,7 @@ drupal.date:
   dependencies:
     - core/drupal
     - core/modernizr
+    - core/jquery.once
     - core/jquery.ui.datepicker
 
 drupal.debounce:
