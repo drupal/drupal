@@ -87,11 +87,20 @@ function template_preprocess_toolbar(&$variables) {
   $variables['tabs'] = array();
   $variables['remainder'] = array();
   foreach (Element::children($element) as $key) {
+    // Early rendering to collect the wrapper attributes from
+    // ToolbarItem elements.
+    if (!empty($element[$key])) {
+      Drupal::service('renderer')->render($element[$key]);
+    }
     // Add the tray.
     if (isset($element[$key]['tray'])) {
+      $attributes = array();
+      if (!empty($element[$key]['tray']['#wrapper_attributes'])) {
+        $attributes = $element[$key]['tray']['#wrapper_attributes'];
+      }
       $variables['trays'][$key] = array(
         'links' => $element[$key]['tray'],
-        'attributes' => new Attribute($element[$key]['tray']['#wrapper_attributes']),
+        'attributes' => new Attribute($attributes),
       );
       if (array_key_exists('#heading', $element[$key]['tray'])) {
         $variables['trays'][$key]['label'] = $element[$key]['tray']['#heading'];
@@ -102,7 +111,7 @@ function template_preprocess_toolbar(&$variables) {
     if (isset($element[$key]['tab'])) {
       $attributes = array();
       // Pass the wrapper attributes along.
-      if (array_key_exists('#wrapper_attributes', $element[$key])) {
+      if (!empty($element[$key]['#wrapper_attributes'])) {
         $attributes = $element[$key]['#wrapper_attributes'];
       }
 

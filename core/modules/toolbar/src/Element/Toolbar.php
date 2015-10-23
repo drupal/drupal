@@ -97,9 +97,6 @@ class Toolbar extends RenderElement {
       $element[$key]['#id'] = Html::getId('toolbar-item-' . $key);
     }
 
-    // Render the children.
-    $element['#children'] = drupal_render_children($element);
-
     return $element;
   }
 
