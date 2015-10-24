@@ -17,3 +17,5 @@ libraries-extend:
     - classy/dropbutton
   core/drupal.dialog:
     - classy/dialog
+  file/drupal.file:
+    - classy/file

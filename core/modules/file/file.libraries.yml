@@ -5,8 +5,6 @@ drupal.file:
   css:
     theme:
       css/file.admin.css: {}
-    component:
-      css/file.theme.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once
