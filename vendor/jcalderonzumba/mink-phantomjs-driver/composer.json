@@ -1,0 +1,53 @@
+{
+  "name": "jcalderonzumba/mink-phantomjs-driver",
+  "description": "PhantomJS driver for Mink framework",
+  "keywords": [
+    "phantomjs",
+    "headless",
+    "javascript",
+    "ajax",
+    "testing",
+    "browser"
+  ],
+  "homepage": "http://mink.behat.org/",
+  "type": "mink-driver",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Juan Francisco Calderón Zumba",
+      "email": "juanfcz@gmail.com",
+      "homepage": "http://github.com/jcalderonzumba"
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "behat/mink": "~1.6",
+    "twig/twig": "~1.8",
+    "jcalderonzumba/gastonjs": "~1.0"
+  },
+  "require-dev": {
+    "symfony/process": "~2.3",
+    "symfony/phpunit-bridge": "~2.7",
+    "symfony/css-selector": "~2.1",
+    "phpunit/phpunit": "~4.6",
+    "silex/silex": "~1.2"
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zumba\\Mink\\Driver\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Behat\\Mink\\Tests\\Driver\\": "tests/integration"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.4.x-dev"
+    }
+  }
+}
