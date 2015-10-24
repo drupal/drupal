@@ -135,7 +135,7 @@ class BulkFormTest extends NodeTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $node = $this->loadNode($node->id());
-    $this->assertTrue($node->isPublished(), 'Node has been made sticky');
+    $this->assertTrue($node->isSticky(), 'Node has been made sticky');
     $this->assertFalse($node->getTranslation('fr')->isSticky(), 'Node translation has not been made sticky');
     $this->assertFalse($node->getTranslation('it')->isSticky(), 'Node translation has not been made sticky');
 
