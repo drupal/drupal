@@ -55,15 +55,15 @@ EOS;
 <?php
 
 /**
- * Module A update A.
- */
-function module_a_post_update_a() {
-}
-
-/**
  * Module A update B.
  */
 function module_a_post_update_b() {
+}
+
+/**
+ * Module A update A.
+ */
+function module_a_post_update_a() {
 }
 
 EOS;

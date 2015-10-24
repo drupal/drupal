@@ -34,7 +34,7 @@ class UpdatePostUpdateTest extends UpdatePathTestBase {
 
     // Ensure that normal and post_update updates are merged together on the
     // selection page.
-    $this->assertRaw('<ul><li>8001 -   Normal update_N() function. </li><li>First update.</li><li>Second update.</li><li>Test1 update.</li><li>Test0 update.</li><li>Testing batch processing in post updates update.</li></ul>');
+    $this->assertRaw('<ul><li>8001 -   Normal update_N() function. </li><li>First update.</li><li>Second update.</li><li>Test0 update.</li><li>Test1 update.</li><li>Testing batch processing in post updates update.</li></ul>');
   }
 
   /**
@@ -58,8 +58,8 @@ class UpdatePostUpdateTest extends UpdatePathTestBase {
     $updates = [
       'update_test_postupdate_post_update_first',
       'update_test_postupdate_post_update_second',
-      'update_test_postupdate_post_update_test1',
       'update_test_postupdate_post_update_test0',
+      'update_test_postupdate_post_update_test1',
       'update_test_postupdate_post_update_test_batch-1',
       'update_test_postupdate_post_update_test_batch-2',
       'update_test_postupdate_post_update_test_batch-3',
