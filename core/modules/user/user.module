@@ -434,7 +434,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
   $user = \Drupal::currentUser();
 
   $variables['user'] = clone $user;
-  // Remove password and session IDs, $form_state, since themes should not need nor see them.
+  // Remove password and session IDs, since themes should not need nor see them.
   unset($variables['user']->pass, $variables['user']->sid, $variables['user']->ssid);
 
   $variables['is_admin'] = $user->hasPermission('access administration pages');
