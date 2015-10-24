@@ -47,8 +47,8 @@ class Delete extends Query implements ConditionInterface {
   /**
    * Executes the DELETE query.
    *
-   * @return
-   *   The return value is dependent on the database connection.
+   * @return int
+   *   The number of rows affected by the delete query.
    */
   public function execute() {
     $values = array();
