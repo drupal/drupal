@@ -95,6 +95,9 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -107,6 +110,9 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['term_page'] = array(
       '#type' => 'checkbox',
@@ -165,6 +171,9 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = array()) {
     // Filter unselected items so we don't unnecessarily store giant arrays.
     $options['vids'] = array_filter($options['vids']);
