@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\PageCache\ChainResponsePolicy.
+ * Contains \Drupal\Core\ProxyClass\PageCache\ChainResponsePolicy.
  */
 
 /**

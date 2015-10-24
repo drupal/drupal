@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\forum\ProxyClass\ForumUninstallValidator.
+ * Contains \Drupal\forum\ProxyClass\ForumUninstallValidator.
  */
 
 /**

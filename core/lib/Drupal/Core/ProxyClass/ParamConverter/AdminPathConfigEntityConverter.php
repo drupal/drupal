@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\ParamConverter\AdminPathConfigEntityConverter.
+ * Contains \Drupal\Core\ProxyClass\ParamConverter\AdminPathConfigEntityConverter.
  */
 
 /**

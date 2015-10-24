@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Plugin\CachedDiscoveryClearer.
+ * Contains \Drupal\Core\ProxyClass\Plugin\CachedDiscoveryClearer.
  */
 
 /**

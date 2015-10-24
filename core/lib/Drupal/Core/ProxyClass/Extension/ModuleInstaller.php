@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Extension\ModuleInstaller.
+ * Contains \Drupal\Core\ProxyClass\Extension\ModuleInstaller.
  */
 
 /**

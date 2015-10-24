@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Batch\BatchStorage.
+ * Contains \Drupal\Core\ProxyClass\Batch\BatchStorage.
  */
 
 /**

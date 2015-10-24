@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\TemplateTest
+ * Contains \Drupal\migrate\Tests\TemplateTest.
  */
 
 namespace Drupal\migrate\Tests;

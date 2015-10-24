@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\language\ProxyClass\LanguageConverter.
+ * Contains \Drupal\language\ProxyClass\LanguageConverter.
  */
 
 /**

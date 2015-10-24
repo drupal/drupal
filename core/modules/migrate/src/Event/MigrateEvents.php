@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\migrate\Event\MigrateEvents.
+ * Contains \Drupal\migrate\Event\MigrateEvents.
  */
 
 namespace Drupal\migrate\Event;

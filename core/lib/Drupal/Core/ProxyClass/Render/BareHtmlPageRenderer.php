@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Render\BareHtmlPageRenderer.
+ * Contains \Drupal\Core\ProxyClass\Render\BareHtmlPageRenderer.
  */
 
 /**

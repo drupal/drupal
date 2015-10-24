@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\aggregator\FeedHtmlRouteProvider.
+ * Contains \Drupal\aggregator\FeedHtmlRouteProvider.
  */
 
 namespace Drupal\aggregator;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Component\Render\FormattableMarkup.
+ * Contains \Drupal\Component\Render\FormattableMarkup.
  */
 
 namespace Drupal\Component\Render;

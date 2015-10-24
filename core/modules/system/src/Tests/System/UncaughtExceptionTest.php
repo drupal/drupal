@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\system\Tests\System\UncaughtExceptionTest
+ * Contains \Drupal\system\Tests\System\UncaughtExceptionTest.
  */
 
 namespace Drupal\system\Tests\System;

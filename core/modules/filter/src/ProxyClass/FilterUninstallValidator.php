@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\filter\ProxyClass\FilterUninstallValidator.
+ * Contains \Drupal\filter\ProxyClass\FilterUninstallValidator.
  */
 
 /**

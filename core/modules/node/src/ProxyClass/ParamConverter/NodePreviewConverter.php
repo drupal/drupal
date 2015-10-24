@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\node\ProxyClass\ParamConverter\NodePreviewConverter.
+ * Contains \Drupal\node\ProxyClass\ParamConverter\NodePreviewConverter.
  */
 
 /**

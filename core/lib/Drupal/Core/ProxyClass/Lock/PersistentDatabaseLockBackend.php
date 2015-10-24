@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Lock\PersistentDatabaseLockBackend.
+ * Contains \Drupal\Core\ProxyClass\Lock\PersistentDatabaseLockBackend.
  */
 
 /**

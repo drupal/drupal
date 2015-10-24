@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Update\UpdatePathRC1TestBaseTest
+ * Contains \Drupal\system\Tests\Update\UpdatePathRC1TestBaseTest.
  */
 
 namespace Drupal\system\Tests\Update;
