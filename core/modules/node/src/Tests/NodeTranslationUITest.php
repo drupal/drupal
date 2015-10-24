@@ -66,7 +66,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests the basic translation UI.
    */
-  function testTranslationUI() {
+  public function testTranslationUI() {
     parent::testTranslationUI();
     $this->doUninstallTest();
   }
@@ -74,7 +74,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests changing the published status on a node without fields.
    */
-  function testPublishedStatusNoFields() {
+  public function testPublishedStatusNoFields() {
     // Test changing the published status of an article without fields.
     $this->drupalLogin($this->administrator);
     // Delete all fields.
@@ -221,7 +221,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translation page inherits admin status of edit page.
    */
-  function testTranslationLinkTheme() {
+  public function testTranslationLinkTheme() {
     $this->drupalLogin($this->administrator);
     $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => $this->langcodes[0]));
 
@@ -270,7 +270,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translations are rendered properly.
    */
-  function testTranslationRendering() {
+  public function testTranslationRendering() {
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
