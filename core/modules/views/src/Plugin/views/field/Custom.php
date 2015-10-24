@@ -7,7 +7,9 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 
 /**
@@ -63,7 +65,7 @@ class Custom extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     // Return the text, so the code never thinks the value is empty.
-    return $this->options['alter']['text'];
+    return ViewsRenderPipelineMarkup::create(Xss::filterAdmin($this->options['alter']['text']));
   }
 
   /**
