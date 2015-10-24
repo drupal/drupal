@@ -65,12 +65,12 @@ class BookExport {
    * @param \Drupal\node\NodeInterface $node
    *   The node to export.
    *
-   * @throws \Exception
-   *   Thrown when the node was not attached to a book.
-   *
    * @return array
    *   A render array representing the HTML for a node and its children in the
    *   book hierarchy.
+   *
+   * @throws \Exception
+   *   Thrown when the node was not attached to a book.
    */
   public function bookExportHtml(NodeInterface $node) {
     if (!isset($node->book)) {

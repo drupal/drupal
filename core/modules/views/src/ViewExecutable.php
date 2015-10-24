@@ -1855,11 +1855,11 @@ class ViewExecutable implements \Serializable {
    * @param string $display_id
    *   (Optional) The display id. ( Used only to detail an exception. )
    *
-   * @throws \InvalidArgumentException
-   *   Thrown when the display plugin does not have a URL to return.
-   *
    * @return \Drupal\Core\Url
    *   The display handlers URL object.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the display plugin does not have a URL to return.
    */
   public function getUrlInfo($display_id = '') {
     $this->initDisplay();

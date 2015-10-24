@@ -85,13 +85,13 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @param \Drupal\image\ImageStyleInterface $image_style
    *   The image style to deliver.
    *
+   * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+   *   The transferred file as response or some error response.
+   *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the user does not have access to the file.
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
    *   Thrown when the file is still being generated.
-   *
-   * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
-   *   The transferred file as response or some error response.
    */
   public function deliver(Request $request, $scheme, ImageStyleInterface $image_style) {
     $target = $request->query->get('file');
