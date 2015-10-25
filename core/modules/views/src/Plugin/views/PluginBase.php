@@ -382,7 +382,10 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           assert('preg_match(\'/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/\', $key) === 1', 'Tokens need to be valid Twig variables.');
           $token_array = array($key => $token_array);
         }
-        $twig_tokens[$top] = $token_array;
+        if (!isset($twig_tokens[$top])) {
+          $twig_tokens[$top] = [];
+        }
+        $twig_tokens[$top] += $token_array;
       }
     }
 
