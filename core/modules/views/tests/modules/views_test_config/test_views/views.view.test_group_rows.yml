@@ -7,7 +7,6 @@ dependencies:
     - user
   config:
     - field.storage.node.field_views_testing_group_rows
-  module:
 id: test_group_rows
 label: test_group_rows
 module: views
