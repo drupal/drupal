@@ -156,7 +156,7 @@ function file_default_scheme() {
  *   The normalized URI.
  */
 function file_stream_wrapper_uri_normalize($uri) {
-  $scheme = file_uri_scheme($uri);
+  $scheme = \Drupal::service('file_system')->uriScheme($uri);
 
   if (file_stream_wrapper_valid_scheme($scheme)) {
     $target = file_uri_target($uri);
@@ -199,7 +199,7 @@ function file_create_url($uri) {
   // file server.
   \Drupal::moduleHandler()->alter('file_url', $uri);
 
-  $scheme = file_uri_scheme($uri);
+  $scheme = \Drupal::service('file_system')->uriScheme($uri);
 
   if (!$scheme) {
     // Allow for:
@@ -300,7 +300,7 @@ function file_url_transform_relative($file_url) {
  *   otherwise.
  */
 function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS) {
-  if (!file_stream_wrapper_valid_scheme(file_uri_scheme($directory))) {
+  if (!file_stream_wrapper_valid_scheme(\Drupal::service('file_system')->uriScheme($directory))) {
     // Only trim if we're not dealing with a stream.
     $directory = rtrim($directory, '/\\');
   }
@@ -349,7 +349,7 @@ function file_ensure_htaccess() {
  *   if one is already present. Defaults to FALSE.
  */
 function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALSE) {
-  if (file_uri_scheme($directory)) {
+  if (\Drupal::service('file_system')->uriScheme($directory)) {
     $htaccess_path = file_stream_wrapper_uri_normalize($directory . '/.htaccess');
   }
   else {
@@ -407,7 +407,7 @@ function file_htaccess_lines($private = TRUE) {
  */
 function file_valid_uri($uri) {
   // Assert that the URI has an allowed scheme. Bare paths are not allowed.
-  $uri_scheme = file_uri_scheme($uri);
+  $uri_scheme = \Drupal::service('file_system')->uriScheme($uri);
   if (!file_stream_wrapper_valid_scheme($uri_scheme)) {
     return FALSE;
   }
