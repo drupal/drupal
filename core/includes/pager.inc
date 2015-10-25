@@ -10,18 +10,18 @@ use Drupal\Component\Utility\UrlHelper;
 /**
  * Returns the current page being requested for display within a pager.
  *
- * @param $element
- *  An optional integer to distinguish between multiple pagers on one page.
+ * @param int $element
+ *   (optional) An integer to distinguish between multiple pagers on one page.
  *
- * @return
- *  The number of the current requested page, within the pager represented by
- *  $element. This is determined from the URL query parameter
- *  \Drupal::request()->query->get('page'), or 0 by default. Note that this
- *  number may differ from the actual page being displayed. For example, if a
- *  search for "example text" brings up three pages of results, but a users
- *  visits search/node/example+text?page=10, this function will return 10, even
- *  though the default pager implementation adjusts for this and still displays
- * the third page of search results at that URL.
+ * @return int
+ *   The number of the current requested page, within the pager represented by
+ *   $element. This is determined from the URL query parameter
+ *   \Drupal::request()->query->get('page'), or 0 by default. Note that this
+ *   number may differ from the actual page being displayed. For example, if a
+ *   search for "example text" brings up three pages of results, but a user
+ *   visits search/node/example+text?page=10, this function will return 10,
+ *   even though the default pager implementation adjusts for this and still
+ *   displays the third page of search results at that URL.
  *
  * @see pager_default_initialize()
  */
@@ -35,11 +35,11 @@ function pager_find_page($element = 0) {
 }
 
 /**
- * Initializes a pager for _theme('pager').
+ * Initializes a pager.
  *
- * This function sets up the necessary global variables so that future calls
- * to _theme('pager') will render a pager that correctly corresponds to the
- * items being displayed.
+ * This function sets up the necessary global variables so that the render
+ * system will correctly process #type 'pager' render arrays to output pagers
+ * that correspond to the items being displayed.
  *
  * If the items being displayed result from a database query performed using
  * Drupal's database API, and if you have control over the construction of the
@@ -54,7 +54,7 @@ function pager_find_page($element = 0) {
  * However, if you are using a different method for generating the items to be
  * paged through, then you should call this function in preparation.
  *
- * The following example shows how this function can be used in a page callback
+ * The following example shows how this function can be used in a controller
  * that invokes an external datastore with an SQL-like syntax:
  * @code
  *   // First find the total number of items and initialize the pager.
@@ -63,21 +63,22 @@ function pager_find_page($element = 0) {
  *   $num_per_page = \Drupal::config('mymodule.settings')->get('num_per_page');
  *   $page = pager_default_initialize($total, $num_per_page);
  *
- *   // Next, retrieve and display the items for the current page.
+ *   // Next, retrieve the items for the current page and put them into a
+ *   // render array.
  *   $offset = $num_per_page * $page;
  *   $result = mymodule_select("SELECT * FROM data " . $where . " LIMIT %d, %d", $offset, $num_per_page)->fetchAll();
- *   $output = drupal_render(
+ *   $render = [];
+ *   $render[] = [
  *     '#theme' => 'mymodule_results',
  *     '#result' => $result,
- *   );
+ *   ];
  *
- *   // Finally, display the pager controls, and return.
- *   $pager = array('#type' => 'pager');
- *   $output .= drupal_render($pager);
- *   return $output;
+ *   // Finally, add the pager to the render array, and return.
+ *   $render[] = ['#type' => 'pager'];
+ *   return $render;
  * @endcode
  *
- * A second example involves a page callback that invokes an external search
+ * A second example involves a controller that invokes an external search
  * service where the total number of matching results is provided as part of
  * the returned set (so that we do not need a separate query in order to obtain
  * this information). Here, we call pager_find_page() to calculate the desired
@@ -95,28 +96,27 @@ function pager_find_page($element = 0) {
  *   // Now that we have the total number of results, initialize the pager.
  *   pager_default_initialize($result->total, $num_per_page);
  *
- *   // Display the search results.
- *   $search_results = array(
+ *   // Create a render array with the search results.
+ *   $render = [];
+ *   $render[] = [
  *     '#theme' => 'search_results',
  *     '#results' => $result->data,
  *     '#type' => 'remote',
- *   );
- *   $output = drupal_render($search_results);
+ *   ];
  *
- *   // Finally, display the pager controls, and return.
- *   $pager = array('#type' => 'pager');
- *   $output .= drupal_render($pager);
- *   return $output;
+ *   // Finally, add the pager to the render array, and return.
+ *   $render[] = ['#type' => 'pager'];
+ *   return $render;
  * @endcode
  *
- * @param $total
- *  The total number of items to be paged.
- * @param $limit
- *  The number of items the calling code will display per page.
- * @param $element
- *  An optional integer to distinguish between multiple pagers on one page.
+ * @param int $total
+ *   The total number of items to be paged.
+ * @param int $limit
+ *   The number of items the calling code will display per page.
+ * @param int $element
+ *   (optional) An integer to distinguish between multiple pagers on one page.
  *
- * @return
+ * @return int
  *   The number of the current page, within the pager represented by $element.
  *   This is determined from the URL query parameter
  *   \Drupal::request()->query->get('page), or 0 by default. However, if a page
@@ -140,7 +140,7 @@ function pager_default_initialize($total, $limit, $element = 0) {
 /**
  * Compose a URL query parameter array for pager links.
  *
- * @return
+ * @return array
  *   A URL query parameter array that consists of all components of the current
  *   page request except for those pertaining to paging.
  */
@@ -284,18 +284,23 @@ function template_preprocess_pager(&$variables) {
 }
 
 /**
- * Get the query parameter array of a pager link.
+ * Gets the URL query parameter array of a pager link.
  *
- * Adds or adjusts the 'page' parameter to make sure that, following the link,
- * the requested $page for the given $element is displayed.
- * The 'page' parameter is a comma-delimited string, where each value is the
- * target page for the corresponding pager $element.
+ * Adds to or adjusts the 'page' URL query parameter so that if you follow the
+ * link, you'll get page $index for pager $element on the page.
+ *
+ * The 'page' URL query parameter is a comma-delimited string, where each value
+ * is the target content page for the corresponding pager $element. For
+ * instance, if we have 5 pagers on a single page, and we want to have a link
+ * to a page that should display the 6th content page for the 3rd pager, and
+ * the 1st content page for all the other pagers, then the URL query will look
+ * like this: ?page=0,0,5,0,0 (page numbering starts at zero).
  *
  * @param array $query
- *   An associative array of query parameters to add to.
- * @param integer $element
+ *   An associative array of URL query parameters to add to.
+ * @param int $element
  *   An integer to distinguish between multiple pagers on one page.
- * @param integer $index
+ * @param int $index
  *   The index of the target page, for the given element, in the pager array.
  *
  * @return array
