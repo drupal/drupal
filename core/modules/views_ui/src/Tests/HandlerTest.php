@@ -179,7 +179,8 @@ class HandlerTest extends UITestBase {
     ])->save();
 
     $this->drupalGet('admin/structure/views/nojs/add-handler/content/default/field');
-    $this->assertEscaped('Appears in: page, article. Also known as: Content: The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
+    $this->assertEscaped('The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
+    $this->assertEscaped('Appears in: page, article. Also known as: Content: The giraffe" label');
   }
 
   /**

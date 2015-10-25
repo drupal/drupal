@@ -263,7 +263,14 @@ function views_entity_field_label($entity_type, $field_name) {
     return array($field_name, $all_labels);
   }
   // Sort the field labels by it most used label and return the most used one.
-  arsort($label_counter);
+  // If the counts are equal, sort by the label to ensure the result is
+  // deterministic.
+  uksort($label_counter, function($a, $b) use ($label_counter) {
+    if ($label_counter[$a] === $label_counter[$b]) {
+      return strcmp($a, $b);
+    }
+    return $label_counter[$a] > $label_counter[$b] ? -1 : 1;
+  });
   $label_counter = array_keys($label_counter);
   return array($label_counter[0], $all_labels);
 }
