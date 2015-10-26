@@ -7,6 +7,7 @@
 
 namespace Drupal\toolbar\Controller;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
@@ -52,7 +53,8 @@ class ToolbarController extends ControllerBase {
    *   The access result.
    */
   public function checkSubTreeAccess($hash) {
-    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && $hash == _toolbar_get_subtrees_hash()[0])->cachePerPermissions();
+    $expected_hash = _toolbar_get_subtrees_hash()[0];
+    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && Crypt::hashEquals($expected_hash, $hash))->cachePerPermissions();
   }
 
 }

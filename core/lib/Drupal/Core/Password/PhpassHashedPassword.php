@@ -251,7 +251,9 @@ class PhpassHashedPassword implements PasswordInterface {
       default:
         return FALSE;
     }
-    return ($computed_hash && $stored_hash === $computed_hash);
+
+    // Compare using hashEquals() instead of === to mitigate timing attacks.
+    return $computed_hash && Crypt::hashEquals($stored_hash, $computed_hash);
   }
 
   /**
