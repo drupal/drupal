@@ -1241,18 +1241,14 @@ class EntityManagerTest extends UnitTestCase {
     $field_definition->getTargetBundle()->willReturn('test_bundle');
     $field_definition->getName()->willReturn('test_field');
     $field_definition->getType()->willReturn('test_type');
+    $field = $field_definition->reveal();
 
-    $class = $this->getMockClass(DynamicallyFieldableEntityStorageInterface::class);
+    $storage = $this->prophesize(DynamicallyFieldableEntityStorageInterface::class);
+    $storage->onFieldDefinitionCreate($field)
+      ->shouldBeCalledTimes(1);
+    $this->entityManager->setHandler('storage', 'test_entity_type', $storage->reveal());
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn($class);
     $this->setUpEntityManager(array('test_entity_type' => $entity));
-
-    // The entity manager will instantiate a new object with the given class
-    // name. Define the mock expectations on that.
-    $storage = $this->entityManager->getStorage('test_entity_type');
-    $storage->expects($this->once())
-      ->method('onFieldDefinitionCreate')
-      ->with($field_definition->reveal());
 
     // Set up the stored bundle field map.
     $key_value_store = $this->prophesize(KeyValueStoreInterface::class);
@@ -1265,7 +1261,7 @@ class EntityManagerTest extends UnitTestCase {
         ],
       ])->shouldBeCalled();
 
-    $this->entityManager->onFieldDefinitionCreate($field_definition->reveal());
+    $this->entityManager->onFieldDefinitionCreate($field);
   }
 
   /**
@@ -1276,18 +1272,14 @@ class EntityManagerTest extends UnitTestCase {
     $field_definition->getTargetEntityTypeId()->willReturn('test_entity_type');
     $field_definition->getTargetBundle()->willReturn('test_bundle');
     $field_definition->getName()->willReturn('test_field');
+    $field = $field_definition->reveal();
 
-    $class = $this->getMockClass(DynamicallyFieldableEntityStorageInterface::class);
+    $storage = $this->prophesize(DynamicallyFieldableEntityStorageInterface::class);
+    $storage->onFieldDefinitionCreate($field)
+      ->shouldBeCalledTimes(1);
+    $this->entityManager->setHandler('storage', 'test_entity_type', $storage->reveal());
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn($class);
     $this->setUpEntityManager(array('test_entity_type' => $entity));
-
-    // The entity manager will instantiate a new object with the given class
-    // name. Define the mock expectations on that.
-    $storage = $this->entityManager->getStorage('test_entity_type');
-    $storage->expects($this->once())
-      ->method('onFieldDefinitionCreate')
-      ->with($field_definition->reveal());
 
     // Set up the stored bundle field map.
     $key_value_store = $this->prophesize(KeyValueStoreInterface::class);
@@ -1306,7 +1298,7 @@ class EntityManagerTest extends UnitTestCase {
       ])
       ->shouldBeCalled();
 
-    $this->entityManager->onFieldDefinitionCreate($field_definition->reveal());
+    $this->entityManager->onFieldDefinitionCreate($field);
   }
 
   /**
@@ -1315,20 +1307,15 @@ class EntityManagerTest extends UnitTestCase {
   public function testOnFieldDefinitionUpdate() {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
     $field_definition->getTargetEntityTypeId()->willReturn('test_entity_type');
+    $field = $field_definition->reveal();
 
-    $class = $this->getMockClass(DynamicallyFieldableEntityStorageInterface::class);
+    $storage = $this->prophesize(DynamicallyFieldableEntityStorageInterface::class);
+    $storage->onFieldDefinitionUpdate($field, $field)
+      ->shouldBeCalledTimes(1);
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn($class);
+    $this->entityManager->setHandler('storage', 'test_entity_type', $storage->reveal());
     $this->setUpEntityManager(array('test_entity_type' => $entity));
-
-    // The entity manager will instantiate a new object with the given class
-    // name. Define the mock expectations on that.
-    $storage = $this->entityManager->getStorage('test_entity_type');
-    $storage->expects($this->once())
-      ->method('onFieldDefinitionUpdate')
-      ->with($field_definition->reveal());
-
-    $this->entityManager->onFieldDefinitionUpdate($field_definition->reveal(), $field_definition->reveal());
+    $this->entityManager->onFieldDefinitionUpdate($field, $field);
   }
 
   /**
@@ -1339,18 +1326,14 @@ class EntityManagerTest extends UnitTestCase {
     $field_definition->getTargetEntityTypeId()->willReturn('test_entity_type');
     $field_definition->getTargetBundle()->willReturn('test_bundle');
     $field_definition->getName()->willReturn('test_field');
+    $field = $field_definition->reveal();
 
-    $class = $this->getMockClass(DynamicallyFieldableEntityStorageInterface::class);
+    $storage = $this->prophesize(DynamicallyFieldableEntityStorageInterface::class);
+    $storage->onFieldDefinitionDelete($field)
+      ->shouldBeCalledTimes(1);
+    $this->entityManager->setHandler('storage', 'test_entity_type', $storage->reveal());
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn($class);
     $this->setUpEntityManager(array('test_entity_type' => $entity));
-
-    // The entity manager will instantiate a new object with the given class
-    // name. Define the mock expectations on that.
-    $storage = $this->entityManager->getStorage('test_entity_type');
-    $storage->expects($this->once())
-      ->method('onFieldDefinitionDelete')
-      ->with($field_definition->reveal());
 
     // Set up the stored bundle field map.
     $key_value_store = $this->prophesize(KeyValueStoreInterface::class);
@@ -1373,7 +1356,7 @@ class EntityManagerTest extends UnitTestCase {
       ])
       ->shouldBeCalled();
 
-    $this->entityManager->onFieldDefinitionDelete($field_definition->reveal());
+    $this->entityManager->onFieldDefinitionDelete($field);
   }
 
 
@@ -1385,18 +1368,14 @@ class EntityManagerTest extends UnitTestCase {
     $field_definition->getTargetEntityTypeId()->willReturn('test_entity_type');
     $field_definition->getTargetBundle()->willReturn('test_bundle');
     $field_definition->getName()->willReturn('test_field');
+    $field = $field_definition->reveal();
 
-    $class = $this->getMockClass(DynamicallyFieldableEntityStorageInterface::class);
+    $storage = $this->prophesize(DynamicallyFieldableEntityStorageInterface::class);
+    $storage->onFieldDefinitionDelete($field)
+      ->shouldBeCalledTimes(1);
+    $this->entityManager->setHandler('storage', 'test_entity_type', $storage->reveal());
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn($class);
     $this->setUpEntityManager(array('test_entity_type' => $entity));
-
-    // The entity manager will instantiate a new object with the given class
-    // name. Define the mock expectations on that.
-    $storage = $this->entityManager->getStorage('test_entity_type');
-    $storage->expects($this->once())
-      ->method('onFieldDefinitionDelete')
-      ->with($field_definition->reveal());
 
     // Set up the stored bundle field map.
     $key_value_store = $this->prophesize(KeyValueStoreInterface::class);
@@ -1415,7 +1394,7 @@ class EntityManagerTest extends UnitTestCase {
       ])
       ->shouldBeCalled();
 
-    $this->entityManager->onFieldDefinitionDelete($field_definition->reveal());
+    $this->entityManager->onFieldDefinitionDelete($field);
   }
 
   /**
@@ -1567,6 +1546,20 @@ class TestEntityManager extends EntityManager {
    */
   public function setDiscovery(DiscoveryInterface $discovery) {
     $this->discovery = $discovery;
+  }
+
+  /**
+   * Allow settings of mock handlers.
+   *
+   * @param string $entity_type
+   *   The entity type for this handler.
+   * @param string $handler_type
+   *   The handler type to create an instance for.
+   * @param object $handler
+   *   A handler instance.
+   */
+  public function setHandler($handler_type, $entity_type, $handler) {
+    $this->handlers[$handler_type][$entity_type] = $handler;
   }
 
   /**
