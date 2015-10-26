@@ -236,8 +236,12 @@ EOS;
   public function testRegisterInvokedUpdatesWithoutExistingUpdates() {
     $this->setupBasicModules();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])->willReturn([]);
-    $key_value->set('existing_updates', ['module_a_post_update_a'])->willReturn(NULL);
+    $key_value->get('existing_updates', [])
+      ->willReturn([])
+      ->shouldBeCalledTimes(1);
+    $key_value->set('existing_updates', ['module_a_post_update_a'])
+      ->willReturn(NULL)
+      ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
@@ -253,8 +257,12 @@ EOS;
   public function testRegisterInvokedUpdatesWithMultiple() {
     $this->setupBasicModules();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])->willReturn([]);
-    $key_value->set('existing_updates', ['module_a_post_update_a', 'module_a_post_update_b'])->willReturn(NULL);
+    $key_value->get('existing_updates', [])
+      ->willReturn([])
+      ->shouldBeCalledTimes(1);
+    $key_value->set('existing_updates', ['module_a_post_update_a', 'module_a_post_update_b'])
+      ->willReturn(NULL)
+      ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
@@ -270,8 +278,12 @@ EOS;
   public function testRegisterInvokedUpdatesWithExistingUpdates() {
     $this->setupBasicModules();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])->willReturn(['module_a_post_update_b']);
-    $key_value->set('existing_updates', ['module_a_post_update_b', 'module_a_post_update_a'])->willReturn(NULL);
+    $key_value->get('existing_updates', [])
+      ->willReturn(['module_a_post_update_b'])
+      ->shouldBeCalledTimes(1);
+    $key_value->set('existing_updates', ['module_a_post_update_b', 'module_a_post_update_a'])
+      ->willReturn(NULL)
+      ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
@@ -287,8 +299,12 @@ EOS;
   public function testFilterOutInvokedUpdatesByModule() {
     $this->setupBasicModules();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])->willReturn(['module_a_post_update_b', 'module_a_post_update_a', 'module_b_post_update_a']);
-    $key_value->set('existing_updates', ['module_b_post_update_a'])->willReturn(NULL);
+    $key_value->get('existing_updates', [])
+      ->willReturn(['module_a_post_update_b', 'module_a_post_update_a', 'module_b_post_update_a'])
+      ->shouldBeCalledTimes(1);
+    $key_value->set('existing_updates', ['module_b_post_update_a'])
+      ->willReturn(NULL)
+      ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
