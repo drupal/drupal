@@ -21,6 +21,9 @@ use Drupal\Component\Utility\Unicode;
  * @{
  */
 
+/**
+ * MySQL implementation of \Drupal\Core\Database\Connection.
+ */
 class Connection extends DatabaseConnection {
 
   /**

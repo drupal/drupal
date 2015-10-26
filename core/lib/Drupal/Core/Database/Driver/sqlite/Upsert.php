@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Driver\sqlite;
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 
 /**
- * Implements the Upsert query for the SQLite database driver.
+ * SQLite implementation of \Drupal\Core\Database\Query\Upsert.
  */
 class Upsert extends QueryUpsert {
 

@@ -17,6 +17,9 @@ use Drupal\Core\Database\Schema as DatabaseSchema;
  * @{
  */
 
+/**
+ * PostgreSQL implementation of \Drupal\Core\Database\Schema.
+ */
 class Schema extends DatabaseSchema {
 
   /**

@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Driver\mysql;
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 
 /**
- * Implements the Upsert query for the MySQL database driver.
+ * MySQL implementation of \Drupal\Core\Database\Query\Upsert.
  */
 class Upsert extends QueryUpsert {
 

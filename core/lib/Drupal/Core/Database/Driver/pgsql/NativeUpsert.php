@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 
 /**
- * Implements the native Upsert query for the PostgreSQL database driver.
+ * PostgreSQL implementation of native \Drupal\Core\Database\Query\Upsert.
  *
  * @see http://www.postgresql.org/docs/9.5/static/sql-insert.html#SQL-ON-CONFLICT
  */
