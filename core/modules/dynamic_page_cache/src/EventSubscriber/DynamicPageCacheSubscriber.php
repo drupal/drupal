@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageacheSubscriber.
+ * Contains \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber.
  */
 
 namespace Drupal\dynamic_page_cache\EventSubscriber;

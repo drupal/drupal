@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains
- *   \Drupal\Tests\Core\DependencyInjection\Compiler\ProxyServicesPassTest.
+ * Contains \Drupal\Tests\Core\DependencyInjection\Compiler\ProxyServicesPassTest.
  */
 
 namespace Drupal\Tests\Core\DependencyInjection\Compiler;

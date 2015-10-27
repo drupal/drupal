@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\process\FilterSettings.
+ * Contains \Drupal\filter\Plugin\migrate\process\FilterSettings.
  */
 
 namespace Drupal\filter\Plugin\migrate\process;

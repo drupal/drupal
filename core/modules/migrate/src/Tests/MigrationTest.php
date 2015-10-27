@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\migrate\Tests\MigrationTest.
+ */
+
 namespace Drupal\migrate\Tests;
 
 use Drupal\migrate\Entity\Migration;

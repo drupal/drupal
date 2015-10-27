@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\destination\EntityFile.
+ * Contains \Drupal\file\Plugin\migrate\destination\EntityFile.
  */
 
 namespace Drupal\file\Plugin\migrate\destination;

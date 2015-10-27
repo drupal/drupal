@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\Normalizer\FileFieldItemNormalizer.
+ * Contains \Drupal\serialization\Normalizer\EntityReferenceFieldItemNormalizer.
  */
 
 namespace Drupal\serialization\Normalizer;

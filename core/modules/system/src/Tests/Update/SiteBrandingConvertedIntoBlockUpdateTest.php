@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Update\LocalActionsAndTasksConvertedIntoBlocksUpdateTest.
+ * Contains \Drupal\system\Tests\Update\SiteBrandingConvertedIntoBlockUpdateTest.
  */
 
 namespace Drupal\system\Tests\Update;

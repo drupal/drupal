@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\ban\Unit\Plugin\migrate\source\d7\BlockedIps.
+ * Contains \Drupal\Tests\ban\Unit\Plugin\migrate\source\d7\BlockedIpsTest.
  */
 
 namespace Drupal\Tests\ban\Unit\Plugin\migrate\source\d7;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Tests\NodeFieldTokensTest.
+ * Contains \Drupal\node\Tests\Views\NodeFieldTokensTest.
  */
 
 namespace Drupal\node\Tests\Views;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Command\DbDumpCommand.
+ * Contains \Drupal\Core\Command\DbImportCommand.
  */
 
 namespace Drupal\Core\Command;

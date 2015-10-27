@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\link\Plugin\Validation\Constraint\LinkAccessConstraintValidatorTest.
+ * Contains \Drupal\Tests\link\Unit\Plugin\Validation\Constraint\LinkAccessConstraintValidatorTest.
  */
 
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;

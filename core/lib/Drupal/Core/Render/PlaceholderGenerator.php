@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Render\Placeholder.
+ * Contains \Drupal\Core\Render\PlaceholderGenerator.
  */
 
 namespace Drupal\Core\Render;

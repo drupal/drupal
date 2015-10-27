@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\CacheableResponse.
+ * Contains \Drupal\Core\Cache\CacheableJsonResponse.
  */
 
 namespace Drupal\Core\Cache;

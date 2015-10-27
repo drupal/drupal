@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\form_test\Form\FormTestGroupContainerForm.
+ * Contains \Drupal\form_test\Form\FormTestDetailsForm.
  */
 
 namespace Drupal\form_test\Form;

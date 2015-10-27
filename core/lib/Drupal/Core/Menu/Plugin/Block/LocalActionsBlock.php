@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\Block\LocalActionsBlock.
+ * Contains \Drupal\Core\Menu\Plugin\Block\LocalActionsBlock.
  */
 
 namespace Drupal\Core\Menu\Plugin\Block;

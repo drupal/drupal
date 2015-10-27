@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\systeml\Plugin\migrate\process\d6\TimeZone.
+ * Contains \Drupal\system\Plugin\migrate\process\d6\TimeZone.
  */
 
 namespace Drupal\system\Plugin\migrate\process\d6;
