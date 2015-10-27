@@ -488,7 +488,6 @@ class BookManager implements BookManagerInterface {
    * {@inheritdoc}
    */
   public function getActiveTrailIds($bid, $link) {
-    $nid = isset($link['nid']) ? $link['nid'] : 0;
     // The tree is for a single item, so we need to match the values in its
     // p columns and 0 (the top level) with the plid values of other links.
     $active_trail = array(0);
