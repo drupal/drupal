@@ -863,9 +863,6 @@ function template_preprocess_image(&$variables) {
  *     rows.
  */
 function template_preprocess_table(&$variables) {
-  $is_sticky = !empty($variables['sticky']);
-  $is_responsive = !empty($variables['responsive']);
-
   // Format the table columns:
   if (!empty($variables['colgroups'])) {
     foreach ($variables['colgroups'] as &$colgroup) {
