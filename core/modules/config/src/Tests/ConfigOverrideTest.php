@@ -132,6 +132,8 @@ class ConfigOverrideTest extends KernelTestBase {
       ->save();
     // Ensure override is preserved but all other data has been updated
     // accordingly.
+    $config = \Drupal::config('config_test.new');
+    $this->assertFalse($config->isNew(), 'The configuration object config_test.new is not new');
     $this->assertIdentical($config->get('key'), 'override');
     $this->assertIdentical($config->get('new_key'), 'new_value');
     $raw_data = $config->getRawData();
