@@ -141,7 +141,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
 
     // Flush all persistent caches.
     $this->moduleHandler->invokeAll('cache_flush');
-    foreach (Cache::getBins() as $service_id => $cache_backend) {
+    foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
 

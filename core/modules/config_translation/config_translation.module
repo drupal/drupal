@@ -101,7 +101,6 @@ function config_translation_entity_type_alter(array &$entity_types) {
  */
 function config_translation_config_translation_info(&$info) {
   $entity_manager = \Drupal::entityManager();
-  $route_provider = \Drupal::service('router.route_provider');
 
   // If field UI is not enabled, the base routes of the type
   // "entity.field_config.{$entity_type}_field_edit_form" are not defined.
