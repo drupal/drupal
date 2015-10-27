@@ -35,8 +35,6 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    *   The entity info for the entity type.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The config storage service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
