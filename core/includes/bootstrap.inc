@@ -200,7 +200,6 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 
   // Profiles are converted into modules in system_rebuild_module_data().
   // @todo Remove false-exposure of profiles as modules.
-  $original_type = $type;
   if ($type == 'profile') {
     $type = 'module';
   }
