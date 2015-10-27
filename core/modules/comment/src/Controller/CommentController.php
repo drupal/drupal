@@ -219,7 +219,6 @@ class CommentController extends ControllerBase {
    */
   public function getReplyForm(Request $request, EntityInterface $entity, $field_name, $pid = NULL) {
     $account = $this->currentUser();
-    $uri = $entity->urlInfo()->setAbsolute();
     $build = array();
 
     // The user is not just previewing a comment.
