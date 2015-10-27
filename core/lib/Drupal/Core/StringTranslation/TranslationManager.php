@@ -123,7 +123,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * Translates a string to the current language or to a given language.
    *
    * @param string $string
-   *   A string containing the English string to translate.
+   *   A string containing the English text to translate.
    * @param array $options
    *   An associative array of additional options, with the following elements:
    *   - 'langcode': The language code to translate to a language other than

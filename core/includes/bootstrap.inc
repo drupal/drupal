@@ -258,56 +258,39 @@ function drupal_get_path($type, $name) {
 /**
  * Translates a string to the current language or to a given language.
  *
- * The t() function serves two purposes. First, at run-time it translates
- * user-visible text into the appropriate language. Second, various mechanisms
- * that figure out what text needs to be translated work off t() -- the text
- * inside t() calls is added to the database of strings to be translated.
- * These strings are expected to be in English, so the first argument should
- * always be in English. To allow the site to be localized, it is important that
- * all human-readable text that will be displayed on the site or sent to a user
- * is passed through the t() function, or a related function. See the
- * @link https://www.drupal.org/node/322729 Localization API @endlink pages for
- * more information, including recommendations on how to break up or not
- * break up strings for translation.
+ * In order for strings to be localized, make them available in one of the ways
+ * supported by the
+ * @link https://www.drupal.org/node/322729 Localization API @endlink. When
+ * possible, use the \Drupal\Core\StringTranslation\StringTranslationTrait
+ * $this->t(). Otherwise create a new
+ * \Drupal\Core\StringTranslation\TranslatableMarkup object directly.
  *
- * @section sec_translating_vars Translating Variables
- * You should never use t() to translate variables, such as calling t($text)
- * unless the text that the variable holds has been passed through t()
- * elsewhere (e.g., $text is one of several translated literal strings in an
- * array). It is especially important never to call t($user_text) where
- * $user_text is some text that a user entered - doing that can lead to
- * cross-site scripting and other security problems. However, you can use
- * variable substitution in your string, to put variable text such as user
- * names or link URLs into translated text. Variable substitution looks like
- * this:
- * @code
- * $text = t("@name's blog", array('@name' => $account->getDisplayName()));
- * @endcode
- * Basically, you can put variables like @name into your string, and t() will
- * substitute their sanitized values at translation time. (See the
- * Localization API pages referenced above and the documentation of
- * \Drupal\Component\Utility\SafeMarkup::format() for details about how to
- * define variables in your string.). Translators can then rearrange the string
- * as necessary for the language (e.g., in Spanish, it might be "blog de
- * @name").
+ * See \Drupal\Core\StringTranslation\TranslatableMarkup::__construct() for
+ * important security information and usage guidelines.
  *
- * @param $string
- *   A string containing the English string to translate.
- * @param $args
- *   An associative array of replacements to make after translation. Based
- *   on the first character of the key, the value is escaped and/or themed.
- *   See \Drupal\Component\Utility\SafeMarkup::format() for details.
- * @param $options
- *   An associative array of additional options, with the following elements:
- *   - 'langcode' (defaults to the current language): The language code to
+ * @param string $string
+ *   A string containing the English text to translate.
+ * @param array $args
+ *   (optional) An associative array of replacements to make after translation.
+ *   Based on the first character of the key, the value is escaped and/or
+ *   themed. See
+ *   \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
+ *   details.
+ * @param array $options
+ *   (optional) An associative array of additional options, with the following
+ *   elements:
+ *   - 'langcode' (defaults to the current language): A language code, to
  *     translate to a language other than what is used to display the page.
  *   - 'context' (defaults to the empty context): The context the source string
  *     belongs to.
  *
  * @return \Drupal\Core\StringTranslation\TranslatableMarkup
- *   An object that, when cast to a string, will yield the translated string.
+ *   An object that, when cast to a string, returns the translated string.
  *
- * @see \Drupal\Component\Utility\SafeMarkup::format()
+ * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
+ * @see \Drupal\Core\StringTranslation\StringTranslationTrait::t()
+ * @see \Drupal\Core\StringTranslation\TranslatableMarkup::__construct()
+ *
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {

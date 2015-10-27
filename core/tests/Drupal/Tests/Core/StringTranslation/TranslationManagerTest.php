@@ -66,7 +66,7 @@ class TranslationManagerTest extends UnitTestCase {
    * Tests translation using placeholders.
    *
    * @param string $string
-   *   A string containing the English string to translate.
+   *   A string containing the English text to translate.
    * @param array $args
    *   An associative array of replacements to make after translation.
    * @param string $expected_string
