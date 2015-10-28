@@ -454,10 +454,10 @@ class ConfigImporter {
   /**
    * Imports the changelist to the target storage.
    *
-   * @throws \Drupal\Core\Config\ConfigException
-   *
    * @return \Drupal\Core\Config\ConfigImporter
    *   The ConfigImporter instance.
+   *
+   * @throws \Drupal\Core\Config\ConfigException
    */
   public function import() {
     if ($this->hasUnprocessedConfigurationChanges()) {
@@ -828,10 +828,10 @@ class ConfigImporter {
    * @param string $name
    *   The name of the configuration to process.
    *
-   * @throws \Drupal\Core\Config\ConfigImporterException
-   *
    * @return bool
    *   TRUE is to continue processing, FALSE otherwise.
+   *
+   * @throws \Drupal\Core\Config\ConfigImporterException
    */
   protected function checkOp($collection, $op, $name) {
     if ($op == 'rename') {
@@ -939,13 +939,13 @@ class ConfigImporter {
    * @param string $name
    *   The name of the configuration to process.
    *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   Thrown if the data is owned by an entity type, but the entity storage
-   *   does not support imports.
-   *
    * @return bool
    *   TRUE if the configuration was imported as a configuration entity. FALSE
    *   otherwise.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown if the data is owned by an entity type, but the entity storage
+   *   does not support imports.
    */
   protected function importInvokeOwner($collection, $op, $name) {
     // Renames are handled separately.
@@ -989,13 +989,13 @@ class ConfigImporter {
    *   The rename configuration name, as provided by
    *   \Drupal\Core\Config\StorageComparer::createRenameName().
    *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   Thrown if the data is owned by an entity type, but the entity storage
-   *   does not support imports.
-   *
    * @return bool
    *   TRUE if the configuration was imported as a configuration entity. FALSE
    *   otherwise.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown if the data is owned by an entity type, but the entity storage
+   *   does not support imports.
    *
    * @see \Drupal\Core\Config\ConfigImporter::createRenameName()
    */

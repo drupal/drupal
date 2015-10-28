@@ -30,10 +30,10 @@ interface RendererInterface {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    *
-   * @see ::render()
-   *
    * @throws \LogicException
    *   When called from inside another renderRoot() call.
+   *
+   * @see ::render()
    */
   public function renderRoot(&$elements);
 
@@ -348,19 +348,19 @@ interface RendererInterface {
    * Any and all rendering must therefore happen within a render context, and it
    * is this method that provides that.
    *
-   * @see \Drupal\Core\Render\BubbleableMetadata
-   *
    * @param \Drupal\Core\Render\RenderContext $context
    *   The render context to execute the callable within.
    * @param callable $callable
    *   The callable to execute.
+   *
    * @return mixed
    *   The callable's return value.
    *
-   * @see \Drupal\Core\Render\RenderContext
-   *
    * @throws \LogicException
    *   In case bubbling has failed, can only happen in case of broken code.
+   *
+   * @see \Drupal\Core\Render\RenderContext
+   * @see \Drupal\Core\Render\BubbleableMetadata
    */
   public function executeInRenderContext(RenderContext $context, callable $callable);
 

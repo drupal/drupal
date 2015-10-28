@@ -54,12 +54,12 @@ interface ParamConverterManagerInterface {
    * @param array $defaults
    *   The route defaults array.
    *
+   * @return array
+   *   The modified defaults.
+   *
    * @throws \Drupal\Core\ParamConverter\ParamNotConvertedException
    *   If one of the assigned converters returned NULL because the given
    *   variable could not be converted.
-   *
-   * @return array
-   *   The modified defaults.
    */
   public function convert(array $defaults);
 

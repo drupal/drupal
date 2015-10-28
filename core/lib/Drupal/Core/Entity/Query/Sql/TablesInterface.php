@@ -23,13 +23,13 @@ interface TablesInterface {
    * @param string $langcode
    *   The language code the field values are to be queried in.
    *
-   * @throws \Drupal\Core\Entity\Query\QueryException
-   *   If $field specifies an invalid relationship.
-   *
    * @return string
    *   The return value is a string containing the alias of the table, a dot
    *   and the appropriate SQL column as passed in. This allows the direct use
    *   of this in a query for a condition or sort.
+   *
+   * @throws \Drupal\Core\Entity\Query\QueryException
+   *   If $field specifies an invalid relationship.
    */
   public function addField($field, $type, $langcode);
 

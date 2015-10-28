@@ -120,9 +120,9 @@ class Drupal {
   /**
    * Returns the currently active global container.
    *
-   * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
-   *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface|null
+   *
+   * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    */
   public static function getContainer() {
     if (static::$container === NULL) {
@@ -150,6 +150,7 @@ class Drupal {
    *
    * @param string $id
    *   The ID of the service to retrieve.
+   *
    * @return mixed
    *   The specified service.
    */

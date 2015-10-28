@@ -588,16 +588,16 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * @param array $sandbox
  *   Stores information for batch updates. See above for more information.
  *
+ * @return string|null
+ *   Optionally, update hooks may return a translated string that will be
+ *   displayed to the user after the update has completed. If no message is
+ *   returned, no message will be presented to the user.
+ *
  * @throws \Drupal\Core\Utility\UpdateException|PDOException
  *   In case of error, update hooks should throw an instance of
  *   Drupal\Core\Utility\UpdateException with a meaningful message for the user.
  *   If a database query fails for whatever reason, it will throw a
  *   PDOException.
- *
- * @return string|null
- *   Optionally, update hooks may return a translated string that will be
- *   displayed to the user after the update has completed. If no message is
- *   returned, no message will be presented to the user.
  *
  * @ingroup update_api
  *
@@ -683,16 +683,16 @@ function hook_update_N(&$sandbox) {
  * @param array $sandbox
  *   Stores information for batch updates. See above for more information.
  *
+ * @return string|null
+ *   Optionally, hook_post_update_NAME() hooks may return a translated string
+ *   that will be displayed to the user after the update has completed. If no
+ *   message is returned, no message will be presented to the user.
+ *
  * @throws \Drupal\Core\Utility\UpdateException|PDOException
  *   In case of error, update hooks should throw an instance of
  *   \Drupal\Core\Utility\UpdateException with a meaningful message for the
  *   user. If a database query fails for whatever reason, it will throw a
  *   PDOException.
- *
- * @return string|null
- *   Optionally, hook_post_update_NAME() hooks may return a translated string
- *   that will be displayed to the user after the update has completed. If no
- *   message is returned, no message will be presented to the user.
  *
  * @ingroup update_api
  *

@@ -43,11 +43,11 @@ interface DataDefinitionInterface {
    * @param string $data_type
    *   The data type, for which a data definition should be created.
    *
+   * @return static
+   *
    * @throws \InvalidArgumentException
    *   If an unsupported data type gets passed to the class; e.g., 'string' to a
    *   definition class handling 'entity:* data types.
-   *
-   * @return static
    */
    public static function createFromDataType($data_type);
 

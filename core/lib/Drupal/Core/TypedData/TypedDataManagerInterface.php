@@ -122,12 +122,12 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   - value: The value to set. If set, it has to match one of the supported
    *     data type formats as documented by the data type classes.
    *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
+   *
    * @throws \InvalidArgumentException
    *   If the given property is not known, or the passed object does not
    *   implement the ListInterface or the ComplexDataInterface.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The new property instance.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
    */
@@ -153,12 +153,12 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type formats as documented by the data type classes.
    *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
+   *
    * @throws \InvalidArgumentException
    *   If the given property is not known, or the passed object does not
    *   implement the ListInterface or the ComplexDataInterface.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The new property instance.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
