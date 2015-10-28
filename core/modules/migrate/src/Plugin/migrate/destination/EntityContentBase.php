@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -71,6 +72,7 @@ class EntityContentBase extends Entity {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
+    $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $entity = $this->getEntity($row, $old_destination_id_values);
     return $this->save($entity, $old_destination_id_values);
   }
@@ -126,6 +128,8 @@ class EntityContentBase extends Entity {
         $field->setValue($values);
       }
     }
+
+    $this->setRollbackAction($row->getIdMap());
   }
 
 }

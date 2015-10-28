@@ -80,7 +80,19 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
   public function rollback(array $destination_identifier);
 
   /**
+   * Whether the destination can be rolled back or not.
+   *
    * @return bool
+   *   TRUE if rollback is supported, FALSE if not.
    */
   public function supportsRollback();
+
+  /**
+   * The rollback action for the last imported item.
+   *
+   * @return int
+   *   The MigrateIdMapInterface::ROLLBACK_ constant indicating how an imported
+   *   item should be handled on rollback.
+   */
+  public function rollbackAction();
 }

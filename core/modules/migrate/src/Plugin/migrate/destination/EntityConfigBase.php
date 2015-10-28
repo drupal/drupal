@@ -10,6 +10,7 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -31,6 +32,7 @@ class EntityConfigBase extends Entity {
     if ($row->isStub()) {
       throw new MigrateException('Config entities can not be stubbed.');
     }
+    $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $ids = $this->getIds();
     $id_key = $this->getKey('id');
     if (count($ids) > 1) {
@@ -64,7 +66,6 @@ class EntityConfigBase extends Entity {
     return $ids;
   }
 
-
   /**
    * Updates an entity with the contents of a row.
    *
@@ -77,6 +78,8 @@ class EntityConfigBase extends Entity {
     foreach ($row->getRawDestination() as $property => $value) {
       $this->updateEntityProperty($entity, explode(Row::PROPERTY_SEPARATOR, $property), $value);
     }
+
+    $this->setRollbackAction($row->getIdMap());
   }
 
   /**

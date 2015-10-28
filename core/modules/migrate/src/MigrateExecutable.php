@@ -65,13 +65,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $sourceIdValues;
 
   /**
-   * The rollback action to be saved for the current row.
-   *
-   * @var int
-   */
-  public $rollbackAction;
-
-  /**
    * An array of counts. Initially used for cache hit/miss tracking.
    *
    * @var array
@@ -230,12 +223,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $save = TRUE;
       }
       catch (MigrateException $e) {
-        $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus(), $this->rollbackAction);
+        $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus());
         $this->saveMessage($e->getMessage(), $e->getLevel());
         $save = FALSE;
       }
       catch (MigrateSkipRowException $e) {
-        $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED, $this->rollbackAction);
+        $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_IGNORED);
         $save = FALSE;
       }
 
@@ -247,11 +240,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
           if ($destination_id_values) {
             // We do not save an idMap entry for config.
             if ($destination_id_values !== TRUE) {
-              $id_map->saveIdMapping($row, $destination_id_values, $this->sourceRowStatus, $this->rollbackAction);
+              $id_map->saveIdMapping($row, $destination_id_values, $this->sourceRowStatus, $destination->rollbackAction());
             }
           }
           else {
-            $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED, $this->rollbackAction);
+            $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED);
             if (!$id_map->messageCount()) {
               $message = $this->t('New object was not saved, no error provided');
               $this->saveMessage($message);
@@ -260,11 +253,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
         }
         catch (MigrateException $e) {
-          $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus(), $this->rollbackAction);
+          $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus());
           $this->saveMessage($e->getMessage(), $e->getLevel());
         }
         catch (\Exception $e) {
-          $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED, $this->rollbackAction);
+          $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED);
           $this->handleException($e);
         }
       }

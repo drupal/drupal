@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests\Migrate\d6;
 
 use Drupal\migrate\Entity\Migration;
+use Drupal\migrate\MigrateExecutable;
 use Drupal\user\Entity\User;
 use Drupal\file\Entity\File;
 use Drupal\Core\Database\Database;
@@ -29,6 +30,10 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
 
     $this->installEntitySchema('file');
     $this->installSchema('file', ['file_usage']);
+    $this->installEntitySchema('node');
+    $this->installSchema('user', ['users_data']);
+    // Make sure uid 1 is created.
+    user_install();
 
     $file = File::create(array(
       'fid' => 2,
@@ -68,7 +73,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
     $users = Database::getConnection('default', 'migrate')
       ->select('users', 'u')
       ->fields('u')
-      ->condition('uid', 1, '>')
+      ->condition('uid', 0, '>')
       ->execute()
       ->fetchAll();
 
@@ -116,6 +121,23 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
       // Use the API to check if the password has been salted and re-hashed to
       // conform the Drupal >= 7.
       $this->assertTrue(\Drupal::service('password')->check($source->pass_plain, $user->getPassword()));
+    }
+    // Rollback the migration and make sure everything is deleted but uid 1.
+    (new MigrateExecutable($this->migration, $this))->rollback();
+    $users = Database::getConnection('default', 'migrate')
+      ->select('users', 'u')
+      ->fields('u', ['uid'])
+      ->condition('uid', 0, '>')
+      ->execute()
+      ->fetchCol();
+    foreach ($users as $uid) {
+      $account = User::load($uid);
+      if ($uid == 1) {
+        $this->assertNotNull($account, 'User 1 was preserved after rollback');
+      }
+      else {
+        $this->assertNull($account);
+      }
     }
   }
 
