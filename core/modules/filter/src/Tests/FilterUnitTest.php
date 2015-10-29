@@ -1135,7 +1135,8 @@ body {color:red}
    *   (optional) Message to display if failed. Defaults to an empty string.
    * @param $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
-   * @return
+   *
+   * @return bool
    *   TRUE on pass, FALSE on fail.
    */
   function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
@@ -1159,7 +1160,8 @@ body {color:red}
    *   (optional) Message to display if failed. Defaults to an empty string.
    * @param $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
-   * @return
+   *
+   * @return bool
    *   TRUE on pass, FALSE on fail.
    */
   function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {

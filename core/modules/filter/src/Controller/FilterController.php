@@ -17,8 +17,9 @@ class FilterController {
   /**
    * Displays a page with long filter tips.
    *
-   * @param \Drupal\filter\FilterFormatInterface|null $format
-   *   A filter format, or NULL to show tips for all formats. Defaults to NULL.
+   * @param \Drupal\filter\FilterFormatInterface|null $filter_format
+   *   (optional) A filter format, or NULL to show tips for all formats.
+   *   Defaults to NULL.
    *
    * @return array
    *   A renderable array.
