@@ -404,7 +404,29 @@
  * See \Drupal\Core\Asset\LibraryDiscoveryParser::parseLibraryInfo() for more
  * information on how to define libraries.
  *
- * @section render_pipeline The Render Pipeline
+ * @section sec_placeholders Placeholders in render arrays
+ * Render arrays have a placeholder mechanism, which can be used to add data
+ * into the render array late in the rendering process. This works in a similar
+ * manner to \Drupal\Component\Render\FormattableMarkup::placeholderFormat(),
+ * with the text that ends up in the #markup property of the element at the
+ * end of the rendering process getting substitutions from placeholders that
+ * are stored in the 'placeholders' element of the #attached property.
+ *
+ * For example, after the rest of the rendering process was done, if your
+ * render array contained:
+ * @code
+ * $build['my_element'] = [
+ *   '#attached' => ['placeholders' => ['@foo' => 'replacement']],
+ *   '#markup' => ['Something about @foo'],
+ * ];
+ * @endcode
+ * then #markup would end up containing 'Something about replacement'.
+ *
+ * Note that each placeholder value can itself be a render array, which will be
+ * rendered, and any cache tags generated during rendering will be added to the
+ * cache tags for the markup.
+ *
+ * @section render_pipeline The render pipeline
  * The term "render pipeline" refers to the process Drupal uses to take
  * information provided by modules and render it into a response. For more
  * details on this process, see https://www.drupal.org/developing/api/8/render;
