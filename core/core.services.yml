@@ -496,10 +496,37 @@ services:
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@keyvalue', '@event_dispatcher']
+    parent: container.trait
+    # @todo Remove this tag in https://www.drupal.org/node/2549143.
+    tags:
+      - { name: plugin_manager_cache_clear }
+  entity_type.manager:
+    class: Drupal\Core\Entity\EntityTypeManager
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }
+  entity_type.repository:
+    class: Drupal\Core\Entity\EntityTypeRepository
+    arguments: ['@entity_type.manager']
+  entity_type.bundle.info:
+    class: Drupal\Core\Entity\EntityTypeBundleInfo
+    arguments: ['@entity_type.manager', '@language_manager', '@module_handler', '@typed_data_manager', '@cache.discovery']
+  entity.repository:
+    class: Drupal\Core\Entity\EntityRepository
+    arguments: ['@entity_type.manager', '@language_manager']
+  entity_display.repository:
+    class: Drupal\Core\Entity\EntityDisplayRepository
+    arguments: ['@entity_type.manager', '@module_handler', '@cache.discovery', '@language_manager']
+  entity_field.manager:
+    class: Drupal\Core\Entity\EntityFieldManager
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery']
+  entity_type.listener:
+    class: Drupal\Core\Entity\EntityTypeListener
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@event_dispatcher', '@entity.last_installed_schema.repository']
+  entity_bundle.listener:
+    class: Drupal\Core\Entity\EntityBundleListener
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@module_handler']
   entity_route_subscriber:
     class: Drupal\Core\EventSubscriber\EntityRouteProviderSubscriber
     arguments: ['@entity.manager']
@@ -508,6 +535,15 @@ services:
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
     arguments: ['@entity.manager']
+  entity.last_installed_schema.repository:
+    class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
+    arguments: ['@keyvalue']
+  field_storage_definition.listener:
+    class: Drupal\Core\Field\FieldStorageDefinitionListener
+    arguments: ['@entity_type.manager', '@event_dispatcher', '@entity.last_installed_schema.repository', '@entity_field.manager']
+  field_definition.listener:
+    class: Drupal\Core\Field\FieldDefinitionListener
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@keyvalue', '@cache.discovery']
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity.manager', '@form_builder']
