@@ -40813,7 +40813,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'cache_flush_cache',
-  'value' => 'i:1444944970;',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_block',
@@ -40821,7 +40821,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'cache_flush_cache_field',
-  'value' => 'i:1444944970;',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_filter',
@@ -41062,6 +41062,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'date_default_timezone',
   'value' => 's:15:"America/Chicago";',
+))
+->values(array(
+  'name' => 'dblog_row_limit',
+  'value' => 'i:10000;',
 ))
 ->values(array(
   'name' => 'default_nodes_main',

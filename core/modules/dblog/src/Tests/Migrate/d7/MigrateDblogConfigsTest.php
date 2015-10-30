@@ -12,14 +12,12 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 /**
  * Upgrade variables to dblog.settings.yml.
  *
- * @group dblog
+ * @group migrate_drupal_7
  */
 class MigrateDblogConfigsTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = ['dblog'];
 
@@ -37,7 +35,7 @@ class MigrateDblogConfigsTest extends MigrateDrupal7TestBase {
    */
   public function testDblogSettings() {
     $config = $this->config('dblog.settings');
-    $this->assertIdentical(1000, $config->get('row_limit'));
+    $this->assertIdentical(10000, $config->get('row_limit'));
   }
 
 }

@@ -33409,7 +33409,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'dblog_row_limit',
-  'value' => 'i:1000;',
+  'value' => 'i:10000;',
 ))
 ->values(array(
   'name' => 'drupal_badge_color',
