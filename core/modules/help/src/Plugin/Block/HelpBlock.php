@@ -8,6 +8,7 @@
 namespace Drupal\help\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -120,7 +121,7 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
   public function getCacheContexts() {
     // The "Help" block must be cached per URL: help is defined for a
     // given path, and does not come with any access restrictions.
-    return array('url');
+    return Cache::mergeContexts(parent::getCacheContexts(), ['url']);
   }
 
 }

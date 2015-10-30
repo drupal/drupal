@@ -9,6 +9,7 @@ namespace Drupal\book\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\book\BookManagerInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -182,12 +183,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    // The "Book navigation" block must be cached per role and book navigation
-    // context.
-    return [
-      'user.roles',
-      'route.book_navigation',
-    ];
+    return Cache::mergeContexts(parent::getCacheContexts(), ['user.roles', 'route.book_navigation']);
   }
 
   /**

@@ -9,6 +9,7 @@ namespace Drupal\forum\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -87,14 +88,14 @@ abstract class ForumBlockBase extends BlockBase {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return ['user.node_grants:view'];
+    return Cache::mergeContexts(parent::getCacheContexts(), ['user.node_grants:view']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return ['node_list'];
+    return Cache::mergeTags(parent::getCacheTags(), ['node_list']);
   }
 
 }

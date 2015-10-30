@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
@@ -194,9 +195,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // Additional cache contexts, e.g. those that determine link text or
     // accessibility of a menu, will be bubbled automatically.
     $menu_name = $this->getDerivativeId();
-    return [
-      'route.menu_active_trails:' . $menu_name,
-    ];
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route.menu_active_trails:' . $menu_name]);
   }
 
 }
