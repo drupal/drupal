@@ -12,6 +12,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Event\MigrateIdMapMessageEvent;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -562,6 +563,10 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->getDatabase()->insert($this->messageTableName())
       ->fields($fields)
       ->execute();
+
+    // Notify anyone listening of the message we've saved.
+    $this->eventDispatcher->dispatch(MigrateEvents::IDMAP_MESSAGE,
+      new MigrateIdMapMessageEvent($this->migration, $source_id_values, $message, $level));
   }
 
   /**
