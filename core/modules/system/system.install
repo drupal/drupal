@@ -641,15 +641,15 @@ function system_requirements($phase) {
       $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href=":update">database update script</a> immediately.', array(':update' => \Drupal::url('system.db_update')));
     }
 
-    // Verify that no entity updates are pending after running every DB update.
-    if (!isset($requirements['update']['severity']) && \Drupal::entityDefinitionUpdateManager()->needsUpdates()) {
-      $requirements['entity_update'] = array(
-        'title' => t('Entity/field definitions'),
-        'value' => t('Mismatch detected'),
-        'severity' => REQUIREMENT_ERROR,
-        // @todo Provide details: https://www.drupal.org/node/2554911
-        'description' => t('Mismatched entity and/or field definitions.'),
-      );
+    $requirements['entity_update'] = [
+      'title' => t('Entity/field definitions'),
+      'value' => t('Up to date'),
+    ];
+    // Verify that no entity updates are pending.
+    if (\Drupal::entityDefinitionUpdateManager()->needsUpdates()) {
+      $requirements['entity_update']['severity'] = REQUIREMENT_ERROR;
+      // @todo Provide details: https://www.drupal.org/node/2554911
+      $requirements['entity_update']['value'] = t('Mismatched entity and/or field definitions');
     }
   }
 

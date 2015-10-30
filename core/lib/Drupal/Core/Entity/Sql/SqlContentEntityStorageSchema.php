@@ -591,22 +591,36 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   storage definitions.
    */
   protected function getEntitySchemaData(ContentEntityTypeInterface $entity_type, array $schema) {
-    $schema_data = array();
     $entity_type_id = $entity_type->id();
-    $keys = array('indexes', 'unique keys');
-    $unused_keys = array_flip(array('description', 'fields', 'foreign keys'));
 
+    // Collect all possible field schema identifiers for shared table fields.
+    // These will be used to detect entity schema data in the subsequent loop.
+    $field_schema_identifiers = [];
+    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+    $table_mapping = $this->storage->getTableMapping($storage_definitions);
+    foreach ($storage_definitions as $field_name => $storage_definition) {
+      if ($table_mapping->allowsSharedTableStorage($storage_definition)) {
+        // Make sure both base identifier names and suffixed names are listed.
+        $name = $this->getFieldSchemaIdentifierName($entity_type_id, $field_name);
+        $field_schema_identifiers[$name] = $name;
+        foreach ($storage_definition->getColumns() as $key => $columns) {
+          $name = $this->getFieldSchemaIdentifierName($entity_type_id, $field_name, $key);
+          $field_schema_identifiers[$name] = $name;
+        }
+      }
+    }
+
+    // Extract entity schema data from the Schema API definition.
+    $schema_data = [];
+    $keys = ['indexes', 'unique keys'];
+    $unused_keys = array_flip(['description', 'fields', 'foreign keys']);
     foreach ($schema as $table_name => $table_schema) {
       $table_schema = array_diff_key($table_schema, $unused_keys);
       foreach ($keys as $key) {
         // Exclude data generated from field storage definitions, we will check
         // that separately.
-        if (!empty($table_schema[$key])) {
-          $data_keys = array_keys($table_schema[$key]);
-          $entity_keys = array_filter($data_keys, function ($key) use ($entity_type_id) {
-            return strpos($key, $entity_type_id . '_field__') !== 0;
-          });
-          $table_schema[$key] = array_intersect_key($table_schema[$key], array_flip($entity_keys));
+        if ($field_schema_identifiers && !empty($table_schema[$key])) {
+          $table_schema[$key] = array_diff_key($table_schema[$key], $field_schema_identifiers);
         }
       }
       $schema_data[$table_name] = array_filter($table_schema);
