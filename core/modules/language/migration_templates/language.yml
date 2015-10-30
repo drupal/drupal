@@ -1,0 +1,19 @@
+id: language
+label: Languages
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: language
+process:
+  id: language
+  label: name
+  direction:
+    plugin: static_map
+    source: direction
+    map:
+      0: ltr
+      1: rtl
+  weight: weight
+destination:
+  plugin: entity:configurable_language
