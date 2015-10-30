@@ -821,6 +821,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // If there is no container and no cached container definition, build a new
     // one from scratch.
     if (!isset($container) && !isset($container_definition)) {
+      if (version_compare(phpversion(), '7.0.0-dev') >= 0) {
+        // The service graph implementation is prone to corruption during GC.
+        // Collect cycles now then disable the GC for the time of the compiler
+        // run.
+        // @see https://bugs.php.net/bug.php?id=70805
+        gc_collect_cycles();
+      }
       $container = $this->compileContainer();
 
       // Only dump the container if dumping is allowed. This is useful for
