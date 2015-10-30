@@ -863,11 +863,14 @@ function template_preprocess_views_view_row_rss(&$variables) {
   $variables['title'] = $item->title;
   $variables['link'] = $item->link;
 
-  /** @var \Drupal\Core\Render\RendererInterface $renderer */
-  $renderer = \Drupal::service('renderer');
-  // We render the item description. It might contain entities, which attach rss
-  // elements via hook_entity_view, see comment_entity_view().
-  $variables['description'] = is_array($item->description) ? $renderer->render($item->description) : $item->description;
+  // The description is the only place where we should find HTML.
+  // @see https://validator.w3.org/feed/docs/rss2.html#hrelementsOfLtitemgt
+  // If we have a render array, render it here and pass the result to the
+  // template, letting Twig autoescape it.
+  if (isset($item->description) && is_array($item->description)) {
+    $variables['description'] = (string) \Drupal::service('renderer')->render($item->description);
+  }
+
   $variables['item_elements'] = array();
   foreach ($item->elements as $element) {
     if (isset($element['attributes']) && is_array($element['attributes'])) {

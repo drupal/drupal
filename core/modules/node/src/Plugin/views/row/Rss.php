@@ -108,8 +108,6 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $description_build = [];
-
     $node->link = $node->url('canonical', array('absolute' => TRUE));
     $node->rss_namespaces = array();
     $node->rss_elements = array(
@@ -149,13 +147,11 @@ class Rss extends RssPluginBase {
       $this->view->style_plugin->namespaces += $xml_rdf_namespaces;
     }
 
+    $item = new \stdClass();
     if ($display_mode != 'title') {
       // We render node contents.
-      $description_build = $build;
+      $item->description = $build;
     }
-
-    $item = new \stdClass();
-    $item->description = $description_build;
     $item->title = $node->label();
     $item->link = $node->link;
     // Provide a reference so that the render call in

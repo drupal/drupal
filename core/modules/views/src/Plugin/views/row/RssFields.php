@@ -147,8 +147,10 @@ class RssFields extends RowPluginBase {
     // @todo Views should expect and store a leading /. See:
     //   https://www.drupal.org/node/2423913
     $item->link = Url::fromUserInput('/' . $this->getField($row_index, $this->options['link_field']))->setAbsolute()->toString();
+
     $field = $this->getField($row_index, $this->options['description_field']);
     $item->description = is_array($field) ? $field : ['#markup' => $field];
+
     $item->elements = array(
       array('key' => 'pubDate', 'value' => $this->getField($row_index, $this->options['date_field'])),
       array(
