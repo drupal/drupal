@@ -534,7 +534,7 @@ class TwigExtension extends \Twig_Extension {
    *
    * @param \Twig_Environment $env
    *   A Twig_Environment instance.
-   * @param mixed[]|\Traversable $value
+   * @param mixed[]|\Traversable|NULL $value
    *   The pieces to join.
    * @param string $glue
    *   The delimiter with which to join the string. Defaults to an empty string.
@@ -545,10 +545,14 @@ class TwigExtension extends \Twig_Extension {
    *   The strings joined together.
    */
   public function safeJoin(\Twig_Environment $env, $value, $glue = '') {
+    if ($value instanceof \Traversable) {
+      $value = iterator_to_array($value, false);
+    }
+
     return implode($glue, array_map(function($item) use ($env) {
       // If $item is not marked safe then it will be escaped.
       return $this->escapeFilter($env, $item, 'html', NULL, TRUE);
-    }, $value));
+    }, (array) $value));
   }
 
 }
