@@ -159,7 +159,7 @@ abstract class Entity implements EntityInterface {
    */
   public function urlInfo($rel = 'canonical', array $options = []) {
     if ($this->id() === NULL) {
-      throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does have an ID', $this->getEntityTypeId()));
+      throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does not have an ID', $this->getEntityTypeId()));
     }
 
     // The links array might contain URI templates set in annotations.
