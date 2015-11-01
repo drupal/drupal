@@ -223,13 +223,22 @@ class FormattableMarkup implements MarkupInterface {
           break;
 
         case '%':
-        default:
           // Similarly to @, escape non-safe values. Also, add wrapping markup
           // in order to render as a placeholder. Not for use within attributes,
           // per the warning above about
           // \Drupal\Component\Utility\SafeMarkup\SafeMarkup::isSafe() and also
           // due to the wrapping markup.
           $args[$key] = '<em class="placeholder">' . static::placeholderEscape($value) . '</em>';
+          break;
+
+        default:
+          // We do not trigger an error for placeholder that start with an
+          // alphabetic character.
+          if (!ctype_alpha($key[0])) {
+            // We trigger an error as we may want to introduce new placeholders
+            // in the future without breaking backward compatibility.
+            trigger_error('Invalid placeholder: ' . $key, E_USER_ERROR);
+          }
           break;
       }
     }

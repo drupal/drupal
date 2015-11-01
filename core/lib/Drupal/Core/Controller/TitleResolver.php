@@ -60,7 +60,6 @@ class TitleResolver implements TitleResolverInterface {
       if (($raw_parameters = $request->attributes->get('_raw_variables'))) {
         foreach ($raw_parameters->all() as $key => $value) {
           $args['@' . $key] = $value;
-          $args['!' . $key] = $value;
           $args['%' . $key] = $value;
         }
       }

@@ -71,13 +71,13 @@ class ViewsIntegrationTest extends ViewKernelTestBase {
     );
     // Setup a watchdog entry with two tokens.
     $entries[] = array(
-      'message' => '@token1 !token2',
+      'message' => '@token1 @token2',
       // Setup a link with a tag which is filtered by
       // \Drupal\Component\Utility\Xss::filterAdmin() in order to make sure
       // that strings which are not marked as safe get filtered.
       'variables' => array(
         '@token1' => $this->randomMachineName(),
-        '!token2' => $this->randomMachineName(),
+        '@token2' => $this->randomMachineName(),
         'link' => '<a href="' . \Drupal::url('<front>') . '"><object>Link</object></a>',
       ),
     );
