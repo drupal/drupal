@@ -158,24 +158,9 @@ class Renderer implements RendererInterface {
   }
 
   /**
-   * Renders final HTML for a placeholder.
-   *
-   * Renders the placeholder in isolation.
-   *
-   * @param string $placeholder
-   *   An attached placeholder to render. (This must be a key of one of the
-   *   values of $elements['#attached']['placeholders'].)
-   * @param array $elements
-   *   The structured array describing the data to be rendered.
-   *
-   * @return array
-   *   The updated $elements.
-   *
-   * @see ::replacePlaceholders()
-   *
-   * @todo Make public as part of https://www.drupal.org/node/2469431
+   * {@inheritdoc}
    */
-  protected function renderPlaceholder($placeholder, array $elements) {
+  public function renderPlaceholder($placeholder, array $elements) {
     // Get the render array for the given placeholder
     $placeholder_elements = $elements['#attached']['placeholders'][$placeholder];
 
@@ -195,7 +180,6 @@ class Renderer implements RendererInterface {
 
     return $elements;
   }
-
 
   /**
    * {@inheritdoc}
@@ -647,6 +631,8 @@ class Renderer implements RendererInterface {
    *
    * @returns bool
    *   Whether placeholders were replaced.
+   *
+   * @see \Drupal\Core\Render\Renderer::renderPlaceholder()
    */
   protected function replacePlaceholders(array &$elements) {
     if (!isset($elements['#attached']['placeholders']) || empty($elements['#attached']['placeholders'])) {

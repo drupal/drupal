@@ -33,7 +33,7 @@ interface RendererInterface {
    * @throws \LogicException
    *   When called from inside another renderRoot() call.
    *
-   * @see ::render()
+   * @see \Drupal\Core\Render\RendererInterface::render()
    */
   public function renderRoot(&$elements);
 
@@ -61,10 +61,28 @@ interface RendererInterface {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    *
-   * @see ::renderRoot()
-   * @see ::render()
+   * @see \Drupal\Core\Render\RendererInterface::renderRoot()
+   * @see \Drupal\Core\Render\RendererInterface::render()
    */
   public function renderPlain(&$elements);
+
+  /**
+   * Renders final HTML for a placeholder.
+   *
+   * Renders the placeholder in isolation.
+   *
+   * @param string $placeholder
+   *   An attached placeholder to render. (This must be a key of one of the
+   *   values of $elements['#attached']['placeholders'].)
+   * @param array $elements
+   *   The structured array describing the data to be rendered.
+   *
+   * @return array
+   *   The updated $elements.
+   *
+   * @see \Drupal\Core\Render\RendererInterface::render()
+   */
+  public function renderPlaceholder($placeholder, array $elements);
 
   /**
    * Renders HTML given a structured array tree.
@@ -317,7 +335,7 @@ interface RendererInterface {
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see drupal_process_states()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
-   * @see ::renderRoot()
+   * @see \Drupal\Core\Render\RendererInterface::renderRoot()
    */
   public function render(&$elements, $is_root_call = FALSE);
 
