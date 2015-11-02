@@ -61,8 +61,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    *
    * @param string $id
    *   The block ID.
-   * @param string $module
-   *   The module.
    * @param array $visibility
    *   The block visibility settings.
    * @param string $region

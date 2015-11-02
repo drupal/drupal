@@ -83,10 +83,10 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Creates a custom block.
    *
-   * @param string $title
+   * @param bool|string $title
    *   (optional) Title of block. When no value is given uses a random name.
    *   Defaults to FALSE.
-   * @param string $bundle
+   * @param bool|string $bundle
    *   (optional) Bundle name. When no value is given, defaults to
    *   $this->bundle. Defaults to FALSE.
    *

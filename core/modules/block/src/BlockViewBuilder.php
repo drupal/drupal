@@ -186,8 +186,6 @@ class BlockViewBuilder extends EntityViewBuilder {
    *   A block config entity ID.
    * @param $view_mode
    *   The view mode the block is being viewed in.
-   * @param $langcode
-   *   The langcode the block is being viewed in.
    *
    * @return array
    *   A render array with a #pre_render callback to render the block.
