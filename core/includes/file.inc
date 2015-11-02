@@ -266,7 +266,6 @@ function file_url_transform_relative($file_url) {
   // Unfortunately, we pretty much have to duplicate Symfony's
   // Request::getHttpHost() method because Request::getPort() may return NULL
   // instead of a port number.
-  $http_host = '';
   $request = \Drupal::request();
   $host = $request->getHost();
   $scheme = $request->getScheme();
