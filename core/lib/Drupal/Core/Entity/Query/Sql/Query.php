@@ -96,7 +96,7 @@ class Query extends QueryBase implements QueryInterface {
    *   Returns the called object.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
-   *   Thrown if the base table does not exists.
+   *   Thrown if the base table does not exist.
    */
   protected function prepare() {
     if ($this->allRevisions) {
