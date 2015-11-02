@@ -69,6 +69,8 @@ interface AssetResolverInterface {
    *
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
    *   The assets attached to the current response.
+   *   Note that this object is modified to reflect the final JavaScript
+   *   settings assets.
    * @param bool $optimize
    *   Whether to apply the JavaScript asset collection optimizer, to return
    *   optimized JavaScript asset collections rather than an unoptimized ones.

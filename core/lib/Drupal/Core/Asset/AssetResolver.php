@@ -334,6 +334,9 @@ class AssetResolver implements AssetResolverInterface {
       // Allow modules and themes to alter the JavaScript settings.
       $this->moduleHandler->alter('js_settings', $settings, $assets);
       $this->themeManager->alter('js_settings', $settings, $assets);
+      // Update the $assets object accordingly, so that it reflects the final
+      // settings.
+      $assets->setSettings($settings);
       $settings_as_inline_javascript = [
         'type' => 'setting',
         'group' => JS_SETTING,

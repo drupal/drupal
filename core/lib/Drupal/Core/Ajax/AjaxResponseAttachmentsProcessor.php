@@ -148,6 +148,16 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $css_assets = $this->assetResolver->getCssAssets($assets, $optimize_css);
     list($js_assets_header, $js_assets_footer) = $this->assetResolver->getJsAssets($assets, $optimize_js);
 
+    // First, AttachedAssets::setLibraries() ensures duplicate libraries are
+    // removed: it converts it to a set of libraries if necessary. Second,
+    // AssetResolver::getJsSettings() ensures $assets contains the final set of
+    // JavaScript settings. AttachmentsResponseProcessorInterface also mandates
+    // that the response it processes contains the final attachment values, so
+    // update both the 'library' and 'drupalSettings' attachments accordingly.
+    $attachments['library'] = $assets->getLibraries();
+    $attachments['drupalSettings'] = $assets->getSettings();
+    $response->setAttachments($attachments);
+
     // Render the HTML to load these files, and add AJAX commands to insert this
     // HTML in the page. Settings are handled separately, afterwards.
     $settings = [];

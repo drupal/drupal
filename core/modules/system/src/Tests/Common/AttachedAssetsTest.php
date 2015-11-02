@@ -108,8 +108,10 @@ class AttachedAssetsTest extends KernelTestBase {
     $build['#attached']['library'][] = 'core/drupalSettings';
     $assets = AttachedAssets::createFromRenderArray($build);
 
+    $this->assertEqual([], $assets->getSettings(), 'JavaScript settings on $assets are empty.');
     $javascript = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $this->assertTrue(array_key_exists('currentPath', $javascript['drupalSettings']['data']['path']), 'The current path JavaScript setting is set correctly.');
+    $this->assertTrue(array_key_exists('currentPath', $assets->getSettings()['path']), 'JavaScript settings on $assets are resolved after retrieving JavaScript assets, and are equal to the returned JavaScript settings.');
 
     $assets->setSettings(['drupal' => 'rocks', 'dries' => 280342800]);
     $javascript = $this->assetResolver->getJsAssets($assets, FALSE)[1];
