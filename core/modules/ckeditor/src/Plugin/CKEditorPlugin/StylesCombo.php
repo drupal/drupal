@@ -85,7 +85,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       '#title_display' => 'invisible',
       '#type' => 'textarea',
       '#default_value' => $config['styles'],
-      '#description' => t('A list of classes that will be provided in the "Styles" dropdown. Enter one class on each line in the format: element.class|Label. Example: h1.title|Title.<br />These styles should be available in your theme\'s CSS file.'),
+      '#description' => t('A list of classes that will be provided in the "Styles" dropdown. Enter one or more classes on each line in the format: element.classA.classB|Label. Example: h1.title|Title. Advanced example: h1.fancy.title|Fancy title.<br />These styles should be available in your theme\'s CSS file.'),
       '#attached' => array(
         'library' => array('ckeditor/drupal.ckeditor.stylescombo.admin'),
       ),
