@@ -440,7 +440,7 @@ class DateHelper {
    * Identifies the number of days in a month for a date.
    *
    * @param mixed $date
-   *   (optional) A date object, timestamp, or a date string.
+   *   (optional) A DrupalDateTime object or a date string.
    *   Defaults to NULL, which means to use the current date.
    *
    * @return int
@@ -460,7 +460,7 @@ class DateHelper {
    * Identifies the number of days in a year for a date.
    *
    * @param mixed $date
-   *   (optional) A date object, timestamp, or a date string.
+   *   (optional) A DrupalDateTime object or a date string.
    *   Defaults to NULL, which means to use the current date.
    *
    * @return int
@@ -485,7 +485,7 @@ class DateHelper {
    * Returns day of week for a given date (0 = Sunday).
    *
    * @param mixed $date
-   *   (optional) A date object, timestamp, or a date string.
+   *   (optional) A DrupalDateTime object or a date string.
    *   Defaults to NULL, which means use the current date.
    *
    * @return int
@@ -505,7 +505,7 @@ class DateHelper {
    * Returns translated name of the day of week for a given date.
    *
    * @param mixed $date
-   *   (optional) A date object, timestamp, or a date string.
+   *   (optional) A DrupalDateTime object or a date string.
    *   Defaults to NULL, which means use the current date.
    * @param string $abbr
    *   (optional) Whether to return the abbreviated name for that day.
