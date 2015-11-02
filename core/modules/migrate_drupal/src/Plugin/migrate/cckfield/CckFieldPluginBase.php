@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface;
 
 /**
@@ -68,6 +69,20 @@ abstract class CckFieldPluginBase extends PluginBase implements MigrateCckFieldI
       $process[0]['map'][$this->pluginId][$source_format] = $destination_format;
     }
     $migration->mergeProcessOfProperty('options/type', $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldType(Row $row) {
+    $field_type = $row->getSourceProperty('type');
+
+    if (isset($this->pluginDefinition['type_map'][$field_type])) {
+      return $this->pluginDefinition['type_map'][$field_type];
+    }
+    else {
+      return $field_type;
+    }
   }
 
 }

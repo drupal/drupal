@@ -8,10 +8,13 @@
 namespace Drupal\text\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @PluginID("text")
+ * @MigrateCckField(
+ *   id = "text"
+ * )
  */
 class TextField extends CckFieldPluginBase {
 
@@ -89,6 +92,35 @@ class TextField extends CckFieldPluginBase {
       'process' => $process,
     );
     $migration->setProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldType(Row $row) {
+    $widget_type = $row->getSourceProperty('widget_type');
+
+    if ($widget_type == 'text_textfield') {
+      $settings = $row->getSourceProperty('global_settings');
+      $field_type = $settings['text_processing'] ? 'text' : 'string';
+      if (empty($settings['max_length']) || $settings['max_length'] > 255) {
+        $field_type .= '_long';
+      }
+      return $field_type;
+    }
+    else {
+      switch ($widget_type) {
+        case 'optionwidgets_buttons':
+        case 'optionwidgets_select':
+          return 'list_string';
+        case 'optionwidgets_onoff':
+          return 'boolean';
+        case 'text_textarea':
+          return 'text_long';
+        default:
+          break;
+      }
+    }
   }
 
 }

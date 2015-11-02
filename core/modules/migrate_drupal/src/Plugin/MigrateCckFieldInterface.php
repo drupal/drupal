@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Row;
 
 /**
  * Provides an interface for all CCK field type plugins.
@@ -76,5 +77,16 @@ interface MigrateCckFieldInterface extends PluginInspectionInterface {
    *   The array of field data from CckFieldValues::fieldData().
    */
   public function processCckFieldValues(MigrationInterface $migration, $field_name, $data);
+
+  /**
+   * Computes the destination type of a migrated field.
+   *
+   * @param \Drupal\migrate\Row $row
+   *   The field being migrated.
+   *
+   * @return string
+   *   The destination field type.
+   */
+  public function getFieldType(Row $row);
 
 }
