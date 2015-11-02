@@ -538,16 +538,26 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           if (count($allowed_attributes)) {
             $allowed[$tag]['attributes'] = implode(',', array_keys($allowed_attributes));
           }
-          if (isset($allowed_attributes['style']) && is_array($allowed_attributes['style'])) {
-            $allowed_styles = $get_attribute_values($allowed_attributes['style'], TRUE);
-            if (isset($allowed_styles)) {
-              $allowed[$tag]['styles'] = $allowed_styles;
+          if (isset($allowed_attributes['style'])) {
+            if (is_bool($allowed_attributes['style'])) {
+              $allowed[$tag]['styles'] = $allowed_attributes['style'];
+            }
+            elseif (is_array($allowed_attributes['style'])) {
+              $allowed_classes = $get_attribute_values($allowed_attributes['style'], TRUE);
+              if (isset($allowed_classes)) {
+                $allowed[$tag]['styles'] = $allowed_classes;
+              }
             }
           }
-          if (isset($allowed_attributes['class']) && is_array($allowed_attributes['class'])) {
-            $allowed_classes = $get_attribute_values($allowed_attributes['class'], TRUE);
-            if (isset($allowed_classes)) {
-              $allowed[$tag]['classes'] = $allowed_classes;
+          if (isset($allowed_attributes['class'])) {
+            if (is_bool($allowed_attributes['class'])) {
+              $allowed[$tag]['classes'] = $allowed_attributes['class'];
+            }
+            elseif (is_array($allowed_attributes['class'])) {
+              $allowed_classes = $get_attribute_values($allowed_attributes['class'], TRUE);
+              if (isset($allowed_classes)) {
+                $allowed[$tag]['classes'] = $allowed_classes;
+              }
             }
           }
 
