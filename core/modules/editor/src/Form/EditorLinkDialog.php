@@ -53,13 +53,6 @@ class EditorLinkDialog extends FormBase {
       '#maxlength' => 2048,
     );
 
-    $form['attributes']['target'] = array(
-      '#title' => $this->t('Open in new window'),
-      '#type' => 'checkbox',
-      '#default_value' => !empty($input['target']),
-      '#return_value' => '_blank',
-    );
-
     $form['actions'] = array(
       '#type' => 'actions',
     );
