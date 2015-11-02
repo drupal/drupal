@@ -199,6 +199,11 @@ class RssFields extends RowPluginBase {
    *   The index count of the row as expected by views_plugin_style::getField().
    * @param $field_id
    *   The ID assigned to the required field in the display.
+   *
+   * @return string|null|\Drupal\Component\Render\MarkupInterface
+   *   An empty string if there is no style plugin, or the field ID is empty.
+   *   NULL if the field value is empty. If neither of these conditions apply,
+   *   a MarkupInterface object containing the rendered field value.
    */
   public function getField($index, $field_id) {
     if (empty($this->view->style_plugin) || !is_object($this->view->style_plugin) || empty($field_id)) {
