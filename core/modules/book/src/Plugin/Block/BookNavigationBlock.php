@@ -183,7 +183,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return Cache::mergeContexts(parent::getCacheContexts(), ['user.roles', 'route.book_navigation']);
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route.book_navigation']);
   }
 
   /**
