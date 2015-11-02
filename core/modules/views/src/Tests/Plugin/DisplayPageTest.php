@@ -136,6 +136,8 @@ class DisplayPageTest extends ViewKernelTestBase {
     $this->assertTrue(isset($tree['system.admin']->subtree['views_view:views.test_page_display_menu.page_4']));
     $menu_link = $tree['system.admin']->subtree['views_view:views.test_page_display_menu.page_4']->link;
     $this->assertEqual($menu_link->getTitle(), 'Test child (with parent)');
+    $this->assertEqual($menu_link->isExpanded(), TRUE);
+    $this->assertEqual($menu_link->getDescription(), 'Sample description.');
   }
 
   /**

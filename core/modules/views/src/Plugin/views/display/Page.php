@@ -132,6 +132,7 @@ class Page extends PathPluginBase {
         'menu_name' => array('default' => 'main'),
         'parent' => array('default' => ''),
         'context' => array('default' => ''),
+        'expanded' => array('default' => FALSE),
       ),
     );
     $options['tab_options'] = array(
@@ -239,7 +240,7 @@ class Page extends PathPluginBase {
         );
         $menu = $this->getOption('menu');
         if (empty($menu)) {
-          $menu = array('type' => 'none', 'title' => '', 'weight' => 0);
+          $menu = array('type' => 'none', 'title' => '', 'weight' => 0, 'expanded' => FALSE);
         }
         $form['menu']['type'] = array(
           '#prefix' => '<div class="views-left-30">',
@@ -293,6 +294,12 @@ class Page extends PathPluginBase {
             ),
           ),
         );
+        $form['menu']['expanded'] = [
+          '#title' => $this->t('Show as expanded'),
+          '#type' => 'checkbox',
+          '#default_value' => !empty($menu['expanded']),
+          '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded. '),
+        ];
 
         // Only display the parent selector if Menu UI module is enabled.
         $menu_parent = $menu['menu_name'] . ':' . $menu['parent'];
