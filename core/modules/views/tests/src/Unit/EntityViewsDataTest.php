@@ -775,6 +775,26 @@ class EntityViewsDataTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getViewsData
+   */
+  public function testGetViewsDataWithoutEntityOperations() {
+    // Make sure there is no list builder. The API does not document is
+    // supports resetting entity handlers, so this might break in the future.
+    $this->baseEntityType->setListBuilderClass(NULL);
+    $data = $this->viewsData->getViewsData();
+    $this->assertArrayNotHasKey('operations', $data[$this->baseEntityType->getBaseTable()]);
+  }
+
+  /**
+   * @covers ::getViewsData
+   */
+  public function testGetViewsDataWithEntityOperations() {
+    $this->baseEntityType->setListBuilderClass('\Drupal\Core\Entity\EntityListBuilder');
+    $data = $this->viewsData->getViewsData();
+    $this->assertSame('entity_operations', $data[$this->baseEntityType->getBaseTable()]['operations']['field']['id']);
+  }
+
+  /**
    * Tests views data for a string field.
    *
    * @param $data

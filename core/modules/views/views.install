@@ -313,3 +313,21 @@ function _views_update_argument_map($displays) {
 /**
  * @} End of "addtogroup updates-8.0.0-beta".
  */
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * Clear caches to fix entity operations field.
+ */
+function views_update_8003() {
+  // Empty update to cause a cache flush so that views data is rebuilt. Entity
+  // types that don't implement a list builder cannot have the entity operations
+  // field.
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
+ */

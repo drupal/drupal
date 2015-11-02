@@ -152,13 +152,17 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       }
     }
 
-    $data[$base_table]['operations'] = array(
-      'field' => array(
-        'title' => $this->t('Operations links'),
-        'help' => $this->t('Provides links to perform entity operations.'),
-        'id' => 'entity_operations',
-      ),
-    );
+    // Entity types must implement a list_builder in order to use Views'
+    // entity operations field.
+    if ($this->entityType->hasListBuilderClass()) {
+      $data[$base_table]['operations'] = array(
+        'field' => array(
+          'title' => $this->t('Operations links'),
+          'help' => $this->t('Provides links to perform entity operations.'),
+          'id' => 'entity_operations',
+        ),
+      );
+    }
 
     // Setup relations to the revisions/property data.
     if ($data_table) {
