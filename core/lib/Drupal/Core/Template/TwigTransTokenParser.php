@@ -82,14 +82,14 @@ class TwigTransTokenParser extends \Twig_TokenParser {
   /**
    * Ensure that any nodes that are parsed are only of allowed types.
    *
-   * @param \Twig_NodeInterface $body
+   * @param \Twig_Node $body
    *   The expression to check.
    * @param integer $lineno
    *   The source line.
    *
    * @throws \Twig_Error_Syntax
    */
-  protected function checkTransString(\Twig_NodeInterface $body, $lineno) {
+  protected function checkTransString(\Twig_Node $body, $lineno) {
     foreach ($body as $node) {
       if (
         $node instanceof \Twig_Node_Text
