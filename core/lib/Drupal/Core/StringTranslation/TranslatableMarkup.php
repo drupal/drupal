@@ -9,6 +9,7 @@ namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\ToStringTrait;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Provides translatable markup class.
@@ -229,6 +230,16 @@ class TranslatableMarkup extends FormattableMarkup {
     }
 
     return $this->stringTranslation;
+  }
+
+  /**
+   * Returns the string length.
+   *
+   * @return int
+   *   The length of the string.
+   */
+  public function count() {
+    return Unicode::strlen($this->render());
   }
 
 }

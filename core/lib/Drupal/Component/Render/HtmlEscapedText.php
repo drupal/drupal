@@ -18,7 +18,7 @@ use Drupal\Component\Utility\Unicode;
  *
  * @ingroup sanitization
  */
-class HtmlEscapedText implements MarkupInterface {
+class HtmlEscapedText implements MarkupInterface, \Countable {
 
   /**
    * The string to escape.

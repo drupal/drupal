@@ -65,7 +65,7 @@ use Drupal\Component\Utility\UrlHelper;
  * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup
  * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
  */
-class FormattableMarkup implements MarkupInterface {
+class FormattableMarkup implements MarkupInterface, \Countable {
 
   /**
    * The arguments to replace placeholders with.
