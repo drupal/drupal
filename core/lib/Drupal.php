@@ -518,6 +518,10 @@ class Drupal {
    * @see \Drupal\Core\Url
    * @see \Drupal\Core\Url::fromRoute()
    * @see \Drupal\Core\Url::fromUri()
+   *
+   * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
+   *   Instead create a \Drupal\Core\Url object directly, for example using
+   *   Url::fromRoute().
    */
   public static function url($route_name, $route_parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
     return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options, $collect_bubbleable_metadata);
