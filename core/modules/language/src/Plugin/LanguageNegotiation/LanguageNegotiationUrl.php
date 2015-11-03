@@ -200,9 +200,9 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $links[$language->getId()] = array(
-        // We need to clone the $url object to avoid using the same one for all links.
-        // When the links are rendered, options are set on the $url object,
-        // so if we use the same one, they would be set for all links.
+        // We need to clone the $url object to avoid using the same one for all
+        // links. When the links are rendered, options are set on the $url
+        // object, so if we use the same one, they would be set for all links.
         'url' => clone $url,
         'title' => $language->getName(),
         'language' => $language,
