@@ -1393,7 +1393,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The request object
    *
    * @return bool
-   *   TRUE if the hostmame is valid, or FALSE otherwise.
+   *   TRUE if the hostname is valid, or FALSE otherwise.
    */
   public static function validateHostname(Request $request) {
     // $request->getHost() can throw an UnexpectedValueException if it
@@ -1419,7 +1419,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * is possible to create an attack vectors against a site by overriding this.
    * Symfony provides a mechanism for creating a list of trusted Host values.
    *
-   * Host patterns (as regular expressions) can be configured throught
+   * Host patterns (as regular expressions) can be configured through
    * settings.php for multisite installations, sites using ServerAlias without
    * canonical redirection, or configurations where the site responds to default
    * requests. For example,
