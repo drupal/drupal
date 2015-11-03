@@ -184,13 +184,6 @@ class FilterUnitTest extends KernelTestBase {
     $this->assertIdentical($expected, $output->getProcessedText());
     $this->assertIdentical($attached_library, $output->getAttachments());
 
-    // Ensure the caption filter works for linked images.
-    $input = '<a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" /></a>';
-    $expected = '<figure role="group"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
-    $output = $test($input);
-    $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAttachments());
-
     // So far we've tested that the caption filter works correctly. But we also
     // want to make sure that it works well in tandem with the "Limit allowed
     // HTML tags" filter, which it is typically used with.
@@ -305,13 +298,6 @@ class FilterUnitTest extends KernelTestBase {
     // attribute value.
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="left foobar" />';
     $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
-    $output = $test($input);
-    $this->assertIdentical($expected, $output->getProcessedText());
-    $this->assertIdentical($attached_library, $output->getAttachments());
-
-    // Ensure both filters together work for linked images.
-    $input = '<a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" /></a>';
-    $expected = '<figure role="group" class="align-center"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
     $this->assertIdentical($attached_library, $output->getAttachments());

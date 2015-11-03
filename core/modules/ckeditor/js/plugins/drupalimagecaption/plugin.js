@@ -71,9 +71,10 @@
         // data-caption attributes.
         var originalDowncast = widgetDefinition.downcast;
         widgetDefinition.downcast = function (element) {
-          var img = findElementByName(element, 'img');
-          originalDowncast.call(this, img);
-
+          var img = originalDowncast.call(this, element);
+          if (!img) {
+            img = findElementByName(element, 'img');
+          }
           var caption = this.editables.caption;
           var captionHtml = caption && caption.getData();
           var attrs = img.attributes;
@@ -90,14 +91,10 @@
               attrs['data-align'] = this.data.align;
             }
           }
+          attrs['data-entity-type'] = this.data['data-entity-type'];
+          attrs['data-entity-uuid'] = this.data['data-entity-uuid'];
 
-          // If img is wrapped with a link, we want to return that link.
-          if (img.parent.name === 'a') {
-            return img.parent;
-          }
-          else {
-            return img;
-          }
+          return img;
         };
 
         // We want to upcast <img> elements to a DOM structure required by the
@@ -118,11 +115,6 @@
 
           element = originalUpcast.call(this, element, data);
           var attrs = element.attributes;
-
-          if (element.parent.name === 'a') {
-            element = element.parent;
-          }
-
           var retElement = element;
           var caption;
 

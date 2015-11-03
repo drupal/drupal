@@ -23,68 +23,46 @@ const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33; // Brown.
 // Restricting the chunk of queries prevents memory exhaustion.
 const SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT = 350;
 
-const SIMPLETEST_SCRIPT_EXIT_SUCCESS = 0;
-const SIMPLETEST_SCRIPT_EXIT_FAILURE = 1;
-const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 2;
-
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();
 
 if ($args['help'] || $count == 0) {
   simpletest_script_help();
-  exit(($count == 0) ? SIMPLETEST_SCRIPT_EXIT_FAILURE : SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+  exit;
 }
 
 simpletest_script_init();
 
-try {
-  $request = Request::createFromGlobals();
-  $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
-  $kernel->prepareLegacyRequest($request);
-}
-catch (Exception $e) {
-  echo (string) $e;
-  exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-}
+$request = Request::createFromGlobals();
+$kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
+$kernel->prepareLegacyRequest($request);
 
 if ($args['execute-test']) {
   simpletest_script_setup_database();
   simpletest_script_run_one_test($args['test-id'], $args['execute-test']);
   // Sub-process exited already; this is just for clarity.
-  exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+  exit;
 }
 
 if ($args['list']) {
   // Display all available tests.
   echo "\nAvailable test groups & classes\n";
   echo   "-------------------------------\n\n";
-  try {
-    $groups = simpletest_test_get_all($args['module']);
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  $groups = simpletest_test_get_all($args['module']);
   foreach ($groups as $group => $tests) {
     echo $group . "\n";
     foreach ($tests as $class => $info) {
       echo " - $class\n";
     }
   }
-  exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+  exit;
 }
 
 simpletest_script_setup_database(TRUE);
 
 if ($args['clean']) {
   // Clean up left-over tables and directories.
-  try {
-    simpletest_clean_environment();
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  simpletest_clean_environment();
   echo "\nEnvironment cleaned.\n";
 
   // Get the status messages and print them.
@@ -92,7 +70,7 @@ if ($args['clean']) {
   foreach ($messages['status'] as $text) {
     echo " - " . $text . "\n";
   }
-  exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+  exit;
 }
 
 $test_list = simpletest_script_get_test_list();
@@ -107,7 +85,7 @@ for ($i = 0; $i < $args['repeat']; $i++) {
 }
 
 // Execute tests.
-$status = simpletest_script_execute_batch($tests_to_run);
+simpletest_script_execute_batch($tests_to_run);
 
 // Stop the timer.
 simpletest_script_reporter_timer_stop();
@@ -126,17 +104,11 @@ if ($args['xml']) {
 
 // Clean up all test results.
 if (!$args['keep-results']) {
-  try {
-    simpletest_clean_results_table();
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  simpletest_clean_results_table();
 }
 
 // Test complete, exit.
-exit($status);
+exit;
 
 /**
  * Print help text.
@@ -323,7 +295,7 @@ function simpletest_script_parse_args() {
       else {
         // Argument not found in list.
         simpletest_script_print_error("Unknown argument '$arg'.");
-        exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+        exit;
       }
     }
     else {
@@ -336,7 +308,7 @@ function simpletest_script_parse_args() {
   // Validate the concurrency argument
   if (!is_numeric($args['concurrency']) || $args['concurrency'] <= 0) {
     simpletest_script_print_error("--concurrency must be a strictly positive integer.");
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+    exit;
   }
 
   if ($args['browser']) {
@@ -371,7 +343,7 @@ function simpletest_script_init() {
   else {
     simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
     simpletest_script_help();
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+    exit();
   }
 
   // Get URL from arguments.
@@ -469,7 +441,7 @@ function simpletest_script_setup_database($new = FALSE) {
     }
     catch (\InvalidArgumentException $e) {
       simpletest_script_print_error('Invalid --dburl. Reason: ' . $e->getMessage());
-      exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+      exit(1);
     }
   }
   // Otherwise, use the default database connection from settings.php.
@@ -480,7 +452,7 @@ function simpletest_script_setup_database($new = FALSE) {
   // If there is no default database connection for tests, we cannot continue.
   if (!isset($databases['default']['default'])) {
     simpletest_script_print_error('Missing default database connection for tests. Use --dburl to specify one.');
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+    exit(1);
   }
   Database::addConnectionInfo('default', 'default', $databases['default']['default']);
 
@@ -524,33 +496,21 @@ function simpletest_script_setup_database($new = FALSE) {
   }
   catch (\PDOException $e) {
     simpletest_script_print_error($databases['test-runner']['default']['driver'] . ': ' . $e->getMessage());
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+    exit(1);
   }
   if ($new && $sqlite) {
     require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/simpletest.install';
     foreach (simpletest_schema() as $name => $table_spec) {
-      try {
-        if ($schema->tableExists($name)) {
-          $schema->dropTable($name);
-        }
-        $schema->createTable($name, $table_spec);
+      if ($schema->tableExists($name)) {
+        $schema->dropTable($name);
       }
-      catch (Exception $e) {
-        echo (string) $e;
-        exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-      }
+      $schema->createTable($name, $table_spec);
     }
   }
   // Verify that the Simpletest database schema exists by checking one table.
-  try {
-    if (!$schema->tableExists('simpletest')) {
-      simpletest_script_print_error('Missing Simpletest database schema. Either install Simpletest module or use the --sqlite parameter.');
-      exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
-    }
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+  if (!$schema->tableExists('simpletest')) {
+    simpletest_script_print_error('Missing Simpletest database schema. Either install Simpletest module or use the --sqlite parameter.');
+    exit(1);
   }
 }
 
@@ -560,8 +520,6 @@ function simpletest_script_setup_database($new = FALSE) {
 function simpletest_script_execute_batch($test_classes) {
   global $args, $test_ids;
 
-  $total_status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
-
   // Multi-process execution.
   $children = array();
   while (!empty($test_classes) || !empty($children)) {
@@ -570,16 +528,8 @@ function simpletest_script_execute_batch($test_classes) {
         break;
       }
 
-      try {
-        $test_id = Database::getConnection('default', 'test-runner')
-          ->insert('simpletest_test_id')
-          ->useDefaults(array('test_id'))
-          ->execute();
-      }
-      catch (Exception $e) {
-        echo (string) $e;
-        exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-      }
+      $test_id = Database::getConnection('default', 'test-runner')
+        ->insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
       $test_ids[] = $test_id;
 
       $test_class = array_shift($test_classes);
@@ -589,7 +539,7 @@ function simpletest_script_execute_batch($test_classes) {
 
       if (!is_resource($process)) {
         echo "Unable to fork test process. Aborting.\n";
-        exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+        exit;
       }
 
       // Register our new child.
@@ -610,11 +560,7 @@ function simpletest_script_execute_batch($test_classes) {
       if (empty($status['running'])) {
         // The child exited, unregister it.
         proc_close($child['process']);
-        if ($status['exitcode'] === SIMPLETEST_SCRIPT_EXIT_FAILURE) {
-          $total_status = max($status['exitcode'], $total_status);
-        }
-        elseif ($status['exitcode']) {
-          $total_status = $status['exitcode'];
+        if ($status['exitcode']) {
           echo 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
           if ($args['die-on-fail']) {
             list($db_prefix, ) = simpletest_last_test_get($child['test_id']);
@@ -635,19 +581,19 @@ function simpletest_script_execute_batch($test_classes) {
       }
     }
   }
-  return $total_status;
 }
 
 /**
  * Run a group of phpunit tests.
  */
 function simpletest_script_run_phpunit($test_id, $class) {
+
   $reflection = new \ReflectionClass($class);
   if ($reflection->hasProperty('runLimit')) {
     set_time_limit($reflection->getStaticPropertyValue('runLimit'));
   }
 
-  $results = simpletest_run_phpunit_tests($test_id, array($class), $status);
+  $results = simpletest_run_phpunit_tests($test_id, array($class));
   simpletest_process_phpunit_results($results);
 
   // Map phpunit results to a data structure we can pass to
@@ -682,7 +628,6 @@ function simpletest_script_run_phpunit($test_id, $class) {
   foreach ($summaries as $class => $summary) {
     simpletest_script_reporter_display_summary($class, $summary);
   }
-  return $status;
 }
 
 /**
@@ -703,28 +648,23 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     }
     $test = new $class_name($test_id);
     if (is_subclass_of($test_class, '\PHPUnit_Framework_TestCase')) {
-      $status = simpletest_script_run_phpunit($test_id, $test_class);
+      simpletest_script_run_phpunit($test_id, $test_class);
     }
     else {
       $test->dieOnFail = (bool) $args['die-on-fail'];
       $test->verbose = (bool) $args['verbose'];
       $test->run($methods);
       simpletest_script_reporter_display_summary($test_class, $test->results);
-
-      $status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
-      // Finished, kill this runner.
-      if ($test->results['#fail'] || $test->results['#exception']) {
-        $status = SIMPLETEST_SCRIPT_EXIT_FAILURE;
-      }
     }
 
-    exit($status);
+    // Finished, kill this runner.
+    exit(0);
   }
   // DrupalTestCase::run() catches exceptions already, so this is only reached
   // when an exception is thrown in the wrapping test runner environment.
   catch (Exception $e) {
     echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+    exit(1);
   }
 }
 
@@ -786,13 +726,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
     return;
   }
   // Retrieve the last database prefix used for testing.
-  try {
-    list($db_prefix,) = simpletest_last_test_get($test_id);
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  list($db_prefix, ) = simpletest_last_test_get($test_id);
 
   // If no database prefix was found, then the test was not set up correctly.
   if (empty($db_prefix)) {
@@ -807,13 +741,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
   $messages[] = "- Found database prefix '$db_prefix' for test ID $test_id.";
 
   // Read the log file in case any fatal errors caused the test to crash.
-  try {
-    simpletest_log_read($test_id, $db_prefix, $test_class);
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  simpletest_log_read($test_id, $db_prefix, $test_class);
 
   // Check whether a test site directory was setup already.
   // @see \Drupal\simpletest\TestBase::prepareEnvironment()
@@ -835,19 +763,12 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
   }
 
   // Clear out all database tables from the test.
-  try {
-    $schema = Database::getConnection('default', 'default')->schema();
-    $count = 0;
-    foreach ($schema->findTables($db_prefix . '%') as $table) {
-      $schema->dropTable($table);
-      $count++;
-    }
+  $schema = Database::getConnection('default', 'default')->schema();
+  $count = 0;
+  foreach ($schema->findTables($db_prefix . '%') as $table) {
+    $schema->dropTable($table);
+    $count++;
   }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
-
   if ($count) {
     $messages[] = "- Removed $count leftover tables.";
   }
@@ -871,13 +792,7 @@ function simpletest_script_get_test_list() {
 
   $test_list = array();
   if ($args['all'] || $args['module']) {
-    try {
-      $groups = simpletest_test_get_all($args['module']);
-    }
-    catch (Exception $e) {
-      echo (string) $e;
-      exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-    }
+    $groups = simpletest_test_get_all($args['module']);
     $all_tests = array();
     foreach ($groups as $group => $tests) {
       $all_tests = array_merge($all_tests, array_keys($tests));
@@ -893,20 +808,14 @@ function simpletest_script_get_test_list() {
           $test_list[] = $test_class;
         }
         else {
-          try {
-            $groups = simpletest_test_get_all();
-          }
-          catch (Exception $e) {
-            echo (string) $e;
-            exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-          }
+          $groups = simpletest_test_get_all();
           $all_classes = array();
           foreach ($groups as $group) {
             $all_classes = array_merge($all_classes, array_keys($group));
           }
           simpletest_script_print_error('Test class not found: ' . $class_name);
           simpletest_script_print_alternatives($class_name, $all_classes, 6);
-          exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+          exit(1);
         }
       }
     }
@@ -915,7 +824,7 @@ function simpletest_script_get_test_list() {
       foreach ($args['test_names'] as $file) {
         if (!file_exists($file)) {
           simpletest_script_print_error('File not found: ' . $file);
-          exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+          exit;
         }
         $content = file_get_contents($file);
         // Extract a potential namespace.
@@ -994,13 +903,7 @@ function simpletest_script_get_test_list() {
       }
     }
     else {
-      try {
-        $groups = simpletest_test_get_all();
-      }
-      catch (Exception $e) {
-        echo (string) $e;
-        exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-      }
+      $groups = simpletest_test_get_all();
       foreach ($args['test_names'] as $group_name) {
         if (isset($groups[$group_name])) {
           $test_list = array_merge($test_list, array_keys($groups[$group_name]));
@@ -1008,7 +911,7 @@ function simpletest_script_get_test_list() {
         else {
           simpletest_script_print_error('Test group not found: ' . $group_name);
           simpletest_script_print_alternatives($group_name, array_keys($groups));
-          exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+          exit(1);
         }
       }
     }
@@ -1016,7 +919,7 @@ function simpletest_script_get_test_list() {
 
   if (empty($test_list)) {
     simpletest_script_print_error('No valid tests were specified.');
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+    exit;
   }
   return $test_list;
 }
@@ -1090,13 +993,7 @@ function simpletest_script_reporter_display_summary($class, $results) {
 function simpletest_script_reporter_write_xml_results() {
   global $args, $test_ids, $results_map;
 
-  try {
-    $results = simpletest_script_load_messages_by_test_id($test_ids);
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  $results = simpletest_script_load_messages_by_test_id($test_ids);
 
   $test_class = '';
   $xml_files = array();
@@ -1186,13 +1083,7 @@ function simpletest_script_reporter_display_results() {
     echo "Detailed test results\n";
     echo "---------------------\n";
 
-    try {
-      $results = simpletest_script_load_messages_by_test_id($test_ids);
-    }
-    catch (Exception $e) {
-      echo (string) $e;
-      exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-    }
+    $results = simpletest_script_load_messages_by_test_id($test_ids);
     $test_class = '';
     foreach ($results as $result) {
       if (isset($results_map[$result->status])) {
@@ -1340,16 +1231,10 @@ function simpletest_script_load_messages_by_test_id($test_ids) {
   }
 
   foreach ($test_id_chunks as $test_id_chunk) {
-    try {
-      $result_chunk = Database::getConnection('default', 'test-runner')
-        ->query("SELECT * FROM {simpletest} WHERE test_id IN ( :test_ids[] ) ORDER BY test_class, message_id", array(
-          ':test_ids[]' => $test_id_chunk,
-        ))->fetchAll();
-    }
-    catch (Exception $e) {
-      echo (string) $e;
-      exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-    }
+    $result_chunk = Database::getConnection('default', 'test-runner')
+      ->query("SELECT * FROM {simpletest} WHERE test_id IN ( :test_ids[] ) ORDER BY test_class, message_id", array(
+        ':test_ids[]' => $test_id_chunk,
+      ))->fetchAll();
     if ($result_chunk) {
       $results = array_merge($results, $result_chunk);
     }
@@ -1364,20 +1249,14 @@ function simpletest_script_load_messages_by_test_id($test_ids) {
 function simpletest_script_open_browser() {
   global $test_ids;
 
-  try {
-    $connection = Database::getConnection('default', 'test-runner');
-    $results = $connection->select('simpletest')
-      ->fields('simpletest')
-      ->condition('test_id', $test_ids, 'IN')
-      ->orderBy('test_class')
-      ->orderBy('message_id')
-      ->execute()
-      ->fetchAll();
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  $connection = Database::getConnection('default', 'test-runner');
+  $results = $connection->select('simpletest')
+    ->fields('simpletest')
+    ->condition('test_id', $test_ids, 'IN')
+    ->orderBy('test_class')
+    ->orderBy('message_id')
+    ->execute()
+    ->fetchAll();
 
   // Get the results form.
   $form = array();
