@@ -123,7 +123,7 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
         'buttons' => array(),
       );
       $buttons = array_filter($button_row, function ($button) use ($group_name) {
-        return $button['group'] === $group_name;
+        return (string) $button['group'] === $group_name;
       });
       foreach ($buttons as $button) {
         $variables['active_buttons'][$row_number][$group_name]['buttons'][] = $build_button_item($button, $rtl);
