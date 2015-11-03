@@ -71,7 +71,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * Constructs a container aware event dispatcher.
    *
-   * @param \Symfony\Component\EventDispatcher\IntrospectableContainerInterface $container
+   * @param \Symfony\Component\DependencyInjection\IntrospectableContainerInterface $container
    *   The service container.
    * @param array $listeners
    *   A nested array of listener definitions keyed by event name and priority.
