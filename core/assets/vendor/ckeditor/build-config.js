@@ -5,6 +5,15 @@
  * CKEditor again. Alternatively, use the "build.sh" script to build it locally.
  * If you do so, be sure to pass it the "-s" flag. So: "sh build.sh -s".
  *
+ * If you are developing or debugging CKEditor plugins, you may want to work
+ * against an unoptimized (unminified) CKEditor build. To do so, you have two
+ * options:
+ * 1. Upload build-config.js to http://ckeditor.com/builder and choose the
+ *    "Source (Big N'Slow)" option when downloading.
+ * 2. Use the "build.sh" script to build it locally, with one additional flag:
+ *    "sh build.sh -s --leave-js-unminified".
+ * Then, replace this directory (core/assets/vendor/ckeditor) with your build.
+ *
  * NOTE:
  *    This file is not used by CKEditor, you may remove it.
  *    Changing this file will not change your CKEditor configuration.
