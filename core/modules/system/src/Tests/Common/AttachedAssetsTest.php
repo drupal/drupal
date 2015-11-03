@@ -184,12 +184,9 @@ class AttachedAssetsTest extends KernelTestBase {
     list($header_js, $footer_js) = $this->assetResolver->getJsAssets($assets, TRUE);
     $this->assertEqual([], \Drupal::service('asset.js.collection_renderer')->render($header_js), 'There are 0 JavaScript assets in the header.');
     $rendered_footer_js = \Drupal::service('asset.js.collection_renderer')->render($footer_js);
-    $this->assertTrue(
-      count($rendered_footer_js) == 2
-      && $rendered_footer_js[0]['#attributes']['data-drupal-selector'] === 'drupal-settings-json'
-      && substr($rendered_footer_js[1]['#attributes']['src'], 0, 7) === 'http://',
-      'There are 2 JavaScript assets in the footer: one with drupal settings, one with the sole aggregated JavaScript asset.'
-    );
+    $this->assertEqual(2, count($rendered_footer_js), 'There are 2 JavaScript assets in the footer.');
+    $this->assertEqual('drupal-settings-json', $rendered_footer_js[0]['#attributes']['data-drupal-selector'], 'The first of the two JavaScript assets in the footer has drupal settings.');
+    $this->assertEqual('http://', substr($rendered_footer_js[1]['#attributes']['src'], 0, 7), 'The second of the two JavaScript assets in the footer has the sole aggregated JavaScript asset.');
   }
 
   /**
