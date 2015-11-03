@@ -29,41 +29,51 @@
           return;
         }
 
-        // Override requiredContent & allowedContent.
+        // First, convert requiredContent & allowedContent from the string
+        // format that image2 uses for both to formats that are better suited
+        // for extending, so that both this basic drupalimage plugin and Drupal
+        // modules can easily extend it.
+        // @see http://docs.ckeditor.com/#!/api/CKEDITOR.filter.allowedContentRules
+        // Mapped from image2's allowedContent. Unlike image2, we don't allow
+        // <figure>, <figcaption>, <div> or <p>  in our downcast, so we omit
+        // those. For the <img> tag, we list all attributes it lists, but omit
+        // the classes, because the listed classes are for alignment, and for
+        // alignment we use the data-align attribute.
+        widgetDefinition.allowedContent = {
+          img: {
+            attributes: {
+              '!src': true,
+              '!alt': true,
+              'width': true,
+              'height': true
+            },
+            classes: {},
+            styles: {}
+          }
+        };
+        // Mapped from image2's requiredContent: "img[src,alt]". This does not
+        // use the object format unlike above, but a CKEDITOR.style instance,
+        // because requiredContent does not support the object format.
+        // @see https://www.drupal.org/node/2585173#comment-10456981
         widgetDefinition.requiredContent = new CKEDITOR.style({
           element: 'img',
           styles: {},
           attributes: {
-            'alt': '',
-            'src': '',
-            'width': '',
-            'height': '',
-            'data-entity-type': '',
-            'data-entity-uuid': ''
+            src: '',
+            alt: ''
           }
         });
-        var allowedContentDefinition = {
-          element: 'img',
-          styles: {},
-          attributes: {
-            '!data-entity-type': '',
-            '!data-entity-uuid': ''
-          }
-        };
-        var imgAttributes = widgetDefinition.allowedContent.img.attributes.split(/\s*,\s*/);
-        for (var i = 0; i < imgAttributes.length; i++) {
-          allowedContentDefinition.attributes[imgAttributes[i]] = '';
-        }
-        if (widgetDefinition.allowedContent.img.classes) {
-          allowedContentDefinition.attributes['class'] = widgetDefinition.allowedContent.img.classes.split(/\s*,\s*/).join(' ');
-        }
-        if (widgetDefinition.allowedContent.img.styles) {
-          var imgStyles = widgetDefinition.allowedContent.img.styles.split(/\s*,\s*/);
-          for (var j = 0; j < imgStyles.length; j++) {
-            allowedContentDefinition.styles[imgStyles[j]] = '';
-          }
-        }
-        widgetDefinition.allowedContent = new CKEDITOR.style(allowedContentDefinition);
+
+        // Extend requiredContent & allowedContent.
+        // CKEDITOR.style is an immutable object: we cannot modify its
+        // definition to extend requiredContent. Hence we get the definition,
+        // modify it, and pass it to a new CKEDITOR.style instance.
+        var requiredContent = widgetDefinition.requiredContent.getDefinition();
+        requiredContent.attributes['data-entity-type'] = '';
+        requiredContent.attributes['data-entity-uuid'] = '';
+        widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
+        widgetDefinition.allowedContent.img.attributes['!data-entity-type'] = true;
+        widgetDefinition.allowedContent.img.attributes['!data-entity-uuid'] = true;
 
         // Override downcast(): since we only accept <img> in our upcast method,
         // the element is already correct. We only need to update the element's
