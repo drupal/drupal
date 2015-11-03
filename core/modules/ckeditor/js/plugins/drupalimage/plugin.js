@@ -47,8 +47,7 @@
               'width': true,
               'height': true
             },
-            classes: {},
-            styles: {}
+            classes: {}
           }
         };
         // Mapped from image2's requiredContent: "img[src,alt]". This does not
@@ -57,7 +56,6 @@
         // @see https://www.drupal.org/node/2585173#comment-10456981
         widgetDefinition.requiredContent = new CKEDITOR.style({
           element: 'img',
-          styles: {},
           attributes: {
             src: '',
             alt: ''

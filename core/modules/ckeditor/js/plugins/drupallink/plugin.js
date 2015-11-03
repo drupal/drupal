@@ -19,13 +19,11 @@
               '!href': true,
               'target': true
             },
-            classes: {},
-            styles: {}
+            classes: {}
           }
         },
         requiredContent: new CKEDITOR.style({
           element: 'a',
-          styles: {},
           attributes: {
             href: ''
           }
