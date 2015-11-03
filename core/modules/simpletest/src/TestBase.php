@@ -1194,7 +1194,7 @@ abstract class TestBase {
     $this->originalConf = isset($GLOBALS['conf']) ? $GLOBALS['conf'] : NULL;
 
     // Backup statics and globals.
-    $this->originalContainer = clone \Drupal::getContainer();
+    $this->originalContainer = \Drupal::getContainer();
     $this->originalLanguage = $language_interface;
     $this->originalConfigDirectories = $GLOBALS['config_directories'];
 
