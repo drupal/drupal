@@ -64,8 +64,8 @@ following the instructions in the INTRODUCTION section at the top of this file:
    Enable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
-3. Remove all old core files and directories, except for the 'sites' directory
-   and any custom files you added elsewhere.
+3. Remove the 'core' and 'vendor' directories. Also remove all of the files
+   in the top-level directory, except any that you added manually.
 
    If you made modifications to files like .htaccess, composer.json, or
    robots.txt you will need to re-apply them from your backup, after the new
