@@ -49,7 +49,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
       $libraries = $this->collector->get($extension);
       $this->libraryDefinitions[$extension] = [];
       foreach ($libraries as $name => $definition) {
-        $library_name = "$extension/$name";
         $this->libraryDefinitions[$extension][$name] = $definition;
       }
     }
