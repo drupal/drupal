@@ -43,7 +43,7 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *     },
  *   },
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}}
+ *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}, "FileValidation" = {}}
  * )
  */
 class ImageItem extends FileItem {
