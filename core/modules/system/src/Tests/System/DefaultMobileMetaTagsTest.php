@@ -44,11 +44,6 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
    * Verifies that the default mobile meta tags can be removed.
    */
   public function testRemovingDefaultMetaTags() {
-    // @todo remove once PHP7 on Drupal CI has the fix.
-    if (version_compare(phpversion(), '7.0.0-dev') >= 0) {
-      // @see https://bugs.php.net/bug.php?id=70808
-      return;
-    }
     \Drupal::service('module_installer')->install(array('system_module_test'));
     $this->drupalGet('');
     foreach ($this->defaultMetaTags as $name => $metatag) {
