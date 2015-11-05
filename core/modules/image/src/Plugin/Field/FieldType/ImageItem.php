@@ -349,7 +349,7 @@ class ImageItem extends FileItem {
         // $image->setOwner($account);
         $image->setMimeType('image/' . pathinfo($path, PATHINFO_EXTENSION));
         $image->setFileName(drupal_basename($path));
-        $destination_dir = $settings['uri_scheme'] . '://' . $settings['file_directory'];
+        $destination_dir = static::doGetUploadLocation($settings);
         file_prepare_directory($destination_dir, FILE_CREATE_DIRECTORY);
         $destination = $destination_dir . '/' . basename($path);
         $file = file_move($image, $destination, FILE_CREATE_DIRECTORY);
