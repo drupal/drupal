@@ -119,8 +119,11 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
       }
 
       // Use the API to check if the password has been salted and re-hashed to
-      // conform the Drupal >= 7.
-      $this->assertTrue(\Drupal::service('password')->check($source->pass_plain, $user->getPassword()));
+      // conform to Drupal >= 7 for non-admin users.
+      if ($user->id() != 1) {
+        $this->assertTrue(\Drupal::service('password')
+          ->check($source->pass_plain, $user->getPassword()));
+      }
     }
     // Rollback the migration and make sure everything is deleted but uid 1.
     (new MigrateExecutable($this->migration, $this))->rollback();

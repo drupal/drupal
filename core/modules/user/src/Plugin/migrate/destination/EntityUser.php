@@ -90,6 +90,10 @@ class EntityUser extends EntityContentBase {
         throw new MigrateException('Password service has been altered by another module, aborting.');
       }
     }
+    // Do not overwrite the root account password.
+    if ($row->getDestinationProperty('uid') == 1) {
+      $row->removeDestinationProperty('pass');
+    }
     $ids = parent::import($row, $old_destination_id_values);
     if ($this->password) {
       $this->password->disableMd5Prefixing();

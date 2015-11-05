@@ -223,6 +223,17 @@ class Row {
   }
 
   /**
+   * Removes destination property.
+   *
+   * @param string $property
+   *   The name of the destination property.
+   */
+  public function removeDestinationProperty($property) {
+    unset($this->rawDestination[$property]);
+    NestedArray::unsetValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
+  }
+
+  /**
    * Returns the whole destination array.
    *
    * @return array
