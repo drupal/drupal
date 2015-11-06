@@ -92,12 +92,12 @@ class ConfigInstallProfileOverrideTest extends WebTestBase {
     }
 
     // Install the config_test module and ensure that the override from the
-    // install profile is not used. Optional configuration can not override
+    // install profile is used. Optional configuration can override
     // configuration in a modules config/install directory.
     $this->container->get('module_installer')->install(['config_test']);
     $this->rebuildContainer();
     $config_test_storage = \Drupal::entityManager()->getStorage('config_test');
-    $this->assertEqual($config_test_storage->load('dotted.default')->label(), 'Default', 'The config_test entity is not overridden by the profile optional configuration.');
+    $this->assertEqual($config_test_storage->load('dotted.default')->label(), 'Default install profile override', 'The config_test entity is overridden by the profile optional configuration.');
     // Test that override of optional configuration does work.
     $this->assertEqual($config_test_storage->load('override')->label(), 'Override', 'The optional config_test entity is overridden by the profile optional configuration.');
     // Test that override of optional configuration which introduces an unmet
