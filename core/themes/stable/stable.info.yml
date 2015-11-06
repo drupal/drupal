@@ -5,3 +5,4 @@ package: Core
 version: VERSION
 core: 8.x
 base theme: false
+hidden: true

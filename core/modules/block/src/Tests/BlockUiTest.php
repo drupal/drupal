@@ -90,6 +90,10 @@ class BlockUiTest extends WebTestBase {
     \Drupal::service('theme_handler')->install(array('test_theme'));
     $this->drupalGet('admin/structure/block/demo/test_theme');
     $this->assertEscaped('<strong>Test theme</strong>');
+
+    \Drupal::service('theme_handler')->install(['stable']);
+    $this->drupalGet('admin/structure/block/demo/stable');
+    $this->assertResponse(404, 'Hidden themes that are not the default theme are not supported by the block demo screen');
   }
 
   /**
@@ -136,6 +140,28 @@ class BlockUiTest extends WebTestBase {
     $this->drupalGet('admin/structure/block');
     $element = $this->xpath('//tr[contains(@class, :class)]', [':class' => 'region-title-header']);
     $this->assertTrue(!empty($element));
+
+    // Ensure hidden themes do not appear in the UI. Enable another non base
+    // theme and place the local tasks block.
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('classy'), 'The classy base theme is enabled');
+    $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
+    \Drupal::service('theme_installer')->install(['stable', 'stark']);
+    $this->drupalGet('admin/structure/block');
+    $theme_handler = \Drupal::service('theme_handler');
+    $this->assertLink($theme_handler->getName('classy'));
+    $this->assertLink($theme_handler->getName('stark'));
+    $this->assertNoLink($theme_handler->getName('stable'));
+
+    $this->drupalGet('admin/structure/block/list/stable');
+    $this->assertResponse(404, 'Placing blocks through UI is not possible for a hidden base theme.');
+
+    \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+    $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
+    $this->drupalGet('admin/structure/block');
+    $this->assertLink($theme_handler->getName('stable'));
+    $this->drupalGet('admin/structure/block/list/stable');
+    $this->assertResponse(200, 'Placing blocks through UI is possible for a hidden base theme that is the admin theme.');
   }
 
   /**

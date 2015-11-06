@@ -7,8 +7,10 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -17,6 +19,35 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SystemConfigSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
+
+  /**
+   * The router builder.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   */
+  protected $routerBuilder;
+
+  /**
+   * Constructs the SystemConfigSubscriber.
+   *
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   *   The router builder service.
+   */
+  public function __construct(RouteBuilderInterface $router_builder) {
+    $this->routerBuilder = $router_builder;
+  }
+
+  /**
+   * Rebuilds the router when the default or admin theme is changed.
+   *
+   * @param \Drupal\Core\Config\ConfigCrudEvent $event
+   */
+  public function onConfigSave(ConfigCrudEvent $event) {
+    $saved_config = $event->getConfig();
+    if ($saved_config->getName() == 'system.theme' && ($event->isChanged('admin') || $event->isChanged('default'))) {
+      $this->routerBuilder->setRebuildNeeded();
+    }
+  }
 
   /**
    * Checks that the configuration synchronization is valid.
@@ -55,6 +86,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
+    $events[ConfigEvents::SAVE][] = array('onConfigSave', 0);
     // The empty check has a high priority so that is can stop propagation if
     // there is no configuration to import.
     $events[ConfigEvents::IMPORT_VALIDATE][] = array('onConfigImporterValidateNotEmpty', 512);

@@ -108,13 +108,11 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $themes = $this->themeHandler->listInfo();
 
-    // Deny access if the theme is not installed or not found.
-    if (!empty($theme) && (empty($themes[$theme]) || !$themes[$theme]->status)) {
-      throw new NotFoundHttpException();
-    }
-
     // Default settings are defined in theme_get_setting() in includes/theme.inc
     if ($theme) {
+      if (!$this->themeHandler->hasUi($theme)) {
+        throw new NotFoundHttpException();
+      }
       $var = 'theme_' . $theme . '_settings';
       $config_key = $theme . '.settings';
       $themes = $this->themeHandler->listInfo();

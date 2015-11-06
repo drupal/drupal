@@ -483,4 +483,18 @@ class ThemeHandler implements ThemeHandlerInterface {
     throw new \InvalidArgumentException(sprintf('The theme %s does not exist.', $name));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasUi($name) {
+    $themes = $this->listInfo();
+    if (isset($themes[$name])) {
+      if (!empty($themes[$name]->info['hidden'])) {
+        $theme_config = $this->configFactory->get('system.theme');
+        return $name == $theme_config->get('default') || $name == $theme_config->get('admin');
+      }
+      return TRUE;
+    }
+    return FALSE;
+  }
 }

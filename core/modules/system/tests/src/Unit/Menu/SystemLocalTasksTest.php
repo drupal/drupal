@@ -44,6 +44,10 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->will($this->returnValue(array(
         'bartik' => $theme,
       )));
+    $this->themeHandler->expects($this->any())
+      ->method('hasUi')
+      ->with('bartik')
+      ->willReturn(TRUE);
     $this->container->set('theme_handler', $this->themeHandler);
   }
 

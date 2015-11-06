@@ -35,6 +35,7 @@ services:
       - { name: theme_negotiator, priority: 100 }
   system.config_subscriber:
     class: Drupal\system\SystemConfigSubscriber
+    arguments: ['@router.builder']
     tags:
       - { name: event_subscriber }
   system.config_cache_tag:

@@ -65,6 +65,14 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
       unset($new_blocks[str_replace($default_theme . '_', $new_theme . '_', $default_block_name)]);
     }
     $this->assertTrue(empty($new_blocks), 'The new theme has exactly the same blocks as the previous default theme.');
+
+    // Install a hidden base theme and ensure blocks are not copied.
+    $base_theme = 'test_basetheme';
+    \Drupal::service('theme_handler')->install([$base_theme]);
+    $new_blocks = $this->container->get('entity.query')->get('block')
+      ->condition('theme', $base_theme)
+      ->execute();
+    $this->assertTrue(empty($new_blocks), 'Installing a hidden base theme does not copy blocks from the default theme.');
   }
 
 }

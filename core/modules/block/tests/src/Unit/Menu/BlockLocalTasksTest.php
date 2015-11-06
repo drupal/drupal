@@ -27,7 +27,11 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
 
     $themes = array();
     $themes['test_a'] = (object) array(
-      'status' => 0,
+      'status' => 1,
+      'info' => array(
+        'name' => 'test_a',
+        'hidden' => TRUE,
+      ),
     );
     $themes['test_b'] = (object) array(
       'status' => 1,
@@ -45,6 +49,13 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
     $theme_handler->expects($this->any())
       ->method('listInfo')
       ->will($this->returnValue($themes));
+    $theme_handler->expects($this->any())
+      ->method('hasUi')
+      ->willReturnMap([
+        ['test_a', FALSE],
+        ['test_b', TRUE],
+        ['test_c', TRUE],
+      ]);
 
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
