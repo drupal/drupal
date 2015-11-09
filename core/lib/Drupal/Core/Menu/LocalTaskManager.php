@@ -304,7 +304,9 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     }
     // Pre-fetch all routes involved in the tree. This reduces the number
     // of SQL queries that would otherwise be triggered by the access manager.
-    $routes = $route_names ? $this->routeProvider->getRoutesByNames($route_names) : array();
+    if ($route_names) {
+      $this->routeProvider->getRoutesByNames($route_names);
+    }
 
     foreach ($tree as $level => $instances) {
       /** @var $instances \Drupal\Core\Menu\LocalTaskInterface[] */
