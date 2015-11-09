@@ -1464,6 +1464,7 @@ function system_update_8005() {
         break;
 
       case 'classy':
+      case 'stable':
         // Don't place any blocks or trigger custom themes installed warning.
         break;
 
@@ -1541,6 +1542,7 @@ function system_update_8006() {
 
       case 'seven':
       case 'classy':
+      case 'stable':
         // Don't place any blocks or trigger custom themes installed warning.
         break;
       default:
@@ -1806,23 +1808,6 @@ function system_update_8011() {
 }
 
 /**
- * Install the Stable base theme if needed.
- */
-function system_update_8012() {
-  $theme_handler = \Drupal::service('theme_handler');
-  // Ensure we have fresh info.
-  $theme_handler->rebuildThemeData();
-  foreach ($theme_handler->listInfo() as $theme) {
-    // We first check that a base theme is set because if it's set to false then
-    // it's unset in \Drupal\Core\Extension\ThemeHandler::rebuildThemeData().
-    if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
-      $theme_handler->install(['stable']);
-      return;
-    }
-  }
-}
-
-/**
  * Enable automated cron module and move the config into it.
  */
 function system_update_8013() {
@@ -1846,4 +1831,32 @@ function system_update_8013() {
 
 /**
  * @} End of "addtogroup updates-8.0.0-beta".
+ */
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * Install the Stable base theme if needed.
+ */
+function system_update_8014() {
+  $theme_handler = \Drupal::service('theme_handler');
+  if ($theme_handler->themeExists('stable')) {
+    return;
+  }
+  $theme_handler->refreshInfo();
+  foreach ($theme_handler->listInfo() as $theme) {
+    // We first check that a base theme is set because if it's set to false then
+    // it's unset in \Drupal\Core\Extension\ThemeHandler::rebuildThemeData().
+    if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
+      $theme_handler->install(['stable']);
+      return;
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
  */

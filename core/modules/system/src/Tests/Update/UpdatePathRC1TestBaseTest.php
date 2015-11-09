@@ -34,6 +34,8 @@ class UpdatePathRC1TestBaseTest extends UpdatePathTestBase {
    * Tests that the database was properly loaded.
    */
   public function testDatabaseLoaded() {
+    $extensions = \Drupal::service('config.storage')->read('core.extension');
+    $this->assertFalse(isset($extensions['theme']['stable']), 'Stable is not installed before updating.');
     $hook_updates = [
       'user' => '8000',
       'node' => '8003',
@@ -57,11 +59,14 @@ class UpdatePathRC1TestBaseTest extends UpdatePathTestBase {
       $this->assertEqual($existing_updates[$expected_update], 1, new FormattableMarkup("@expected_update exists in 'existing_updates' key and only appears once.", ['@expected_update' => $expected_update]));
     }
 
-    // @todo there are no updates to run.
-    // $this->runUpdates();
+    $this->runUpdates();
     $this->assertEqual(\Drupal::config('system.site')->get('name'), 'Site-Install');
     $this->drupalGet('<front>');
     $this->assertText('Site-Install');
+    $extensions = \Drupal::service('config.storage')->read('core.extension');
+    $this->assertTrue(isset($extensions['theme']['stable']), 'Stable is installed after updating.');
+    $blocks = \Drupal::entityManager()->getStorage('block')->loadByProperties(['theme' => 'stable']);
+    $this->assertTrue(empty($blocks), 'No blocks have been placed for Stable.');
   }
 
 }

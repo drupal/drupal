@@ -4,7 +4,6 @@ description: 'A base theme with sensible default CSS classes added. Learn how to
 package: Core
 version: VERSION
 core: 8.x
-base theme: false
 hidden: true
 
 libraries:

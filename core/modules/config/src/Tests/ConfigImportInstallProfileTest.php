@@ -67,6 +67,7 @@ class ConfigImportInstallProfileTest extends WebTestBase {
     $core['module']['testing_config_import'] = 0;
     unset($core['module']['syslog']);
     unset($core['theme']['stark']);
+    $core['theme']['stable'] = 0;
     $core['theme']['classy'] = 0;
     $sync->write('core.extension', $core);
     $sync->deleteAll('syslog.');

@@ -109,6 +109,16 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $ancestor = $theme_name;
     while ($ancestor && isset($themes[$ancestor]->base_theme)) {
       $ancestor = $themes[$ancestor]->base_theme;
+      if (!$this->themeHandler->themeExists($ancestor)) {
+        if ($ancestor == 'stable') {
+          // Themes that depend on Stable will be fixed by system_update_8014().
+          // There is no harm in not adding it as an ancestor since at worst
+          // some people might experience slight visual regressions on
+          // update.php.
+          continue;
+        }
+        throw new MissingThemeDependencyException(sprintf('Base theme %s has not been installed.', $ancestor), $ancestor);
+      }
       $base_themes[] = $themes[$ancestor];
     }
 
