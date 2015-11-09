@@ -15,6 +15,7 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
+use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
@@ -403,6 +404,8 @@ function install_begin_request($class_loader, &$install_state) {
   $kernel->setSitePath($site_path);
   $kernel->boot();
   $container = $kernel->getContainer();
+  // If Drupal is being installed behind a proxy, configure the request.
+  ReverseProxyMiddleware::setSettingsOnRequest($request, Settings::getInstance());
 
   // Register the file translation service.
   if (isset($GLOBALS['config']['locale.settings']['translation']['path'])) {
