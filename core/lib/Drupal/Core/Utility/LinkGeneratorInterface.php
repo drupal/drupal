@@ -84,6 +84,10 @@ interface LinkGeneratorInterface {
    * @return \Drupal\Core\GeneratedLink
    *   A GeneratedLink object containing a link to the given route and
    *   parameters and bubbleable metadata.
+   *
+   * @internal
+   *   Should not be used in user code.
+   *   Use \Drupal\Core\Link instead.
    */
   public function generateFromLink(Link $link);
 
