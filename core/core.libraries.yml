@@ -260,7 +260,6 @@ drupal.tabledrag:
     misc/tabledrag.js: { weight: -1 }
   dependencies:
     - core/jquery
-    - core/modernizr
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
