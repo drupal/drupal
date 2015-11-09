@@ -79,8 +79,7 @@ class FileStorage implements PhpStorageInterface {
   public static function htaccessLines($private = TRUE) {
     $lines = <<<EOF
 # Turn off all options we don't need.
-Options None
-Options +FollowSymLinks
+Options -Indexes -ExecCGI -Includes -MultiViews
 
 # Set the catch-all handler to prevent scripts from being executed.
 SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
