@@ -73,33 +73,6 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   }
 
   /**
-   * Synchronizes a service change.
-   *
-   * This method is a copy of the ContainerBuilder of symfony.
-   *
-   * This method updates all services that depend on the given
-   * service by calling all methods referencing it.
-   *
-   * @param string $id A service id
-   */
-  private function synchronize($id) {
-    foreach ($this->getDefinitions() as $definitionId => $definition) {
-      // only check initialized services
-      if (!$this->initialized($definitionId)) {
-        continue;
-      }
-
-      foreach ($definition->getMethodCalls() as $call) {
-        foreach ($call[1] as $argument) {
-          if ($argument instanceof Reference && $id == (string) $argument) {
-            $this->callMethod($this->get($definitionId), $call);
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * A 1to1 copy of parent::callMethod.
    */
   protected function callMethod($service, $call) {
