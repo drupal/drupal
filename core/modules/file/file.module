@@ -555,10 +555,6 @@ function file_theme() {
     ),
 
     // From file.field.inc.
-    'file_widget' => array(
-      'render element' => 'element',
-      'file' => 'file.field.inc',
-    ),
     'file_widget_multiple' => array(
       'render element' => 'element',
       'file' => 'file.field.inc',
