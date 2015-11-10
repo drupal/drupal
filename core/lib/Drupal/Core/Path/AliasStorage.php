@@ -11,9 +11,14 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Database\Query\Condition;
 
 /**
  * Provides a class for CRUD operations on path aliases.
+ *
+ * All queries perform case-insensitive matching on the 'source' and 'alias'
+ * fields, so the aliases '/test-alias' and '/test-Alias' are considered to be
+ * the same, and will both refer to the same internal system path.
  */
 class AliasStorage implements AliasStorageInterface {
   /**
@@ -98,7 +103,13 @@ class AliasStorage implements AliasStorageInterface {
   public function load($conditions) {
     $select = $this->connection->select('url_alias');
     foreach ($conditions as $field => $value) {
-      $select->condition($field, $value);
+      if ($field == 'source' || $field == 'alias') {
+        // Use LIKE for case-insensitive matching.
+        $select->condition($field, $this->connection->escapeLike($value), 'LIKE');
+      }
+      else {
+        $select->condition($field, $value);
+      }
     }
     return $select
       ->fields('url_alias')
@@ -115,7 +126,13 @@ class AliasStorage implements AliasStorageInterface {
     $path = $this->load($conditions);
     $query = $this->connection->delete('url_alias');
     foreach ($conditions as $field => $value) {
-      $query->condition($field, $value);
+      if ($field == 'source' || $field == 'alias') {
+        // Use LIKE for case-insensitive matching.
+        $query->condition($field, $this->connection->escapeLike($value), 'LIKE');
+      }
+      else {
+        $query->condition($field, $value);
+      }
     }
     $deleted = $query->execute();
     // @todo Switch to using an event for this instead of a hook.
@@ -128,90 +145,101 @@ class AliasStorage implements AliasStorageInterface {
    * {@inheritdoc}
    */
   public function preloadPathAlias($preloaded, $langcode) {
-    $args = array(
-      ':system[]' => $preloaded,
-      ':langcode' => $langcode,
-      ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    );
+    $langcode_list = [$langcode, LanguageInterface::LANGCODE_NOT_SPECIFIED];
+    $select = $this->connection->select('url_alias')
+      ->fields('url_alias', ['source', 'alias']);
+
+    if (!empty($preloaded)) {
+      $conditions = new Condition('OR');
+      foreach ($preloaded as $preloaded_item) {
+        $conditions->condition('source', $this->connection->escapeLike($preloaded_item), 'LIKE');
+      }
+      $select->condition($conditions);
+    }
+
     // Always get the language-specific alias before the language-neutral one.
     // For example 'de' is less than 'und' so the order needs to be ASC, while
     // 'xx-lolspeak' is more than 'und' so the order needs to be DESC. We also
     // order by pid ASC so that fetchAllKeyed() returns the most recently
     // created alias for each source. Subsequent queries using fetchField() must
-    // use pid DESC to have the same effect. For performance reasons, the query
-    // builder is not used here.
+    // use pid DESC to have the same effect.
     if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      // Prevent PDO from complaining about a token the query doesn't use.
-      unset($args[':langcode']);
-      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN ( :system[] ) AND langcode = :langcode_undetermined ORDER BY pid ASC', $args);
+      array_pop($langcode_list);
     }
     elseif ($langcode < LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN ( :system[] ) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid ASC', $args);
+      $select->orderBy('langcode', 'ASC');
     }
     else {
-      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN ( :system[] ) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid ASC', $args);
+      $select->orderBy('langcode', 'DESC');
     }
 
-    return $result->fetchAllKeyed();
+    $select->orderBy('pid', 'ASC');
+    $select->condition('langcode', $langcode_list, 'IN');
+    return $select->execute()->fetchAllKeyed();
   }
 
   /**
    * {@inheritdoc}
    */
   public function lookupPathAlias($path, $langcode) {
-    $args = array(
-      ':source' => $path,
-      ':langcode' => $langcode,
-      ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    );
-    // See the queries above.
+    $source = $this->connection->escapeLike($path);
+    $langcode_list = [$langcode, LanguageInterface::LANGCODE_NOT_SPECIFIED];
+
+    // See the queries above. Use LIKE for case-insensitive matching.
+    $select = $this->connection->select('url_alias')
+      ->fields('url_alias', ['alias'])
+      ->condition('source', $source, 'LIKE');
     if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      unset($args[':langcode']);
-      $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode = :langcode_undetermined ORDER BY pid DESC", $args)->fetchField();
+      array_pop($langcode_list);
     }
     elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args)->fetchField();
+      $select->orderBy('langcode', 'DESC');
     }
     else {
-      $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid DESC", $args)->fetchField();
+      $select->orderBy('langcode', 'ASC');
     }
 
-    return $alias;
+    $select->orderBy('pid', 'DESC');
+    $select->condition('langcode', $langcode_list, 'IN');
+    return $select->execute()->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function lookupPathSource($path, $langcode) {
-    $args = array(
-      ':alias' => $path,
-      ':langcode' => $langcode,
-      ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    );
-    // See the queries above.
+    $alias = $this->connection->escapeLike($path);
+    $langcode_list = [$langcode, LanguageInterface::LANGCODE_NOT_SPECIFIED];
+
+    // See the queries above. Use LIKE for case-insensitive matching.
+    $select = $this->connection->select('url_alias')
+      ->fields('url_alias', ['source'])
+      ->condition('alias', $alias, 'LIKE');
     if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      unset($args[':langcode']);
-      $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode = :langcode_undetermined ORDER BY pid DESC", $args);
+      array_pop($langcode_list);
     }
     elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args);
+      $select->orderBy('langcode', 'DESC');
     }
     else {
-      $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid DESC", $args);
+      $select->orderBy('langcode', 'ASC');
     }
 
-    return $result->fetchField();
+    $select->orderBy('pid', 'DESC');
+    $select->condition('langcode', $langcode_list, 'IN');
+    return $select->execute()->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function aliasExists($alias, $langcode, $source = NULL) {
+    // Use LIKE and NOT LIKE for case-insensitive matching.
     $query = $this->connection->select('url_alias')
-      ->condition('alias', $alias)
+      ->condition('alias', $this->connection->escapeLike($alias), 'LIKE')
       ->condition('langcode', $langcode);
     if (!empty($source)) {
-      $query->condition('source', $source, '<>');
+      $query->condition('source', $this->connection->escapeLike($source), 'NOT LIKE');
     }
     $query->addExpression('1');
     $query->range(0, 1);

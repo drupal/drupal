@@ -180,8 +180,22 @@ abstract class PathFormBase extends FormBase {
     $langcode = $form_state->getValue('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
     if ($this->aliasStorage->aliasExists($alias, $langcode, $this->path['source'])) {
-      $form_state->setErrorByName('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
+      $stored_alias = $this->aliasStorage->load(['alias' => $alias, 'langcode' => $langcode]);
+      if ($stored_alias['alias'] !== $alias) {
+        // The alias already exists with different capitalization as the default
+        // implementation of AliasStorageInterface::aliasExists is
+        // case-insensitive.
+        $form_state->setErrorByName('alias', t('The alias %alias could not be added because it is already in use in this language with different capitalization: %stored_alias.', [
+          '%alias' => $alias,
+          '%stored_alias' => $stored_alias['alias'],
+        ]));
+      }
+      else {
+        $form_state->setErrorByName('alias', t('The alias %alias is already in use in this language.', ['%alias' => $alias]));
+      }
     }
+
+
     if (!$this->pathValidator->isValid(trim($source, '/'))) {
       $form_state->setErrorByName('source', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $source)));
     }
