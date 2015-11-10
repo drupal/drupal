@@ -18,7 +18,7 @@ abstract class StyleTestBase extends ViewKernelTestBase {
   /**
    * Stores the SimpleXML representation of the output.
    *
-   * @var SimpleXMLElement
+   * @var \SimpleXMLElement
    */
   protected $elements;
 

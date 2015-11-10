@@ -469,4 +469,100 @@ class ViewExecutableTest extends UnitTestCase {
     return array($view, $display);
   }
 
+  /**
+   * @covers ::setItemsPerPage
+   * @covers ::getItemsPerPage
+   */
+  public function testSetItemsPerPageBeforePreRender() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    $view->setItemsPerPage(12);
+    $this->assertEquals(12, $view->getItemsPerPage());
+    $this->assertContains('items_per_page:12', $view->element['#cache']['keys']);
+  }
+
+  /**
+   * @covers ::setItemsPerPage
+   * @covers ::getItemsPerPage
+   */
+  public function testSetItemsPerPageDuringPreRender() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    $elements = &$view->element;
+    $elements['#cache'] += ['keys' => []];
+    $elements['#pre_rendered'] = TRUE;
+
+    $view->setItemsPerPage(12);
+    $this->assertEquals(12, $view->getItemsPerPage());
+    $this->assertNotContains('items_per_page:12', $view->element['#cache']['keys']);
+  }
+
+  /**
+   * @covers ::setOffset
+   * @covers ::getOffset
+   */
+  public function testSetOffsetBeforePreRender() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    $view->setOffset(12);
+    $this->assertEquals(12, $view->getOffset());
+    $this->assertContains('offset:12', $view->element['#cache']['keys']);
+  }
+
+  /**
+   * @covers ::setOffset
+   * @covers ::getOffset
+   */
+  public function testSetOffsetDuringPreRender() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    $elements = &$view->element;
+    $elements['#cache'] += ['keys' => []];
+    $elements['#pre_rendered'] = TRUE;
+
+    $view->setOffset(12);
+    $this->assertEquals(12, $view->getOffset());
+    $this->assertNotContains('offset:12', $view->element['#cache']['keys']);
+  }
+
+  /**
+   * @covers ::setCurrentPage
+   * @covers ::getCurrentPage
+   */
+  public function testSetCurrentPageBeforePreRender() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    $view->setCurrentPage(12);
+    $this->assertEquals(12, $view->getCurrentPage());
+    $this->assertContains('page:12', $view->element['#cache']['keys']);
+  }
+
+  /**
+   * @covers ::setCurrentPage
+   * @covers ::getCurrentPage
+   */
+  public function testSetCurrentPageDuringPreRender() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    $elements = &$view->element;
+    $elements['#cache'] += ['keys' => []];
+    $elements['#pre_rendered'] = TRUE;
+
+    $view->setCurrentPage(12);
+    $this->assertEquals(12, $view->getCurrentPage());
+    $this->assertNotContains('page:12', $view->element['#cache']['keys']);
+  }
+
 }
