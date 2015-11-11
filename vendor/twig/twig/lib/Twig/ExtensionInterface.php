@@ -22,13 +22,15 @@ interface Twig_ExtensionInterface
      * This is where you can load some file that contains filter functions for instance.
      *
      * @param Twig_Environment $environment The current Twig_Environment instance
+     *
+     * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_InitRuntimeInterace instead
      */
     public function initRuntime(Twig_Environment $environment);
 
     /**
      * Returns the token parser instances to add to the existing list.
      *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+     * @return Twig_TokenParserInterface[]
      */
     public function getTokenParsers();
 
@@ -42,21 +44,21 @@ interface Twig_ExtensionInterface
     /**
      * Returns a list of filters to add to the existing list.
      *
-     * @return array An array of filters
+     * @return Twig_SimpleFilter[]
      */
     public function getFilters();
 
     /**
      * Returns a list of tests to add to the existing list.
      *
-     * @return array An array of tests
+     * @return Twig_SimpleTest[]
      */
     public function getTests();
 
     /**
      * Returns a list of functions to add to the existing list.
      *
-     * @return array An array of functions
+     * @return Twig_SimpleFunction[]
      */
     public function getFunctions();
 
@@ -71,6 +73,8 @@ interface Twig_ExtensionInterface
      * Returns a list of global variables to add to the existing list.
      *
      * @return array An array of global variables
+     *
+     * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_GlobalsInterface instead
      */
     public function getGlobals();
 

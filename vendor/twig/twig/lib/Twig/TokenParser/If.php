@@ -25,13 +25,6 @@
  */
 class Twig_TokenParser_If extends Twig_TokenParser
 {
-    /**
-     * Parses a token and returns a node.
-     *
-     * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
-     */
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
@@ -63,7 +56,7 @@ class Twig_TokenParser_If extends Twig_TokenParser
                     break;
 
                 default:
-                    throw new Twig_Error_Syntax(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d)', $lineno), $stream->getCurrent()->getLine(), $stream->getFilename());
+                    throw new Twig_Error_Syntax(sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d).', $lineno), $stream->getCurrent()->getLine(), $stream->getFilename());
             }
         }
 
@@ -82,11 +75,6 @@ class Twig_TokenParser_If extends Twig_TokenParser
         return $token->test(array('endif'));
     }
 
-    /**
-     * Gets the tag name associated with this token parser.
-     *
-     * @return string The tag name
-     */
     public function getTag()
     {
         return 'if';
