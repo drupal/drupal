@@ -80,5 +80,14 @@ class HistoryTimestampTest extends ViewTestBase {
     $this->executeView($view);
     $this->assertEqual(count($view->result), 1);
     $this->assertIdenticalResultset($view, array(array('nid' => $nodes[0]->id())), $column_map);
+
+    // Install Comment module and make sure that content types without comment
+    // field will not break the view.
+    // See \Drupal\history\Plugin\views\filter\HistoryUserTimestamp::query()
+    \Drupal::service('module_installer')->install(['comment']);
+    $view = Views::getView('test_history');
+    $view->setDisplay('page_2');
+    $this->executeView($view);
+
   }
 }
