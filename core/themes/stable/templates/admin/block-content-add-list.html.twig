@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Theme override to present a list of custom block types.
+ *
+ * Available variables:
+ * - types: A collection of all the available custom block types.
+ *   Each block type contains the following:
+ *   - link: A link to add a block of this type.
+ *   - description: A description of this custom block type.
+ *
+ * @see template_preprocess_block_content_add_list()
+ */
+#}
+{% spaceless %}
+  <dl>
+    {% for type in types %}
+      <dt>{{ type.link }}</dt>
+      <dd>{{ type.description }}</dd>
+    {% endfor %}
+  </dl>
+{% endspaceless %}

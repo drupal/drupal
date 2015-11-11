@@ -44,12 +44,12 @@ libraries-override:
   core/drupal.dropbutton:
     css:
       component:
-        misc/dropbutton/dropbutton.css: /themes/my_theme/css/dropbutton.css
+        /core/themes/stable/css/core/dropbutton/dropbutton.css: /themes/my_theme/css/dropbutton.css
   # Use stream wrappers.
   core/drupal.vertical-tabs:
     css:
       component:
-        misc/vertical-tabs.css: public://my_css/vertical-tabs.css
+        /core/themes/stable/css/core/vertical-tabs.css: public://my_css/vertical-tabs.css
   # Use a protocol-relative URI.
   core/jquery.ui:
     css:

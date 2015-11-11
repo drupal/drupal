@@ -1,0 +1,74 @@
+
+/**
+ * Image style configuration pages.
+ */
+.image-style-new,
+.image-style-new div {
+  display: inline;
+}
+.image-style-preview .preview-image-wrapper {
+  float: left;
+  padding-bottom: 2em;
+  text-align: center;
+  top: 50%;
+  width: 48%;
+}
+.image-style-preview .preview-image {
+  margin: auto;
+  position: relative;
+}
+.image-style-preview .preview-image .width {
+  border: 1px solid #666;
+  border-top: none;
+  bottom: -6px;
+  height: 2px;
+  left: -1px;
+  position: absolute;
+  box-sizing: content-box;
+}
+.image-style-preview .preview-image .width span {
+  position: relative;
+  top: 4px;
+}
+.image-style-preview .preview-image .height {
+  border: 1px solid #666;
+  border-left: none;
+  position: absolute;
+  right: -6px;
+  top: -1px;
+  width: 2px;
+  box-sizing: content-box;
+}
+.image-style-preview .preview-image .height span {
+  height: 2em;
+  left: 10px;
+  margin-top: -1em;
+  position: absolute;
+  top: 50%;
+}
+
+/**
+ * Improve image style preview on narrow viewports.
+ */
+@media screen and (max-width: 470px) {
+  .image-style-preview .preview-image-wrapper {
+    float: none;
+    margin-bottom: 1em;
+  }
+  .image-style-preview .preview-image-wrapper:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/**
+ * Image anchor element.
+ */
+.image-anchor {
+  width: auto;
+}
+.image-anchor tr {
+  background: none;
+}
+.image-anchor td {
+  border: 1px solid #ccc;
+}

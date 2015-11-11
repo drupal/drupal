@@ -1,0 +1,93 @@
+
+/* Test Table */
+#simpletest-form-table th.select-all {
+  width: 1em;
+}
+th.simpletest-test-label {
+  width: 40%;
+}
+
+.simpletest-image {
+  display: inline-block;
+  cursor: pointer;
+  width: 1em;
+}
+.simpletest-group-label label {
+  display: inline;
+  font-weight: bold;
+}
+.simpletest-test-label label {
+  margin-left: 1em; /* LTR */
+}
+.simpletest-test-description .description {
+  margin: 0;
+}
+#simpletest-form-table tr td {
+  background-color: white;
+  color: #494949;
+}
+#simpletest-form-table tr.simpletest-group td {
+  background-color: #edf5fa;
+  color: #494949;
+}
+
+table#simpletest-form-table tr.simpletest-group label {
+  display: inline;
+}
+
+div.message > div.item-list {
+  font-weight: normal;
+}
+
+div.simpletest-pass {
+  color: #33a333;
+}
+.simpletest-fail {
+  color: #981010;
+}
+
+tr.simpletest-pass,
+tr.simpletest-pass.odd {
+  background-color: #b6ffb6;
+}
+tr.simpletest-pass.even {
+  background-color: #9bff9b;
+}
+tr.simpletest-fail,
+tr.simpletest-fail.odd {
+  background-color: #ffc9c9;
+}
+tr.simpletest-fail.even {
+  background-color: #ffacac;
+}
+tr.simpletest-exception,
+tr.simpletest-exception.odd {
+  background-color: #f4ea71;
+}
+tr.simpletest-exception.even {
+  background-color: #f5e742;
+}
+tr.simpletest-debug,
+tr.simpletest-debug.odd {
+  background-color: #eee;
+}
+tr.simpletest-debug.even {
+  background-color: #fff;
+}
+
+a.simpletest-collapse {
+  height: 0;
+  width: 0;
+  top: -99em;
+  position: absolute;
+}
+a.simpletest-collapse:focus,
+a.simpletest-collapse:hover {
+  font-size: 80%;
+  top: 0px;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  position: relative;
+  z-index: 1000;
+}

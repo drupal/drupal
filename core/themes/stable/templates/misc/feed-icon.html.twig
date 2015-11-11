@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme override for a feed icon.
+ *
+ * Available variables:
+ * - url: An internal system path or a fully qualified external URL of the feed.
+ * - attributes: Remaining HTML attributes for the feed link.
+ *   - title: A descriptive title of the feed link.
+ *   - class: HTML classes to be applied to the feed link.
+ */
+#}
+<a href="{{ url }}"{{ attributes.addClass('feed-icon') }}>
+  {{ 'Subscribe to @title'|t({'@title': title}) }}
+</a>

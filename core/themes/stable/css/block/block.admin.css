@@ -1,0 +1,42 @@
+/* Block listing page */
+.region-title__action {
+  display: inline-block;
+  margin-left: 1em; /* LTR */
+}
+[dir="rtl"] .region-title__action {
+  margin-left: 0;
+  margin-right: 1em;
+}
+
+/* Block demo mode */
+.block-region {
+  background-color: #ff6;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 3px;
+}
+a.block-demo-backlink,
+a.block-demo-backlink:link,
+a.block-demo-backlink:visited {
+  background-color: #b4d7f0;
+  border-radius: 0 0 10px 10px;
+  color: #000;
+  font-family: "Lucida Grande", Verdana, sans-serif;
+  font-size: small;
+  line-height: 20px;
+  left: 20px; /*LTR*/
+  padding: 5px 10px;
+  position: fixed;
+  z-index: 499;
+}
+a.block-demo-backlink:hover {
+  text-decoration: underline;
+}
+
+/* Configure block form - Block description */
+.block-form .form-item-settings-admin-label label {
+  display: inline;
+}
+.block-form .form-item-settings-admin-label label:after {
+  content: ':';
+}

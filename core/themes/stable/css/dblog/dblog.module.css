@@ -1,0 +1,37 @@
+/**
+ * @file
+ * Admin styles for the Database Logging module.
+ */
+.dblog-filter-form .form-item-type,
+.dblog-filter-form .form-item-severity {
+  display: inline-block;
+  margin: .1em .9em .1em .1em; /* LTR */
+  max-width: 30%;
+}
+[dir="rtl"] .dblog-filter-form .form-item-type,
+[dir="rtl"] .dblog-filter-form .form-item-severity {
+  margin: .1em .1em .1em .9em;
+}
+.dblog-filter-form .form-actions {
+  display: inline-block;
+  padding: 3ex 0 0;
+  vertical-align: top;
+}
+.admin-dblog .icon,
+.admin-dblog .dblog-warning .icon,
+.admin-dblog .dblog-error .icon,
+.admin-dblog .dblog-critical .icon,
+.admin-dblog .dblog-alert .icon,
+.admin-dblog .dblog-emergency .icon {
+  background: no-repeat center;
+  width: 16px;
+}
+.admin-dblog .dblog-warning .icon {
+  background-image: url(../../images/core/icons/e29700/warning.svg);
+}
+.admin-dblog .dblog-error .icon,
+.admin-dblog .dblog-critical .icon,
+.admin-dblog .dblog-alert .icon,
+.admin-dblog .dblog-emergency .icon {
+  background-image: url(../../images/core/icons/e32700/error.svg);
+}
