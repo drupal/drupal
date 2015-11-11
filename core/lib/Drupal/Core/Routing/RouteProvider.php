@@ -246,7 +246,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * @return array
    *   An array of outlines that could match the specified path parts.
    */
-  public function getCandidateOutlines(array $parts) {
+  protected function getCandidateOutlines(array $parts) {
     $number_parts = count($parts);
     $ancestors = array();
     $length = $number_parts - 1;
@@ -355,7 +355,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
   /**
    * Comparison function for usort on routes.
    */
-  public function routeProviderRouteCompare(array $a, array $b) {
+  protected function routeProviderRouteCompare(array $a, array $b) {
     if ($a['fit'] == $b['fit']) {
       return strcmp($a['name'], $b['name']);
     }
