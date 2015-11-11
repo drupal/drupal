@@ -1064,6 +1064,14 @@ function node_query_node_access_alter(AlterableInterface $query) {
 
   // Update the query for the given storage method.
   \Drupal::service('node.grant_storage')->alterQuery($query, $tables, $op, $account, $base_table);
+
+  // Bubble the 'user.node_grants:$op' cache context to the current render
+  // context.
+  $renderer = \Drupal::service('renderer');
+  if ($renderer->hasRenderContext()) {
+    $build = ['#cache' => ['contexts' => ['user.node_grants:' . $op]]];
+    $renderer->render($build);
+  }
 }
 
 /**
