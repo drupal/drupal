@@ -40,8 +40,6 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *   default_widget = "entity_reference_autocomplete",
  *   default_formatter = "entity_reference_label",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
- *   default_widget = "entity_reference_autocomplete",
- *   default_formatter = "entity_reference_label",
  *   constraints = {"ValidReference" = {}}
  * )
  */
