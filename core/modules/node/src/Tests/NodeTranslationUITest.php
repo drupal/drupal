@@ -94,7 +94,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $language = ConfigurableLanguage::load($langcode);
     $values[$langcode] = array('title' => array(array('value' => $this->randomMachineName())));
 
-    $add_url = Url::fromRoute('content_translation.translation_add_' . $entity->getEntityTypeId(), [
+    $entity_type_id = $entity->getEntityTypeId();
+    $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
       'target' => $langcode

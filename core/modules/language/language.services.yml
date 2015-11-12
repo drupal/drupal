@@ -9,7 +9,7 @@ services:
       - [initLanguageManager]
   language.config_subscriber:
     class: Drupal\language\EventSubscriber\ConfigSubscriber
-    arguments: ['@language_manager', '@language.default', '@config.factory']
+    arguments: ['@language_manager', '@language.default', '@config.factory', '@language_negotiator']
     tags:
       - { name: event_subscriber }
   language.config_factory_override:

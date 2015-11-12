@@ -652,7 +652,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $source = $form_state->getValue(array('source_langcode', 'source'));
 
     $entity_type_id = $entity->getEntityTypeId();
-    $form_state->setRedirect('content_translation.translation_add_' . $entity_type_id, array(
+    $form_state->setRedirect("entity.$entity_type_id.content_translation_add", array(
       $entity_type_id => $entity->id(),
       'source' => $source,
       'target' => $form_object->getFormLangcode($form_state),
@@ -689,7 +689,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $form_state->setRedirectUrl($entity->urlInfo('delete-form'));
     }
     else {
-      $form_state->setRedirect('content_translation.translation_delete_' . $entity_type_id, [
+      $form_state->setRedirect("entity.$entity_type_id.content_translation_delete", [
         $entity_type_id => $entity->id(),
         'language' => $form_object->getFormLangcode($form_state),
       ]);

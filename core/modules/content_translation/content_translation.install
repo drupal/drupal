@@ -29,3 +29,19 @@ function content_translation_enable() {
   $message = t('<a href=":settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
   drupal_set_message($message, 'warning');
 }
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * Rebuild the routes as the content translation routes have now new names.
+ */
+function content_translation_update_8001() {
+  \Drupal::service('router.builder')->rebuild();
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
+ */

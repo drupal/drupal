@@ -14,6 +14,8 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\language\ConfigurableLanguageManager;
+use Drupal\language\HttpKernel\PathProcessorLanguage;
+use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -43,6 +45,20 @@ class ConfigSubscriber implements EventSubscriberInterface {
   protected $configFactory;
 
   /**
+   * The language negotiator.
+   *
+   * @var \Drupal\language\LanguageNegotiatorInterface
+   */
+  protected $languageNegotiator;
+
+  /**
+   * The language path processor.
+   *
+   * @var \Drupal\language\HttpKernel\PathProcessorLanguage
+   */
+  protected $pathProcessorLanguage;
+
+  /**
    * Constructs a new class object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -51,11 +67,14 @@ class ConfigSubscriber implements EventSubscriberInterface {
    *   The default language.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
+   * @param \Drupal\language\LanguageNegotiatorInterface $language_negotiator
+   *   The language negotiator.
    */
-  public function __construct(LanguageManagerInterface $language_manager, LanguageDefault $language_default, ConfigFactoryInterface $config_factory) {
+  public function __construct(LanguageManagerInterface $language_manager, LanguageDefault $language_default, ConfigFactoryInterface $config_factory, LanguageNegotiatorInterface $language_negotiator) {
     $this->languageManager = $language_manager;
     $this->languageDefault = $language_default;
     $this->configFactory = $config_factory;
+    $this->languageNegotiator = $language_negotiator;
   }
 
   /**
@@ -102,6 +121,25 @@ class ConfigSubscriber implements EventSubscriberInterface {
       // Trigger a container rebuild on the next request by invalidating it.
       ConfigurableLanguageManager::rebuildServices();
     }
+    elseif ($saved_config->getName() == 'language.types' && $event->isChanged('negotiation')) {
+      // If the negotiation configuration changed the language negotiator and
+      // the language path processor have to be reset so that they regenerate
+      // the method instances and also sort them accordingly to the new config.
+      $this->languageNegotiator->reset();
+      if (isset($this->pathProcessorLanguage)) {
+        $this->pathProcessorLanguage->reset();
+      }
+    }
+  }
+
+  /**
+   * Injects the language path processors on multilingual site configuration.
+   *
+   * @param \Drupal\language\HttpKernel\PathProcessorLanguage $path_processor_language
+   *   The language path processor.
+   */
+  public function setPathProcessorLanguage(PathProcessorLanguage $path_processor_language) {
+    $this->pathProcessorLanguage = $path_processor_language;
   }
 
   /**

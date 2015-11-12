@@ -309,6 +309,9 @@ class UrlGenerator implements UrlGeneratorInterface {
     $name = $this->getRouteDebugMessage($name);
     $this->processRoute($name, $route, $parameters, $generated_url);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters, $query_params);
+    // Outbound path processors might need the route object for the path, e.g.
+    // to get the path pattern.
+    $options['route'] = $route;
     $path = $this->processPath($path, $options, $generated_url);
 
     if (!empty($options['prefix'])) {

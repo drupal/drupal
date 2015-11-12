@@ -53,7 +53,7 @@ function content_translation_help($route_name, RouteMatchInterface $route_match)
  */
 function content_translation_module_implements_alter(&$implementations, $hook) {
   switch ($hook) {
-    // Move some of our hook implementations to the end of the list.
+    // Move our hook_entity_type_alter() implementation to the end of the list.
     case 'entity_type_alter':
       $group = $implementations['content_translation'];
       unset($implementations['content_translation']);
@@ -140,7 +140,11 @@ function content_translation_entity_type_alter(array &$entity_types) {
       if ($entity_type->hasLinkTemplate('canonical')) {
         // Provide default route names for the translation paths.
         if (!$entity_type->hasLinkTemplate('drupal:content-translation-overview')) {
-          $entity_type->setLinkTemplate('drupal:content-translation-overview', $entity_type->getLinkTemplate('canonical') . '/translations');
+          $translations_path = $entity_type->getLinkTemplate('canonical') . '/translations';
+          $entity_type->setLinkTemplate('drupal:content-translation-overview', $translations_path);
+          $entity_type->setLinkTemplate('drupal:content-translation-add', $translations_path . '/add/{source}/{target}');
+          $entity_type->setLinkTemplate('drupal:content-translation-edit', $translations_path . '/edit/{language}');
+          $entity_type->setLinkTemplate('drupal:content-translation-delete', $translations_path . '/delete/{language}');
         }
         // @todo Remove this as soon as menu access checks rely on the
         //   controller. See https://www.drupal.org/node/2155787.
