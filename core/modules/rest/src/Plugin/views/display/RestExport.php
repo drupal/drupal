@@ -151,7 +151,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    * {@inheritdoc}
    */
   public function usesExposed() {
-    return FALSE;
+    return TRUE;
   }
 
   /**
