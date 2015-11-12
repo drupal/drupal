@@ -87,6 +87,16 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
+   * Tests the entityTypeManager() method.
+   *
+   * @covers ::entityTypeManager
+   */
+  public function testEntityTypeManager() {
+    $this->setMockContainerService('entity_type.manager');
+    $this->assertNotNull(\Drupal::entityTypeManager());
+  }
+
+  /**
    * Tests the database() method.
    *
    * @covers ::database

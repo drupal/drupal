@@ -72,9 +72,24 @@ abstract class Entity implements EntityInterface {
    * Gets the entity manager.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal::entityTypeManager() instead in most cases. If the needed
+   *   method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
+   *   deprecated \Drupal\Core\Entity\EntityManager to find the
+   *   correct interface or service.
    */
   protected function entityManager() {
     return \Drupal::entityManager();
+  }
+
+  /**
+   * Gets the entity type manager.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected function entityTypeManager() {
+    return \Drupal::entityTypeManager();
   }
 
   /**

@@ -252,9 +252,25 @@ class Drupal {
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
    *   The entity manager service.
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal::entityTypeManager() instead in most cases. If the needed
+   *   method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
+   *   deprecated \Drupal\Core\Entity\EntityManager to find the
+   *   correct interface or service.
    */
   public static function entityManager() {
     return static::getContainer()->get('entity.manager');
+  }
+
+  /**
+   * Retrieves the entity type manager.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
+   */
+  public static function entityTypeManager() {
+    return static::getContainer()->get('entity_type.manager');
   }
 
   /**
