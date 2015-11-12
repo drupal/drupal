@@ -735,9 +735,36 @@
     }
     $(this.element).prop('disabled', false);
 
+    // Save element's ancestors tree so if the element is removed from the dom
+    // we can try to refocus one of its parents. Using addBack reverse the
+    // result array, meaning that index 0 is the highest parent in the hierarchy
+    // in this situation it is usually a <form> element.
+    var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
+
+    // Track if any command is altering the focus so we can avoid changing the
+    // focus set by the Ajax command.
+    var focusChanged = false;
     for (var i in response) {
       if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
         this.commands[response[i].command](this, response[i], status);
+        if (response[i].command === 'invoke' && response[i].method === 'focus') {
+          focusChanged = true;
+        }
+      }
+    }
+
+    // If the focus hasn't be changed by the ajax commands, try to refocus the
+    // triggering element or one of its parents if that element does not exist
+    // anymore.
+    if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
+      var target = false;
+
+      for (var n = elementParents.length - 1; !target && n > 0; n--) {
+        target = document.querySelector('[data-drupal-selector="' + elementParents[n].getAttribute('data-drupal-selector') + '"]');
+      }
+
+      if (target) {
+        $(target).trigger('focus');
       }
     }
 
