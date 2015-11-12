@@ -177,6 +177,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
       // Add the theme wrapper for outer markup.
       // Allow menu-specific theme overrides.
       $build['#theme'] = 'menu__' . strtr($menu_name, '-', '_');
+      $build['#menu_name'] = $menu_name;
       $build['#items'] = $items;
       // Set cache tag.
       $build['#cache']['tags'][] = 'config:system.menu.' . $menu_name;

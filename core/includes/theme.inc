@@ -1778,7 +1778,7 @@ function drupal_common_theme() {
     ),
     // From menu.inc.
     'menu' => array(
-      'variables' => array('items' => array(), 'attributes' => array()),
+      'variables' => array('menu_name' => NULL, 'items' => array(), 'attributes' => array()),
     ),
     'menu_local_task' => array(
       'render element' => 'element',
