@@ -949,14 +949,14 @@ services:
     tags:
       - { name: route_enhancer }
       - { name: event_subscriber }
+  route_enhancer.form:
+    class: Drupal\Core\Routing\Enhancer\FormRouteEnhancer
+    tags:
+      - { name: route_enhancer }
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     tags:
       - { name: route_enhancer, priority: 20 }
-  route_content_controller_subscriber:
-    class: Drupal\Core\EventSubscriber\ContentControllerSubscriber
-    tags:
-      - { name: event_subscriber }
   route_special_attributes_subscriber:
     class: Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
     tags:
