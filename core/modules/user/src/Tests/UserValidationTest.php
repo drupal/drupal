@@ -176,7 +176,7 @@ class UserValidationTest extends KernelTestBase {
     $user->roles[1]->target_id = 'unknown_role';
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1);
-    $this->assertEqual($violations[0]->getPropertyPath(), 'roles.1');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'roles.1.target_id');
     $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%entity_type: %name) does not exist.', array('%entity_type' => 'user_role', '%name' => 'unknown_role')));
   }
 

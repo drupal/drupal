@@ -113,7 +113,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $entity->{$this->fieldName}->target_id = $referenced_entity->id();
     $violations = $entity->{$this->fieldName}->validate();
     $this->assertEqual($violations->count(), 1, 'Validation throws a violation.');
-    $this->assertEqual($violations[0]->getMessage(), t('The entity must be of bundle %bundle.', array('%bundle' => $this->bundle)));
+    $this->assertEqual($violations[0]->getMessage(), t('This entity (%type: %id) cannot be referenced.', array('%type' => $this->referencedEntityType, '%id' => $referenced_entity->id())));
   }
 
   /**

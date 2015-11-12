@@ -47,6 +47,7 @@ class FileItemValidationTest extends KernelTestBase {
 
     $this->user = User::create([
       'name' => 'username',
+      'status' => 1,
     ]);
     $this->user->save();
   }
@@ -90,6 +91,7 @@ class FileItemValidationTest extends KernelTestBase {
     $file = File::create([
       'uri' => 'vfs://drupal_root/sites/default/files/test.txt',
     ]);
+    $file->setPermanent();
     $file->save();
 
     $entity_test = EntityTest::create([

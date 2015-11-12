@@ -48,4 +48,32 @@ class NodeSelection extends DefaultSelection {
     return $query;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
+    $node = parent::createNewEntity($entity_type_id, $bundle, $label, $uid);
+
+    // In order to create a referenceable node, it needs to published.
+    /** @var \Drupal\node\NodeInterface $node */
+    $node->setPublished(TRUE);
+
+    return $node;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableNewEntities(array $entities) {
+    $entities = parent::validateReferenceableNewEntities($entities);
+    // Mirror the conditions checked in buildEntityQuery().
+    if (!$this->currentUser->hasPermission('bypass node access') && !count($this->moduleHandler->getImplementations('node_grants'))) {
+      $entities = array_filter($entities, function ($node) {
+        /** @var \Drupal\node\NodeInterface $node */
+        return $node->isPublished();
+      });
+    }
+    return $entities;
+  }
+
 }

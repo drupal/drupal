@@ -39,7 +39,7 @@ class CommentValidationTest extends EntityUnitTestBase {
    */
   public function testValidation() {
     // Add a user.
-    $user = User::create(array('name' => 'test'));
+    $user = User::create(array('name' => 'test', 'status' => TRUE));
     $user->save();
 
     // Add comment type.

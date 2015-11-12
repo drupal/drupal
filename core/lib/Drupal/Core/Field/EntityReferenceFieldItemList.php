@@ -18,6 +18,16 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
   /**
    * {@inheritdoc}
    */
+  public function getConstraints() {
+    $constraints = parent::getConstraints();
+    $constraint_manager = $this->getTypedDataManager()->getValidationConstraintManager();
+    $constraints[] = $constraint_manager->create('ValidReference', []);
+    return $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function referencedEntities() {
     if (empty($this->list)) {
       return array();

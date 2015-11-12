@@ -43,7 +43,7 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *     },
  *   },
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}, "FileValidation" = {}}
+ *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
  * )
  */
 class ImageItem extends FileItem {
@@ -346,7 +346,7 @@ class ImageItem extends FileItem {
       if ($path = $random->image(drupal_realpath($destination), $min_resolution, $max_resolution)) {
         $image = File::create();
         $image->setFileUri($path);
-        // $image->setOwner($account);
+        $image->setOwnerId(\Drupal::currentUser()->id());
         $image->setMimeType('image/' . pathinfo($path, PATHINFO_EXTENSION));
         $image->setFileName(drupal_basename($path));
         $destination_dir = static::doGetUploadLocation($settings);

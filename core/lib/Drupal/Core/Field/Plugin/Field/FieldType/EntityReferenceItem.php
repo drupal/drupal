@@ -40,7 +40,6 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *   default_widget = "entity_reference_autocomplete",
  *   default_formatter = "entity_reference_label",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
- *   constraints = {"ValidReference" = {}}
  * )
  */
 class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
@@ -161,20 +160,6 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     foreach ($constraints as $key => $constraint) {
       if ($constraint instanceof AllowedValuesConstraint) {
         unset($constraints[$key]);
-      }
-    }
-    list($current_handler) = explode(':', $this->getSetting('handler'), 2);
-    if ($current_handler === 'default') {
-      $handler_settings = $this->getSetting('handler_settings');
-      if (isset($handler_settings['target_bundles'])) {
-        $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
-        $constraints[] = $constraint_manager->create('ComplexData', [
-          'entity' => [
-            'Bundle' => [
-              'bundle' => $handler_settings['target_bundles'],
-            ],
-          ],
-        ]);
       }
     }
     return $constraints;

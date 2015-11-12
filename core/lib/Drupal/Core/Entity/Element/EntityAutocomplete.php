@@ -10,10 +10,10 @@ namespace Drupal\Core\Entity\Element;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Textfield;
 use Drupal\Core\Site\Settings;
-use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an entity autocomplete form element.
@@ -147,7 +147,7 @@ class EntityAutocomplete extends Textfield {
         'handler_settings' => $element['#selection_settings'],
       );
       $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($options);
-      $autocreate = (bool) $element['#autocreate'];
+      $autocreate = (bool) $element['#autocreate'] && $handler instanceof SelectionWithAutocreateInterface;
 
       $input_values = $element['#tags'] ? Tags::explode($element['#value']) : array($element['#value']);
       foreach ($input_values as $input) {
@@ -167,13 +167,14 @@ class EntityAutocomplete extends Textfield {
           // Auto-create item. See an example of how this is handled in
           // \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::presave().
           $value[] = array(
-            'entity' => static::createNewEntity($element['#target_type'], $element['#autocreate']['bundle'], $input, $element['#autocreate']['uid'])
+            'entity' => $handler->createNewEntity($element['#target_type'], $element['#autocreate']['bundle'], $input, $element['#autocreate']['uid']),
           );
         }
       }
 
       // Check that the referenced entities are valid, if needed.
-      if ($element['#validate_reference'] && !$autocreate && !empty($value)) {
+      if ($element['#validate_reference'] && !empty($value)) {
+        // Validate existing entities.
         $ids = array_reduce($value, function ($return, $item) {
           if (isset($item['target_id'])) {
             $return[] = $item['target_id'];
@@ -187,6 +188,30 @@ class EntityAutocomplete extends Textfield {
             foreach ($invalid_ids as $invalid_id) {
               $form_state->setError($element, t('The referenced entity (%type: %id) does not exist.', array('%type' => $element['#target_type'], '%id' => $invalid_id)));
             }
+          }
+        }
+
+        // Validate newly created entities.
+        $new_entities = array_reduce($value, function ($return, $item) {
+          if (isset($item['entity'])) {
+            $return[] = $item['entity'];
+          }
+          return $return;
+        });
+
+        if ($new_entities) {
+          if ($autocreate) {
+            $valid_new_entities = $handler->validateReferenceableNewEntities($new_entities);
+            $invalid_new_entities = array_diff_key($new_entities, $valid_new_entities);
+          }
+          else {
+            // If the selection handler does not support referencing newly
+            // created entities, all of them should be invalidated.
+            $invalid_new_entities = $new_entities;
+          }
+
+          foreach ($invalid_new_entities as $entity) {
+            $form_state->setError($element, t('This entity (%type: %label) cannot be referenced.', array('%type' => $element['#target_type'], '%label' => $entity->label())));
           }
         }
       }
@@ -308,39 +333,6 @@ class EntityAutocomplete extends Textfield {
     }
 
     return $match;
-  }
-
-  /**
-   * Creates a new entity from a label entered in the autocomplete input.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param string $bundle
-   *   The bundle name.
-   * @param string $label
-   *   The entity label.
-   * @param int $uid
-   *   The entity owner ID.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   */
-  protected static function createNewEntity($entity_type_id, $bundle, $label, $uid) {
-    $entity_manager = \Drupal::entityManager();
-
-    $entity_type = $entity_manager->getDefinition($entity_type_id);
-    $bundle_key = $entity_type->getKey('bundle');
-    $label_key = $entity_type->getKey('label');
-
-    $entity = $entity_manager->getStorage($entity_type_id)->create(array(
-      $bundle_key => $bundle,
-      $label_key => $label,
-    ));
-
-    if ($entity instanceof EntityOwnerInterface) {
-      $entity->setOwnerId($uid);
-    }
-
-    return $entity;
   }
 
 }

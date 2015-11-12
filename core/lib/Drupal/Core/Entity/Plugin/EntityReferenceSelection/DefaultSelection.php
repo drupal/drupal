@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,6 +19,7 @@ use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,7 +42,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   deriver = "Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver"
  * )
  */
-class DefaultSelection extends PluginBase implements SelectionInterface, ContainerFactoryPluginInterface {
+class DefaultSelection extends PluginBase implements SelectionInterface, SelectionWithAutocreateInterface, ContainerFactoryPluginInterface {
 
   /**
    * The entity manager.
@@ -286,6 +288,38 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Contain
     }
 
     return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $bundle_key = $entity_type->getKey('bundle');
+    $label_key = $entity_type->getKey('label');
+
+    $entity = $this->entityManager->getStorage($entity_type_id)->create(array(
+      $bundle_key => $bundle,
+      $label_key => $label,
+    ));
+
+    if ($entity instanceof EntityOwnerInterface) {
+      $entity->setOwnerId($uid);
+    }
+
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableNewEntities(array $entities) {
+    return array_filter($entities, function ($entity) {
+      if (isset($this->configuration['handler_settings']['target_bundles'])) {
+        return in_array($entity->bundle(), $this->configuration['handler_settings']['target_bundles']);
+      }
+      return TRUE;
+    });
   }
 
   /**

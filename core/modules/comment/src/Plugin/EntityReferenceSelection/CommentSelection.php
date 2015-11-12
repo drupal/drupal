@@ -42,6 +42,34 @@ class CommentSelection extends DefaultSelection {
   /**
    * {@inheritdoc}
    */
+  public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
+    $comment = parent::createNewEntity($entity_type_id, $bundle, $label, $uid);
+
+    // In order to create a referenceable comment, it needs to published.
+    /** @var \Drupal\comment\CommentInterface $comment */
+    $comment->setPublished(TRUE);
+
+    return $comment;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableNewEntities(array $entities) {
+    $entities = parent::validateReferenceableNewEntities($entities);
+    // Mirror the conditions checked in buildEntityQuery().
+    if (!$this->currentUser->hasPermission('administer comments')) {
+      $entities = array_filter($entities, function ($comment) {
+        /** @var \Drupal\comment\CommentInterface $comment */
+        return $comment->isPublished();
+      });
+    }
+    return $entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function entityQueryAlter(SelectInterface $query) {
     $tables = $query->getTables();
     $data_table = 'comment_field_data';
