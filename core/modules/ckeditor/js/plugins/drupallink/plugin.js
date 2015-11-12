@@ -16,8 +16,7 @@
         allowedContent: {
           a: {
             attributes: {
-              '!href': true,
-              'target': true
+              '!href': true
             },
             classes: {}
           }
@@ -97,11 +96,6 @@
                 range.selectNodeContents(text);
               }
 
-              // Ignore a disabled target attribute.
-              if (returnValues.attributes.target === 0) {
-                delete returnValues.attributes.target;
-              }
-
               // Create the new link by applying a style to the new text.
               var style = new CKEDITOR.style({element: 'a', attributes: returnValues.attributes});
               style.type = CKEDITOR.STYLE_INLINE;
@@ -150,8 +144,7 @@
         allowedContent: {
           a: {
             attributes: {
-              '!href': true,
-              'target': true
+              '!href': true
             }
           }
         },
