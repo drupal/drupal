@@ -19,6 +19,7 @@ process:
     -
       plugin: skip_on_empty
       method: row
+  label: name
   'settings/handler': 'constants/selection_handler'
   'settings/handler_settings/target_bundles/0': '@field_name'
   'settings/handler_settings/auto_create': 'constants/auto_create'
