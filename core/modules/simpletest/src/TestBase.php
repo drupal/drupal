@@ -821,13 +821,49 @@ abstract class TestBase {
    * @return bool
    *   TRUE if the assertion succeeded, FALSE otherwise.
    *
-   * @see TestBase::prepareEnvironment()
+   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    */
   protected function assertNoErrorsLogged() {
     // Since PHP only creates the error.log file when an actual error is
     // triggered, it is sufficient to check whether the file exists.
     return $this->assertFalse(file_exists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'), 'PHP error.log is empty.');
+  }
+
+  /**
+   * Asserts that a specific error has been logged to the PHP error log.
+   *
+   * @param string $error_message
+   *   The expected error message.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   *
+   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
+   * @see \Drupal\Core\DrupalKernel::bootConfiguration()
+   */
+  protected function assertErrorLogged($error_message) {
+    $error_log_filename = DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log';
+    if (!file_exists($error_log_filename)) {
+      $this->error('No error logged yet.');
+    }
+
+    $content = file_get_contents($error_log_filename);
+    $rows = explode(PHP_EOL, $content);
+
+    // We iterate over the rows in order to be able to remove the logged error
+    // afterwards.
+    $found = FALSE;
+    foreach ($rows as $row_index => $row) {
+      if (strpos($content, $error_message) !== FALSE) {
+        $found = TRUE;
+        unset($rows[$row_index]);
+      }
+    }
+
+    file_put_contents($error_log_filename, implode("\n", $rows));
+
+    return $this->assertTrue($found, sprintf('The %s error message was logged.', $error_message));
   }
 
   /**

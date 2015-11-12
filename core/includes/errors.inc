@@ -119,8 +119,11 @@ function error_displayable($error = NULL) {
  *   %line, severity_level, and backtrace. All the parameters are plain-text,
  *   with the exception of @message, which needs to be an HTML string, and
  *   backtrace, which is a standard PHP backtrace.
- * @param $fatal
- *   TRUE if the error is fatal.
+ * @param bool $fatal
+ *  TRUE for:
+ *   - An exception is thrown and not caught by something else.
+ *   - A recoverable fatal error, which is a fatal error.
+ *  Non-recoverable fatal errors cannot be logged by Drupal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = drupal_installation_attempted();
@@ -167,6 +170,11 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // available. At least try to log to PHP error log.
       error_log(strtr('Failed to log error: %type: @message in %function (line %line of %file).', $error));
     }
+  }
+
+  // Log fatal errors, so developers can find and debug them.
+  if ($fatal) {
+    error_log(sprintf('%s: %s in %s on line %d', $error['%type'], $error['@message'], $error['%file'], $error['%line']));
   }
 
   if (PHP_SAPI === 'cli') {
