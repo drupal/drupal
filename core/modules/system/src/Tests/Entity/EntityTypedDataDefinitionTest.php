@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\KernelTests\Core\Entity\EntityDataDefinitionTest.
+ * Contains \Drupal\system\Tests\Entity\EntityTypedDataDefinitionTest.
  */
 
-namespace Drupal\KernelTests\Core\Entity;
+namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests deriving metadata of entity and field data types.
