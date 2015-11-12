@@ -1,7 +1,8 @@
-id: d6_update_settings
+id: update_settings
 label: Update configuration
 migration_tags:
   - Drupal 6
+  - Drupal 7
 source:
   plugin: variable
   variables:

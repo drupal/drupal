@@ -41540,8 +41540,28 @@ $connection->insert('variable')
   'value' => 'i:999;',
 ))
 ->values(array(
+  'name' => 'update_check_frequency',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'update_fetch_url',
+  'value' => 's:23:"http://127.0.0.1/update";',
+))
+->values(array(
   'name' => 'update_last_check',
   'value' => 'i:1444944973;',
+))
+->values(array(
+  'name' => 'update_max_fetch_attempts',
+  'value' => 'i:3;',
+))
+->values(array(
+  'name' => 'update_notification_threshold',
+  'value' => 's:3:"all";',
+))
+->values(array(
+  'name' => 'update_notify_emails',
+  'value' => 'a:1:{i:0;s:19:"webmaster@127.0.0.1";}',
 ))
 ->values(array(
   'name' => 'user_admin_role',
