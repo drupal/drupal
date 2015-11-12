@@ -12,6 +12,7 @@ source:
     - search_cron_limit
     - search_tag_weights
     - search_and_or_limit
+    - search_default_module
 process:
   'index/minimum_word_size': minimum_word_size
   'index/overlap_cjk': overlap_cjk
@@ -19,6 +20,13 @@ process:
   'index/tag_weights': search_tag_weights
   and_or_limit: search_and_or_limit
   logging: 'constants/status'
+  default_page:
+    plugin: static_map
+    source:
+      - search_default_module
+    map:
+      node: node_search
+      user: user_search
 destination:
   plugin: config
   config_name: search.settings
