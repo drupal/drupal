@@ -12,6 +12,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
+use Drupal\simpletest\TestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 $autoloader = require_once __DIR__ . '/../../autoload.php';
@@ -561,7 +562,12 @@ function simpletest_script_execute_batch($test_classes) {
         // The child exited, unregister it.
         proc_close($child['process']);
         if ($status['exitcode']) {
-          echo 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
+          $message = 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').';
+          echo $message . "\n";
+          // Insert a fail for xml results.
+          TestBase::insertAssert($child['test_id'], $child['class'], FALSE, $message, 'run-tests.sh check');
+          /// Ensure that an error line is displayed for the class.
+          simpletest_script_reporter_display_summary($child['class'], ['#pass' => 0, '#fail' => 1, '#exception' => 0, '#debug' => 0]);
           if ($args['die-on-fail']) {
             list($db_prefix, ) = simpletest_last_test_get($child['test_id']);
             $test_directory = 'sites/simpletest/' . substr($db_prefix, 10);
