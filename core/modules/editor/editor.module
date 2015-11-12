@@ -464,7 +464,11 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity) {
 
   $formatted_text_fields = _editor_get_formatted_text_fields($entity);
   foreach ($formatted_text_fields as $formatted_text_field) {
-    $text = $entity->get($formatted_text_field)->value;
+    $text = '';
+    $field_items = $entity->get($formatted_text_field);
+    foreach ($field_items as $field_item) {
+      $text .= $field_item->value;
+    }
     $uuids[$formatted_text_field] = _editor_parse_file_uuids($text);
   }
   return $uuids;
