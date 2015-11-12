@@ -137,19 +137,6 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
   }
 
   /**
-   * Process the stub values.
-   *
-   * @param \Drupal\migrate\Row $row
-   *   The row of data.
-   */
-  protected function processStubRow(Row $row) {
-    $bundle_key = $this->getKey('bundle');
-    if ($bundle_key && empty($row->getDestinationProperty($bundle_key))) {
-      $row->setDestinationProperty($bundle_key, reset($this->bundles));
-    }
-  }
-
-  /**
    * Returns a specific entity key.
    *
    * @param string $key

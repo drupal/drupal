@@ -9,6 +9,8 @@ namespace Drupal\file\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
@@ -41,7 +43,7 @@ class EntityFile extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, StreamWrapperManagerInterface $stream_wrappers, FileSystemInterface $file_system) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, StreamWrapperManagerInterface $stream_wrappers, FileSystemInterface $file_system) {
     $configuration += array(
       'source_base_path' => '',
       'source_path_property' => 'filepath',
@@ -49,7 +51,7 @@ class EntityFile extends EntityContentBase {
       'move' => FALSE,
       'urlencode' => FALSE,
     );
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager, $field_type_manager);
 
     $this->streamWrapperManager = $stream_wrappers;
     $this->fileSystem = $file_system;
@@ -68,6 +70,7 @@ class EntityFile extends EntityContentBase {
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
       $container->get('entity.manager'),
+      $container->get('plugin.manager.field.field_type'),
       $container->get('stream_wrapper_manager'),
       $container->get('file_system')
     );
@@ -77,6 +80,12 @@ class EntityFile extends EntityContentBase {
    * {@inheritdoc}
    */
   protected function getEntity(Row $row, array $old_destination_id_values) {
+    // For stub rows, there is no real file to deal with, let the stubbing
+    // process take its default path.
+    if ($row->isStub()) {
+      return parent::getEntity($row, $old_destination_id_values);
+    }
+
     $destination = $row->getDestinationProperty($this->configuration['destination_path_property']);
     $entity = $this->storage->loadByProperties(['uri' => $destination]);
     if ($entity) {
@@ -91,6 +100,12 @@ class EntityFile extends EntityContentBase {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
+    // For stub rows, there is no real file to deal with, let the stubbing
+    // process create the stub entity.
+    if ($row->isStub()) {
+      return parent::import($row, $old_destination_id_values);
+    }
+
     $file = $row->getSourceProperty($this->configuration['source_path_property']);
     $destination = $row->getDestinationProperty($this->configuration['destination_path_property']);
     $source = $this->configuration['source_base_path'] . $file;
@@ -254,6 +269,31 @@ class EntityFile extends EntityContentBase {
       $filename = str_replace('%26', '&', $filename);
     }
     return $filename;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function processStubRow(Row $row) {
+    // We stub the uri value ourselves so we can create a real stub file for it.
+    if (!$row->getDestinationProperty('uri')) {
+      $field_definitions = $this->entityManager
+        ->getFieldDefinitions($this->storage->getEntityTypeId(),
+          $this->getKey('bundle'));
+      $value = UriItem::generateSampleValue($field_definitions['uri']);
+      if (empty($value)) {
+        throw new MigrateException('Stubbing failed, unable to generate value for field uri');
+      }
+      // generateSampleValue() wraps the value in an array.
+      $value = reset($value);
+      // Make it into a proper public file uri, stripping off the existing
+      // scheme if present.
+      $value = 'public://' . preg_replace('|^[a-z]+://|i', '', $value);
+      // Create a real file, so File::preSave() can do filesize() on it.
+      touch($value);
+      $row->setDestinationProperty('uri', $value);
+    }
+    parent::processStubRow($row);
   }
 
 }

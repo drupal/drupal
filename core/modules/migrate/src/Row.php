@@ -73,7 +73,7 @@ class Row {
    *
    * @see getRawDestination()
    */
-  protected $rawDestination;
+  protected $rawDestination = [];
 
   /**
    * TRUE when this row is a stub.

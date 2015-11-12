@@ -22,13 +22,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'comment',
-    // Directly testing that a stub comment's entity_id is populated upon
-    // importing is not straightforward, but RDF module serves as an implicit
-    // test - its hook_comment_storage_load() references a stubbed comment.
-    'rdf',
-  ];
+  public static $modules = ['comment'];
 
   /**
    * {@inheritdoc}

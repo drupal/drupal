@@ -7,12 +7,17 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Component\Utility\Random;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\link\LinkItemInterface;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,6 +33,13 @@ class EntityContentBase extends Entity {
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
+
+  /**
+   * Field type plugin manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected $fieldTypeManager;
 
   /**
    * Constructs a content entity.
@@ -46,10 +58,13 @@ class EntityContentBase extends Entity {
    *   The list of bundles this entity type has.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   *   The field type plugin manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->entityManager = $entity_manager;
+    $this->fieldTypeManager = $field_type_manager;
   }
 
   /**
@@ -64,7 +79,8 @@ class EntityContentBase extends Entity {
       $migration,
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('plugin.manager.field.field_type')
     );
   }
 
@@ -130,6 +146,46 @@ class EntityContentBase extends Entity {
     }
 
     $this->setRollbackAction($row->getIdMap());
+  }
+
+  /**
+   * Do as much population of the stub row as we can.
+   *
+   * @param \Drupal\migrate\Row $row
+   *   The row of data.
+   */
+  protected function processStubRow(Row $row) {
+    $bundle_key = $this->getKey('bundle');
+    if ($bundle_key && empty($row->getDestinationProperty($bundle_key))) {
+      $row->setDestinationProperty($bundle_key, reset($this->bundles));
+    }
+
+    // Populate any required fields not already populated.
+    $fields = $this->entityManager
+      ->getFieldDefinitions($this->storage->getEntityTypeId(), $bundle_key);
+    foreach ($fields as $field_name => $field_definition) {
+      if ($field_definition->isRequired() && is_null($row->getDestinationProperty($field_name))) {
+        // Use the configured default value for this specific field, if any.
+        if ($default_value = $field_definition->getDefaultValueLiteral()) {
+          $values[] = $default_value;
+        }
+        else {
+          // Otherwise, ask the field type to generate a sample value.
+          $field_type = $field_definition->getType();
+          /** @var \Drupal\Core\Field\FieldItemInterface $field_type_class */
+          $field_type_class = $this->fieldTypeManager
+            ->getPluginClass($field_definition->getType());
+          $values = $field_type_class::generateSampleValue($field_definition);
+          if (is_null($values)) {
+            // Handle failure to generate a sample value.
+            throw new MigrateException('Stubbing failed, unable to generate value for field ' . $field_name);
+            break;
+          }
+        }
+
+        $row->setDestinationProperty($field_name, $values);
+      }
+    }
   }
 
 }

@@ -36,6 +36,11 @@ class EntityRevisionTest extends UnitTestCase {
    */
   protected $entityManager;
 
+  /**
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected $fieldTypeManager;
+
   public function setUp() {
     parent::setUp();
 
@@ -43,6 +48,7 @@ class EntityRevisionTest extends UnitTestCase {
     $this->migration = $this->prophesize('\Drupal\migrate\Entity\MigrationInterface');
     $this->storage = $this->prophesize('\Drupal\Core\Entity\EntityStorageInterface');
     $this->entityManager = $this->prophesize('\Drupal\Core\Entity\EntityManagerInterface');
+    $this->fieldTypeManager = $this->prophesize('\Drupal\Core\Field\FieldTypePluginManagerInterface');
   }
 
   /**
@@ -183,7 +189,9 @@ class EntityRevisionTest extends UnitTestCase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       [],
-      $this->entityManager->reveal());
+      $this->entityManager->reveal(),
+      $this->fieldTypeManager->reveal()
+    );
   }
 
 }
