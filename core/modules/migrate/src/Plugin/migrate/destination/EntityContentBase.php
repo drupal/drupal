@@ -90,6 +90,9 @@ class EntityContentBase extends Entity {
   public function import(Row $row, array $old_destination_id_values = array()) {
     $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $entity = $this->getEntity($row, $old_destination_id_values);
+    if (!$entity) {
+      throw new MigrateException('Unable to get entity');
+    }
     return $this->save($entity, $old_destination_id_values);
   }
 
