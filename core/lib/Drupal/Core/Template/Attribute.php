@@ -117,10 +117,11 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    *   An AttributeValueBase representation of the attribute's value.
    */
   protected function createAttributeValue($name, $value) {
-    // If the value is already an AttributeValueBase object, return it
-    // straight away.
+    // If the value is already an AttributeValueBase object,
+    // return a new instance of the same class, but with the new name.
     if ($value instanceof AttributeValueBase) {
-      return $value;
+      $class = get_class($value);
+      return new $class($name, $value->value());
     }
     // An array value or 'class' attribute name are forced to always be an
     // AttributeArray value for consistency.
