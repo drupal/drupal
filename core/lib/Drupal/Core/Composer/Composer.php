@@ -10,6 +10,7 @@ namespace Drupal\Core\Composer;
 use Drupal\Component\PhpStorage\FileStorage;
 use Composer\Script\Event;
 use Composer\Installer\PackageEvent;
+use Composer\Semver\Constraint\Constraint;
 
 /**
  * Provides static functions for composer script events.
@@ -71,23 +72,38 @@ class Composer {
   ];
 
   /**
-   * Add vendor classes to composers static classmap.
+   * Add vendor classes to Composer's static classmap.
    */
   public static function preAutoloadDump(Event $event) {
-    $composer = $event->getComposer();
-    $package = $composer->getPackage();
-    $autoload = $package->getAutoload();
-    $autoload['classmap'] = array_merge($autoload['classmap'], array(
-      'vendor/symfony/http-foundation/Request.php',
-      'vendor/symfony/http-foundation/ParameterBag.php',
-      'vendor/symfony/http-foundation/FileBag.php',
-      'vendor/symfony/http-foundation/ServerBag.php',
-      'vendor/symfony/http-foundation/HeaderBag.php',
-      'vendor/symfony/http-kernel/HttpKernel.php',
-      'vendor/symfony/http-kernel/HttpKernelInterface.php',
-      'vendor/symfony/http-kernel/TerminableInterface.php',
-    ));
-    $package->setAutoload($autoload);
+    // We need the root package so we can add our classmaps to its loader.
+    $package = $event->getComposer()->getPackage();
+    // We need the local repository so that we can query and see if it's likely
+    // that our files are present there.
+    $repository = $event->getComposer()->getRepositoryManager()->getLocalRepository();
+    // This is, essentially, a null constraint. We only care whether the package
+    // is present in vendor/ yet, but findPackage() requires it.
+    $constraint = new Constraint('>', '');
+    // Check for our packages, and then optimize them if they're present.
+    if ($repository->findPackage('symfony/http-foundation', $constraint)) {
+      $autoload = $package->getAutoload();
+      $autoload['classmap'] = array_merge($autoload['classmap'], array(
+        'vendor/symfony/http-foundation/Request.php',
+        'vendor/symfony/http-foundation/ParameterBag.php',
+        'vendor/symfony/http-foundation/FileBag.php',
+        'vendor/symfony/http-foundation/ServerBag.php',
+        'vendor/symfony/http-foundation/HeaderBag.php',
+      ));
+      $package->setAutoload($autoload);
+    }
+    if ($repository->findPackage('symfony/http-kernel', $constraint)) {
+      $autoload = $package->getAutoload();
+      $autoload['classmap'] = array_merge($autoload['classmap'], array(
+        'vendor/symfony/http-kernel/HttpKernel.php',
+        'vendor/symfony/http-kernel/HttpKernelInterface.php',
+        'vendor/symfony/http-kernel/TerminableInterface.php',
+      ));
+      $package->setAutoload($autoload);
+    }
   }
 
   /**
