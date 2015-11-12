@@ -23,3 +23,4 @@ process:
 destination:
   plugin: entity:file
   source_path_property: filepath
+  urlencode: true
