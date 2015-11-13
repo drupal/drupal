@@ -57,6 +57,8 @@ class EntityLinkTest extends UnitTestCase {
   }
 
   /**
+   * Tests for the Entity::link() method
+   *
    * @covers ::link
    *
    * @dataProvider providerTestLink
@@ -98,7 +100,7 @@ class EntityLinkTest extends UnitTestCase {
     /** @var \Drupal\Core\Entity\Entity $entity */
     $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', [
       ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
-      $entity_type_id
+      $entity_type_id,
     ]);
 
     $expected_link = Link::createFromRoute(
@@ -114,6 +116,64 @@ class EntityLinkTest extends UnitTestCase {
       ->willReturn($expected);
 
     $this->assertSame($expected, $entity->link($link_text, $link_rel, $link_options));
+  }
+
+  /**
+   * Tests for the Entity::toLink() method
+   *
+   * @covers ::toLink
+   *
+   * @dataProvider providerTestLink
+   */
+  public function testToLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []) {
+    $language = new Language(['id' => 'es']);
+    $link_options += ['language' => $language];
+    $this->languageManager->expects($this->any())
+      ->method('getLanguage')
+      ->with('es')
+      ->willReturn($language);
+
+    $route_name_map = [
+      'canonical' => 'entity.test_entity_type.canonical',
+      'edit-form' => 'entity.test_entity_type.edit_form',
+    ];
+    $route_name = $route_name_map[$link_rel];
+    $entity_id = 'test_entity_id';
+    $entity_type_id = 'test_entity_type';
+    $expected = '<a href="/test_entity_type/test_entity_id">' . $expected_text . '</a>';
+
+    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type->expects($this->once())
+      ->method('getLinkTemplates')
+      ->willReturn($route_name_map);
+    $entity_type->expects($this->any())
+      ->method('getKey')
+      ->willReturnMap([
+        ['label', 'label'],
+        ['langcode', 'langcode'],
+      ]);
+
+    $this->entityManager
+      ->expects($this->any())
+      ->method('getDefinition')
+      ->with($entity_type_id)
+      ->will($this->returnValue($entity_type));
+
+    /** @var \Drupal\Core\Entity\Entity $entity */
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', [
+      ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
+      $entity_type_id,
+    ]);
+
+    $expected_link = Link::createFromRoute(
+      $expected_text,
+      $route_name,
+      [$entity_type_id => $entity_id],
+      ['entity_type' => $entity_type_id, 'entity' => $entity] + $link_options
+    );
+
+    $result_link = $entity->toLink($link_text, $link_rel, $link_options);
+    $this->assertEquals($expected_link, $result_link);
   }
 
   /**

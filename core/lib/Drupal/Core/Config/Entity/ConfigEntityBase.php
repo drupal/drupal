@@ -387,6 +387,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function url($rel = 'edit-form', $options = array()) {
+    // Do not remove this override: the default value of $rel is different.
     return parent::url($rel, $options);
   }
 
@@ -394,7 +395,17 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function link($text = NULL, $rel = 'edit-form', array $options = []) {
+    // Do not remove this override: the default value of $rel is different.
     return parent::link($text, $rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toUrl($rel = 'edit-form', array $options = []) {
+    // Unless language was already provided, avoid setting an explicit language.
+    $options += ['language' => NULL];
+    return parent::toUrl($rel, $options);
   }
 
   /**

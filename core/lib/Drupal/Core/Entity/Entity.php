@@ -173,6 +173,13 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function urlInfo($rel = 'canonical', array $options = []) {
+    return $this->toUrl($rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toUrl($rel = 'canonical', array $options = []) {
     if ($this->id() === NULL) {
       throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does not have an ID', $this->getEntityTypeId()));
     }
@@ -252,26 +259,33 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function link($text = NULL, $rel = 'canonical', array $options = []) {
-    if (is_null($text)) {
+    return $this->toLink($text, $rel, $options)->toString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toLink($text = NULL, $rel = 'canonical', array $options = []) {
+    if (!isset($text)) {
       $text = $this->label();
     }
-    $url = $this->urlInfo($rel);
+    $url = $this->toUrl($rel);
     $options += $url->getOptions();
     $url->setOptions($options);
-    return (new Link($text, $url))->toString();
+    return new Link($text, $url);
   }
 
   /**
    * {@inheritdoc}
    */
   public function url($rel = 'canonical', $options = array()) {
-    // While self::urlInfo() will throw an exception if the entity is new,
+    // While self::toUrl() will throw an exception if the entity has no id,
     // the expected result for a URL is always a string.
-    if ($this->isNew() || !$this->hasLinkTemplate($rel)) {
+    if ($this->id() === NULL || !$this->hasLinkTemplate($rel)) {
       return '';
     }
 
-    $uri = $this->urlInfo($rel);
+    $uri = $this->toUrl($rel);
     $options += $uri->getOptions();
     $uri->setOptions($options);
     return $uri->toString();
