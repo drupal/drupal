@@ -9,6 +9,27 @@
 
   'use strict';
 
+  function parseAttributes(element) {
+    var parsedAttributes = {};
+
+    var domElement = element.$;
+    var attribute = null;
+    var attributeName;
+    for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
+      attribute = domElement.attributes.item(attrIndex);
+      attributeName = attribute.nodeName.toLowerCase();
+      // Don't consider data-cke-saved- attributes; they're just there to work
+      // around browser quirks.
+      if (attributeName.substring(0, 15) === 'data-cke-saved-') {
+        continue;
+      }
+      // Store the value for this attribute, unless there's a data-cke-saved-
+      // alternative for it, which will contain the quirk-free, original value.
+      parsedAttributes[attributeName] = element.data('cke-saved-' + attributeName) || attribute.nodeValue;
+    }
+    return parsedAttributes;
+  }
+
   CKEDITOR.plugins.add('drupallink', {
     init: function (editor) {
       // Add the commands for link and unlink.
@@ -33,35 +54,16 @@
           var drupalImageUtils = CKEDITOR.plugins.drupalimage;
           var focusedImageWidget = drupalImageUtils && drupalImageUtils.getFocusedWidget(editor);
           var linkElement = getSelectedLink(editor);
-          var linkDOMElement = null;
 
           // Set existing values based on selected element.
           var existingValues = {};
           if (linkElement && linkElement.$) {
-            linkDOMElement = linkElement.$;
-
-            // Populate an array with the link's current attributes.
-            var attribute = null;
-            var attributeName;
-            for (var attrIndex = 0; attrIndex < linkDOMElement.attributes.length; attrIndex++) {
-              attribute = linkDOMElement.attributes.item(attrIndex);
-              attributeName = attribute.nodeName.toLowerCase();
-              // Don't consider data-cke-saved- attributes; they're just there
-              // to work around browser quirks.
-              if (attributeName.substring(0, 15) === 'data-cke-saved-') {
-                continue;
-              }
-              // Store the value for this attribute, unless there's a
-              // data-cke-saved- alternative for it, which will contain the
-              // quirk-free, original value.
-              existingValues[attributeName] = linkElement.data('cke-saved-' + attributeName) || attribute.nodeValue;
-            }
+            existingValues = parseAttributes(linkElement);
           }
           // Or, if an image widget is focused, we're editing a link wrapping
           // an image widget.
           else if (focusedImageWidget && focusedImageWidget.data.link) {
-            var url = focusedImageWidget.data.link.url;
-            existingValues.href = url.protocol + url.url;
+            existingValues = CKEDITOR.tools.clone(focusedImageWidget.data.link);
           }
 
           // Prepare a save callback to be used upon saving the dialog.
@@ -69,14 +71,7 @@
             // If an image widget is focused, we're not editing an independent
             // link, but we're wrapping an image widget in a link.
             if (focusedImageWidget) {
-              var urlMatch = returnValues.attributes.href.match(urlRegex);
-              focusedImageWidget.setData('link', {
-                type: 'url',
-                url: {
-                  protocol: urlMatch[1],
-                  url: urlMatch[2]
-                }
-              });
+              focusedImageWidget.setData('link', CKEDITOR.tools.extend(returnValues.attributes, focusedImageWidget.data.link));
               editor.fire('saveSnapshot');
               return;
             }
@@ -273,8 +268,6 @@
     return null;
   }
 
-  var urlRegex = /^((?:http|https):\/\/)?(.*)$/;
-
   /**
    * The image2 plugin is currently tightly coupled to the link plugin: it
    * calls CKEDITOR.plugins.link.parseLinkAttributes().
@@ -289,26 +282,14 @@
    */
   CKEDITOR.plugins.link = CKEDITOR.plugins.link || {
     parseLinkAttributes: function (editor, element) {
-      var href = (element && (element.data('cke-saved-href') || element.getAttribute('href'))) || '';
-      var urlMatch = href.match(urlRegex);
-      return {
-        type: 'url',
-        url: {
-          protocol: urlMatch[1],
-          url: urlMatch[2]
-        }
-      };
+      return parseAttributes(element);
     },
     getLinkAttributes: function (editor, data) {
       var set = {};
-
-      var protocol = (data.url && typeof data.url.protocol !== 'undefined') ? data.url.protocol : 'http://';
-      var url = (data.url && CKEDITOR.tools.trim(data.url.url)) || '';
-      set['data-cke-saved-href'] = (url.indexOf('/') === 0) ? url : protocol + url;
-
-      // Browser need the "href" fro copy/paste link to work. (#6641)
-      if (set['data-cke-saved-href']) {
-        set.href = set['data-cke-saved-href'];
+      for (var attributeName in data) {
+        if (data.hasOwnProperty(attributeName)) {
+          set[attributeName] = data[attributeName];
+        }
       }
 
       // Remove all attributes which are not currently set.
