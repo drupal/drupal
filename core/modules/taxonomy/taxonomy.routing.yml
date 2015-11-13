@@ -23,6 +23,7 @@ entity.taxonomy_term.edit_form:
     _admin_route: TRUE
   requirements:
     _entity_access: 'taxonomy_term.update'
+    taxonomy_term: \d+
 
 entity.taxonomy_term.delete_form:
   path: '/taxonomy/term/{taxonomy_term}/delete'
@@ -33,6 +34,7 @@ entity.taxonomy_term.delete_form:
     _admin_route: TRUE
   requirements:
     _entity_access: 'taxonomy_term.delete'
+    taxonomy_term: \d+
 
 entity.taxonomy_vocabulary.add_form:
   path: '/admin/structure/taxonomy/add'
@@ -82,3 +84,4 @@ entity.taxonomy_term.canonical:
     _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:
     _entity_access: 'taxonomy_term.view'
+    taxonomy_term: \d+

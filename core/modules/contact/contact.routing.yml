@@ -54,3 +54,4 @@ entity.user.contact_form:
     _controller: '\Drupal\contact\Controller\ContactController::contactPersonalPage'
   requirements:
     _access_contact_personal_tab: 'TRUE'
+    user: \d+

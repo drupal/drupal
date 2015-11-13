@@ -47,6 +47,7 @@ entity.node.version_history:
     _controller: '\Drupal\node\Controller\NodeController::revisionOverview'
   requirements:
     _access_node_revision: 'view'
+    node: \d+
   options:
     _node_operation_route: TRUE
 
@@ -57,6 +58,7 @@ entity.node.revision:
     _title_callback: '\Drupal\node\Controller\NodeController::revisionPageTitle'
   requirements:
     _access_node_revision: 'view'
+    node: \d+
 
 node.revision_revert_confirm:
   path: '/node/{node}/revisions/{node_revision}/revert'
@@ -65,6 +67,7 @@ node.revision_revert_confirm:
     _title: 'Revert to earlier revision'
   requirements:
     _access_node_revision: 'update'
+    node: \d+
   options:
     _node_operation_route: TRUE
 
@@ -75,6 +78,7 @@ node.revision_revert_translation_confirm:
     _title: 'Revert to earlier revision of a translation'
   requirements:
     _access_node_revision: 'update'
+    node: \d+
   options:
     _node_operation_route: TRUE
 
@@ -85,6 +89,7 @@ node.revision_delete_confirm:
     _title: 'Delete earlier revision'
   requirements:
     _access_node_revision: 'delete'
+    node: \d+
   options:
     _node_operation_route: TRUE
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\link\Plugin\Validation\Constraint;
 
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
@@ -50,7 +52,15 @@ class LinkNotExistingInternalConstraintValidator implements ConstraintValidatorI
         try {
           $url->toString();
         }
+        // The following exceptions are all possible during URL generation, and
+        // should be considered as disallowed URLs.
         catch (RouteNotFoundException $e) {
+          $allowed = FALSE;
+        }
+        catch (InvalidParameterException $e) {
+          $allowed = FALSE;
+        }
+        catch (MissingMandatoryParametersException $e) {
           $allowed = FALSE;
         }
         if (!$allowed) {
