@@ -16,13 +16,17 @@ use Composer\Composer;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
+use Composer\Package\Link;
 use Composer\Package\Loader\ArrayLoader;
+use Composer\Package\RootAliasPackage;
 use Composer\Package\RootPackage;
+use Composer\Package\RootPackageInterface;
 use Composer\Package\Version\VersionParser;
 use UnexpectedValueException;
 
 /**
- * Processing for a composer.json file that will be merged into a RootPackage
+ * Processing for a composer.json file that will be merged into
+ * a RootPackageInterface
  *
  * @author Bryan Davis <bd808@bd808.com>
  */
@@ -80,6 +84,17 @@ class ExtraPackage
     }
 
     /**
+     * Get list of additional packages to require if precessing recursively.
+     *
+     * @return array
+     */
+    public function getRequires()
+    {
+        return isset($this->json['extra']['merge-plugin']['require']) ?
+            $this->json['extra']['merge-plugin']['require'] : array();
+    }
+
+    /**
      * Read the contents of a composer.json style file into an array.
      *
      * The package contents are fixed up to be usable to create a Package
@@ -123,25 +138,30 @@ class ExtraPackage
     }
 
     /**
-     * Merge this package into a RootPackage
+     * Merge this package into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    public function mergeInto(RootPackage $root, PluginState $state)
+    public function mergeInto(RootPackageInterface $root, PluginState $state)
     {
         $this->addRepositories($root);
 
-        $this->mergeRequires($root, $state);
-        $this->mergeDevRequires($root, $state);
+        $this->mergeRequires('require', $root, $state);
+        if ($state->isDevMode()) {
+            $this->mergeRequires('require-dev', $root, $state);
+        }
 
-        $this->mergeConflicts($root);
-        $this->mergeReplaces($root);
-        $this->mergeProvides($root);
+        $this->mergePackageLinks('conflict', $root);
+        $this->mergePackageLinks('replace', $root);
+        $this->mergePackageLinks('provide', $root);
+
         $this->mergeSuggests($root);
 
-        $this->mergeAutoload($root);
-        $this->mergeDevAutoload($root);
+        $this->mergeAutoload('autoload', $root);
+        if ($state->isDevMode()) {
+            $this->mergeAutoload('devAutoload', $root);
+        }
 
         $this->mergeExtra($root, $state);
     }
@@ -150,9 +170,9 @@ class ExtraPackage
      * Add a collection of repositories described by the given configuration
      * to the given package and the global repository manager.
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function addRepositories(RootPackage $root)
+    protected function addRepositories(RootPackageInterface $root)
     {
         if (!isset($this->json['repositories'])) {
             return;
@@ -164,7 +184,7 @@ class ExtraPackage
             if (!isset($repoJson['type'])) {
                 continue;
             }
-            $this->logger->debug("Adding {$repoJson['type']} repository");
+            $this->logger->info("Adding {$repoJson['type']} repository");
             $repo = $repoManager->createRepository(
                 $repoJson['type'],
                 $repoJson
@@ -173,125 +193,102 @@ class ExtraPackage
             $newRepos[] = $repo;
         }
 
-        $root->setRepositories(array_merge(
+        $unwrapped = self::unwrapIfNeeded($root, 'setRepositories');
+        $unwrapped->setRepositories(array_merge(
             $newRepos,
             $root->getRepositories()
         ));
     }
 
     /**
-     * Merge require into a RootPackage
+     * Merge require or require-dev into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param string $type 'require' or 'require-dev'
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    protected function mergeRequires(RootPackage $root, PluginState $state)
-    {
-        $requires = $this->package->getRequires();
+    protected function mergeRequires(
+        $type,
+        RootPackageInterface $root,
+        PluginState $state
+    ) {
+        $linkType = BasePackage::$supportedLinkTypes[$type];
+        $getter = 'get' . ucfirst($linkType['method']);
+        $setter = 'set' . ucfirst($linkType['method']);
+
+        $requires = $this->package->{$getter}();
         if (empty($requires)) {
             return;
         }
 
         $this->mergeStabilityFlags($root, $requires);
 
-        $dups = array();
-        $root->setRequires($this->mergeLinks(
-            $root->getRequires(),
+        $requires = $this->replaceSelfVersionDependencies(
+            $type,
             $requires,
-            $state->replaceDuplicateLinks(),
-            $dups
-        ));
-        $state->addDuplicateLinks('require', $dups);
-    }
+            $root
+        );
 
-    /**
-     * Merge require-dev into RootPackage
-     *
-     * @param RootPackage $root
-     * @param PluginState $state
-     */
-    protected function mergeDevRequires(RootPackage $root, PluginState $state)
-    {
-        $requires = $this->package->getDevRequires();
-        if (empty($requires)) {
-            return;
-        }
-
-        $this->mergeStabilityFlags($root, $requires);
-
-        $dups = array();
-        $root->setDevRequires($this->mergeLinks(
-            $root->getDevRequires(),
+        $root->{$setter}($this->mergeOrDefer(
+            $type,
+            $root->{$getter}(),
             $requires,
-            $state->replaceDuplicateLinks(),
-            $dups
+            $state
         ));
-        $state->addDuplicateLinks('require-dev', $dups);
     }
 
     /**
      * Merge two collections of package links and collect duplicates for
      * subsequent processing.
      *
+     * @param string $type 'require' or 'require-dev'
      * @param array $origin Primary collection
      * @param array $merge Additional collection
-     * @param bool $replace Replace exising links?
-     * @param array &dups Duplicate storage
+     * @param PluginState $state
      * @return array Merged collection
      */
-    protected function mergeLinks(
+    protected function mergeOrDefer(
+        $type,
         array $origin,
         array $merge,
-        $replace,
-        array &$dups
+        $state
     ) {
+        $dups = array();
         foreach ($merge as $name => $link) {
-            if (!isset($origin[$name]) || $replace) {
-                $this->logger->debug("Merging <comment>{$name}</comment>");
+            if (!isset($origin[$name]) || $state->replaceDuplicateLinks()) {
+                $this->logger->info("Merging <comment>{$name}</comment>");
                 $origin[$name] = $link;
             } else {
                 // Defer to solver.
-                $this->logger->debug(
+                $this->logger->info(
                     "Deferring duplicate <comment>{$name}</comment>"
                 );
                 $dups[] = $link;
             }
         }
+        $state->addDuplicateLinks($type, $dups);
         return $origin;
     }
 
     /**
-     * Merge autoload into a RootPackage
+     * Merge autoload or autoload-dev into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param string $type 'autoload' or 'devAutoload'
+     * @param RootPackageInterface $root
      */
-    protected function mergeAutoload(RootPackage $root)
+    protected function mergeAutoload($type, RootPackageInterface $root)
     {
-        $autoload = $this->package->getAutoload();
+        $getter = 'get' . ucfirst($type);
+        $setter = 'set' . ucfirst($type);
+
+        $autoload = $this->package->{$getter}();
         if (empty($autoload)) {
             return;
         }
 
-        $root->setAutoload(array_merge_recursive(
-            $root->getAutoload(),
-            $this->fixRelativePaths($autoload)
-        ));
-    }
-
-    /**
-     * Merge autoload-dev into a RootPackage
-     *
-     * @param RootPackage $root
-     */
-    protected function mergeDevAutoload(RootPackage $root)
-    {
-        $autoload = $this->package->getDevAutoload();
-        if (empty($autoload)) {
-            return;
-        }
-
-        $root->setDevAutoload(array_merge_recursive(
-            $root->getDevAutoload(),
+        $unwrapped = self::unwrapIfNeeded($root, $setter);
+        $unwrapped->{$setter}(array_merge_recursive(
+            $root->{$getter}(),
             $this->fixRelativePaths($autoload)
         ));
     }
@@ -319,83 +316,64 @@ class ExtraPackage
 
     /**
      * Extract and merge stability flags from the given collection of
-     * requires and merge them into a RootPackage
+     * requires and merge them into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param array $requires
      */
     protected function mergeStabilityFlags(
-        RootPackage $root,
+        RootPackageInterface $root,
         array $requires
     ) {
         $flags = $root->getStabilityFlags();
-        foreach ($requires as $name => $link) {
-            $name = strtolower($name);
-            $version = $link->getPrettyConstraint();
-            $stability = VersionParser::parseStability($version);
-            $flags[$name] = BasePackage::$stabilities[$stability];
-        }
-        $root->setStabilityFlags($flags);
+        $sf = new StabilityFlags($flags, $root->getMinimumStability());
+
+        $unwrapped = self::unwrapIfNeeded($root, 'setStabilityFlags');
+        $unwrapped->setStabilityFlags(array_merge(
+            $flags,
+            $sf->extractAll($requires)
+        ));
     }
 
     /**
-     * Merge conflicting packages into a RootPackage
+     * Merge package links of the given type  into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param string $type 'conflict', 'replace' or 'provide'
+     * @param RootPackageInterface $root
      */
-    protected function mergeConflicts(RootPackage $root)
+    protected function mergePackageLinks($type, RootPackageInterface $root)
     {
-        $conflicts = $this->package->getConflicts();
-        if (!empty($conflicts)) {
-            $root->setconflicts(array_merge(
-                $root->getConflicts(),
-                $conflicts
+        $linkType = BasePackage::$supportedLinkTypes[$type];
+        $getter = 'get' . ucfirst($linkType['method']);
+        $setter = 'set' . ucfirst($linkType['method']);
+
+        $links = $this->package->{$getter}();
+        if (!empty($links)) {
+            $unwrapped = self::unwrapIfNeeded($root, $setter);
+            if ($root !== $unwrapped) {
+                $this->logger->warning(
+                    'This Composer version does not support ' .
+                    "'{$type}' merging for aliased packages."
+                );
+            }
+            $unwrapped->{$setter}(array_merge(
+                $root->{$getter}(),
+                $this->replaceSelfVersionDependencies($type, $links, $root)
             ));
         }
     }
 
     /**
-     * Merge replaced packages into a RootPackage
+     * Merge suggested packages into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeReplaces(RootPackage $root)
-    {
-        $replaces = $this->package->getReplaces();
-        if (!empty($replaces)) {
-            $root->setReplaces(array_merge(
-                $root->getReplaces(),
-                $replaces
-            ));
-        }
-    }
-
-    /**
-     * Merge provided virtual packages into a RootPackage
-     *
-     * @param RootPackage $root
-     */
-    protected function mergeProvides(RootPackage $root)
-    {
-        $provides = $this->package->getProvides();
-        if (!empty($provides)) {
-            $root->setProvides(array_merge(
-                $root->getProvides(),
-                $provides
-            ));
-        }
-    }
-
-    /**
-     * Merge suggested packages into a RootPackage
-     *
-     * @param RootPackage $root
-     */
-    protected function mergeSuggests(RootPackage $root)
+    protected function mergeSuggests(RootPackageInterface $root)
     {
         $suggests = $this->package->getSuggests();
         if (!empty($suggests)) {
-            $root->setSuggests(array_merge(
+            $unwrapped = self::unwrapIfNeeded($root, 'setSuggests');
+            $unwrapped->setSuggests(array_merge(
                 $root->getSuggests(),
                 $suggests
             ));
@@ -403,12 +381,12 @@ class ExtraPackage
     }
 
     /**
-     * Merge extra config into a RootPackage
+     * Merge extra config into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    public function mergeExtra(RootPackage $root, PluginState $state)
+    public function mergeExtra(RootPackageInterface $root, PluginState $state)
     {
         $extra = $this->package->getExtra();
         unset($extra['merge-plugin']);
@@ -417,21 +395,93 @@ class ExtraPackage
         }
 
         $rootExtra = $root->getExtra();
+        $unwrapped = self::unwrapIfNeeded($root, 'setExtra');
 
         if ($state->replaceDuplicateLinks()) {
-            $root->setExtra(array_merge($rootExtra, $extra));
+            $unwrapped->setExtra(
+                array_merge($rootExtra, $extra)
+            );
 
         } else {
-            foreach ($extra as $key => $value) {
-                if (isset($rootExtra[$key])) {
-                    $this->logger->debug(
-                        "Ignoring duplicate <comment>{$key}</comment> in ".
-                        "<comment>{$this->path}</comment> extra config."
+            foreach (array_intersect(
+                array_keys($extra),
+                array_keys($rootExtra)
+            ) as $key) {
+                $this->logger->info(
+                    "Ignoring duplicate <comment>{$key}</comment> in ".
+                    "<comment>{$this->path}</comment> extra config."
+                );
+            }
+            $unwrapped->setExtra(
+                array_merge($extra, $rootExtra)
+            );
+        }
+    }
+
+    /**
+     * Update Links with a 'self.version' constraint with the root package's
+     * version.
+     *
+     * @param string $type Link type
+     * @param array $links
+     * @param RootPackageInterface $root
+     * @return array
+     */
+    protected function replaceSelfVersionDependencies(
+        $type,
+        array $links,
+        RootPackageInterface $root
+    ) {
+        $linkType = BasePackage::$supportedLinkTypes[$type];
+        $version = $root->getVersion();
+        $prettyVersion = $root->getPrettyVersion();
+        $vp = new VersionParser();
+
+        return array_map(
+            function ($link) use ($linkType, $version, $prettyVersion, $vp) {
+                if ('self.version' === $link->getPrettyConstraint()) {
+                    return new Link(
+                        $link->getSource(),
+                        $link->getTarget(),
+                        $vp->parseConstraints($version),
+                        $linkType['description'],
+                        $prettyVersion
                     );
                 }
-            }
-            $root->setExtra(array_merge($extra, $rootExtra));
+                return $link;
+            },
+            $links
+        );
+    }
+
+    /**
+     * Get a full featured Package from a RootPackageInterface.
+     *
+     * In Composer versions before 599ad77 the RootPackageInterface only
+     * defines a sub-set of operations needed by composer-merge-plugin and
+     * RootAliasPackage only implemented those methods defined by the
+     * interface. Most of the unimplemented methods in RootAliasPackage can be
+     * worked around because the getter methods that are implemented proxy to
+     * the aliased package which we can modify by unwrapping. The exception
+     * being modifying the 'conflicts', 'provides' and 'replaces' collections.
+     * We have no way to actually modify those collections unfortunately in
+     * older versions of Composer.
+     *
+     * @param RootPackageInterface $root
+     * @param string $method Method needed
+     * @return RootPackageInterface|RootPackage
+     */
+    public static function unwrapIfNeeded(
+        RootPackageInterface $root,
+        $method = 'setExtra'
+    ) {
+        if ($root instanceof RootAliasPackage &&
+            !method_exists($root, $method)
+        ) {
+            // Unwrap and return the aliased RootPackage.
+            $root = $root->getAliasOf();
         }
+        return $root;
     }
 }
 // vim:sw=4:ts=4:sts=4:et:

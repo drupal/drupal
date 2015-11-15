@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2be29019515c847055593ea41b88475d",
-    "content-hash": "f38613812a285c03a1a18458384fe0b1",
+    "hash": "dac77f10c1f7585fd1f7344c6a376338",
+    "content-hash": "73cbcb262208c5d802cb528279f2a95c",
     "packages": [
         {
             "name": "composer/installers",
@@ -1980,16 +1980,16 @@
         },
         {
             "name": "wikimedia/composer-merge-plugin",
-            "version": "dev-master",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/composer-merge-plugin.git",
-                "reference": "47bb3388cfeae41a38087ac8465a7d08fa92ea2e"
+                "reference": "bfed1f8d4eb97e9ba80eee57ea46229d7e5364d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/f770a4dd9771041f713f5ba3d8e4ba702015653d",
-                "reference": "47bb3388cfeae41a38087ac8465a7d08fa92ea2e",
+                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/bfed1f8d4eb97e9ba80eee57ea46229d7e5364d9",
+                "reference": "bfed1f8d4eb97e9ba80eee57ea46229d7e5364d9",
                 "shasum": ""
             },
             "require": {
@@ -1999,8 +1999,7 @@
             "require-dev": {
                 "composer/composer": "1.0.*@dev",
                 "jakub-onderka/php-parallel-lint": "~0.8",
-                "phpspec/prophecy-phpunit": "~1.0",
-                "phpunit/phpunit": "~4.0",
+                "phpunit/phpunit": "~4.8|~5.0",
                 "squizlabs/php_codesniffer": "~2.1.0"
             },
             "type": "composer-plugin",
@@ -2026,7 +2025,7 @@
                 }
             ],
             "description": "Composer plugin to merge multiple composer.json files",
-            "time": "2015-09-22 21:14:25"
+            "time": "2015-11-06 20:31:16"
         },
         {
             "name": "zendframework/zend-diactoros",
