@@ -116,8 +116,9 @@ class AssetResolver implements AssetResolverInterface {
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize) {
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
-    // hook_css_alter().
-    $cid = 'css:' . $theme_info->getName() . ':' . Crypt::hashBase64(serialize($assets)) . (int) $optimize;
+    // hook_library_info_alter().
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
+    $cid = 'css:' . $theme_info->getName() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) $optimize;
     if ($cached = $this->cache->get($cid)) {
       return $cached->data;
     }
@@ -132,7 +133,7 @@ class AssetResolver implements AssetResolverInterface {
       'browsers' => [],
     ];
 
-    foreach ($this->getLibrariesToLoad($assets) as $library) {
+    foreach ($libraries_to_load as $library) {
       list($extension, $name) = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['css'])) {
@@ -187,9 +188,7 @@ class AssetResolver implements AssetResolverInterface {
    * Returns the JavaScript settings assets for this response's libraries.
    *
    * Gathers all drupalSettings from all libraries in the attached assets
-   * collection and merges them, then it merges individual attached settings,
-   * and finally invokes hook_js_settings_alter() to allow alterations of
-   * JavaScript settings by modules and themes.
+   * collection and merges them.
    *
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
    *   The assets attached to the current response.
@@ -207,9 +206,6 @@ class AssetResolver implements AssetResolverInterface {
       }
     }
 
-    // Attached settings win over settings in libraries.
-    $settings = NestedArray::mergeDeepArray([$settings, $assets->getSettings()], TRUE);
-
     return $settings;
   }
 
@@ -219,9 +215,10 @@ class AssetResolver implements AssetResolverInterface {
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize) {
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
-    // hook_js_alter(). Additionally add the current language to support
-    // translation of JavaScript files.
-    $cid = 'js:' . $theme_info->getName() . ':' . $this->languageManager->getCurrentLanguage()->getId() . ':' .  Crypt::hashBase64(serialize($assets)) . (int) $optimize;
+    // hook_library_info_alter(). Additionally add the current language to
+    // support translation of JavaScript files via hook_js_alter().
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
+    $cid = 'js:' . $theme_info->getName() . ':' .  $this->languageManager->getCurrentLanguage()->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
 
     if ($cached = $this->cache->get($cid)) {
       list($js_assets_header, $js_assets_footer, $settings, $settings_in_header) = $cached->data;
@@ -238,8 +235,6 @@ class AssetResolver implements AssetResolverInterface {
         'version' => NULL,
         'browsers' => [],
       ];
-
-      $libraries_to_load = $this->getLibrariesToLoad($assets);
 
       // Collect all libraries that contain JS assets and are in the header.
       $header_js_libraries = [];
@@ -329,8 +324,10 @@ class AssetResolver implements AssetResolverInterface {
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
     }
 
-
     if ($settings !== FALSE) {
+      // Attached settings override both library definitions and
+      // hook_js_settings_build().
+      $settings = NestedArray::mergeDeepArray([$settings, $assets->getSettings()], TRUE);
       // Allow modules and themes to alter the JavaScript settings.
       $this->moduleHandler->alter('js_settings', $settings, $assets);
       $this->themeManager->alter('js_settings', $settings, $assets);
