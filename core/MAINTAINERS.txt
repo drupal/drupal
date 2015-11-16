@@ -283,6 +283,7 @@ Breakpoint module
 
 CKEditor module
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
 
 Color module
 - ?
