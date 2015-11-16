@@ -167,6 +167,9 @@ class LocalePluralFormatTest extends WebTestBase {
     $path = 'admin/config/regional/translate/';
     $search = array(
       'langcode' => 'fr',
+      // Limit to only translated strings to ensure that database ordering does
+      // not break the test.
+      'translation' => 'translated',
     );
     $this->drupalPostForm($path, $search, t('Filter'));
     // Plural values for the langcode fr.
