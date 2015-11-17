@@ -170,17 +170,20 @@ function simpletest_run_tests($test_list) {
  * @param $unescaped_test_classnames
  *   An array of test class names, including full namespaces, to be passed as
  *   a regular expression to PHPUnit's --filter option.
+ * @param int $status
+ *   (optional) The exit status code of the PHPUnit process will be assigned to
+ *   this variable.
  *
  * @return array
  *   The parsed results of PHPUnit's JUnit XML output, in the format of
  *   {simpletest}'s schema.
  */
-function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames) {
+function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames, &$status = NULL) {
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
-  $ret = simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file);
-  // A return value of 0 = passed test, 1 = failed test, > 1 indicates segfault
+  simpletest_phpunit_run_command($unescaped_test_classnames, $phpunit_file, $status);
+  // A $status of 0 = passed test, 1 = failed test, > 1 indicates segfault
   // timeout, or other type of failure.
-  if ($ret > 1) {
+  if ($status > 1) {
     // Something broke during the execution of phpunit.
     // Return an error record of all failed classes.
     $rows[] = [
@@ -251,11 +254,14 @@ function simpletest_phpunit_configuration_filepath() {
  *   a regular expression to PHPUnit's --filter option.
  * @param string $phpunit_file
  *   A filepath to use for PHPUnit's --log-junit option.
+ * @param int $status
+ *   (optional) The exit status code of the PHPUnit process will be assigned to
+ *   this variable.
  *
  * @return string
  *  The results as returned by exec().
  */
-function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file) {
+function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file, &$status = NULL) {
   // Setup an environment variable containing the database connection so that
   // functional tests can connect to the database.
   putenv('SIMPLETEST_DB=' . Database::getConnectionInfoAsUrl());
@@ -292,7 +298,8 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
 
   // exec in a subshell so that the environment is isolated when running tests
   // via the simpletest UI.
-  exec(join($command, " "), $output, $ret);
+  $ret = exec(join($command, " "), $output, $status);
+
   chdir($old_cwd);
   putenv('SIMPLETEST_DB=');
   return $ret;
