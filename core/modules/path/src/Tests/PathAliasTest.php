@@ -9,7 +9,6 @@ namespace Drupal\path\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
-use Drupal\simpletest\RandomGeneratorTrait;
 use Drupal\Core\Database\Database;
 
 /**
@@ -19,8 +18,6 @@ use Drupal\Core\Database\Database;
  * @group path
  */
 class PathAliasTest extends PathTestBase {
-
-  use RandomGeneratorTrait;
 
   /**
    * Modules to enable.
