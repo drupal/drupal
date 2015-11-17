@@ -328,7 +328,6 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Verify that we obtain the entity object itself when we attempt to
     // retrieve a translation referring to it.
     $translation = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED);
-    $this->assertFalse($translation->isNewTranslation(), 'Existing translations are not marked as new.');
     $this->assertIdentical($entity, $translation, 'The translation object corresponding to a non-default language is the entity object itself when the entity is language-neutral.');
     $entity->{$langcode_key}->value = $default_langcode;
     $translation = $entity->getTranslation($default_langcode);
@@ -354,7 +353,6 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->name->value = $name;
     $name_translated = $langcode . '_' . $this->randomMachineName();
     $translation = $entity->addTranslation($langcode);
-    $this->assertTrue($translation->isNewTranslation(), 'Newly added translations are marked as new.');
     $this->assertNotIdentical($entity, $translation, 'The entity and the translation object differ from one another.');
     $this->assertTrue($entity->hasTranslation($langcode), 'The new translation exists.');
     $this->assertEqual($translation->language()->getId(), $langcode, 'The translation language matches the specified one.');

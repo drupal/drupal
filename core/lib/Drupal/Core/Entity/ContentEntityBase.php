@@ -811,13 +811,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
-  public function isNewTranslation() {
-    return $this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_CREATED;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function addTranslation($langcode, array $values = array()) {
     // Make sure we do not attempt to create a translation if an invalid
     // language is specified or the entity cannot be translated.
@@ -829,11 +822,37 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       throw new \InvalidArgumentException("The entity cannot be translated since it is language neutral ({$this->defaultLangcode}).");
     }
 
-    // Initialize the translation object.
-    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->entityManager()->getStorage($this->getEntityTypeId());
+    // Instantiate a new empty entity so default values will be populated in the
+    // specified language.
+    $entity_type = $this->getEntityType();
+
+    $default_values = array(
+      $entity_type->getKey('bundle') => $this->bundle(),
+      $this->langcodeKey => $langcode,
+    );
+    $entity = $this->entityManager()
+      ->getStorage($this->getEntityTypeId())
+      ->create($default_values);
+
+    foreach ($entity as $name => $field) {
+      if (!isset($values[$name]) && !$field->isEmpty()) {
+        $values[$name] = $field->getValue();
+      }
+    }
+    $values[$this->langcodeKey] = $langcode;
+    $values[$this->defaultLangcodeKey] = FALSE;
+
     $this->translations[$langcode]['status'] = static::TRANSLATION_CREATED;
-    return $storage->createTranslation($this, $langcode, $values);
+    $translation = $this->getTranslation($langcode);
+    $definitions = $translation->getFieldDefinitions();
+
+    foreach ($values as $name => $value) {
+      if (isset($definitions[$name]) && $definitions[$name]->isTranslatable()) {
+        $translation->values[$name][$langcode] = $value;
+      }
+    }
+
+    return $translation;
   }
 
   /**

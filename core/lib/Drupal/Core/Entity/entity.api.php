@@ -780,9 +780,10 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
 }
 
 /**
- * Acts when creating a new entity.
+ * Act on a newly created entity.
  *
- * This hook runs after a new entity object has just been instantiated.
+ * This hook runs after a new entity object has just been instantiated. It can
+ * be used to set initial values, e.g. to provide defaults.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -791,13 +792,16 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
  * @see hook_ENTITY_TYPE_create()
  */
 function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
-  \Drupal::logger('example')->info('Entity created: @label', ['@label' => $entity->label()]);
+  if ($entity instanceof FieldableEntityInterface && !$entity->foo->value) {
+    $entity->foo->value = 'some_initial_value';
+  }
 }
 
 /**
- * Acts when creating a new entity of a specific type.
+ * Act on a newly created entity of a specific type.
  *
- * This hook runs after a new entity object has just been instantiated.
+ * This hook runs after a new entity object has just been instantiated. It can
+ * be used to set initial values, e.g. to provide defaults.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -806,7 +810,9 @@ function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * @see hook_entity_create()
  */
 function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
-  \Drupal::logger('example')->info('ENTITY_TYPE created: @label', ['@label' => $entity->label()]);
+  if (!$entity->foo->value) {
+    $entity->foo->value = 'some_initial_value';
+  }
 }
 
 /**
@@ -1003,38 +1009,6 @@ function hook_ENTITY_TYPE_update(Drupal\Core\Entity\EntityInterface $entity) {
     ))
     ->condition('id', $entity->id())
     ->execute();
-}
-
-/**
- * Acts when creating a new entity translation.
- *
- * This hook runs after a new entity translation object has just been
- * instantiated.
- *
- * @param \Drupal\Core\Entity\EntityInterface $translation
- *   The entity object.
- *
- * @ingroup entity_crud
- * @see hook_ENTITY_TYPE_translation_create()
- */
-function hook_entity_translation_create(\Drupal\Core\Entity\EntityInterface $translation) {
-  \Drupal::logger('example')->info('Entity translation created: @label', ['@label' => $translation->label()]);
-}
-
-/**
- * Acts when creating a new entity translation of a specific type.
- *
- * This hook runs after a new entity translation object has just been
- * instantiated.
- *
- * @param \Drupal\Core\Entity\EntityInterface $translation
- *   The entity object.
- *
- * @ingroup entity_crud
- * @see hook_entity_translation_create()
- */
-function hook_ENTITY_TYPE_translation_create(\Drupal\Core\Entity\EntityInterface $translation) {
-  \Drupal::logger('example')->info('ENTITY_TYPE translation created: @label', ['@label' => $translation->label()]);
 }
 
 /**
@@ -1909,44 +1883,6 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
     // AccessResultInterface::isAllowed() , because the grants of other modules
     // should still decide on their own if this field is accessible or not
     $grants['node'] = AccessResult::neutral()->inheritCacheability($grants['node']);
-  }
-}
-
-/**
- * Acts when initializing a fieldable entity object.
- *
- * This hook runs after a new entity object or a new entity translation object
- * has just been instantiated. It can be used to set initial values, e.g. to
- * provide defaults.
- *
- * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
- *   The entity object.
- *
- * @ingroup entity_crud
- * @see hook_ENTITY_TYPE_field_values_init()
- */
-function hook_entity_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity) {
-  if ($entity instanceof \Drupal\Core\Entity\ContentEntityInterface && !$entity->foo->value) {
-    $entity->foo->value = 'some_initial_value';
-  }
-}
-
-/**
- * Acts when initializing a fieldable entity object.
- *
- * This hook runs after a new entity object or a new entity translation object
- * has just been instantiated. It can be used to set initial values, e.g. to
- * provide defaults.
- *
- * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
- *   The entity object.
- *
- * @ingroup entity_crud
- * @see hook_entity_field_values_init()
- */
-function hook_ENTITY_TYPE_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity) {
-  if (!$entity->foo->value) {
-    $entity->foo->value = 'some_initial_value';
   }
 }
 
