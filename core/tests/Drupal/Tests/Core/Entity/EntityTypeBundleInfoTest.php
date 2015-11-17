@@ -175,11 +175,11 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
 
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getLabel()->willReturn('Apple');
-    $apple->getBundleOf()->willReturn(NULL);
+    $apple->getBundleEntityType()->willReturn(NULL);
 
     $banana = $this->prophesize(EntityTypeInterface::class);
     $banana->getLabel()->willReturn('Banana');
-    $banana->getBundleOf()->willReturn(NULL);
+    $banana->getBundleEntityType()->willReturn(NULL);
 
     $this->setUpEntityTypeDefinitions([
       'apple' => $apple,
@@ -223,11 +223,11 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
 
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getLabel()->willReturn('Apple');
-    $apple->getBundleOf()->willReturn(NULL);
+    $apple->getBundleEntityType()->willReturn(NULL);
 
     $banana = $this->prophesize(EntityTypeInterface::class);
     $banana->getLabel()->willReturn('Banana');
-    $banana->getBundleOf()->willReturn(NULL);
+    $banana->getBundleEntityType()->willReturn(NULL);
 
     $this->setUpEntityTypeDefinitions([
       'apple' => $apple,
@@ -269,6 +269,51 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
 
     $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
     $this->assertSame('cached data', $bundle_info);
+  }
+
+  /**
+   * @covers ::getAllBundleInfo
+   */
+  public function testGetAllBundleInfoWithEntityBundleInfo() {
+    // Ensure that EntityTypeBundleInfo::getAllBundleInfo() does not add
+    // additional bundles if hook_entity_bundle_info() defines some and the
+    // entity_type does not define a bundle entity type.
+    $this->moduleHandler->invokeAll('entity_bundle_info')->willReturn([
+      'banana' => [
+        'fig' => [
+          'label' => 'Fig banana',
+        ],
+      ],
+    ]);
+    $this->moduleHandler->alter('entity_bundle_info', Argument::type('array'))->willReturn(NULL);
+
+    $apple = $this->prophesize(EntityTypeInterface::class);
+    $apple->getLabel()->willReturn('Apple');
+    $apple->getBundleEntityType()->willReturn(NULL);
+
+    $banana = $this->prophesize(EntityTypeInterface::class);
+    $banana->getLabel()->willReturn('Banana');
+    $banana->getBundleEntityType()->willReturn(NULL);
+
+    $this->setUpEntityTypeDefinitions([
+      'apple' => $apple,
+      'banana' => $banana,
+    ]);
+
+    $expected = [
+      'banana' => [
+        'fig' => [
+          'label' => 'Fig banana',
+        ],
+      ],
+      'apple' => [
+        'apple' => [
+          'label' => 'Apple',
+        ],
+      ],
+    ];
+    $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
+    $this->assertSame($expected, $bundle_info);
   }
 
 }

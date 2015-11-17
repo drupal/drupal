@@ -218,6 +218,9 @@ class NodeTypeTest extends NodeTestBase {
    * Tests for when there are no content types defined.
    */
   public function testNodeTypeNoContentType() {
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
+    $bundle_info = \Drupal::service('entity_type.bundle.info');
+    $this->assertEqual(2, count($bundle_info->getBundleInfo('node')), 'The bundle information service has 2 bundles for the Node entity type.');
     $web_user = $this->drupalCreateUser(['administer content types']);
     $this->drupalLogin($web_user);
 
@@ -231,6 +234,9 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw(t('No content types available. <a href=":link">Add content type</a>.', [
         ':link' => Url::fromRoute('node.type_add')->toString()
       ]), 'Empty text when there are no content types in the system is correct.');
+
+    $bundle_info->clearCachedBundles();
+    $this->assertEqual(0, count($bundle_info->getBundleInfo('node')), 'The bundle information service has 0 bundles for the Node entity type.');
   }
 
 }

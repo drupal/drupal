@@ -8,6 +8,7 @@
 namespace Drupal\block_content\Tests\Migrate;
 
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 
@@ -37,13 +38,15 @@ class MigrateBlockContentStubTest extends MigrateDrupalTestBase {
    * Tests creation of block content stubs with no block_content_type available.
    */
   public function testStubFailure() {
-    $entity_id = $this->createStub('block_content');
-    $violations = $this->validateStub('block_content', $entity_id);
-    $this->assertIdentical(count($violations), 1);
-    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', [
-      '%type' => 'block_content_type',
-      '%id' => 'block_content',
-    ]));
+    $message = 'Expected MigrateException thrown when no bundles exist.';
+    try {
+      $this->createStub('block_content');
+      $this->fail($message);
+    }
+    catch (MigrateException $e) {
+      $this->pass($message);
+      $this->assertEqual('Stubbing failed, no bundles available for entity type: block_content', $e->getMessage());
+    }
   }
 
   /**

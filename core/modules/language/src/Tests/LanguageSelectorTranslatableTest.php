@@ -84,7 +84,7 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
     $this->drupalGet($path);
 
     // Get en language from selector.
-    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => 'edit-settings-node-node-settings-language-langcode', ':option' => 'en'));
+    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => 'edit-settings-user-user-settings-language-langcode', ':option' => 'en'));
 
     // Check that the language text is translated.
     $this->assertEqual((string) $elements[0], $name_translation, 'Checking the option string English is translated to Spanish.');

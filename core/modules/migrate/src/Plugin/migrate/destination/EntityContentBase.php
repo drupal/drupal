@@ -160,6 +160,9 @@ class EntityContentBase extends Entity {
   protected function processStubRow(Row $row) {
     $bundle_key = $this->getKey('bundle');
     if ($bundle_key && empty($row->getDestinationProperty($bundle_key))) {
+      if (empty($this->bundles)) {
+        throw new MigrateException('Stubbing failed, no bundles available for entity type: ' . $this->storage->getEntityTypeId());
+      }
       $row->setDestinationProperty($bundle_key, reset($this->bundles));
     }
 
