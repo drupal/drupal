@@ -60,6 +60,9 @@ class EditorController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the XSS-filtered value.
    *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   Thrown if no value to filter is specified.
+   *
    * @see editor_filter_xss()
    */
   public function filterXss(Request $request, FilterFormatInterface $filter_format) {
