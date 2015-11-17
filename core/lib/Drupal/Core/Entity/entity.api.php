@@ -1916,16 +1916,16 @@ function hook_entity_extra_field_info() {
     // Visibility of the ordering of the language selector is the same as on the
     // node/add form.
     if ($module_language_enabled) {
-      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->type);
+      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->id());
       if ($configuration->isLanguageAlterable()) {
-        $extra['node'][$bundle->type]['form']['language'] = array(
+        $extra['node'][$bundle->id()]['form']['language'] = array(
           'label' => t('Language'),
           'description' => $description,
           'weight' => 0,
         );
       }
     }
-    $extra['node'][$bundle->type]['display']['language'] = array(
+    $extra['node'][$bundle->id()]['display']['language'] = array(
       'label' => t('Language'),
       'description' => $description,
       'weight' => 0,
@@ -1948,8 +1948,8 @@ function hook_entity_extra_field_info() {
 function hook_entity_extra_field_info_alter(&$info) {
   // Force node title to always be at the top of the list by default.
   foreach (NodeType::loadMultiple() as $bundle) {
-    if (isset($info['node'][$bundle->type]['form']['title'])) {
-      $info['node'][$bundle->type]['form']['title']['weight'] = -20;
+    if (isset($info['node'][$bundle->id()]['form']['title'])) {
+      $info['node'][$bundle->id()]['form']['title']['weight'] = -20;
     }
   }
 }
