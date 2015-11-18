@@ -54,6 +54,15 @@ display:
           plugin_id: block_content_id
           entity_type: block_content
           entity_field: id
+      sorts:
+        revision_id:
+          id: revision_id
+          table: block_content_field_revision
+          field: revision_id
+          order: ASC
+          plugin_id: field
+          entity_type: block_content
+          entity_field: revision_id
       display_extenders: {  }
     display_plugin: default
     display_title: Master
