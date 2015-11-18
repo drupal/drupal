@@ -66,7 +66,7 @@ EOD;
     $this->assertIdentical($entity->label(), 'First');
     $this->assertIdentical($entity->id(), 'first');
     $this->assertTrue($entity->status());
-    $this->assertRaw(t('The @entity_type %label was imported.', array('@entity_type' => 'config_test', '%label' => $entity->label())));
+    $this->assertRaw(t('The configuration was imported successfully.'));
 
     // Attempt an import with an existing ID but missing UUID.
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
@@ -82,8 +82,7 @@ EOD;
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', array('%name' => 'custom_id', '@type' => 'test configuration')));
     $this->drupalPostForm(NULL, array(), t('Confirm'));
-    $entity = $storage->load('custom_id');
-    $this->assertRaw(t('The @entity_type %label was imported.', array('@entity_type' => 'config_test', '%label' => $entity->label())));
+    $this->assertRaw(t('The configuration was imported successfully.'));
 
     // Perform an import with a unique ID and UUID.
     $import = <<<EOD
@@ -103,7 +102,7 @@ EOD;
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', array('%name' => 'second', '@type' => 'test configuration')));
     $this->drupalPostForm(NULL, array(), t('Confirm'));
     $entity = $storage->load('second');
-    $this->assertRaw(t('The @entity_type %label was imported.', array('@entity_type' => 'config_test', '%label' => $entity->label())));
+    $this->assertRaw(t('The configuration was imported successfully.'));
     $this->assertIdentical($entity->label(), 'Second');
     $this->assertIdentical($entity->id(), 'second');
     $this->assertFalse($entity->status());
@@ -126,8 +125,27 @@ EOD;
     $this->assertRaw(t('Are you sure you want to update the %name @type?', array('%name' => 'second', '@type' => 'test configuration')));
     $this->drupalPostForm(NULL, array(), t('Confirm'));
     $entity = $storage->load('second');
-    $this->assertRaw(t('The @entity_type %label was imported.', array('@entity_type' => 'config_test', '%label' => $entity->label())));
+    $this->assertRaw(t('The configuration was imported successfully.'));
     $this->assertIdentical($entity->label(), 'Second updated');
+
+    // Try to perform an update which adds missing dependencies.
+    $import = <<<EOD
+id: second
+uuid: $second_uuid
+label: 'Second updated'
+weight: 0
+style: ''
+status: '0'
+dependencies:
+  module:
+    - does_not_exist
+EOD;
+    $edit = array(
+      'config_type' => 'config_test',
+      'import' => $import,
+    );
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertRaw(t('Configuration %name depends on the %owner module that will not be installed after import.', ['%name' => 'config_test.dynamic.second', '%owner' => 'does_not_exist']));
   }
 
   /**
@@ -150,6 +168,20 @@ EOD;
     $this->drupalPostForm(NULL, array(), t('Confirm'));
     $this->drupalGet('');
     $this->assertText('Test simple import');
+
+    // Ensure that ConfigImporter validation is running when importing simple
+    // configuration.
+    $config_data = $this->config('core.extension')->get();
+    // Simulate uninstalling the Config module.
+    unset($config_data['module']['config']);
+    $edit = array(
+      'config_type' => 'system.simple',
+      'config_name' => 'core.extension',
+      'import' => Yaml::encode($config_data),
+    );
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertText(t('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.'));
+
   }
 
   /**

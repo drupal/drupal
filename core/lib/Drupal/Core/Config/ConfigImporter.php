@@ -511,8 +511,6 @@ class ConfigImporter {
    *   If the configuration is already importing.
    */
   public function initialize() {
-    $this->createExtensionChangelist();
-
     // Ensure that the changes have been validated.
     $this->validate();
 
@@ -710,8 +708,10 @@ class ConfigImporter {
    * @throws \Drupal\Core\Config\ConfigImporterException
    *   Exception thrown if the validate event logged any errors.
    */
-  protected function validate() {
+  public function validate() {
     if (!$this->validated) {
+      // Create the list of installs and uninstalls.
+      $this->createExtensionChangelist();
       // Validate renames.
       foreach ($this->getUnprocessedConfiguration('rename') as $name) {
         $names = $this->storageComparer->extractRenameNames($name);
