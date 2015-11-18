@@ -7,12 +7,12 @@
 
 namespace Drupal\file;
 
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines an interface for file entity storage classes.
  */
-interface FileStorageInterface extends EntityStorageInterface {
+interface FileStorageInterface extends ContentEntityStorageInterface {
 
   /**
    * Determines total disk space used by a single user or the whole filesystem.

@@ -13,7 +13,10 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class ContentEntityStorageBase extends EntityStorageBase implements DynamicallyFieldableEntityStorageInterface {
+/**
+ * Base class for content entity storage handlers.
+ */
+abstract class ContentEntityStorageBase extends EntityStorageBase implements ContentEntityStorageInterface, DynamicallyFieldableEntityStorageInterface {
 
   /**
    * The entity bundle key.
@@ -87,13 +90,32 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
       $bundle = $values[$this->bundleKey];
     }
     $entity = new $this->entityClass(array(), $this->entityTypeId, $bundle);
+    $this->initFieldValues($entity, $values);
+    return $entity;
+  }
 
+  /**
+   * Initializes field values.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   An entity object.
+   * @param array $values
+   *   (optional) An associative array of initial field values keyed by field
+   *   name. If none is provided default values will be applied.
+   * @param array $field_names
+   *   (optional) An associative array of field names to be initialized. If none
+   *   is provided all fields will be initialized.
+   */
+  protected function initFieldValues(ContentEntityInterface $entity, array $values = [], array $field_names = []) {
+    // Populate field values.
     foreach ($entity as $name => $field) {
-      if (isset($values[$name])) {
-        $entity->$name = $values[$name];
-      }
-      elseif (!array_key_exists($name, $values)) {
-        $entity->get($name)->applyDefaultValue();
+      if (!$field_names || isset($field_names[$name])) {
+        if (isset($values[$name])) {
+          $entity->$name = $values[$name];
+        }
+        elseif (!array_key_exists($name, $values)) {
+          $entity->get($name)->applyDefaultValue();
+        }
       }
       unset($values[$name]);
     }
@@ -102,7 +124,23 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
     foreach ($values as $name => $value) {
       $entity->$name = $value;
     }
-    return $entity;
+
+    // Make sure modules can alter field initial values.
+    $this->invokeHook('field_values_init', $entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
+    $translation = $entity->getTranslation($langcode);
+    $definitions = array_filter($translation->getFieldDefinitions(), function(FieldDefinitionInterface $definition) { return $definition->isTranslatable(); });
+    $field_names = array_map(function(FieldDefinitionInterface $definition) { return $definition->getName(); }, $definitions);
+    $values[$this->langcodeKey] = $langcode;
+    $values[$this->getEntityType()->getKey('default_langcode')] = FALSE;
+    $this->initFieldValues($translation, $values, $field_names);
+    $this->invokeHook('translation_create', $entity);
+    return $translation;
   }
 
   /**

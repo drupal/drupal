@@ -29,6 +29,14 @@ interface TranslatableInterface {
   public function isDefaultTranslation();
 
   /**
+   * Checks whether the translation is new.
+   *
+   * @return bool
+   *   TRUE if the translation is new, FALSE otherwise.
+   */
+  public function isNewTranslation();
+
+  /**
    * Returns the languages the data is translated to.
    *
    * @param bool $include_default

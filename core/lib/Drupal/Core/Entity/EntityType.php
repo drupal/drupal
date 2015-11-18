@@ -276,6 +276,9 @@ class EntityType implements EntityTypeInterface {
     $this->handlers += array(
       'access' => 'Drupal\Core\Entity\EntityAccessControlHandler',
     );
+    if (isset($this->handlers['storage'])) {
+      $this->checkStorageClass($this->handlers['storage']);
+    }
 
     // Automatically add the EntityChanged constraint if the entity type tracks
     // the changed time.
@@ -459,7 +462,18 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function setStorageClass($class) {
+    $this->checkStorageClass($class);
     $this->handlers['storage'] = $class;
+  }
+
+  /**
+   * Checks that the provided class is an instance of ConfigEntityStorage.
+   *
+   * @param string $class
+   *   The class to check.
+   */
+  protected function checkStorageClass($class) {
+    // Nothing to check by default.
   }
 
   /**

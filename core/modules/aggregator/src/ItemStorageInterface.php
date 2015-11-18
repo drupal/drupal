@@ -7,12 +7,12 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines an interface for aggregator item entity storage classes.
  */
-interface ItemStorageInterface extends EntityStorageInterface {
+interface ItemStorageInterface extends ContentEntityStorageInterface {
 
   /**
    * Returns the count of the items in a feed.
