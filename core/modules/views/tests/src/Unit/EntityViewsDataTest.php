@@ -93,7 +93,12 @@ class EntityViewsDataTest extends UnitTestCase {
       'base_table' => 'entity_test',
       'id' => 'entity_test',
       'label' => 'Entity test',
-      'entity_keys' => ['id' => 'id', 'langcode' => 'langcode'],
+      'entity_keys' => [
+        'id' => 'id',
+        'langcode' => 'langcode',
+        'bundle' => 'type',
+        'revision' => 'revision_id',
+      ],
       'provider' => 'entity_test',
       'list_cache_contexts' => ['entity_test_list_cache_context'],
     ]);
@@ -190,6 +195,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $entity_type = $this->baseEntityType
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('id', 'entity_test_mul')
+      ->set('translatable', TRUE)
       ->setKey('label', 'label');
 
     $this->viewsData->setEntityType($entity_type);
@@ -259,6 +265,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
       ->set('id', 'entity_test_mulrev')
+      ->set('translatable', TRUE)
       ->setKey('revision', 'revision_id')
     ;
     $this->viewsData->setEntityType($entity_type);
@@ -297,6 +304,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
       ->set('id', 'entity_test_mulrev')
+      ->set('translatable', TRUE)
       ->setKey('revision', 'revision_id')
     ;
     $this->viewsData->setEntityType($entity_type);
@@ -316,7 +324,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $revision_data = $data['entity_test_mulrev_property_revision'];
     $this->assertCount(2, $revision_data['table']['join']);
     $this->assertEquals([
-      'entity_test' => ['left_field' => 'revision_id', 'field' => 'revision_id', 'type' => 'INNER'],
+      'entity_test_mulrev_field_data' => ['left_field' => 'revision_id', 'field' => 'revision_id', 'type' => 'INNER'],
       'entity_test_mulrev_revision' => ['left_field' => 'revision_id', 'field' => 'revision_id', 'type' => 'INNER'],
     ], $revision_data['table']['join']);
     $this->assertFalse(isset($data['data_table']));
@@ -526,9 +534,18 @@ class EntityViewsDataTest extends UnitTestCase {
     $table_mapping->expects($this->any())
       ->method('getFieldNames')
       ->willReturnMap([
-        ['entity_test_mul', ['id', 'uuid', 'type', 'langcode']],
-        ['entity_test_mul_property_data', ['id', 'langcode', 'name', 'description', 'homepage', 'user_id']],
+        ['entity_test_mul', ['uuid']],
+        ['entity_test_mul_property_data', ['id', 'type', 'langcode', 'name', 'description', 'homepage', 'user_id']],
       ]);
+
+    $table_mapping->expects($this->any())
+      ->method('getFieldTableName')
+      ->willReturnCallback(function($field) {
+        if ($field == 'uuid') {
+          return 'entity_test_mul';
+        }
+        return 'entity_test_mul_property_data';
+      });
 
     $this->entityStorage->expects($this->once())
       ->method('getTableMapping')
@@ -547,17 +564,13 @@ class EntityViewsDataTest extends UnitTestCase {
     $data = $this->viewsData->getViewsData();
 
     // Check the base fields.
-    $this->assertNumericField($data['entity_test_mul']['id']);
-    $this->assertField($data['entity_test_mul']['id'], 'id');
+    $this->assertFalse(isset($data['entity_test_mul']['id']));
+    $this->assertFalse(isset($data['entity_test_mul']['type']));
     $this->assertUuidField($data['entity_test_mul']['uuid']);
     $this->assertField($data['entity_test_mul']['uuid'], 'uuid');
 
-    $this->assertBundleField($data['entity_test_mul']['type']);
-    $this->assertField($data['entity_test_mul']['type'], 'type');
     $this->assertFalse(isset($data['entity_test_mul']['type']['relationship']));
 
-    $this->assertLanguageField($data['entity_test_mul']['langcode']);
-    $this->assertField($data['entity_test_mul']['langcode'], 'langcode');
     // Also ensure that field_data only fields don't appear on the base table.
     $this->assertFalse(isset($data['entity_test_mul']['name']));
     $this->assertFalse(isset($data['entity_test_mul']['description']));
@@ -569,6 +582,9 @@ class EntityViewsDataTest extends UnitTestCase {
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mul_property_data']['id']);
     $this->assertField($data['entity_test_mul_property_data']['id'], 'id');
+
+    $this->assertBundleField($data['entity_test_mul_property_data']['type']);
+    $this->assertField($data['entity_test_mul_property_data']['type'], 'type');
 
     $this->assertLanguageField($data['entity_test_mul_property_data']['langcode']);
     $this->assertField($data['entity_test_mul_property_data']['langcode'], 'langcode');
@@ -600,7 +616,8 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('data_table', 'entity_test_mulrev_property_data')
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
-      ->set('id', 'entity_test_mulrev');
+      ->set('id', 'entity_test_mulrev')
+      ->set('translatable', TRUE);
     $base_field_definitions = $this->setupBaseFields(EntityTestMulRev::baseFieldDefinitions($this->baseEntityType));
     $user_base_field_definitions = [
       'uid' => BaseFieldDefinition::create('integer')
@@ -645,6 +662,15 @@ class EntityViewsDataTest extends UnitTestCase {
         ['entity_test_mulrev_property_revision', ['id', 'revision_id', 'langcode', 'name', 'description', 'homepage', 'user_id']],
       ]);
 
+    $table_mapping->expects($this->any())
+      ->method('getFieldTableName')
+      ->willReturnCallback(function($field) {
+        if ($field == 'uuid') {
+          return 'entity_test_mulrev';
+        }
+        return 'entity_test_mulrev_property_data';
+      });
+
     $this->entityStorage->expects($this->once())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
@@ -654,14 +680,11 @@ class EntityViewsDataTest extends UnitTestCase {
     $data = $this->viewsData->getViewsData();
 
     // Check the base fields.
-    $this->assertNumericField($data['entity_test_mulrev']['id']);
-    $this->assertField($data['entity_test_mulrev']['id'], 'id');
-    $this->assertNumericField($data['entity_test_mulrev']['revision_id']);
-    $this->assertField($data['entity_test_mulrev']['revision_id'], 'revision_id');
+    $this->assertFalse(isset($data['entity_test_mulrev']['id']));
+    $this->assertFalse(isset($data['entity_test_mulrev']['type']));
+    $this->assertFalse(isset($data['entity_test_mulrev']['revision_id']));
     $this->assertUuidField($data['entity_test_mulrev']['uuid']);
     $this->assertField($data['entity_test_mulrev']['uuid'], 'uuid');
-    $this->assertStringField($data['entity_test_mulrev']['type']);
-    $this->assertField($data['entity_test_mulrev']['type'], 'type');
 
     // Also ensure that field_data only fields don't appear on the base table.
     $this->assertFalse(isset($data['entity_test_mulrev']['name']));
@@ -672,17 +695,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertFalse(isset($data['entity_test_mulrev']['langcode']));
     $this->assertFalse(isset($data['entity_test_mulrev']['user_id']));
 
-    // Check the revision fields.
-    $this->assertNumericField($data['entity_test_mulrev_revision']['id']);
-    $this->assertField($data['entity_test_mulrev_revision']['id'], 'id');
-    $this->assertNumericField($data['entity_test_mulrev_revision']['revision_id']);
-    $this->assertField($data['entity_test_mulrev_revision']['revision_id'], 'revision_id');
-
-    $this->assertLanguageField($data['entity_test_mulrev_revision']['langcode']);
-    $this->assertField($data['entity_test_mulrev_revision']['langcode'], 'langcode');
-    $this->assertEquals('Original language', $data['entity_test_mulrev_revision']['langcode']['title']);
+    // Check the revision fields. The revision ID should only appear in the data
+    // table.
+    $this->assertFalse(isset($data['entity_test_mulrev_revision']['revision_id']));
 
     // Also ensure that field_data only fields don't appear on the revision table.
+    $this->assertFalse(isset($data['entity_test_mulrev_revision']['id']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['name']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description__value']));
@@ -693,6 +711,8 @@ class EntityViewsDataTest extends UnitTestCase {
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mulrev_property_data']['id']);
     $this->assertField($data['entity_test_mulrev_property_data']['id'], 'id');
+    $this->assertNumericField($data['entity_test_mulrev_property_data']['revision_id']);
+    $this->assertField($data['entity_test_mulrev_property_data']['revision_id'], 'revision_id');
     $this->assertLanguageField($data['entity_test_mulrev_property_data']['langcode']);
     $this->assertField($data['entity_test_mulrev_property_data']['langcode'], 'langcode');
     $this->assertStringField($data['entity_test_mulrev_property_data']['name']);

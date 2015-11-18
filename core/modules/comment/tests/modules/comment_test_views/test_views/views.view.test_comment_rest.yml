@@ -338,7 +338,7 @@ display:
       arguments:
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           relationship: node
           group_type: group

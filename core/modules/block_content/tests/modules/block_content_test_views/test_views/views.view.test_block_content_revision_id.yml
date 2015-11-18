@@ -8,7 +8,7 @@ label: null
 module: views
 description: ''
 tag: ''
-base_table: block_content_revision
+base_table: block_content_field_revision
 base_field: revision_id
 core: '8'
 display:
@@ -17,28 +17,28 @@ display:
       relationships:
         id:
           id: id
-          table: block_content_revision
+          table: block_content_field_revision
           field: id
           required: true
           plugin_id: standard
       fields:
         revision_id:
           id: revision_id
-          table: block_content_revision
+          table: block_content_field_revision
           field: revision_id
           plugin_id: field
           entity_type: block_content
           entity_field: revision_id
         id_1:
           id: id_1
-          table: block_content_revision
+          table: block_content_field_revision
           field: id
           plugin_id: field
           entity_type: block_content
           entity_field: id
         id:
           id: id
-          table: block_content
+          table: block_content_field_data
           field: id
           relationship: id
           plugin_id: field
@@ -47,7 +47,7 @@ display:
       arguments:
         id:
           id: id
-          table: block_content_revision
+          table: block_content_field_revision
           field: id
           plugin_id: numeric
           entity_type: block_content

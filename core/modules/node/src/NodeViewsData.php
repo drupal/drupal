@@ -240,7 +240,7 @@ class NodeViewsData extends EntityViewsData {
         'title' => t('Content'),
         'label' => t('Get the actual content from a content revision.'),
       ),
-    ) + $data['node_revision']['vid'];
+    ) + $data['node_field_revision']['vid'];
 
     $data['node_field_revision']['langcode']['help'] = t('The language the original content is in.');
 

@@ -9,7 +9,7 @@ label: test_view_fieldapi
 module: views
 description: ''
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -21,7 +21,7 @@ display:
         nid:
           field: nid
           id: nid
-          table: node
+          table: node_field_data
           plugin_id: field
           entity_type: node
           entity_field: nid

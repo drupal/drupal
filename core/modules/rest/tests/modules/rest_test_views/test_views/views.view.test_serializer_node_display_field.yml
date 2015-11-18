@@ -41,7 +41,7 @@ display:
       fields:
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           plugin_id: field
           entity_type: node
