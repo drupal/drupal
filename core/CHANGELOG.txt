@@ -1,4 +1,4 @@
-Drupal 8.0.x, xxxx-xx-xx (development version)
+Drupal 8.0.0, 2015-11-19
 ------------------------
 - Significantly improved the front end:
     * Made all built-in themes responsive.
