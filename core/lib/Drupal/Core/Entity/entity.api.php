@@ -1051,7 +1051,7 @@ function hook_ENTITY_TYPE_translation_create(\Drupal\Core\Entity\EntityInterface
  */
 function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
   $variables = array(
-    '@language' => $translation->language()->name,
+    '@language' => $translation->language()->getName(),
     '@label' => $translation->getUntranslated()->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been stored.', $variables);
@@ -1071,7 +1071,7 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
  */
 function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
   $variables = array(
-    '@language' => $translation->language()->name,
+    '@language' => $translation->language()->getName(),
     '@label' => $translation->getUntranslated()->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been stored.', $variables);
@@ -1089,10 +1089,9 @@ function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface
  * @see hook_ENTITY_TYPE_translation_delete()
  */
 function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
-  $languages = \Drupal::languageManager()->getLanguages();
   $variables = array(
-    '@language' => $languages[$langcode]->name,
-    '@label' => $entity->label(),
+    '@language' => $translation->language()->getName(),
+    '@label' => $translation->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been deleted.', $variables);
 }
@@ -1109,10 +1108,9 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
  * @see hook_entity_translation_delete()
  */
 function hook_ENTITY_TYPE_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
-  $languages = \Drupal::languageManager()->getLanguages();
   $variables = array(
-    '@language' => $languages[$langcode]->name,
-    '@label' => $entity->label(),
+    '@language' => $translation->language()->getName(),
+    '@label' => $translation->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been deleted.', $variables);
 }
