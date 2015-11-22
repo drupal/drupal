@@ -3,10 +3,6 @@
 /**
  * @file
  * Primarily Drupal hooks and global API functions to manipulate views.
- *
- * This is the main module file for Views. The main entry points into
- * this module are views_page() and views_block(), where it handles
- * incoming page and block requests.
  */
 
 use Drupal\Component\Utility\Html;
