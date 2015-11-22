@@ -163,6 +163,9 @@ function hook_ajax_render_alter(array &$data) {
  * altering a node form, the node entity can be retrieved by invoking
  * $form_state->getFormObject()->getEntity().
  *
+ * Implementations are responsible for adding cache contexts/tags/max-age as
+ * needed. See https://www.drupal.org/developing/api/8/cache.
+ *
  * In addition to hook_form_alter(), which is called for all forms, there are
  * two more specific form hooks available. The first,
  * hook_form_BASE_FORM_ID_alter(), allows targeting of a form/forms via a base
@@ -210,6 +213,9 @@ function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_stat
 /**
  * Provide a form-specific alteration instead of the global hook_form_alter().
  *
+ * Implementations are responsible for adding cache contexts/tags/max-age as
+ * needed. See https://www.drupal.org/developing/api/8/cache.
+ *
  * Modules can implement hook_form_FORM_ID_alter() to modify a specific form,
  * rather than implementing hook_form_alter() and checking the form ID, or
  * using long switch statements to alter multiple forms.
@@ -248,6 +254,9 @@ function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $f
 
 /**
  * Provide a form-specific alteration for shared ('base') forms.
+ *
+ * Implementations are responsible for adding cache contexts/tags/max-age as
+ * needed. See https://www.drupal.org/developing/api/8/cache.
  *
  * By default, when \Drupal::formBuilder()->getForm() is called, Drupal looks
  * for a function with the same name as the form ID, and uses that function to
