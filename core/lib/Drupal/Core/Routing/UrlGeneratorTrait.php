@@ -3,6 +3,9 @@
 /**
  * @file
  * Contains \Drupal\Core\Routing\UrlGeneratorTrait.
+ *
+ * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\Url instead.
  */
 
 namespace Drupal\Core\Routing;
@@ -34,6 +37,9 @@ trait UrlGeneratorTrait {
    *
    * @return string
    *   The generated URL for the given route.
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Url instead.
    */
   protected function url($route_name, $route_parameters = array(), $options = array()) {
     return $this->getUrlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
