@@ -570,6 +570,13 @@ class Drupal {
    *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    * @see \Drupal\Core\Url
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Link instead.
+   *   Example:
+   *   @code
+   *     $link = Link::fromTextAndUrl($text, $url);
+   *   @endcode
    */
   public static function l($text, Url $url) {
     return static::getContainer()->get('link_generator')->generate($text, $url);
