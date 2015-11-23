@@ -467,7 +467,7 @@ class EntityType implements EntityTypeInterface {
   }
 
   /**
-   * Checks that the provided class is an instance of ConfigEntityStorage.
+   * Checks that the provided class is compatible with the current entity type.
    *
    * @param string $class
    *   The class to check.
