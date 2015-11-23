@@ -83,7 +83,7 @@ class FieldModuleUninstallValidatorTest extends EntityUnitTestBase {
     }
     catch (ModuleUninstallValidatorException $e) {
       $this->pass($message);
-      $this->assertEqual($e->getMessage(), 'The following reasons prevents the modules from being uninstalled: There is data for the field extra_base_field on entity type Test entity');
+      $this->assertEqual($e->getMessage(), 'The following reasons prevent the modules from being uninstalled: There is data for the field extra_base_field on entity type Test entity');
     }
 
     // Verify uninstalling entity_test is not possible when there is content for
