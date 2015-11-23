@@ -237,7 +237,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
           if (!ctype_alpha($key[0])) {
             // We trigger an error as we may want to introduce new placeholders
             // in the future without breaking backward compatibility.
-            trigger_error('Invalid placeholder: ' . $key, E_USER_ERROR);
+            trigger_error('Invalid placeholder (' . $key . ') in string: ' . $string, E_USER_ERROR);
           }
           break;
       }

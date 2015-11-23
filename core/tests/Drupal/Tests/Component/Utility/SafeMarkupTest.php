@@ -205,7 +205,7 @@ class SafeMarkupTest extends UnitTestCase {
     restore_error_handler();
 
     $this->assertEquals(E_USER_ERROR, $this->lastErrorNumber);
-    $this->assertEquals('Invalid placeholder: ~placeholder', $this->lastErrorMessage);
+    $this->assertEquals('Invalid placeholder (~placeholder) in string: Broken placeholder: ~placeholder', $this->lastErrorMessage);
   }
 
 }
