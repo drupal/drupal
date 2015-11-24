@@ -346,6 +346,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $alt = $this->randomString(512);
     $title = $this->randomString(1024);
     $edit = array(
+      // Get the path of the 'image-test.png' file.
       'files[settings_default_image_uuid]' => drupal_realpath($images[0]->uri),
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
@@ -378,7 +379,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Create alt text for the image.
     $alt = $this->randomMachineName();
 
-    $nid = $this->uploadNodeImage($images[1], $field_name, 'article', $alt);
+    // Upload the 'image-test.gif' file.
+    $nid = $this->uploadNodeImage($images[2], $field_name, 'article', $alt);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
@@ -413,7 +415,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->createImageField($private_field_name, 'article', array('uri_scheme' => 'private'));
     // Add a default image to the new field.
     $edit = array(
-      'files[settings_default_image_uuid]' => drupal_realpath($images[1]->uri),
+      // Get the path of the 'image-test.gif' file.
+      'files[settings_default_image_uuid]' => drupal_realpath($images[2]->uri),
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     );
