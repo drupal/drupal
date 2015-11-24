@@ -220,23 +220,23 @@ trait AssertContentTrait {
    *   placeholders in the query. The values may be either strings or numeric
    *   values.
    *
-   * @return array
-   *   The return value of the xpath search. For details on the xpath string
-   *   format and return values see the SimpleXML documentation,
-   *   http://php.net/manual/function.simplexml-element-xpath.php.
+   * @return \SimpleXMLElement[]|bool
+   *   The return value of the xpath search or FALSE on failure. For details on
+   *   the xpath string format and return values see the SimpleXML
+   *   documentation.
+   *
+   * @see http://php.net/manual/function.simplexml-element-xpath.php
    */
-  protected function xpath($xpath, array $arguments = array()) {
+  protected function xpath($xpath, array $arguments = []) {
     if ($this->parse()) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
       $result = $this->elements->xpath($xpath);
       // Some combinations of PHP / libxml versions return an empty array
       // instead of the documented FALSE. Forcefully convert any falsish values
       // to an empty array to allow foreach(...) constructions.
-      return $result ? $result : array();
+      return $result ?: [];
     }
-    else {
-      return FALSE;
-    }
+    return FALSE;
   }
 
   /**
