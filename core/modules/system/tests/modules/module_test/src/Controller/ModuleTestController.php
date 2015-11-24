@@ -13,24 +13,40 @@ namespace Drupal\module_test\Controller;
 class ModuleTestController {
 
   /**
-   * @todo Remove module_test_hook_dynamic_loading_invoke().
+   * Returns dynamically invoked hook results for the 'module_test' module
+   *
+   * @return array
+   *   Renderable array.
    */
   public function hookDynamicLoadingInvoke() {
-    return module_test_hook_dynamic_loading_invoke();
+    $result = \Drupal::moduleHandler()->invoke('module_test', 'test_hook');
+    return $result['module_test'];
   }
 
   /**
-   * @todo Remove module_test_hook_dynamic_loading_invoke_all().
+   * Returns dynamically invoked hook results for all modules.
+   *
+   * @return array
+   *   Renderable array.
    */
   public function hookDynamicLoadingInvokeAll() {
-    return module_test_hook_dynamic_loading_invoke_all();
+    $result = \Drupal::moduleHandler()->invokeAll('test_hook');
+    return $result['module_test'];
   }
 
   /**
-   * @todo Remove module_test_class_loading().
+   * Returns the result of an autoloaded class's public method.
+   *
+   * @return array
+   *   Renderable array.
    */
   public function testClassLoading() {
-    return ['#markup' => module_test_class_loading()];
+    $markup = NULL;
+    if (class_exists('Drupal\module_autoload_test\SomeClass')) {
+      $obj = new \Drupal\module_autoload_test\SomeClass();
+      $markup = $obj->testMethod();
+    }
+    return ['#markup' => $markup];
   }
 
 }

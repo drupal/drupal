@@ -62,32 +62,6 @@ function module_test_hook_info() {
 }
 
 /**
- * Page callback for 'hook dynamic loading' test.
- *
- * If the hook is dynamically loaded correctly, the menu callback should
- * return 'success!'.
- *
- * @deprecated \Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvoke()
- */
-function module_test_hook_dynamic_loading_invoke() {
-  $result = \Drupal::moduleHandler()->invoke('module_test', 'test_hook');
-  return $result['module_test'];
-}
-
-/**
- * Page callback for 'hook dynamic loading' test.
- *
- * If the hook is dynamically loaded correctly, the menu callback should
- * return 'success!'.
- *
- * @deprecated \Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvokeAll()
- */
-function module_test_hook_dynamic_loading_invoke_all() {
-  $result = \Drupal::moduleHandler()->invokeAll('test_hook');
-  return $result['module_test'];
-}
-
-/**
  * Load function used by module_test_hook_dynamic_loading_invoke_all_during_load().
  *
  * @see module_test_menu().
@@ -95,23 +69,6 @@ function module_test_hook_dynamic_loading_invoke_all() {
 function module_test_load($param) {
   $result = \Drupal::moduleHandler()->invokeAll('test_hook');
   return $result[$param];
-}
-
-/**
- * Page callback for 'class loading' test.
- *
- * This module does not have a dependency on module_autoload_test.module. If
- * that module is enabled, this function should return the string
- * 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.'. If
- * that module is not enabled, this function should return nothing.
- *
- * @deprecated \Drupal\module_test\Controller\ModuleTestController::testClassLoading()
- */
-function module_test_class_loading() {
-  if (class_exists('Drupal\module_autoload_test\SomeClass')) {
-    $obj = new Drupal\module_autoload_test\SomeClass();
-    return $obj->testMethod();
-  }
 }
 
 /**
