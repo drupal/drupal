@@ -70,9 +70,7 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
    *   The view executable factory
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, ViewExecutableFactory $view_executable_factory) {
-    $this->configuration = $configuration;
-    $this->pluginId = $plugin_id;
-    $this->pluginDefinition = $plugin_definition;
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
     $this->viewExecutableFactory = $view_executable_factory;
