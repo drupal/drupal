@@ -8,7 +8,10 @@
 use Drupal\Core\Extension\Extension;
 
 /**
- * Implements hook_init().
+ * Includes .theme file from themes.
+ *
+ * @param \Drupal\Core\Extension\Extension $theme
+ *   The theme extension object.
  */
 function nyan_cat_init(Extension $theme) {
   $theme->load();
