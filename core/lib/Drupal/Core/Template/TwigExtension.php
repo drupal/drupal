@@ -438,7 +438,7 @@ class TwigExtension extends \Twig_Extension {
         $return = $arg->toString();
       }
       else {
-        throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+        throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
       }
     }
 
@@ -516,7 +516,7 @@ class TwigExtension extends \Twig_Extension {
         return $arg->toString();
       }
       else {
-        throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+        throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
       }
     }
 
