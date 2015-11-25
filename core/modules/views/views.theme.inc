@@ -740,8 +740,7 @@ function template_preprocess_views_view_unformatted(&$variables) {
   foreach ($rows as $id => $row) {
     $variables['rows'][$id] = array();
     $variables['rows'][$id]['content'] = $row;
-    $variables['rows'][$id]['attributes'] = array();
-    $variables['rows'][$id]['attributes'] = new Attribute($variables['rows'][$id]['attributes']);
+    $variables['rows'][$id]['attributes'] = new Attribute();
     if ($row_class = $view->style_plugin->getRowClass($id)) {
       $variables['rows'][$id]['attributes']->addClass($row_class);
     }
