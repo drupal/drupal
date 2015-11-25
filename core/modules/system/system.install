@@ -646,10 +646,21 @@ function system_requirements($phase) {
       'value' => t('Up to date'),
     ];
     // Verify that no entity updates are pending.
-    if (\Drupal::entityDefinitionUpdateManager()->needsUpdates()) {
+    if ($change_list = \Drupal::entityDefinitionUpdateManager()->getChangeSummary()) {
+      $build = [];
+      foreach ($change_list as $entity_type_id => $changes) {
+        $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+        $build[] = [
+          '#theme' => 'item_list',
+          '#title' => $entity_type->getLabel(),
+          '#items' => $changes,
+        ];
+      }
+
+      $entity_update_issues = \Drupal::service('renderer')->render($build);
       $requirements['entity_update']['severity'] = REQUIREMENT_ERROR;
-      // @todo Provide details: https://www.drupal.org/node/2554911
       $requirements['entity_update']['value'] = t('Mismatched entity and/or field definitions');
+      $requirements['entity_update']['description'] = t('The following changes were detected in the entity type and field definitions. @updates', ['@updates' => $entity_update_issues]);
     }
   }
 
