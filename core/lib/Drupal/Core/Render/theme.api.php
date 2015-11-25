@@ -68,12 +68,12 @@
  * receives are documented in the header of the default Twig template file.
  *
  * hook_theme() implementations can also specify that a theme hook
- * implementation is a theme function, but that is uncommon. It is only used for
- * special cases, for performance reasons, because rendering using theme
- * functions is somewhat faster than theme templates. Note that while Twig
- * templates will auto-escape variables, theme functions must explicitly escape
- * any variables by using theme_render_and_autoescape(). Failure to do so is
- * likely to result in security vulnerabilities.
+ * implementation is a theme function, but that is uncommon and not recommended.
+ * Note that while Twig templates will auto-escape variables, theme functions
+ * must explicitly escape any variables by using theme_render_and_autoescape().
+ * Failure to do so is likely to result in security vulnerabilities. Theme
+ * functions are deprecated in Drupal 8.0.x and will be removed before
+ * Drupal 9.0.x. Use Twig templates instead.
  *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
@@ -98,7 +98,8 @@
  * default function is again a good starting point for overriding its behavior.
  * Again, note that theme functions (unlike templates) must explicitly escape
  * variables using theme_render_and_autoescape() or risk security
- * vulnerabilities.
+ * vulnerabilities. Theme functions are deprecated in Drupal 8.0.x and will be
+ * removed before Drupal 9.0.x. Use Twig templates instead.
  *
  * @section sec_preprocess_templates Preprocessing for Template Files
  * If the theme implementation is a template file, several functions are called
@@ -1080,8 +1081,7 @@ function hook_page_bottom(array &$page_bottom) {
  *     element or tree in preprocess and process functions.
  *   - file: The file the implementation resides in. This file will be included
  *     prior to the theme being rendered, to make sure that the function or
- *     preprocess function (as needed) is actually loaded; this makes it
- *     possible to split theme functions out into separate files quite easily.
+ *     preprocess function (as needed) is actually loaded.
  *   - path: Override the path of the file to be used. Ordinarily the module or
  *     theme path will be used, but if the file will not be in the default
  *     path, include it here. This path should be relative to the Drupal root
@@ -1094,9 +1094,10 @@ function hook_page_bottom(array &$page_bottom) {
  *     specified, a default template name will be assumed. For example, if a
  *     module registers the 'search_result' theme hook, 'search-result' will be
  *     assigned as its template name.
- *   - function: If specified, this will be the function name to invoke for
- *     this implementation. If neither 'template' nor 'function' are specified,
- *     a default template name will be assumed. See above for more details.
+ *   - function: (deprecated in Drupal 8.0.x, will be removed in Drupal 9.0.x)
+ *     If specified, this will be the function name to invoke for this
+ *     implementation. If neither 'template' nor 'function' are specified, a
+ *     default template name will be assumed. See above for more details.
  *   - base hook: Used for theme suggestions only: the base theme hook name.
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.
