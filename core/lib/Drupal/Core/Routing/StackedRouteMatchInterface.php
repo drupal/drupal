@@ -33,7 +33,7 @@ interface StackedRouteMatchInterface extends RouteMatchInterface {
   /**
    * Returns the parent route match of the current.
    *
-   * @return \Drupal\Core\Routing\RouteMatchInterface\NULL
+   * @return \Drupal\Core\Routing\RouteMatchInterface|NULL
    *   The parent route match or NULL, if it the master route match.
    */
   public function getParentRouteMatch();
