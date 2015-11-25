@@ -999,7 +999,7 @@ function hook_page_attachments(array &$attachments) {
  * @param array &$attachments
  *   Array of all attachments provided by hook_page_attachments() implementations.
  *
- * @see hook_page_attachments_alter()
+ * @see hook_page_attachments()
  */
 function hook_page_attachments_alter(array &$attachments) {
   // Conditionally remove an asset.
