@@ -35,6 +35,15 @@ function views_post_update_update_cacheability_metadata() {
 }
 
 /**
+ * @} End of "addtogroup updates-8.0.0-beta".
+ */
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
  * Update some views fields that were previously duplicated.
  */
 function views_post_update_cleanup_duplicate_views_data() {
@@ -128,5 +137,5 @@ function views_post_update_cleanup_duplicate_views_data() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-beta".
+ * @} End of "addtogroup updates-8.0.0-rc".
  */
