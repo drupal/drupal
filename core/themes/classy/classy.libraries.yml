@@ -11,7 +11,7 @@ base:
       css/components/exposed-filters.css: { weight: -10 }
       css/components/field.css: { weight: -10 }
       css/components/form.css: { weight: -10 }
-      css/components/icons.css:  { weight: -10 }
+      css/components/icons.css: { weight: -10 }
       css/components/inline-form.css: { weight: -10 }
       css/components/item-list.css: { weight: -10 }
       css/components/link.css: { weight: -10 }
@@ -66,7 +66,7 @@ messages:
   version: VERSION
   css:
     component:
-      css/components/messages.css:  { weight: -10 }
+      css/components/messages.css: { weight: -10 }
 
 node:
   version: VERSION
