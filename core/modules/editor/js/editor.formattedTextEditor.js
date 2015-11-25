@@ -122,9 +122,9 @@
           break;
 
         case 'activating':
-          // When transformation filters have been been applied to the formatted
-          // text of this field, then we'll need to load a re-formatted version
-          // of it without the transformation filters.
+          // When transformation filters have been applied to the formatted text
+          // of this field, then we'll need to load a re-formatted version of it
+          // without the transformation filters.
           if (this.textFormatHasTransformations) {
             var $textElement = this.$textElement;
             this._getUntransformedText(function (untransformedText) {

@@ -18,7 +18,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 class Element {
 
   /**
-   * The Text Editor plugin manager manager service.
+   * The Text Editor plugin manager service.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
