@@ -15,6 +15,7 @@ namespace Drupal\views\Tests;
 use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Views;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 
 class ModuleTest extends ViewKernelTestBase {
 
@@ -54,7 +55,7 @@ class ModuleTest extends ViewKernelTestBase {
         'field' => $this->randomMachineName(),
       );
       $handler = $this->container->get('plugin.manager.views.' . $type)->getHandler($item);
-      $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
+      $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), new FormattableMarkup('Make sure that a broken handler of type: @type is created.', ['@type' => $type]));
     }
 
     $views_data = $this->viewsData();
