@@ -53,13 +53,11 @@ class ImageStyleDownloadController extends FileDownloadController {
    *   The lock backend.
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
    */
-  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, LoggerInterface $logger) {
+  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory) {
     $this->lock = $lock;
     $this->imageFactory = $image_factory;
-    $this->logger = $logger;
+    $this->logger = $this->getLogger('image');
   }
 
   /**
@@ -68,8 +66,7 @@ class ImageStyleDownloadController extends FileDownloadController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('lock'),
-      $container->get('image.factory'),
-      $container->get('logger.factory')->get('image')
+      $container->get('image.factory')
     );
   }
 

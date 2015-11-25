@@ -47,14 +47,12 @@ class SearchController extends ControllerBase {
    *
    * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
    *   The search page repository.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(SearchPageRepositoryInterface $search_page_repository, LoggerInterface $logger, RendererInterface $renderer) {
+  public function __construct(SearchPageRepositoryInterface $search_page_repository, RendererInterface $renderer) {
     $this->searchPageRepository = $search_page_repository;
-    $this->logger = $logger;
+    $this->logger = $this->getLogger('search');
     $this->renderer = $renderer;
   }
 
@@ -64,7 +62,6 @@ class SearchController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('search.search_page_repository'),
-      $container->get('logger.factory')->get('search'),
       $container->get('renderer')
     );
   }
