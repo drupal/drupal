@@ -30,9 +30,9 @@ use Drupal\Core\Url;
  * additional information, as well as a list of properties that are common to
  * all render elements (including form elements). Properties specific to a
  * particular element are documented on that element's class.
-
- * Here is a list of properties that are used during the rendering and
- * form processing of form elements:
+ *
+ * Here is a list of properties that are used during the rendering and form
+ * processing of form elements:
  * - #after_build: (array) Array of callables or function names, which are
  *   called after the element is built. Arguments: $element, $form_state.
  * - #ajax: (array) Array of elements to specify Ajax behavior. See
