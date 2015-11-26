@@ -259,6 +259,23 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
+   * Tests the "No results text" rendering.
+   *
+   * @covers ::renderText
+   */
+  public function testRenderNoResult() {
+    $this->setupDisplayWithEmptyArgumentsAndFields();
+    $field = $this->setupTestField(['empty' => 'This <strong>should work</strong>.']);
+    $field->field_alias = 'key';
+    $row = new ResultRow(['key' => '']);
+
+    $expected_result = 'This <strong>should work</strong>.';
+    $result = $field->advancedRender($row);
+    $this->assertEquals($expected_result, $result);
+    $this->assertInstanceOf('\Drupal\views\Render\ViewsRenderPipelineMarkup', $result);
+  }
+
+  /**
    * Test rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsLinkWithPathAndOptions
