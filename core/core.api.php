@@ -235,7 +235,7 @@
  * configuration storage on a particular site, configuration files are always
  * used for:
  * - Defining the default configuration for an extension (module, theme, or
- *   profile), which is imported to the active storage when the extension if
+ *   profile), which is imported to the active storage when the extension is
  *   enabled. These configuration items are located in the config/install
  *   sub-directory of the extension. Note that changes to this configuration
  *   after a module or theme is already enabled have no effect; to make a
