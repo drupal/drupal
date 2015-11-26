@@ -311,8 +311,13 @@ function language_negotiation_url_domains() {
  */
 function language_modules_installed($modules) {
   if (!in_array('language', $modules)) {
+    // Since newly (un)installed modules may change the default settings for
+    // non-locked language types (e.g. content language), we need to resave the
+    // language type configuration.
+    /** @var \Drupal\language\LanguageNegotiatorInterface $negotiator */
     $negotiator = \Drupal::service('language_negotiator');
-    $negotiator->updateConfiguration(array());
+    $configurable = \Drupal::config('language.types')->get('configurable');
+    $negotiator->updateConfiguration($configurable);
     $negotiator->purgeConfiguration();
   }
   else {
