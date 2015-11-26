@@ -53,15 +53,14 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
       // Process entity type definition changes.
       if (!empty($change_list['entity_type'])) {
         $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        $t_args = array('%entity_type' => $entity_type->getLabel());
 
         switch ($change_list['entity_type']) {
           case static::DEFINITION_CREATED:
-            $summary[$entity_type_id][] = $this->t('Create the %entity_type entity type.', $t_args);
+            $summary[$entity_type_id][] = $this->t('The %entity_type entity type needs to be installed.', ['%entity_type' => $entity_type->getLabel()]);
             break;
 
           case static::DEFINITION_UPDATED:
-            $summary[$entity_type_id][] = $this->t('Update the %entity_type entity type.', $t_args);
+            $summary[$entity_type_id][] = $this->t('The %entity_type entity type needs to be updated.', ['%entity_type' => $entity_type->getLabel()]);
             break;
         }
       }
@@ -74,15 +73,15 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
           switch ($change) {
             case static::DEFINITION_CREATED:
-              $summary[$entity_type_id][] = $this->t('Create the %field_name field.', array('%field_name' => $storage_definitions[$field_name]->getLabel()));
+              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be installed.', ['%field_name' => $storage_definitions[$field_name]->getLabel()]);
               break;
 
             case static::DEFINITION_UPDATED:
-              $summary[$entity_type_id][] = $this->t('Update the %field_name field.', array('%field_name' => $storage_definitions[$field_name]->getLabel()));
+              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be updated.', ['%field_name' => $storage_definitions[$field_name]->getLabel()]);
               break;
 
             case static::DEFINITION_DELETED:
-              $summary[$entity_type_id][] = $this->t('Delete the %field_name field.', array('%field_name' => $original_storage_definitions[$field_name]->getLabel()));
+              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be uninstalled.', ['%field_name' => $original_storage_definitions[$field_name]->getLabel()]);
               break;
           }
         }
