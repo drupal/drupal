@@ -43,7 +43,10 @@
  *   by the machine name of the module that defines the route, or the name of
  *   a subsystem.
  * - The 'path' line gives the URL path of the route (relative to the site's
- *   base URL).
+ *   base URL). Note: The path in Drupal is treated case insensitive so
+ *   /example and /EXAmplE should return the same page.
+ *   @todo Fix https://www.drupal.org/node/2075889 to actually get this
+ *   behaviour.
  * - The 'defaults' section tells how to build the main content of the route,
  *   and can also give other information, such as the page title and additional
  *   arguments for the route controller method. There are several possibilities
