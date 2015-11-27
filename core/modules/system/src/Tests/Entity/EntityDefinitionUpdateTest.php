@@ -105,7 +105,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel()]),
+        t('Update the %entity_type entity type.', array('%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel())),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected); //, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -144,7 +144,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be installed.', ['%field_name' => t('A new base field')]),
+        t('Create the %field_name field.', array('%field_name' => t('A new base field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -157,7 +157,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new base field')]),
+        t('Update the %field_name field.', array('%field_name' => t('A new base field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -170,7 +170,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new base field')]),
+        t('Update the %field_name field.', array('%field_name' => t('A new base field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -184,7 +184,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new base field')]),
+        t('Update the %field_name field.', array('%field_name' => t('A new base field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -199,7 +199,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be uninstalled.', ['%field_name' => t('A new base field')]),
+        t('Delete the %field_name field.', array('%field_name' => t('A new base field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -218,7 +218,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be installed.', ['%field_name' => t('A new bundle field')]),
+        t('Create the %field_name field.', array('%field_name' => t('A new bundle field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -231,9 +231,9 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->modifyBundleField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
-      'entity_test_update' => [
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new bundle field')]),
-      ],
+      'entity_test_update' => array(
+        t('Update the %field_name field.', array('%field_name' => t('A new bundle field'))),
+      ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
     $this->entityDefinitionUpdateManager->applyUpdates();
@@ -245,7 +245,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %field_name field needs to be uninstalled.', ['%field_name' => t('A new bundle field')]),
+        t('Delete the %field_name field.', array('%field_name' => t('A new bundle field'))),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -487,7 +487,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel()]),
+        t('Update the %entity_type entity type.', array('%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel())),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
@@ -502,7 +502,7 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $expected = array(
       'entity_test_update' => array(
-        t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel()]),
+        t('Update the %entity_type entity type.', array('%entity_type' => $this->entityManager->getDefinition('entity_test_update')->getLabel())),
       ),
     );
     $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');

@@ -181,8 +181,8 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
    * \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity::processOutbound().
    *
    * @return bool
-   *   TRUE if the the content entity language negotiator has higher priority
-   *   than the url language negotiator, FALSE otherwise.
+   *   TRUE if the content entity language negotiator has higher priority than
+   *   the url language negotiator, FALSE otherwise.
    */
   protected function hasLowerLanguageNegotiationWeight() {
     if (!isset($this->hasLowerLanguageNegotiationWeightResult)) {
