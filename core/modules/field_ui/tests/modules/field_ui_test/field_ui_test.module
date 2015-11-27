@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Field UI test module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_form_FORM_BASE_ID_alter().
+ */
+function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $table = &$form['fields'];
+
+  foreach (Element::children($table) as $name) {
+    $table[$name]['parent_wrapper']['parent']['#options'] = array('indent' => 'Indent');
+    $table[$name]['parent_wrapper']['parent']['#default_value'] = 'indent';
+  }
+
+  $table['indent'] = [
+    '#attributes' => array('class' => array('draggable', 'field-group'), 'id' => 'indent-id'),
+    '#row_type' => 'group',
+    '#region_callback' => 'field_ui_test_region_callback',
+    '#js_settings' => array('rowHandler' => 'group'),
+    'human_name' => array(
+      '#markup' => 'Indent',
+      '#prefix' => '<span class="group-label">',
+      '#suffix' => '</span>',
+    ),
+    'weight' => array(
+      '#type' => 'textfield',
+      '#default_value' => 0,
+      '#size' => 3,
+      '#attributes' => array('class' => array('field-weight')),
+    ),
+    'parent_wrapper' => array(
+      'parent' => array(
+        '#type' => 'select',
+        '#options' =>  array('indent' => 'Indent'),
+        '#empty_value' => '',
+        '#default_value' => '',
+        '#attributes' => array('class' => array('field-parent')),
+        '#parents' => array('fields', 'indent', 'parent'),
+      ),
+      'hidden_name' => array(
+        '#type' => 'hidden',
+        '#default_value' => 'indent',
+        '#attributes' => array('class' => array('field-name')),
+      ),
+    ),
+  ];
+
+}
+
+function field_ui_test_region_callback($row) {
+  return 'content';
+}
