@@ -16,15 +16,6 @@ use Drupal\Component\Annotation\Plugin;
 abstract class ViewsPluginAnnotationBase extends Plugin implements AnnotationInterface {
 
   /**
-   * A class to make the plugin derivative aware.
-   *
-   * @var string
-   *
-   * @see \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator
-   */
-  public $derivative;
-
-  /**
    * Whether or not to register a theme function automatically.
    *
    * @var bool (optional)

@@ -48,13 +48,4 @@ class MigrateDestination extends Plugin {
    */
   public $requirements_met = TRUE;
 
-  /**
-   * A class to make the plugin derivative aware.
-   *
-   * @var string
-   *
-   * @see \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator
-   */
-  public $derivative;
-
 }

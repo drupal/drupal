@@ -43,11 +43,4 @@ class Block extends Plugin {
    */
   public $category = '';
 
-  /**
-   * Class used to retrieve derivative definitions of the block.
-   *
-   * @var string
-   */
-  public $derivative = '';
-
 }
