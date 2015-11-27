@@ -113,13 +113,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   protected $formBuilder;
 
   /**
-   * The logger factory.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $loggerFactory;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -287,23 +280,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
       $this->languageManager = $this->container()->get('language_manager');
     }
     return $this->languageManager;
-  }
-
-  /**
-   * Returns a channel logger object.
-   *
-   * @param string $channel
-   *   The name of the channel. Can be any string, but the general practice is
-   *   to use the name of the subsystem calling this.
-   *
-   * @return \Psr\Log\LoggerInterface
-   *   The logger for this channel.
-   */
-  protected function getLogger($channel) {
-    if (!$this->loggerFactory) {
-      $this->loggerFactory = $this->container()->get('logger.factory');
-    }
-    return $this->loggerFactory->get($channel);
   }
 
   /**
