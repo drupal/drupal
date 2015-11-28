@@ -168,10 +168,10 @@ for ($i = 0; $i < 36; $i++) {
   if ($i < 12) {
     $node->type = 'page';
   }
-  else if ($i < 24) {
+  elseif ($i < 24) {
     $node->type = 'story';
   }
-  else if (module_exists('blog')) {
+  elseif (module_exists('blog')) {
     $node->type = 'blog';
   }
   $node->sticky = 0;

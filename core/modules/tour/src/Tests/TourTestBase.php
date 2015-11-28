@@ -58,7 +58,7 @@ abstract class TourTestBase extends WebTestBase {
           $elements = \PHPUnit_Util_XML::cssSelect('#' . $tip['data-id'], TRUE, $this->content, TRUE);
           $this->assertTrue(!empty($elements) && count($elements) === 1, format_string('Found corresponding page element for tour tip with id #%data-id', array('%data-id' => $tip['data-id'])));
         }
-        else if (!empty($tip['data-class'])) {
+        elseif (!empty($tip['data-class'])) {
           $elements = \PHPUnit_Util_XML::cssSelect('.' . $tip['data-class'], TRUE, $this->content, TRUE);
           $this->assertFalse(empty($elements), format_string('Found corresponding page element for tour tip with class .%data-class', array('%data-class' => $tip['data-class'])));
         }

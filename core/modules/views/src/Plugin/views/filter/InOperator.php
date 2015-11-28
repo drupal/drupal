@@ -349,7 +349,7 @@ class InOperator extends FilterPluginBase {
       if (count($this->value) == 0) {
         $values = $this->t('Unknown');
       }
-      else if (count($this->value) == 1) {
+      elseif (count($this->value) == 1) {
         // If any, use the 'single' short name of the operator instead.
         if (isset($info[$this->operator]['short_single'])) {
           $operator = $info[$this->operator]['short_single'];

@@ -290,7 +290,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
     if ($data instanceof MarkupInterface) {
       $data = (string) $data;
     }
-    else if (is_array($data)) {
+    elseif (is_array($data)) {
       array_walk_recursive($data, function (&$value) {
         if ($value instanceof MarkupInterface) {
           $value = (string) $value;

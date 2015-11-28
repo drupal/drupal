@@ -99,18 +99,18 @@ function system_requirements($phase) {
       if ($matches[1] < 2) {
         $rewrite_error = TRUE;
       }
-      else if ($matches[1] == 2) {
+      elseif ($matches[1] == 2) {
         if (!isset($matches[2])) {
           $rewrite_warning = TRUE;
         }
-        else if ($matches[2] < 2) {
+        elseif ($matches[2] < 2) {
           $rewrite_error = TRUE;
         }
-        else if ($matches[2] == 2) {
+        elseif ($matches[2] == 2) {
           if (!isset($matches[3])) {
             $rewrite_warning = TRUE;
           }
-          else if ($matches[3] < 16) {
+          elseif ($matches[3] < 16) {
             $rewrite_error = TRUE;
           }
         }

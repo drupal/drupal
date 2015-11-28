@@ -798,7 +798,7 @@ class AccessResultTest extends UnitTestCase {
     if ($op === 'OR') {
       $result = $first->orIf($second);
     }
-    else if ($op === 'AND') {
+    elseif ($op === 'AND') {
       $result = $first->andIf($second);
     }
     else {
