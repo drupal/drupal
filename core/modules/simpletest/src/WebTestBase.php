@@ -2970,7 +2970,7 @@ abstract class WebTestBase extends TestBase {
     }
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
-    else if ($this->container->has('url_generator')) {
+    elseif ($this->container->has('url_generator')) {
       $force_internal = isset($options['external']) && $options['external'] == FALSE;
       if (!$force_internal && UrlHelper::isExternal($path)) {
         return Url::fromUri($path, $options)->toString();

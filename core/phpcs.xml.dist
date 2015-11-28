@@ -25,7 +25,6 @@
     <exclude name="Drupal.Commenting.InlineComment"/>
     <exclude name="Drupal.Commenting.PostStatementComment"/>
     <exclude name="Drupal.ControlStructures.ControlSignature"/>
-    <exclude name="Drupal.ControlStructures.ElseIf"/>
     <exclude name="Drupal.ControlStructures.InlineControlStructure"/>
     <exclude name="Drupal.Files.EndFileNewline"/>
     <exclude name="Drupal.Files.LineLength"/>
