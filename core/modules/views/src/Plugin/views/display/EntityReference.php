@@ -150,7 +150,7 @@ class EntityReference extends DisplayPluginBase {
 
     // Add an IN condition for validation.
     if (!empty($options['ids'])) {
-      $this->view->query->addWhere(0, $id_field, $options['ids']);
+      $this->view->query->addWhere(0, $id_field, $options['ids'], 'IN');
     }
 
     $this->view->setItemsPerPage($options['limit']);

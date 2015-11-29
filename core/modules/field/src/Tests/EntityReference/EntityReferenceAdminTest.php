@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Entity\Entity;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\node\Entity\Node;
 use Drupal\simpletest\WebTestBase;
@@ -235,7 +236,12 @@ class EntityReferenceAdminTest extends WebTestBase {
       'field_name' => $field_name,
     );
     $this->drupalPostForm($bundle_path . '/fields/add-field', $edit, t('Save and continue'));
-    $this->drupalPostForm(NULL, array(), t('Save field settings'));
+
+    // Set to unlimited.
+    $edit = array(
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
 
     // Add the view to the test field.
     $edit = array(
@@ -267,6 +273,17 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalGet($target_url, array('query' => array('q' => 'Foo')));
     $this->assertRaw($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertRaw($node2->getTitle() . ' (' . $node2->id() . ')');
+
+    // Try to add a new node, fill the entity reference field and submit the
+    // form.
+    $this->drupalPostForm('node/add/' . $this->type, [], t('Add another item'));
+    $edit = array(
+      'title[0][value]' => 'Example',
+      'field_test_entity_ref_field[0][target_id]' => 'Foo Node (' . $node1->id() . ')',
+      'field_test_entity_ref_field[1][target_id]' => 'Foo Node (' . $node2->id() . ')',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
 
     $edit = array(
       'title[0][value]' => 'Example',
