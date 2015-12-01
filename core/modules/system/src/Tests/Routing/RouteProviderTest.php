@@ -134,6 +134,15 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
+   * Don't fail when given an empty path.
+   */
+  public function testEmptyPathCandidatesOutlines() {
+    $provider = new TestRouteProvider(Database::getConnection(), $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $candidates = $provider->getCandidateOutlines([]);
+    $this->assertEqual(count($candidates), 0, 'Empty parts should return no candidates.');
+  }
+
+  /**
    * Confirms that we can find routes with the exact incoming path.
    */
   function testExactPathMatch() {

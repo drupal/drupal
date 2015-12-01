@@ -257,7 +257,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
     if ($number_parts == 1) {
       $masks = array(1);
     }
-    elseif ($number_parts <= 3) {
+    elseif ($number_parts <= 3 && $number_parts > 0) {
       // Optimization - don't query the state system for short paths. This also
       // insulates against the state entry for masks going missing for common
       // user-facing paths since we generate all values without checking state.
@@ -271,7 +271,6 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
       // Get the actual patterns that exist out of state.
       $masks = (array) $this->state->get('routing.menu_masks.' . $this->tableName, array());
     }
-
 
     // Only examine patterns that actually exist as router items (the masks).
     foreach ($masks as $i) {
