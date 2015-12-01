@@ -61,4 +61,17 @@ class LocaleConfigManagerTest extends KernelTestBase {
     $this->assertFalse($translation_after->isNew());
     $translation_after->setString('updated_translation')->save();
   }
+
+  /**
+   * Tests getDefaultConfigLangcode().
+   */
+  public function testGetDefaultConfigLangcode() {
+    // Install the Language module's configuration so we can use the
+    // module_installer service.
+    $this->installConfig(['language']);
+    $this->assertNull(\Drupal::service('locale.config_manager')->getDefaultConfigLangcode('locale_test_translate.settings'), 'Before installing a module the locale config manager can not access the shipped configuration.');
+    \Drupal::service('module_installer')->install(['locale_test_translate']);
+    $this->assertEqual('en', \Drupal::service('locale.config_manager')->getDefaultConfigLangcode('locale_test_translate.settings'), 'After installing a module the locale config manager can get the shipped configuration langcode.');
+  }
+
 }
