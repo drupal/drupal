@@ -51,14 +51,14 @@ class LibraryDiscoveryCollector extends CacheCollector {
   /**
    * Constructs a CacheCollector object.
    *
+   * @param string $cid
+   *   The cid for the array being cached.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
    * @param \Drupal\Core\Asset\LibraryDiscoveryParser $discovery_parser
    *   The library discovery parser.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
    */
   public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, LibraryDiscoveryParser $discovery_parser, ThemeManagerInterface $theme_manager) {
     $this->themeManager = $theme_manager;
