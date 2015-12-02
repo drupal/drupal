@@ -106,9 +106,9 @@ function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfi
  * subclassing \Drupal\Core\Field\WidgetBase). Widget plugins need to be in the
  * namespace \Drupal\{your_module}\Plugin\Field\FieldWidget.
  *
- * Widgets are @link forms_api_reference.html Form API @endlink
- * elements with additional processing capabilities. The methods of the
- * WidgetInterface object are typically called by respective methods in the
+ * Widgets are @link form_api Form API @endlink elements with additional
+ * processing capabilities. The methods of the WidgetInterface object are
+ * typically called by respective methods in the
  * \Drupal\Core\Entity\Entity\EntityFormDisplay class.
  *
  * @see field

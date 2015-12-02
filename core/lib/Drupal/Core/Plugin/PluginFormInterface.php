@@ -27,8 +27,7 @@ interface PluginFormInterface {
    * callback and build the rest of the form in the callback. By the time the
    * callback is executed, the element's #parents and #array_parents properties
    * will have been set by the form API. For more documentation on #parents and
-   * #array_parents, see
-   * https://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/8.
+   * #array_parents, see \Drupal\Core\Render\Element\FormElement.
    *
    * @param array $form
    *   An associative array containing the initial structure of the plugin form.
