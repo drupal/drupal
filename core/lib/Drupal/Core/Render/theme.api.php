@@ -473,6 +473,36 @@
  */
 
 /**
+ * @defgroup listing_page_element Page header for Elements page
+ * @{
+ * Introduction to form and render elements
+ *
+ * Render elements are referenced in render arrays. Render arrays contain data
+ * to be rendered, along with meta-data and attributes that specify how to
+ * render the data into markup; see the
+ * @link theme_render Render API topic @endlink for an overview of render
+ * arrays and render elements. Form arrays are a subset of render arrays,
+ * representing HTML forms; form elements are a subset of render elements,
+ * representing HTML elements for forms. See the
+ * @link form_api Form API topic @endlink for an overview of forms, form
+ * processing, and form arrays.
+ *
+ * Each form and render element type corresponds to an element plugin class;
+ * each of them either extends \Drupal\Core\Render\Element\RenderElement
+ * (render elements) or \Drupal\Core\Render\Element\FormElement (form
+ * elements). Usage and properties are documented on the individual classes,
+ * and the two base classes list common properties shared by all render
+ * elements and the form element subset, respectively.
+ *
+ * @see theme_render
+ * @see form_api
+ * @see \Drupal\Core\Render\Element\RenderElement
+ * @see \Drupal\Core\Render\Element\FormElement
+ *
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */

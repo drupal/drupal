@@ -194,7 +194,8 @@ function hook_ajax_render_alter(array &$data) {
  *
  * @see hook_form_BASE_FORM_ID_alter()
  * @see hook_form_FORM_ID_alter()
- * @see forms_api_reference.html
+ *
+ * @ingroup form_api
  */
 function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
@@ -237,7 +238,8 @@ function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_stat
  * @see hook_form_alter()
  * @see hook_form_BASE_FORM_ID_alter()
  * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm()
- * @see forms_api_reference.html
+ *
+ * @ingroup form_api
  */
 function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   // Modification for the form with the given form ID goes here. For example, if
@@ -286,6 +288,8 @@ function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $f
  * @see hook_form_alter()
  * @see hook_form_FORM_ID_alter()
  * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm()
+ *
+ * @ingroup form_api
  */
 function hook_form_BASE_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   // Modification for the form with the given BASE_FORM_ID goes here. For
