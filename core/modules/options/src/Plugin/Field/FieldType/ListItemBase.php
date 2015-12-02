@@ -252,7 +252,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * @inheritdoc.
+   * {@inheritdoc}
    */
   public static function storageSettingsToConfigData(array $settings) {
     if (isset($settings['allowed_values'])) {
@@ -262,7 +262,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * @inheritdoc.
+   * {@inheritdoc}
    */
   public static function storageSettingsFromConfigData(array $settings) {
     if (isset($settings['allowed_values'])) {

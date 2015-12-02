@@ -156,7 +156,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getPluginClass($type) {
     $plugin_definition = $this->getDefinition($type, FALSE);

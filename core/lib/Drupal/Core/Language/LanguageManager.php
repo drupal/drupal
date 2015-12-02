@@ -224,7 +224,7 @@ class LanguageManager implements LanguageManagerInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function getStandardLanguageList() {
     // This list is based on languages available from localize.drupal.org. See

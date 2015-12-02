@@ -18,7 +18,7 @@ use Drupal\user\UserInterface;
 class EntityApiTest extends EntityUnitTestBase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();

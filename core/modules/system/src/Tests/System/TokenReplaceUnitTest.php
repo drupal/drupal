@@ -21,7 +21,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();

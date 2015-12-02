@@ -779,7 +779,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function currentDestination() {
     if ($this->valid()) {
