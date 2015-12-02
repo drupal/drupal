@@ -41,7 +41,7 @@ class UserMailRequired extends Constraint implements ConstraintValidatorInterfac
   protected $context;
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function initialize(ExecutionContextInterface $context) {
     $this->context = $context;

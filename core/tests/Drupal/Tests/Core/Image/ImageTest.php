@@ -47,7 +47,7 @@ class ImageTest extends UnitTestCase {
   protected $toolkitOperation;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp() {
     // Use the Druplicon image.

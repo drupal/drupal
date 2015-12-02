@@ -59,7 +59,7 @@ class Fast404ExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function getHandledFormats() {
     return ['html'];
