@@ -547,8 +547,8 @@ function template_preprocess_views_view_table(&$variables) {
       $column_reference['attributes'] = new Attribute($column_reference['attributes']);
     }
 
-    // Remove columns if the option is hide empty column is checked and the
-    // field is not empty.
+    // Remove columns if the "empty_column" option is checked and the
+    // field is empty.
     if (!empty($options['info'][$field]['empty_column'])) {
       $empty = TRUE;
       foreach ($variables['rows'] as $columns) {
