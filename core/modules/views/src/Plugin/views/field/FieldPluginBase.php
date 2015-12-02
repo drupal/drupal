@@ -86,9 +86,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   public $original_value = NULL;
 
   /**
-   * @var array
-   * Stores additional fields which get's added to the query.
+   * Stores additional fields that get added to the query.
+   *
    * The generated aliases are stored in $aliases.
+   *
+   * @var array
    */
   var $additional_fields = array();
 
