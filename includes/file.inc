@@ -595,7 +595,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
   global $user;
   static $upload_cache;
 
-  // Add in our check of the the file name length.
+  // Add our check of the file name length.
   $validators['file_validate_name_length'] = array();
 
   // Return cached objects without processing since the file will have

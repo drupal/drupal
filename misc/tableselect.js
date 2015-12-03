@@ -56,7 +56,7 @@ Drupal.tableSelect = function() {
 };
 
 Drupal.tableSelectRange = function(from, to, state) {
-  // We determine the looping mode based on the the order of from and to.
+  // We determine the looping mode based on the order of from and to.
   var mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
 
   // Traverse through the sibling nodes.
