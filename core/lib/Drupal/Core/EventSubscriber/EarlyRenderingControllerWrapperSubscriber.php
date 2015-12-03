@@ -160,8 +160,8 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
       }
       else {
         // A Response or domain object is returned that does not care about
-        // attachments nor cacheability. E.g. a RedirectResponse. It is safe to
-        // discard any early rendering metadata.
+        // attachments nor cacheability; for instance, a RedirectResponse. It is
+        // safe to discard any early rendering metadata.
       }
     }
 

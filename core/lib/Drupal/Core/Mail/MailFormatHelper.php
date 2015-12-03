@@ -297,8 +297,8 @@ class MailFormatHelper {
    * Note that we are skipping MIME content header lines, because attached
    * files, especially applications, could have long MIME types or long
    * filenames which result in line length longer than the 77 characters limit
-   * and wrapping that line will break the email format. E.g., the attached file
-   * hello_drupal.docx will produce the following Content-Type:
+   * and wrapping that line will break the email format. For instance, the
+   * attached file hello_drupal.docx will produce the following Content-Type:
    * @code
    * Content-Type:
    * application/vnd.openxmlformats-officedocument.wordprocessingml.document;

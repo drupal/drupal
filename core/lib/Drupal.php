@@ -423,11 +423,11 @@ class Drupal {
    * Returns the entity query object for this entity type.
    *
    * @param string $entity_type
-   *   The entity type, e.g. node, for which the query object should be
+   *   The entity type (for example, node) for which the query object should be
    *   returned.
    * @param string $conjunction
-   *   AND if all conditions in the query need to apply, OR if any of them is
-   *   enough. Optional, defaults to AND.
+   *   (optional) Either 'AND' if all conditions in the query need to apply, or
+   *   'OR' if any of them is sufficient. Defaults to 'AND'.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query object that can query the given entity type.
@@ -440,11 +440,11 @@ class Drupal {
    * Returns the entity query aggregate object for this entity type.
    *
    * @param string $entity_type
-   *   The entity type, e.g. node, for which the query object should be
+   *   The entity type (for example, node) for which the query object should be
    *   returned.
    * @param string $conjunction
-   *   AND if all conditions in the query need to apply, OR if any of them is
-   *   enough. Optional, defaults to AND.
+   *   (optional) Either 'AND' if all conditions in the query need to apply, or
+   *   'OR' if any of them is sufficient. Defaults to 'AND'.
    *
    * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
    *   The query object that can query the given entity type.

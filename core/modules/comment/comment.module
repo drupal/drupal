@@ -245,7 +245,8 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment object.
  * @param $view_mode
- *   (optional) View mode; e.g., 'full', 'teaser', etc. Defaults to 'full'.
+ *   (optional) View mode; for instance, 'full', 'teaser', etc. Defaults to
+ *   'full'.
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
@@ -266,7 +267,8 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  * @param $comments
  *   An array of comments as returned by entity_load_multiple().
  * @param $view_mode
- *   View mode; e.g., 'full', 'teaser', etc.
+ *   (optional) View mode; for instance, 'full', 'teaser', etc. Defaults to
+ *   'full'.
  * @param $langcode
  *   (optional) A string indicating the language field values are to be shown
  *   in. If no language is provided the current content language is used.
@@ -641,8 +643,8 @@ function template_preprocess_comment(&$variables) {
   }
 
   if (theme_get_setting('features.comment_user_picture')) {
-    // To change user picture settings (e.g., image style), edit the 'compact'
-    // view mode on the User entity.
+    // To change user picture settings (for instance, image style), edit the
+    // 'compact' view mode on the User entity.
     $variables['user_picture'] = user_view($account, 'compact');
   }
   else {

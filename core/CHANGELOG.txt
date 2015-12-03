@@ -341,7 +341,7 @@ Drupal 7.0, 2011-01-05
 - Improved time zone support:
     * Drupal now uses PHP's time zone database when rendering dates in local
       time. Site-wide and user-configured time zone offsets have been converted
-      to time zone names, e.g. Africa/Abidjan.
+      to time zone names; for example, Africa/Abidjan.
     * In some cases the upgrade and install scripts do not choose the preferred
       site default time zone. The automatically-selected time zone can be
       corrected at admin/config/regional/settings.
@@ -399,7 +399,7 @@ Drupal 7.0, 2011-01-05
       preserved but renamed to file_unmanaged_*().
     * Rewrote file handling to use PHP stream wrappers to enable support for
       both public and private files and to support pluggable storage mechanisms
-      and access to remote resources (e.g. S3 storage or Flickr photos).
+      and access to remote resources (for example, S3 storage or Flickr photos).
     * The mime_extension_mapping variable has been removed. Modules that need to
       alter the default MIME type extension mappings should implement
       hook_file_mimetype_mapping_alter().
@@ -816,7 +816,7 @@ Drupal 4.7.0, 2006-05-01
 - Added support for PHP5's 'mysqli' extension.
 - Search module:
     * Made indexer smarter and more robust.
-    * Added advanced search operators (e.g., phrase, node type, etc.).
+    * Added advanced search operators (phrase, node type, etc.).
     * Added customizable result ranking.
 - PostgreSQL support:
     * Removed dependency on PL/pgSQL procedural language.

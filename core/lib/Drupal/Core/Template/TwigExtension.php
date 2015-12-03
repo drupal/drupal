@@ -315,8 +315,8 @@ class TwigExtension extends \Twig_Extension {
    * ampersand ("&") which separates query params. Thus we cannot mark
    * the generated URL as always safe, but only when we are sure there won't be
    * multiple query params. This is the case when there are none or only one
-   * constant parameter given. E.g. we know beforehand this will not need to
-   * be escaped:
+   * constant parameter given. For instance, we know beforehand this will not
+   * need to be escaped:
    * - path('route')
    * - path('route', {'param': 'value'})
    * But the following may need to be escaped:

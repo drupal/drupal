@@ -80,9 +80,9 @@ class InstallStorage extends FileStorage {
    *   The path to the configuration file.
    *
    * @todo Improve this when figuring out how we want to handle configuration in
-   *   installation profiles. E.g., a config object actually has to be searched
-   *   in the profile first (whereas the profile is never the owner), only
-   *   afterwards check for a corresponding module or theme.
+   *   installation profiles. For instance, a config object actually has to be
+   *   searched in the profile first (whereas the profile is never the owner);
+   *   only afterwards check for a corresponding module or theme.
    */
   public function getFilePath($name) {
     $folders = $this->getAllFolders();

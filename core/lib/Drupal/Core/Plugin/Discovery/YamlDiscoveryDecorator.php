@@ -30,8 +30,8 @@ class YamlDiscoveryDecorator extends YamlDiscovery {
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
    *   The discovery object that is being decorated.
    * @param string $name
-   *   The file name suffix to use for discovery. E.g. 'test' will become
-   *   'MODULE.test.yml'.
+   *   The file name suffix to use for discovery; for instance, 'test' will
+   *   become 'MODULE.test.yml'.
    * @param array $directories
    *   An array of directories to scan.
    */

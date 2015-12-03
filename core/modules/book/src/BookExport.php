@@ -58,9 +58,9 @@ class BookExport {
    * The given node is embedded to its absolute depth in a top level section. For
    * example, a child node with depth 2 in the hierarchy is contained in
    * (otherwise empty) <div> elements corresponding to depth 0 and depth 1.
-   * This is intended to support WYSIWYG output - e.g., level 3 sections always
-   * look like level 3 sections, no matter their depth relative to the node
-   * selected to be exported as printer-friendly HTML.
+   * This is intended to support WYSIWYG output; for instance, level 3 sections
+   * always look like level 3 sections, no matter their depth relative to the
+   * node selected to be exported as printer-friendly HTML.
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node to export.
