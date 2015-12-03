@@ -477,11 +477,11 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           //     Once validated, an element or its property cannot be
           //     invalidated by another rule.
           // That means that the most permissive setting wins. Which means that
-          // it will still be allowed by CKEditor to e.g. define any style, no
-          // matter what the "*" tag's restrictions may be. If there's a setting
-          // for either the "style" or "class" attribute, it cannot possibly be
-          // more permissive than what was set above. Hence: inherit from the
-          // "*" tag where possible.
+          // it will still be allowed by CKEditor, for instance, to define any
+          // style, no matter what the "*" tag's restrictions may be. If there
+          // is a setting for either the "style" or "class" attribute, it cannot
+          // possibly be more permissive than what was set above. Hence, inherit
+          // from the "*" tag where possible.
           if (isset($html_restrictions['allowed']['*'])) {
             $wildcard = $html_restrictions['allowed']['*'];
             if (isset($wildcard['style'])) {

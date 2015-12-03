@@ -17,9 +17,9 @@ interface CacheableResponseInterface {
   /**
    * Adds a dependency on an object: merges its cacheability metadata.
    *
-   * E.g. when a response depends on some configuration, an entity, or an access
-   * result, we must make sure their cacheability metadata is present on the
-   * response. This method makes doing that simple.
+   * For instance, when a response depends on some configuration, an entity, or
+   * an access result, we must make sure their cacheability metadata is present
+   * on the response. This method makes doing that simple.
    *
    * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $dependency
    *   The dependency. If the object implements CacheableDependencyInterface,

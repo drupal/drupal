@@ -32,8 +32,8 @@ use Drupal\Core\Site\Settings;
  *   The prepared statement query to run. Although it will accept both named and
  *   unnamed placeholders, named placeholders are strongly preferred as they are
  *   more self-documenting. If the argument corresponding to a placeholder is
- *   an array of values to be expanded, e.g. for an IN query, the placeholder
- *   should be named with a trailing bracket like :example[]
+ *   an array of values to be expanded (for example, with an IN query), the
+ *   placeholder should be named with a trailing bracket like :example[].
  * @param array $args
  *   An array of values to substitute into the query. If the query uses named
  *   placeholders, this is an associative array in any order. If the query uses
@@ -47,7 +47,7 @@ use Drupal\Core\Site\Settings;
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call query() on it. E.g.
+ *   call query() on it. For example,
  *   $injected_database->query($query, $args, $options);
  *
  * @see \Drupal\Core\Database\Connection::query()
@@ -85,7 +85,7 @@ function db_query($query, array $args = array(), array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call queryRange() on it. E.g.
+ *   call queryRange() on it. For example,
  *   $injected_database->queryRange($query, $from, $count, $args, $options);
  *
  * @see \Drupal\Core\Database\Connection::queryRange()
@@ -121,7 +121,7 @@ function db_query_range($query, $from, $count, array $args = array(), array $opt
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call queryTemporary() on it. E.g.
+ *   call queryTemporary() on it. For example,
  *   $injected_database->queryTemporary($query, $args, $options);
  *
  * @see \Drupal\Core\Database\Connection::queryTemporary()
@@ -148,7 +148,8 @@ function db_query_temporary($query, array $args = array(), array $options = arra
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call insert() on it. E.g. $injected_database->insert($table, $options);
+ *   call insert() on it. For example,
+ *   $injected_database->insert($table, $options);
  *
  * @see \Drupal\Core\Database\Connection::insert()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
@@ -173,7 +174,8 @@ function db_insert($table, array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call merge() on it. E.g. $injected_database->merge($table, $options);
+ *   call merge() on it. For example,
+ *   $injected_database->merge($table, $options);
  *
  * @see \Drupal\Core\Database\Connection::merge()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
@@ -198,7 +200,8 @@ function db_merge($table, array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call update() on it. E.g. $injected_database->update($table, $options);
+ *   call update() on it. For example,
+ *   $injected_database->update($table, $options);
  *
  * @see \Drupal\Core\Database\Connection::update()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
@@ -223,7 +226,8 @@ function db_update($table, array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call delete() on it. E.g. $injected_database->delete($table, $options);
+ *   call delete() on it. For example,
+ *   $injected_database->delete($table, $options);
  *
  * @see \Drupal\Core\Database\Connection::delete()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
@@ -248,7 +252,8 @@ function db_delete($table, array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call truncate() on it. E.g. $injected_database->truncate($table, $options);
+ *   call truncate() on it. For example,
+ *   $injected_database->truncate($table, $options);
  *
  * @see \Drupal\Core\Database\Connection::truncate()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
@@ -277,7 +282,7 @@ function db_truncate($table, array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call select() on it. E.g.
+ *   call select() on it. For example,
  *   $injected_database->select($table, $alias, $options);
  *
  * @see \Drupal\Core\Database\Connection::select()
@@ -304,7 +309,7 @@ function db_select($table, $alias = NULL, array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call startTransaction() on it. E.g.
+ *   call startTransaction() on it. For example,
  *   $injected_database->startTransaction($name);
  *
  * @see \Drupal\Core\Database\Connection::startTransaction()
@@ -346,7 +351,8 @@ function db_set_active($key = 'default') {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call escapeTable() on it. E.g. $injected_database->escapeTable($table);
+ *   call escapeTable() on it. For example,
+ *   $injected_database->escapeTable($table);
  *
  * @see \Drupal\Core\Database\Connection::escapeTable()
  */
@@ -367,7 +373,8 @@ function db_escape_table($table) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call escapeTable() on it. E.g. $injected_database->escapeTable($table);
+ *   call escapeTable() on it. For example,
+ *   $injected_database->escapeTable($table);
  *
  * @see \Drupal\Core\Database\Connection::escapeField()
  */
@@ -407,7 +414,8 @@ function db_escape_field($field) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call escapeLike() on it. E.g. $injected_database->escapeLike($string);
+ *   call escapeLike() on it. For example,
+ *   $injected_database->escapeLike($string);
  *
  * @see \Drupal\Core\Database\Connection::escapeLike()
  */
@@ -423,7 +431,7 @@ function db_like($string) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call driver() on it. E.g. $injected_database->driver($string);
+ *   call driver() on it. For example, $injected_database->driver($string);
  *
  * @see \Drupal\Core\Database\Connection::driver()
  */
@@ -467,7 +475,7 @@ function db_close(array $options = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container and
- *   call nextId() on it. E.g. $injected_database->nextId($existing_id);
+ *   call nextId() on it. For example, $injected_database->nextId($existing_id);
  *
  * @see \Drupal\Core\Database\Connection::nextId()
  */
@@ -565,7 +573,7 @@ function db_condition($conjunction) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call createTable() on it. E.g.
+ *   its schema driver, and call createTable() on it. For example,
  *   $injected_database->schema()->createTable($name, $table);
  *
  * @see \Drupal\Core\Database\Schema::createTable()
@@ -588,7 +596,7 @@ function db_create_table($name, $table) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call fieldNames() on it. E.g.
+ *   its schema driver, and call fieldNames() on it. For example,
  *   $injected_database->schema()->fieldNames($fields);
  *
  * @see \Drupal\Core\Database\Schema::fieldNames()
@@ -610,7 +618,7 @@ function db_field_names($fields) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call indexExists() on it. E.g.
+ *   its schema driver, and call indexExists() on it. For example,
  *   $injected_database->schema()->indexExists($table, $name);
  *
  * @see \Drupal\Core\Database\Schema::indexExists()
@@ -630,7 +638,7 @@ function db_index_exists($table, $name) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call tableExists() on it. E.g.
+ *   its schema driver, and call tableExists() on it. For example,
  *   $injected_database->schema()->tableExists($table);
  *
  * @see \Drupal\Core\Database\Schema::tableExists()
@@ -652,7 +660,7 @@ function db_table_exists($table) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call fieldExists() on it. E.g.
+ *   its schema driver, and call fieldExists() on it. For example,
  *   $injected_database->schema()->fieldExists($table, $field);
  *
  * @see \Drupal\Core\Database\Schema::fieldExists()
@@ -672,7 +680,7 @@ function db_field_exists($table, $field) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call findTables() on it. E.g.
+ *   its schema driver, and call findTables() on it. For example,
  *   $injected_database->schema()->findTables($table_expression);
  *
  * @see \Drupal\Core\Database\Schema::findTables()
@@ -691,7 +699,7 @@ function db_find_tables($table_expression) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call renameTable() on it. E.g.
+ *   its schema driver, and call renameTable() on it. For example,
  *   $injected_database->schema()->renameTable($table, $new_name);
  *
  * @see \Drupal\Core\Database\Schema::renameTable()
@@ -708,7 +716,7 @@ function db_rename_table($table, $new_name) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call dropTable() on it. E.g.
+ *   its schema driver, and call dropTable() on it. For example,
  *   $injected_database->schema()->dropTable($table);
  *
  * @see \Drupal\Core\Database\Schema::dropTable()
@@ -738,7 +746,7 @@ function db_drop_table($table) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call addField() on it. E.g.
+ *   its schema driver, and call addField() on it. For example,
  *   $injected_database->schema()->addField($table, $field, $spec, $keys_new);
  *
  * @see \Drupal\Core\Database\Schema::addField()
@@ -762,7 +770,7 @@ function db_add_field($table, $field, $spec, $keys_new = array()) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call dropField() on it. E.g.
+ *   its schema driver, and call dropField() on it. For example,
  *   $injected_database->schema()->dropField($table, $field);
  *
  * @see \Drupal\Core\Database\Schema::dropField()
@@ -783,7 +791,7 @@ function db_drop_field($table, $field) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call fieldSetDefault() on it. E.g.
+ *   its schema driver, and call fieldSetDefault() on it. For example,
  *   $injected_database->schema()->fieldSetDefault($table, $field, $default);
  *
  * @see \Drupal\Core\Database\Schema::fieldSetDefault()
@@ -802,7 +810,7 @@ function db_field_set_default($table, $field, $default) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call fieldSetNoDefault() on it. E.g.
+ *   its schema driver, and call fieldSetNoDefault() on it. For example,
  *   $injected_database->schema()->fieldSetNoDefault($table, $field);
  *
  * @see \Drupal\Core\Database\Schema::fieldSetNoDefault()
@@ -821,7 +829,7 @@ function db_field_set_no_default($table, $field) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call addPrimaryKey() on it. E.g.
+ *   its schema driver, and call addPrimaryKey() on it. For example,
  *   $injected_database->schema()->addPrimaryKey($table, $fields);
  *
  * @see \Drupal\Core\Database\Schema::addPrimaryKey()
@@ -842,7 +850,7 @@ function db_add_primary_key($table, $fields) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call dropPrimaryKey() on it. E.g.
+ *   its schema driver, and call dropPrimaryKey() on it. For example,
  *   $injected_database->schema()->dropPrimaryKey($table);
  *
  * @see \Drupal\Core\Database\Schema::dropPrimaryKey()
@@ -863,7 +871,7 @@ function db_drop_primary_key($table) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call addUniqueKey() on it. E.g.
+ *   its schema driver, and call addUniqueKey() on it. For example,
  *   $injected_database->schema()->addUniqueKey($table, $name, $fields);
  *
  * @see \Drupal\Core\Database\Schema::addUniqueKey()
@@ -886,7 +894,7 @@ function db_add_unique_key($table, $name, $fields) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call dropUniqueKey() on it. E.g.
+ *   its schema driver, and call dropUniqueKey() on it. For example,
  *   $injected_database->schema()->dropUniqueKey($table, $name);
  *
  * @see \Drupal\Core\Database\Schema::dropUniqueKey()
@@ -911,7 +919,7 @@ function db_drop_unique_key($table, $name) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call addIndex() on it. E.g.
+ *   its schema driver, and call addIndex() on it. For example,
  *   $injected_database->schema()->addIndex($table, $name, $fields, $spec);
  *
  * @see hook_schema()
@@ -936,7 +944,7 @@ function db_add_index($table, $name, $fields, array $spec) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call dropIndex() on it. E.g.
+ *   its schema driver, and call dropIndex() on it. For example,
  *   $injected_database->schema()->dropIndex($table, $name);
  *
  * @see \Drupal\Core\Database\Schema::dropIndex()
@@ -1007,7 +1015,7 @@ function db_drop_index($table, $name) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
  *   a database connection injected into your service from the container, get
- *   its schema driver, and call changeField() on it. E.g.
+ *   its schema driver, and call changeField() on it. For example,
  *   $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
  *
  * @see \Drupal\Core\Database\Schema::changeField()

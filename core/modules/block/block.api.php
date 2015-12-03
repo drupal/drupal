@@ -190,7 +190,8 @@ function hook_block_build_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\
  * @param \Drupal\block\Entity\Block $block
  *   The block instance.
  * @param string $operation
- *   The operation to be performed, e.g., 'view', 'create', 'delete', 'update'.
+ *   The operation to be performed; for instance, 'view', 'create', 'delete', or
+ *   'update'.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object to perform the access check operation on.
  *

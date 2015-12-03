@@ -22,8 +22,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * plugin configuration during plugin instantiation.
  *
  * While core does not prefix constraint plugins, modules have to prefix them
- * with the module name in order to avoid any naming conflicts. E.g. a "profile"
- * module would have to prefix any constraints with "Profile".
+ * with the module name in order to avoid any naming conflicts; for example, a
+ * "profile" module would have to prefix any constraints with "Profile".
  *
  * Constraint plugins may specify data types to which support is limited via the
  * 'type' key of plugin definitions. See

@@ -36,10 +36,11 @@ class UrlHelper {
    *   http_build_query() directly.
    *
    * @param array $query
-   *   The query parameter array to be processed,
-   *   e.g. \Drupal::request()->query->all().
+   *   The query parameter array to be processed; for instance,
+   *   \Drupal::request()->query->all().
    * @param string $parent
-   *   Internal use only. Used to build the $query array key for nested items.
+   *   (optional) Internal use only. Used to build the $query array key for
+   *   nested items. Defaults to an empty string.
    *
    * @return string
    *   A rawurlencoded string which can be used as or appended to the URL query
@@ -168,8 +169,8 @@ class UrlHelper {
     }
     // Internal URLs.
     else {
-      // parse_url() does not support relative URLs, so make it absolute. E.g. the
-      // relative URL "foo/bar:1" isn't properly parsed.
+      // parse_url() does not support relative URLs, so make it absolute. For
+      // instance, the relative URL "foo/bar:1" isn't properly parsed.
       $parts = parse_url('http://example.com/' . $url);
       // Strip the leading slash that was just added.
       $options['path'] = substr($parts['path'], 1);
@@ -200,10 +201,11 @@ class UrlHelper {
   }
 
   /**
-   * Determines whether a path is external to Drupal (e.g. http://example.com).
+   * Determines whether a path is external to Drupal.
    *
-   * If a path cannot be assessed by Drupal's menu handler, then we must
-   * treat it as potentially insecure.
+   * An example of an external path is http://example.com. If a path cannot be
+   * assessed by Drupal's menu handler, then we must treat it as potentially
+   * insecure.
    *
    * @param string $path
    *   The internal path or external URL being linked to, such as "node/34" or
@@ -296,7 +298,7 @@ class UrlHelper {
   }
 
   /**
-   * Strips dangerous protocols (e.g. 'javascript:') from a URI.
+   * Strips dangerous protocols (for example, 'javascript:') from a URI.
    *
    * This function must be called for all URIs within user-entered input prior
    * to being output to an HTML attribute value. It is often called as part of
@@ -316,8 +318,8 @@ class UrlHelper {
    *   for well-formed URLs will be invoked, which strips most substrings that
    *   precede a ":". The result can be used in URL attributes such as "href"
    *   or "src" (only after calling Html::escape() separately), but this may not
-   *   produce valid HTML (e.g., malformed URLs within "href" attributes fail
-   *   HTML validation). This can be avoided by using
+   *   produce valid HTML (for example, malformed URLs within "href" attributes
+   *   fail HTML validation). This can be avoided by using
    *   Url::fromUri($possibly_not_a_url)->toString(), which either throws an
    *   exception or returns a well-formed URL.
    *

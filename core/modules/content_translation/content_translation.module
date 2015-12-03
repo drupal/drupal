@@ -96,9 +96,9 @@ function content_translation_language_types_info_alter(array &$language_types) {
  *   canonical link template cannot be enabled for translation. Setting this key
  *   to TRUE overrides that. When that key is set, the Content Translation
  *   module will not provide any UI for translating the entity type, and the
- *   entity type should implement its own UI. This is useful for (e.g.) entity
- *   types that are embedded into others for editing (which would not need a
- *   canonical link, but could still support translation).
+ *   entity type should implement its own UI. For instance, this is useful for
+ *   entity types that are embedded into others for editing (which would not
+ *   need a canonical link, but could still support translation).
  * - content_translation_metadata: To implement its business logic the content
  *   translation UI relies on various metadata items describing the translation
  *   state. The default implementation is provided by
