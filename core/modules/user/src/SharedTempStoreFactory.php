@@ -47,8 +47,8 @@ class SharedTempStoreFactory {
   /**
    * Constructs a Drupal\user\SharedTempStoreFactory object.
    *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The connection object used for this data.
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $storage_factory
+   *   The key/value store factory.
    * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
