@@ -135,8 +135,8 @@ function tracker_cron() {
 /**
  * Access callback: Determines access permission for a user's own account.
  *
- * @param int $account
- *   The account ID to check.
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The user account to track.
  *
  * @return bool
  *   TRUE if a user is accessing tracking info for their own account and
