@@ -49,6 +49,7 @@ class ComposerIntegrationTest extends UnitTestCase {
     return [
       $this->root,
       $this->root . '/core',
+      $this->root . '/core/lib/Drupal/Component/Bridge',
       $this->root . '/core/lib/Drupal/Component/Gettext',
       $this->root . '/core/lib/Drupal/Component/Plugin',
       $this->root . '/core/lib/Drupal/Component/ProxyBuilder',
