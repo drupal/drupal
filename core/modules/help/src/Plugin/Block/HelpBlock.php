@@ -89,6 +89,9 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
+   *
+   * @return string
+   *   Help text of the matched route item as HTML.
    */
   protected function getActiveHelp(Request $request) {
     // Do not show on a 403 or 404 page.
