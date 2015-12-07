@@ -55,6 +55,8 @@ class CustomAccessCheck implements RoutingAccessInterface {
   /**
    * Checks access for the account and route using the custom access checker.
    *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match object to be checked.
    * @param \Drupal\Core\Session\AccountInterface $account
