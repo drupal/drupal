@@ -74,6 +74,8 @@ button.color-palette__lock,
   left: -10px;
   direction: ltr;
   text-indent: -9999px;
+  border: 0;
+  outline: 0;
 }
 [dir="rtl"] button.color-palette__lock,
 [dir="rtl"] .color-palette__lock {
