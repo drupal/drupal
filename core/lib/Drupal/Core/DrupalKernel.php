@@ -1307,7 +1307,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @return array
    *   Array where each key is a module name, and each value is a path to the
-   *   respective *.module or *.profile file.
+   *   respective *.info.yml file.
    */
   protected function getModuleFileNames() {
     $filenames = array();
@@ -1324,7 +1324,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param string[] $module_file_names
    *   Array where each key is a module name, and each value is a path to the
-   *   respective *.module or *.profile file.
+   *   respective *.info.yml file.
    *
    * @return string[]
    *   Array where each key is a module namespace like 'Drupal\system', and each
