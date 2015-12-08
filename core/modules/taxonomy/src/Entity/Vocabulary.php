@@ -82,14 +82,14 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
    * - TAXONOMY_HIERARCHY_SINGLE: Single parent.
    * - TAXONOMY_HIERARCHY_MULTIPLE: Multiple parents.
    *
-   * @var integer
+   * @var int
    */
   protected $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
   /**
    * The weight of this vocabulary in relation to other vocabularies.
    *
-   * @var integer
+   * @var int
    */
   protected $weight = 0;
 

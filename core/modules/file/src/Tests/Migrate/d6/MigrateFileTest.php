@@ -50,18 +50,18 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
   /**
    * Asserts a file entity.
    *
-   * @param integer $fid
-   *  The file ID.
+   * @param int $fid
+   *   The file ID.
    * @param string $name
-   *  The expected file name.
-   * @param integer $size
-   *  The expected file size.
+   *   The expected file name.
+   * @param int $size
+   *   The expected file size.
    * @param string $uri
-   *  The expected file URI.
+   *   The expected file URI.
    * @param string $type
-   *  The expected MIME type.
-   * @param integer $uid
-   *  The expected file owner ID.
+   *   The expected MIME type.
+   * @param int $uid
+   *   The expected file owner ID.
    */
   protected function assertEntity($fid, $name, $size, $uri, $type, $uid) {
     /** @var \Drupal\file\FileInterface $file */

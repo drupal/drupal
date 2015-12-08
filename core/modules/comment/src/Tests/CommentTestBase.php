@@ -288,7 +288,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Sets the value governing restrictions on anonymous comments.
    *
-   * @param integer $level
+   * @param int $level
    *   The level of the contact information allowed for anonymous comments:
    *   - 0: No contact information allowed.
    *   - 1: Contact information allowed but not required.
@@ -373,7 +373,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @param string $subject
    *   Comment subject to find.
    *
-   * @return integer
+   * @return int
    *   Comment id.
    */
   function getUnapprovedComment($subject) {

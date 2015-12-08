@@ -53,9 +53,9 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
    *   The entity ID in the form ENTITY_TYPE.FIELD_NAME.
    * @param string $expected_type
    *   The expected field type.
-   * @param boolean $expected_translatable
+   * @param bool $expected_translatable
    *   Whether or not the field is expected to be translatable.
-   * @param integer $expected_cardinality
+   * @param int $expected_cardinality
    *   The expected cardinality of the field.
    */
   protected function assertEntity($id, $expected_type, $expected_translatable, $expected_cardinality) {

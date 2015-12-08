@@ -118,9 +118,9 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
   /**
    * Changes the tid filter to given term and depth.
    *
-   * @param integer $tid
+   * @param int $tid
    *   The term ID to filter on.
-   * @param integer $depth
+   * @param int $depth
    *   The depth to search.
    * @param array $expected
    *   The expected views result.

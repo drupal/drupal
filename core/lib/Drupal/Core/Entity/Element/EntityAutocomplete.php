@@ -243,7 +243,7 @@ class EntityAutocomplete extends Textfield {
    *   Whether to trigger a form error if an element from $input (eg. an entity)
    *   is not found.
    *
-   * @return integer|null
+   * @return int|null
    *   Value of a matching entity ID, or NULL if none.
    */
   protected static function matchEntityByTitle($handler, $input, &$element, FormStateInterface $form_state, $strict) {

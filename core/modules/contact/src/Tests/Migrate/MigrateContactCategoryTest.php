@@ -37,15 +37,15 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
    * Performs various assertions on a single contact form entity.
    *
    * @param string $id
-   *  The contact form ID.
+   *   The contact form ID.
    * @param string $expected_label
-   *  The expected label.
+   *   The expected label.
    * @param string[] $expected_recipients
-   *  The recipient e-mail addresses the form should have.
+   *   The recipient e-mail addresses the form should have.
    * @param string $expected_reply
-   *  The expected reply message.
-   * @param integer $expected_weight
-   *  The contact form's expected weight.
+   *   The expected reply message.
+   * @param int $expected_weight
+   *   The contact form's expected weight.
    */
   protected function assertEntity($id, $expected_label, array $expected_recipients, $expected_reply, $expected_weight) {
     /** @var \Drupal\contact\ContactFormInterface $entity */
