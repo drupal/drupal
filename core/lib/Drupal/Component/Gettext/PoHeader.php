@@ -471,10 +471,10 @@ class PoHeader {
    *
    * @param array $element_stack
    *   Array of plural formula values and operators create by parseArithmetic().
-   * @param integer $n
+   * @param int $n
    *   The @count number for which we are determining the right plural position.
    *
-   * @return integer
+   * @return int
    *   Number of the plural string to be used for the given plural value.
    *
    * @see parseArithmetic()

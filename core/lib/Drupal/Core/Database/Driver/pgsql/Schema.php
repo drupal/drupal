@@ -39,7 +39,7 @@ class Schema extends DatabaseSchema {
    * Value will usually be set to a 63 chars limit but PostgreSQL allows
    * to higher this value before compiling, so we need to check for that.
    *
-   * @var integer
+   * @var int
    */
   protected $maxIdentifierLength;
 

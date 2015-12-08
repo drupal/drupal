@@ -23,7 +23,7 @@ class Timestamp extends IntegerData implements DateTimeInterface {
   /**
    * The data value as a UNIX timestamp.
    *
-   * @var integer
+   * @var int
    */
   protected $value;
 

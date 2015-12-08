@@ -30,7 +30,7 @@ class SortArrayTest extends UnitTestCase {
    *   The first input array for the SortArray::sortByWeightElement() method.
    * @param array $b
    *   The second input array for the SortArray::sortByWeightElement().
-   * @param integer $expected
+   * @param int $expected
    *   The expected output from calling the method.
    */
   public function testSortByWeightElement($a, $b, $expected) {
@@ -106,7 +106,7 @@ class SortArrayTest extends UnitTestCase {
    *   The first input array for the SortArray::sortByWeightProperty() method.
    * @param array $b
    *   The second input array for the SortArray::sortByWeightProperty().
-   * @param integer $expected
+   * @param int $expected
    *   The expected output from calling the method.
    */
   public function testSortByWeightProperty($a, $b, $expected) {
@@ -182,7 +182,7 @@ class SortArrayTest extends UnitTestCase {
    *   The first input item for comparison.
    * @param array $b
    *   The second item for comparison.
-   * @param integer $expected
+   * @param int $expected
    *   The expected output from calling the method.
    */
   public function testSortByTitleElement($a, $b, $expected) {
@@ -251,7 +251,7 @@ class SortArrayTest extends UnitTestCase {
    *   The first input item for comparison.
    * @param array $b
    *   The second item for comparison.
-   * @param integer $expected
+   * @param int $expected
    *   The expected output from calling the method.
    */
   public function testSortByTitleProperty($a, $b, $expected) {

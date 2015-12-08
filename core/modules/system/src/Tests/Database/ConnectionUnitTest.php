@@ -66,7 +66,7 @@ class ConnectionUnitTest extends KernelTestBase {
   /**
    * Returns the connection ID of the current test connection.
    *
-   * @return integer
+   * @return int
    */
   protected function getConnectionID() {
     return (int) Database::getConnection($this->target, $this->key)->query('SELECT CONNECTION_ID()')->fetchField();
@@ -75,7 +75,7 @@ class ConnectionUnitTest extends KernelTestBase {
   /**
    * Asserts that a connection ID exists.
    *
-   * @param integer $id
+   * @param int $id
    *   The connection ID to verify.
    */
   protected function assertConnection($id) {
@@ -86,7 +86,7 @@ class ConnectionUnitTest extends KernelTestBase {
   /**
    * Asserts that a connection ID does not exist.
    *
-   * @param integer $id
+   * @param int $id
    *   The connection ID to verify.
    */
   protected function assertNoConnection($id) {

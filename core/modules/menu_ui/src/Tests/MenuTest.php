@@ -901,8 +901,8 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Verifies the logged in user has the desired access to various menu pages.
    *
-   * @param integer $response
-   *   The expected HTTP response code. Defaults to 200.
+   * @param int $response
+   *   (optional) The expected HTTP response code. Defaults to 200.
    */
   private function verifyAccess($response = 200) {
     // View menu help page.
