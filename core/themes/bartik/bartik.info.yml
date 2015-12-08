@@ -11,6 +11,7 @@ ckeditor_stylesheets:
   - css/base/elements.css
   - css/components/captions.css
   - css/components/table.css
+  - css/components/text-formatted.css
 regions:
   header: Header
   primary_menu: 'Primary menu'
