@@ -22,8 +22,8 @@ interface EntityRepositoryInterface {
    * @param string $uuid
    *   The UUID of the entity to load.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
-   *   The entity object, or NULL if there is no entity with the given UUID.
+   * @return \Drupal\Core\Entity\EntityInterface|false
+   *   The entity object, or FALSE if there is no entity with the given UUID.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   Thrown in case the requested entity type does not support UUIDs.
