@@ -115,7 +115,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    // Support passing in only the value of the first item, either as a litteral
+    // Support passing in only the value of the first item, either as a literal
     // (value of the first property) or as an array of properties.
     if (isset($values) && (!is_array($values) || (!empty($values) && !is_numeric(current(array_keys($values)))))) {
       $values = array(0 => $values);
