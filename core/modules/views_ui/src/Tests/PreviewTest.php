@@ -21,7 +21,7 @@ class PreviewTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_preview', 'test_pager_full', 'test_mini_pager');
+  public static $testViews = array('test_preview', 'test_preview_error', 'test_pager_full', 'test_mini_pager');
 
   /**
    * Tests contextual links in the preview form.
@@ -228,6 +228,18 @@ class PreviewTest extends UITestBase {
     // Check that additional assets are attached.
     $this->assertTrue(strpos($this->getDrupalSettings()['ajaxPageState']['libraries'], 'views_ui_test/views_ui_test.test') !== FALSE, 'Attached library found.');
     $this->assertRaw('css/views_ui_test.test.css', 'Attached CSS asset found.');
+  }
+
+  /**
+   * Tests view validation error messages in the preview.
+   */
+  public function testPreviewError() {
+    $this->drupalGet('admin/structure/views/view/test_preview_error/edit');
+    $this->assertResponse(200);
+
+    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
+
+    $this->assertText('Unable to preview due to validation errors.', 'Preview error text found.');
   }
 
   /**

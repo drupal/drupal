@@ -818,7 +818,7 @@ class ViewUI implements ViewEntityInterface {
           drupal_set_message($error, 'error');
         }
       }
-      $preview = t('Unable to preview due to validation errors.');
+      $preview = ['#markup' => t('Unable to preview due to validation errors.')];
     }
 
     // Assemble the preview, the query info, and the query statistics in the
