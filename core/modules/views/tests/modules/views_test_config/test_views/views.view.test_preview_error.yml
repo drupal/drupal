@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_preview_error
+label: test_preview_error
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: null
+    display_options:
+      row:
+        type: fields
+      fields: { }
