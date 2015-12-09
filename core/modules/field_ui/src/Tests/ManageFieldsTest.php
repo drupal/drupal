@@ -718,4 +718,17 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertEqual($view_display->getComponent('field_test_custom_options')['type'], 'field_test_multiple');
   }
 
+  /**
+   * Tests the access to non-existent field URLs.
+   */
+  public function testNonExistentFieldUrls() {
+    $field_id = 'node.foo.bar';
+
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
+    $this->assertResponse(404);
+
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
+    $this->assertResponse(404);
+  }
+
 }
