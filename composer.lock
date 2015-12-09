@@ -2627,23 +2627,23 @@
         },
         {
             "name": "jcalderonzumba/mink-phantomjs-driver",
-            "version": "dev-master",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jcalderonzumba/MinkPhantomJSDriver.git",
-                "reference": "10d7c48c9a4129463052321b52450d98983c4332"
+                "reference": "782892dbea4af7d04024374672b3790b6c008def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jcalderonzumba/MinkPhantomJSDriver/zipball/10d7c48c9a4129463052321b52450d98983c4332",
-                "reference": "10d7c48c9a4129463052321b52450d98983c4332",
+                "url": "https://api.github.com/repos/jcalderonzumba/MinkPhantomJSDriver/zipball/782892dbea4af7d04024374672b3790b6c008def",
+                "reference": "782892dbea4af7d04024374672b3790b6c008def",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "~1.6",
                 "jcalderonzumba/gastonjs": "~1.0",
                 "php": ">=5.4",
-                "twig/twig": "~1.8"
+                "twig/twig": "~1.20|~2.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.6",
@@ -2684,7 +2684,7 @@
                 "phantomjs",
                 "testing"
             ],
-            "time": "2015-10-05 18:24:44"
+            "time": "2015-12-04 13:55:02"
         },
         {
             "name": "mikey179/vfsStream",
@@ -3740,39 +3740,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "php": 0,
-        "symfony/class-loader": 0,
-        "symfony/console": 0,
-        "symfony/dependency-injection": 0,
-        "symfony/event-dispatcher": 0,
-        "symfony/http-foundation": 0,
-        "symfony/http-kernel": 0,
-        "symfony/routing": 0,
-        "symfony/serializer": 0,
-        "symfony/translation": 0,
-        "symfony/validator": 0,
-        "symfony/process": 0,
-        "symfony/yaml": 0,
-        "twig/twig": 0,
-        "doctrine/common": 0,
-        "doctrine/annotations": 0,
-        "guzzlehttp/guzzle": 0,
-        "symfony-cmf/routing": 0,
-        "easyrdf/easyrdf": 0,
-        "zendframework/zend-feed": 0,
-        "stack/builder": 0,
-        "egulias/email-validator": 0,
-        "masterminds/html5": 0,
-        "symfony/psr-http-message-bridge": 0,
-        "zendframework/zend-diactoros": 0,
-        "composer/semver": 0,
-        "behat/mink": 0,
-        "behat/mink-goutte-driver": 0,
-        "jcalderonzumba/gastonjs": 20,
-        "jcalderonzumba/mink-phantomjs-driver": 20,
-        "mikey179/vfsstream": 0,
-        "phpunit/phpunit": 0,
-        "symfony/css-selector": 0
+        "jcalderonzumba/gastonjs": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

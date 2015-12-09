@@ -35,7 +35,7 @@
     "behat/mink": "~1.6",
     "behat/mink-goutte-driver": "~1.2",
     "jcalderonzumba/gastonjs": "^1.1@dev",
-    "jcalderonzumba/mink-phantomjs-driver": "dev-master#10d7c48c9a4129463052321b52450d98983c4332",
+    "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
     "mikey179/vfsStream": "~1.2",
     "phpunit/phpunit": "~4.8",
     "symfony/css-selector": "2.7.*"
