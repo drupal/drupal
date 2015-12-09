@@ -913,7 +913,7 @@ function file_progress_implementation() {
     $implementation = FALSE;
 
     // We prefer the PECL extension uploadprogress because it supports multiple
-    // simultaneous uploads. APC only supports one at a time.
+    // simultaneous uploads. APCu only supports one at a time.
     if (extension_loaded('uploadprogress')) {
       $implementation = 'uploadprogress';
     }

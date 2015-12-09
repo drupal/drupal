@@ -38,7 +38,7 @@ class FileWidgetAjaxController {
       }
     }
     elseif ($implementation == 'apc') {
-      $status = apc_fetch('upload_' . $key);
+      $status = apcu_fetch('upload_' . $key);
       if (isset($status['current']) && !empty($status['total'])) {
         $progress['message'] = t('Uploading... (@current of @total)', array('@current' => format_size($status['current']), '@total' => format_size($status['total'])));
         $progress['percentage'] = round(100 * $status['current'] / $status['total']);

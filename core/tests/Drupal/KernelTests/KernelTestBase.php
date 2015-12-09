@@ -509,7 +509,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       ];
       // @todo Use extension_loaded('apcu') for non-testbot
       //  https://www.drupal.org/node/2447753.
-      if (function_exists('apc_fetch')) {
+      if (function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = ApcuFileCacheBackend::class;
       }
     }
