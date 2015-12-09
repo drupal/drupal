@@ -22,7 +22,7 @@
   "require": {
     "php": ">=5.4",
     "behat/mink": "~1.6",
-    "twig/twig": "~1.8",
+    "twig/twig": "~1.20|~2.0",
     "jcalderonzumba/gastonjs": "~1.0"
   },
   "require-dev": {

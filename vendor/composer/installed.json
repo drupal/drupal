@@ -2736,69 +2736,6 @@
         ]
     },
     {
-        "name": "jcalderonzumba/mink-phantomjs-driver",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jcalderonzumba/MinkPhantomJSDriver.git",
-            "reference": "10d7c48c9a4129463052321b52450d98983c4332"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jcalderonzumba/MinkPhantomJSDriver/zipball/10d7c48c9a4129463052321b52450d98983c4332",
-            "reference": "10d7c48c9a4129463052321b52450d98983c4332",
-            "shasum": ""
-        },
-        "require": {
-            "behat/mink": "~1.6",
-            "jcalderonzumba/gastonjs": "~1.0",
-            "php": ">=5.4",
-            "twig/twig": "~1.8"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.6",
-            "silex/silex": "~1.2",
-            "symfony/css-selector": "~2.1",
-            "symfony/phpunit-bridge": "~2.7",
-            "symfony/process": "~2.3"
-        },
-        "time": "2015-10-05 18:24:44",
-        "type": "mink-driver",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.4.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Zumba\\Mink\\Driver\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Juan Francisco Calderón Zumba",
-                "email": "juanfcz@gmail.com",
-                "homepage": "http://github.com/jcalderonzumba"
-            }
-        ],
-        "description": "PhantomJS driver for Mink framework",
-        "homepage": "http://mink.behat.org/",
-        "keywords": [
-            "ajax",
-            "browser",
-            "headless",
-            "javascript",
-            "phantomjs",
-            "testing"
-        ]
-    },
-    {
         "name": "symfony/class-loader",
         "version": "v2.7.6",
         "version_normalized": "2.7.6.0",
@@ -3857,5 +3794,68 @@
             }
         ],
         "description": "Composer plugin to merge multiple composer.json files"
+    },
+    {
+        "name": "jcalderonzumba/mink-phantomjs-driver",
+        "version": "v0.3.1",
+        "version_normalized": "0.3.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jcalderonzumba/MinkPhantomJSDriver.git",
+            "reference": "782892dbea4af7d04024374672b3790b6c008def"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jcalderonzumba/MinkPhantomJSDriver/zipball/782892dbea4af7d04024374672b3790b6c008def",
+            "reference": "782892dbea4af7d04024374672b3790b6c008def",
+            "shasum": ""
+        },
+        "require": {
+            "behat/mink": "~1.6",
+            "jcalderonzumba/gastonjs": "~1.0",
+            "php": ">=5.4",
+            "twig/twig": "~1.20|~2.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.6",
+            "silex/silex": "~1.2",
+            "symfony/css-selector": "~2.1",
+            "symfony/phpunit-bridge": "~2.7",
+            "symfony/process": "~2.3"
+        },
+        "time": "2015-12-04 13:55:02",
+        "type": "mink-driver",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.4.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zumba\\Mink\\Driver\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Juan Francisco Calderón Zumba",
+                "email": "juanfcz@gmail.com",
+                "homepage": "http://github.com/jcalderonzumba"
+            }
+        ],
+        "description": "PhantomJS driver for Mink framework",
+        "homepage": "http://mink.behat.org/",
+        "keywords": [
+            "ajax",
+            "browser",
+            "headless",
+            "javascript",
+            "phantomjs",
+            "testing"
+        ]
     }
 ]
