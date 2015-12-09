@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Cache;
 
+use Drupal\Core\Cache\Apcu4Backend;
 use Drupal\Core\Cache\ApcuBackend;
 
 /**
@@ -21,7 +22,7 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
    * Get a list of failed requirements.
    *
    * This specifically bypasses checkRequirements because it fails tests. PHP 7
-   * does not have APC and simpletest does not have a explicit "skip"
+   * does not have APCu and simpletest does not have a explicit "skip"
    * functionality so to emulate it we override all test methods and explicitly
    * pass when  requirements are not met.
    *
@@ -29,13 +30,10 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
    */
   protected function getRequirements() {
     $requirements = [];
-    if (!extension_loaded('apc')) {
-      $requirements[] = 'APC extension not found.';
+    if (!extension_loaded('apcu')) {
+      $requirements[] = 'APCu extension not found.';
     }
     else {
-      if (version_compare(phpversion('apc'), '3.1.1', '<')) {
-        $requirements[] = 'APC extension must be newer than 3.1.1 for APCIterator support.';
-      }
       if (PHP_SAPI === 'cli' && !ini_get('apc.enable_cli')) {
         $requirements[] = 'apc.enable_cli must be enabled to run this test.';
       }
@@ -66,7 +64,12 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
    * {@inheritdoc}
    */
   protected function createCacheBackend($bin) {
-    return new ApcuBackend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
+    if (version_compare(phpversion('apcu'), '5.0.0', '>=')) {
+      return new ApcuBackend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
+    }
+    else {
+      return new Apcu4Backend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
+    }
   }
 
   /**
@@ -91,7 +94,15 @@ class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
     // Make sure entries are permanent (i.e. no TTL).
     $backend = $this->getCacheBackend($this->getTestBin());
     $key = $backend->getApcuKey('TEST8');
-    foreach (new \APCIterator('user', '/^' . $key . '/') as $item) {
+
+    if (class_exists('\APCUIterator')) {
+      $iterator = new \APCUIterator('/^' . $key . '/');
+    }
+    else {
+      $iterator = new \APCIterator('user', '/^' . $key . '/');
+    }
+
+    foreach ($iterator as $item) {
       $this->assertEqual(0, $item['ttl']);
       $found = TRUE;
     }

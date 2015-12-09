@@ -428,7 +428,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       ];
       // @todo Use extension_loaded('apcu') for non-testbot
       //  https://www.drupal.org/node/2447753.
-      if (function_exists('apc_fetch')) {
+      if (function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = '\Drupal\Component\FileCache\ApcuFileCacheBackend';
       }
     }
@@ -968,11 +968,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
-    // If the class loader is still the same, possibly upgrade to the APC class
+    // If the class loader is still the same, possibly upgrade to the APCu class
     // loader.
     if ($class_loader_class == get_class($this->classLoader)
         && Settings::get('class_loader_auto_detect', TRUE)
-        && function_exists('apc_fetch')) {
+        && function_exists('apcu_fetch')) {
       $prefix = Settings::getApcuPrefix('class_loader', $this->root);
       $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader($prefix, $this->classLoader);
       $this->classLoader->unregister();
