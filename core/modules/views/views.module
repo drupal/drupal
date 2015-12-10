@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -803,4 +804,19 @@ function views_local_tasks_alter(&$local_tasks) {
   $container = \Drupal::getContainer();
   $local_task = ViewsLocalTask::create($container, 'views_view');
   $local_task->alterLocalTasks($local_tasks);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function views_view_delete(EntityInterface $entity) {
+  // Rebuild the routes in case there is a routed display.
+  $executable = Views::executableFactory()->get($entity);
+  $executable->initDisplay();
+  foreach ($executable->displayHandlers as $display) {
+    if ($display->getRoutedDisplay()) {
+      \Drupal::service('router.builder')->setRebuildNeeded();
+      break;
+    }
+  }
 }

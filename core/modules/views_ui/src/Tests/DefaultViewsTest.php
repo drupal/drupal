@@ -142,6 +142,23 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet($edit_href);
     $this->assertResponse(404);
     $this->assertText('Page not found');
+
+    // Delete all duplicated Glossary views.
+    $this->drupalGet('admin/structure/views');
+    $this->clickViewsOperationLink(t('Delete'), 'duplicate_of_glossary');
+    // Submit the confirmation form.
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+
+    $this->drupalGet('glossary');
+    $this->assertResponse(200);
+
+    $this->drupalGet('admin/structure/views');
+    $this->clickViewsOperationLink(t('Delete'), $random_name);
+    // Submit the confirmation form.
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalGet('glossary');
+    $this->assertResponse(404);
+    $this->assertText('Page not found');
   }
 
   /**
