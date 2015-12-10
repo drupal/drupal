@@ -882,7 +882,8 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Update the kernel to remove their services.
     $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
 
-    // Ensure isLoaded() is TRUE in order to make _theme() work.
+    // Ensure isLoaded() is TRUE in order to make
+    // \Drupal\Core\Theme\ThemeManagerInterface::render() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
     // no longer the $module_handler instance from above.
     $module_handler = $this->container->get('module_handler');

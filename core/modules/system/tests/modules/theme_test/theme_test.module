@@ -88,14 +88,14 @@ function template_preprocess_theme_test_function_suggestions(&$variables) {
 }
 
 /**
- * Theme function for testing _theme('theme_test_foo').
+ * Theme function for hook theme_test_foo.
  */
 function theme_theme_test_foo($variables) {
   return $variables['foo'];
 }
 
 /**
- * Theme function for testing _theme('theme_test_function_template_override').
+ * Theme function for hook theme_test_function_template_override.
  */
 function theme_theme_test_function_template_override($variables) {
   return 'theme_test_function_template_override test failed.';
@@ -140,7 +140,8 @@ function template_preprocess_theme_test_render_element(&$variables) {
  *
  * Theme hooks defining a 'render element' add an internal '#render_children'
  * property. When this property is found, drupal_render() avoids calling
- * _theme() on the top-level element to prevent infinite recursion.
+ * the 'theme.manager' service 'render' method on the top-level element to
+ * prevent infinite recursion.
  *
  * @param array $variables
  *   An associative array containing:

@@ -40,7 +40,7 @@ function twig_init(Extension $theme) {
  *
  * Renders a Twig template.
  *
- * If the Twig debug setting is enabled, HTML comments including _theme() call
+ * If the Twig debug setting is enabled, HTML comments including the theme hook
  * and template file name suggestions will surround the template markup.
  *
  * @param string $template_file
