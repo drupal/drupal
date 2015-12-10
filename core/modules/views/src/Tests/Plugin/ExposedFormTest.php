@@ -151,6 +151,7 @@ class ExposedFormTest extends ViewTestBase {
    * Tests the exposed block functionality.
    */
   public function testExposedBlock() {
+    $this->drupalCreateContentType(['type' => 'page']);
     $view = Views::getView('test_exposed_block');
     $view->setDisplay('page_1');
     $block = $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-page_1');
@@ -167,6 +168,15 @@ class ExposedFormTest extends ViewTestBase {
     // Test there is only one views exposed form on the page.
     $elements = $this->xpath('//form[@id=:id]', array(':id' => $this->getExpectedExposedFormId($view)));
     $this->assertEqual(count($elements), 1, 'One exposed form block found.');
+
+    // Test that the correct option is selected after form submission.
+    $this->assertCacheContext('url');
+    $this->assertOptionSelected('edit-type','All');
+    foreach (['All', 'article', 'page'] as $argument) {
+      $this->drupalGet('test_exposed_block', ['query' => ['type' => $argument]]);
+      $this->assertCacheContext('url');
+      $this->assertOptionSelected('edit-type', $argument);
+    }
   }
 
   /**
