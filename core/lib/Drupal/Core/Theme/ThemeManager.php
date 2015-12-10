@@ -138,11 +138,11 @@ class ThemeManager implements ThemeManagerInterface {
 
     $active_theme = $this->getActiveTheme();
 
-    // If called before all modules are loaded, we do not necessarily have a full
-    // theme registry to work with, and therefore cannot process the theme
+    // If called before all modules are loaded, we do not necessarily have a
+    // full theme registry to work with, and therefore cannot process the theme
     // request properly. See also \Drupal\Core\Theme\Registry::get().
     if (!$this->moduleHandler->isLoaded() && !defined('MAINTENANCE_MODE')) {
-      throw new \Exception(t('_theme() may not be called until all modules are loaded.'));
+      throw new \Exception('The theme implementations may not be rendered until all modules are loaded.');
     }
 
     $theme_registry = $this->themeRegistry->getRuntime();
@@ -180,9 +180,10 @@ class ThemeManager implements ThemeManagerInterface {
           \Drupal::logger('theme')->warning('Theme hook %hook not found.', array('%hook' => $hook));
         }
         // There is no theme implementation for the hook passed. Return FALSE so
-        // the function calling _theme() can differentiate between a hook that
-        // exists and renders an empty string and a hook that is not
-        // implemented.
+        // the function calling
+        // \Drupal\Core\Theme\ThemeManagerInterface::render() can differentiate
+        // between a hook that exists and renders an empty string, and a hook
+        // that is not implemented.
         return FALSE;
       }
     }
@@ -233,8 +234,8 @@ class ThemeManager implements ThemeManagerInterface {
 
     // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, array($variables));
-    // If _theme() was invoked with a direct theme suggestion like
-    // '#theme' => 'node__article', add it to the suggestions array before
+    // If the theme implementation was invoked with a direct theme suggestion
+    // like '#theme' => 'node__article', add it to the suggestions array before
     // invoking suggestion alter hooks.
     if (isset($info['base hook'])) {
       $suggestions[] = $hook;
@@ -250,10 +251,10 @@ class ThemeManager implements ThemeManagerInterface {
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
     // Check if each suggestion exists in the theme registry, and if so,
-    // use it instead of the hook that _theme() was called with. For example, a
-    // function may call _theme('node', ...), but a module can add
-    // 'node__article' as a suggestion via hook_theme_suggestions_HOOK_alter(),
-    // enabling a theme to have an alternate template file for article nodes.
+    // use it instead of the base hook. For example, a function may use
+    // '#theme' => 'node', but a module can add 'node__article' as a suggestion
+    // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
+    // an alternate template file for article nodes.
     foreach (array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
         $info = $theme_registry->get($suggestion);
