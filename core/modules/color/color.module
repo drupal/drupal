@@ -9,7 +9,7 @@ use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\Textfield;
@@ -118,9 +118,13 @@ function color_block_view_system_branding_block_alter(array &$build, BlockPlugin
  */
 function color_block_view_pre_render(array $build) {
   $theme_key = \Drupal::theme()->getActiveTheme()->getName();
+  $config = \Drupal::config('color.theme.' . $theme_key);
+  CacheableMetadata::createFromRenderArray($build)
+    ->addCacheableDependency($config)
+    ->applyTo($build);
 
   // Override logo.
-  $logo = \Drupal::config('color.theme.' . $theme_key)->get('logo');
+  $logo = $config->get('logo');
   if ($logo && $build['content']['site_logo'] && preg_match('!' . $theme_key . '/logo.svg$!', $build['content']['site_logo']['#uri'])) {
     $build['content']['site_logo']['#uri'] = file_create_url($logo);
   }
@@ -193,7 +197,6 @@ function color_get_palette($theme, $default = FALSE) {
  * @see color_scheme_form_submit()
  */
 function color_scheme_form($complete_form, FormStateInterface $form_state, $theme) {
-  $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
   $info['schemes'][''] = array('title' => t('Custom'), 'colors' => array());
@@ -500,9 +503,6 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
     ->set('stylesheets', $css)
     ->set('files', $paths['files'])
     ->save();
-
-  // Clear the library cache.
-  Cache::invalidateTags(['library_info']);
 }
 
 /**
