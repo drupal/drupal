@@ -21,6 +21,7 @@ class ToolkitTest extends ToolkitTestBase {
     $manager = $this->container->get('image.toolkit.manager');
     $toolkits = $manager->getAvailableToolkits();
     $this->assertTrue(isset($toolkits['test']), 'The working toolkit was returned.');
+    $this->assertTrue(isset($toolkits['test:derived_toolkit']), 'The derived toolkit was returned.');
     $this->assertFalse(isset($toolkits['broken']), 'The toolkit marked unavailable was not returned');
     $this->assertToolkitOperationsCalled(array());
   }
@@ -71,4 +72,22 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertEqual($calls['apply'][0][0], 'my_operation', "'my_operation' was passed correctly as operation");
     $this->assertEqual($calls['apply'][0][1], array(), 'passing no parameters was handled correctly');
   }
+
+  /**
+   * Tests image toolkit operations inheritance by derivative toolkits.
+   */
+  public function testDerivative() {
+    $toolkit_manager = $this->container->get('image.toolkit.manager');
+    $operation_manager = $this->container->get('image.toolkit.operation.manager');
+
+    $toolkit = $toolkit_manager->createInstance('test:derived_toolkit');
+
+    // Load an overwritten and an inherited operation.
+    $blur = $operation_manager->getToolkitOperation($toolkit, 'blur');
+    $invert = $operation_manager->getToolkitOperation($toolkit, 'invert');
+
+    $this->assertIdentical('foo_derived', $blur->getPluginId(), "'Blur' operation overwritten by derivative.");
+    $this->assertIdentical('bar', $invert->getPluginId(), '"Invert" operation inherited from base plugin.');
+  }
+
 }

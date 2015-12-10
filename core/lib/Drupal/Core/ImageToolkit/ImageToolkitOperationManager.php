@@ -33,6 +33,13 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
   protected $logger;
 
   /**
+   * The image toolkit manager.
+   *
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitManager
+   */
+  protected $toolkitManager;
+
+  /**
    * Constructs the ImageToolkitOperationManager object.
    *
    * @param \Traversable $namespaces
@@ -44,20 +51,23 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    *   The module handler to invoke the alter hook with.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitManager $toolkit_manager
+   *   The image toolkit manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger, ImageToolkitManager $toolkit_manager) {
     parent::__construct('Plugin/ImageToolkit/Operation', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\ImageToolkitOperationInterface', 'Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation');
 
     $this->alterInfo('image_toolkit_operation');
     $this->setCacheBackend($cache_backend, 'image_toolkit_operation_plugins');
     $this->logger = $logger;
+    $this->toolkitManager = $toolkit_manager;
   }
 
   /**
    * Returns the plugin ID for a given toolkit and operation.
    *
-   * @param string $toolkit_id
-   *   The toolkit plugin ID.
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
+   *   The toolkit instance.
    * @param string $operation
    *   The operation (e.g. "crop").
    *
@@ -67,7 +77,8 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   When no plugin is available.
    */
-  protected function getToolkitOperationPluginId($toolkit_id, $operation) {
+  protected function getToolkitOperationPluginId(ImageToolkitInterface $toolkit, $operation) {
+    $toolkit_id = $toolkit->getPluginId();
     $definitions = $this->getDefinitions();
 
     $definitions = array_filter($definitions,
@@ -77,6 +88,14 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
     );
 
     if (!$definitions) {
+      // If this image toolkit plugin is a derivative and returns no operation,
+      // try once again with its base plugin.
+      $base_toolkit_id = $toolkit->getBaseId();
+      if (($toolkit_id != $base_toolkit_id) && !empty($base_toolkit_id)) {
+        $base_toolkit = $this->toolkitManager->createInstance($base_toolkit_id);
+        return $this->getToolkitOperationPluginId($base_toolkit, $operation);
+      }
+
       $message = SafeMarkup::format("No image operation plugin for '@toolkit' toolkit and '@operation' operation.", array('@toolkit' => $toolkit_id, '@operation' => $operation));
       throw new PluginNotFoundException($toolkit_id . '.' . $operation, $message);
     }
@@ -102,7 +121,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    * {@inheritdoc}
    */
   public function getToolkitOperation(ImageToolkitInterface $toolkit, $operation) {
-    $plugin_id = $this->getToolkitOperationPluginId($toolkit->getPluginId(), $operation);
+    $plugin_id = $this->getToolkitOperationPluginId($toolkit, $operation);
     return $this->createInstance($plugin_id, array(), $toolkit);
   }
 

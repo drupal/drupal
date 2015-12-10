@@ -1256,7 +1256,7 @@ services:
       - { name: plugin_manager_cache_clear }
   image.toolkit.operation.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitOperationManager
-    arguments: ['@logger.channel.image']
+    arguments: ['@logger.channel.image', '@image.toolkit.manager']
     parent: default_plugin_manager
     tags:
       - { name: plugin_manager_cache_clear }
