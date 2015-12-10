@@ -13,7 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Storage to access migration template configuration in enabled extensions.
  */
-class MigrateTemplateStorage {
+class MigrateTemplateStorage implements MigrateTemplateStorageInterface {
   /**
    * Extension sub-directory containing default configuration for migrations.
    */
@@ -41,13 +41,7 @@ class MigrateTemplateStorage {
   }
 
   /**
-   * Find all migration templates with the specified tag.
-   *
-   * @param $tag
-   *   The tag to match.
-   *
-   * @return array
-   *   Any templates (parsed YAML config) that matched, keyed by the ID.
+   * {@inheritdoc}
    */
   public function findTemplatesByTag($tag) {
     $templates = $this->getAllTemplates();
@@ -63,13 +57,7 @@ class MigrateTemplateStorage {
   }
 
   /**
-   * Retrieve a template given a specific name.
-   *
-   * @param string $name
-   *   A migration template name.
-   *
-   * @return NULL|array
-   *   A parsed migration template, or NULL if it doesn't exist.
+   * {@inheritdoc}
    */
   public function getTemplateByName($name) {
     $templates = $this->getAllTemplates();
@@ -77,10 +65,7 @@ class MigrateTemplateStorage {
   }
 
   /**
-   * Retrieves all migration templates belonging to enabled extensions.
-   *
-   * @return array
-   *   Array of parsed templates, keyed by the fully-qualified id.
+   * {@inheritdoc}
    */
   public function getAllTemplates() {
     $templates = [];
