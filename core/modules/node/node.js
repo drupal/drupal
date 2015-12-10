@@ -38,9 +38,16 @@
         var $authorContext = $(context);
         var name = $authorContext.find('.field--name-uid input').val();
         var date = $authorContext.find('.field--name-created input').val();
-        return date ?
-          Drupal.t('By @name on @date', {'@name': name, '@date': date}) :
-          Drupal.t('By @name', {'@name': name});
+
+        if (name && date) {
+          return Drupal.t('By @name on @date', {'@name': name, '@date': date});
+        }
+        else if (name) {
+          return Drupal.t('By @name', {'@name': name});
+        }
+        else if (date) {
+          return Drupal.t('Authored on @date', {'@date': date});
+        }
       });
 
       $context.find('.node-form-options').drupalSetSummary(function (context) {
