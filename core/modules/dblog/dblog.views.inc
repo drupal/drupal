@@ -66,7 +66,7 @@ function dblog_views_data() {
 
   $data['watchdog']['type'] = array(
     'title' => t('Type'),
-    'help' => t('The of the log entry, for example "user" or "page not found.".'),
+    'help' => t('The type of the log entry, for example "user" or "page not found".'),
     'field' => array(
       'id' => 'standard',
     ),
