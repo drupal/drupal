@@ -51,7 +51,7 @@ class TemplateTest extends MigrateTestBase {
    * Tests retrieving a template by name.
    */
   public function testGetTemplateByName() {
-    /** @var \Drupal\migrate\MigrateTemplateStorage $template_storage */
+    /** @var \Drupal\migrate\MigrateTemplateStorageInterface $template_storage */
     $template_storage = \Drupal::service('migrate.template_storage');
 
     $expected_url = [
