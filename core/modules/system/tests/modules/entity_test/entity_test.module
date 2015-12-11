@@ -656,6 +656,7 @@ function entity_test_entity_test_access(EntityInterface $entity, $operation, Acc
  */
 function entity_test_entity_create_access(AccountInterface $account, $context, $entity_bundle) {
   \Drupal::state()->set('entity_test_entity_create_access', TRUE);
+  \Drupal::state()->set('entity_test_entity_create_access_context', $context);
 
   // No opinion.
   return AccessResult::neutral();
