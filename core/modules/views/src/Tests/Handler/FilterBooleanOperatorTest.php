@@ -95,6 +95,30 @@ class FilterBooleanOperatorTest extends ViewKernelTestBase {
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+
+    $view->destroy();
+    $view->setDisplay();
+
+    // Testing the same scenario but using the reverse status and operation.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'status' => array(
+        'id' => 'status',
+        'field' => 'status',
+        'table' => 'views_test_data',
+        'value' => 0,
+        'operator' => '!=',
+      ),
+    ));
+    $this->executeView($view);
+
+    $expected_result = array(
+      array('id' => 1),
+      array('id' => 3),
+      array('id' => 5),
+    );
+
+    $this->assertEqual(3, count($view->result));
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
   /**
@@ -133,6 +157,24 @@ class FilterBooleanOperatorTest extends ViewKernelTestBase {
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+
+    $view->destroy();
+
+    // Expecting the same results as for ['status' => 1].
+    $view->setExposedInput(['status' => 3]);
+    $view->setDisplay();
+    $view->displayHandlers->get('default')->overrideOption('filters', $filters);
+
+    $this->executeView($view);
+
+    $expected_result = array(
+      array('id' => 1),
+      array('id' => 3),
+      array('id' => 5),
+    );
+
+    $this->assertEqual(3, count($view->result));
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
   /**
@@ -167,6 +209,13 @@ class FilterBooleanOperatorTest extends ViewKernelTestBase {
             2 => array(
               'title' => 'Blocked',
               'operator' => '=',
+              'value' => '0',
+            ),
+            // This group should return the same results as group 1, because it
+            // is the negation of group 2.
+            3 => array(
+              'title' => 'Active (reverse)',
+              'operator' => '!=',
               'value' => '0',
             ),
           ),
