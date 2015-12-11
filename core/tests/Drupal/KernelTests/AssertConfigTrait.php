@@ -74,6 +74,10 @@ trait AssertConfigTrait {
           }
           break;
         case 'Drupal\Component\Diff\Engine\DiffOpAdd':
+          // The _core property does not exist in the default config.
+          if ($op->closing[0] === '_core:') {
+            continue;
+          }
           foreach ($op->closing as $closing) {
             // The UUIDs don't exist in the default config.
             if (strpos($closing, 'uuid: ') === 0)  {
