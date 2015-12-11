@@ -87,12 +87,22 @@ color_hex:
 # Complex extended data types:
 
 # Root of a configuration object.
+
+_core_config_info:
+  type: mapping
+  mapping:
+    default_config_hash:
+      type: string
+      label: 'Default configuration hash'
+
 config_object:
   type: mapping
   mapping:
     langcode:
       type: string
       label: 'Language code'
+    _core:
+      type: _core_config_info
 
 # Mail text with subject and body parts.
 mail:
@@ -281,6 +291,8 @@ config_entity:
       label: 'Third party settings'
       sequence:
         type: '[%parent.%parent.%type].third_party.[%key]'
+    _core:
+      type: _core_config_info
 
 block_settings:
   type: mapping

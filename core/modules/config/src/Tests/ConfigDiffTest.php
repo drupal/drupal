@@ -35,13 +35,10 @@ class ConfigDiffTest extends KernelTestBase {
     $add_key = 'biff';
     $add_data = 'bangpow';
     $change_data = 'foobar';
-    $original_data = array(
-      'foo' => 'bar',
-      '404' => 'herp',
-    );
 
     // Install the default config.
     $this->installConfig(array('config_test'));
+    $original_data = \Drupal::config($config_name)->get();
 
     // Change a configuration value in sync.
     $sync_data = $original_data;

@@ -157,6 +157,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
           'status' => 'status',
           'dependencies' => 'dependencies',
           'third_party_settings' => 'third_party_settings',
+          '_core' => '_core',
         ];
         foreach ($this->config_export as $property => $name) {
           if (is_numeric($property)) {

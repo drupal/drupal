@@ -104,6 +104,17 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   protected $third_party_settings = array();
 
   /**
+   * Information maintained by Drupal core about configuration.
+   *
+   * Keys:
+   * - default_config_hash: A hash calculated by the config.installer service
+   *   and added during installation.
+   *
+   * @var array
+   */
+  protected $_core = [];
+
+  /**
    * Trust supplied data and not use configuration schema on save.
    *
    * @var bool
@@ -295,6 +306,9 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
 
     if (empty($this->third_party_settings)) {
       unset($properties['third_party_settings']);
+    }
+    if (empty($this->_core)) {
+      unset($properties['_core']);
     }
     return $properties;
   }

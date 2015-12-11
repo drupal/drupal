@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Config\FileStorage;
@@ -48,6 +49,7 @@ class ConfigInstallProfileOverrideTest extends WebTestBase {
         'requirements_error' => 1209600,
       ),
     );
+    $expected_profile_data['_core']['default_config_hash'] = Crypt::hashBase64(serialize($expected_profile_data));
 
     // Verify that the original data matches. We have to read the module config
     // file directly, because the install profile default system.cron.yml

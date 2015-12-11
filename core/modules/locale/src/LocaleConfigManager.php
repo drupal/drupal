@@ -9,6 +9,7 @@ namespace Drupal\locale;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -96,6 +97,17 @@ class LocaleConfigManager {
   protected $defaultConfigStorage;
 
   /**
+   * The configuration manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
+   *
+   * @internal
+   *   Will be made protected and renamed to $configManager in 8.1.0.
+   *   https://www.drupal.org/node/2628132
+   */
+  private $_configManager;
+
+  /**
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
@@ -118,6 +130,36 @@ class LocaleConfigManager {
     $this->typedConfigManager = $typed_config;
     $this->languageManager = $language_manager;
     $this->defaultConfigStorage = $default_config_storage;
+  }
+
+  /**
+   * Sets the configuration manager service.
+   *
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *
+   * @internal
+   *   Will be replaced by constructor injection in 8.1.0.
+   *   https://www.drupal.org/node/2628132
+   */
+  public function _setConfigManager(ConfigManagerInterface $config_manager) {
+    $this->_configManager = $config_manager;
+  }
+
+  /**
+   * Gets the configuration manager service.
+   *
+   * @return \Drupal\Core\Config\ConfigManagerInterface
+   *   The config manager
+   *
+   * @internal
+   *   Will be replaced by constructor injection in 8.1.0.
+   *   https://www.drupal.org/node/2628132
+   */
+  private final function _getConfigManager() {
+    if (!isset($this->_configManager)) {
+      $this->_configManager = \Drupal::service('config.manager');
+    }
+    return $this->_configManager;
   }
 
   /**
@@ -477,10 +519,21 @@ class LocaleConfigManager {
    *   configuration exists.
    */
   public function getDefaultConfigLangcode($name) {
-    $shipped = $this->defaultConfigStorage->read($name);
-    if (!empty($shipped)) {
-      return !empty($shipped['langcode']) ? $shipped['langcode'] : 'en';
+    // Config entities that do not have the 'default_config_hash' cannot be
+    // shipped configuration regardless of whether there is a name match.
+    // configurable_language entities are a special case since they can be
+    // translated regardless of whether they are shipped if they in the standard
+    // language list.
+    $config_entity_type = $this->_getConfigManager()->getEntityTypeIdByName($name);
+    if (!$config_entity_type || $config_entity_type === 'configurable_language'
+      || !empty($this->configFactory->get($name)->get('_core.default_config_hash'))
+    ) {
+      $shipped = $this->defaultConfigStorage->read($name);
+      if (!empty($shipped)) {
+        return !empty($shipped['langcode']) ? $shipped['langcode'] : 'en';
+      }
     }
+    return NULL;
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
@@ -263,6 +264,7 @@ class ConfigCRUDTest extends KernelTestBase {
       'string' => 'string',
       'string_int' => '1',
     );
+    $data['_core']['default_config_hash'] = Crypt::hashBase64(serialize($data));
     $this->assertIdentical($config->get(), $data);
 
     // Re-set each key using Config::set().
