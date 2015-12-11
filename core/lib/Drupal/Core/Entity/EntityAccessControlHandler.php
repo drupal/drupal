@@ -206,6 +206,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array(), $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
     $context += array(
+      'entity_type_id' => $this->entityTypeId,
       'langcode' => LanguageInterface::LANGCODE_DEFAULT,
     );
 

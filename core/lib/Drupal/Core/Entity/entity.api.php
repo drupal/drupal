@@ -592,7 +592,8 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *   The account trying to access the entity.
  * @param array $context
  *   An associative array of additional context values. By default it contains
- *   language:
+ *   language and the entity type ID:
+ *   - entity_type_id - the entity type ID.
  *   - langcode - the current language code.
  * @param string $entity_bundle
  *   The entity bundle name.
