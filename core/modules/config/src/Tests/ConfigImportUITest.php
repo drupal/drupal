@@ -311,6 +311,10 @@ class ConfigImportUITest extends WebTestBase {
     // Deleted value is escaped.
     $this->assertText(Html::escape("404: '<em>herp</em>'"));
 
+    // Verify diff colors are displayed.
+    $result = $this->xpath('//table[contains(@class, :class)]', array(':class' => 'diff'));
+    $this->assertEqual(count($result), 1, "Diff UI is displaying colors.");
+
     // Reset data back to original, and remove a key
     $sync_data = $original_data;
     unset($sync_data[$remove_key]);
