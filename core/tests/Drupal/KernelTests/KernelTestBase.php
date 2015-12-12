@@ -235,8 +235,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->streamWrappers = array();
     \Drupal::unsetContainer();
 
-    // @see /core/tests/bootstrap.php
-    $this->classLoader = $GLOBALS['loader'];
+    $this->classLoader = require $this->root . '/autoload.php';
 
     require_once $this->root . '/core/includes/bootstrap.inc';
 
