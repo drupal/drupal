@@ -26,11 +26,13 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   The plugin configuration array, i.e. an array with the following keys:
    *   - data_definition: The data definition object, i.e. an instance of
    *     \Drupal\Core\TypedData\DataDefinitionInterface.
-   *   - name: (optional) If a property or list item is to be created, the name
-   *     of the property or the delta of the list item.
-   *   - parent: (optional) If a property or list item is to be created, the
-   *     parent typed data object implementing either the ListInterface or the
-   *     ComplexDataInterface.
+   *   - name: The name of the property or the delta of the list item if a
+   *     property or list item is to be created. Otherwise, this should be set
+   *     to NULL, but the key must be specified.
+   *   - parent: The parent typed data object implementing either the
+   *     ListInterface or the ComplexDataInterface if a property or list item is
+   *     to be created. Otherwise, this should be set to NULL, but the key must
+   *     be specified.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The instantiated typed data object.
