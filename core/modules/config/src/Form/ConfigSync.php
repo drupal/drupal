@@ -343,7 +343,7 @@ class ConfigSync extends FormBase {
           'finished' => array(get_class($this), 'finishBatch'),
           'title' => t('Synchronizing configuration'),
           'init_message' => t('Starting configuration synchronization.'),
-          'progress_message' => t('Completed @current step of @total.'),
+          'progress_message' => t('Completed step @current of @total.'),
           'error_message' => t('Configuration synchronization has encountered an error.'),
           'file' => drupal_get_path('module', 'config') . '/config.admin.inc',
         );
