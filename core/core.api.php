@@ -344,7 +344,7 @@
  *   Configuration entity classes expose dependencies by overriding the
  *   \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
  *   method.
- * - On routes for paths staring with '/admin' or otherwise designated as
+ * - On routes for paths starting with '/admin' or otherwise designated as
  *   administration paths (such as node editing when it is set as an admin
  *   operation), if they have configuration entity placeholders, configuration
  *   entities are normally loaded in their original language, without
