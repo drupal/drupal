@@ -440,11 +440,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Initialize the container.
     $this->initializeContainer();
 
-    // Ensure mt_rand() is reseeded to prevent random values from one page load
-    // being exploited to predict random values in subsequent page loads.
-    $seed = unpack("L", Crypt::randomBytes(4));
-    mt_srand($seed[1]);
-
     $this->booted = TRUE;
 
     return $this;
