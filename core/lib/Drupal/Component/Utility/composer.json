@@ -5,7 +5,8 @@
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0+",
   "require": {
-    "php": ">=5.5.9"
+    "php": ">=5.5.9",
+    "paragonie/random_compat": "~1.0"
   },
   "autoload": {
     "psr-0": {

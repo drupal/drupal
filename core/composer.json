@@ -29,7 +29,8 @@
     "masterminds/html5": "~2.1",
     "symfony/psr-http-message-bridge": "v0.2",
     "zendframework/zend-diactoros": "~1.1",
-    "composer/semver": "~1.0"
+    "composer/semver": "~1.0",
+    "paragonie/random_compat": "~1.0"
   },
   "require-dev": {
     "behat/mink": "~1.6",
