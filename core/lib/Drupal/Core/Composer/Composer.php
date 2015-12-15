@@ -36,7 +36,6 @@ class Composer {
     'jcalderonzumba/mink-phantomjs-driver' => ['tests'],
     'masterminds/html5' => ['test'],
     'mikey179/vfsStream' => ['src/test'],
-    'paragonie/random_compat' => ['tests'],
     'phpdocumentor/reflection-docblock' => ['tests'],
     'phpunit/php-code-coverage' => ['tests'],
     'phpunit/php-timer' => ['tests'],
