@@ -13,7 +13,7 @@ use Drupal\migrate\Plugin\MigratePluginManager;
 /**
  * Builds migration entities from migration templates.
  */
-class MigrationBuilder {
+class MigrationBuilder implements MigrationBuilderInterface {
 
   /**
    * The builder plugin manager.
@@ -33,14 +33,7 @@ class MigrationBuilder {
   }
 
   /**
-   * Builds migration entities from templates.
-   *
-   * @param array $templates
-   *   The parsed templates (each of which is an array parsed from YAML), keyed
-   *   by ID.
-   *
-   * @return \Drupal\migrate\Entity\MigrationInterface[]
-   *   The migration entities derived from the templates.
+   * {@inheritdoc}
    */
   public function createMigrations(array $templates) {
     /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
