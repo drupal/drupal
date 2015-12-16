@@ -94,7 +94,14 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
+ * Prepares variables for language content settings table templates.
+ *
+ * Default template: language-content-settings-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #bundle_label, #title.
  */
 function template_preprocess_language_content_settings_table(&$variables) {
   // Add a render element representing the bundle language settings table.
@@ -132,24 +139,10 @@ function template_preprocess_language_content_settings_table(&$variables) {
     );
   }
 
+  $variables['title'] = $element['#title'];
   $variables['build'] = array(
-    '#title' => $element['#title'],
     '#header' => $header,
     '#rows' => $rows,
     '#type' => 'table',
   );
-}
-
-/**
- * Returns HTML for an administration settings table.
- *
- * @param array $variables
- *   An associative array containing:
- *   - build: A render element representing a table of bundle content language
- *     settings for a particular entity type.
- *
- * @ingroup themeable
- */
-function theme_language_content_settings_table($variables) {
-  return '<h4>' . theme_render_and_autoescape($variables['build']['#title']) . '</h4>' . theme_render_and_autoescape($variables['build']);
 }

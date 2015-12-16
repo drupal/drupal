@@ -48,14 +48,14 @@ class BundleConstraint extends Constraint {
   }
 
   /**
-   * Overrides Constraint::getDefaultOption().
+   * {@inheritdoc}
    */
   public function getDefaultOption() {
     return 'bundle';
   }
 
   /**
-   * Overrides Constraint::getRequiredOptions().
+   * {@inheritdoc}
    */
   public function getRequiredOptions() {
     return array('bundle');

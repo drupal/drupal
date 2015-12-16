@@ -40,7 +40,7 @@ class ThemeTest extends WebTestBase {
    * Render arrays that use a render element and templates (and hence call
    * template_preprocess()) must ensure the attributes at different occasions
    * are all merged correctly:
-   *   - $variables['attributes'] as passed in to _theme()
+   *   - $variables['attributes'] as passed in to the theme hook implementation.
    *   - the render element's #attributes
    *   - any attributes set in the template's preprocessing function
    */
@@ -57,7 +57,7 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Test that _theme() returns expected data types.
+   * Test that ThemeManager renders the expected data types.
    */
   function testThemeDataTypes() {
     // theme_test_false is an implemented theme hook so \Drupal::theme() service

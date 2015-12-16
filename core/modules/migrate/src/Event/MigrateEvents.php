@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\migrate\Event\MigrateEvents.
+ * Contains \Drupal\migrate\Event\MigrateEvents.
  */
 
 namespace Drupal\migrate\Event;
@@ -17,6 +17,7 @@ namespace Drupal\migrate\Event;
  * @see \Drupal\migrate\Event\MigratePostRowSaveEvent
  * @see \Drupal\migrate\Event\MigrateRollbackEvent
  * @see \Drupal\migrate\Event\MigrateRowDeleteEvent
+ * @see \Drupal\migrate\Event\MigrateIdMapMessageEvent
  */
 final class MigrateEvents {
 
@@ -169,5 +170,20 @@ final class MigrateEvents {
    * @var string
    */
   const POST_ROW_DELETE = 'migrate.post_row_delete';
+
+  /**
+   * Name of the event fired when saving a message to the idmap.
+   *
+   * This event allows modules to perform an action whenever a message is being
+   * logged by the idmap. The event listener method
+   * receives a \Drupal\migrate\Event\MigrateIdMapMessageEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\migrate\Event\MigrateIdMapMessageEvent
+   *
+   * @var string
+   */
+  const IDMAP_MESSAGE = 'migrate.idmap_message';
 
 }

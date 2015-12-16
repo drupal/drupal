@@ -107,7 +107,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $language = ConfigurableLanguage::load($langcode);
     $values[$langcode] = $this->getNewEntityValues($langcode);
 
-    $add_url = Url::fromRoute('content_translation.translation_add_' . $entity->getEntityTypeId(), [
+    $entity_type_id = $entity->getEntityTypeId();
+    $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
       'target' => $langcode
@@ -167,7 +168,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $language = ConfigurableLanguage::load($langcode);
     $source_langcode = 'it';
     $edit = array('source_langcode[source]' => $source_langcode);
-    $add_url = Url::fromRoute('content_translation.translation_add_' . $entity->getEntityTypeId(), [
+    $entity_type_id =  $entity->getEntityTypeId();
+    $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
       'target' => $langcode
@@ -180,7 +182,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     // Add another translation and mark the other ones as outdated.
     $values[$langcode] = $this->getNewEntityValues($langcode);
     $edit = $this->getEditValues($values, $langcode) + array('content_translation[retranslate]' => TRUE);
-    $add_url = Url::fromRoute('content_translation.translation_add_' . $entity->getEntityTypeId(), [
+    $entity_type_id = $entity->getEntityTypeId();
+    $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $source_langcode,
       'target' => $langcode
@@ -207,13 +210,15 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    */
   protected function doTestTranslationOverview() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    $this->drupalGet($entity->urlInfo('drupal:content-translation-overview'));
+    $translate_url = $entity->urlInfo('drupal:content-translation-overview');
+    $this->drupalGet($translate_url);
+    $translate_url->setAbsolute(FALSE);
 
     foreach ($this->langcodes as $langcode) {
       if ($entity->hasTranslation($langcode)) {
         $language = new Language(array('id' => $langcode));
-        $view_path = $entity->url('canonical', array('language' => $language));
-        $elements = $this->xpath('//table//a[@href=:href]', array(':href' => $view_path));
+        $view_url = $entity->url('canonical', ['language' => $language]);
+        $elements = $this->xpath('//table//a[@href=:href]', [':href' => $view_url]);
         $this->assertEqual((string) $elements[0], $entity->getTranslation($langcode)->label(), format_string('Label correctly shown for %language translation.', array('%language' => $langcode)));
         $edit_path = $entity->url('edit-form', array('language' => $language));
         $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a[@href=:href]', array(':href' => $edit_path));
@@ -343,7 +348,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
     // Check that the translator cannot delete the original translation.
     $args = [$this->entityTypeId => $entity->id(), 'language' => 'en'];
-    $this->drupalGet(Url::fromRoute('content_translation.translation_delete_' . $this->entityTypeId, $args));
+    $this->drupalGet(Url::fromRoute("entity.$this->entityTypeId.content_translation_delete", $args));
     $this->assertResponse(403);
   }
 

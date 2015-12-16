@@ -394,9 +394,9 @@ class LanguageSwitchingTest extends WebTestBase {
   }
 
   /**
-   * Test language switcher links for session based negotiation.
+   * Tests language switcher links for session based negotiation.
    */
-  function testLanguageSessionSwitchLinks() {
+  public function testLanguageSessionSwitchLinks() {
     // Add language.
     $edit = array(
       'predefined_langcode' => 'fr',

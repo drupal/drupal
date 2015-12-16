@@ -36,7 +36,7 @@ use Drupal\views\Plugin\views\PluginBase;
 abstract class ExposedFormPluginBase extends PluginBase implements CacheableDependencyInterface {
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 
@@ -356,6 +356,14 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
 
       if ($has_exposed_sort_handler) {
         $contexts[] = 'url.query_args:sort_order';
+      }
+    }
+
+    // Merge in cache contexts for all exposed filters to prevent display of
+    // cached forms.
+    foreach ($this->displayHandler->getHandlers('filter') as $filter_hander) {
+      if ($filter_hander->isExposed()) {
+        $contexts = Cache::mergeContexts($contexts, $filter_hander->getCacheContexts());
       }
     }
 

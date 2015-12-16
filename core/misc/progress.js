@@ -120,6 +120,7 @@
           type: this.method,
           url: uri,
           data: '',
+          dataType: 'json',
           success: function (progress) {
             // Display errors.
             if (progress.status === 0) {

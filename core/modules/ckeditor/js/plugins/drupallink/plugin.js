@@ -9,21 +9,41 @@
 
   'use strict';
 
+  function parseAttributes(element) {
+    var parsedAttributes = {};
+
+    var domElement = element.$;
+    var attribute = null;
+    var attributeName;
+    for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
+      attribute = domElement.attributes.item(attrIndex);
+      attributeName = attribute.nodeName.toLowerCase();
+      // Don't consider data-cke-saved- attributes; they're just there to work
+      // around browser quirks.
+      if (attributeName.substring(0, 15) === 'data-cke-saved-') {
+        continue;
+      }
+      // Store the value for this attribute, unless there's a data-cke-saved-
+      // alternative for it, which will contain the quirk-free, original value.
+      parsedAttributes[attributeName] = element.data('cke-saved-' + attributeName) || attribute.nodeValue;
+    }
+    return parsedAttributes;
+  }
+
   CKEDITOR.plugins.add('drupallink', {
     init: function (editor) {
       // Add the commands for link and unlink.
       editor.addCommand('drupallink', {
-        allowedContent: new CKEDITOR.style({
-          element: 'a',
-          styles: {},
-          attributes: {
-            '!href': '',
-            'target': ''
+        allowedContent: {
+          a: {
+            attributes: {
+              '!href': true
+            },
+            classes: {}
           }
-        }),
+        },
         requiredContent: new CKEDITOR.style({
           element: 'a',
-          styles: {},
           attributes: {
             href: ''
           }
@@ -31,34 +51,31 @@
         modes: {wysiwyg: 1},
         canUndo: true,
         exec: function (editor) {
+          var drupalImageUtils = CKEDITOR.plugins.drupalimage;
+          var focusedImageWidget = drupalImageUtils && drupalImageUtils.getFocusedWidget(editor);
           var linkElement = getSelectedLink(editor);
-          var linkDOMElement = null;
 
           // Set existing values based on selected element.
           var existingValues = {};
           if (linkElement && linkElement.$) {
-            linkDOMElement = linkElement.$;
-
-            // Populate an array with the link's current attributes.
-            var attribute = null;
-            var attributeName;
-            for (var attrIndex = 0; attrIndex < linkDOMElement.attributes.length; attrIndex++) {
-              attribute = linkDOMElement.attributes.item(attrIndex);
-              attributeName = attribute.nodeName.toLowerCase();
-              // Don't consider data-cke-saved- attributes; they're just there
-              // to work around browser quirks.
-              if (attributeName.substring(0, 15) === 'data-cke-saved-') {
-                continue;
-              }
-              // Store the value for this attribute, unless there's a
-              // data-cke-saved- alternative for it, which will contain the
-              // quirk-free, original value.
-              existingValues[attributeName] = linkElement.data('cke-saved-' + attributeName) || attribute.nodeValue;
-            }
+            existingValues = parseAttributes(linkElement);
+          }
+          // Or, if an image widget is focused, we're editing a link wrapping
+          // an image widget.
+          else if (focusedImageWidget && focusedImageWidget.data.link) {
+            existingValues = CKEDITOR.tools.clone(focusedImageWidget.data.link);
           }
 
           // Prepare a save callback to be used upon saving the dialog.
           var saveCallback = function (returnValues) {
+            // If an image widget is focused, we're not editing an independent
+            // link, but we're wrapping an image widget in a link.
+            if (focusedImageWidget) {
+              focusedImageWidget.setData('link', CKEDITOR.tools.extend(returnValues.attributes, focusedImageWidget.data.link));
+              editor.fire('saveSnapshot');
+              return;
+            }
+
             editor.fire('saveSnapshot');
 
             // Create a new link element if needed.
@@ -72,11 +89,6 @@
                 var text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
                 range.insertNode(text);
                 range.selectNodeContents(text);
-              }
-
-              // Ignore a disabled target attribute.
-              if (returnValues.attributes.target === 0) {
-                delete returnValues.attributes.target;
               }
 
               // Create the new link by applying a style to the new text.
@@ -124,13 +136,6 @@
       editor.addCommand('drupalunlink', {
         contextSensitive: 1,
         startDisabled: 1,
-        allowedContent: new CKEDITOR.style({
-          element: 'a',
-          attributes: {
-            '!href': '',
-            'target': ''
-          }
-        }),
         requiredContent: new CKEDITOR.style({
           element: 'a',
           attributes: {
@@ -255,5 +260,48 @@
     }
     return null;
   }
+
+  /**
+   * The image2 plugin is currently tightly coupled to the link plugin: it
+   * calls CKEDITOR.plugins.link.parseLinkAttributes().
+   *
+   * Drupal 8's CKEditor build doesn't include the 'link' plugin. Because it
+   * includes its own link plugin that integrates with Drupal's dialog system.
+   * So, to allow images to be linked, we need to duplicate the necessary subset
+   * of the logic.
+   *
+   * @todo Remove once we update to CKEditor 4.5.5.
+   * @see https://dev.ckeditor.com/ticket/13885
+   */
+  CKEDITOR.plugins.link = CKEDITOR.plugins.link || {
+    parseLinkAttributes: function (editor, element) {
+      return parseAttributes(element);
+    },
+    getLinkAttributes: function (editor, data) {
+      var set = {};
+      for (var attributeName in data) {
+        if (data.hasOwnProperty(attributeName)) {
+          set[attributeName] = data[attributeName];
+        }
+      }
+
+      // CKEditor tracks the *actual* saved href in a data-cke-saved-* attribute
+      // to work around browser quirks. We need to update it.
+      set['data-cke-saved-href'] = set.href;
+
+      // Remove all attributes which are not currently set.
+      var removed = {};
+      for (var s in set) {
+        if (set.hasOwnProperty(s)) {
+          delete removed[s];
+        }
+      }
+
+      return {
+        set: set,
+        removed: CKEDITOR.tools.objectKeys(removed)
+      };
+    }
+  };
 
 })(jQuery, Drupal, drupalSettings, CKEDITOR);

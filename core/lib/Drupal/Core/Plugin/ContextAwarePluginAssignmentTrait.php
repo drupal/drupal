@@ -53,7 +53,7 @@ trait ContextAwarePluginAssignmentTrait {
         ];
       }
 
-      if (count($options) > 1) {
+      if (count($options) > 1 || !$definition->isRequired()) {
         $assignments = $plugin->getContextMapping();
         $element[$context_slot] = [
           '#title' => $definition->getLabel() ?: $this->t('Select a @context value:', ['@context' => $context_slot]),
@@ -63,6 +63,9 @@ trait ContextAwarePluginAssignmentTrait {
           '#default_value' => !empty($assignments[$context_slot]) ? $assignments[$context_slot] : '',
           '#description' => $definition->getDescription(),
         ];
+        if (!$definition->isRequired()) {
+          $element[$context_slot]['#empty_value'] = '';
+        }
       }
     }
     return $element;

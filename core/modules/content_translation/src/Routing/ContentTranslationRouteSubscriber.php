@@ -112,7 +112,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_admin_route' => $is_admin,
         )
       );
-      $collection->add("content_translation.translation_add_$entity_type_id", $route);
+      $collection->add("entity.$entity_type_id.content_translation_add", $route);
 
       $route = new Route(
         $path . '/edit/{language}',
@@ -137,7 +137,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_admin_route' => $is_admin,
         )
       );
-      $collection->add("content_translation.translation_edit_$entity_type_id", $route);
+      $collection->add("entity.$entity_type_id.content_translation_edit", $route);
 
       $route = new Route(
         $path . '/delete/{language}',
@@ -162,7 +162,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_admin_route' => $is_admin,
         )
       );
-      $collection->add("content_translation.translation_delete_$entity_type_id", $route);
+      $collection->add("entity.$entity_type_id.content_translation_delete", $route);
     }
   }
 

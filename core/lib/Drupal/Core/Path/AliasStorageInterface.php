@@ -44,6 +44,9 @@ interface AliasStorageInterface {
   /**
    * Fetches a specific URL alias from the database.
    *
+   * The default implementation performs case-insensitive matching on the
+   * 'source' and 'alias' strings.
+   *
    * @param array $conditions
    *   An array of query conditions.
    *
@@ -59,6 +62,9 @@ interface AliasStorageInterface {
 
   /**
    * Deletes a URL alias.
+   *
+   * The default implementation performs case-insensitive matching on the
+   * 'source' and 'alias' strings.
    *
    * @param array $conditions
    *   An array of criteria.
@@ -82,6 +88,9 @@ interface AliasStorageInterface {
   /**
    * Returns an alias of Drupal system URL.
    *
+   * The default implementation performs case-insensitive matching on the
+   * 'source' and 'alias' strings.
+   *
    * @param string $path
    *   The path to investigate for corresponding path aliases.
    * @param string $langcode
@@ -96,6 +105,9 @@ interface AliasStorageInterface {
   /**
    * Returns Drupal system URL of an alias.
    *
+   * The default implementation performs case-insensitive matching on the
+   * 'source' and 'alias' strings.
+   *
    * @param string $path
    *   The path to investigate for corresponding system URLs.
    * @param string $langcode
@@ -109,6 +121,9 @@ interface AliasStorageInterface {
 
   /**
    * Checks if alias already exists.
+   *
+   * The default implementation performs case-insensitive matching on the
+   * 'source' and 'alias' strings.
    *
    * @param string $alias
    *   Alias to check against.
@@ -135,8 +150,9 @@ interface AliasStorageInterface {
    *
    * @param array $header
    *   Table header.
-   * @param string[]|null $keys
-   *   (optional) Search keys.
+   * @param string|null $keys
+   *   (optional) Search keyword that may include one or more '*' as wildcard
+   *   values.
    *
    * @return array
    *   Array of items to be displayed on the current page.

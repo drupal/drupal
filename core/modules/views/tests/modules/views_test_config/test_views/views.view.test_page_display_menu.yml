@@ -91,10 +91,11 @@ display:
         type: normal
         title: 'Test child (with parent)'
         parent: system.admin
-        description: ''
+        description: 'Sample description.'
         menu_name: admin
         weight: 0
         context: '0'
+        expanded: true
       defaults:
         title: false
     display_plugin: page

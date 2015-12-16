@@ -77,6 +77,10 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
    *   Thrown when a parameter value for a placeholder is not correct because it
    *   does not match the requirement.
+   *
+   * @internal
+   *   Should not be used in user code.
+   *   Use \Drupal\Core\Url instead.
    */
   public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE);
 

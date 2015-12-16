@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\MigrateTemplateStorage;
+use Drupal\migrate\MigrateTemplateStorageInterface;
 use Drupal\migrate\Plugin\migrate\builder\BuilderBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,10 +36,10 @@ class TermNode extends BuilderBase implements ContainerFactoryPluginInterface {
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin definition.
-   * @param \Drupal\migrate\MigrateTemplateStorage $template_storage
+   * @param \Drupal\migrate\MigrateTemplateStorageInterface $template_storage
    *   The migration template storage handler.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateTemplateStorage $template_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateTemplateStorageInterface $template_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->templateStorage = $template_storage;
   }

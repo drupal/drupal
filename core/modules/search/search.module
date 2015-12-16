@@ -803,7 +803,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
  * @param string|null $langcode
  *   Language code for the language of $text, if known.
  *
- * @return
+ * @return string|null
  *   A segment of $text that is between word boundary characters that either
  *   matches $key directly, or matches $key when both this text segment and
  *   $key are processed by search_simplify(). If a matching text segment is
@@ -847,7 +847,6 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   $words = preg_split('/' . $boundary . '+/u', $text, NULL, PREG_SPLIT_OFFSET_CAPTURE);
   // Add an entry pointing to the end of the string, for the loop below.
   $words[] = array('', strlen($text));
-  $num_words = count($words);
 
   // Using a binary search, find the earliest possible ending position in
   // $text where it will still match the keyword after applying

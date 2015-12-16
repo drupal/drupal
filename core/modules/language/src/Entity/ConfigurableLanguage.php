@@ -63,14 +63,14 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * The direction of language, either DIRECTION_LTR or DIRECTION_RTL.
    *
-   * @var integer
+   * @var int
    */
   protected $direction = self::DIRECTION_LTR;
 
   /**
    * The weight of the language, used in lists of languages.
    *
-   * @var integer
+   * @var int
    */
   protected $weight = 0;
 

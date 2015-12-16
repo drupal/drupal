@@ -208,7 +208,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           if ($new_comments > 0) {
             $page_number = $this->entityManager
               ->getStorage('comment')
-              ->getNewCommentPageNumber($entity->{$field_name}->comment_count, $new_comments, $entity);
+              ->getNewCommentPageNumber($entity->{$field_name}->comment_count, $new_comments, $entity, $field_name);
             $query = $page_number ? ['page' => $page_number] : NULL;
             $value = [
               'new_comment_count' => (int) $new_comments,

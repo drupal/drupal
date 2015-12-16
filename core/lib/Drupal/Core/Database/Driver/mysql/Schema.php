@@ -19,6 +19,9 @@ use Drupal\Component\Utility\Unicode;
  * @{
  */
 
+/**
+ * MySQL implementation of \Drupal\Core\Database\Schema.
+ */
 class Schema extends DatabaseSchema {
 
   /**

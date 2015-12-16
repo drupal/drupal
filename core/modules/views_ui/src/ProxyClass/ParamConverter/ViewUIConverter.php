@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views_ui\ProxyClass\ParamConverter\ViewUIConverter.
+ * Contains \Drupal\views_ui\ProxyClass\ParamConverter\ViewUIConverter.
  */
 
 /**

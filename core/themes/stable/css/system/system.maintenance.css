@@ -1,0 +1,56 @@
+/**
+ * Update styles
+ */
+.update-results {
+  margin-top: 3em;
+  padding: 0.25em;
+  border: 1px solid #ccc;
+  background: #eee;
+  font-size: smaller;
+}
+.update-results h2 {
+  margin-top: 0.25em;
+}
+.update-results h4 {
+  margin-bottom: 0.25em;
+}
+.update-results .none {
+  color: #888;
+  font-style: italic;
+}
+.update-results .failure strong {
+  color: #b63300;
+}
+
+/**
+ * Authorize.php styles
+ */
+#edit-submit-connection {
+  clear: both;
+}
+#edit-submit-process,
+.filetransfer {
+  display: none;
+  clear: both;
+}
+.js #edit-submit-connection {
+  display: none;
+}
+.js #edit-submit-process {
+  display: block;
+}
+
+#edit-connection-settings-change-connection-type {
+  margin: 2.6em 0.5em 0 1em; /* LTR */
+}
+[dir="rtl"] #edit-connection-settings-change-connection-type {
+  margin-left: 0.5em;
+  margin-right: 1em;
+}
+
+/**
+ * Theme maintenance styles
+ */
+.authorize-results__failure {
+  font-weight: bold;
+}

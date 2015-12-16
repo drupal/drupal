@@ -11,7 +11,9 @@ use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @PluginID("link")
+ * @MigrateCckField(
+ *   id = "link"
+ * )
  */
 class LinkField extends CckFieldPluginBase {
 

@@ -52,7 +52,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
+   * {@inheritdoc}
    */
   public function normalize($field_item, $format = NULL, array $context = array()) {
     /** @var $field_item \Drupal\Core\Field\FieldItemInterface */
@@ -97,7 +97,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   }
 
   /**
-   * Overrides \Drupal\hal\Normalizer\FieldItemNormalizer::constructValue().
+   * {@inheritdoc}
    */
   protected function constructValue($data, $context) {
     $field_item = $context['target_instance'];
@@ -111,7 +111,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   }
 
   /**
-   * Implements \Drupal\serialization\EntityResolver\UuidReferenceInterface::getUuid().
+   * {@inheritdoc}
    */
   public function getUuid($data) {
     if (isset($data['uuid'])) {

@@ -27,7 +27,7 @@ class PoMemoryWriter implements PoWriterInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoWriterInterface::writeItem().
+   * {@inheritdoc}
    */
   public function writeItem(PoItem $item) {
     if (is_array($item->getSource())) {
@@ -39,7 +39,7 @@ class PoMemoryWriter implements PoWriterInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoWriterInterface::writeItems().
+   * {@inheritdoc}
    */
   public function writeItems(PoReaderInterface $reader, $count = -1) {
     $forever = $count == -1;

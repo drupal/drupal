@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Extension\RequiredModuleUninstallValidator.
+ * Contains \Drupal\Core\ProxyClass\Extension\RequiredModuleUninstallValidator.
  */
 
 /**

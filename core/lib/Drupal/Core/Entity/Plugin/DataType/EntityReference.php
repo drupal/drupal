@@ -41,7 +41,7 @@ class EntityReference extends DataReferenceBase {
   /**
    * The entity ID.
    *
-   * @var integer|string
+   * @var int|string
    */
   protected $id;
 

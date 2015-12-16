@@ -127,7 +127,7 @@ class ContentTranslationController extends ControllerBase {
         $langcode = $language->getId();
 
         $add_url = new Url(
-          'content_translation.translation_add_' . $entity_type_id,
+          "entity.$entity_type_id.content_translation_add",
           array(
             'source' => $original,
             'target' => $language->getId(),
@@ -138,7 +138,7 @@ class ContentTranslationController extends ControllerBase {
           )
         );
         $edit_url = new Url(
-          'content_translation.translation_edit_' . $entity_type_id,
+          "entity.$entity_type_id.content_translation_edit",
           array(
             'language' => $language->getId(),
             $entity_type_id => $entity->id(),
@@ -148,7 +148,7 @@ class ContentTranslationController extends ControllerBase {
           )
         );
         $delete_url = new Url(
-          'content_translation.translation_delete_' . $entity_type_id,
+          "entity.$entity_type_id.content_translation_delete",
           array(
             'language' => $language->getId(),
             $entity_type_id => $entity->id(),

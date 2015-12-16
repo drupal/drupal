@@ -53,7 +53,7 @@ function content_translation_help($route_name, RouteMatchInterface $route_match)
  */
 function content_translation_module_implements_alter(&$implementations, $hook) {
   switch ($hook) {
-    // Move some of our hook implementations to the end of the list.
+    // Move our hook_entity_type_alter() implementation to the end of the list.
     case 'entity_type_alter':
       $group = $implementations['content_translation'];
       unset($implementations['content_translation']);
@@ -96,9 +96,9 @@ function content_translation_language_types_info_alter(array &$language_types) {
  *   canonical link template cannot be enabled for translation. Setting this key
  *   to TRUE overrides that. When that key is set, the Content Translation
  *   module will not provide any UI for translating the entity type, and the
- *   entity type should implement its own UI. This is useful for (e.g.) entity
- *   types that are embedded into others for editing (which would not need a
- *   canonical link, but could still support translation).
+ *   entity type should implement its own UI. For instance, this is useful for
+ *   entity types that are embedded into others for editing (which would not
+ *   need a canonical link, but could still support translation).
  * - content_translation_metadata: To implement its business logic the content
  *   translation UI relies on various metadata items describing the translation
  *   state. The default implementation is provided by
@@ -140,7 +140,11 @@ function content_translation_entity_type_alter(array &$entity_types) {
       if ($entity_type->hasLinkTemplate('canonical')) {
         // Provide default route names for the translation paths.
         if (!$entity_type->hasLinkTemplate('drupal:content-translation-overview')) {
-          $entity_type->setLinkTemplate('drupal:content-translation-overview', $entity_type->getLinkTemplate('canonical') . '/translations');
+          $translations_path = $entity_type->getLinkTemplate('canonical') . '/translations';
+          $entity_type->setLinkTemplate('drupal:content-translation-overview', $translations_path);
+          $entity_type->setLinkTemplate('drupal:content-translation-add', $translations_path . '/add/{source}/{target}');
+          $entity_type->setLinkTemplate('drupal:content-translation-edit', $translations_path . '/edit/{language}');
+          $entity_type->setLinkTemplate('drupal:content-translation-delete', $translations_path . '/delete/{language}');
         }
         // @todo Remove this as soon as menu access checks rely on the
         //   controller. See https://www.drupal.org/node/2155787.
@@ -534,7 +538,7 @@ function content_translation_form_language_content_settings_form_alter(array &$f
 }
 
 /**
- * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
+ * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
  */
 function content_translation_preprocess_language_content_settings_table(&$variables) {
   module_load_include('inc', 'content_translation', 'content_translation.admin');

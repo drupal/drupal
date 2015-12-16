@@ -18,8 +18,9 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\file\Element\ManagedFile;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\file\Entity\File;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
@@ -369,11 +370,6 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     $item = $element['#value'];
     $item['fids'] = $element['fids']['#value'];
 
-    // Prevent the file widget from overriding the image widget.
-    if (!isset($element['#theme'])) {
-      $element['#theme'] = 'file_widget';
-    }
-
     // Add the display field if enabled.
     if ($element['#display_field']) {
       $element['display'] = array(
@@ -573,6 +569,17 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     $field_state = static::getWidgetState($parents, $field_name, $form_state);
     $field_state['items'] = $submitted_values;
     static::setWidgetState($parents, $field_name, $form_state, $field_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
+    // Never flag validation errors for the remove button.
+    $clicked_button = end($form_state->getTriggeringElement()['#parents']);
+    if ($clicked_button !== 'remove_button') {
+      parent::flagErrors($items, $violations, $form, $form_state);
+    }
   }
 
 }

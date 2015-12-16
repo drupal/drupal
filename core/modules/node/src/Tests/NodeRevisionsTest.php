@@ -21,7 +21,19 @@ use Drupal\node\NodeInterface;
  * @group node
  */
 class NodeRevisionsTest extends NodeTestBase {
+
+  /**
+   * An array of node revisions.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
   protected $nodes;
+
+  /**
+   * Revision log messages.
+   *
+   * @var array
+   */
   protected $revisionLogs;
 
   /**
@@ -93,6 +105,16 @@ class NodeRevisionsTest extends NodeTestBase {
       );
       $node->untranslatable_string_field->value = $this->randomString();
       $node->setNewRevision();
+
+      // Edit the 2nd revision with a different user.
+      if ($i == 1) {
+        $editor = $this->drupalCreateUser();
+        $node->setRevisionAuthorId($editor->id());
+      }
+      else {
+        $node->setRevisionAuthorId($web_user->id());
+      }
+
       $node->save();
 
       $node = Node::load($node->id()); // Make sure we get revision information.
@@ -123,6 +145,11 @@ class NodeRevisionsTest extends NodeTestBase {
     foreach ($logs as $revision_log) {
       $this->assertText($revision_log, 'Revision log message found.');
     }
+    // Original author, and editor names should appear on revisions overview.
+    $web_user = $nodes[0]->revision_uid->entity;
+    $this->assertText(t('by @name', ['@name' => $web_user->getAccountName()]));
+    $editor = $nodes[2]->revision_uid->entity;
+    $this->assertText(t('by @name', ['@name' => $editor->getAccountName()]));
 
     // Confirm that this is the default revision.
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');

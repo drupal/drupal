@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Extension\InfoParserUnitTest.
+ * Contains \Drupal\Tests\Core\Extension\InfoParserUnitTest.
  */
 
 namespace Drupal\Tests\Core\Extension;

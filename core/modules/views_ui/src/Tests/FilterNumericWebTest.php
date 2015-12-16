@@ -92,6 +92,26 @@ class FilterNumericWebTest extends UITestBase {
     $this->assertNoText('Ringo');
     $this->assertNoText('George');
     $this->assertNoText('Meredith');
+
+    // Change the filter to a 'between' filter to test if the label and
+    // description are set for the 'minimum' filter element.
+    $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/age');
+    $edit = array();
+    $edit['options[expose][label]'] = 'Age between';
+    $edit['options[expose][description]'] = 'Description of the exposed filter';
+    $edit['options[operator]'] = 'between';
+    $edit['options[value][min]'] = 26;
+    $edit['options[value][max]'] = 28;
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/test_view', array(), t('Save'));
+    $this->assertConfigSchemaByName('views.view.test_view');
+
+    $this->drupalPostForm(NULL, array(), t('Update preview'));
+    // Check the max field label.
+    $this->assertRaw('<label for="edit-age-max">And</label>', 'Max field label found');
+    $this->assertRaw('<label for="edit-age-min">Age between</label>', 'Min field label found');
+    // Check that the description is shown in the right place.
+    $this->assertEqual(trim($this->cssSelect('.form-item-age-min .description')[0]), 'Description of the exposed filter');
   }
 
 }

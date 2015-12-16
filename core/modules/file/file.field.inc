@@ -10,27 +10,6 @@ use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\Element;
 
 /**
- * Returns HTML for an individual file upload widget.
- *
- * Default template: file-widget.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: A render element representing the file.
- */
-function template_preprocess_file_widget(&$variables) {
-  $element = $variables['element'];
-  if (!empty($element['fids']['#value'])) {
-    // Add the file size after the file name.
-    $file = reset($element['#files']);
-    $element['file_' . $file->id()]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
-  }
-  $variables['element'] = $element;
-  // The "js-form-managed-file" class is required for proper Ajax functionality.
-  $variables['attributes'] = array('class' => array('file-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix'));
-}
-
-/**
  * Prepares variables for multi file form widget templates.
  *
  * Default template: file-widget-multiple.html.twig.

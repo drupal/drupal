@@ -16,6 +16,9 @@ use Drupal\Core\Database\DatabaseNotFoundException;
  * @{
  */
 
+/**
+ * PostgreSQL implementation of \Drupal\Core\Database\Connection.
+ */
 class Connection extends DatabaseConnection {
 
   /**

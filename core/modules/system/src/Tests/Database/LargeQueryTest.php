@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\LargeQueryTest.
+ * Contains \Drupal\system\Tests\Database\LargeQueryTest.
  */
 
 namespace Drupal\system\Tests\Database;

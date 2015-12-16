@@ -11,6 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Drupal\simpletest\KernelTestBase;
 
@@ -122,9 +123,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    * Prepare any dependent migrations.
    *
    * @param array $id_mappings
-   *   A list of id mappings keyed by migration ids. Each id mapping is a list
-   *   of two arrays, the first are source ids and the second are destination
-   *   ids.
+   *   A list of ID mappings keyed by migration IDs. Each ID mapping is a list
+   *   of two arrays, the first are source IDs and the second are destination
+   *   IDs.
    */
   protected function prepareMigrations(array $id_mappings) {
     foreach ($id_mappings as $migration_id => $data) {
@@ -196,6 +197,28 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   public function stopCollectingMessages() {
     $this->collectMessages = FALSE;
+  }
+
+  /**
+   * Records a failure in the map table of a specific migration in order to
+   * test scenarios which require a failed row.
+   *
+   * @param string|\Drupal\migrate\Entity\MigrationInterface $migration
+   *   The migration entity, or its ID.
+   * @param array $row
+   *   The raw source row which "failed".
+   * @param int $status
+   *   (optional) The failure status. Should be one of the
+   *   MigrateIdMapInterface::STATUS_* constants.
+   */
+  protected function mockFailure($migration, array $row, $status = MigrateIdMapInterface::STATUS_FAILED) {
+    if (is_string($migration)) {
+      $migration = Migration::load($migration);
+    }
+    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+    $destination = array_map(function() { return NULL; }, $migration->getDestinationPlugin()->getIds());
+    $row = new Row($row, $migration->getSourcePlugin()->getIds());
+    $migration->getIdMap()->saveIdMapping($row, $destination, $status);
   }
 
 }

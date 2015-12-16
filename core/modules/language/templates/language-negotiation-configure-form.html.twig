@@ -1,24 +1,25 @@
 {#
 /**
-* @file
-* Default theme implementation for a language negotiation configuration form.
-*
-* Available variables:
-* - language_types: A list of language negotiation types. Each language type
-*   contains the following:
-*   - type: The machine name for the negotiation type.
-*   - title: The language negotiation type name.
-*   - description: A description for how the language negotiation type operates.
-*   - configurable: A radio element to toggle the table.
-*   - table: A draggable table for the language detection methods of this type.
-*   - children: Remaining form items for the group.
-*   - attributes: A list of HTML attributes for the wrapper element.
-* - children: Remaining form items for all groups.
-*
-* @see template_preprocess_language_negotiation_configure_form()
-*
-* @ingroup themeable
-*/
+ * @file
+ * Default theme implementation for a language negotiation configuration form.
+ *
+ * Available variables:
+ * - language_types: A list of language negotiation types. Each language type
+ *   contains the following:
+ *   - type: The machine name for the negotiation type.
+ *   - title: The language negotiation type name.
+ *   - description: A description for how the language negotiation type
+ *     operates.
+ *   - configurable: A radio element to toggle the table.
+ *   - table: A draggable table for the language detection methods of this type.
+ *   - children: Remaining form items for the group.
+ *   - attributes: A list of HTML attributes for the wrapper element.
+ * - children: Remaining form items for all groups.
+ *
+ * @see template_preprocess_language_negotiation_configure_form()
+ *
+ * @ingroup themeable
+ */
 #}
 {% for language_type in language_types %}
   {%

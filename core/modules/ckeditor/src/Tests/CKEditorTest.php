@@ -123,11 +123,13 @@ class CKEditorTest extends KernelTestBase {
     // Change the allowed HTML tags; the "allowedContent" and "format_tags"
     // settings for CKEditor should automatically be updated as well.
     $format = $editor->getFilterFormat();
-    $format->filters('filter_html')->settings['allowed_html'] .= '<pre> <h1>';
+    $format->filters('filter_html')->settings['allowed_html'] .= '<pre class> <h1> <blockquote class="*"> <address class="foo bar-* *">';
     $format->save();
 
-    $expected_config['allowedContent']['pre'] = array('attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE);
+    $expected_config['allowedContent']['pre'] = array('attributes' => 'class', 'styles' => FALSE, 'classes' => TRUE);
     $expected_config['allowedContent']['h1'] = array('attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE);
+    $expected_config['allowedContent']['blockquote'] = array('attributes' => 'class', 'styles' => FALSE, 'classes' => TRUE);
+    $expected_config['allowedContent']['address'] = array('attributes' => 'class', 'styles' => FALSE, 'classes' => 'foo,bar-*');
     $expected_config['format_tags'] = 'p;h1;h2;h3;h4;h5;h6;pre';
     ksort($expected_config['allowedContent']);
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');

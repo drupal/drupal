@@ -18,10 +18,11 @@
   -webkit-font-smoothing: antialiased;
   text-align: left; /* LTR */
 }
-[dir="rtl"] .js .dropbutton .dropbutton-action > input,
-[dir="rtl"] .js .dropbutton .dropbutton-action > a,
-[dir="rtl"] .js .dropbutton .dropbutton-action > button {
+[dir="rtl"].js .dropbutton .dropbutton-action > input,
+[dir="rtl"].js .dropbutton .dropbutton-action > a,
+[dir="rtl"].js .dropbutton .dropbutton-action > button {
   text-align: right;
+  margin-left: 0; /* This is required to win over specificity of [dir="rtl"] .dropbutton-multiple .dropbutton .dropbutton-action > * */
 }
 .js .dropbutton-action.last {
   border-radius: 0 0 0 1em; /* LTR */

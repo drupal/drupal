@@ -65,7 +65,7 @@ abstract class BlockContentTestBase extends WebTestBase {
   /**
    * Creates a custom block.
    *
-   * @param string $title
+   * @param bool|string $title
    *   (optional) Title of block. When no value is given uses a random name.
    *   Defaults to FALSE.
    * @param string $bundle

@@ -77,7 +77,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\filter\ManyToOne::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

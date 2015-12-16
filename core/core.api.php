@@ -235,7 +235,7 @@
  * configuration storage on a particular site, configuration files are always
  * used for:
  * - Defining the default configuration for an extension (module, theme, or
- *   profile), which is imported to the active storage when the extension if
+ *   profile), which is imported to the active storage when the extension is
  *   enabled. These configuration items are located in the config/install
  *   sub-directory of the extension. Note that changes to this configuration
  *   after a module or theme is already enabled have no effect; to make a
@@ -344,7 +344,7 @@
  *   Configuration entity classes expose dependencies by overriding the
  *   \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
  *   method.
- * - On routes for paths staring with '/admin' or otherwise designated as
+ * - On routes for paths starting with '/admin' or otherwise designated as
  *   administration paths (such as node editing when it is set as an admin
  *   operation), if they have configuration entity placeholders, configuration
  *   entities are normally loaded in their original language, without
@@ -567,7 +567,7 @@
  *
  * By default cached data is stored in the database. This can be configured
  * though so that all cached data, or that of an individual cache bin, uses a
- * different cache backend, such as APC or Memcache, for storage.
+ * different cache backend, such as APCu or Memcache, for storage.
  *
  * In a settings.php file, you can override the service used for a particular
  * cache bin. For example, if your service implementation of
@@ -692,7 +692,7 @@
  * "service" (such as accessing the database, sending email, or translating user
  * interface text) is defined (given a name and an interface or at least a
  * class that defines the methods that may be called), and a default class is
- * defined to provide the service. These two steps must be done together, and
+ * designated to provide the service. These two steps must be done together, and
  * can be done by Drupal Core or a module. Other modules can then define
  * alternative classes to provide the same services, overriding the default
  * classes. Classes and functions that need to use the service should always
@@ -840,6 +840,32 @@
  * @see \Symfony\Component\DependencyInjection\ContainerInterface
  * @see plugin_api
  * @see menu
+ * @}
+ */
+
+/**
+ * @defgroup listing_page_service Page header for Services page
+ * @{
+ * Introduction to services
+ *
+ * A "service" (such as accessing the database, sending email, or translating
+ * user interface text) can be defined by a module or Drupal core. Defining a
+ * service means giving it a name and designating a default class to provide the
+ * service; ideally, there should also be an interface that defines the methods
+ * that may be called. Services are collected into the Dependency Injection
+ * Container, and can be overridden to use different classes or different
+ * instantiation by modules. See the
+ * @link container Services and Dependency Injection Container topic @endlink
+ * for details.
+ *
+ * Some services have tags, which are defined in the service definition. Tags
+ * are used to define a group of related services, or to specify some aspect of
+ * how the service behaves. See the
+ * @link service_tag Service Tags topic @endlink for more information.
+ *
+ * @see container
+ * @see service_tag
+ *
  * @}
  */
 
@@ -1442,6 +1468,38 @@
  */
 
 /**
+ * @defgroup listing_page_class Page header for Classes page
+ * @{
+ * Introduction to classes
+ *
+ * A lot of the PHP code in Drupal is object oriented (OO), making use of
+ * @link http://php.net/manual/language.oop5.php PHP classes, interfaces, and traits. @endlink
+ * See the
+ * @link oo_conventions Objected-oriented programming conventions @endlink
+ * for more information.
+ *
+ * @see oo_conventions
+ *
+ * @}
+ */
+
+/**
+ * @defgroup listing_page_namespace Page header for Namespaces page
+ * @{
+ * Introduction to namespaces
+ *
+ * PHP classes, interfaces, and traits in Drupal are
+ * @link http://php.net/manual/en/language.namespaces.rationale.php namespaced. @endlink
+ * See the
+ * @link oo_conventions Objected-oriented programming conventions @endlink
+ * for more information.
+ *
+ * @see oo_conventions
+ *
+ * @}
+ */
+
+/**
  * @defgroup best_practices Best practices for developers
  * @{
  * Overview of standards and best practices for developers
@@ -1667,16 +1725,13 @@
  *     _form: '\Drupal\mymodule\Form\ExampleForm'
  * @endcode
  *
- * The $form argument to form-related functions is a structured array containing
- * the elements and properties of the form. For information on the array
- * components and format, and more detailed explanations of the Form API
- * workflow, see the
- * @link forms_api_reference.html Form API reference @endlink
- * and the
+ * The $form argument to form-related functions is a specialized render array
+ * containing the elements and properties of the form. For more about render
+ * arrays, see the @link theme_render Render API topic. @endlink For more
+ * detailed explanations of the Form API workflow, see the
  * @link https://www.drupal.org/node/2117411 Form API documentation section. @endlink
- * In addition, there is a set of Form API tutorials in
- * @link form_example_tutorial.inc the Form Example Tutorial @endlink which
- * provide basics all the way up through multistep forms.
+ * In addition, there is a set of Form API tutorials in the
+ * @link https://www.drupal.org/project/examples Examples for Developers project. @endlink
  *
  * In the form builder, validation, submission, and other form methods,
  * $form_state is the primary influence on the processing of the form and is

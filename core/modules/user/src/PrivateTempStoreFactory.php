@@ -55,10 +55,14 @@ class PrivateTempStoreFactory {
   /**
    * Constructs a Drupal\user\PrivateTempStoreFactory object.
    *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The connection object used for this data.
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $storage_factory
+   *   The key/value store factory.
    * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current account.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param int $expire
    *   The time to live for items, in seconds.
    */

@@ -37,27 +37,27 @@ use Symfony\Component\Routing\RouteCollection;
 class RestExport extends PathPluginBase implements ResponseDisplayPluginInterface {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesAJAX.
+   * {@inheritdoc}
    */
   protected $usesAJAX = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesPager.
+   * {@inheritdoc}
    */
   protected $usesPager = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesMore.
+   * {@inheritdoc}
    */
   protected $usesMore = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesAreas.
+   * {@inheritdoc}
    */
   protected $usesAreas = FALSE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::$usesAreas.
+   * {@inheritdoc}
    */
   protected $usesOptions = FALSE;
 
@@ -151,7 +151,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    * {@inheritdoc}
    */
   public function usesExposed() {
-    return FALSE;
+    return TRUE;
   }
 
   /**

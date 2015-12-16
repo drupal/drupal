@@ -24,7 +24,7 @@ class MockMenuBlock {
   /**
    * The number of menu levels deep to render.
    *
-   * @var integer
+   * @var int
    */
   protected $depth;
 

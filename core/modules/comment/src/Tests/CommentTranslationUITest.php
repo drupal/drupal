@@ -63,7 +63,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::setupBundle().
+   * {@inheritdoc}
    */
   function setupBundle() {
     parent::setupBundle();
@@ -80,14 +80,14 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getTranslatorPermission().
+   * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments', 'access comments'));
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::createEntity().
+   * {@inheritdoc}
    */
   protected function createEntity($values, $langcode, $comment_type = 'comment_article') {
     if ($comment_type == 'comment_article') {
@@ -114,7 +114,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getNewEntityValues().
+   * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
     // Comment subject is not translatable hence we use a fixed value.

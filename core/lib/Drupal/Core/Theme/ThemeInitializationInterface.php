@@ -34,6 +34,9 @@ interface ThemeInitializationInterface {
    *
    * @return \Drupal\Core\Theme\ActiveTheme
    *   An active theme object instance for the given theme.
+   *
+   * @throws \Drupal\Core\Theme\MissingThemeDependencyException
+   *   Thrown when base theme for installed theme is not installed.
    */
   public function getActiveThemeByName($theme_name);
 
@@ -54,8 +57,8 @@ interface ThemeInitializationInterface {
    * @param \Drupal\Core\Extension\Extension $theme
    *   The theme extension object.
    * @param \Drupal\Core\Extension\Extension[] $base_themes
-   *    An array of extension objects of base theme and its bases. It is ordered
-   *    by 'oldest first', meaning the top level of the chain will be first.
+   *   An array of extension objects of base theme and its bases. It is ordered
+   *   by 'next parent first', meaning the top level of the chain will be first.
    *
    * @return \Drupal\Core\Theme\ActiveTheme
    *   The active theme instance for the passed in $theme.

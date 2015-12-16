@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Driver\sqlite;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 /**
- * SQLite specific implementation of InsertQuery.
+ * SQLite implementation of \Drupal\Core\Database\Query\Insert.
  *
  * We ignore all the default fields and use the clever SQLite syntax:
  *   INSERT INTO table DEFAULT VALUES

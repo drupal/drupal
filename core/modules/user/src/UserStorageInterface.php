@@ -7,13 +7,13 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an interface for user entity storage classes.
  */
-interface UserStorageInterface extends EntityStorageInterface{
+interface UserStorageInterface extends ContentEntityStorageInterface {
 
   /**
    * Update the last login timestamp of the user.

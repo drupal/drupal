@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Time extends CachePluginBase {
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

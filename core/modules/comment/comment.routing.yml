@@ -23,6 +23,7 @@ entity.comment.edit_form:
     _entity_form: 'comment.default'
   requirements:
     _entity_access: 'comment.update'
+    comment: \d+
 
 comment.approve:
   path: '/comment/{comment}/approve'
@@ -33,6 +34,7 @@ comment.approve:
   requirements:
     _entity_access: 'comment.approve'
     _csrf_token: 'TRUE'
+    comment: \d+
 
 entity.comment.canonical:
   path: '/comment/{comment}'
@@ -41,6 +43,7 @@ entity.comment.canonical:
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
+    comment: \d+
 
 entity.comment.delete_form:
   path: '/comment/{comment}/delete'
@@ -49,6 +52,7 @@ entity.comment.delete_form:
     _entity_form: 'comment.delete'
   requirements:
     _entity_access: 'comment.delete'
+    comment: \d+
 
 comment.reply:
   path: '/comment/reply/{entity_type}/{entity}/{field_name}/{pid}'
@@ -77,6 +81,7 @@ comment.node_redirect:
   requirements:
     _entity_access: 'node.view'
     _module_dependencies: 'node'
+    node: \d+
 
 entity.comment_type.collection:
   path: '/admin/structure/comment'

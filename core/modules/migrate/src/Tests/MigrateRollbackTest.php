@@ -9,6 +9,8 @@ namespace Drupal\migrate\Tests;
 
 use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Row;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -109,9 +111,21 @@ class MigrateRollbackTest extends MigrateTestBase {
 
     $this->assertTrue($term_migration->getDestinationPlugin()->supportsRollback());
 
+    // Pre-create a term, to make sure it isn't deleted on rollback.
+    $preserved_term_ids[] = 1;
+    $new_term = Term::create(['tid' => 1, 'vid' => 1, 'name' => 'music']);
+    $new_term->save();
+
     // Import and validate term entities were created.
     $term_executable = new MigrateExecutable($term_migration, $this);
     $term_executable->import();
+    // Also explicitly mark one row to be preserved on rollback.
+    $preserved_term_ids[] = 2;
+    $map_row = $term_id_map->getRowBySource(['id' => 2]);
+    $dummy_row = new Row(['id' => 2], $ids);
+    $term_id_map->saveIdMapping($dummy_row, [$map_row['destid1']],
+      $map_row['source_row_status'], MigrateIdMapInterface::ROLLBACK_PRESERVE);
+
     foreach ($term_data_rows as $row) {
       /** @var Term $term */
       $term = Term::load($row['id']);
@@ -124,7 +138,12 @@ class MigrateRollbackTest extends MigrateTestBase {
     $term_executable->rollback();
     foreach ($term_data_rows as $row) {
       $term = Term::load($row['id']);
-      $this->assertNull($term);
+      if (in_array($row['id'], $preserved_term_ids)) {
+        $this->assertNotNull($term);
+      }
+      else {
+        $this->assertNull($term);
+      }
       $map_row = $term_id_map->getRowBySource(['id' => $row['id']]);
       $this->assertFalse($map_row);
     }

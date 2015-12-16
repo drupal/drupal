@@ -684,7 +684,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityStorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete(array $entities) {
     if (!$entities) {
@@ -1453,9 +1453,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $callback();
     }
     catch (SchemaException $e) {
+      $message .= ' ' . $e->getMessage();
       throw new EntityStorageException($message, 0, $e);
     }
     catch (DatabaseExceptionWrapper $e) {
+      $message .= ' ' . $e->getMessage();
       throw new EntityStorageException($message, 0, $e);
     }
   }

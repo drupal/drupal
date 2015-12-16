@@ -156,7 +156,7 @@ display:
           plugin_id: field
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           entity_type: node
           entity_field: nid

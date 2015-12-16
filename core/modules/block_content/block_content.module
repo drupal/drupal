@@ -72,8 +72,8 @@ function block_content_entity_type_alter(array &$entity_types) {
  * @param string $label
  *   (optional) The label for the body instance. Defaults to 'Body'
  *
- * @return array()
- *   Body field.
+ * @return \Drupal\field\Entity\FieldConfig
+ *   A Body field object.
  */
 function block_content_add_body_field($block_type_id, $label = 'Body') {
   // Add or remove the body field, as needed.

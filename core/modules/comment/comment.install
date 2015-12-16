@@ -110,3 +110,20 @@ function comment_schema() {
 
   return $schema;
 }
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * Clear caches to fix Comment entity list builder and operations Views field.
+ */
+function comment_update_8001() {
+  // Empty update to cause a cache flush to rebuild comment entity handler
+  // information, so that comment operation links work.
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
+ */

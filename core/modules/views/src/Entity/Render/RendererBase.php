@@ -37,7 +37,7 @@ abstract class RendererBase implements CacheableDependencyInterface {
   /**
    * The type of the entity being rendered.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
 

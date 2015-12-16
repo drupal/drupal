@@ -28,7 +28,7 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
   use TypedDataAwareValidatorTrait;
 
   /**
-   * Implements \Symfony\Component\Validator\ConstraintValidatorInterface::validate().
+   * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
 

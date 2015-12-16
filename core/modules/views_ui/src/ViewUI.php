@@ -45,25 +45,11 @@ class ViewUI implements ViewEntityInterface {
   public $changed_display;
 
   /**
-   * How long the view takes to build.
+   * How long the view takes to render in microseconds.
    *
-   * @var int
-   */
-  public $build_time;
-
-  /**
-   * How long the view takes to render.
-   *
-   * @var int
+   * @var float
    */
   public $render_time;
-
-  /**
-   * How long the view takes to execute.
-   *
-   * @var int
-   */
-  public $execute_time;
 
   /**
    * If this view is locked for editing.
@@ -167,7 +153,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::get().
+   * {@inheritdoc}
    */
   public function get($property_name, $langcode = NULL) {
     if (property_exists($this->storage, $property_name)) {
@@ -178,14 +164,14 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setStatus().
+   * {@inheritdoc}
    */
   public function setStatus($status) {
     return $this->storage->setStatus($status);
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::set().
+   * {@inheritdoc}
    */
   public function set($property_name, $value, $notify = TRUE) {
     if (property_exists($this->storage, $property_name)) {
@@ -636,12 +622,15 @@ class ViewUI implements ViewEntityInterface {
         $this->endQueryCapture();
       }
 
-      $this->render_time = Timer::stop('entity.view.preview_form');
+      $this->render_time = Timer::stop('entity.view.preview_form')['time'];
 
       views_ui_contextual_links_suppress_pop();
 
       // Prepare the query information and statistics to show either above or
       // below the view preview.
+      // Initialise the empty rows arrays so we can safely merge them later.
+      $rows['query'] = [];
+      $rows['statistics'] = [];
       if ($show_info || $show_query || $show_stats) {
         // Get information from the preview for display.
         if (!empty($executable->build_info['query'])) {
@@ -769,7 +758,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'View render time' %}</strong>",
                 ),
               ),
-              t('@time ms', array('@time' => intval($executable->render_time * 100000) / 100)),
+              t('@time ms', array('@time' => intval($this->render_time * 100) / 100)),
             );
           }
           \Drupal::moduleHandler()->alter('views_preview_info', $rows, $executable);
@@ -818,7 +807,7 @@ class ViewUI implements ViewEntityInterface {
           drupal_set_message($error, 'error');
         }
       }
-      $preview = t('Unable to preview due to validation errors.');
+      $preview = ['#markup' => t('Unable to preview due to validation errors.')];
     }
 
     // Assemble the preview, the query info, and the query statistics in the
@@ -827,26 +816,16 @@ class ViewUI implements ViewEntityInterface {
       '#type' => 'table',
       '#prefix' => '<div class="views-query-info">',
       '#suffix' => '</div>',
+      '#rows' => array_merge($rows['query'], $rows['statistics']),
     );
-    if ($show_location === 'above' || $show_location === 'below') {
-      if ($combined) {
-        $table['#rows'] = array_merge($rows['query'], $rows['statistics']);
-      }
-      else {
-        $table['#rows'] = $rows['query'];
-      }
-    }
-    elseif ($show_stats === 'above' || $show_stats === 'below') {
-      $table['#rows'] = $rows['statistics'];
-    }
 
-    if ($show_location === 'above' || $show_stats === 'above') {
+    if ($show_location == 'above') {
       $output = [
         'table' => $table,
         'preview' => $preview,
       ];
     }
-    elseif ($show_location === 'below' || $show_stats === 'below') {
+    else {
       $output = [
         'preview' => $preview,
         'table' => $table,
@@ -941,21 +920,21 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->storage->id();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::uuid().
+   * {@inheritdoc}
    */
   public function uuid() {
     return $this->storage->uuid();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::isNew().
+   * {@inheritdoc}
    */
   public function isNew() {
     return $this->storage->isNew();
@@ -969,7 +948,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::bundle().
+   * {@inheritdoc}
    */
   public function bundle() {
     return $this->storage->bundle();
@@ -983,7 +962,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     return $this->storage->createDuplicate();
@@ -1011,24 +990,31 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::delete().
+   * {@inheritdoc}
    */
   public function delete() {
     return $this->storage->delete();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::save().
+   * {@inheritdoc}
    */
   public function save() {
     return $this->storage->save();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::uri().
+   * {@inheritdoc}
    */
   public function urlInfo($rel = 'edit-form', array $options = []) {
     return $this->storage->urlInfo($rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toUrl($rel = 'edit-form', array $options = []) {
+    return $this->storage->toUrl($rel, $options);
   }
 
   /**
@@ -1039,14 +1025,21 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::label().
+   * {@inheritdoc}
+   */
+  public function toLink($text = NULL, $rel = 'edit-form', array $options = []) {
+    return $this->storage->toLink($text, $rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function label() {
     return $this->storage->label();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::enforceIsNew().
+   * {@inheritdoc}
    */
   public function enforceIsNew($value = TRUE) {
     return $this->storage->enforceIsNew($value);
@@ -1074,21 +1067,21 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::enable().
+   * {@inheritdoc}
    */
   public function enable() {
     return $this->storage->enable();
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::disable().
+   * {@inheritdoc}
    */
   public function disable() {
     return $this->storage->disable();
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::status().
+   * {@inheritdoc}
    */
   public function status() {
     return $this->storage->status();

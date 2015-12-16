@@ -30,6 +30,7 @@ class ToolbarMenuLinkTree extends MenuLinkTree {
       $menu_name = $first_link->getMenuName();
       // Add a more specific theme suggestion to differentiate this rendered
       // menu from others.
+      $build['#menu_name'] = $menu_name;
       $build['#theme'] = 'menu__toolbar__' . strtr($menu_name, '-', '_');
       return $build;
     }

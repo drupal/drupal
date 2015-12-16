@@ -1,0 +1,22 @@
+/**
+ * @file
+ * Admin styling for the User module.
+ */
+
+/* Permissions page */
+.permissions .module {
+  font-weight: bold;
+}
+.permissions .permission {
+  padding-left: 1.5em; /* LTR */
+}
+[dir="rtl"] .permissions .permission {
+  padding-left: 0;
+  padding-right: 1.5em;
+}
+
+/* Account settings */
+.user-admin-settings .details-description {
+  font-size: 0.85em;
+  padding-bottom: .5em;
+}

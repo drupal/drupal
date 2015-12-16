@@ -20,6 +20,11 @@ abstract class MigrateTestCase extends UnitTestCase {
   protected $migrationConfiguration = [];
 
   /**
+   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $idMap;
+
+  /**
    * Local store for mocking setStatus()/getStatus().
    *
    * @var \Drupal\migrate\Entity\MigrationInterface::STATUS_*

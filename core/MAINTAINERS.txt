@@ -49,6 +49,7 @@ maintainer. Current subsystem maintainers for Drupal 8:
 Ajax system
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Earl Miles 'merlinofchaos' https://www.drupal.org/u/merlinofchaos
+- Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Asset library system
 - ?
@@ -282,6 +283,7 @@ Breakpoint module
 
 CKEditor module
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
 
 Color module
 - ?

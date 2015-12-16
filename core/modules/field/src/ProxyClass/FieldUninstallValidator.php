@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\field\ProxyClass\FieldUninstallValidator.
+ * Contains \Drupal\field\ProxyClass\FieldUninstallValidator.
  */
 
 /**

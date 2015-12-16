@@ -122,11 +122,11 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @param $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
    *
-   * @throws \InvalidArgumentException
-   *   If a not existing property is accessed.
-   *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The property object.
+   *
+   * @throws \InvalidArgumentException
+   *   If a not existing property is accessed.
    */
   public function __get($property_name);
 

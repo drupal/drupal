@@ -84,8 +84,6 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $description_build = [];
-
     $comment->link = $comment->url('canonical', array('absolute' => TRUE));
     $comment->rss_namespaces = array();
     $comment->rss_elements = array(
@@ -113,13 +111,11 @@ class Rss extends RssPluginBase {
       $this->view->style_plugin->namespaces = array_merge($this->view->style_plugin->namespaces, $comment->rss_namespaces);
     }
 
+    $item = new \stdClass();
     if ($view_mode != 'title') {
       // We render comment contents.
-      $description_build = $build;
+      $item->description = $build;
     }
-
-    $item = new \stdClass();
-    $item->description = $description_build;
     $item->title = $comment->label();
     $item->link = $comment->link;
     // Provide a reference so that the render call in

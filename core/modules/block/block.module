@@ -89,7 +89,10 @@ function block_page_top(array &$page_top) {
  */
 function block_themes_installed($theme_list) {
   foreach ($theme_list as $theme) {
-    block_theme_initialize($theme);
+    // Don't initialize themes that are not displayed in the UI.
+    if (\Drupal::service('theme_handler')->hasUi($theme)) {
+      block_theme_initialize($theme);
+    }
   }
 }
 

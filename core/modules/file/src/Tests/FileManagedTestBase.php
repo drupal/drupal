@@ -33,9 +33,9 @@ abstract class FileManagedTestBase extends WebTestBase {
    * Assert that all of the specified hook_file_* hooks were called once, other
    * values result in failure.
    *
-   * @param array $expected
-   *   Array with string containing with the hook name, e.g. 'load', 'save',
-   *   'insert', etc.
+   * @param string[] $expected
+   *   An array of strings containing with the hook name; for example, 'load',
+   *   'save', 'insert', etc.
    */
   function assertFileHooksCalled($expected) {
     \Drupal::state()->resetCache();
@@ -66,7 +66,7 @@ abstract class FileManagedTestBase extends WebTestBase {
    * Assert that a hook_file_* hook was called a certain number of times.
    *
    * @param string $hook
-   *   String with the hook name, e.g. 'load', 'save', 'insert', etc.
+   *   String with the hook name; for instance, 'load', 'save', 'insert', etc.
    * @param int $expected_count
    *   Optional integer count.
    * @param string|NULL $message

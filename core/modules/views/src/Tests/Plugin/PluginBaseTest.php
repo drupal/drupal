@@ -44,6 +44,20 @@ class PluginBaseTest extends KernelTestBase {
   }
 
   /**
+   * Test that the token replacement in views works correctly with dots.
+   */
+  public function testViewsTokenReplaceWithDots() {
+    $text = '{{ argument.first }} comes before {{ argument.second }}';
+    $tokens = ['{{ argument.first }}' => 'first', '{{ argument.second }}' => 'second'];
+
+    $result = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($text, $tokens) {
+      return $this->testPluginBase->viewsTokenReplace($text, $tokens);
+    });
+
+    $this->assertIdentical($result, 'first comes before second');
+  }
+
+  /**
    * Tests viewsTokenReplace without any twig tokens.
    */
   public function testViewsTokenReplaceWithTwigTokens() {

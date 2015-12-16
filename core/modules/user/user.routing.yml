@@ -138,6 +138,7 @@ user.cancel_confirm:
     hashed_pass: ''
   requirements:
     _entity_access: 'user.delete'
+    user: \d+
 
 user.reset:
   path: '/user/reset/{uid}/{timestamp}/{hash}'

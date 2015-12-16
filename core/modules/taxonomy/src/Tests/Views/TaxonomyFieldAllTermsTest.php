@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\Views\TaxonomyFieldAllTerms.
+ * Contains \Drupal\taxonomy\Tests\Views\TaxonomyFieldAllTermsTest.
  */
 
 namespace Drupal\taxonomy\Tests\Views;

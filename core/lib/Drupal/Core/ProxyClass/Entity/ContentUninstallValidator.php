@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Entity\ContentUninstallValidator.
+ * Contains \Drupal\Core\ProxyClass\Entity\ContentUninstallValidator.
  */
 
 /**

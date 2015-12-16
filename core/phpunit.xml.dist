@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
+<!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
+<phpunit bootstrap="tests/bootstrap.php" colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         checkForUnintentionallyCoveredCode="false">
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
@@ -16,6 +21,7 @@
       <directory>./tests/Drupal/Tests</directory>
       <directory>./modules/*/tests/src/Unit</directory>
       <directory>../modules/*/tests/src/Unit</directory>
+      <directory>../profiles/*/tests/src/Unit</directory>
       <directory>../sites/*/modules/*/tests/src/Unit</directory>
       <!-- Exclude Composer's vendor directory so we don't run tests there. -->
       <exclude>./vendor</exclude>
@@ -26,6 +32,7 @@
       <directory>./tests/Drupal/KernelTests</directory>
       <directory>./modules/*/tests/src/Kernel</directory>
       <directory>../modules/*/tests/src/Kernel</directory>
+      <directory>../profiles/*/tests/src/Kernel</directory>
       <directory>../sites/*/modules/*/tests/src/Kernel</directory>
       <!-- Exclude Composer's vendor directory so we don't run tests there. -->
       <exclude>./vendor</exclude>
@@ -36,6 +43,7 @@
       <directory>./tests/Drupal/FunctionalTests</directory>
       <directory>./modules/*/tests/src/Functional</directory>
       <directory>../modules/*/tests/src/Functional</directory>
+      <directory>../profiles/*/tests/src/Functional</directory>
       <directory>../sites/*/modules/*/tests/src/Functional</directory>
       <!-- Exclude Composer's vendor directory so we don't run tests there. -->
       <exclude>./vendor</exclude>

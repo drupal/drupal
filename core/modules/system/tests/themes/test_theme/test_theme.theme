@@ -29,8 +29,13 @@ function test_theme_element_info_alter(&$info) {
   }
 }
 
-function test_theme_library_info_alter(&$libraries) {
-  $libraries['kitten']['js'][] = 'kittens.js';
+/**
+ * Implements hook_library_info_alter().
+ */
+function test_theme_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'test_theme') {
+    $libraries['kitten']['js']['kittens.js'] = [];
+  }
 }
 
 /**

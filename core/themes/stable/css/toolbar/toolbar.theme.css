@@ -1,0 +1,168 @@
+/**
+ * @file toolbar.theme.css
+ */
+.toolbar {
+  font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
+  /* Set base font size to 13px based on root ems. */
+  font-size: 0.8125rem;
+  -moz-tap-highlight-color: rgba(0,0,0,0);
+  -o-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  tap-highlight-color: rgba(0,0,0,0);
+  -moz-touch-callout: none;
+  -o-touch-callout: none;
+  -webkit-touch-callout: none;
+  touch-callout: none;
+}
+.toolbar .toolbar-item {
+  cursor: pointer;
+  padding: 1em 1.3333em;
+  line-height: 1em;
+  text-decoration: none;
+}
+.toolbar .toolbar-item:hover, .toolbar .toolbar-item:focus {
+  text-decoration: underline;
+}
+
+/**
+ * Toolbar bar.
+ */
+.toolbar .toolbar-bar {
+  background-color: #0f0f0f;
+  box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+  color: #dddddd;
+}
+[dir="rtl"] .toolbar .toolbar-bar {
+  box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
+}
+.toolbar .toolbar-bar .toolbar-item {
+  color: #ffffff;
+}
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item {
+  font-weight: bold;
+}
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+}
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+}
+
+/**
+ * Toolbar tray.
+ */
+.toolbar .toolbar-tray {
+  background-color: #ffffff;
+}
+.toolbar .toolbar-tray-horizontal > .toolbar-lining {
+  padding-right: 5em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal > .toolbar-lining {
+  padding-right: 0;
+  padding-left: 5em;
+}
+.toolbar .toolbar-tray-vertical {
+  background-color: #f5f5f5;
+  border-right: 1px solid #aaaaaa; /* LTR */
+  box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical {
+  border-left: 1px solid #aaaaaa;
+  border-right: 0 none;
+  box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
+}
+.toolbar .toolbar-tray-horizontal {
+  border-bottom: 1px solid #aaaaaa;
+  box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal {
+  box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
+}
+.toolbar .toolbar-tray-horizontal .toolbar-tray {
+  background-color: #f5f5f5;
+}
+.toolbar-tray a {
+  color: #565656;
+  cursor: pointer;
+  padding: 1em 1.3333em;
+  text-decoration: none;
+}
+.toolbar-tray a:hover,
+.toolbar-tray a:active,
+.toolbar-tray a:focus,
+.toolbar-tray a.is-active
+ {
+  color: #000;
+  text-decoration: underline;
+}
+.toolbar .toolbar-menu {
+  background-color: #ffffff;
+}
+.toolbar .toolbar-tray-horizontal .menu-item + .menu-item {
+  border-left: 1px solid #dddddd; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .menu-item + .menu-item {
+  border-left: 0 none ;
+  border-right: 1px solid #dddddd;
+}
+.toolbar .toolbar-tray-horizontal .menu-item:last-child {
+  border-right: 1px solid #dddddd; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .menu-item:last-child {
+  border-left: 1px solid #dddddd;
+}
+.toolbar .toolbar-tray-vertical .menu-item + .menu-item {
+  border-top: 1px solid #dddddd;
+}
+.toolbar .toolbar-tray-vertical .menu-item:last-child {
+  border-bottom: 1px solid #dddddd;
+}
+.toolbar .toolbar-tray-vertical .menu-item .menu-item {
+  border: 0 none;
+}
+.toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
+  border-bottom: 1px solid #dddddd;
+  border-top: 1px solid #dddddd;
+}
+.toolbar .toolbar-tray-vertical .menu-item:last-child > ul {
+  border-bottom: 0;
+}
+.toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
+  margin-left: 0.25em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
+  margin-left: 0;
+  margin-right: 0.25em;
+}
+.toolbar .toolbar-menu .toolbar-menu a {
+  color: #434343;
+}
+
+/**
+ * Orientation toggle.
+ */
+.toolbar .toolbar-toggle-orientation {
+  background-color: #f5f5f5;
+  padding: 0;
+  height: 100%;
+}
+.toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
+  border-left: 1px solid #c9c9c9; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
+  border-left: 0 none;
+  border-right: 1px solid #c9c9c9;
+}
+.toolbar .toolbar-toggle-orientation > .toolbar-lining {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
+  float: left;
+}
+.toolbar .toolbar-toggle-orientation button {
+  cursor: pointer;
+  display: inline-block;
+}

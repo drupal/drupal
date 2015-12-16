@@ -113,11 +113,11 @@ class CommentController extends ControllerBase {
    * @param \Drupal\comment\CommentInterface $comment
    *   A comment entity.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The comment listing set to the page on which the comment appears.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function commentPermalink(Request $request, CommentInterface $comment) {
     if ($entity = $comment->getCommentedEntity()) {
@@ -172,10 +172,10 @@ class CommentController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node object identified by the legacy URL.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirects user to new url.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function redirectNode(EntityInterface $node) {
     $fields = $this->commentManager->getFields('node');
@@ -208,17 +208,17 @@ class CommentController extends ControllerBase {
    *   (optional) Some comments are replies to other comments. In those cases,
    *   $pid is the parent comment's comment ID. Defaults to NULL.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
    *   An associative array containing:
    *   - An array for rendering the entity or parent comment.
    *     - comment_entity: If the comment is a reply to the entity.
    *     - comment_parent: If the comment is a reply to another comment.
    *   - comment_form: The comment form as a renderable array.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function getReplyForm(Request $request, EntityInterface $entity, $field_name, $pid = NULL) {
     $account = $this->currentUser();
-    $uri = $entity->urlInfo()->setAbsolute();
     $build = array();
 
     // The user is not just previewing a comment.
@@ -270,9 +270,10 @@ class CommentController extends ControllerBase {
    *   (optional) Some comments are replies to other comments. In those cases,
    *   $pid is the parent comment's comment ID. Defaults to NULL.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    * @return \Drupal\Core\Access\AccessResultInterface
    *   An access result
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function replyFormAccess(EntityInterface $entity, $field_name, $pid = NULL) {
     // Check if entity and field exists.
@@ -312,10 +313,11 @@ class CommentController extends ControllerBase {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request of the page.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function renderNewCommentsNodeLinks(Request $request) {
     if ($this->currentUser()->isAnonymous()) {
@@ -335,7 +337,7 @@ class CommentController extends ControllerBase {
       $node = $this->entityManager->getStorage('node')->load($nid);
       $new = $this->commentManager->getCountNewComments($node);
       $page_number = $this->entityManager()->getStorage('comment')
-        ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node);
+        ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node, $field_name);
       $query = $page_number ? array('page' => $page_number) : NULL;
       $links[$nid] = array(
         'new_comment_count' => (int) $new,

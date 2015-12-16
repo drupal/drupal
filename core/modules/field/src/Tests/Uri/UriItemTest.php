@@ -68,6 +68,11 @@ class UriItemTest extends FieldUnitTestBase {
         'type' => 'uri',
       ])
       ->save();
+
+    // Test the generateSampleValue() method.
+    $entity = entity_create('entity_test');
+    $entity->$field_name->generateSampleItems();
+    $this->entityValidateAndSave($entity);
   }
 
 }

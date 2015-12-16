@@ -27,35 +27,35 @@ class MemoryStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
+   * {@inheritdoc}
    */
   public function get($key, $default = NULL) {
     return array_key_exists($key, $this->data) ? $this->data[$key] : $default;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getMultiple().
+   * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
     return array_intersect_key($this->data, array_flip($keys));
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getAll().
+   * {@inheritdoc}
    */
   public function getAll() {
     return $this->data;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::set().
+   * {@inheritdoc}
    */
   public function set($key, $value) {
     $this->data[$key] = $value;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setIfNotExists().
+   * {@inheritdoc}
    */
   public function setIfNotExists($key, $value) {
     if (!isset($this->data[$key])) {
@@ -66,7 +66,7 @@ class MemoryStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setMultiple().
+   * {@inheritdoc}
    */
   public function setMultiple(array $data) {
     $this->data = $data + $this->data;
@@ -81,14 +81,14 @@ class MemoryStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($key) {
     unset($this->data[$key]);
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteMultiple().
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $keys) {
     foreach ($keys as $key) {
@@ -97,7 +97,7 @@ class MemoryStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll() {
     $this->data = array();

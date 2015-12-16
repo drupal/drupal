@@ -39,7 +39,7 @@ class BinaryData extends PrimitiveBase implements BinaryInterface {
   public $handle = NULL;
 
   /**
-   * Overrides TypedData::getValue().
+   * {@inheritdoc}
    */
   public function getValue() {
     // If the value has been set by (absolute) stream resource URI, access the
@@ -76,7 +76,7 @@ class BinaryData extends PrimitiveBase implements BinaryInterface {
   }
 
   /**
-   * Overrides TypedData::getString().
+   * {@inheritdoc}
    */
   public function getString() {
     // Return the file content.

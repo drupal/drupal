@@ -42,10 +42,10 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend instance to use.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   Cache backend instance to use.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
@@ -135,7 +135,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
   /**
    * {@inheritdoc}
    */
-  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name = 'comment') {
+  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name) {
     $field = $entity->getFieldDefinition($field_name);
     $comments_per_page = $field->getSetting('per_page');
 

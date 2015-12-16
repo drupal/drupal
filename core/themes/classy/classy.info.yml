@@ -4,7 +4,7 @@ description: 'A base theme with sensible default CSS classes added. Learn how to
 package: Core
 version: VERSION
 core: 8.x
-base theme: false
+hidden: true
 
 libraries:
   - classy/base
@@ -17,3 +17,5 @@ libraries-extend:
     - classy/dropbutton
   core/drupal.dialog:
     - classy/dialog
+  file/drupal.file:
+    - classy/file

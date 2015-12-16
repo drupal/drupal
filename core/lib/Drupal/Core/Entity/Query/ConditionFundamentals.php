@@ -60,21 +60,21 @@ abstract class ConditionFundamentals {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Query\ConditionInterface::getConjunction().
+   * {@inheritdoc}
    */
   public function getConjunction() {
     return $this->conjunction;
   }
 
   /**
-   * Implements \Countable::count().
+   * {@inheritdoc}
    */
   public function count() {
     return count($this->conditions) - 1;
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Query\ConditionInterface::conditions().
+   * {@inheritdoc}
    */
   public function &conditions() {
     return $this->conditions;

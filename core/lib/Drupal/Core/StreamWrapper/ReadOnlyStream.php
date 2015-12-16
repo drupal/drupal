@@ -42,14 +42,14 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
   protected $uri;
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::setUri().
+   * {@inheritdoc}
    */
   function setUri($uri) {
     $this->uri = $uri;
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getUri().
+   * {@inheritdoc}
    */
   function getUri() {
     return $this->uri;

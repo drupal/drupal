@@ -73,7 +73,7 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getMultiple().
+   * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
     $values = array();
@@ -94,7 +94,7 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getAll().
+   * {@inheritdoc}
    */
   public function getAll() {
     $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', array(':collection' => $this->collection));
@@ -109,7 +109,7 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::set().
+   * {@inheritdoc}
    */
   public function set($key, $value) {
     $this->connection->merge($this->table)
@@ -122,7 +122,7 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setIfNotExists().
+   * {@inheritdoc}
    */
   public function setIfNotExists($key, $value) {
     $result = $this->connection->merge($this->table)
@@ -149,7 +149,7 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteMultiple().
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $keys) {
     // Delete in chunks when a large array is passed.
@@ -162,7 +162,7 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll() {
     $this->connection->delete($this->table)

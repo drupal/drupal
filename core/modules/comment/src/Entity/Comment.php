@@ -30,6 +30,7 @@ use Drupal\user\UserInterface;
  *     "storage" = "Drupal\comment\CommentStorage",
  *     "storage_schema" = "Drupal\comment\CommentStorageSchema",
  *     "access" = "Drupal\comment\CommentAccessControlHandler",
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "view_builder" = "Drupal\comment\CommentViewBuilder",
  *     "views_data" = "Drupal\comment\CommentViewsData",
  *     "form" = {

@@ -48,10 +48,6 @@ class HtmlResponsePlaceholderStrategySubscriber implements EventSubscriberInterf
    *   The event to process.
    */
   public function onRespond(FilterResponseEvent $event) {
-    if (!$event->isMasterRequest()) {
-      return;
-    }
-
     $response = $event->getResponse();
     if (!$response instanceof HtmlResponse) {
       return;

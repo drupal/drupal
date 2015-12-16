@@ -20,12 +20,12 @@ interface ClassResolverInterface {
    * @param string $definition
    *   A class name or service name.
    *
-   * @throws \InvalidArgumentException
-   *   If $class is not a valid service identifier and the class does not exist.
-   *
    * @return object
    *   The instance of the class.
-  */
+   *
+   * @throws \InvalidArgumentException
+   *   If $class is not a valid service identifier and the class does not exist.
+   */
   public function getInstanceFromDefinition($definition);
 
 }

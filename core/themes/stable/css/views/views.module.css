@@ -1,0 +1,19 @@
+/* table style column align */
+.views-align-left {
+  text-align: left;
+}
+.views-align-right {
+  text-align: right;
+}
+.views-align-center {
+  text-align: center;
+}
+/* Grid style column align. */
+.views-view-grid .views-col {
+  float: left;
+}
+.views-view-grid .views-row {
+  clear: both;
+  float: left;
+  width: 100%;
+}

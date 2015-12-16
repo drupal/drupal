@@ -221,8 +221,13 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Unknown language prefix should return 404.
     $definitions = \Drupal::languageManager()->getNegotiator()->getNegotiationMethods();
+    // Enable only methods, which are either not limited to a specific language
+    // type or are supporting the interface language type.
+    $language_interface_method_definitions = array_filter($definitions, function ($method_definition) {
+      return !isset($method_definition['types']) || (isset($method_definition['types']) && in_array(LanguageInterface::TYPE_INTERFACE, $method_definition['types']));
+    });
     $this->config('language.types')
-      ->set('negotiation.' . LanguageInterface::TYPE_INTERFACE . '.enabled', array_flip(array_keys($definitions)))
+      ->set('negotiation.' . LanguageInterface::TYPE_INTERFACE . '.enabled', array_flip(array_keys($language_interface_method_definitions)))
       ->save();
     $this->drupalGet("$langcode_unknown/admin/config", array(), $http_header_browser_fallback);
     $this->assertResponse(404, "Unknown language path prefix should return 404");

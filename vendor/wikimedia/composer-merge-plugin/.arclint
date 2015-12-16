@@ -1,0 +1,13 @@
+{
+    "exclude": "(^vendor/)",
+    "linters": {
+        "php": {
+            "type": "php",
+            "include": "(\\.php$)"
+        },
+        "json": {
+            "type": "json",
+            "include": "(\\.json$)"
+        }
+    }
+}

@@ -108,13 +108,11 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $themes = $this->themeHandler->listInfo();
 
-    // Deny access if the theme is not installed or not found.
-    if (!empty($theme) && (empty($themes[$theme]) || !$themes[$theme]->status)) {
-      throw new NotFoundHttpException();
-    }
-
     // Default settings are defined in theme_get_setting() in includes/theme.inc
     if ($theme) {
+      if (!$this->themeHandler->hasUi($theme)) {
+        throw new NotFoundHttpException();
+      }
       $var = 'theme_' . $theme . '_settings';
       $config_key = $theme . '.settings';
       $themes = $this->themeHandler->listInfo();
@@ -185,12 +183,6 @@ class ThemeSettingsForm extends ConfigFormBase {
         '#type' => 'details',
         '#title' => t('Logo image settings'),
         '#open' => TRUE,
-        '#states' => array(
-          // Hide the logo image settings fieldset when logo display is disabled.
-          'invisible' => array(
-            'input[name="toggle_logo"]' => array('checked' => FALSE),
-          ),
-        ),
       );
       $form['logo']['default_logo'] = array(
         '#type' => 'checkbox',
@@ -432,7 +424,6 @@ class ThemeSettingsForm extends ConfigFormBase {
       $filename = file_unmanaged_copy($values['logo_upload']->getFileUri());
       $values['default_logo'] = 0;
       $values['logo_path'] = $filename;
-      $values['toggle_logo'] = 1;
     }
     if (!empty($values['favicon_upload'])) {
       $filename = file_unmanaged_copy($values['favicon_upload']->getFileUri());

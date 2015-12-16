@@ -94,7 +94,7 @@ views.style.table:
       label: 'Enable Drupal style "sticky" table headers (Javascript)'
     summary:
       type: label
-      label: 'Table summary'
+      label: 'Summary title'
     order:
       type: string
       label: 'Default order'
@@ -103,10 +103,10 @@ views.style.table:
       label: 'Show the empty text in the table'
     caption:
       type: label
-      label: 'Caption'
+      label: 'Caption for the table'
     description:
       type: text
-      label: 'Caption'
+      label: 'Table description'
 
 views.style.default_summary:
   type: views_style

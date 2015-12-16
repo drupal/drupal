@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PathProcessor implements InboundPathProcessorInterface {
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     if (preg_match('!^/user/([^/]+)(/.*)?!', $path, $matches)) {

@@ -32,7 +32,7 @@ use Drupal\Component\Utility\Html;
 class AttributeBoolean extends AttributeValueBase {
 
   /**
-   * Overrides AttributeValueBase::render().
+   * {@inheritdoc}
    */
   public function render() {
     return $this->__toString();

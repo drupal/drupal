@@ -74,6 +74,9 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['index'] = array('default' => '');
@@ -82,6 +85,9 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['index'] = array(
@@ -102,12 +108,19 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getArgument() {
-    $path = trim($this->currentPath->getPath($this->view->getRequest()), '/');
+    // Don't trim the leading slash since getAliasByPath() requires it.
+    $path = rtrim($this->currentPath->getPath($this->view->getRequest()), '/');
     if ($this->options['use_alias']) {
       $path = $this->aliasManager->getAliasByPath($path);
     }
     $args = explode('/', $path);
+    // Drop the empty first element created by the leading slash since the path
+    // component index doesn't take it into account.
+    array_shift($args);
     if (isset($args[$this->options['index']])) {
       return $args[$this->options['index']];
     }

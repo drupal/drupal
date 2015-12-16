@@ -13,6 +13,7 @@ use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Session\AccountInterface;
@@ -58,6 +59,14 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
   protected $multilingual;
 
   /**
+   * The language configuration event subscriber.
+   *
+   * @var \Drupal\language\EventSubscriber\ConfigSubscriber
+   */
+  protected $configSubscriber;
+
+
+  /**
    * Constructs a PathProcessorLanguage object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
@@ -68,12 +77,15 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    *   The language negotiator.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.
+   * @param \Drupal\language\EventSubscriber\ConfigSubscriber $config_subscriber
+   *   The language configuration event subscriber.
    */
-  public function __construct(ConfigFactoryInterface $config, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, AccountInterface $current_user) {
+  public function __construct(ConfigFactoryInterface $config, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, AccountInterface $current_user, ConfigSubscriber $config_subscriber) {
     $this->config = $config;
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
     $this->negotiator->setCurrentUser($current_user);
+    $this->configSubscriber = $config_subscriber;
   }
 
   /**
@@ -150,6 +162,24 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
 
       return ($a_weight < $b_weight) ? -1 : 1;
     });
+  }
+
+  /**
+   * Initializes the injected event subscriber with the language path processor.
+   *
+   * The language path processor service is registered only on multilingual
+   * site configuration, thus we inject it in the event subscriber only when
+   * it is initialized.
+   */
+  public function initConfigSubscriber() {
+    $this->configSubscriber->setPathProcessorLanguage($this);
+  }
+
+  /**
+   * Resets the collected processors instances.
+   */
+  public function reset() {
+    $this->processors = array();
   }
 
 }

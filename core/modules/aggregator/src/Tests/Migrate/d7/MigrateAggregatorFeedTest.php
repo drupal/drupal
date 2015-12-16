@@ -13,11 +13,14 @@ use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 /**
  * Test migration to aggregator_feed entities.
  *
- * @group aggregator
+ * @group migrate_drupal_7
  */
 class MigrateAggregatorFeedTest extends MigrateDrupal7TestBase {
 
-  public static $modules = array('aggregator');
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}
@@ -32,19 +35,25 @@ class MigrateAggregatorFeedTest extends MigrateDrupal7TestBase {
    * Tests migration of aggregator feeds.
    */
   public function testAggregatorFeedImport() {
-    /** @var \Drupal\aggregator\Entity\Feed $feed */
+    /** @var \Drupal\aggregator\FeedInterface $feed */
     $feed = Feed::load(1);
-    $this->assertIdentical('Know Your Meme', $feed->title->value);
+    $this->assertIdentical('Know Your Meme', $feed->label());
     $this->assertIdentical('en', $feed->language()->getId());
-    $this->assertIdentical('http://knowyourmeme.com/newsfeed.rss', $feed->url->value);
-    $this->assertIdentical('900', $feed->refresh->value);
-    $this->assertIdentical('1387659487', $feed->checked->value);
-    $this->assertIdentical('0', $feed->queued->value);
+    $this->assertIdentical('http://knowyourmeme.com/newsfeed.rss', $feed->getUrl());
+    $this->assertIdentical('900', $feed->getRefreshRate());
+    // The feed's last checked time can change as the fixture is updated, so
+    // assert that its format is correct.
+    $checked_time = $feed->getLastCheckedTime();
+    $this->assertTrue(is_numeric($checked_time));
+    $this->assertTrue($checked_time > 1000000000);
+    $this->assertIdentical('0', $feed->getQueuedTime());
     $this->assertIdentical('http://knowyourmeme.com', $feed->link->value);
-    $this->assertIdentical('New items added to the News Feed', $feed->description->value);
-    $this->assertIdentical('http://b.thumbs.redditmedia.com/harEHsUUZVajabtC.png', $feed->image->value);
-    $this->assertIdentical('"213cc1365b96c310e92053c5551f0504"', $feed->etag->value);
-    $this->assertIdentical('0', $feed->modified->value);
+    $this->assertIdentical('New items added to the News Feed', $feed->getDescription());
+    $this->assertNull($feed->getImage());
+    // As with getLastCheckedTime(), the etag can change as the fixture is
+    // updated normally, so assert that its format is correct.
+    $this->assertTrue(preg_match('/^"[a-z0-9]{32}"$/', $feed->getEtag()));
+    $this->assertIdentical('0', $feed->getLastModified());
   }
 
 }

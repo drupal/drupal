@@ -39,7 +39,9 @@ class LanguageServiceProvider extends ServiceProviderBase {
         ->addArgument(new Reference('config.factory'))
         ->addArgument(new Reference('language_manager'))
         ->addArgument(new Reference('language_negotiator'))
-        ->addArgument(new Reference('current_user'));
+        ->addArgument(new Reference('current_user'))
+        ->addArgument(new Reference('language.config_subscriber'))
+        ->addMethodCall('initConfigSubscriber');
     }
   }
 

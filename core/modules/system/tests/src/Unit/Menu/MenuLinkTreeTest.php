@@ -135,6 +135,7 @@ class MenuLinkTreeTest extends UnitTestCase {
         'max-age' => Cache::PERMANENT,
       ],
       '#sorted' => TRUE,
+      '#menu_name' => 'mock',
       '#theme' => 'menu__mock',
       '#items' => [
         // To be filled when generating test cases, using $get_built_element().

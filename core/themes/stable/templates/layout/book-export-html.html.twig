@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ * Theme override for printed version of book outline.
+ *
+ * Available variables:
+ * - title: Top level node title.
+ * - head: Header tags.
+ * - language: Language object.
+ * - language_rtl: A flag indicating whether the current display language is a
+ *   right to left language.
+ * - base_url: URL to the home page.
+ * - contents: Nodes within the current outline rendered through
+ *   book-node-export-html.html.twig.
+ *
+ * @see template_preprocess_book_export_html()
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <title>{{ title }}</title>
+    {{ page.head }}
+    <base href="{{ base_url }}" />
+    <link type="text/css" rel="stylesheet" href="misc/print.css" />
+  </head>
+  <body>
+    {#
+      The given node is embedded to its absolute depth in a top level section.
+      For example, a child node with depth 2 in the hierarchy is contained in
+      (otherwise empty) div elements corresponding to depth 0 and depth 1. This
+      is intended to support WYSIWYG output - e.g., level 3 sections always look
+      like level 3 sections, no matter their depth relative to the node selected
+      to be exported as printer-friendly HTML.
+    #}
+
+  {% for i in 1..depth-1 if depth > 1 %}
+    <div>
+  {% endfor %}
+  {{ contents }}
+  {% for i in 1..depth-1 if depth > 1 %}
+    </div>
+  {% endfor %}
+  </body>
+</html>

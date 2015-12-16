@@ -18,6 +18,7 @@
  */
 #}
 <table class="system-status-report">
+  <tbody>
   {% for requirement in requirements %}
     <tr class="system-status-report__entry system-status-report__entry--{{ requirement.severity_status }} color-{{ requirement.severity_status }}">
       {% if requirement.severity_status in ['warning', 'error'] %}

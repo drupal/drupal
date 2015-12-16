@@ -55,7 +55,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::exists().
+   * {@inheritdoc}
    */
   public function exists($name) {
     // The cache would read in the entire data (instead of only checking whether
@@ -65,7 +65,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::read().
+   * {@inheritdoc}
    */
   public function read($name) {
     $cache_key = $this->getCacheKey($name);
@@ -123,7 +123,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::write().
+   * {@inheritdoc}
    */
   public function write($name, array $data) {
     if ($this->storage->write($name, $data)) {
@@ -137,7 +137,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($name) {
     // If the cache was the first to be deleted, another process might start
@@ -151,7 +151,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::rename().
+   * {@inheritdoc}
    */
   public function rename($name, $new_name) {
     // If the cache was the first to be deleted, another process might start
@@ -166,14 +166,14 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::encode().
+   * {@inheritdoc}
    */
   public function encode($data) {
     return $this->storage->encode($data);
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::decode().
+   * {@inheritdoc}
    */
   public function decode($raw) {
     return $this->storage->decode($raw);
@@ -215,7 +215,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll($prefix = '') {
     // If the cache was the first to be deleted, another process might start

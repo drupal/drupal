@@ -41,8 +41,17 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * The entity manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
+   *
+   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    */
   protected $entityManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The entity being used by this form.
@@ -401,6 +410,14 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   public function setEntityManager(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEntityTypeManager(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
     return $this;
   }
 

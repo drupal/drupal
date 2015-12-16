@@ -69,7 +69,7 @@ class TestClass implements EventSubscriberInterface, DestructableInterface, Cont
   }
 
   /**
-   * Implements \Drupal\Core\DestructableInterface::destruct().
+   * {@inheritdoc}
    */
   public function destruct() {
     $this->state->set('service_provider_test.destructed', TRUE);

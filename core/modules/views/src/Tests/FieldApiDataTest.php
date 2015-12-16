@@ -28,7 +28,7 @@ class FieldApiDataTest extends FieldTestBase {
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'page',
-      'label' => 'The giraffe" label'
+      'label' => 'GiraffeA" label'
     );
     entity_create('field_config', $field)->save();
 
@@ -38,7 +38,7 @@ class FieldApiDataTest extends FieldTestBase {
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'article',
-      'label' => 'The giraffe2" label'
+      'label' => 'GiraffeB" label'
     ])->save();
 
     // Now create some example nodes/users for the view result.
@@ -56,18 +56,11 @@ class FieldApiDataTest extends FieldTestBase {
    * We check data structure for both node and node revision tables.
    */
   function testViewsData() {
-    $views_data = $this->container->get('views.views_data');
-    $data = array();
-
-    // Check the table and the joins of the first field.
-    // Attached to node only.
-    $field_storage = $this->fieldStorages[0];
-    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = \Drupal::entityManager()->getStorage('node')->getTableMapping();
+    $field_storage = $this->fieldStorages[0];
     $current_table = $table_mapping->getDedicatedDataTableName($field_storage);
     $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage);
-    $data[$current_table] = $views_data->get($current_table);
-    $data[$revision_table] = $views_data->get($revision_table);
+    $data = $this->getViewsData();
 
     $this->assertTrue(isset($data[$current_table]));
     $this->assertTrue(isset($data[$revision_table]));
@@ -100,10 +93,51 @@ class FieldApiDataTest extends FieldTestBase {
     $this->assertTrue(empty($data[$revision_table][$field_storage->getName()]['field']['click sortable']), 'Non-primary fields are not click sortable');
 
     $this->assertTrue($data[$current_table][$field_storage->getName()]['help'] instanceof MarkupInterface);
-    $this->assertEqual($data[$current_table][$field_storage->getName()]['help'], 'Appears in: page, article. Also known as: Content: The giraffe2&quot; label');
+    $this->assertEqual($data[$current_table][$field_storage->getName()]['help'], 'Appears in: page, article. Also known as: Content: GiraffeB&quot; label');
 
     $this->assertTrue($data[$current_table][$field_storage->getName() . '_value']['help'] instanceof MarkupInterface);
-    $this->assertEqual($data[$current_table][$field_storage->getName() . '_value']['help'], 'Appears in: page, article. Also known as: Content: The giraffe&quot; label (field_name_0)');
+    $this->assertEqual($data[$current_table][$field_storage->getName() . '_value']['help'], 'Appears in: page, article. Also known as: Content: GiraffeA&quot; label (field_name_0)');
+
+    // Since each label is only used once, views_entity_field_label() will
+    // return a label using alphabetical sorting.
+    $this->assertEqual('GiraffeA&quot; label (field_name_0)', $data[$current_table][$field_storage->getName() . '_value']['title']);
+
+    // Attach the same field to a different bundle with a different label.
+    $this->drupalCreateContentType(['type' => 'news']);
+    FieldConfig::create([
+      'field_name' => $this->fieldStorages[0]->getName(),
+      'entity_type' => 'node',
+      'bundle' => 'news',
+      'label' => 'GiraffeB" label'
+    ])->save();
+    $this->container->get('views.views_data')->clear();
+    $data = $this->getViewsData();
+
+    // Now the 'GiraffeB&quot; label' is used twice and therefore will be
+    // selected by views_entity_field_label().
+    $this->assertEqual('GiraffeB&quot; label (field_name_0)', $data[$current_table][$field_storage->getName() . '_value']['title']);
+    $this->assertTrue($data[$current_table][$field_storage->getName()]['help'] instanceof MarkupInterface);
+    $this->assertEqual($data[$current_table][$field_storage->getName()]['help'], 'Appears in: page, article, news. Also known as: Content: GiraffeA&quot; label');
+  }
+
+  /**
+   * Gets the views data for the field created in setUp().
+   *
+   * @return array
+   */
+  protected function getViewsData() {
+    $views_data = $this->container->get('views.views_data');
+    $data = array();
+
+    // Check the table and the joins of the first field.
+    // Attached to node only.
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = \Drupal::entityManager()->getStorage('node')->getTableMapping();
+    $current_table = $table_mapping->getDedicatedDataTableName($this->fieldStorages[0]);
+    $revision_table = $table_mapping->getDedicatedRevisionTableName($this->fieldStorages[0]);
+    $data[$current_table] = $views_data->get($current_table);
+    $data[$revision_table] = $views_data->get($revision_table);
+    return $data;
   }
 
 }

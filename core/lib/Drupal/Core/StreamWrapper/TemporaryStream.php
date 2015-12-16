@@ -39,14 +39,14 @@ class TemporaryStream extends LocalStream {
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
+   * {@inheritdoc}
    */
   public function getDirectoryPath() {
     return file_directory_temp();
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getExternalUrl().
+   * {@inheritdoc}
    */
   public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());

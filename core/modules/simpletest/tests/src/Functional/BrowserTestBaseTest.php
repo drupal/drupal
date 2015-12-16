@@ -13,9 +13,6 @@ use Drupal\simpletest\BrowserTestBase;
  * Tests BrowserTestBase functionality.
  *
  * @group simpletest
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class BrowserTestBaseTest extends BrowserTestBase {
 

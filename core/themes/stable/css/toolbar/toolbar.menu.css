@@ -1,0 +1,103 @@
+/**
+ * @file toolbar.menu.css
+ */
+.toolbar .toolbar-menu,
+[dir="rtl"] .toolbar .toolbar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.toolbar .toolbar-box {
+  display: block;
+  line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
+  position: relative;
+  width: auto;
+}
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-handle,
+.toolbar .toolbar-tray-horizontal .toolbar-menu ul,
+.toolbar .toolbar-tray-vertical .toolbar-menu ul {
+  display: none;
+}
+.toolbar .toolbar-tray-vertical li.open > ul {
+  display: block; /* Show the sub-menus */
+}
+.toolbar .toolbar-tray-vertical .toolbar-handle + a {
+  margin-right: 3em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-handle + a {
+  margin-left: 3em;
+  margin-right: 0;
+}
+.toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
+.toolbar .toolbar-tray a.is-active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* ----- Toolbar menu tray for viewports less than 320px ------ */
+@media screen and (max-width: 319px) {
+  .toolbar .toolbar-tray-vertical.is-active {
+    width: 100%;
+  }
+}
+
+/**
+ * Items.
+ */
+.toolbar .level-2 > ul {
+  background-color: #fafafa;
+  border-bottom-color: #cccccc;
+  border-top-color: #e5e5e5;
+}
+.toolbar .level-3 > ul {
+  background-color: #f5f5f5;
+  border-bottom-color: #c5c5c5;
+  border-top-color: #dddddd;
+}
+.toolbar .level-4 > ul {
+  background-color: #eeeeee;
+  border-bottom-color: #bbbbbb;
+  border-top-color: #d5d5d5;
+}
+.toolbar .level-5 > ul {
+  background-color: #e5e5e5;
+  border-bottom-color: #b5b5b5;
+  border-top-color: #cccccc;
+}
+.toolbar .level-6 > ul {
+  background-color: #eeeeee;
+  border-bottom-color: #aaaaaa;
+  border-top-color: #c5c5c5;
+}
+.toolbar .level-7 > ul {
+  background-color: #fafafa;
+  border-bottom-color: #b5b5b5;
+  border-top-color: #cccccc;
+}
+.toolbar .level-8 > ul {
+  background-color: #dddddd;
+  border-bottom-color: #cccccc;
+  border-top-color: #dddddd;
+}
+
+/**
+ * Handle.
+ */
+.toolbar .toolbar-handle:hover {
+  cursor: pointer;
+}
+.toolbar .toolbar-icon.toolbar-handle {
+  bottom: 0;
+  display: block;
+  height: 100%;
+  padding: 0;
+  position: absolute;
+  right: 0; /* LTR */
+  top: 0;
+  z-index: 1;
+}
+[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle {
+  left: 0;
+  padding: 0;
+  right: auto;
+}

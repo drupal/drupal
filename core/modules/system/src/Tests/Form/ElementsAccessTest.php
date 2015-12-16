@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Form\ElementsAccessTest.
+ * Contains \Drupal\system\Tests\Form\ElementsAccessTest.
  */
 
 namespace Drupal\system\Tests\Form;

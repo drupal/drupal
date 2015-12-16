@@ -92,7 +92,7 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
    * @return string[]
    *   The expanded list of IDs.
    */
-  protected function getVariantIds(array $ids) {
+  public function getVariantIds(array $ids) {
     // Re-index the array numerically, since we need to limit the loop by size.
     $ids = array_values($ids);
 
@@ -173,13 +173,13 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
    * Add one or more dependencies to a graph.
    *
    * @param array $graph
-   *   The graph so far.
+   *   The graph so far, passed by reference.
    * @param int $id
-   *   The migration id.
+   *   The migration ID.
    * @param string $dependency
    *   The dependency string.
    * @param array $dynamic_ids
-   *   The dynamic id mapping.
+   *   The dynamic ID mapping.
    */
   protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
     $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : array($dependency);

@@ -24,28 +24,28 @@ class ReindexConfirm extends ConfirmFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\ConfirmFormBase::getQuestion().
+   * {@inheritdoc}
    */
   public function getQuestion() {
     return $this->t('Are you sure you want to re-index the site?');
   }
 
   /**
-   * Overrides \Drupal\Core\Form\ConfirmFormBase::getDescription().
+   * {@inheritdoc}
    */
   public function getDescription() {
     return $this->t("This will re-index content in the search indexes of all active search pages. Searching will continue to work, but new content won't be indexed until all existing content has been re-indexed. This action cannot be undone.");
   }
 
   /**
-   * Overrides \Drupal\Core\Form\ConfirmFormBase::getConfirmText().
+   * {@inheritdoc}
    */
   public function getConfirmText() {
     return $this->t('Re-index site');
   }
 
   /**
-   * Overrides \Drupal\Core\Form\ConfirmFormBase::getCancelText().
+   * {@inheritdoc}
    */
   public function getCancelText() {
     return $this->t('Cancel');

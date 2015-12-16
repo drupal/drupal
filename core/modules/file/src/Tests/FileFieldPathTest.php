@@ -19,20 +19,29 @@ class FileFieldPathTest extends FileFieldTestBase {
    * Tests the normal formatter display on node display.
    */
   function testUploadPath() {
+    /** @var \Drupal\node\NodeStorageInterface $node_storage */
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
     $this->createFileField($field_name, 'node', $type_name);
+    /** @var \Drupal\file\FileInterface $test_file */
     $test_file = $this->getTestFile('text');
 
     // Create a new node.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
-    // Check that the file was uploaded to the file root.
+    // Check that the file was uploaded to the correct location.
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertPathMatch('public://' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
+    /** @var \Drupal\file\FileInterface $node_file */
+    $node_file = $node->{$field_name}->entity;
+    $date_formatter = $this->container->get('date.formatter');
+    $expected_filename =
+      'public://' .
+      $date_formatter->format(REQUEST_TIME, 'custom', 'Y') . '-' .
+      $date_formatter->format(REQUEST_TIME, 'custom', 'm') . '/' .
+      $test_file->getFilename();
+    $this->assertPathMatch($expected_filename, $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
 
     // Change the path to contain multiple subdirectories.
     $this->updateFileField($field_name, $type_name, array('file_directory' => 'foo/bar/baz'));

@@ -47,28 +47,41 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     // Initialize proxy settings.
-    if ($this->settings->get('reverse_proxy', FALSE)) {
-      $ip_header = $this->settings->get('reverse_proxy_header', 'X_FORWARDED_FOR');
+    static::setSettingsOnRequest($request, $this->settings);
+    return $this->httpKernel->handle($request, $type, $catch);
+  }
+
+  /**
+   * Sets reverse proxy settings on Request object.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   A Request instance.
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The site settings.
+   */
+  public static function setSettingsOnRequest(Request $request, Settings $settings) {
+    // Initialize proxy settings.
+    if ($settings->get('reverse_proxy', FALSE)) {
+      $ip_header = $settings->get('reverse_proxy_header', 'X_FORWARDED_FOR');
       $request::setTrustedHeaderName($request::HEADER_CLIENT_IP, $ip_header);
 
-      $proto_header = $this->settings->get('reverse_proxy_proto_header', 'X_FORWARDED_PROTO');
+      $proto_header = $settings->get('reverse_proxy_proto_header', 'X_FORWARDED_PROTO');
       $request::setTrustedHeaderName($request::HEADER_CLIENT_PROTO, $proto_header);
 
-      $host_header = $this->settings->get('reverse_proxy_host_header', 'X_FORWARDED_HOST');
+      $host_header = $settings->get('reverse_proxy_host_header', 'X_FORWARDED_HOST');
       $request::setTrustedHeaderName($request::HEADER_CLIENT_HOST, $host_header);
 
-      $port_header = $this->settings->get('reverse_proxy_port_header', 'X_FORWARDED_PORT');
+      $port_header = $settings->get('reverse_proxy_port_header', 'X_FORWARDED_PORT');
       $request::setTrustedHeaderName($request::HEADER_CLIENT_PORT, $port_header);
 
-      $forwarded_header = $this->settings->get('reverse_proxy_forwarded_header', 'FORWARDED');
+      $forwarded_header = $settings->get('reverse_proxy_forwarded_header', 'FORWARDED');
       $request::setTrustedHeaderName($request::HEADER_FORWARDED, $forwarded_header);
 
-      $proxies = $this->settings->get('reverse_proxy_addresses', array());
+      $proxies = $settings->get('reverse_proxy_addresses', array());
       if (count($proxies) > 0) {
         $request::setTrustedProxies($proxies);
       }
     }
-    return $this->httpKernel->handle($request, $type, $catch);
   }
 
 }

@@ -53,7 +53,7 @@ class ChainedFastBackendFactory implements CacheFactoryInterface {
     }
 
     // Default the fast backend to APCu if it's available.
-    if (!isset($fast_service_name) && function_exists('apc_fetch')) {
+    if (!isset($fast_service_name) && function_exists('apcu_fetch')) {
       $fast_service_name = 'cache.backend.apcu';
     }
 

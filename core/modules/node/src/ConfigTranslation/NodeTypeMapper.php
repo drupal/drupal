@@ -23,7 +23,10 @@ class NodeTypeMapper extends ConfigEntityMapper {
 
     // Adds the title label to the translation form.
     $node_type = $entity->id();
-    $this->addConfigName("core.base_field_override.node.$node_type.title");
+    $config = $this->configFactory->get("core.base_field_override.node.$node_type.title");
+    if (!$config->isNew()) {
+      $this->addConfigName($config->getName());
+    }
   }
 
 }

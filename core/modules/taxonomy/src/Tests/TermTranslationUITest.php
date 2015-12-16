@@ -38,7 +38,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::setupBundle().
+   * {@inheritdoc}
    */
   protected function setupBundle() {
     parent::setupBundle();
@@ -55,14 +55,14 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getTranslatorPermission().
+   * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('administer taxonomy'));
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getNewEntityValues().
+   * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
     return array('name' => $this->randomMachineName()) + parent::getNewEntityValues($langcode);
@@ -88,7 +88,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::testTranslationUI().
+   * {@inheritdoc}
    */
   public function testTranslationUI() {
     parent::testTranslationUI();

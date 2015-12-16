@@ -120,9 +120,9 @@ class Drupal {
   /**
    * Returns the currently active global container.
    *
-   * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
-   *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface|null
+   *
+   * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    */
   public static function getContainer() {
     if (static::$container === NULL) {
@@ -150,6 +150,7 @@ class Drupal {
    *
    * @param string $id
    *   The ID of the service to retrieve.
+   *
    * @return mixed
    *   The specified service.
    */
@@ -251,9 +252,25 @@ class Drupal {
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
    *   The entity manager service.
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal::entityTypeManager() instead in most cases. If the needed
+   *   method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
+   *   deprecated \Drupal\Core\Entity\EntityManager to find the
+   *   correct interface or service.
    */
   public static function entityManager() {
     return static::getContainer()->get('entity.manager');
+  }
+
+  /**
+   * Retrieves the entity type manager.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
+   */
+  public static function entityTypeManager() {
+    return static::getContainer()->get('entity_type.manager');
   }
 
   /**
@@ -406,11 +423,11 @@ class Drupal {
    * Returns the entity query object for this entity type.
    *
    * @param string $entity_type
-   *   The entity type, e.g. node, for which the query object should be
+   *   The entity type (for example, node) for which the query object should be
    *   returned.
    * @param string $conjunction
-   *   AND if all conditions in the query need to apply, OR if any of them is
-   *   enough. Optional, defaults to AND.
+   *   (optional) Either 'AND' if all conditions in the query need to apply, or
+   *   'OR' if any of them is sufficient. Defaults to 'AND'.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query object that can query the given entity type.
@@ -423,11 +440,11 @@ class Drupal {
    * Returns the entity query aggregate object for this entity type.
    *
    * @param string $entity_type
-   *   The entity type, e.g. node, for which the query object should be
+   *   The entity type (for example, node) for which the query object should be
    *   returned.
    * @param string $conjunction
-   *   AND if all conditions in the query need to apply, OR if any of them is
-   *   enough. Optional, defaults to AND.
+   *   (optional) Either 'AND' if all conditions in the query need to apply, or
+   *   'OR' if any of them is sufficient. Defaults to 'AND'.
    *
    * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
    *   The query object that can query the given entity type.
@@ -517,6 +534,10 @@ class Drupal {
    * @see \Drupal\Core\Url
    * @see \Drupal\Core\Url::fromRoute()
    * @see \Drupal\Core\Url::fromUri()
+   *
+   * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
+   *   Instead create a \Drupal\Core\Url object directly, for example using
+   *   Url::fromRoute().
    */
   public static function url($route_name, $route_parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
     return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options, $collect_bubbleable_metadata);
@@ -549,6 +570,13 @@ class Drupal {
    *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    * @see \Drupal\Core\Url
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Link instead.
+   *   Example:
+   *   @code
+   *     $link = Link::fromTextAndUrl($text, $url);
+   *   @endcode
    */
   public static function l($text, Url $url) {
     return static::getContainer()->get('link_generator')->generate($text, $url);

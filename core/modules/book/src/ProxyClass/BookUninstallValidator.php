@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\book\ProxyClass\BookUninstallValidator.
+ * Contains \Drupal\book\ProxyClass\BookUninstallValidator.
  */
 
 /**

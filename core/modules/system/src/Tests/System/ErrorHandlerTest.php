@@ -100,6 +100,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
     $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
+    $this->assertErrorLogged($fatal_error['@message']);
 
     // Set error reporting to not collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_SOME)->save();

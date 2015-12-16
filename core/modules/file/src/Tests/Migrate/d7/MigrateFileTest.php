@@ -53,22 +53,22 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
   /**
    * Tests a single file entity.
    *
-   * @param integer $id
-   *  The file ID.
+   * @param int $id
+   *   The file ID.
    * @param string $name
-   *  The expected file name.
+   *   The expected file name.
    * @param string $uri
-   *  The expected URI.
+   *   The expected URI.
    * @param string $mime
-   *  The expected MIME type.
-   * @param integer $size
-   *  The expected file size.
-   * @param integer $created
-   *  The expected creation time.
-   * @param integer $changed
-   *  The expected modification time.
-   * @param integer $uid
-   *  The expected owner ID.
+   *   The expected MIME type.
+   * @param int $size
+   *   The expected file size.
+   * @param int $created
+   *   The expected creation time.
+   * @param int $changed
+   *   The expected modification time.
+   * @param int $uid
+   *   The expected owner ID.
    */
   protected function assertEntity($id, $name, $uri, $mime, $size, $created, $changed, $uid) {
     /** @var \Drupal\file\FileInterface $file */

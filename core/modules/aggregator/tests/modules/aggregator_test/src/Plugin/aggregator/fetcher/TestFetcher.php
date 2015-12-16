@@ -25,7 +25,7 @@ use Drupal\aggregator\FeedInterface;
 class TestFetcher extends DefaultFetcher implements FetcherInterface {
 
   /**
-   * Implements \Drupal\aggregator\Plugin\FetcherInterface::fetch().
+   * {@inheritdoc}
    */
   public function fetch(FeedInterface $feed) {
     if ($feed->label() == 'Do not fetch') {

@@ -338,6 +338,9 @@ class BookTest extends WebTestBase {
    *   A book node ID or set to 'new' to create a new book.
    * @param int|null $parent
    *   (optional) Parent book reference ID. Defaults to NULL.
+   *
+   * @return \Drupal\node\NodeInterface
+   *   The created node.
    */
   function createBookNode($book_nid, $parent = NULL) {
     // $number does not use drupal_static as it should not be reset

@@ -1062,10 +1062,13 @@ function system_rebuild_module_data() {
 
 /**
  * Returns an array of default theme features.
+ *
+ * @see \Drupal\Core\Extension\ThemeHandler::$defaultFeatures
  */
 function _system_default_theme_features() {
   return array(
     'favicon',
+    'logo',
     'node_user_picture',
     'comment_user_picture',
     'comment_user_verification',
@@ -1163,9 +1166,9 @@ function system_default_region($theme) {
  * for the user by \Drupal\system\Controller\SystemController::compactPage().
  *
  * If the user does not have the cookie, the default value is given by the
- * system variable 'admin_compact_mode', which itself defaults to FALSE. This
- * does not have a user interface to set it: it is a hidden variable which can
- * be set in the settings.php file.
+ * configuration variable 'system.site.admin_compact_mode', which itself
+ * defaults to FALSE. This does not have a user interface to set it: it is a
+ * hidden variable which can be set in the settings.php file.
  *
  * @return bool
  *   TRUE when in compact mode, FALSE when in expanded mode.

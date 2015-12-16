@@ -22,7 +22,7 @@ use Drupal\views\ViewExecutable;
 class LastTimestamp extends Date {
 
   /**
-   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

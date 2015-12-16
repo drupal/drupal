@@ -4,12 +4,10 @@
  * Theme override to display a node.
  *
  * Available variables:
- * - node: Full node entity.
- *   - id: The node ID.
- *   - bundle: The type of the node, for example, "page" or "article".
- *   - authorid: The user ID of the node author.
- *   - createdtime: Time the node was published formatted in Unix timestamp.
- *   - changedtime: Time the node was changed formatted in Unix timestamp.
+ * - node: The node entity with limited access to object properties and methods.
+     Only "getter" methods (method names starting with "get", "has", or "is")
+     and a few common methods such as "id" and "label" are available. Calling
+     other methods (such as node.delete) will result in an exception.
  * - label: The title of the node.
  * - content: All node items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use

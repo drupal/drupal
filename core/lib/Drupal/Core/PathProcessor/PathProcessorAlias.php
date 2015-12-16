@@ -34,7 +34,7 @@ class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathP
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     $path = $this->aliasManager->getPathByAlias($path);
@@ -42,7 +42,7 @@ class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathP
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
+   * {@inheritdoc}
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     if (empty($options['alias'])) {

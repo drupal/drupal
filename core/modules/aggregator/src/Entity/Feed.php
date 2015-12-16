@@ -53,7 +53,7 @@ use Drupal\aggregator\FeedInterface;
 class Feed extends ContentEntityBase implements FeedInterface {
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::label().
+   * {@inheritdoc}
    */
   public function label() {
     return $this->get('title')->value;

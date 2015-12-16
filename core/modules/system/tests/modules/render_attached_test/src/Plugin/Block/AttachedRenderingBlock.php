@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\render_attached_test\Plugin\Block\DrupalProcessAttachedBlock.
+ * Contains \Drupal\render_attached_test\Plugin\Block\AttachedRenderingBlock.
  */
 
 namespace Drupal\render_attached_test\Plugin\Block;

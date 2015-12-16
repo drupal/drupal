@@ -12,7 +12,7 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 
 /**
- * Specific SQLite implementation of DatabaseConnection.
+ * SQLite implementation of \Drupal\Core\Database\Connection.
  */
 class Connection extends DatabaseConnection {
 

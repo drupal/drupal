@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
@@ -150,6 +151,12 @@ class ConfigCRUDTest extends KernelTestBase {
     $new_config->save();
     $this->assertIdentical($new_config->get('value'), $expected_values['value']);
     $this->assertIdentical($new_config->get('404'), $expected_values['404']);
+
+    // Test that getMultiple() does not return new config objects that were
+    // previously accessed with get()
+    $new_config = $config_factory->get('non_existing_key');
+    $this->assertTrue($new_config->isNew());
+    $this->assertEqual(0, count($config_factory->loadMultiple(['non_existing_key'])), 'loadMultiple() does not return new objects');
   }
 
   /**
@@ -257,6 +264,7 @@ class ConfigCRUDTest extends KernelTestBase {
       'string' => 'string',
       'string_int' => '1',
     );
+    $data['_core']['default_config_hash'] = Crypt::hashBase64(serialize($data));
     $this->assertIdentical($config->get(), $data);
 
     // Re-set each key using Config::set().

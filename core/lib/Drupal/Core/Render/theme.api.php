@@ -37,16 +37,16 @@
  * http://twig.sensiolabs.org/doc/templates.html
  *
  * @section sec_theme_hooks Theme Hooks
- * The theme system is invoked in drupal_render() by calling the internal
- * _theme() function, which operates on the concept of "theme hooks". Theme
- * hooks define how a particular type of data should be rendered. They are
- * registered by modules by implementing hook_theme(), which specifies the name
- * of the hook, the input "variables" used to provide data and options, and
- * other information. Modules implementing hook_theme() also need to provide a
- * default implementation for each of their theme hooks, normally in a Twig
- * file, and they may also provide preprocessing functions. For example, the
- * core Search module defines a theme hook for a search result item in
- * search_theme():
+ * The theme system is invoked in \Drupal\Core\Render\Renderer::doRender() by
+ * calling the \Drupal\Core\Theme\ThemeManagerInterface::render() function,
+ * which operates on the concept of "theme hooks". Theme hooks define how a
+ * particular type of data should be rendered. They are registered by modules by
+ * implementing hook_theme(), which specifies the name of the hook, the input
+ * "variables" used to provide data and options, and other information. Modules
+ * implementing hook_theme() also need to provide a default implementation for
+ * each of their theme hooks, normally in a Twig file, and they may also provide
+ * preprocessing functions. For example, the core Search module defines a theme
+ * hook for a search result item in search_theme():
  * @code
  * return array(
  *   'search_result' => array(
@@ -68,12 +68,12 @@
  * receives are documented in the header of the default Twig template file.
  *
  * hook_theme() implementations can also specify that a theme hook
- * implementation is a theme function, but that is uncommon. It is only used for
- * special cases, for performance reasons, because rendering using theme
- * functions is somewhat faster than theme templates. Note that while Twig
- * templates will auto-escape variables, theme functions must explicitly escape
- * any variables by using theme_render_and_autoescape(). Failure to do so is
- * likely to result in security vulnerabilities.
+ * implementation is a theme function, but that is uncommon and not recommended.
+ * Note that while Twig templates will auto-escape variables, theme functions
+ * must explicitly escape any variables by using theme_render_and_autoescape().
+ * Failure to do so is likely to result in security vulnerabilities. Theme
+ * functions are deprecated in Drupal 8.0.x and will be removed before
+ * Drupal 9.0.x. Use Twig templates instead.
  *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
@@ -98,7 +98,8 @@
  * default function is again a good starting point for overriding its behavior.
  * Again, note that theme functions (unlike templates) must explicitly escape
  * variables using theme_render_and_autoescape() or risk security
- * vulnerabilities.
+ * vulnerabilities. Theme functions are deprecated in Drupal 8.0.x and will be
+ * removed before Drupal 9.0.x. Use Twig templates instead.
  *
  * @section sec_preprocess_templates Preprocessing for Template Files
  * If the theme implementation is a template file, several functions are called
@@ -365,7 +366,7 @@
  * @code
  *   '#cache' => [
  *     'keys' => ['entity_view', 'node', $node->id()],
- *     'contexts' => ['language'],
+ *     'contexts' => ['languages'],
  *     'tags' => ['node:' . $node->id()],
  *     'max-age' => Cache::PERMANENT,
  *   ],
@@ -404,7 +405,29 @@
  * See \Drupal\Core\Asset\LibraryDiscoveryParser::parseLibraryInfo() for more
  * information on how to define libraries.
  *
- * @section render_pipeline The Render Pipeline
+ * @section sec_placeholders Placeholders in render arrays
+ * Render arrays have a placeholder mechanism, which can be used to add data
+ * into the render array late in the rendering process. This works in a similar
+ * manner to \Drupal\Component\Render\FormattableMarkup::placeholderFormat(),
+ * with the text that ends up in the #markup property of the element at the
+ * end of the rendering process getting substitutions from placeholders that
+ * are stored in the 'placeholders' element of the #attached property.
+ *
+ * For example, after the rest of the rendering process was done, if your
+ * render array contained:
+ * @code
+ * $build['my_element'] = [
+ *   '#attached' => ['placeholders' => ['@foo' => 'replacement']],
+ *   '#markup' => ['Something about @foo'],
+ * ];
+ * @endcode
+ * then #markup would end up containing 'Something about replacement'.
+ *
+ * Note that each placeholder value can itself be a render array, which will be
+ * rendered, and any cache tags generated during rendering will be added to the
+ * cache tags for the markup.
+ *
+ * @section render_pipeline The render pipeline
  * The term "render pipeline" refers to the process Drupal uses to take
  * information provided by modules and render it into a response. For more
  * details on this process, see https://www.drupal.org/developing/api/8/render;
@@ -450,6 +473,36 @@
  */
 
 /**
+ * @defgroup listing_page_element Page header for Elements page
+ * @{
+ * Introduction to form and render elements
+ *
+ * Render elements are referenced in render arrays. Render arrays contain data
+ * to be rendered, along with meta-data and attributes that specify how to
+ * render the data into markup; see the
+ * @link theme_render Render API topic @endlink for an overview of render
+ * arrays and render elements. Form arrays are a subset of render arrays,
+ * representing HTML forms; form elements are a subset of render elements,
+ * representing HTML elements for forms. See the
+ * @link form_api Form API topic @endlink for an overview of forms, form
+ * processing, and form arrays.
+ *
+ * Each form and render element type corresponds to an element plugin class;
+ * each of them either extends \Drupal\Core\Render\Element\RenderElement
+ * (render elements) or \Drupal\Core\Render\Element\FormElement (form
+ * elements). Usage and properties are documented on the individual classes,
+ * and the two base classes list common properties shared by all render
+ * elements and the form element subset, respectively.
+ *
+ * @see theme_render
+ * @see form_api
+ * @see \Drupal\Core\Render\Element\RenderElement
+ * @see \Drupal\Core\Render\Element\FormElement
+ *
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -489,7 +542,8 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * preprocess variables for a specific theme hook, whether implemented as a
  * template or function.
  *
- * For more detailed information, see _theme().
+ * For more detailed information, see the
+ * @link themeable Theme system overview topic @endlink.
  *
  * @param $variables
  *   The variables array (modify in place).
@@ -537,7 +591,8 @@ function hook_preprocess(&$variables, $hook) {
  * hook. It should only be used if a module needs to override or add to the
  * theme preprocessing for a theme hook it didn't define.
  *
- * For more detailed information, see _theme().
+ * For more detailed information, see the
+ * @link themeable Theme system overview topic @endlink.
  *
  * @param $variables
  *   The variables array (modify in place).
@@ -976,7 +1031,7 @@ function hook_page_attachments(array &$attachments) {
  * @param array &$attachments
  *   Array of all attachments provided by hook_page_attachments() implementations.
  *
- * @see hook_page_attachments_alter()
+ * @see hook_page_attachments()
  */
 function hook_page_attachments_alter(array &$attachments) {
   // Conditionally remove an asset.
@@ -1058,8 +1113,7 @@ function hook_page_bottom(array &$page_bottom) {
  *     element or tree in preprocess and process functions.
  *   - file: The file the implementation resides in. This file will be included
  *     prior to the theme being rendered, to make sure that the function or
- *     preprocess function (as needed) is actually loaded; this makes it
- *     possible to split theme functions out into separate files quite easily.
+ *     preprocess function (as needed) is actually loaded.
  *   - path: Override the path of the file to be used. Ordinarily the module or
  *     theme path will be used, but if the file will not be in the default
  *     path, include it here. This path should be relative to the Drupal root
@@ -1072,9 +1126,10 @@ function hook_page_bottom(array &$page_bottom) {
  *     specified, a default template name will be assumed. For example, if a
  *     module registers the 'search_result' theme hook, 'search-result' will be
  *     assigned as its template name.
- *   - function: If specified, this will be the function name to invoke for
- *     this implementation. If neither 'template' nor 'function' are specified,
- *     a default template name will be assumed. See above for more details.
+ *   - function: (deprecated in Drupal 8.0.x, will be removed in Drupal 9.0.x)
+ *     If specified, this will be the function name to invoke for this
+ *     implementation. If neither 'template' nor 'function' are specified, a
+ *     default template name will be assumed. See above for more details.
  *   - base hook: Used for theme suggestions only: the base theme hook name.
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.

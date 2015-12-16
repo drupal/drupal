@@ -11,7 +11,6 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\migrate_drupal\Tests\d7\MigrateDrupal7TestBase;
 use Drupal\node\NodeInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Tests migration of comments from Drupal 7.
@@ -37,12 +36,6 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
       'd7_user_role',
       'd7_user',
     ]);
-    // The test database doesn't include uid 1, so we'll need to create it.
-    User::create(array(
-      'uid' => 1,
-      'name' => 'admin',
-      'mail' => 'admin@local.host',
-    ))->save();
     $this->executeMigration('d7_node_type');
     // We only need the test_content_type node migration to run for real, so
     // mock all the others.

@@ -13,7 +13,7 @@ namespace Drupal\Core\FileTransfer;
 class FTPExtension extends FTP implements ChmodInterface {
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::connect().
+   * {@inheritdoc}
    */
   public function connect() {
     $this->connection = ftp_connect($this->hostname, $this->port);
@@ -27,7 +27,7 @@ class FTPExtension extends FTP implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::copyFileJailed().
+   * {@inheritdoc}
    */
   protected function copyFileJailed($source, $destination) {
     if (!@ftp_put($this->connection,  $destination, $source, FTP_BINARY)) {
@@ -36,7 +36,7 @@ class FTPExtension extends FTP implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::createDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function createDirectoryJailed($directory) {
     if (!ftp_mkdir($this->connection, $directory)) {
@@ -45,7 +45,7 @@ class FTPExtension extends FTP implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function removeDirectoryJailed($directory) {
     $pwd = ftp_pwd($this->connection);
@@ -75,7 +75,7 @@ class FTPExtension extends FTP implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeFileJailed().
+   * {@inheritdoc}
    */
   protected function removeFileJailed($destination) {
     if (!ftp_delete($this->connection, $destination)) {
@@ -84,7 +84,7 @@ class FTPExtension extends FTP implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isDirectory().
+   * {@inheritdoc}
    */
   public function isDirectory($path) {
     $result = FALSE;
@@ -97,14 +97,14 @@ class FTPExtension extends FTP implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isFile().
+   * {@inheritdoc}
    */
   public function isFile($path) {
     return ftp_size($this->connection, $path) != -1;
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\ChmodInterface::chmodJailed().
+   * {@inheritdoc}
    */
   function chmodJailed($path, $mode, $recursive) {
     if (!ftp_chmod($this->connection, $mode, $path)) {

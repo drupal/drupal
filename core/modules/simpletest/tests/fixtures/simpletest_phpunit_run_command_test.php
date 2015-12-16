@@ -15,8 +15,9 @@ class SimpletestPhpunitRunCommandTestWillDie extends UnitTestCase {
 
   public function testWillDie() {
     if (getenv('SimpletestPhpunitRunCommandTestWillDie') === 'fail') {
-      exit(1);
+      exit(2);
     }
+    $this->assertTrue(TRUE, 'Assertion to ensure test pass');
   }
 }
 

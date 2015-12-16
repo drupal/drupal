@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\system\Tests\System\UncaughtExceptionTest
+ * Contains \Drupal\system\Tests\System\UncaughtExceptionTest.
  */
 
 namespace Drupal\system\Tests\System;
@@ -87,6 +87,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->assertResponse(500);
     $this->assertText('The website encountered an unexpected error. Please try again later.');
     $this->assertText($this->expectedExceptionMessage);
+    $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
   /**
@@ -122,6 +123,7 @@ class UncaughtExceptionTest extends WebTestBase {
 
     $this->assertRaw('The website encountered an unexpected error.');
     $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
   /**
@@ -137,6 +139,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $settings_php .= "  print('Oh oh, flying teapots');\n";
     $settings_php .= "  exit();\n";
     $settings_php .= "});\n";
+    $settings_php .= "\$settings['teapots'] = TRUE;\n";
     file_put_contents($settings_filename, $settings_php);
 
     $this->drupalGet('broken-service-class');
@@ -177,6 +180,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->assertResponse(500);
 
     $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
   /**
@@ -198,6 +202,7 @@ class UncaughtExceptionTest extends WebTestBase {
 
     $this->assertRaw('The website encountered an unexpected error');
     $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
   /**
@@ -232,6 +237,7 @@ class UncaughtExceptionTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertResponse(500);
     $this->assertRaw('PDOException');
+    $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
   /**
@@ -251,10 +257,11 @@ class UncaughtExceptionTest extends WebTestBase {
 
     // Find fatal error logged to the simpletest error.log
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
-    $this->assertIdentical(count($errors), 1, 'Exactly one line logged to the PHP error log');
+    $this->assertIdentical(count($errors), 2, 'The error + the error that the logging service is broken has been written to the error log.');
+    $this->assertTrue(strpos($errors[0], 'Failed to log error') !== FALSE, 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 61;
+    $expected_line = 63;
     $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
     $this->assert(strpos($errors[0], $expected_entry) !== FALSE, 'Original error logged to the PHP error log when an exception is thrown by a logger');
 

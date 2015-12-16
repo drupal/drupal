@@ -43,6 +43,8 @@ class TranslationManagerTest extends UnitTestCase {
       // @todo support locale_get_plural
       [2, 'Singular', '@count @arg', array('@arg' => '<script>'), array(), '2 &lt;script&gt;'],
       [2, 'Singular', '@count %arg', array('%arg' => '<script>'), array(), '2 <em class="placeholder">&lt;script&gt;</em>'],
+      [1, 'Singular', '@count plural', array(), array('langcode' => NULL), 'Singular'],
+      [1, 'Singular', '@count plural', array(), array('langcode' => 'es'), 'Singular'],
     );
   }
 
@@ -50,12 +52,15 @@ class TranslationManagerTest extends UnitTestCase {
    * @dataProvider providerTestFormatPlural
    */
   public function testFormatPlural($count, $singular, $plural, array $args = array(), array $options = array(), $expected) {
+    $langcode = empty($options['langcode']) ? 'fr' : $options['langcode'];
     $translator = $this->getMock('\Drupal\Core\StringTranslation\Translator\TranslatorInterface');
     $translator->expects($this->once())
       ->method('getStringTranslation')
-      ->will($this->returnCallback(function ($langcode, $string) {
+      ->with($langcode, $this->anything(), $this->anything())
+      ->will($this->returnCallback(function ($langcode, $string, $context) {
         return $string;
       }));
+    $this->translationManager->setDefaultLangcode('fr');
     $this->translationManager->addTranslator($translator);
     $result = $this->translationManager->formatPlural($count, $singular, $plural, $args, $options);
     $this->assertEquals($expected, $result);
@@ -66,7 +71,7 @@ class TranslationManagerTest extends UnitTestCase {
    * Tests translation using placeholders.
    *
    * @param string $string
-   *   A string containing the English string to translate.
+   *   A string containing the English text to translate.
    * @param array $args
    *   An associative array of replacements to make after translation.
    * @param string $expected_string

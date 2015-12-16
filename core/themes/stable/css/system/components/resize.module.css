@@ -1,0 +1,21 @@
+/**
+ * @file
+ * Resizable textareas.
+ */
+
+.resize-none {
+  resize: none;
+}
+.resize-vertical {
+  resize: vertical;
+  min-height: 2em;
+}
+.resize-horizontal {
+  resize: horizontal;
+  max-width: 100%;
+}
+.resize-both {
+  resize: both;
+  max-width: 100%;
+  min-height: 2em;
+}

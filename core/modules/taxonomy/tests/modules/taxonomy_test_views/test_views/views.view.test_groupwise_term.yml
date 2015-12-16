@@ -59,7 +59,7 @@ display:
           subquery_namespace: ''
           subquery_order: DESC
           subquery_regenerate: true
-          subquery_sort: node.nid
+          subquery_sort: node_field_data.nid
           subquery_view: ''
           table: taxonomy_term_field_data
           plugin_id: groupwise_max

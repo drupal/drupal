@@ -97,7 +97,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\TypedData::getString().
+   * {@inheritdoc}
    */
   public function getString() {
     $strings = array();
@@ -109,7 +109,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
+   * {@inheritdoc}
    */
   public function get($property_name) {
     if (!isset($this->properties[$property_name])) {
@@ -156,7 +156,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
+   * {@inheritdoc}
    */
   public function getProperties($include_computed = FALSE) {
     $properties = array();
@@ -180,14 +180,14 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Implements \IteratorAggregate::getIterator().
+   * {@inheritdoc}
    */
   public function getIterator() {
     return new \ArrayIterator($this->getProperties());
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
+   * {@inheritdoc}
    */
   public function isEmpty() {
     foreach ($this->properties as $property) {

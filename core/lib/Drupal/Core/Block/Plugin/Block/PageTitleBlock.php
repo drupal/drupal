@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\Block\PageTitleBlock.
+ * Contains \Drupal\Core\Block\Plugin\Block\PageTitleBlock.
  */
 
 namespace Drupal\Core\Block\Plugin\Block;

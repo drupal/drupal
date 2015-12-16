@@ -86,9 +86,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   public $original_value = NULL;
 
   /**
-   * @var array
-   * Stores additional fields which get's added to the query.
+   * Stores additional fields that get added to the query.
+   *
    * The generated aliases are stored in $aliases.
+   *
+   * @var array
    */
   var $additional_fields = array();
 
@@ -107,7 +109,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   protected $renderer;
 
   /**
-   * Overrides Drupal\views\Plugin\views\HandlerBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -1248,10 +1250,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($alter['phase'] == static::RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty) {
       // If we got here then $alter contains the value of "No results text"
       // and so there is nothing left to do.
-      if ($value_is_safe) {
-        $value = ViewsRenderPipelineMarkup::create($value);
-      }
-      return $value;
+      return ViewsRenderPipelineMarkup::create($value);
     }
 
     if (!empty($alter['strip_tags'])) {

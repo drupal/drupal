@@ -28,6 +28,8 @@ class EntityUrlTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The mocked URL generator.
+   *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $urlGenerator;
@@ -50,12 +52,15 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the urlInfo() method.
    *
+   * Note that urlInfo() is a deprecated alias for toUrl().
+   * See testToUrl().
+   *
    * @covers ::urlInfo
    *
-   * @dataProvider providerTestUrlInfo
+   * @dataProvider providerTestToUrl
    */
   public function testUrlInfo($entity_class, $link_template, $expected, $langcode = NULL) {
-    /** @var $entity \Drupal\Core\Entity\EntityInterface */
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->getMockForAbstractClass($entity_class, array(array('id' => 'test_entity_id'), 'test_entity_type'));
     $uri = $this->getTestUrlInfo($entity, $link_template, [], $langcode);
 
@@ -75,27 +80,57 @@ class EntityUrlTest extends UnitTestCase {
       }
     }
   }
+  /**
+   * Tests the toUrl() method.
+   *
+   * @covers ::toUrl
+   *
+   * @dataProvider providerTestToUrl
+   */
+  public function testToUrl($entity_class, $link_template, $expected, $langcode = NULL) {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = $this->getMockForAbstractClass($entity_class, array(array('id' => 'test_entity_id'), 'test_entity_type'));
+    $uri = $this->getTestToUrl($entity, $link_template, [], $langcode);
+
+    $this->assertSame($expected, $uri->getRouteName());
+    $this->assertSame($entity, $uri->getOption('entity'));
+
+    if ($langcode) {
+      $this->assertEquals($langcode, $uri->getOption('language')->getId());
+    }
+    else {
+      if ($entity instanceof ConfigEntityInterface) {
+        // Config entities do not provide a language with their URIs.
+        $this->assertEquals(NULL, $uri->getOption('language'));
+      }
+      else {
+        $this->assertEquals(LanguageInterface::LANGCODE_NOT_SPECIFIED, $uri->getOption('language')->getId());
+      }
+    }
+  }
 
   /**
-   * @covers ::urlInfo
+   * Tests for Entity::toUrl() exercising different language options.
+   *
+   * @covers ::toUrl
    */
-  public function testUrlInfoWithSpecificLanguageInOptions() {
-    /** @var $entity \Drupal\Core\Entity\EntityInterface */
+  public function testToUrlWithSpecificLanguageInOptions() {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'));
 
     // Ensure that a specified language overrides the current translation
     // language.
-    $uri = $this->getTestUrlInfo($entity, 'edit-form', [], 'en');
+    $uri = $this->getTestToUrl($entity, 'edit-form', [], 'en');
     $this->assertEquals('en', $uri->getOption('language')->getId());
 
-    $uri = $this->getTestUrlInfo($entity, 'edit-form', ['language' => new Language(['id' => 'fr'])], 'en');
+    $uri = $this->getTestToUrl($entity, 'edit-form', ['language' => new Language(['id' => 'fr'])], 'en');
     $this->assertEquals('fr', $uri->getOption('language')->getId());
   }
 
   /**
    * Provides test data for testUrlInfo().
    */
-  public function providerTestUrlInfo() {
+  public function providerTestToUrl() {
     return array(
       array('Drupal\Core\Entity\Entity', 'edit-form', 'entity.test_entity_type.edit_form', NULL),
       // Specify a langcode.
@@ -108,19 +143,20 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the urlInfo() method with an invalid link template.
+   * Tests the toUrl() method with an invalid link template.
    *
-   * @covers ::urlInfo
+   * @covers ::toUrl
    *
    * @expectedException \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
+   *
    * @expectedExceptionMessage No link template 'canonical' found for the 'test_entity_type' entity type
    *
-   * @dataProvider providerTestUrlInfoForInvalidLinkTemplate
+   * @dataProvider providerTestToUrlForInvalidLinkTemplate
    */
-  public function testUrlInfoForInvalidLinkTemplate($entity_class, $link_template) {
-    /** @var $entity \Drupal\Core\Entity\EntityInterface */
+  public function testToUrlForInvalidLinkTemplate($entity_class, $link_template) {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->getMockForAbstractClass($entity_class, array(array('id' => 'test_entity_id'), 'test_entity_type'));
-    $uri = $this->getTestUrlInfo($entity, $link_template);
+    $uri = $this->getTestToUrl($entity, $link_template);
 
     $this->assertEmpty($uri);
   }
@@ -128,7 +164,7 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Provides test data for testUrlInfoForInvalidLinkTemplate().
    */
-  public function providerTestUrlInfoForInvalidLinkTemplate() {
+  public function providerTestToUrlForInvalidLinkTemplate() {
     return array(
       array('Drupal\Core\Entity\Entity', 'canonical'),
       array('Drupal\Core\Entity\Entity', FALSE),
@@ -138,6 +174,9 @@ class EntityUrlTest extends UnitTestCase {
 
   /**
    * Creates a \Drupal\Core\Url object based on the entity and link template.
+   *
+   * Method urlInfo() is deprecated and replaced with toUrl().
+   * See also getTestToUrl().
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The test entity.
@@ -184,17 +223,64 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the urlInfo() method when an entity is still "new".
+   * Creates a \Drupal\Core\Url object based on the entity and link template.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The test entity.
+   * @param string $link_template
+   *   The link template.
+   * @param string $langcode
+   *   The langcode.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL for this entity's link template.
+   */
+  protected function getTestToUrl(EntityInterface $entity, $link_template, array $options = [], $langcode = NULL) {
+    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type->expects($this->any())
+      ->method('getLinkTemplates')
+      ->will($this->returnValue(array(
+        'edit-form' => 'test_entity_type.edit',
+      )));
+
+    if ($langcode) {
+      $entity->langcode = $langcode;
+    }
+
+    $this->entityManager
+      ->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_entity_type')
+      ->will($this->returnValue($entity_type));
+
+    // If no link template is given, call without a value to test the default.
+    if ($link_template) {
+      $uri = $entity->toUrl($link_template, $options);
+    }
+    else {
+      if ($entity instanceof ConfigEntityInterface) {
+        $uri = $entity->toUrl('edit-form', $options);
+      }
+      else {
+        $uri = $entity->toUrl('canonical', $options);
+      }
+    }
+
+    return $uri;
+  }
+
+  /**
+   * Tests the toUrl() method when an entity is still "new".
    *
    * @see \Drupal\Core\Entity\EntityInterface::isNew()
    *
-   * @covers ::urlInfo
+   * @covers ::toUrl
    *
    * @expectedException \Drupal\Core\Entity\EntityMalformedException
    */
-  public function testUrlInfoForNewEntity() {
+  public function testToUrlForNewEntity() {
     $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array(), 'test_entity_type'));
-    $entity->urlInfo();
+    $entity->toUrl();
   }
 
   /**
@@ -236,7 +322,7 @@ class EntityUrlTest extends UnitTestCase {
         if ($route_name === 'entity.test_entity_type.canonical' && $route_parameters === array('test_entity_type' => 'test_entity_id') && array_keys($options) === ['absolute', 'entity_type', 'entity', 'language'] && $options['language'] == $language) {
           return 'http://drupal/entity/test_entity_type/test_entity_id';
         }
-    });
+      });
 
     $this->assertSame('/entity/test_entity_type/test_entity_id', $valid_entity->url());
     $this->assertSame('http://drupal/entity/test_entity_type/test_entity_id', $valid_entity->url('canonical', array('absolute' => TRUE)));

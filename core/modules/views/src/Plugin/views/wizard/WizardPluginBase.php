@@ -1249,7 +1249,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function createView(array $form, FormStateInterface $form_state) {
     $view = $this->retrieveValidatedView($form, $form_state);

@@ -121,11 +121,9 @@ class Context extends ComponentContext implements ContextInterface {
     if (!isset($this->contextData)) {
       $definition = $this->getContextDefinition();
       $default_value = $definition->getDefaultValue();
-      if (isset($default_value)) {
-        // Store the default value so that subsequent calls don't have to look
-        // it up again.
-        $this->contextData = $this->getTypedDataManager()->create($definition->getDataDefinition(), $default_value);
-      }
+      // Store the default value so that subsequent calls don't have to look
+      // it up again.
+      $this->contextData = $this->getTypedDataManager()->create($definition->getDataDefinition(), $default_value);
     }
     return $this->contextData;
   }

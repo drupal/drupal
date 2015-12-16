@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Update functions for Language module.
+ */
+
+/**
+ * Rebuild the container as services changed.
+ */
+function language_update_8001() {
+  \Drupal::service('kernel')->invalidateContainer();
+}

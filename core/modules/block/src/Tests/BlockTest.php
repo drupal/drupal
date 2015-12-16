@@ -197,9 +197,9 @@ class BlockTest extends BlockTestBase {
    */
   public function testBlockThemeSelector() {
     // Install all themes.
-    \Drupal::service('theme_handler')->install(array('bartik', 'seven'));
+    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
     $theme_settings = $this->config('system.theme');
-    foreach (array('bartik', 'classy', 'seven') as $theme) {
+    foreach (['bartik', 'seven', 'stark'] as $theme) {
       $this->drupalGet('admin/structure/block/list/' . $theme);
       $this->assertTitle(t('Block layout') . ' | Drupal');
       // Select the 'Powered by Drupal' block to be placed.

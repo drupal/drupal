@@ -87,13 +87,14 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     if (!isset($this->discovery)) {
       // Look at all themes and modules.
       // @todo If the list of installed modules and themes is changed, new
-      //   definitions are not picked up immediately and obsolete definitions are
-      //   not removed, because the list of search directories is only compiled
-      //   once in this constructor. The current code only works due to
-      //   coincidence: The request that installs e.g. a new theme does not
-      //   instantiate this plugin manager at the beginning of the request; when
-      //   routes are being rebuilt at the end of the request, this service only
-      //   happens to get instantiated with the updated list of installed themes.
+      //   definitions are not picked up immediately and obsolete definitions
+      //   are not removed, because the list of search directories is only
+      //   compiled once in this constructor. The current code only works due to
+      //   coincidence: The request that installs (for instance, a new theme)
+      //   does not instantiate this plugin manager at the beginning of the
+      //   request; when routes are being rebuilt at the end of the request,
+      //   this service only happens to get instantiated with the updated list
+      //   of installed themes.
       $directories = array();
       foreach ($this->moduleHandler->getModuleList() as $name => $module) {
         $directories[$name] = $module->getPath();

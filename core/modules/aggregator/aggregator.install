@@ -21,3 +21,19 @@ function aggregator_requirements($phase) {
   }
   return $requirements;
 }
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * The simple presence of this update function clears cached field definitions.
+ */
+function aggregator_update_8001() {
+  // Feed ID base field is now required.
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
+ */

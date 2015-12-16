@@ -21,6 +21,9 @@ use Drupal\Component\Utility\Unicode;
  * @{
  */
 
+/**
+ * MySQL implementation of \Drupal\Core\Database\Connection.
+ */
 class Connection extends DatabaseConnection {
 
   /**
@@ -32,6 +35,16 @@ class Connection extends DatabaseConnection {
    * Error code for "Can't initialize character set" error.
    */
   const UNSUPPORTED_CHARSET = 2019;
+
+  /**
+   * Driver-specific error code for "Unknown character set" error.
+   */
+  const UNKNOWN_CHARSET = 1115;
+
+  /**
+   * SQLSTATE error code for "Syntax error or access rule violation".
+   */
+  const SQLSTATE_SYNTAX_ERROR = 42000;
 
   /**
    * Flag to indicate if the cleanup function in __destruct() should run.

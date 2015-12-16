@@ -8,10 +8,13 @@
 namespace Drupal\file\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @PluginID("filefield")
+ * @MigrateCckField(
+ *   id = "filefield"
+ * )
  */
 class FileField extends CckFieldPluginBase {
 
@@ -47,6 +50,13 @@ class FileField extends CckFieldPluginBase {
       'source' => $field_name,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldType(Row $row) {
+    return $row->getSourceProperty('widget_type') == 'imagefield_widget' ? 'image' : 'file';
   }
 
 }

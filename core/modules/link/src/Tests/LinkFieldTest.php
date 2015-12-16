@@ -129,8 +129,6 @@ class LinkFieldTest extends WebTestBase {
       'entity:user/1' => '- Restricted access - (1)',
       // URI for an entity that doesn't exist, but with a valid ID.
       'entity:user/999999' => 'entity:user/999999',
-      // URI for an entity that doesn't exist, with an invalid ID.
-      'entity:user/invalid-parameter' => 'entity:user/invalid-parameter',
     );
 
     // Define some invalid URLs.
@@ -146,6 +144,8 @@ class LinkFieldTest extends WebTestBase {
     $invalid_internal_entries = array(
       'no-leading-slash' => $validation_error_2,
       'entity:non_existing_entity_type/yar' => $validation_error_1,
+      // URI for an entity that doesn't exist, with an invalid ID.
+      'entity:user/invalid-parameter' => $validation_error_1,
     );
 
     // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.

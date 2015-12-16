@@ -171,6 +171,42 @@ class UserSelection extends DefaultSelection {
   /**
    * {@inheritdoc}
    */
+  public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
+    $user = parent::createNewEntity($entity_type_id, $bundle, $label, $uid);
+
+    // In order to create a referenceable user, it needs to be active.
+    if (!$this->currentUser->hasPermission('administer users')) {
+      /** @var \Drupal\user\UserInterface $user */
+      $user->activate();
+    }
+
+    return $user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableNewEntities(array $entities) {
+    $entities = parent::validateReferenceableNewEntities($entities);
+    // Mirror the conditions checked in buildEntityQuery().
+    if (!empty($this->configuration['handler_settings']['filter']['role'])) {
+      $entities = array_filter($entities, function ($user) {
+        /** @var \Drupal\user\UserInterface $user */
+        return !empty(array_intersect($user->getRoles(), $this->configuration['handler_settings']['filter']['role']));
+      });
+    }
+    if (!$this->currentUser->hasPermission('administer users')) {
+      $entities = array_filter($entities, function ($user) {
+        /** @var \Drupal\user\UserInterface $user */
+        return $user->isActive();
+      });
+    }
+    return $entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function entityQueryAlter(SelectInterface $query) {
     // Bail out early if we do not need to match the Anonymous user.
     $handler_settings = $this->configuration['handler_settings'];

@@ -171,7 +171,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * settings are supplied.
    */
   public function setSettings(array $settings) {
-    // Assign settings individiually, in order to keep the current values
+    // Assign settings individually, in order to keep the current values
     // of settings not specified in $settings.
     foreach ($settings as $setting_name => $setting) {
       $this->getItemDefinition()->setSetting($setting_name, $setting);

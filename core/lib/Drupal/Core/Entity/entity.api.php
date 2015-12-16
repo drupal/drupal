@@ -592,7 +592,8 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *   The account trying to access the entity.
  * @param array $context
  *   An associative array of additional context values. By default it contains
- *   language:
+ *   language and the entity type ID:
+ *   - entity_type_id - the entity type ID.
  *   - langcode - the current language code.
  * @param string $entity_bundle
  *   The entity bundle name.
@@ -780,10 +781,9 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
 }
 
 /**
- * Act on a newly created entity.
+ * Acts when creating a new entity.
  *
- * This hook runs after a new entity object has just been instantiated. It can
- * be used to set initial values, e.g. to provide defaults.
+ * This hook runs after a new entity object has just been instantiated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -792,16 +792,13 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
  * @see hook_ENTITY_TYPE_create()
  */
 function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof FieldableEntityInterface && !$entity->foo->value) {
-    $entity->foo->value = 'some_initial_value';
-  }
+  \Drupal::logger('example')->info('Entity created: @label', ['@label' => $entity->label()]);
 }
 
 /**
- * Act on a newly created entity of a specific type.
+ * Acts when creating a new entity of a specific type.
  *
- * This hook runs after a new entity object has just been instantiated. It can
- * be used to set initial values, e.g. to provide defaults.
+ * This hook runs after a new entity object has just been instantiated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -810,9 +807,7 @@ function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * @see hook_entity_create()
  */
 function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
-  if (!$entity->foo->value) {
-    $entity->foo->value = 'some_initial_value';
-  }
+  \Drupal::logger('example')->info('ENTITY_TYPE created: @label', ['@label' => $entity->label()]);
 }
 
 /**
@@ -1012,6 +1007,38 @@ function hook_ENTITY_TYPE_update(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Acts when creating a new entity translation.
+ *
+ * This hook runs after a new entity translation object has just been
+ * instantiated.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $translation
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_translation_create()
+ */
+function hook_entity_translation_create(\Drupal\Core\Entity\EntityInterface $translation) {
+  \Drupal::logger('example')->info('Entity translation created: @label', ['@label' => $translation->label()]);
+}
+
+/**
+ * Acts when creating a new entity translation of a specific type.
+ *
+ * This hook runs after a new entity translation object has just been
+ * instantiated.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $translation
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_translation_create()
+ */
+function hook_ENTITY_TYPE_translation_create(\Drupal\Core\Entity\EntityInterface $translation) {
+  \Drupal::logger('example')->info('ENTITY_TYPE translation created: @label', ['@label' => $translation->label()]);
+}
+
+/**
  * Respond to creation of a new entity translation.
  *
  * This hook runs once the entity translation has been stored. Note that hook
@@ -1025,7 +1052,7 @@ function hook_ENTITY_TYPE_update(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
   $variables = array(
-    '@language' => $translation->language()->name,
+    '@language' => $translation->language()->getName(),
     '@label' => $translation->getUntranslated()->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been stored.', $variables);
@@ -1045,7 +1072,7 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
  */
 function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
   $variables = array(
-    '@language' => $translation->language()->name,
+    '@language' => $translation->language()->getName(),
     '@label' => $translation->getUntranslated()->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been stored.', $variables);
@@ -1063,10 +1090,9 @@ function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface
  * @see hook_ENTITY_TYPE_translation_delete()
  */
 function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
-  $languages = \Drupal::languageManager()->getLanguages();
   $variables = array(
-    '@language' => $languages[$langcode]->name,
-    '@label' => $entity->label(),
+    '@language' => $translation->language()->getName(),
+    '@label' => $translation->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been deleted.', $variables);
 }
@@ -1083,10 +1109,9 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
  * @see hook_entity_translation_delete()
  */
 function hook_ENTITY_TYPE_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
-  $languages = \Drupal::languageManager()->getLanguages();
   $variables = array(
-    '@language' => $languages[$langcode]->name,
-    '@label' => $entity->label(),
+    '@language' => $translation->language()->getName(),
+    '@label' => $translation->label(),
   );
   \Drupal::logger('example')->notice('The @language translation of @label has just been deleted.', $variables);
 }
@@ -1887,6 +1912,44 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
 }
 
 /**
+ * Acts when initializing a fieldable entity object.
+ *
+ * This hook runs after a new entity object or a new entity translation object
+ * has just been instantiated. It can be used to set initial values, e.g. to
+ * provide defaults.
+ *
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_field_values_init()
+ */
+function hook_entity_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity) {
+  if ($entity instanceof \Drupal\Core\Entity\ContentEntityInterface && !$entity->foo->value) {
+    $entity->foo->value = 'some_initial_value';
+  }
+}
+
+/**
+ * Acts when initializing a fieldable entity object.
+ *
+ * This hook runs after a new entity object or a new entity translation object
+ * has just been instantiated. It can be used to set initial values, e.g. to
+ * provide defaults.
+ *
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_field_values_init()
+ */
+function hook_ENTITY_TYPE_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity) {
+  if (!$entity->foo->value) {
+    $entity->foo->value = 'some_initial_value';
+  }
+}
+
+/**
  * Exposes "pseudo-field" components on content entities.
  *
  * Field UI's "Manage fields" and "Manage display" pages let users re-order
@@ -1902,7 +1965,7 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
  *
  * @return array
  *   The array structure is identical to that of the return value of
- *   \Drupal\Core\Entity\EntityManagerInterface::getExtraFields().
+ *   \Drupal\Core\Entity\EntityFieldManagerInterface::getExtraFields().
  */
 function hook_entity_extra_field_info() {
   $extra = array();
@@ -1916,16 +1979,16 @@ function hook_entity_extra_field_info() {
     // Visibility of the ordering of the language selector is the same as on the
     // node/add form.
     if ($module_language_enabled) {
-      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->type);
+      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->id());
       if ($configuration->isLanguageAlterable()) {
-        $extra['node'][$bundle->type]['form']['language'] = array(
+        $extra['node'][$bundle->id()]['form']['language'] = array(
           'label' => t('Language'),
           'description' => $description,
           'weight' => 0,
         );
       }
     }
-    $extra['node'][$bundle->type]['display']['language'] = array(
+    $extra['node'][$bundle->id()]['display']['language'] = array(
       'label' => t('Language'),
       'description' => $description,
       'weight' => 0,
@@ -1948,8 +2011,8 @@ function hook_entity_extra_field_info() {
 function hook_entity_extra_field_info_alter(&$info) {
   // Force node title to always be at the top of the list by default.
   foreach (NodeType::loadMultiple() as $bundle) {
-    if (isset($info['node'][$bundle->type]['form']['title'])) {
-      $info['node'][$bundle->type]['form']['title']['weight'] = -20;
+    if (isset($info['node'][$bundle->id()]['form']['title'])) {
+      $info['node'][$bundle->id()]['form']['title']['weight'] = -20;
     }
   }
 }

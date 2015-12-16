@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -169,8 +170,12 @@ class ConfigSingleExportForm extends FormBase {
       $entity_storage = $this->entityManager->getStorage($config_type);
       foreach ($entity_storage->loadMultiple() as $entity) {
         $entity_id = $entity->id();
-        $label = $entity->label() ?: $entity_id;
-        $names[$entity_id] = $label;
+        if ($label = $entity->label()) {
+          $names[$entity_id] = new TranslatableMarkup('@label (@id)', ['@label' => $label, '@id' => $entity_id]);
+        }
+        else {
+          $names[$entity_id] = $entity_id;
+        }
       }
     }
     // Handle simple configuration.

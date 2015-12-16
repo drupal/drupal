@@ -31,35 +31,35 @@ use Drupal\editor\Entity\Editor;
 class Llama extends PluginBase implements CKEditorPluginInterface {
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getDependencies().
+   * {@inheritdoc}
    */
   function getDependencies(Editor $editor) {
     return array();
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getLibraries().
+   * {@inheritdoc}
    */
   function getLibraries(Editor $editor) {
     return array();
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::isInternal().
+   * {@inheritdoc}
    */
   function isInternal() {
     return FALSE;
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getFile().
+   * {@inheritdoc}
    */
   function getFile() {
     return drupal_get_path('module', 'ckeditor_test') . '/js/llama.js';
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getConfig().
+   * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
     return array();

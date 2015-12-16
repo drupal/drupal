@@ -52,7 +52,7 @@ class EntityDeriver implements ContainerDeriverInterface {
   }
 
   /**
-   * Implements DerivativeInterface::getDerivativeDefinition().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     if (!isset($this->derivatives)) {
@@ -64,7 +64,7 @@ class EntityDeriver implements ContainerDeriverInterface {
   }
 
   /**
-   * Implements DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     if (!isset($this->derivatives)) {

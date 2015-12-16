@@ -33,7 +33,7 @@ class RowTest extends RowPluginBase {
   public $output;
 
   /**
-   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -43,7 +43,7 @@ class RowTest extends RowPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -76,7 +76,7 @@ class RowTest extends RowPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::render()
+   * {@inheritdoc}
    */
   public function render($row) {
     return $this->getOutput();

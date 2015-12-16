@@ -13,7 +13,7 @@ namespace Drupal\Core\Entity\Query;
 abstract class ConditionAggregateBase extends ConditionFundamentals implements ConditionAggregateInterface {
 
   /**
-   * Implements \Drupal\Core\Entity\Query\ConditionAggregateInterface::condition().
+   * {@inheritdoc}
    */
   public function condition($field, $function = NULL, $value = NULL, $operator = NULL, $langcode = NULL) {
     $this->conditions[] = array(

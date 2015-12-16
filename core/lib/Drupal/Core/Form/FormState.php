@@ -212,9 +212,8 @@ class FormState implements FormStateInterface {
    *
    * The validation functions and submit functions use this array for nearly all
    * their decision making. (Note that #tree determines whether the values are a
-   * flat array or an array whose structure parallels the $form array. See the
-   * @link forms_api_reference.html Form API reference @endlink for more
-   * information.)
+   * flat array or an array whose structure parallels the $form array. See
+   * \Drupal\Core\Render\Element\FormElement for more information.)
    *
    * This property is uncacheable.
    *

@@ -82,19 +82,21 @@ function _drupal_maintenance_theme() {
   $theme = $custom_theme;
 
   // Find all our ancestor themes and put them in an array.
-  $base_theme = array();
+  // @todo This is just a workaround. Find a better way how to handle themes
+  //   on maintenance pages, see https://www.drupal.org/node/2322619.
+  // This code is basically a duplicate of
+  // \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName.
+  $base_themes = [];
   $ancestor = $theme;
   while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-    $base_theme[] = $themes[$themes[$ancestor]->base_theme];
+    $base_themes[] = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
     if ($ancestor) {
-      // Ensure that the base theme is added.
+      // Ensure that the base theme is added and installed.
       $theme_handler->addTheme($themes[$ancestor]);
     }
   }
-  // @todo This is just a workaround. Find a better way how to handle themes
-  //   on maintenance pages, see https://www.drupal.org/node/2322619.
-  \Drupal::theme()->setActiveTheme($theme_init->getActiveTheme($themes[$custom_theme], array_reverse($base_theme)));
+  \Drupal::theme()->setActiveTheme($theme_init->getActiveTheme($themes[$custom_theme], $base_themes));
   // Prime the theme registry.
   Drupal::service('theme.registry');
 }

@@ -116,11 +116,29 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   public function getViewsData() {
     $data = [];
 
-    $base_table = $this->entityType->getBaseTable();
+    $base_table = $this->entityType->getBaseTable() ?: $this->entityType->id();
+    $revisionable = $this->entityType->isRevisionable();
     $base_field = $this->entityType->getKey('id');
-    $data_table = $this->entityType->getDataTable();
-    $revision_table = $this->entityType->getRevisionTable();
-    $revision_data_table = $this->entityType->getRevisionDataTable();
+
+    $revision_table = '';
+    if ($revisionable) {
+      $revision_table = $this->entityType->getRevisionTable() ?: $this->entityType->id() . '_revision';
+    }
+
+    $translatable = $this->entityType->isTranslatable();
+    $data_table = '';
+    if ($translatable) {
+      $data_table = $this->entityType->getDataTable() ?: $this->entityType->id() . '_field_data';
+    }
+
+    // Some entity types do not have a revision data table defined, but still
+    // have a revision table name set in
+    // \Drupal\Core\Entity\Sql\SqlContentEntityStorage::initTableLayout() so we
+    // apply the same kind of logic.
+    $revision_data_table = '';
+    if ($revisionable && $translatable) {
+      $revision_data_table = $this->entityType->getRevisionDataTable() ?: $this->entityType->id() . '_field_revision';
+    }
     $revision_field = $this->entityType->getKey('revision');
 
     // Setup base information of the views data.
@@ -152,13 +170,17 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       }
     }
 
-    $data[$base_table]['operations'] = array(
-      'field' => array(
-        'title' => $this->t('Operations links'),
-        'help' => $this->t('Provides links to perform entity operations.'),
-        'id' => 'entity_operations',
-      ),
-    );
+    // Entity types must implement a list_builder in order to use Views'
+    // entity operations field.
+    if ($this->entityType->hasListBuilderClass()) {
+      $data[$base_table]['operations'] = array(
+        'field' => array(
+          'title' => $this->t('Operations links'),
+          'help' => $this->t('Provides links to perform entity operations.'),
+          'id' => 'entity_operations',
+        ),
+      );
+    }
 
     // Setup relations to the revisions/property data.
     if ($data_table) {
@@ -209,6 +231,10 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // the entity base, revision, data tables.
     $field_definitions = $this->entityManager->getBaseFieldDefinitions($this->entityType->id());
     if ($table_mapping = $this->storage->getTableMapping()) {
+      // Fetch all fields that can appear in both the base table and the data
+      // table.
+      $entity_keys = $this->entityType->getKeys();
+      $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'revision', 'bundle']));
       // Iterate over each table we have so far and collect field data for each.
       // Based on whether the field is in the field_definitions provided by the
       // entity manager.
@@ -217,6 +243,12 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       // @todo https://www.drupal.org/node/2337511
       foreach ($table_mapping->getTableNames() as $table) {
         foreach ($table_mapping->getFieldNames($table) as $field_name) {
+          // To avoid confusing duplication in the user interface, for fields
+          // that are on both base and data tables, only add them on the data
+          // table (same for revision vs. revision data).
+          if ($data_table && ($table === $base_table || $table === $revision_table) && in_array($field_name, $duplicate_fields)) {
+            continue;
+          }
           $this->mapFieldDefinition($table, $field_name, $field_definitions[$field_name], $table_mapping, $data[$table]);
         }
       }

@@ -105,7 +105,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->set('notify_emails', []);

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Cron.
+ * Contains \Drupal\Core\ProxyClass\Cron.
  */
 
 /**

@@ -36,8 +36,7 @@ class DrupalDateTime extends DateTimePlus {
    * Constructs a date object.
    *
    * @param string $time
-   *   A DateTime object, a date/input_time_adjusted string, a unix timestamp.
-   *   Defaults to 'now'.
+   *   A date/input_time_adjusted string. Defaults to 'now'.
    * @param mixed $timezone
    *   PHP DateTimeZone object, string or NULL allowed.
    *   Defaults to NULL.

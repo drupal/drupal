@@ -80,22 +80,48 @@ function drupal_phpunit_get_extension_namespaces($dirs) {
   return $namespaces;
 }
 
-// Start with classes in known locations.
-$loader = require __DIR__ . '/../../autoload.php';
-$loader->add('Drupal\\Tests', __DIR__);
-$loader->add('Drupal\\KernelTests', __DIR__);
-
-if (!isset($GLOBALS['namespaces'])) {
-  // Scan for arbitrary extension namespaces from core and contrib.
-  $extension_roots = drupal_phpunit_contrib_extension_directory_roots();
-
-  $dirs = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
-  $dirs = array_reduce($dirs, 'array_merge', array());
-  $GLOBALS['namespaces'] = drupal_phpunit_get_extension_namespaces($dirs);
+// We define the COMPOSER_INSTALL constant, so that PHPUnit knows where to
+// autoload from. This is needed for tests run in isolation mode, because
+// phpunit.xml.dist is located in a non-default directory relative to the
+// PHPUnit executable.
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+  define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../autoload.php');
 }
-foreach ($GLOBALS['namespaces'] as $prefix => $paths) {
-  $loader->addPsr4($prefix, $paths);
-}
+
+/**
+ * Populate class loader with additional namespaces for tests.
+ *
+ * We run this in a function to avoid setting the class loader to a global
+ * that can change. This change can cause unpredictable false positives for
+ * phpunit's global state change watcher. The class loader can be retrieved from
+ * composer at any time by requiring autoload.php.
+ */
+function drupal_phpunit_populate_class_loader() {
+
+  /** @var \Composer\Autoload\ClassLoader $loader */
+  $loader = require __DIR__ . '/../../autoload.php';
+
+  // Start with classes in known locations.
+  $loader->add('Drupal\\Tests', __DIR__);
+  $loader->add('Drupal\\KernelTests', __DIR__);
+
+  if (!isset($GLOBALS['namespaces'])) {
+    // Scan for arbitrary extension namespaces from core and contrib.
+    $extension_roots = drupal_phpunit_contrib_extension_directory_roots();
+
+    $dirs = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
+    $dirs = array_reduce($dirs, 'array_merge', array());
+    $GLOBALS['namespaces'] = drupal_phpunit_get_extension_namespaces($dirs);
+  }
+  foreach ($GLOBALS['namespaces'] as $prefix => $paths) {
+    $loader->addPsr4($prefix, $paths);
+  }
+
+  return $loader;
+};
+
+// Do class loader population.
+drupal_phpunit_populate_class_loader();
 
 // Set sane locale settings, to ensure consistent string, dates, times and
 // numbers handling.

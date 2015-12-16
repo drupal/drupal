@@ -16,7 +16,7 @@ class StaticDiscovery implements DiscoveryInterface {
   use DiscoveryCachedTrait;
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
+   * {@inheritdoc}
    */
   public function getDefinitions() {
     if (!$this->definitions) {

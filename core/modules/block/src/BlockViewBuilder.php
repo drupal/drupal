@@ -186,8 +186,6 @@ class BlockViewBuilder extends EntityViewBuilder {
    *   A block config entity ID.
    * @param $view_mode
    *   The view mode the block is being viewed in.
-   * @param $langcode
-   *   The langcode the block is being viewed in.
    *
    * @return array
    *   A render array with a #pre_render callback to render the block.
@@ -213,14 +211,15 @@ class BlockViewBuilder extends EntityViewBuilder {
     if ($content !== NULL && !Element::isEmpty($content)) {
       // Place the $content returned by the block plugin into a 'content' child
       // element, as a way to allow the plugin to have complete control of its
-      // properties and rendering (e.g., its own #theme) without conflicting
-      // with the properties used above, or alternate ones used by alternate
-      // block rendering approaches in contrib (e.g., Panels). However, the use
-      // of a child element is an implementation detail of this particular block
-      // rendering approach. Semantically, the content returned by the plugin
-      // "is the" block, and in particular, #attributes and #contextual_links is
-      // information about the *entire* block. Therefore, we must move these
-      // properties from $content and merge them into the top-level element.
+      // properties and rendering (for instance, its own #theme) without
+      // conflicting with the properties used above, or alternate ones used by
+      // alternate block rendering approaches in contrib (for instance, Panels).
+      // However, the use of a child element is an implementation detail of this
+      // particular block rendering approach. Semantically, the content returned
+      // by the plugin "is the" block, and in particular, #attributes and
+      // #contextual_links is information about the *entire* block. Therefore,
+      // we must move these properties from $content and merge them into the
+      // top-level element.
       foreach (array('#attributes', '#contextual_links') as $property) {
         if (isset($content[$property])) {
           $build[$property] += $content[$property];
@@ -234,8 +233,8 @@ class BlockViewBuilder extends EntityViewBuilder {
     else {
       // Abort rendering: render as the empty string and ensure this block is
       // render cached, so we can avoid the work of having to repeatedly
-      // determine whether the block is empty. E.g. modifying or adding entities
-      // could cause the block to no longer be empty.
+      // determine whether the block is empty. For instance, modifying or adding
+      // entities could cause the block to no longer be empty.
       $build = array(
         '#markup' => '',
         '#cache' => $build['#cache'],

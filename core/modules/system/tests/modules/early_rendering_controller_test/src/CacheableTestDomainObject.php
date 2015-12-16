@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\early_rendering_controller_test\AttachmentsTestDomainObject.
+ * Contains \Drupal\early_rendering_controller_test\CacheableTestDomainObject.
  */
 
 namespace Drupal\early_rendering_controller_test;

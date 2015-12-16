@@ -210,6 +210,13 @@ class DefaultViewsTest extends ViewTestBase {
       ),
     );
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
+
+    $view->storage->setStatus(TRUE);
+    $view->save();
+    \Drupal::service('router.builder')->rebuild();
+
+    $this->drupalGet('archive');
+    $this->assertResponse(200);
   }
 
 }

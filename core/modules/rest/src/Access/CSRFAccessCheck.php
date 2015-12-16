@@ -37,7 +37,7 @@ class CSRFAccessCheck implements AccessCheckInterface {
   }
 
   /**
-   * Implements AccessCheckInterface::applies().
+   * {@inheritdoc}
    */
   public function applies(Route $route) {
     $requirements = $route->getRequirements();

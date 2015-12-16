@@ -182,13 +182,22 @@ small .admin-link:after {
   float: right;
 }
 .module-link-help {
-  background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat;
+  background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link-help {
+  background-position: top 50% right 0;
 }
 .module-link-permissions {
-  background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat;
+  background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link-permissions {
+  background-position: top 50% right 0;
 }
 .module-link-configure {
-  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat;
+  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link-configure {
+  background-position: top 50% right 0;
 }
 
 /* Status report. */

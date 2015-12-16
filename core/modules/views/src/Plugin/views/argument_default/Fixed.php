@@ -23,6 +23,9 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class Fixed extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['argument'] = array('default' => '');
@@ -30,6 +33,9 @@ class Fixed extends ArgumentDefaultPluginBase implements CacheableDependencyInte
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['argument'] = array(
@@ -40,7 +46,7 @@ class Fixed extends ArgumentDefaultPluginBase implements CacheableDependencyInte
   }
 
   /**
-   * Return the default argument.
+   * {@inheritdoc}
    */
   public function getArgument() {
     return $this->options['argument'];

@@ -315,8 +315,8 @@ class TwigExtension extends \Twig_Extension {
    * ampersand ("&") which separates query params. Thus we cannot mark
    * the generated URL as always safe, but only when we are sure there won't be
    * multiple query params. This is the case when there are none or only one
-   * constant parameter given. E.g. we know beforehand this will not need to
-   * be escaped:
+   * constant parameter given. For instance, we know beforehand this will not
+   * need to be escaped:
    * - path('route')
    * - path('route', {'param': 'value'})
    * But the following may need to be escaped:
@@ -438,7 +438,7 @@ class TwigExtension extends \Twig_Extension {
         $return = $arg->toString();
       }
       else {
-        throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+        throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
       }
     }
 
@@ -516,7 +516,7 @@ class TwigExtension extends \Twig_Extension {
         return $arg->toString();
       }
       else {
-        throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+        throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
       }
     }
 
@@ -534,7 +534,7 @@ class TwigExtension extends \Twig_Extension {
    *
    * @param \Twig_Environment $env
    *   A Twig_Environment instance.
-   * @param mixed[]|\Traversable $value
+   * @param mixed[]|\Traversable|NULL $value
    *   The pieces to join.
    * @param string $glue
    *   The delimiter with which to join the string. Defaults to an empty string.
@@ -545,10 +545,14 @@ class TwigExtension extends \Twig_Extension {
    *   The strings joined together.
    */
   public function safeJoin(\Twig_Environment $env, $value, $glue = '') {
+    if ($value instanceof \Traversable) {
+      $value = iterator_to_array($value, false);
+    }
+
     return implode($glue, array_map(function($item) use ($env) {
       // If $item is not marked safe then it will be escaped.
       return $this->escapeFilter($env, $item, 'html', NULL, TRUE);
-    }, $value));
+    }, (array) $value));
   }
 
 }

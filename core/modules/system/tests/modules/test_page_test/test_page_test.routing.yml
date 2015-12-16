@@ -42,3 +42,11 @@ test_page_test.admin_render_title:
     _controller: '\Drupal\test_page_test\Controller\Test::renderTitle'
   requirements:
     _access: 'TRUE'
+
+test_page_test.http_response_exception:
+  path: '/test-http-response-exception/{code}'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::httpResponseException'
+    code: 200
+  requirements:
+    _access: 'TRUE'

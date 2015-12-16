@@ -62,19 +62,19 @@ class NullGenerator extends UrlGenerator {
   }
 
   /**
-   * Overrides Drupal\Core\Routing\UrlGenerator::setContext();
+   * {@inheritdoc}
    */
   public function setContext(SymfonyRequestContext $context) {
   }
 
   /**
-   * Implements Symfony\Component\Routing\RequestContextAwareInterface::getContext();
+   * {@inheritdoc}
    */
   public function getContext() {
   }
 
   /**
-   * Overrides Drupal\Core\Routing\UrlGenerator::processPath().
+   * {@inheritdoc}
    */
   protected function processPath($path, &$options = array(), BubbleableMetadata $bubbleable_metadata = NULL) {
     return $path;

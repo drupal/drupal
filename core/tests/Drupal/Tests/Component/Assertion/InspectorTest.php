@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\Tests\Component\InspectorTest.
+ * Contains \Drupal\Tests\Component\Assertion\InspectorTest.
  */
 
 namespace Drupal\Tests\Component\Assertion;

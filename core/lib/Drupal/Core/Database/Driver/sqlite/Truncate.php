@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Driver\sqlite;
 use Drupal\Core\Database\Query\Truncate as QueryTruncate;
 
 /**
- * SQLite specific implementation of TruncateQuery.
+ * SQLite implementation of \Drupal\Core\Database\Query\Truncate.
  *
  * SQLite doesn't support TRUNCATE, but a DELETE query with no condition has
  * exactly the effect (it is implemented by DROPing the table).

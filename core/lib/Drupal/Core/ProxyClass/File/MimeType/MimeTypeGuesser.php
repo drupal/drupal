@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\File\MimeType\MimeTypeGuesser.
+ * Contains \Drupal\Core\ProxyClass\File\MimeType\MimeTypeGuesser.
  */
 
 /**

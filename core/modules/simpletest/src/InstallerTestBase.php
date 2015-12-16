@@ -72,7 +72,7 @@ abstract class InstallerTestBase extends WebTestBase {
   protected $isInstalled = FALSE;
 
   /**
-   * Overrides WebTestBase::setUp().
+   * {@inheritdoc}
    */
   protected function setUp() {
     $this->isInstalled = FALSE;

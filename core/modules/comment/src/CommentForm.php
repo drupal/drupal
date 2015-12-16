@@ -66,7 +66,7 @@ class CommentForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::form().
+   * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\comment\CommentInterface $comment */
@@ -227,7 +227,7 @@ class CommentForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::actions().
+   * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
@@ -348,7 +348,7 @@ class CommentForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::save().
+   * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
     $comment = $this->entity;

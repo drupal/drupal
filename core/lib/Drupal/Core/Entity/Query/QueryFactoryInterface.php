@@ -35,9 +35,10 @@ interface QueryFactoryInterface {
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
    *
-   * @throws \Drupal\Core\Entity\Query\QueryException
    * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
    *   The query object that can query the given entity type.
+   *
+   * @throws \Drupal\Core\Entity\Query\QueryException
    */
   public function getAggregate(EntityTypeInterface $entity_type, $conjunction);
 

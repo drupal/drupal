@@ -138,7 +138,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageInterface::deleteRevision().
+   * {@inheritdoc}
    */
   public function deleteRevision($revision_id) {
     return NULL;

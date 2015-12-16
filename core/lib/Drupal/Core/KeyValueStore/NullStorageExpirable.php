@@ -41,38 +41,38 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
+   * {@inheritdoc}
    */
   public function get($key, $default = NULL) {
     return NULL;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getMultiple().
+   * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getAll().
+   * {@inheritdoc}
    */
   public function getAll() {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::set().
+   * {@inheritdoc}
    */
   public function set($key, $value) { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setIfNotExists().
+   * {@inheritdoc}
    */
   public function setIfNotExists($key, $value) { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setMultiple().
+   * {@inheritdoc}
    */
   public function setMultiple(array $data) { }
 
@@ -83,39 +83,39 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($key) { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteMultiple().
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $keys) { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteAll().
+   * {@inheritdoc}
    */
   public function deleteAll() { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getCollectionName().
+   * {@inheritdoc}
    */
   public function getCollectionName() {
     return $this->collection;
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface::setMultipleWithExpire().
+   * {@inheritdoc}
    */
   public function setMultipleWithExpire(array $data, $expire) { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface::setWithExpire().
+   * {@inheritdoc}
    */
   public function setWithExpire($key, $value, $expire) { }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface::setWithExpireIfNotExists().
+   * {@inheritdoc}
    */
   public function setWithExpireIfNotExists($key, $value, $expire) { }
 

@@ -10,6 +10,7 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -17,7 +18,7 @@ use Drupal\migrate\Row;
  *
  * This class serves as the import class for most configuration entities.
  * It can be necessary to provide a specific entity class if the configuration
- * entity has a compound id (see EntityFieldEntity) or it has specific setter
+ * entity has a compound ID (see EntityFieldEntity) or it has specific setter
  * methods (see EntityDateFormat). When implementing an entity destination for
  * the latter case, make sure to add a test not only for importing but also
  * for re-importing (if that is supported).
@@ -31,20 +32,21 @@ class EntityConfigBase extends Entity {
     if ($row->isStub()) {
       throw new MigrateException('Config entities can not be stubbed.');
     }
+    $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $ids = $this->getIds();
     $id_key = $this->getKey('id');
     if (count($ids) > 1) {
       // Ids is keyed by the key name so grab the keys.
       $id_keys = array_keys($ids);
       if (!$row->getDestinationProperty($id_key)) {
-        // Set the id into the destination in for form "val1.val2.val3".
+        // Set the ID into the destination in for form "val1.val2.val3".
         $row->setDestinationProperty($id_key, $this->generateId($row, $id_keys));
       }
     }
     $entity = $this->getEntity($row, $old_destination_id_values);
     $entity->save();
     if (count($ids) > 1) {
-      // This can only be a config entity, content entities have their id key
+      // This can only be a config entity, content entities have their ID key
       // and that's it.
       $return = array();
       foreach ($id_keys as $id_key) {
@@ -64,7 +66,6 @@ class EntityConfigBase extends Entity {
     return $ids;
   }
 
-
   /**
    * Updates an entity with the contents of a row.
    *
@@ -77,6 +78,8 @@ class EntityConfigBase extends Entity {
     foreach ($row->getRawDestination() as $property => $value) {
       $this->updateEntityProperty($entity, explode(Row::PROPERTY_SEPARATOR, $property), $value);
     }
+
+    $this->setRollbackAction($row->getIdMap());
   }
 
   /**
@@ -102,15 +105,15 @@ class EntityConfigBase extends Entity {
   }
 
   /**
-   * Generate an entity id.
+   * Generate an entity ID.
    *
    * @param \Drupal\migrate\Row $row
    *   The current row.
    * @param array $ids
-   *   The destination ids.
+   *   The destination IDs.
    *
    * @return string
-   *   The generated entity id.
+   *   The generated entity ID.
    */
   protected function generateId(Row $row, array $ids) {
     $id_values = array();

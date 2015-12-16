@@ -27,21 +27,18 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
    * {@inheritdoc}
    */
   public function query(QueryPluginBase $query, $relationship = NULL) {
-    // There is no point in getting the language, in case the site is not
-    // multilingual.
-    if (!$this->languageManager->isMultilingual()) {
+    // In order to render in the translation language of the entity, we need
+    // to add the language code of the entity to the query. Skip if the site
+    // is not multilingual or the entity is not translatable.
+    if (!$this->languageManager->isMultilingual() || !$this->entityType->hasKey('langcode')) {
       return;
     }
-    // If the data table is defined, we use the translation language as render
-    // language, otherwise we fall back to the default entity language, which is
-    // stored in the revision table for revisionable entity types.
     $langcode_key = $this->entityType->getKey('langcode');
-    foreach (array('data_table', 'revision_table', 'base_table') as $key) {
-      if ($table = $this->entityType->get($key)) {
-        $table_alias = $query->ensureTable($table, $relationship);
-        $this->langcodeAlias = $query->addField($table_alias, $langcode_key);
-        break;
-      }
+    $storage = \Drupal::entityManager()->getStorage($this->entityType->id());
+
+    if ($table = $storage->getTableMapping()->getFieldTableName($langcode_key)) {
+      $table_alias = $query->ensureTable($table, $relationship);
+      $this->langcodeAlias = $query->addField($table_alias, $langcode_key);
     }
   }
 

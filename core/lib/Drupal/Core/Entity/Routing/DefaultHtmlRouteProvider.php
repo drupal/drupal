@@ -7,7 +7,11 @@
 
 namespace Drupal\Core\Entity\Routing;
 
+use Drupal\Core\Entity\EntityHandlerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -24,7 +28,33 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @internal
  */
-class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
+class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a new DefaultHtmlRouteProvider.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   */
+  public function  __construct(EntityManagerInterface $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $container->get('entity.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -71,6 +101,12 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
         ->setOption('parameters', [
           $entity_type_id => ['type' => 'entity:' . $entity_type_id],
         ]);
+
+      // Entity types with serial IDs can specify this in their route
+      // requirements, improving the matching process.
+      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+        $route->setRequirement($entity_type_id, '\d+');
+      }
       return $route;
     }
   }
@@ -102,6 +138,12 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
         ->setOption('parameters', [
           $entity_type_id => ['type' => 'entity:' . $entity_type_id],
         ]);
+
+      // Entity types with serial IDs can specify this in their route
+      // requirements, improving the matching process.
+      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+        $route->setRequirement($entity_type_id, '\d+');
+      }
       return $route;
     }
   }
@@ -128,8 +170,33 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface {
         ->setOption('parameters', [
           $entity_type_id => ['type' => 'entity:' . $entity_type_id],
         ]);
+
+      // Entity types with serial IDs can specify this in their route
+      // requirements, improving the matching process.
+      if ($this->getEntityTypeIdKeyType($entity_type) === 'integer') {
+        $route->setRequirement($entity_type_id, '\d+');
+      }
       return $route;
     }
+  }
+
+  /**
+   * Gets the type of the ID key for a given entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   An entity type.
+   *
+   * @return string|null
+   *   The type of the ID key for a given entity type, or NULL if the entity
+   *   type does not support fields.
+   */
+  protected function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {
+    if (!$entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+      return NULL;
+    }
+
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type->id());
+    return $field_storage_definitions[$entity_type->getKey('id')]->getType();
   }
 
 }

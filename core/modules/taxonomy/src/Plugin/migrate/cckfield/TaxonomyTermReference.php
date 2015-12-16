@@ -11,7 +11,9 @@ use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
 /**
- * @PluginID("taxonomy_term_reference")
+ * @MigrateCckField(
+ *   id = "taxonomy_term_reference"
+ * )
  */
 class TaxonomyTermReference extends CckFieldPluginBase {
 

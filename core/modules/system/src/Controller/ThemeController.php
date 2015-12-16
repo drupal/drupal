@@ -30,26 +30,16 @@ class ThemeController extends ControllerBase {
   protected $themeHandler;
 
   /**
-   * The route builder service.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
    * Constructs a new ThemeController.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
-   *   The route builder.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, RouteBuilderInterface $route_builder, ConfigFactoryInterface $config_factory) {
+  public function __construct(ThemeHandlerInterface $theme_handler,ConfigFactoryInterface $config_factory) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
-    $this->routeBuilder = $route_builder;
   }
 
   /**
@@ -58,7 +48,6 @@ class ThemeController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('theme_handler'),
-      $container->get('router.builder'),
       $container->get('config.factory')
     );
   }
@@ -182,8 +171,6 @@ class ThemeController extends ControllerBase {
 
         // Set the default theme.
         $config->set('default', $theme)->save();
-
-        $this->routeBuilder->setRebuildNeeded();
 
         // The status message depends on whether an admin theme is currently in
         // use: a value of 0 means the admin theme is set to be the default

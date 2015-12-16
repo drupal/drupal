@@ -26,7 +26,7 @@ trait QueryConditionTrait {
   protected $condition;
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
+   * {@inheritdoc}
    */
   public function condition($field, $value = NULL, $operator = '=') {
     $this->condition->condition($field, $value, $operator);
@@ -34,7 +34,7 @@ trait QueryConditionTrait {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
+   * {@inheritdoc}
    */
   public function isNull($field) {
     $this->condition->isNull($field);
@@ -42,7 +42,7 @@ trait QueryConditionTrait {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
+   * {@inheritdoc}
    */
   public function isNotNull($field) {
     $this->condition->isNotNull($field);
@@ -50,7 +50,7 @@ trait QueryConditionTrait {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
+   * {@inheritdoc}
    */
   public function exists(SelectInterface $select) {
     $this->condition->exists($select);
@@ -58,7 +58,7 @@ trait QueryConditionTrait {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
+   * {@inheritdoc}
    */
   public function notExists(SelectInterface $select) {
     $this->condition->notExists($select);
@@ -66,21 +66,21 @@ trait QueryConditionTrait {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
+   * {@inheritdoc}
    */
   public function &conditions() {
     return $this->condition->conditions();
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
+   * {@inheritdoc}
    */
   public function arguments() {
     return $this->condition->arguments();
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
+   * {@inheritdoc}
    */
   public function where($snippet, $args = array()) {
     $this->condition->where($snippet, $args);
@@ -88,35 +88,35 @@ trait QueryConditionTrait {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
+   * {@inheritdoc}
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     $this->condition->compile($connection, $queryPlaceholder);
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
+   * {@inheritdoc}
    */
   public function compiled() {
     return $this->condition->compiled();
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::conditionGroupFactory().
+   * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
     return new Condition($conjunction);
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::andConditionGroup().
+   * {@inheritdoc}
    */
   public function andConditionGroup() {
     return $this->conditionGroupFactory('AND');
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::orConditionGroup().
+   * {@inheritdoc}
    */
   public function orConditionGroup() {
     return $this->conditionGroupFactory('OR');

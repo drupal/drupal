@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - node
+    - search
     - user
 id: test_search
 label: 'Search Test'
@@ -115,6 +116,9 @@ display:
           group_type: group
           admin_label: ''
           order: DESC
+          exposed: false
+          expose:
+            label: ''
           plugin_id: search_score
       title: ''
       header: {  }

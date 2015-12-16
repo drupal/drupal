@@ -1,24 +1,100 @@
-Drupal 8.0, xxxx-xx-xx (development version)
-----------------------
-- Added Twig as the default template engine and converted all .tpl.php templates
-  to .html.twig.
-- Added tour module. Provides highly contextual tips for UI elements.
-- Improved entity system.
-    * Added support for saving and deleting entities through the controller.
-    * Entities are now classed objects, implementing EntityInterface.
-    * Drupal now understands the concept of a "default" revision, tracked
-      independently from the latest revision, allowing for the creation of
-      drafts while the current revision stays published.
-    * All entity types, not just nodes, now have support for revisions.
-- Replaced the core routing system with one built on the Symfony2 framework.
-- Configuration:
-    * Added a centralized file-based configuration system.
-    * Allows module authors to provide configuration in a standard format.
-    * Implements functionality to get, set, add and remove configuration.
-    * Includes ability to override configuration values with language variants
-      and other runtime values.
-- Added the CKEditor WYSIWYG editor. Provides a drag-and-drop configuration UI.
-- Included the HTML5 Shiv library to support HTML5 elements in IE 8 and below.
+Drupal 8.0.0, 2015-11-19
+------------------------
+- Significantly improved the front end:
+    * Made all built-in themes responsive.
+    * Added support for responsive images.
+    * Made built-in tables responsive with three levels of column importance.
+    * Added Twig as the default template engine and converted all .tpl.php
+      templates and theme functions to .html.twig.
+    * Removed the PHPTemplate engine.
+    * Several large scale cleanups of the markup produced by Drupal.
+    * Added Classy as a base theme to maintain CSS classes and wrappers.
+    * Added Stable as the default base theme to maintain backwards compatibility
+      for core template and CSS changes, because templates and CSS outside
+      Stable can be improved in minor releases (8.1.0, 8.2.0, etc.).
+    * Redesigned several key elements of the Seven theme.
+    * Added support for HTML5 elements.
+    * Included Backbone.js and Underscore.js JavaScript frameworks.
+    * Updated to jQuery 2.1.4.
+    * Updated to jQuery UI 1.11.4.
+    * Removed jquery.bbq.
+    * Removed the Garland theme from core.
+    * Removed the Overlay module from core and replaced it with a simple,
+      dynamic "Back to site" link.
+    * Improved the asset library system to manage CSS and JavaScript files and
+      their dependencies. Allowing for smaller AJAX request payloads.
+    * jQuery is no longer loaded on all pages, only when another asset needs it.
+    * No JavaScript is loaded at all for anonymous users by default, for faster
+      page loads.
+    * Implemented SMACSS-style categorization for CSS files.
+    * Removed most support for Internet Explorer 8 and below.
+    * Added Modernizr for making styling changes based on browser support.
+    * All page template variables converted to blocks (title, breadcrumb,
+      branding, etc).
+    * Added the Breakpoint module to manage breakpoints of responsive designs.
+    * Introduced native Schema.org output in pages.
+    * Made use of semantic HTML 5 tags when possible. This also makes form input
+      on mobile devices much easier for users.
+    * Redesigned icons to look good on high resolution (retina) displays too.
+- Made the site administration experience simpler:
+    * Redesigned the installer.
+    * Visually updated and extended the Seven (administration) theme.
+    * Made the administration toolbar responsive and touch friendly.
+    * Added search to the module listing and made the page easier to read.
+    * Added the tour module to provide highly contextual tips for UI elements.
+- Improved the entity system:
+    * Added a full CRUD API for entities.
+    * Improved the field API and entity query API.
+    * Added support for widgets, formatters, and translation to base entity
+      fields (such as labels).
+    * Made view modes configurable for reusable display variants.
+    * Introduced form modes for reusable form variants.
+    * Added ability to handle a "default" revision that may not be the latest.
+    * All content entity types (custom blocks, terms, comments, etc.), not just
+      nodes, have support for revisions.
+    * Database schema of content entities is automatically generated based on
+      entity type and field definitions.
+- Added the Typed Data system to manage complex types.
+- Refactored routing system based on Symfony2 components.
+- Made declarative information (libraries, permissions, routes etc.) use YAML
+  files for definitions instead of PHP.
+- Improved the menu handling systems:
+    * Moved custom menu item handling to its own module.
+    * Reworked menu links, local actions, and local tasks based upon the new
+      routing system.
+- Added plugin system to standardize implementation of several core APIs.
+- Introduced a new configuration management system:
+    * Added a centralized configuration system with export and import
+      functionality.
+    * Allowed module authors to provide configuration in a YAML file format.
+    * Implemented functionality to get, set, add, and remove configuration.
+    * Provided the ability to override configuration values with language
+      variants and other runtime values.
+    * Added configuration schema, dependencies, and validation to maintain
+      data integrity between deployments and updates.
+    * Support added for both global configuration and configuration entities.
+- Improved authoring experience:
+    * Redesigned the content creation and editing form.
+    * Content preview is now displayed on the frontend.
+    * Added the CKEditor WYSIWYG editor. Clean markup guaranteed thanks to tight
+      integration with the filter system.
+    * Made uploading, aligning, and captioning of images possible in the editor.
+    * Modernized the default text formats.
+    * Added a drag-and-drop configuration UI, which automatically updates the
+      HTML filter settings, making configuring text formats trivial for typical
+      use cases.
+    * Added align and caption filters that can be applied to any element:
+      images, blockquotes, code snippets, videos…
+    * Made possible to in-place edit any entity: nodes, blocks…
+    * Added the Text Editor module to help map other editors to text formats.
+- Improved media management:
+    * Added ability to configure when unused files get deleted with the option
+      to keep them, useful for media libraries.
+    * Added a customizable view under the content administration screen that
+      lists all files uploaded on the system.
+    * Made uploads immediate when selecting files in file fields.
+    * Added ability to upload multiple files at once.
+    * Added local image input filter, to enable secure image posting.
 - Included the following Symfony2 components:
     * ClassLoader - PSR-0-compatible autoload routines.
     * DependencyInjection - Flexible dependency injection container.
@@ -28,49 +104,45 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * Process - Allows for executing commands in a sub-process.
     * Routing - Framework for mapping incoming requests to controller
       information.
+    * Serialization - Serialize complex nested objects into JSON/XML etc.
+    * Validator - Ensure that an object is in a valid state based upon some
+      validation rules defined for it.
     * Yaml - Parser for YAML files.
-- Included the Assetic asset management framework for PHP.
-- Included Backbone.js and Underscore.js JavaScript frameworks.
-- Support added for making HTTP requests through a proxy server.
+- Added routing component from Symfony CMF.
+- Added Guzzle HTTP library.
+- Added Zend Feed component.
 - Removed modules from core.
     * The following modules have been removed from core, because contributed
       modules with similar functionality are available:
       * Blog
       * Dashboard
       * OpenID
-      * PHP Filter
       * Poll
       * Profile
       * Trigger
-- Removed the Overlay module from core.
-- Removed the Garland theme from core.
-- Removed the Statistics module's accesslog functionality and reports from core.
+- Removed the Statistics module's accesslog functionality and reports.
 - Removed XML-RPC functionality from core.
 - Removed user signatures support from core.
-- Removed backwards-compatibility with 'magic_quotes_gpc'/'magic_quotes_runtime'
-  PHP configuration settings. Both are required to be disabled.
-- Universally Unique IDentifier (UUID):
-    * Support for generating and validating UUIDs.
-- JavaScript changes:
-    * Updated to jQuery 2.1.0
-    * Updated to jQuery UI 1.10.2
-    * Removed jquery.bbq
-- Tremendously improved language support all around.
+- Added ability to generate and validate Universally Unique IDentifiers (UUIDs).
+- Tremendously improved language support all around:
     * Great language improvements for users:
       * Improved language selection with user preference detection in the
-        installer.
+        installer based on browser settings.
+      * The installer is presented in the user's native language.
       * Moved base language support to Language module.
       * Greatly simplified the interface for setting up languages.
       * Improved browser language detection considerably.
-      * Language domain and path prefix configuraton simplified and centralized;
-        path prefix detection is now default.
+      * Language domain and path prefix configuration simplified and
+        centralized; path prefix detection is now default.
       * Added HTML 5 language markup; language information added in markup in
         several more places.
       * Made it possible to assign external language codes to local languages.
       * Introduced the possibility of an administration-specific language
         preference for users.
+      * Language selection fallback language is now independently configurable
+        without needing to change the site default language.
     * Simplified and added new features in interface translation:
-      * Made interface translation directly accessible from language list.
+      * Made interface translation directly accessible from the language list.
       * Centralized interface translation import to one directory.
       * Drupal can now be translated to English and English can be deleted.
       * Much improved built-in translation interface.
@@ -79,6 +151,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
         be identified and protected from translation update overwrites.
       * All Gettext files are now imported in chunks, better for low resource
         environments.
+      * Automated import and update of translations in the installer and later.
     * Improved content language support:
       * Made it possible to assign language to taxonomy terms, vocabularies,
         menu items, and files.
@@ -99,37 +172,97 @@ Drupal 8.0, xxxx-xx-xx (development version)
         configuration with translatable values (blocks, views, fields, etc.).
       * Added language options to block visibility.
     * Much improved language APIs for developers:
-      * Added simple APIs and hooks to save/delete/update languages.
-      * New Language class wraps language information, used universally.
-      * Unified database schemas and APIs to make it easier to spot where
-        language codes are referenced.
-      * Made the language negotiation system APIs more consistent for
-        developers.
       * Made it possible for users to have a preferred language separate from
         their user entity language.
-      * The text formatter from t() is now available as format_string().
+      * The text formatter from t() is now available as FormattableMarkup.
       * Added support for interface translation contexts in Drupal.t(),
-        Drupal.formatPlural() as well as routing, tabs, actions, and contextual
-        links.
+        Drupal.formatPlural() as well as routing, tabs, actions, shipped
+        menu items and contextual links.
       * Removed textgroups support from interface translation in favor of
         native configuration language support.
-      * Added configuration schema system to support generating translation
-        forms for any configuration.
-      * Reworked Gettext PO support to use pluggable read/write handlers.
-      * Added language select form element in the Form API.
-- Added Email field type to core.
-- Added Link field type to core.
-- Added Phone number field type to core.
-- Added local image input filter, to enable secure image posting.
-- Added Views and Views UI module to core.
-- Added Entity Reference field type to core.
-- Added Date field type to core.
+      * Added a transliteration API. (Only used for machine names in core.)
+      * Added a language fallback capability to the interface translation API.
+- New field types added to core:
+    * Email
+    * Link
+    * Telephone number
+    * Entity reference
+    * Date
+- Made commenting more flexible:
+    * Added the notion of comment types (for reviews, greetings, and so on),
+      each of which can be configured with a different set of fields.
+    * Made commenting a field to allow comment threads on entity types other
+      than nodes.
+- Added Views and Views UI module to core:
+    * Added simple bulk operations functionality to Views.
+    * Converted various core listings to views, including /node,
+      /admin/content/node, /admin/people, and several blocks.
+    * Built in REST API support.
+    * Rewrote caching integration for better performance.
+    * Made it possible to configure responsive tables in Views.
+- Greatly improved block management:
+    * Made custom blocks fieldable, revisionable, and translatable entities.
+    * Added the notion of custom block types.
+    * Added the ability to place the same block in multiple locations.
+    * Introduced a block library with categorized blocks.
+- Introduced an accessible modal API based on improvements made in collaboration
+  with the jQuery UI team.
+- Made it possible to add fields to contact forms allowing site-builders to
+  easily build custom forms for soliciting feedback from users.
 - Added a Web Services module package.
     * Added a RESTful web services provider module.
     * Added a serialization module using the Symfony serialization component.
     * Added a Hypertext Application Language (HAL) serialization module.
     * Added a HTTP Basic authentication provider module.
-- When using MySQL, the MyISAM engine is no longer supported.
+- Improved performance/scalability significantly:
+    * Introduced cache tags, which allow content to be invalidated accurately
+      and instantly, including for reverse proxies and CDNs.
+    * Added cache contexts, which allow content to be cached correctly, and
+      placeholdered to improve cache hit rates.
+    * Implemented cacheability bubbling, which allows strict tracking of assets
+      and cacheability throughout page rendering.
+    * Factored out page caching to its own module and enabled it by default.
+    * Added the Dynamic Page Cache module for authenticated page caching and
+      enabled it by default.
+    * Added APCu, memory, and PHP file caching backends to core, alongside
+      support for a chained, consistent cache backend to support correctly using
+      fast local cache implementations with multiple web servers.
+- Removed support for MyISAM, when using MySQL.
+- Testing improvements
+    * Added PHPUnit for proper unit testing, see
+      https://phpunit.de/manual/4.8/en/index.html so you can run tests via
+      your IDE.
+    * Added BrowserTestBase as an alternative to simpletest for browser
+      testing (JavaScript support to be included in the future)
+    * Added KernelTestBase to provide a fast API testing of integration of
+      different components
+    * Core branch nightly tests include PHP 5.5, 5.6, 7, sqlite and PostgreSQL.
+- Added the migrate module (experimental) with support for migrating content and
+  configuration from earlier Drupal versions.
+- Introduced support for Composer.
+- Moved the automated cron execution functionality to its own module.
+- Refactored IP address based banning functionality to its own module.
+- Security improvements:
+    * Removed PHP filter, including the ability to use PHP for block visibility.
+    * Managing fields for each entity type is now a separate permission.
+    * PDO drivers other than MySQL are now limited to executing single
+      statements to limit SQL injection vectors.
+    * Added an autoescape API to prevent cross-site scripting in many of the
+      places where Drupal outputs HTML.
+    * Hardened user session and session ID handling.
+    * Automated CSRF protection in route definitions.
+    * Clickjacking protection enabled by default.
+    * Made the core JavaScript API compatible with Content Security Policy
+      (CSP).
+    * Trusted host patterns enforced for requests preventing cache and link
+      poisoning.
+- Switched to semantic versioning with significant updates planned every 6
+  months in 8.1, 8.2, etc.
+- Numerous other important changes and additions. See
+  https://www.drupal.org/list-changes/drupal for a detailed list.
+- Numerous bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.0, 2011-01-05
 ----------------------
@@ -208,7 +341,7 @@ Drupal 7.0, 2011-01-05
 - Improved time zone support:
     * Drupal now uses PHP's time zone database when rendering dates in local
       time. Site-wide and user-configured time zone offsets have been converted
-      to time zone names, e.g. Africa/Abidjan.
+      to time zone names; for example, Africa/Abidjan.
     * In some cases the upgrade and install scripts do not choose the preferred
       site default time zone. The automatically-selected time zone can be
       corrected at admin/config/regional/settings.
@@ -266,7 +399,7 @@ Drupal 7.0, 2011-01-05
       preserved but renamed to file_unmanaged_*().
     * Rewrote file handling to use PHP stream wrappers to enable support for
       both public and private files and to support pluggable storage mechanisms
-      and access to remote resources (e.g. S3 storage or Flickr photos).
+      and access to remote resources (for example, S3 storage or Flickr photos).
     * The mime_extension_mapping variable has been removed. Modules that need to
       alter the default MIME type extension mappings should implement
       hook_file_mimetype_mapping_alter().
@@ -683,7 +816,7 @@ Drupal 4.7.0, 2006-05-01
 - Added support for PHP5's 'mysqli' extension.
 - Search module:
     * Made indexer smarter and more robust.
-    * Added advanced search operators (e.g., phrase, node type, etc.).
+    * Added advanced search operators (phrase, node type, etc.).
     * Added customizable result ranking.
 - PostgreSQL support:
     * Removed dependency on PL/pgSQL procedural language.

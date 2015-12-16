@@ -137,6 +137,7 @@ class EntityAutocompleteElementFormTest extends EntityUnitTestBase implements Fo
     $form['single_autocreate_no_validate'] = array(
       '#type' => 'entity_autocomplete',
       '#target_type' => 'entity_test',
+      '#validate_reference' => FALSE,
       '#autocreate' => array(
         'bundle' => 'entity_test',
       ),

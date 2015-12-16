@@ -63,6 +63,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['testitem'] = array('label' => 'Test item');
     $expected['mapping']['testlist'] = array('label' => 'Test list');
     $expected['type'] = 'config_schema_test.someschema';
@@ -106,6 +107,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'label' => 'Language code',
       'type' => 'string',
     );
+    $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['type'] = 'system.maintenance';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for system.maintenance');
@@ -120,6 +122,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'type' => 'string',
       'label' => 'Language code',
     );
+    $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['label'] = array(
       'label' =>  'Label',
       'type' => 'label',
@@ -179,6 +182,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
     $expected['mapping']['third_party_settings']['sequence']['type'] = '[%parent.%parent.%type].third_party.[%key]';
+    $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['type'] = 'image.style.*';
 
     $this->assertEqual($definition, $expected);
@@ -231,6 +235,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';
     $expected['mapping']['testdescription']['type'] = 'text';
@@ -386,7 +391,9 @@ class ConfigSchemaTest extends KernelTestBase {
     $extension_path = drupal_get_path('module', 'config_schema_test');
     $install_storage = new FileStorage($extension_path . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY);
     $original_data = $install_storage->read('config_schema_test.ignore');
-    $this->assertIdentical($this->config('config_schema_test.ignore')->get(), $original_data);
+    $installed_data = $this->config('config_schema_test.ignore')->get();
+    unset($installed_data['_core']);
+    $this->assertIdentical($installed_data, $original_data);
   }
 
   /**
@@ -401,6 +408,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';
     $expected['mapping']['testdescription']['type'] = 'text';

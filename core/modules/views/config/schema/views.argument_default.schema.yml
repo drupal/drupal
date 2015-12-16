@@ -8,14 +8,6 @@ views.argument_default.fixed:
       type: string
       label: 'Fixed value'
 
-views.argument_default.php:
-  type: mapping
-  label: 'PHP Code'
-  mapping:
-    code:
-      type: string
-      label: 'PHP contextual filter code'
-
 views.argument_default.raw:
   type: mapping
   label: 'Raw value from URL'

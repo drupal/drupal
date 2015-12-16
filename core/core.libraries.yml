@@ -24,10 +24,10 @@ classList:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
-  version: "4.5.3"
+  version: "4.5.5"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor-dev/blob/4.5.3/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor-dev/blob/4.5.5/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -145,6 +145,7 @@ drupal.date:
   dependencies:
     - core/drupal
     - core/modernizr
+    - core/jquery.once
     - core/jquery.ui.datepicker
 
 drupal.debounce:
@@ -259,7 +260,6 @@ drupal.tabledrag:
     misc/tabledrag.js: { weight: -1 }
   dependencies:
     - core/jquery
-    - core/modernizr
     - core/drupal
     - core/drupalSettings
     - core/jquery.once

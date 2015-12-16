@@ -26,11 +26,13 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   The plugin configuration array, i.e. an array with the following keys:
    *   - data_definition: The data definition object, i.e. an instance of
    *     \Drupal\Core\TypedData\DataDefinitionInterface.
-   *   - name: (optional) If a property or list item is to be created, the name
-   *     of the property or the delta of the list item.
-   *   - parent: (optional) If a property or list item is to be created, the
-   *     parent typed data object implementing either the ListInterface or the
-   *     ComplexDataInterface.
+   *   - name: The name of the property or the delta of the list item if a
+   *     property or list item is to be created. Otherwise, this should be set
+   *     to NULL, but the key must be specified.
+   *   - parent: The parent typed data object implementing either the
+   *     ListInterface or the ComplexDataInterface if a property or list item is
+   *     to be created. Otherwise, this should be set to NULL, but the key must
+   *     be specified.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The instantiated typed data object.
@@ -78,7 +80,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    * class used by a data type is known, this method allows the creation of data
    * definitions for any given data type.
    *
-   * E.g., if a definition for a map is to be created, the following code
+   * For example, if a definition for a map is to be created, the following code
    * could be used instead of calling this method with the argument 'map':
    * @code
    *   $map_definition = \Drupal\Core\TypedData\MapDataDefinition::create();
@@ -122,12 +124,12 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   - value: The value to set. If set, it has to match one of the supported
    *     data type formats as documented by the data type classes.
    *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
+   *
    * @throws \InvalidArgumentException
    *   If the given property is not known, or the passed object does not
    *   implement the ListInterface or the ComplexDataInterface.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The new property instance.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
    */
@@ -137,9 +139,10 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    * Get a typed data instance for a property of a given typed data object.
    *
    * This method will use prototyping for fast and efficient instantiation of
-   * many property objects with the same property path; e.g.,
+   * many property objects with the same property path; for example,
    * when multiple comments are used comment_body.0.value needs to be
    * instantiated very often.
+   *
    * Prototyping is done by the root object's data type and the given
    * property path, i.e. all property instances having the same property path
    * and inheriting from the same data type are prototyped.
@@ -153,12 +156,12 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type formats as documented by the data type classes.
    *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
+   *
    * @throws \InvalidArgumentException
    *   If the given property is not known, or the passed object does not
    *   implement the ListInterface or the ComplexDataInterface.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The new property instance.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
@@ -203,9 +206,10 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    * Gets default constraints for the given data definition.
    *
    * This generates default constraint definitions based on the data definition;
-   * e.g. a NotNull constraint is generated if the data is defined as required.
-   * Besides that any constraints defined for the data type, i.e. below the
-   * 'constraint' key of the type's plugin definition, are taken into account.
+   * for example, a NotNull constraint is generated if the data is defined as
+   * required. Besides that, any constraints defined for the data type (that is,
+   * below the 'constraint' key of the type's plugin definition) are taken into
+   * account.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   A data definition.
@@ -222,12 +226,12 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *
    * The canonical representation is typically used when data is passed on to
    * other code components. In many use cases, the TypedData object is mostly
-   * unified adapter wrapping a primary value (e.g. a string, an entity...)
-   * which is the canonical representation that consuming code like constraint
+   * unified adapter wrapping a primary value (a string, an entity, etc.) which
+   * is the canonical representation that consuming code like constraint
    * validators are really interested in. For some APIs, though, the domain
-   * object (e.g. Field API's FieldItem and FieldItemList) directly implements
-   * TypedDataInterface, and the canonical representation is thus the data
-   * object itself.
+   * object (for example, Field API's FieldItem and FieldItemList) directly
+   * implements TypedDataInterface, and the canonical representation is thus the
+   * data object itself.
    *
    * When a TypedData object gets validated, for example, its canonical
    * representation is passed on to constraint validators, which thus receive

@@ -7,7 +7,7 @@
 
 namespace Drupal\locale;
 
-use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Config\ExtensionInstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 
@@ -66,8 +66,8 @@ class LocaleDefaultConfigStorage {
     $this->configStorage = $config_storage;
     $this->languageManager = $language_manager;
 
-    $this->requiredInstallStorage = new InstallStorage();
-    $this->optionalInstallStorage = new InstallStorage(InstallStorage::CONFIG_OPTIONAL_DIRECTORY);
+    $this->requiredInstallStorage = new ExtensionInstallStorage($this->configStorage);
+    $this->optionalInstallStorage = new ExtensionInstallStorage($this->configStorage, ExtensionInstallStorage::CONFIG_OPTIONAL_DIRECTORY);
   }
 
   /**

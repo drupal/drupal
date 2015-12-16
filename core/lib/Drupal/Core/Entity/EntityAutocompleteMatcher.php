@@ -45,12 +45,12 @@ class EntityAutocompleteMatcher {
    * @param string $string
    *   (optional) The label of the entity to query by.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Thrown when the current user doesn't have access to the specifies entity.
-   *
    * @return array
    *   An array of matched entity labels, in the format required by the AJAX
    *   autocomplete API (e.g. array('value' => $value, 'label' => $label)).
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   Thrown when the current user doesn't have access to the specified entity.
    *
    * @see \Drupal\system\Controller\EntityAutocompleteController
    */

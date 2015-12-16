@@ -53,8 +53,17 @@ function field_ui_help($route_name, RouteMatchInterface $route_match) {
 function field_ui_theme() {
   return array(
     'field_ui_table' => array(
-      'render element' => 'elements',
-      'function' => 'theme_field_ui_table',
+      'variables' => array(
+        'header' => NULL,
+        'rows' => NULL,
+        'footer' => NULL,
+        'attributes' => array(),
+        'caption' => NULL,
+        'colgroups' => array(),
+        'sticky' => FALSE,
+        'responsive' => TRUE,
+        'empty' => '',
+      ),
     ),
   );
 }
@@ -209,84 +218,17 @@ function field_ui_entity_form_mode_delete(EntityFormModeInterface $form_mode) {
 }
 
 /**
- * Returns HTML for Field UI overview tables.
+ * Prepares variables for field UI overview table templates.
  *
- * @param $variables
+ * Default template: field-ui-table.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - elements: An associative array containing a Form API structure to be
  *     rendered as a table.
- *
- * @ingroup themeable
  */
-function theme_field_ui_table($variables) {
-  $elements = $variables['elements'];
-  $table = array('#type' => 'table');
-
-  // Add table headers and attributes.
-  foreach (array('#header', '#attributes') as $key) {
-    if (isset($elements[$key])) {
-      $table[$key] = $elements[$key];
-    }
-  }
-
-  // Determine the colspan to use for region rows, by checking the number of
-  // columns in the headers.
-  $columns_count = 0;
-  foreach ($table['#header'] as $header) {
-    $columns_count += (is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
-  }
-
-  // Render rows, region by region.
-  foreach ($elements['#regions'] as $region_name => $region) {
-    $region_name_class = Html::getClass($region_name);
-
-    // Add region rows.
-    if (isset($region['title']) && empty($region['invisible'])) {
-      $table['#rows'][] = array(
-        'class' => array('region-title', 'region-' . $region_name_class . '-title'),
-        'no_striping' => TRUE,
-        'data' => array(
-          array('data' => $region['title'], 'colspan' => $columns_count),
-        ),
-      );
-    }
-    if (isset($region['message'])) {
-      $class = (empty($region['rows_order']) ? 'region-empty' : 'region-populated');
-      $table['#rows'][] = array(
-        'class' => array('region-message', 'region-' . $region_name_class . '-message', $class),
-        'no_striping' => TRUE,
-        'data' => array(
-          array('data' => $region['message'], 'colspan' => $columns_count),
-        ),
-      );
-    }
-
-    // Add form rows, in the order determined at pre-render time.
-    foreach ($region['rows_order'] as $name) {
-      $element = $elements[$name];
-
-      $row = array('data' => array());
-      if (isset($element['#attributes'])) {
-        $row += $element['#attributes'];
-      }
-
-      // Render children as table cells.
-      foreach (Element::children($element) as $cell_key) {
-        $child = &$element[$cell_key];
-        // Do not render a cell for children of #type 'value'.
-        if (!(isset($child['#type']) && $child['#type'] == 'value')) {
-          $cell = array('data' => drupal_render($child));
-          if (isset($child['#cell_attributes'])) {
-            $cell += $child['#cell_attributes'];
-          }
-          $row['data'][] = $cell;
-        }
-      }
-      $table['#rows'][] = $row;
-    }
-  }
-
-  return drupal_render($table);
+function template_preprocess_field_ui_table(&$variables) {
+  template_preprocess_table($variables);
 }
 
 /**

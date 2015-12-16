@@ -1,0 +1,39 @@
+.ckeditor-dialog-loading {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.ckeditor-dialog-loading-link {
+  border-radius: 0 0 5px 5px;
+  border: 1px solid #B6B6B6;
+  border-top: none;
+  background: white;
+  padding: 3px 10px;
+  box-shadow: 0 0 10px -3px #000;
+  display: inline-block;
+  font-size: 14px;
+  position: relative;
+  top: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/**
+ * Adjust the style of in-place editing CKEditor instances.
+ */
+.quickedit-toolgroup.wysiwyg-main .cke_chrome,
+.quickedit-toolgroup.wysiwyg-main .cke_inner,
+.quickedit-toolgroup.wysiwyg-main .cke_top {
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  border-left: none;
+  box-shadow: none;
+}

@@ -7,8 +7,11 @@
 
 namespace Drupal\user\Plugin\migrate\destination;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
@@ -50,11 +53,13 @@ class EntityUser extends EntityContentBase {
    *   The migrate plugin manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   *   The field type plugin manager service.
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   The password service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, PasswordInterface $password) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, PasswordInterface $password) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager, $field_type_manager);
     if (isset($configuration['md5_passwords'])) {
       $this->password = $password;
     }
@@ -73,6 +78,7 @@ class EntityUser extends EntityContentBase {
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
       $container->get('entity.manager'),
+      $container->get('plugin.manager.field.field_type'),
       $container->get('password')
     );
   }
@@ -90,12 +96,40 @@ class EntityUser extends EntityContentBase {
         throw new MigrateException('Password service has been altered by another module, aborting.');
       }
     }
+    // Do not overwrite the root account password.
+    if ($row->getDestinationProperty('uid') == 1) {
+      $row->removeDestinationProperty('pass');
+    }
     $ids = parent::import($row, $old_destination_id_values);
     if ($this->password) {
       $this->password->disableMd5Prefixing();
     }
 
     return $ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function processStubRow(Row $row) {
+    parent::processStubRow($row);
+    // Email address is not defined as required in the base field definition but
+    // is effectively required by the UserMailRequired constraint. This means
+    // that Entity::processStubRow() did not populate it - we do it here.
+    $field_definitions = $this->entityManager
+      ->getFieldDefinitions($this->storage->getEntityTypeId(),
+        $this->getKey('bundle'));
+    $mail = EmailItem::generateSampleValue($field_definitions['mail']);
+    $row->setDestinationProperty('mail', reset($mail));
+
+    // @todo Work-around for https://www.drupal.org/node/2602066.
+    $name = $row->getDestinationProperty('name');
+    if (is_array($name)) {
+      $name = reset($name);
+    }
+    if (Unicode::strlen($name) > USERNAME_MAX_LENGTH) {
+      $row->setDestinationProperty('name', Unicode::substr($name, 0, USERNAME_MAX_LENGTH));
+    }
   }
 
 }

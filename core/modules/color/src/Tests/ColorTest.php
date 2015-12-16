@@ -22,7 +22,7 @@ class ColorTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('color', 'color_test');
+  public static $modules = array('color', 'color_test', 'block');
 
   /**
    * A user with administrative permissions.
@@ -192,6 +192,45 @@ class ColorTest extends WebTestBase {
     // Ensure that the overridden logo is present in Bartik, which is colorable.
     $this->drupalGet('admin/appearance/settings/bartik');
     $this->assertIdentical($GLOBALS['base_url'] . '/' . 'core/misc/druplicon.png', $this->getDrupalSettings()['color']['logo']);
+  }
+
+  /**
+   * Test whether the scheme can be set, viewed anonymously and reset.
+   */
+  function testOverrideAndResetScheme() {
+    $settings_path = 'admin/appearance/settings/bartik';
+    $this->config('system.theme')
+      ->set('default', 'bartik')
+      ->save();
+
+    // Place branding block with site name and slogan into header region.
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
+
+    $this->drupalGet('');
+    $this->assertNoRaw('files/color/bartik-', 'Make sure the color logo is not being used.');
+    $this->assertRaw('bartik/logo.svg', 'Make sure the original bartik logo exists.');
+
+    // Log in and set the color scheme to 'slate'.
+    $this->drupalLogin($this->bigUser);
+    $edit['scheme'] = 'slate';
+    $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
+
+    // Visit the homepage and ensure color changes.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertRaw('files/color/bartik-', 'Make sure the color logo is being used.');
+    $this->assertNoRaw('bartik/logo.svg', 'Make sure the original bartik logo does not exist.');
+
+    // Log in and set the color scheme back to default (delete config).
+    $this->drupalLogin($this->bigUser);
+    $edit['scheme'] = 'default';
+    $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
+
+    // Log out and ensure there is no color and we have the original logo.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertNoRaw('files/color/bartik-', 'Make sure the color logo is not being used.');
+    $this->assertRaw('bartik/logo.svg', 'Make sure the original bartik logo exists.');
   }
 
 }

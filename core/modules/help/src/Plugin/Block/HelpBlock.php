@@ -8,6 +8,7 @@
 namespace Drupal\help\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -88,6 +89,9 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
+   *
+   * @return string
+   *   Help text of the matched route item as HTML.
    */
   protected function getActiveHelp(Request $request) {
     // Do not show on a 403 or 404 page.
@@ -120,7 +124,7 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
   public function getCacheContexts() {
     // The "Help" block must be cached per URL: help is defined for a
     // given path, and does not come with any access restrictions.
-    return array('url');
+    return Cache::mergeContexts(parent::getCacheContexts(), ['url']);
   }
 
 }

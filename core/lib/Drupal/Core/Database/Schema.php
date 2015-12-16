@@ -56,14 +56,14 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
-   * Implements PlaceHolderInterface::uniqueIdentifier().
+   * {@inheritdoc}
    */
   public function uniqueIdentifier() {
     return $this->uniqueIdentifier;
   }
 
   /**
-   * Implements PlaceHolderInterface::nextPlaceholder().
+   * {@inheritdoc}
    */
   public function nextPlaceholder() {
     return $this->placeholder++;

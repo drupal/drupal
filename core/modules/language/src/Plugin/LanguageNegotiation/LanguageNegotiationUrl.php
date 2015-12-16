@@ -101,7 +101,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     $config = $this->config->get('language.negotiation')->get('url');
@@ -121,7 +121,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   }
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processOutbound().
+   * {@inheritdoc}
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     $url_scheme = 'http';
@@ -200,9 +200,9 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $links[$language->getId()] = array(
-        // We need to clone the $url object to avoid using the same one for all links.
-        // When the links are rendered, options are set on the $url object,
-        // so if we use the same one, they would be set for all links.
+        // We need to clone the $url object to avoid using the same one for all
+        // links. When the links are rendered, options are set on the $url
+        // object, so if we use the same one, they would be set for all links.
         'url' => clone $url,
         'title' => $language->getName(),
         'language' => $language,

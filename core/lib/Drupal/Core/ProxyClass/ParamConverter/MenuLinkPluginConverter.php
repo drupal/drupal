@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\ParamConverter\MenuLinkPluginConverter.
+ * Contains \Drupal\Core\ProxyClass\ParamConverter\MenuLinkPluginConverter.
  */
 
 /**

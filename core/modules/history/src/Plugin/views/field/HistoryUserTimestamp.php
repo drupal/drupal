@@ -33,7 +33,7 @@ class HistoryUserTimestamp extends Node {
   }
 
   /**
-   * Overrides \Drupal\node\Plugin\views\field\Node::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

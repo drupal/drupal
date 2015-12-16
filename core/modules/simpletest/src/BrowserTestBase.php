@@ -41,11 +41,6 @@ use Symfony\Component\HttpFoundation\Request;
  * Drupal\Tests\yourmodule\Functional namespace and live in the
  * modules/yourmodule/Tests/Functional directory.
  *
- * All BrowserTestBase tests must have two annotations to ensure process
- * isolation:
- * - @runTestsInSeparateProcesses
- * - @preserveGlobalState disabled
- *
  * @ingroup testing
  *
  * @see \Drupal\simpletest\WebTestBase
@@ -182,6 +177,33 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    */
   protected $customTranslations;
 
+  /*
+   * Mink class for the default driver to use.
+   *
+   * Shoud be a fully qualified class name that implements
+   * Behat\Mink\Driver\DriverInterface.
+   *
+   * Value can be overridden using the environment variable MINK_DRIVER_CLASS.
+   *
+   * @var string.
+   */
+  protected $minkDefaultDriverClass = '\Behat\Mink\Driver\GoutteDriver';
+
+  /*
+   * Mink default driver params.
+   *
+   * If it's an array its contents are used as constructor params when default
+   * Mink driver class is instantiated.
+   *
+   * Can be overridden using the environment variable MINK_DRIVER_ARGS. In this
+   * case that variable should be a JSON array, for example:
+   * '["firefox", null, "http://localhost:4444/wd/hub"]'.
+   *
+   *
+   * @var array
+   */
+  protected $minkDefaultDriverArgs;
+
   /**
    * Mink session manager.
    *
@@ -190,16 +212,65 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   protected $mink;
 
   /**
+   * {@inheritdoc}
+   *
+   * Browser tests are run in separate processes to prevent collisions between
+   * code that may be loaded by tests.
+   */
+  protected $runTestInSeparateProcess = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $preserveGlobalState = FALSE;
+
+  /**
    * Initializes Mink sessions.
    */
   protected function initMink() {
-    $driver = new GoutteDriver();
+    $driver = $this->getDefaultDriverInstance();
     $session = new Session($driver);
     $this->mink = new Mink();
-    $this->mink->registerSession('goutte', $session);
-    $this->mink->setDefaultSessionName('goutte');
+    $this->mink->registerSession('default', $session);
+    $this->mink->setDefaultSessionName('default');
     $this->registerSessions();
     return $session;
+  }
+
+  /**
+   * Gets an instance of the default Mink driver.
+   *
+   * @return Behat\Mink\Driver\DriverInterface
+   *   Instance of default Mink driver.
+   *
+   * @throws \InvalidArgumentException
+   *   When provided default Mink driver class can't be instantiated.
+   */
+  protected function getDefaultDriverInstance() {
+    // Get default driver params from environment if availables.
+    if ($arg_json = getenv('MINK_DRIVER_ARGS')) {
+      $this->minkDefaultDriverArgs = json_decode($arg_json);
+    }
+
+    // Get and check default driver class from environment if availables.
+    if ($minkDriverClass = getenv('MINK_DRIVER_CLASS')) {
+      if (class_exists($minkDriverClass)) {
+        $this->minkDefaultDriverClass = $minkDriverClass;
+      }
+      else {
+        throw new \InvalidArgumentException("Can't instantiate provided $minkDriverClass class by environment as default driver class.");
+      }
+    }
+
+    if (is_array($this->minkDefaultDriverArgs)) {
+       // Use ReflectionClass to instantiate class with received params.
+      $reflector = new ReflectionClass($this->minkDefaultDriverClass);
+      $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
+    }
+    else {
+      $driver =  new $this->minkDefaultDriverClass();
+    }
+    return $driver;
   }
 
   /**
@@ -228,7 +299,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // coverage against.
     $base_url = getenv('SIMPLETEST_BASE_URL');
     if (!$base_url) {
-      $this->markTestSkipped(
+      throw new \Exception(
         'You must provide a SIMPLETEST_BASE_URL environment variable to run some PHPUnit based functional tests.'
       );
     }

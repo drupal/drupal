@@ -150,11 +150,16 @@ class PathProcessorTest extends UnitTestCase {
     $current_user = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')
       ->getMock();
 
+    // Create a config event subscriber stub.
+    $config_subscriber = $this->getMockBuilder('Drupal\language\EventSubscriber\ConfigSubscriber')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     // Create the processors.
     $alias_processor = new PathProcessorAlias($alias_manager);
     $decode_processor = new PathProcessorDecode();
     $front_processor = new PathProcessorFront($config_factory_stub);
-    $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languageManager, $negotiator, $current_user);
+    $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languageManager, $negotiator, $current_user, $config_subscriber);
 
     // First, test the processor manager with the processors in the incorrect
     // order. The alias processor will run before the language processor, meaning

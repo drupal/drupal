@@ -26,7 +26,7 @@ class MemoryCounterBackend extends MemoryBackend {
   protected $counter = array();
 
   /**
-   * Implements \Drupal\Core\Cache\CacheBackendInterface::get().
+   * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
     $this->increaseCounter(__FUNCTION__, $cid);
@@ -34,7 +34,7 @@ class MemoryCounterBackend extends MemoryBackend {
   }
 
   /**
-   * Implements \Drupal\Core\Cache\CacheBackendInterface::set().
+   * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     $this->increaseCounter(__FUNCTION__, $cid);
@@ -42,7 +42,7 @@ class MemoryCounterBackend extends MemoryBackend {
   }
 
   /**
-   * Implements \Drupal\Core\Cache\CacheBackendInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($cid) {
     $this->increaseCounter(__FUNCTION__, $cid);

@@ -136,6 +136,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     $this->skipCount = !empty($configuration['skip_count']);
     $this->cacheKey = !empty($configuration['cache_key']) ? !empty($configuration['cache_key']) : NULL;
     $this->trackChanges = !empty($configuration['track_changes']) ? $configuration['track_changes'] : FALSE;
+    $this->idMap = $this->migration->getIdMap();
 
     // Pull out the current highwater mark if we have a highwater property.
     if ($this->highWaterProperty = $this->migration->get('highWaterProperty')) {
@@ -256,7 +257,6 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * source records.
    */
   public function rewind() {
-    $this->idMap = $this->migration->getIdMap();
     $this->getIterator()->rewind();
     $this->next();
   }

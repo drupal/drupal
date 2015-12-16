@@ -235,7 +235,9 @@ class Tables implements TablesInterface {
    * Join entity table if necessary and return the alias for it.
    *
    * @param string $property
+   *
    * @return string
+   *
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
   protected function ensureEntityTable($index_prefix, $property, $type, $langcode, $base_table, $id_field, $entity_tables) {

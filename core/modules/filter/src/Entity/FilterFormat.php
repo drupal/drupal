@@ -338,19 +338,19 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
                   continue;
                 }
                 // The new filter allows less attributes (all -> list or none).
-                else if (!is_array($current_attributes) && $current_attributes == TRUE && ($new_attributes == FALSE || is_array($new_attributes))) {
+                elseif (!is_array($current_attributes) && $current_attributes == TRUE && ($new_attributes == FALSE || is_array($new_attributes))) {
                   $intersection[$tag] = $new_attributes;
                 }
                 // The new filter allows less attributes (list -> none).
-                else if (is_array($current_attributes) && $new_attributes == FALSE) {
+                elseif (is_array($current_attributes) && $new_attributes == FALSE) {
                   $intersection[$tag] = $new_attributes;
                 }
                 // The new filter allows more attributes; retain current.
-                else if (is_array($current_attributes) && $new_attributes == TRUE) {
+                elseif (is_array($current_attributes) && $new_attributes == TRUE) {
                   continue;
                 }
                 // The new filter allows the same attributes; retain current.
-                else if ($current_attributes == $new_attributes) {
+                elseif ($current_attributes == $new_attributes) {
                   continue;
                 }
                 // Both list an array of attribute values; do an intersection,

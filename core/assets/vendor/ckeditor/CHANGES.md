@@ -1,6 +1,57 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.5.5
+
+Fixed Issues:
+
+* [#13887](https://dev.ckeditor.com/ticket/13887): Fixed: [Link](http://ckeditor.com/addon/link) plugin alters the `target` attribute value. Thanks to [SamZiemer](https://github.com/SamZiemer)!
+* [#12189](http://dev.ckeditor.com/ticket/12189): Fixed: The [Link](http://ckeditor.com/addon/link) plugin dialog does not display the subject of email links if the subject parameter is not lowercase.
+* [#9192](http://dev.ckeditor.com/ticket/9192): Fixed: An `undefined` string is appended to an email address added with the [Link](http://ckeditor.com/addon/link) plugin if subject and email body are empty and [`config.emailProtection`](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-emailProtection) is set to `encode`.
+* [#13790](https://dev.ckeditor.com/ticket/13790): Fixed: It is not possible to destroy the editor `<iframe>` after the editor was detached from DOM. Thanks to [Stefan Rijnhart](https://github.com/StefanRijnhart)!
+* [#13803](https://dev.ckeditor.com/ticket/13803): Fixed: The editor cannot be destroyed before being fully initialized. Thanks to [Cyril Fluck](https://github.com/cyril-sf)!
+* [#13867](http://dev.ckeditor.com/ticket/13867): Fixed: CKEditor does not work when the `classList` polyfill is used.
+* [#13885](http://dev.ckeditor.com/ticket/13885): Fixed: [Enhanced Image](http://ckeditor.com/addon/image2) requires the [Link](http://ckeditor.com/addon/link) plugin to link an image.
+* [#13883](http://dev.ckeditor.com/ticket/13883): Fixed: Copying a table using the context menu strips off styles.
+* [#13872](http://dev.ckeditor.com/ticket/13872): Fixed: Cutting is possible in the [read-only](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-readOnly) mode.
+* [#12848](http://dev.ckeditor.com/ticket/12848): [Blink] Fixed: Opening the [Find and Replace](http://ckeditor.com/addon/find) dialog window in the [read-only](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-property-readOnly) mode throws an exception.
+* [#13879](http://dev.ckeditor.com/ticket/13879): Fixed: It is not possible to prevent the [`editor.drop`](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-drop) event.
+* [#13361](http://dev.ckeditor.com/ticket/13361): Fixed: Skin images fail when the site path includes parentheses because the `background-image` path needs single quotes around the URL value.
+* [#13771](http://dev.ckeditor.com/ticket/13771): Fixed: The `contents.css` style is not used if the [IFrame Editing Area](http://ckeditor.com/addon/wysiwygarea) plugin is missing.
+* [#13782](http://dev.ckeditor.com/ticket/13782): Fixed: Unclear log messages.
+* [#13919](http://dev.ckeditor.com/ticket/13919): [Edge] Fixed: Browser window crashes when accessing the `isContentEditable` property of an `<input>` DOM element.
+
+Other Changes:
+
+* [#13859](http://dev.ckeditor.com/ticket/13859): Test cases created with `benter.tools.createTestsForEditors` will also receive editor bot as a second parameter.
+
+## CKEditor 4.5.4
+
+New Features:
+
+* [#13632](http://dev.ckeditor.com/ticket/13632): Introduce error logging mechanism.
+* [#13730](http://dev.ckeditor.com/ticket/13730): Switch to the new error logging mechanism.
+
+Fixed Issues:
+
+* [#9856](http://dev.ckeditor.com/ticket/9856): Fixed: Cannot use the native context menu together with the [Div Editing Area](http://ckeditor.com/addon/divarea) plugin. Thanks to [Mark Wade](https://github.com/mark-wade)!
+* [#12733](http://dev.ckeditor.com/ticket/12733): [IE9+] Fixed: Radio button `onChange` does not work. Thanks to [Iliya Kostadinov](https://github.com/iliyakostadinov)!
+* [#13142](http://dev.ckeditor.com/ticket/13142): [Edge] Fixed: *Ctrl+A* and then *Backspace* result in an empty `<div>` element.
+* [#13599](http://dev.ckeditor.com/ticket/13599): Fixed: Cross-editor drag and drop of an inline widget results in error/artifacts.
+* [#13640](http://dev.ckeditor.com/ticket/13640): [IE] Fixed: Dropping a widget outside the `<body>` element is not handled correctly.
+* [#13533](http://dev.ckeditor.com/ticket/13533): Fixed: No progress during upload.
+* [#13680](http://dev.ckeditor.com/ticket/13680): Fixed: The parser should allow the `<h1-6>` element to be a child of the `<summary>` element.
+* [#11724](http://dev.ckeditor.com/ticket/11724): [Touch devices] Fixed: Drop-downs often hide right after opening them.
+* [#13690](http://dev.ckeditor.com/ticket/13690): Fixed: Copying content from IE to Chrome adds an extra paragraph.
+* [#13284](http://dev.ckeditor.com/ticket/13284): Fixed: Cannot drag and drop a widget if the text caret is placed just after the widget instance.
+* [#13516](http://dev.ckeditor.com/ticket/13516): Fixed: CKEditor removes empty HTML5 anchors without the `name` attribute.
+* [#13765](http://dev.ckeditor.com/ticket/13765): [Safari 9] Fixed: Problems with rendering samples.
+
+Other Changes:
+
+* [#11725](http://dev.ckeditor.com/ticket/11725): Marked [`CKEDITOR.env.mobile`](http://docs.ckeditor.com/#!/api/CKEDITOR.env-property-mobile) as deprecated. The reason is that it is no longer clear what "mobile" means.
+* [#13737](http://dev.ckeditor.com/ticket/13737): Upgraded [Bender.js](https://github.com/benderjs/benderjs) to 0.4.1.
+
 ## CKEditor 4.5.3
 
 New Features:

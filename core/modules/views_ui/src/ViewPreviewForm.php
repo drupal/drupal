@@ -94,6 +94,7 @@ class ViewPreviewForm extends ViewFormBase {
           'event' => 'click',
           'progress' => array('type' => 'fullscreen'),
           'method' => 'replaceWith',
+          'disable-refocus' => TRUE,
         ),
       ),
     );

@@ -112,7 +112,7 @@ class Sql extends QueryPluginBase {
   protected $noDistinct;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -805,9 +805,9 @@ class Sql extends QueryPluginBase {
    *   complex options, it is an array. The meaning of each element in the array is
    *   dependent on the $operator.
    * @param $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more complex
-   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
-   *   = otherwise. If $field is a string you have to use 'formula' here.
+   *   The comparison operator, such as =, <, or >=. It also accepts more
+   *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
+   *   If $field is a string you have to use 'formula' here.
    *
    * The $field, $value and $operator arguments can also be passed in with a
    * single DatabaseCondition object, like this:
@@ -1687,7 +1687,7 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::getDateField().
+   * {@inheritdoc}
    */
   public function getDateField($field) {
     $db_type = Database::getConnection()->databaseType();
@@ -1722,7 +1722,7 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::setupTimezone().
+   * {@inheritdoc}
    */
   public function setupTimezone() {
     $timezone = drupal_get_user_timezone();

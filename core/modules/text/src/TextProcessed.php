@@ -27,7 +27,7 @@ class TextProcessed extends TypedData {
   protected $processed = NULL;
 
   /**
-   * Overrides TypedData::__construct().
+   * {@inheritdoc}
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
@@ -38,7 +38,7 @@ class TextProcessed extends TypedData {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
+   * {@inheritdoc}
    */
   public function getValue() {
     if ($this->processed !== NULL) {
@@ -59,7 +59,7 @@ class TextProcessed extends TypedData {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
+   * {@inheritdoc}
    */
   public function setValue($value, $notify = TRUE) {
     $this->processed = $value;

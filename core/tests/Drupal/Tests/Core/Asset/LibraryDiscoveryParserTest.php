@@ -10,20 +10,6 @@ namespace Drupal\Tests\Core\Asset;
 use Drupal\Core\Asset\LibraryDiscoveryParser;
 use Drupal\Tests\UnitTestCase;
 
-if (!defined('CSS_AGGREGATE_DEFAULT')) {
-  define('CSS_AGGREGATE_DEFAULT', 0);
-  define('CSS_AGGREGATE_THEME', 100);
-  define('CSS_BASE', -200);
-  define('CSS_LAYOUT', -100);
-  define('CSS_COMPONENT', 0);
-  define('CSS_STATE', 100);
-  define('CSS_THEME', 200);
-  define('JS_SETTING', -200);
-  define('JS_LIBRARY', -100);
-  define('JS_DEFAULT', 0);
-  define('JS_THEME', 100);
-}
-
 /**
  * @coversDefaultClass \Drupal\Core\Asset\LibraryDiscoveryParser
  * @group Asset
@@ -574,4 +560,38 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
     $this->validUris[$source] = $valid;
   }
 
+}
+
+if (!defined('CSS_AGGREGATE_DEFAULT')) {
+  define('CSS_AGGREGATE_DEFAULT', 0);
+}
+if (!defined('CSS_AGGREGATE_THEME')) {
+  define('CSS_AGGREGATE_THEME', 100);
+}
+if (!defined('CSS_BASE')) {
+  define('CSS_BASE', -200);
+}
+if (!defined('CSS_LAYOUT')) {
+  define('CSS_LAYOUT', -100);
+}
+if (!defined('CSS_COMPONENT')) {
+  define('CSS_COMPONENT', 0);
+}
+if (!defined('CSS_STATE')) {
+  define('CSS_STATE', 100);
+}
+if (!defined('CSS_THEME')) {
+  define('CSS_THEME', 200);
+}
+if (!defined('JS_SETTING')) {
+  define('JS_SETTING', -200);
+}
+if (!defined('JS_LIBRARY')) {
+  define('JS_LIBRARY', -100);
+}
+if (!defined('JS_DEFAULT')) {
+  define('JS_DEFAULT', 0);
+}
+if (!defined('JS_THEME')) {
+  define('JS_THEME', 100);
 }

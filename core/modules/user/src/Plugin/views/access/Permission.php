@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Route;
 class Permission extends AccessPluginBase implements CacheableDependencyInterface {
 
   /**
-   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   * {@inheritdoc}
    */
   protected $usesOptions = TRUE;
 

@@ -11,9 +11,6 @@ drupal.editor:
   version: VERSION
   js:
     js/editor.js: {}
-  css:
-    component:
-      css/editor.css: {}
   dependencies:
     - core/jquery
     - core/drupal

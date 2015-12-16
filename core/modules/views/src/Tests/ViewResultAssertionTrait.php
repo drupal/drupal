@@ -130,7 +130,7 @@ trait ViewResultAssertionTrait {
 
     $this->verbose('<pre style="white-space: pre-wrap;">'
       . "\n\nQuery:\n" . $view->build_info['query']
-      . "\n\nQuery arguments:\n" . var_export($view->build_info['query_args'], TRUE)
+      . "\n\nQuery arguments:\n" . var_export($view->build_info['query']->getArguments(), TRUE)
       . "\n\nActual result:\n" . var_export($result, TRUE)
       . "\n\nExpected result:\n" . var_export($expected_result, TRUE));
 

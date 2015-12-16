@@ -362,7 +362,7 @@ if (window.jQuery) {
    * See the documentation of the server-side t() function for further details.
    *
    * @param {string} str
-   *   A string containing the English string to translate.
+   *   A string containing the English text to translate.
    * @param {Object.<string, string>} [args]
    *   An object of replacements pairs to make after translation. Incidences
    *   of any key in this array are replaced with the corresponding value.

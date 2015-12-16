@@ -28,7 +28,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ValidReference" = {}, "ReferenceAccess" = {}}
+ *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
  * )
  */
 class FileItem extends EntityReferenceItem {
@@ -51,7 +51,7 @@ class FileItem extends EntityReferenceItem {
   public static function defaultFieldSettings() {
     return array(
       'file_extensions' => 'txt',
-      'file_directory' => '',
+      'file_directory' => '[date:custom:Y]-[date:custom:m]',
       'max_filesize' => '',
       'description_field' => 0,
     ) + parent::defaultFieldSettings();
@@ -267,7 +267,22 @@ class FileItem extends EntityReferenceItem {
    * @see token_replace()
    */
   public function getUploadLocation($data = array()) {
-    $settings = $this->getSettings();
+    return static::doGetUploadLocation($this->getSettings(), $data);
+  }
+
+  /**
+   * Determines the URI for a file field.
+   *
+   * @param array $settings
+   *   The array of field settings.
+   * @param array $data
+   *   An array of token objects to pass to token_replace().
+   *
+   * @return string
+   *   An unsanitized file directory URI with tokens replaced. The result of
+   *   the token replacement is then converted to plain text and returned.
+   */
+  protected static function doGetUploadLocation(array $settings, $data = []) {
     $destination = trim($settings['file_directory'], '/');
 
     // Replace tokens. As the tokens might contain HTML we convert it to plain
@@ -312,7 +327,7 @@ class FileItem extends EntityReferenceItem {
     $settings = $field_definition->getSettings();
 
     // Prepare destination.
-    $dirname = $settings['uri_scheme'] . '://' . $settings['file_directory'];
+    $dirname = static::doGetUploadLocation($settings);
     file_prepare_directory($dirname, FILE_CREATE_DIRECTORY);
 
     // Generate a file entity.

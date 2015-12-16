@@ -23,6 +23,9 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  */
 class CurrentUser extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getArgument() {
     return \Drupal::currentUser()->id();
   }

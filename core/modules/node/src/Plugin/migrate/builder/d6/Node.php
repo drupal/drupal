@@ -41,9 +41,17 @@ class Node extends CckBuilder {
       $node_type = $row->getSourceProperty('type');
       $values = $template;
       $values['id'] = $template['id'] . '__' . $node_type;
+
       $label = $template['label'];
       $values['label'] = $this->t("@label (@type)", ['@label' => $label, '@type' => $node_type]);
       $values['source']['node_type'] = $node_type;
+
+      // If this migration is based on the d6_node_revision template, it should
+      // explicitly depend on the corresponding d6_node variant.
+      if ($template['id'] == 'd6_node_revision') {
+        $values['migration_dependencies']['required'][] = 'd6_node__' . $node_type;
+      }
+
       $migration = Migration::create($values);
 
       if (isset($fields[$node_type])) {

@@ -102,7 +102,7 @@ function shortcut_set_switch_access($account = NULL) {
   if (!isset($account)) {
     return AccessResult::allowed()->cachePerPermissions();
   }
-  else if ($user->id() == $account->id()) {
+  elseif ($user->id() == $account->id()) {
     return AccessResult::allowed()->cachePerPermissions()->cachePerUser();
   }
 

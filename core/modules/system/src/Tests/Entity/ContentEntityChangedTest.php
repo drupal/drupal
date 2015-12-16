@@ -40,7 +40,7 @@ class ContentEntityChangedTest extends EntityUnitTestBase {
   protected $mulRevChangedStorage;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();

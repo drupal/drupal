@@ -20,7 +20,18 @@ process:
       0: comment_no_subject
   bundle: node_type
   'default_value/0/status': comment
-  'settings/default_mode': comment_default_mode
+  'settings/default_mode':
+    plugin: static_map
+    source: comment_default_mode
+    map:
+      # COMMENT_MODE_FLAT_COLLAPSED --> COMMENT_MODE_FLAT
+      1: 0
+      # COMMENT_MODE_FLAT_EXPANDED --> COMMENT_MODE_FLAT
+      2: 0
+      # COMMENT_MODE_THREADED_COLLAPSED --> COMMENT_MODE_THREADED
+      3: 1
+      # COMMENT_MODE_THREADED_EXPANDED --> COMMENT_MODE_THREADED
+      4: 1
   'settings/per_page': comment_default_per_page
   'settings/anonymous': comment_anonymous
   'settings/form_location': comment_form_location

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\field\Unit\Plugin\migrate\source\d6\FieldInstancePerViewModeTest.
+ * Contains \Drupal\Tests\field\Unit\Plugin\migrate\source\d6\FieldInstancePerFormDisplayTest.
  */
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\source\d6;

@@ -35,7 +35,7 @@ class ArgumentDateTest extends ViewKernelTestBase {
   );
 
   /**
-   * Overrides \Drupal\views\Tests\ViewKernelTestBase::viewsData().
+   * {@inheritdoc}
    */
   public function viewsData() {
     $data = parent::viewsData();

@@ -46,6 +46,11 @@ abstract class SecuredRedirectResponse extends RedirectResponse {
   protected function fromResponse(RedirectResponse $response) {
     $this->setProtocolVersion($response->getProtocolVersion());
     $this->setCharset($response->getCharset());
+    // Cookies are separate from other headers and have to be copied over
+    // directly.
+    foreach ($response->headers->getCookies() as $cookie) {
+      $this->headers->setCookie($cookie);
+    }
   }
 
   /**

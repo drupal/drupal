@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Routing\RouteBuilder.
+ * Contains \Drupal\Core\ProxyClass\Routing\RouteBuilder.
  */
 
 /**

@@ -72,9 +72,24 @@ abstract class Entity implements EntityInterface {
    * Gets the entity manager.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
+   *
+   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   *   Use \Drupal::entityTypeManager() instead in most cases. If the needed
+   *   method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
+   *   deprecated \Drupal\Core\Entity\EntityManager to find the
+   *   correct interface or service.
    */
   protected function entityManager() {
     return \Drupal::entityManager();
+  }
+
+  /**
+   * Gets the entity type manager.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected function entityTypeManager() {
+    return \Drupal::entityTypeManager();
   }
 
   /**
@@ -158,8 +173,15 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function urlInfo($rel = 'canonical', array $options = []) {
+    return $this->toUrl($rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toUrl($rel = 'canonical', array $options = []) {
     if ($this->id() === NULL) {
-      throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does have an ID', $this->getEntityTypeId()));
+      throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does not have an ID', $this->getEntityTypeId()));
     }
 
     // The links array might contain URI templates set in annotations.
@@ -237,26 +259,33 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function link($text = NULL, $rel = 'canonical', array $options = []) {
-    if (is_null($text)) {
+    return $this->toLink($text, $rel, $options)->toString();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toLink($text = NULL, $rel = 'canonical', array $options = []) {
+    if (!isset($text)) {
       $text = $this->label();
     }
-    $url = $this->urlInfo($rel);
+    $url = $this->toUrl($rel);
     $options += $url->getOptions();
     $url->setOptions($options);
-    return (new Link($text, $url))->toString();
+    return new Link($text, $url);
   }
 
   /**
    * {@inheritdoc}
    */
   public function url($rel = 'canonical', $options = array()) {
-    // While self::urlInfo() will throw an exception if the entity is new,
+    // While self::toUrl() will throw an exception if the entity has no id,
     // the expected result for a URL is always a string.
-    if ($this->isNew() || !$this->hasLinkTemplate($rel)) {
+    if ($this->id() === NULL || !$this->hasLinkTemplate($rel)) {
       return '';
     }
 
-    $uri = $this->urlInfo($rel);
+    $uri = $this->toUrl($rel);
     $options += $uri->getOptions();
     $uri->setOptions($options);
     return $uri->toString();

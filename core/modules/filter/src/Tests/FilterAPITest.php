@@ -207,6 +207,41 @@ class FilterAPITest extends EntityUnitTestBase {
       array(FilterInterface::TYPE_HTML_RESTRICTOR),
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
     );
+
+    // Test on nonsensical_restricted_html, where the allowed attribute values
+    // contain asterisks, which do not have any meaning, but which we also
+    // cannot prevent because configuration can be modified outside of forms.
+    $nonsensical_restricted_html = \Drupal\filter\Entity\FilterFormat::create(array(
+      'format' => 'nonsensical_restricted_html',
+      'name' => 'Nonsensical Restricted HTML',
+      'filters' => array(
+        'filter_html' => array(
+          'status' => 1,
+          'settings' => array(
+            'allowed_html' => '<a> <b class> <c class="*"> <d class="foo bar-* *">',
+          ),
+        ),
+      )
+    ));
+    $nonsensical_restricted_html->save();
+    $this->assertIdentical(
+      $nonsensical_restricted_html->getHtmlRestrictions(),
+      array(
+        'allowed' => array(
+          'a' => FALSE,
+          'b' => array('class' => TRUE),
+          'c' => array('class' => TRUE),
+          'd' => array('class' => array('foo' => TRUE, 'bar-*' => TRUE)),
+          '*' => array('style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => array('ltr' => TRUE, 'rtl' => TRUE)),
+        ),
+      ),
+      'FilterFormatInterface::getHtmlRestrictions() works as expected for the nonsensical_restricted_html format.'
+    );
+    $this->assertIdentical(
+      $very_restricted_html_format->getFilterTypes(),
+      array(FilterInterface::TYPE_HTML_RESTRICTOR),
+      'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
+    );
   }
 
   /**

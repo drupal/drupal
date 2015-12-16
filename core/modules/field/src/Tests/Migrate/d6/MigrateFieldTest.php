@@ -33,9 +33,9 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     // Text field.
     /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
     $field_storage = FieldStorageConfig::load('node.field_test');
-    $expected = array('max_length' => 255);
-    $this->assertIdentical("text", $field_storage->getType(),  t('Field type is @fieldtype. It should be text.', array('@fieldtype' => $field_storage->getType())));
-    $this->assertIdentical($expected, $field_storage->getSettings(), "Field type text settings are correct");
+    $this->assertIdentical('text_long', $field_storage->getType());
+    // text_long fields do not have settings.
+    $this->assertIdentical([], $field_storage->getSettings());
 
     // Integer field.
     $field_storage = FieldStorageConfig::load('node.field_test_two');

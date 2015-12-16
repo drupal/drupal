@@ -110,10 +110,10 @@
    */
   Drupal.behaviors.filePreviewLinks = {
     attach: function (context) {
-      $(context).find('div.js-form-managed-file .file a, .file-widget .file a').on('click', Drupal.file.openInNewWindow);
+      $(context).find('div.js-form-managed-file .file a').on('click', Drupal.file.openInNewWindow);
     },
     detach: function (context) {
-      $(context).find('div.js-form-managed-file .file a, .file-widget .file a').off('click', Drupal.file.openInNewWindow);
+      $(context).find('div.js-form-managed-file .file a').off('click', Drupal.file.openInNewWindow);
     }
   };
 

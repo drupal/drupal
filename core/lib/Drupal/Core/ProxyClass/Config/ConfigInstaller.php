@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Config\ConfigInstaller.
+ * Contains \Drupal\Core\ProxyClass\Config\ConfigInstaller.
  */
 
 /**

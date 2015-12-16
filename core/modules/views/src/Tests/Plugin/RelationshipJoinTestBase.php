@@ -30,7 +30,7 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
   protected $rootUser;
 
   /**
-   * Overrides \Drupal\views\Tests\ViewKernelTestBase::setUpFixtures().
+   * {@inheritdoc}
    */
   protected function setUpFixtures() {
     $this->installEntitySchema('user');

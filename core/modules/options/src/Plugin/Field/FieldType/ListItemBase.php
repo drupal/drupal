@@ -71,7 +71,9 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * {@inheritdoc}
    */
    public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-     // @todo Implement this once https://www.drupal.org/node/2238085 lands.
+     $allowed_options = options_allowed_values($field_definition->getFieldStorageDefinition());
+     $values['value'] = array_rand($allowed_options);
+     return $values;
    }
 
   /**
@@ -250,7 +252,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * @inheritdoc.
+   * {@inheritdoc}
    */
   public static function storageSettingsToConfigData(array $settings) {
     if (isset($settings['allowed_values'])) {
@@ -260,7 +262,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * @inheritdoc.
+   * {@inheritdoc}
    */
   public static function storageSettingsFromConfigData(array $settings) {
     if (isset($settings['allowed_values'])) {

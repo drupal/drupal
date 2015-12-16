@@ -17,6 +17,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @ContentEntityType(
  *   id = "no_language_entity_test",
  *   label = @Translation("Test entity without language support"),
+ *   handlers = {
+ *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
+ *   },
  *   base_table = "no_language_entity_test",
  *   persistent_cache = FALSE,
  *   entity_keys = {

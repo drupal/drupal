@@ -18,6 +18,7 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\entity_test\Entity\EntityTestUpdate;
 
 /**
  * Tests EntityDefinitionUpdateManager functionality.
@@ -794,6 +795,19 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     catch (EntityStorageException $e) {
       $this->pass($message);
     }
+  }
+
+  /**
+   * Check that field schema is correctly handled with long-named fields.
+   */
+  function testLongNameFieldIndexes() {
+    $this->addLongNameBaseField();
+    $entity_type_id = 'entity_test_update';
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $definitions = EntityTestUpdate::baseFieldDefinitions($entity_type);
+    $name = 'new_long_named_entity_reference_base_field';
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition($name, $entity_type_id, 'entity_test', $definitions[$name]);
+    $this->assertFalse($this->entityDefinitionUpdateManager->needsUpdates(), 'Entity and field schema data are correctly detected.');
   }
 
 }

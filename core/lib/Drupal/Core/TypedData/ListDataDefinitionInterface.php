@@ -35,11 +35,11 @@ interface ListDataDefinitionInterface extends DataDefinitionInterface {
    * @param string $item_type
    *   The item type, for which a list data definition should be created.
    *
+   * @return static
+   *
    * @throws \InvalidArgumentException
    *   If an unsupported data type gets passed to the class; e.g., 'string' to a
    *   definition class handling lists of 'field_item:* data types.
-   *
-   * @return static
    */
   public static function createFromItemType($item_type);
 

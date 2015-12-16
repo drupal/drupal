@@ -59,7 +59,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::rowStyleOptions().
+   * {@inheritdoc}
    */
   protected function rowStyleOptions() {
     $options = array();
@@ -72,7 +72,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
+   * {@inheritdoc}
    */
   protected function defaultDisplayOptions() {
     $display_options = parent::defaultDisplayOptions();
@@ -110,7 +110,7 @@ class Node extends WizardPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayFiltersUser().
+   * {@inheritdoc}
    */
   protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
     $filters = parent::defaultDisplayFiltersUser($form, $form_state);
@@ -199,7 +199,9 @@ class Node extends WizardPluginBase {
   protected function buildFilters(&$form, FormStateInterface $form_state) {
     parent::buildFilters($form, $form_state);
 
-    $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
+    if (isset($form['displays']['show']['type'])) {
+      $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
+    }
 
     // Add the "tagged with" filter to the view.
 

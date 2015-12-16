@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigEntityListMultilingualTest.
+ * Contains \Drupal\config\Tests\ConfigEntityListMultilingualTest.
  */
 
 namespace Drupal\config\Tests;

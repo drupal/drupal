@@ -352,7 +352,6 @@ td.group-title {
   padding-left: 0; /* LTR */
 }
 [dir="rtl"] .views-displays .tabs li.tabs__tab:hover {
-  padding-left: 15px;
   padding-right: 0;
 }
 .views-displays .tabs.secondary a {

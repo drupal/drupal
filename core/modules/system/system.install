@@ -99,18 +99,18 @@ function system_requirements($phase) {
       if ($matches[1] < 2) {
         $rewrite_error = TRUE;
       }
-      else if ($matches[1] == 2) {
+      elseif ($matches[1] == 2) {
         if (!isset($matches[2])) {
           $rewrite_warning = TRUE;
         }
-        else if ($matches[2] < 2) {
+        elseif ($matches[2] < 2) {
           $rewrite_error = TRUE;
         }
-        else if ($matches[2] == 2) {
+        elseif ($matches[2] == 2) {
           if (!isset($matches[3])) {
             $rewrite_warning = TRUE;
           }
-          else if ($matches[3] < 16) {
+          elseif ($matches[3] < 16) {
             $rewrite_error = TRUE;
           }
         }
@@ -641,15 +641,26 @@ function system_requirements($phase) {
       $requirements['update']['description'] = t('Some modules have database schema updates to install. You should run the <a href=":update">database update script</a> immediately.', array(':update' => \Drupal::url('system.db_update')));
     }
 
-    // Verify that no entity updates are pending after running every DB update.
-    if (!isset($requirements['update']['severity']) && \Drupal::entityDefinitionUpdateManager()->needsUpdates()) {
-      $requirements['entity_update'] = array(
-        'title' => t('Entity/field definitions'),
-        'value' => t('Mismatch detected'),
-        'severity' => REQUIREMENT_ERROR,
-        // @todo Provide details: https://www.drupal.org/node/2554911
-        'description' => t('Mismatched entity and/or field definitions.'),
-      );
+    $requirements['entity_update'] = [
+      'title' => t('Entity/field definitions'),
+      'value' => t('Up to date'),
+    ];
+    // Verify that no entity updates are pending.
+    if ($change_list = \Drupal::entityDefinitionUpdateManager()->getChangeSummary()) {
+      $build = [];
+      foreach ($change_list as $entity_type_id => $changes) {
+        $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+        $build[] = [
+          '#theme' => 'item_list',
+          '#title' => $entity_type->getLabel(),
+          '#items' => $changes,
+        ];
+      }
+
+      $entity_update_issues = \Drupal::service('renderer')->render($build);
+      $requirements['entity_update']['severity'] = REQUIREMENT_ERROR;
+      $requirements['entity_update']['value'] = t('Mismatched entity and/or field definitions');
+      $requirements['entity_update']['description'] = t('The following changes were detected in the entity type and field definitions. @updates', ['@updates' => $entity_update_issues]);
     }
   }
 
@@ -1464,6 +1475,7 @@ function system_update_8005() {
         break;
 
       case 'classy':
+      case 'stable':
         // Don't place any blocks or trigger custom themes installed warning.
         break;
 
@@ -1541,6 +1553,7 @@ function system_update_8006() {
 
       case 'seven':
       case 'classy':
+      case 'stable':
         // Don't place any blocks or trigger custom themes installed warning.
         break;
       default:
@@ -1806,23 +1819,6 @@ function system_update_8011() {
 }
 
 /**
- * Install the Stable base theme if needed.
- */
-function system_update_8012() {
-  $theme_handler = \Drupal::service('theme_handler');
-  // Ensure we have fresh info.
-  $theme_handler->rebuildThemeData();
-  foreach ($theme_handler->listInfo() as $theme) {
-    // We first check that a base theme is set because if it's set to false then
-    // it's unset in \Drupal\Core\Extension\ThemeHandler::rebuildThemeData().
-    if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
-      $theme_handler->install(['stable']);
-      return;
-    }
-  }
-}
-
-/**
  * Enable automated cron module and move the config into it.
  */
 function system_update_8013() {
@@ -1846,4 +1842,32 @@ function system_update_8013() {
 
 /**
  * @} End of "addtogroup updates-8.0.0-beta".
+ */
+
+/**
+ * @addtogroup updates-8.0.0-rc
+ * @{
+ */
+
+/**
+ * Install the Stable base theme if needed.
+ */
+function system_update_8014() {
+  $theme_handler = \Drupal::service('theme_handler');
+  if ($theme_handler->themeExists('stable')) {
+    return;
+  }
+  $theme_handler->refreshInfo();
+  foreach ($theme_handler->listInfo() as $theme) {
+    // We first check that a base theme is set because if it's set to false then
+    // it's unset in \Drupal\Core\Extension\ThemeHandler::rebuildThemeData().
+    if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
+      $theme_handler->install(['stable']);
+      return;
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-8.0.0-rc".
  */

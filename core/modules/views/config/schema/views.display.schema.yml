@@ -43,6 +43,9 @@ views.display.page:
         context:
           type: string
           label: 'Context'
+        expanded:
+          type: boolean
+          label: 'Expanded'
     tab_options:
       type: mapping
       label: 'Tab options'

@@ -189,7 +189,10 @@ class BasicTest extends WizardTestBase {
     $this->drupalPostAjaxForm(NULL, array('show[wizard_key]' => 'users'), 'show[wizard_key]');
     $this->assertNoFieldByName('show[type]', NULL, 'The "of type" filter is not added for users.');
     $this->drupalPostAjaxForm(NULL, array('show[wizard_key]' => 'node'), 'show[wizard_key]');
-    $this->assertFieldByName('show[type]', 'all', 'The "of type" filter is added for nodes.');
+    $this->assertNoFieldByName('show[type]', 'all', 'The "of type" filter is not added for nodes when there are no node types.');
+    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalPostAjaxForm(NULL, array('show[wizard_key]' => 'node'), 'show[wizard_key]');
+    $this->assertFieldByName('show[type]', 'all', 'The "of type" filter is added for nodes when there is at least one node type.');
   }
 
   /**

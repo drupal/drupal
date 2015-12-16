@@ -8,13 +8,13 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
  * Defines an interface for comment entity storage classes.
  */
-interface CommentStorageInterface extends EntityStorageInterface {
+interface CommentStorageInterface extends ContentEntityStorageInterface {
 
   /**
    * Gets the maximum encoded thread value for the top level comments.
@@ -54,7 +54,7 @@ interface CommentStorageInterface extends EntityStorageInterface {
    * @return array|null
    *   The page number where first new comment appears. (First page returns 0.)
    */
-  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name = 'comment');
+  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name);
 
   /**
    * Gets the display ordinal or page number for a comment.

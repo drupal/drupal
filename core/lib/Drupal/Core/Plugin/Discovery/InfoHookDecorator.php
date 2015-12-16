@@ -45,7 +45,7 @@ class InfoHookDecorator implements DiscoveryInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
+   * {@inheritdoc}
    */
   public function getDefinitions() {
     $definitions = $this->decorated->getDefinitions();

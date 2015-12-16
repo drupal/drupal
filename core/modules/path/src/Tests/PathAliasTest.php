@@ -7,7 +7,9 @@
 
 namespace Drupal\path\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Database;
 
 /**
  * Add, edit, delete, and change alias and verify its consistency in the
@@ -75,25 +77,45 @@ class PathAliasTest extends PathTestBase {
     // Create alias.
     $edit = array();
     $edit['source'] = '/node/' . $node1->id();
-    $edit['alias'] = '/' . $this->randomMachineName(8);
+    $edit['alias'] = '/' . $this->getRandomGenerator()->word(8);
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['alias']);
     $this->assertText($node1->label(), 'Alias works.');
     $this->assertResponse(200);
+    // Confirm that the alias works in a case-insensitive way.
+    $this->assertTrue(ctype_lower(ltrim($edit['alias'], '/')));
+    $this->drupalGet($edit['alias']);
+    $this->assertText($node1->label(), 'Alias works lower case.');
+    $this->assertResponse(200);
+    $this->drupalGet(Unicode::strtoupper($edit['alias']));
+    $this->assertText($node1->label(), 'Alias works upper case.');
+    $this->assertResponse(200);
 
     // Change alias to one containing "exotic" characters.
     $pid = $this->getPID($edit['alias']);
 
     $previous = $edit['alias'];
-    $edit['alias'] = "/- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
-      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
-      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+    $edit['alias'] = '/alias' . // Lower-case letters.
+      // "Special" ASCII characters.
+      "- ._~!$'\"()*@[]?&+%#,;=:" .
+      // Characters that look like a percent-escaped string.
+      "%23%25%26%2B%2F%3F" .
+      // Characters from various non-ASCII alphabets.
+      "中國書۞";
+    $connection = Database::getConnection();
+    if ($connection->databaseType() != 'sqlite') {
+      // When using LIKE for case-insensitivity, the SQLite driver is
+      // currently unable to find the upper-case versions of non-ASCII
+      // characters.
+      // @todo fix this in https://www.drupal.org/node/2607432
+      $edit['alias'] .= "ïвβéø";
+    }
     $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['alias']);
+    $this->drupalGet(Unicode::strtoupper($edit['alias']));
     $this->assertText($node1->label(), 'Changed alias works.');
     $this->assertResponse(200);
 
@@ -113,6 +135,14 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm no duplicate was created.
     $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['alias'])), 'Attempt to move alias was rejected.');
+
+    $edit_upper = $edit;
+    $edit_upper['alias'] = Unicode::strtoupper($edit['alias']);
+    $this->drupalPostForm('admin/config/search/path/add', $edit_upper, t('Save'));
+    $this->assertRaw(t('The alias %alias could not be added because it is already in use in this language with different capitalization: %stored_alias.', [
+      '%alias' => $edit_upper['alias'],
+      '%stored_alias' => $edit['alias'],
+    ]), 'Attempt to move upper-case alias was rejected.');
 
     // Delete alias.
     $this->drupalPostForm('admin/config/search/path/edit/' . $pid, array(), t('Delete'));
@@ -217,15 +247,27 @@ class PathAliasTest extends PathTestBase {
     $elements = $this->xpath("//link[contains(@rel, 'shortlink') and contains(@href, 'node/" . $node1->id() . "')]");
     $this->assertTrue(!empty($elements), 'Page contains shortlink URL.');
 
-    // Change alias to one containing "exotic" characters.
     $previous = $edit['path[0][alias]'];
-    $edit['path[0][alias]'] = "/- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
-      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
-      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+    // Change alias to one containing "exotic" characters.
+    $edit['path[0][alias]'] = '/alias' . // Lower-case letters.
+      // "Special" ASCII characters.
+      "- ._~!$'\"()*@[]?&+%#,;=:" .
+      // Characters that look like a percent-escaped string.
+      "%23%25%26%2B%2F%3F" .
+      // Characters from various non-ASCII alphabets.
+      "中國書۞";
+    $connection = Database::getConnection();
+    if ($connection->databaseType() != 'sqlite') {
+      // When using LIKE for case-insensitivity, the SQLite driver is
+      // currently unable to find the upper-case versions of non-ASCII
+      // characters.
+      // @todo fix this in https://www.drupal.org/node/2607432
+      $edit['path[0][alias]'] .= "ïвβéø";
+    }
     $this->drupalPostForm('node/' . $node1->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path[0][alias]']);
+    $this->drupalGet(Unicode::strtoupper($edit['path[0][alias]']));
     $this->assertText($node1->label(), 'Changed alias works.');
     $this->assertResponse(200);
 

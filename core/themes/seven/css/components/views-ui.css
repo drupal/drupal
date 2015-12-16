@@ -43,6 +43,13 @@ details.fieldset-no-legend {
 [dir="rtl"] .views-admin a.button,
 [dir="rtl"] .views-ui-dialog a.button {
   margin-left: 0;
+  margin-right: 1em;
+}
+[dir="rtl"] .views-admin input.form-submit:first-child,
+[dir="rtl"] .views-ui-dialog input.form-submit:first-child,
+[dir="rtl"] .views-admin a.button:first-child,
+[dir="rtl"] .views-ui-dialog a.button:first-child {
+  margin-right: 0;
 }
 
 .form-radios > .form-item {

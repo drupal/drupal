@@ -123,7 +123,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    */
   public function testNode() {
     $this->assertEntity(1, 'test_content_type', 'en', 'A Node', '2', TRUE, '1421727515', '1441032132', TRUE, FALSE);
-    $this->assertRevision(1, 'A Node', '2', NULL, '1441032132');
+    $this->assertRevision(1, 'A Node', '1', NULL, '1441032132');
 
     $node = Node::load(1);
     $this->assertTrue($node->field_boolean->value);

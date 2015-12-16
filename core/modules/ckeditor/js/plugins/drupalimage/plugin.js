@@ -29,50 +29,55 @@
           return;
         }
 
-        // Override requiredContent & allowedContent.
-        widgetDefinition.requiredContent = new CKEDITOR.style({
-          element: 'img',
-          styles: {},
-          attributes: {
-            'alt': '',
-            'src': '',
-            'width': '',
-            'height': '',
-            'data-entity-type': '',
-            'data-entity-uuid': ''
-          }
-        });
-        var allowedContentDefinition = {
-          element: 'img',
-          styles: {},
-          attributes: {
-            '!data-entity-type': '',
-            '!data-entity-uuid': ''
+        // First, convert requiredContent & allowedContent from the string
+        // format that image2 uses for both to formats that are better suited
+        // for extending, so that both this basic drupalimage plugin and Drupal
+        // modules can easily extend it.
+        // @see http://docs.ckeditor.com/#!/api/CKEDITOR.filter.allowedContentRules
+        // Mapped from image2's allowedContent. Unlike image2, we don't allow
+        // <figure>, <figcaption>, <div> or <p>  in our downcast, so we omit
+        // those. For the <img> tag, we list all attributes it lists, but omit
+        // the classes, because the listed classes are for alignment, and for
+        // alignment we use the data-align attribute.
+        widgetDefinition.allowedContent = {
+          img: {
+            attributes: {
+              '!src': true,
+              '!alt': true,
+              'width': true,
+              'height': true
+            },
+            classes: {}
           }
         };
-        var imgAttributes = widgetDefinition.allowedContent.img.attributes.split(/\s*,\s*/);
-        for (var i = 0; i < imgAttributes.length; i++) {
-          allowedContentDefinition.attributes[imgAttributes[i]] = '';
-        }
-        if (widgetDefinition.allowedContent.img.classes) {
-          allowedContentDefinition.attributes['class'] = widgetDefinition.allowedContent.img.classes.split(/\s*,\s*/).join(' ');
-        }
-        if (widgetDefinition.allowedContent.img.styles) {
-          var imgStyles = widgetDefinition.allowedContent.img.styles.split(/\s*,\s*/);
-          for (var j = 0; j < imgStyles.length; j++) {
-            allowedContentDefinition.styles[imgStyles[j]] = '';
+        // Mapped from image2's requiredContent: "img[src,alt]". This does not
+        // use the object format unlike above, but a CKEDITOR.style instance,
+        // because requiredContent does not support the object format.
+        // @see https://www.drupal.org/node/2585173#comment-10456981
+        widgetDefinition.requiredContent = new CKEDITOR.style({
+          element: 'img',
+          attributes: {
+            src: '',
+            alt: ''
           }
-        }
-        widgetDefinition.allowedContent = new CKEDITOR.style(allowedContentDefinition);
+        });
 
-        // Override the 'link' part, to completely disable image2's link
-        // support: http://dev.ckeditor.com/ticket/11341.
-        widgetDefinition.parts.link = 'This is a nonsensical selector to disable this functionality completely';
+        // Extend requiredContent & allowedContent.
+        // CKEDITOR.style is an immutable object: we cannot modify its
+        // definition to extend requiredContent. Hence we get the definition,
+        // modify it, and pass it to a new CKEDITOR.style instance.
+        var requiredContent = widgetDefinition.requiredContent.getDefinition();
+        requiredContent.attributes['data-entity-type'] = '';
+        requiredContent.attributes['data-entity-uuid'] = '';
+        widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
+        widgetDefinition.allowedContent.img.attributes['!data-entity-type'] = true;
+        widgetDefinition.allowedContent.img.attributes['!data-entity-uuid'] = true;
 
         // Override downcast(): since we only accept <img> in our upcast method,
         // the element is already correct. We only need to update the element's
         // data-entity-uuid attribute.
         widgetDefinition.downcast = function (element) {
+          element.attributes['data-entity-type'] = this.data['data-entity-type'];
           element.attributes['data-entity-uuid'] = this.data['data-entity-uuid'];
         };
 
@@ -176,6 +181,18 @@
             return widget;
           };
         };
+
+        var originalInit = widgetDefinition.init;
+        widgetDefinition.init = function () {
+          originalInit.call(this);
+
+          // Update data.link object with attributes if the link has been
+          // discovered.
+          // @see plugins/image2/plugin.js/init() in CKEditor; this is similar.
+          if (this.parts.link) {
+            this.setData('link', CKEDITOR.plugins.link.parseLinkAttributes(editor, this.parts.link));
+          }
+        };
       });
 
       // Add a widget#edit listener to every instance of image2 widget in order
@@ -233,25 +250,86 @@
       }
     },
 
-    // Disable image2's integration with the link/drupallink plugins: don't
-    // allow the widget itself to become a link. Support for that may be added
-    // by an text filter that adds a data- attribute specifically for that.
     afterInit: function (editor) {
-      if (editor.plugins.drupallink) {
-        var cmd = editor.getCommand('drupallink');
-        // Needs to be refreshed on selection changes.
-        cmd.contextSensitive = 1;
-        // Disable command and cancel event when the image widget is selected.
-        cmd.on('refresh', function (evt) {
-          var widget = editor.widgets.focused;
-          if (widget && widget.name === 'image') {
-            this.setState(CKEDITOR.TRISTATE_DISABLED);
-            evt.cancel();
-          }
-        });
-      }
+      linkCommandIntegrator(editor);
     }
 
   });
+
+  /**
+   * Integrates the drupalimage widget with the drupallink plugin.
+   *
+   * Makes images linkable.
+   *
+   * @param {CKEDITOR.editor} editor
+   *   A CKEditor instance.
+   */
+  function linkCommandIntegrator(editor) {
+    // Nothing to integrate with if the drupallink plugin is not loaded.
+    if (!editor.plugins.drupallink) {
+      return;
+    }
+
+    // Override default behaviour of 'drupalunlink' command.
+    editor.getCommand('drupalunlink').on('exec', function (evt) {
+      var widget = getFocusedWidget(editor);
+
+      // Override 'drupalunlink' only when link truly belongs to the widget. If
+      // wrapped inline widget in a link, let default unlink work.
+      // @see https://dev.ckeditor.com/ticket/11814
+      if (!widget || !widget.parts.link) {
+        return;
+      }
+
+      widget.setData('link', null);
+
+      // Selection (which is fake) may not change if unlinked image in focused
+      // widget, i.e. if captioned image. Let's refresh command state manually
+      // here.
+      this.refresh(editor, editor.elementPath());
+
+      evt.cancel();
+    });
+
+    // Override default refresh of 'drupalunlink' command.
+    editor.getCommand('drupalunlink').on('refresh', function (evt) {
+      var widget = getFocusedWidget(editor);
+
+      if (!widget) {
+        return;
+      }
+
+      // Note that widget may be wrapped in a link, which
+      // does not belong to that widget (#11814).
+      this.setState(widget.data.link || widget.wrapper.getAscendant('a') ?
+        CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
+
+      evt.cancel();
+    });
+  }
+
+  /**
+   * Gets the focused widget, if of the type specific for this plugin.
+   *
+   * @param {CKEDITOR.editor} editor
+   *   A CKEditor instance.
+   *
+   * @return {?CKEDITOR.plugins.widget}
+   *   The focused image2 widget instance, or null.
+   */
+  function getFocusedWidget(editor) {
+    var widget = editor.widgets.focused;
+
+    if (widget && widget.name === 'image') {
+      return widget;
+    }
+
+    return null;
+  }
+
+  // Expose an API for other plugins to interact with drupalimage widgets.
+  CKEDITOR.plugins.drupalimage = {
+    getFocusedWidget: getFocusedWidget
+  };
 
 })(jQuery, Drupal, CKEDITOR);

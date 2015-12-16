@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\render_attached_test\Controller\TestController.
+ * Contains \Drupal\render_attached_test\Controller\RenderAttachedTestController.
  */
 
 namespace Drupal\render_attached_test\Controller;

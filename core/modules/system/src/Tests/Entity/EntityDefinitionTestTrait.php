@@ -105,6 +105,20 @@ trait EntityDefinitionTestTrait {
   }
 
   /**
+   * Adds a long-named base field to the 'entity_test_update' entity type.
+   */
+  protected function addLongNameBaseField() {
+    $key = 'entity_test_update.additional_base_field_definitions';
+    $definitions = $this->state->get($key, []);
+    $definitions['new_long_named_entity_reference_base_field'] = BaseFieldDefinition::create('entity_reference')
+      ->setName('new_long_named_entity_reference_base_field')
+      ->setLabel(t('A new long-named base field'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default');
+    $this->state->set($key, $definitions);
+  }
+
+  /**
    * Adds a new revisionable base field to the 'entity_test_update' entity type.
    *
    * @param string $type

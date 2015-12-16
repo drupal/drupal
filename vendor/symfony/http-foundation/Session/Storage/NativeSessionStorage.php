@@ -65,7 +65,7 @@ class NativeSessionStorage implements SessionStorageInterface
      * ("auto_start", is not supported as it tells PHP to start a session before
      * PHP starts to execute user-land code. Setting during runtime has no effect).
      *
-     * cache_limiter, "nocache" (use "0" to prevent headers from being sent entirely).
+     * cache_limiter, "" (use "0" to prevent headers from being sent entirely).
      * cookie_domain, ""
      * cookie_httponly, ""
      * cookie_lifetime, "0"
@@ -195,6 +195,16 @@ class NativeSessionStorage implements SessionStorageInterface
      */
     public function regenerate($destroy = false, $lifetime = null)
     {
+        // Cannot regenerate the session ID for non-active sessions.
+        if (PHP_VERSION_ID >= 50400 && \PHP_SESSION_ACTIVE !== session_status()) {
+            return false;
+        }
+
+        // Check if session ID exists in PHP 5.3
+        if (PHP_VERSION_ID < 50400 && '' === session_id()) {
+            return false;
+        }
+
         if (null !== $lifetime) {
             ini_set('session.cookie_lifetime', $lifetime);
         }

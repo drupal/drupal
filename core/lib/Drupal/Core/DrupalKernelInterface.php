@@ -127,8 +127,8 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
    *
    * @return $this
    *
-   * @deprecated 8.x
-   *   Only used by legacy front-controller scripts.
+   * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Only used by
+   *   legacy front-controller scripts.
    */
   public function prepareLegacyRequest(Request $request);
 

@@ -2,11 +2,10 @@
 <ruleset name="drupal_core">
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
   <file>.</file>
-  <arg name="extensions" value="inc,info,install,module,php,profile,test,theme"/>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
 
   <!--Exclude third party code.-->
   <exclude-pattern>./assets/vendor/*</exclude-pattern>
-  <exclude-pattern>./vendor/*</exclude-pattern>
 
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
   <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>
@@ -17,15 +16,15 @@
     <exclude name="Drupal.Classes.ClassCreateInstance"/>
     <exclude name="Drupal.Classes.ClassDeclaration"/>
     <exclude name="Drupal.Classes.InterfaceName"/>
+    <exclude name="Drupal.Classes.UnusedUseStatement"/>
     <exclude name="Drupal.Commenting.ClassComment"/>
     <exclude name="Drupal.Commenting.DocComment"/>
-    <exclude name="Drupal.Commenting.DocCommentStar"/>
     <exclude name="Drupal.Commenting.FileComment"/>
     <exclude name="Drupal.Commenting.FunctionComment"/>
     <exclude name="Drupal.Commenting.HookComment"/>
     <exclude name="Drupal.Commenting.InlineComment"/>
+    <exclude name="Drupal.Commenting.PostStatementComment"/>
     <exclude name="Drupal.ControlStructures.ControlSignature"/>
-    <exclude name="Drupal.ControlStructures.ElseIf"/>
     <exclude name="Drupal.ControlStructures.InlineControlStructure"/>
     <exclude name="Drupal.Files.EndFileNewline"/>
     <exclude name="Drupal.Files.LineLength"/>
@@ -45,6 +44,7 @@
     <exclude name="Drupal.WhiteSpace.CloseBracketSpacing"/>
     <exclude name="Drupal.WhiteSpace.Comma"/>
     <exclude name="Drupal.WhiteSpace.EmptyLines"/>
+    <exclude name="Drupal.WhiteSpace.ObjectOperatorSpacing"/>
     <exclude name="Drupal.WhiteSpace.OpenBracketSpacing"/>
     <exclude name="Drupal.WhiteSpace.OperatorSpacing"/>
     <exclude name="Drupal.WhiteSpace.ScopeClosingBrace"/>

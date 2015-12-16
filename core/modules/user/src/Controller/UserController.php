@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Controller;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -123,7 +124,7 @@ class UserController extends ControllerBase {
         drupal_set_message($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'error');
         return $this->redirect('user.pass');
       }
-      elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && ($hash === user_pass_rehash($user, $timestamp))) {
+      elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && Crypt::hashEquals($hash, user_pass_rehash($user, $timestamp))) {
         $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
         return $this->formBuilder()->getForm('Drupal\user\Form\UserPasswordResetForm', $user, $expiration_date, $timestamp, $hash);
       }
@@ -198,7 +199,7 @@ class UserController extends ControllerBase {
     $account_data = $this->userData->get('user', $user->id());
     if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
       // Validate expiration and hashed password/login.
-      if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && $hashed_pass == user_pass_rehash($user, $timestamp)) {
+      if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && Crypt::hashEquals($hashed_pass, user_pass_rehash($user, $timestamp))) {
         $edit = array(
           'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : $this->config('user.settings')->get('notify.status_canceled'),
         );

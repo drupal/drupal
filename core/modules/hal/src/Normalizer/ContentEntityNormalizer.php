@@ -61,7 +61,7 @@ class ContentEntityNormalizer extends NormalizerBase {
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
+   * {@inheritdoc}
    */
   public function normalize($entity, $format = NULL, array $context = array()) {
     $context += array(
@@ -123,6 +123,9 @@ class ContentEntityNormalizer extends NormalizerBase {
    *   - request_method: if set to "patch" the denormalization will clear out
    *     all default values for entity fields before applying $data to the
    *     entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An unserialized entity object containing the data in $data.
    *
    * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
    */

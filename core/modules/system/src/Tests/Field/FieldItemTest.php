@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Field\FieldItemTest.
+ * Contains \Drupal\system\Tests\Field\FieldItemTest.
  */
 
 namespace Drupal\system\Tests\Field;

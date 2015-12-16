@@ -30,10 +30,10 @@ interface RendererInterface {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    *
-   * @see ::render()
-   *
    * @throws \LogicException
    *   When called from inside another renderRoot() call.
+   *
+   * @see \Drupal\Core\Render\RendererInterface::render()
    */
   public function renderRoot(&$elements);
 
@@ -42,9 +42,9 @@ interface RendererInterface {
    *
    * Calls ::render() in such a way that placeholders are replaced.
    *
-   * Useful for e.g. rendering the values of tokens or emails, which need a
-   * render array being turned into a string, but don't need any of the
-   * bubbleable metadata (the attached assets the cache tags).
+   * Useful for instance when rendering the values of tokens or emails, which
+   * need a render array being turned into a string, but do not need any of the
+   * bubbleable metadata (the attached assets and cache tags).
    *
    * Some of these are a relatively common use case and happen *within* a
    * ::renderRoot() call, but that is generally highly problematic (and hence an
@@ -61,10 +61,28 @@ interface RendererInterface {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    *
-   * @see ::renderRoot()
-   * @see ::render()
+   * @see \Drupal\Core\Render\RendererInterface::renderRoot()
+   * @see \Drupal\Core\Render\RendererInterface::render()
    */
   public function renderPlain(&$elements);
+
+  /**
+   * Renders final HTML for a placeholder.
+   *
+   * Renders the placeholder in isolation.
+   *
+   * @param string $placeholder
+   *   An attached placeholder to render. (This must be a key of one of the
+   *   values of $elements['#attached']['placeholders'].)
+   * @param array $elements
+   *   The structured array describing the data to be rendered.
+   *
+   * @return array
+   *   The updated $elements.
+   *
+   * @see \Drupal\Core\Render\RendererInterface::render()
+   */
+  public function renderPlaceholder($placeholder, array $elements);
 
   /**
    * Renders HTML given a structured array tree.
@@ -120,8 +138,8 @@ interface RendererInterface {
    *     - 'keys': An array of one or more keys that identify the element. If
    *       'keys' is set, the cache ID is created automatically from these keys.
    *     - 'contexts': An array of one or more cache context IDs. These are
-   *       converted to a final value depending on the request. (e.g. 'user' is
-   *       mapped to the current user's ID.)
+   *       converted to a final value depending on the request. (For instance,
+   *       'user' is mapped to the current user's ID.)
    *     - 'max-age': A time in seconds. Zero seconds means it is not cacheable.
    *       \Drupal\Core\Cache\Cache::PERMANENT means it is cacheable forever.
    *     - 'bin': Specify a cache bin to cache the element in. Default is
@@ -280,14 +298,14 @@ interface RendererInterface {
    *     placeholder element containing a #lazy_builder function is rendered in
    *     isolation. The resulting markup is used to replace the placeholder, and
    *     any bubbleable metadata is merged.
-   *     Placeholders must be unique, to guarantee that e.g. samples of
+   *     Placeholders must be unique, to guarantee that for instance, samples of
    *     placeholders are not replaced as well.
    *   - Just before finishing the rendering of this element, this element's
    *     stack frame (the topmost one) is bubbled: the two topmost frames are
    *     popped from the stack, they are merged and the result is pushed back
    *     onto the stack.
-   *     So if this element e.g. was a child element, then a new frame was
-   *     pushed onto the stack element at the beginning of rendering this
+   *     So if for instance this element was a child element, then a new frame
+   *     was pushed onto the stack element at the beginning of rendering this
    *     element, it was updated when the rendering was completed, and now we
    *     merge it with the frame for the parent, so that the parent now has the
    *     bubbleable rendering metadata for its child.
@@ -317,7 +335,7 @@ interface RendererInterface {
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see drupal_process_states()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
-   * @see ::renderRoot()
+   * @see \Drupal\Core\Render\RendererInterface::renderRoot()
    */
   public function render(&$elements, $is_root_call = FALSE);
 
@@ -348,19 +366,19 @@ interface RendererInterface {
    * Any and all rendering must therefore happen within a render context, and it
    * is this method that provides that.
    *
-   * @see \Drupal\Core\Render\BubbleableMetadata
-   *
    * @param \Drupal\Core\Render\RenderContext $context
    *   The render context to execute the callable within.
    * @param callable $callable
    *   The callable to execute.
+   *
    * @return mixed
    *   The callable's return value.
    *
-   * @see \Drupal\Core\Render\RenderContext
-   *
    * @throws \LogicException
    *   In case bubbling has failed, can only happen in case of broken code.
+   *
+   * @see \Drupal\Core\Render\RenderContext
+   * @see \Drupal\Core\Render\BubbleableMetadata
    */
   public function executeInRenderContext(RenderContext $context, callable $callable);
 
@@ -383,9 +401,9 @@ interface RendererInterface {
   /**
    * Adds a dependency on an object: merges its cacheability metadata.
    *
-   * E.g. when a render array depends on some configuration, an entity, or an
-   * access result, we must make sure their cacheability metadata is present on
-   * the render array. This method makes doing that simple.
+   * For instance, when a render array depends on some configuration, an entity,
+   * or an access result, we must make sure their cacheability metadata is
+   * present on the render array. This method makes doing that simple.
    *
    * @param array &$elements
    *   The render array to update.

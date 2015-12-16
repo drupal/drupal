@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\node\Tests\NodeOwnerTest.
+ * Contains \Drupal\node\Tests\NodeOwnerTest.
  */
 
 namespace Drupal\node\Tests;

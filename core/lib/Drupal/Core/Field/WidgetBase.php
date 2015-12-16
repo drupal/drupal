@@ -397,8 +397,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
 
     if ($violations->count()) {
-      $form_builder = \Drupal::formBuilder();
-
       // Locate the correct element in the form.
       $element = NestedArray::getValue($form_state->getCompleteForm(), $field_state['array_parents']);
 

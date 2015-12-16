@@ -1,6 +1,7 @@
 services:
   http_middleware.monkeys:
     class: Drupal\error_service_test\MonkeysInTheControlRoom
+    arguments: ['@settings']
     tags:
       - { name: http_middleware, priority: 400 }
   # Set up a service with a missing class dependency.

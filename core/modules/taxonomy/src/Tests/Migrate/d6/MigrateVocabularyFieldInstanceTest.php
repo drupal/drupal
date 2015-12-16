@@ -39,11 +39,13 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $field_id = 'node.article.tags';
     $field = FieldConfig::load($field_id);
     $this->assertIdentical($field_id, $field->id(), 'Field instance exists on article bundle.');
+    $this->assertIdentical('Tags', $field->label());
 
     // Test the page bundle as well.
     $field_id = 'node.page.tags';
     $field = FieldConfig::load($field_id);
     $this->assertIdentical($field_id, $field->id(), 'Field instance exists on page bundle.');
+    $this->assertIdentical('Tags', $field->label());
 
     $settings = $field->getSettings();
     $this->assertIdentical('default:taxonomy_term', $settings['handler'], 'The handler plugin ID is correct.');

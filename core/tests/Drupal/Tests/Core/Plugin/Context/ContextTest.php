@@ -56,7 +56,7 @@ class ContextTest extends UnitTestCase {
    * @covers ::getContextValue
    */
   public function testDefaultValue() {
-    $this->setUpDefaultValue();
+    $this->setUpDefaultValue('test');
 
     $context = new Context($this->contextDefinition);
     $context->setTypedDataManager($this->typedDataManager);
@@ -67,7 +67,18 @@ class ContextTest extends UnitTestCase {
    * @covers ::getContextData
    */
   public function testDefaultDataValue() {
-    $this->setUpDefaultValue();
+    $this->setUpDefaultValue('test');
+
+    $context = new Context($this->contextDefinition);
+    $context->setTypedDataManager($this->typedDataManager);
+    $this->assertEquals($this->typedData, $context->getContextData());
+  }
+
+  /**
+   * @covers ::getContextData
+   */
+  public function testNullDataValue() {
+    $this->setUpDefaultValue(NULL);
 
     $context = new Context($this->contextDefinition);
     $context->setTypedDataManager($this->typedDataManager);
@@ -127,8 +138,11 @@ class ContextTest extends UnitTestCase {
 
   /**
    * Set up mocks for the getDefaultValue() method call.
+   *
+   * @param mixed $default_value
+   *   The default value to assign to the mock context definition.
    */
-  protected function setUpDefaultValue() {
+  protected function setUpDefaultValue($default_value = NULL) {
     $mock_data_definition = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
 
     $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
@@ -137,7 +151,7 @@ class ContextTest extends UnitTestCase {
 
     $this->contextDefinition->expects($this->once())
       ->method('getDefaultValue')
-      ->willReturn('test');
+      ->willReturn($default_value);
 
     $this->contextDefinition->expects($this->once())
       ->method('getDataDefinition')
@@ -147,7 +161,7 @@ class ContextTest extends UnitTestCase {
 
     $this->typedDataManager->expects($this->once())
       ->method('create')
-      ->with($mock_data_definition, 'test')
+      ->with($mock_data_definition, $default_value)
       ->willReturn($this->typedData);
   }
 }

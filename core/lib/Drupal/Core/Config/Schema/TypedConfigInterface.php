@@ -45,11 +45,11 @@ interface TypedConfigInterface extends TraversableTypedDataInterface {
    *   elements can be get using multiple dot delimited names, for example,
    *   'page.front'.
    *
-   * @throws \InvalidArgumentException
-   *   If an invalid property name is given.
-   *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The property object.
+   *
+   * @throws \InvalidArgumentException
+   *   If an invalid property name is given.
    */
   public function get($name);
 

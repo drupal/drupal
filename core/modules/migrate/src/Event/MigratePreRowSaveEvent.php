@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Event\MigratePreSaveEvent.
+ * Contains \Drupal\migrate\Event\MigratePreRowSaveEvent.
  */
 
 namespace Drupal\migrate\Event;

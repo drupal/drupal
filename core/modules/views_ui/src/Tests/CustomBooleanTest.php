@@ -35,7 +35,7 @@ class CustomBooleanTest extends UITestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewTestBase::dataSet().
+   * {@inheritdoc}
    */
   public function dataSet() {
     $data = parent::dataSet();

@@ -235,8 +235,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->streamWrappers = array();
     \Drupal::unsetContainer();
 
-    // @see /core/tests/bootstrap.php
-    $this->classLoader = $GLOBALS['loader'];
+    $this->classLoader = require $this->root . '/autoload.php';
 
     require_once $this->root . '/core/includes/bootstrap.inc';
 
@@ -407,7 +406,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // If the test is run with argument dburl then use it.
     $db_url = getenv('SIMPLETEST_DB');
     if (empty($db_url)) {
-      $this->markTestSkipped('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable to run PHPUnit based functional tests outside of run-tests.sh. See https://www.drupal.org/node/2116263#skipped-tests for more information.');
+      throw new \Exception('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable to run PHPUnit based functional tests outside of run-tests.sh. See https://www.drupal.org/node/2116263#skipped-tests for more information.');
     }
     else {
       $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root);
@@ -509,7 +508,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       ];
       // @todo Use extension_loaded('apcu') for non-testbot
       //  https://www.drupal.org/node/2447753.
-      if (function_exists('apc_fetch')) {
+      if (function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = ApcuFileCacheBackend::class;
       }
     }
@@ -882,7 +881,8 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Update the kernel to remove their services.
     $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
 
-    // Ensure isLoaded() is TRUE in order to make _theme() work.
+    // Ensure isLoaded() is TRUE in order to make
+    // \Drupal\Core\Theme\ThemeManagerInterface::render() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
     // no longer the $module_handler instance from above.
     $module_handler = $this->container->get('module_handler');

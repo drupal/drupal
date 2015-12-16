@@ -48,7 +48,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
   /**
    * The field cardinality.
    *
-   * @var integer
+   * @var int
    */
   protected $cardinality;
 

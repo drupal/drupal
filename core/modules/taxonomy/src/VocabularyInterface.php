@@ -17,7 +17,7 @@ interface VocabularyInterface extends ConfigEntityInterface {
   /**
    * Returns the vocabulary hierarchy.
    *
-   * @return integer
+   * @return int
    *   The vocabulary hierarchy.
    */
   public function getHierarchy();
@@ -25,7 +25,7 @@ interface VocabularyInterface extends ConfigEntityInterface {
   /**
    * Sets the vocabulary hierarchy.
    *
-   * @param integer $hierarchy
+   * @param int $hierarchy
    *   The hierarchy type of vocabulary.
    *   Possible values:
    *    - TAXONOMY_HIERARCHY_DISABLED: No parents.

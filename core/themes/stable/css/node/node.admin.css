@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Styles for administration pages.
+ */
+
+/**
+ * Revisions overview screen.
+ */
+.revision-current {
+  background: #ffc;
+}

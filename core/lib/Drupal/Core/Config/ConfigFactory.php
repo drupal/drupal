@@ -111,25 +111,26 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     }
     else {
       // If the configuration object does not exist in the configuration
-      // storage, create a new object and add it to the static cache.
-      $cache_key = $this->getConfigCacheKey($name, $immutable);
-      $this->cache[$cache_key] = $this->createConfigObject($name, $immutable);
+      // storage, create a new object.
+      $config = $this->createConfigObject($name, $immutable);
 
       if ($immutable) {
         // Get and apply any overrides.
         $overrides = $this->loadOverrides(array($name));
         if (isset($overrides[$name])) {
-          $this->cache[$cache_key]->setModuleOverride($overrides[$name]);
+          $config->setModuleOverride($overrides[$name]);
         }
         // Apply any settings.php overrides.
         if (isset($GLOBALS['config'][$name])) {
-          $this->cache[$cache_key]->setSettingsOverride($GLOBALS['config'][$name]);
+          $config->setSettingsOverride($GLOBALS['config'][$name]);
         }
       }
 
-      $this->propagateConfigOverrideCacheability($cache_key, $name);
+      foreach ($this->configFactoryOverrides as $override) {
+        $config->addCacheableDependency($override->getCacheableMetadata($name));
+      }
 
-      return $this->cache[$cache_key];
+      return $config;
     }
   }
 

@@ -21,11 +21,11 @@ class Number {
    *
    * This is based on the number/range verification methods of webkit.
    *
-   * @param numeric $value
+   * @param float $value
    *   The value that needs to be checked.
-   * @param numeric $step
+   * @param float $step
    *   The step scale factor. Must be positive.
-   * @param numeric $offset
+   * @param float $offset
    *   (optional) An offset, to which the difference must be a multiple of the
    *   given step.
    *

@@ -30,7 +30,7 @@ class ValidReferenceConstraintValidatorTest extends EntityUnitTestBase {
   public static $modules = array('field', 'user');
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();

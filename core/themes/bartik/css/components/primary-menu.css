@@ -11,6 +11,8 @@
 }
 [dir="rtl"] .region-primary-menu .menu {
   text-align: right;
+  margin-left: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
+  margin-right: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
 }
 .region-primary-menu .menu-item {
   float: none;
@@ -115,6 +117,10 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
     padding: 0;
     text-align: center;
   }
+  /* This is required to win over specificity of the global [dir="rtl"] .region-primary-menu .menu */
+  [dir="rtl"] .region-primary-menu .menu {
+    text-align: center;
+  }
   .region-primary-menu .menu-item,
   body:not(:target) .region-primary-menu .menu-item {
     float: left; /* LTR */
@@ -143,6 +149,10 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
     display: block;
     border-radius: 8px;
     margin-bottom: 5px;
+    padding: 0.9em 5px;
+  }
+  /* This is required to win over specificity of the global [dir="rtl"] .region-primary-menu .menu a */
+  [dir="rtl"] .region-primary-menu .menu a {
     padding: 0.9em 5px;
   }
   body:not(:target) .region-primary-menu .menu-toggle {

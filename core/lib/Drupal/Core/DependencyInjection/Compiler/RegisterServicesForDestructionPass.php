@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 class RegisterServicesForDestructionPass implements CompilerPassInterface {
 
   /**
-   * Implements \Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface::process().
+   * {@inheritdoc}
    */
   public function process(ContainerBuilder $container) {
     if (!$container->hasDefinition('kernel_destruct_subscriber')) {

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PathProcessorDecode implements InboundPathProcessorInterface {
 
   /**
-   * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processInbound().
+   * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
     return urldecode($path);

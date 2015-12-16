@@ -165,6 +165,9 @@
     padding: 15px;
     margin: 0.25em 0;
   }
+  [dir="rtl"] ul {
+    margin-right: 0; /* Overrides default [dir="rtl"] ul margin */
+  }
   .layout-sidebar-first {
     float: left; /* LTR */
     width: 35%;

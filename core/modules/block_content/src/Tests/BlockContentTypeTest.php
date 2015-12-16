@@ -185,17 +185,15 @@ class BlockContentTypeTest extends BlockContentTestBase {
       ->getStorage('block_content');
 
     // Install all themes.
-    \Drupal::service('theme_handler')->install(array('bartik', 'seven'));
-    $themes = array('bartik', 'seven', 'classy');
+    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
     $theme_settings = $this->config('system.theme');
-    foreach ($themes as $default_theme) {
+    foreach (['bartik', 'seven', 'stark'] as $default_theme) {
       // Change the default theme.
       $theme_settings->set('default', $default_theme)->save();
       \Drupal::service('router.builder')->rebuild();
 
       // For each installed theme, go to its block page and test the redirects.
-      $themes = array('bartik', 'classy', 'seven');
-      foreach ($themes as $theme) {
+      foreach (['bartik', 'seven', 'stark'] as $theme) {
         // Test that adding a block from the 'place blocks' form sends you to the
         // block configure form.
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";

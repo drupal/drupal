@@ -6,6 +6,8 @@ services:
   locale.config_manager:
     class: Drupal\locale\LocaleConfigManager
     arguments: ['@config.storage', '@locale.storage', '@config.factory', '@config.typed', '@language_manager', '@locale.default.config.storage']
+    calls:
+      - [_setConfigManager, ['@config.manager']]
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']

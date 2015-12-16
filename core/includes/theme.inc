@@ -407,7 +407,7 @@ function theme_render_and_autoescape($arg) {
       $return = $arg->toString();
     }
     else {
-      throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+      throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
     }
   }
 
@@ -445,22 +445,22 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     if ($key == 'default_logo') {
       $config->set('logo.use_default', $value);
     }
-    else if ($key == 'logo_path') {
+    elseif ($key == 'logo_path') {
       $config->set('logo.path', $value);
     }
-    else if ($key == 'default_favicon') {
+    elseif ($key == 'default_favicon') {
       $config->set('favicon.use_default', $value);
     }
-    else if ($key == 'favicon_path') {
+    elseif ($key == 'favicon_path') {
       $config->set('favicon.path', $value);
     }
-    else if ($key == 'favicon_mimetype') {
+    elseif ($key == 'favicon_mimetype') {
       $config->set('favicon.mimetype', $value);
     }
-    else if (substr($key, 0, 7) == 'toggle_') {
+    elseif (substr($key, 0, 7) == 'toggle_') {
       $config->set('features.' . Unicode::substr($key, 7), $value);
     }
-    else if (!in_array($key, array('theme', 'logo_upload'))) {
+    elseif (!in_array($key, array('theme', 'logo_upload'))) {
       $config->set($key, $value);
     }
   }
@@ -727,7 +727,8 @@ function template_preprocess_links(&$variables) {
  *     to an empty string, but can be set to NULL for the attribute to be
  *     omitted. Usually, neither omission nor an empty string satisfies
  *     accessibility requirements, so it is strongly encouraged for code
- *     calling _theme('image') to pass a meaningful value for this variable.
+ *     building variables for image.html.twig templates to pass a meaningful
+ *     value for this variable.
  *     - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
  *     - http://www.w3.org/TR/xhtml1/dtds.html
  *     - http://dev.w3.org/html5/spec/Overview.html#alt
@@ -863,9 +864,6 @@ function template_preprocess_image(&$variables) {
  *     rows.
  */
 function template_preprocess_table(&$variables) {
-  $is_sticky = !empty($variables['sticky']);
-  $is_responsive = !empty($variables['responsive']);
-
   // Format the table columns:
   if (!empty($variables['colgroups'])) {
     foreach ($variables['colgroups'] as &$colgroup) {
@@ -1724,11 +1722,12 @@ function drupal_common_theme() {
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
       // allows the alt attribute to be omitted in some cases. Therefore,
-      // default the alt attribute to an empty string, but allow code calling
-      // _theme('image') to pass explicit NULL for it to be omitted. Usually,
-      // neither omission nor an empty string satisfies accessibility
-      // requirements, so it is strongly encouraged for code calling
-      // _theme('image') to pass a meaningful value for the alt variable.
+      // default the alt attribute to an empty string, but allow code providing
+      // variables to image.html.twig templates to pass explicit NULL for it to
+      // be omitted. Usually, neither omission nor an empty string satisfies
+      // accessibility requirements, so it is strongly encouraged for code
+      // building variables for image.html.twig templates to pass a meaningful
+      // value for the alt variable.
       // - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
       // - http://www.w3.org/TR/xhtml1/dtds.html
       // - http://dev.w3.org/html5/spec/Overview.html#alt
@@ -1781,7 +1780,7 @@ function drupal_common_theme() {
     ),
     // From menu.inc.
     'menu' => array(
-      'variables' => array('items' => array(), 'attributes' => array()),
+      'variables' => array('menu_name' => NULL, 'items' => array(), 'attributes' => array()),
     ),
     'menu_local_task' => array(
       'render element' => 'element',

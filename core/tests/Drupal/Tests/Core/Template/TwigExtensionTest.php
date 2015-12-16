@@ -200,6 +200,20 @@ class TwigExtensionTest extends UnitTestCase {
     ];
     $result = $twig_extension->safeJoin($twig_environment, $items, '<br/>');
     $this->assertEquals('&lt;em&gt;will be escaped&lt;/em&gt;<br/><em>will be markup</em><br/><strong>will be rendered</strong>', $result);
+
+    // Ensure safe_join Twig filter supports Traversable variables.
+    $items = new \ArrayObject([
+      '<em>will be escaped</em>',
+      $markup,
+      ['#markup' => '<strong>will be rendered</strong>'],
+    ]);
+    $result = $twig_extension->safeJoin($twig_environment, $items, ', ');
+    $this->assertEquals('&lt;em&gt;will be escaped&lt;/em&gt;, <em>will be markup</em>, <strong>will be rendered</strong>', $result);
+
+    // Ensure safe_join Twig filter supports empty variables.
+    $items = NULL;
+    $result = $twig_extension->safeJoin($twig_environment, $items, '<br>');
+    $this->assertEmpty($result);
   }
 
   /**

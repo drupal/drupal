@@ -35,6 +35,11 @@ interface PlaceholderGeneratorInterface {
   /**
    * Whether the given render array should be automatically placeholdered.
    *
+   * The render array should be placeholdered if its cacheability either has a
+   * cache context with too high cardinality, a cache tag with a too high
+   * invalidation rate, or a max-age that is too low. Either of these would make
+   * caching ineffective, and thus we choose to placeholder instead.
+   *
    * @param array $element
    *   The render array whose cacheability to analyze.
    *

@@ -16,6 +16,7 @@ parameters:
       tags: []
   factory.keyvalue:
     default: keyvalue.database
+  http.response.debug_cacheability_headers: false
   factory.keyvalue.expirable:
     default: keyvalue.expirable.database
   filter_protocols:
@@ -495,10 +496,37 @@ services:
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@keyvalue', '@event_dispatcher']
+    parent: container.trait
+    # @todo Remove this tag in https://www.drupal.org/node/2549143.
+    tags:
+      - { name: plugin_manager_cache_clear }
+  entity_type.manager:
+    class: Drupal\Core\Entity\EntityTypeManager
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }
+  entity_type.repository:
+    class: Drupal\Core\Entity\EntityTypeRepository
+    arguments: ['@entity_type.manager']
+  entity_type.bundle.info:
+    class: Drupal\Core\Entity\EntityTypeBundleInfo
+    arguments: ['@entity_type.manager', '@language_manager', '@module_handler', '@typed_data_manager', '@cache.discovery']
+  entity.repository:
+    class: Drupal\Core\Entity\EntityRepository
+    arguments: ['@entity_type.manager', '@language_manager']
+  entity_display.repository:
+    class: Drupal\Core\Entity\EntityDisplayRepository
+    arguments: ['@entity_type.manager', '@module_handler', '@cache.discovery', '@language_manager']
+  entity_field.manager:
+    class: Drupal\Core\Entity\EntityFieldManager
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery']
+  entity_type.listener:
+    class: Drupal\Core\Entity\EntityTypeListener
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@event_dispatcher', '@entity.last_installed_schema.repository']
+  entity_bundle.listener:
+    class: Drupal\Core\Entity\EntityBundleListener
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@module_handler']
   entity_route_subscriber:
     class: Drupal\Core\EventSubscriber\EntityRouteProviderSubscriber
     arguments: ['@entity.manager']
@@ -507,6 +535,15 @@ services:
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
     arguments: ['@entity.manager']
+  entity.last_installed_schema.repository:
+    class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
+    arguments: ['@keyvalue']
+  field_storage_definition.listener:
+    class: Drupal\Core\Field\FieldStorageDefinitionListener
+    arguments: ['@entity_type.manager', '@event_dispatcher', '@entity.last_installed_schema.repository', '@entity_field.manager']
+  field_definition.listener:
+    class: Drupal\Core\Field\FieldDefinitionListener
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@keyvalue', '@cache.discovery']
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity.manager', '@form_builder']
@@ -912,14 +949,14 @@ services:
     tags:
       - { name: route_enhancer }
       - { name: event_subscriber }
+  route_enhancer.form:
+    class: Drupal\Core\Routing\Enhancer\FormRouteEnhancer
+    tags:
+      - { name: route_enhancer }
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     tags:
       - { name: route_enhancer, priority: 20 }
-  route_content_controller_subscriber:
-    class: Drupal\Core\EventSubscriber\ContentControllerSubscriber
-    tags:
-      - { name: event_subscriber }
   route_special_attributes_subscriber:
     class: Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
     tags:
@@ -1070,7 +1107,7 @@ services:
     class: Drupal\Core\EventSubscriber\FinishResponseSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@language_manager', '@config.factory', '@page_cache_request_policy', '@page_cache_response_policy', '@cache_contexts_manager']
+    arguments: ['@language_manager', '@config.factory', '@page_cache_request_policy', '@page_cache_response_policy', '@cache_contexts_manager', '%http.response.debug_cacheability_headers%']
   response_generator_subscriber:
     class: Drupal\Core\EventSubscriber\ResponseGeneratorSubscriber
     tags:
@@ -1423,7 +1460,7 @@ services:
     class: Drupal\Core\Asset\AssetDumper
   library.discovery:
     class: Drupal\Core\Asset\LibraryDiscovery
-    arguments: ['@library.discovery.collector', '@cache_tags.invalidator']
+    arguments: ['@library.discovery.collector']
   library.discovery.collector:
     class: Drupal\Core\Asset\LibraryDiscoveryCollector
     arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']

@@ -149,24 +149,24 @@ final class Settings {
   }
 
   /**
-   * Generates a prefix for APC user cache keys.
+   * Generates a prefix for APCu user cache keys.
    *
-   * A standardized prefix is useful to allow visual inspection of an APC user
+   * A standardized prefix is useful to allow visual inspection of an APCu user
    * cache. By default, this method will produce a unique prefix per site using
    * the hash salt. If the setting 'apcu_ensure_unique_prefix' is set to FALSE
    * then if the caller does not provide a $site_path only the Drupal root will
    * be used. This allows WebTestBase to use the same prefix ensuring that the
-   * number of APC items created during a full test run is kept to a minimum.
+   * number of APCu items created during a full test run is kept to a minimum.
    * Additionally, if a multi site implementation does not use site specific
    * module directories setting apcu_ensure_unique_prefix would allow the sites
-   * to share APC cache items.
+   * to share APCu cache items.
    *
    * @param $identifier
    *   An identifier for the prefix. For example, 'class_loader' or
    *   'cache_backend'.
    *
    * @return string
-   *   The prefix for APC user cache keys.
+   *   The prefix for APCu user cache keys.
    */
   public static function getApcuPrefix($identifier, $root, $site_path = '') {
     if (static::get('apcu_ensure_unique_prefix', TRUE)) {

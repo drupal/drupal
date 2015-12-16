@@ -261,6 +261,9 @@ class CKEditorAdminTest extends WebTestBase {
     $expected_buttons_value = json_encode($default_settings['toolbar']['rows']);
     $this->assertFieldByName('editor[settings][toolbar][button_groups]', $expected_buttons_value);
 
+    // Regression test for https://www.drupal.org/node/2606460.
+    $this->assertTrue(strpos($this->drupalSettings['ckeditor']['toolbarAdmin'], '<li data-drupal-ckeditor-button-name="Bold" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="bold" aria-label="bold"><span class="cke_button_icon cke_button__bold_icon">bold</span></a></li>') !== FALSE);
+
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
     $this->assertFieldByXPath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]', '', 'The styles textarea exists and is empty.');

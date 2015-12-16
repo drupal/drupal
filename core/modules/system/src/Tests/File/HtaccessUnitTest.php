@@ -40,8 +40,7 @@ class HtaccessUnitTest extends KernelTestBase {
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
     $this->assertFalse(strpos($content, "Require all denied") !== FALSE);
     $this->assertFalse(strpos($content, "Deny from all") !== FALSE);
-    $this->assertTrue(strpos($content, "Options None") !== FALSE);
-    $this->assertTrue(strpos($content, "Options +FollowSymLinks") !== FALSE);
+    $this->assertTrue(strpos($content, "Options -Indexes -ExecCGI -Includes -MultiViews") !== FALSE);
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
     $this->assertFilePermissions($public . '/.htaccess', 0444);
 
@@ -54,8 +53,7 @@ class HtaccessUnitTest extends KernelTestBase {
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
     $this->assertTrue(strpos($content, "Require all denied") !== FALSE);
     $this->assertTrue(strpos($content, "Deny from all") !== FALSE);
-    $this->assertTrue(strpos($content, "Options None") !== FALSE);
-    $this->assertTrue(strpos($content, "Options +FollowSymLinks") !== FALSE);
+    $this->assertTrue(strpos($content, "Options -Indexes -ExecCGI -Includes -MultiViews") !== FALSE);
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
     $this->assertFilePermissions($private . '/.htaccess', 0444);
 
@@ -68,8 +66,7 @@ class HtaccessUnitTest extends KernelTestBase {
     $this->assertTrue(strpos($content,"SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
     $this->assertTrue(strpos($content, "Require all denied") !== FALSE);
     $this->assertTrue(strpos($content,"Deny from all") !== FALSE);
-    $this->assertTrue(strpos($content,"Options None") !== FALSE);
-    $this->assertTrue(strpos($content,"Options +FollowSymLinks") !== FALSE);
+    $this->assertTrue(strpos($content,"Options -Indexes -ExecCGI -Includes -MultiViews") !== FALSE);
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
     $this->assertFilePermissions($stream . '/.htaccess', 0444);
 

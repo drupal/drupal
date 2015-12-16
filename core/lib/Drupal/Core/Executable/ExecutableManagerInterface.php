@@ -20,12 +20,12 @@ interface ExecutableManagerInterface extends PluginManagerInterface {
    * @param \Drupal\Core\Executable\ExecutableInterface $plugin
    *   An executable plugin instance managed by the implementing manager.
    *
-   * @throws \Drupal\Core\Executable\ExecutableException
-   *   If the plugin could not be executed.
-   *
    * @return mixed
    *   The returned data varies by plugin implementation, e.g. conditions return
    *   the boolean evaluation result.
+   *
+   * @throws \Drupal\Core\Executable\ExecutableException
+   *   If the plugin could not be executed.
    */
   public function execute(ExecutableInterface $plugin);
 

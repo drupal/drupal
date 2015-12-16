@@ -18,8 +18,7 @@
     "require-dev": {
         "composer/composer": "1.0.*@dev",
         "jakub-onderka/php-parallel-lint": "~0.8",
-        "phpspec/prophecy-phpunit": "~1.0",
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "~4.8|~5.0",
         "squizlabs/php_codesniffer": "~2.1.0"
     },
     "autoload": {

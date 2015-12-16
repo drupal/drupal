@@ -31,7 +31,7 @@ abstract class LanguageTestBase extends ViewKernelTestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewTestBase::schemaDefinition().
+   * {@inheritdoc}
    */
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();
@@ -46,7 +46,7 @@ abstract class LanguageTestBase extends ViewKernelTestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewTestBase::schemaDefinition().
+   * {@inheritdoc}
    */
   protected function viewsData() {
     $data = parent::viewsData();
@@ -68,7 +68,7 @@ abstract class LanguageTestBase extends ViewKernelTestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewTestBase::dataSet().
+   * {@inheritdoc}
    */
   protected function dataSet() {
     $data = parent::dataSet();

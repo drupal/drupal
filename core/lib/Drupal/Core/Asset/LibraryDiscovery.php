@@ -8,7 +8,6 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Core\Cache\CacheCollectorInterface;
-use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 
 /**
  * Discovers available asset libraries in Drupal.
@@ -21,13 +20,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    * @var \Drupal\Core\Cache\CacheCollectorInterface
    */
   protected $collector;
-
-  /**
-   * The cache tag invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagInvalidator;
 
   /**
    * The final library definitions, statically cached.
@@ -44,16 +36,9 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    *
    * @param \Drupal\Core\Cache\CacheCollectorInterface $library_discovery_collector
    *   The library discovery cache collector.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
-   *   The cache tag invalidator.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
    */
-  public function __construct(CacheCollectorInterface $library_discovery_collector, CacheTagsInvalidatorInterface $cache_tag_invalidator) {
+  public function __construct(CacheCollectorInterface $library_discovery_collector) {
     $this->collector = $library_discovery_collector;
-    $this->cacheTagInvalidator = $cache_tag_invalidator;
   }
 
   /**
@@ -64,7 +49,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
       $libraries = $this->collector->get($extension);
       $this->libraryDefinitions[$extension] = [];
       foreach ($libraries as $name => $definition) {
-        $library_name = "$extension/$name";
         $this->libraryDefinitions[$extension][$name] = $definition;
       }
     }
@@ -84,7 +68,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
-    $this->cacheTagInvalidator->invalidateTags(['library_info']);
     $this->libraryDefinitions = [];
     $this->collector->clear();
   }

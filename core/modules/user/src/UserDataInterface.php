@@ -17,7 +17,7 @@ interface UserDataInterface {
    *
    * @param string $module
    *   The name of the module the data is associated with.
-   * @param integer $uid
+   * @param int $uid
    *   (optional) The user account ID the data is associated with.
    * @param string $name
    *   (optional) The name of the data key.
@@ -41,7 +41,7 @@ interface UserDataInterface {
    *
    * @param string $module
    *   The name of the module the data is associated with.
-   * @param integer $uid
+   * @param int $uid
    *   The user account ID the data is associated with.
    * @param string $name
    *   The name of the data key.
@@ -58,7 +58,7 @@ interface UserDataInterface {
    * @param string|array $module
    *   (optional) The name of the module the data is associated with. Can also
    *   be an array to delete the data of multiple modules.
-   * @param integer|array $uid
+   * @param int|array $uid
    *   (optional) The user account ID the data is associated with. If omitted,
    *   all data for $module is deleted. Can also be an array of IDs to delete
    *   the data of multiple user accounts.

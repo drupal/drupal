@@ -112,6 +112,8 @@ class UpdateRegistry {
       }
     }
 
+    // Ensure that the update order is deterministic.
+    sort($updates);
     return $updates;
   }
 

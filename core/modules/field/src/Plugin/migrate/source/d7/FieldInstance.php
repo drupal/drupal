@@ -82,6 +82,9 @@ class FieldInstance extends DrupalSqlBase {
     $row->setSourceProperty('widget_settings', $data['widget']);
     $row->setSourceProperty('display_settings', $data['display']);
 
+    // This is for parity with the d6_field_instance plugin.
+    $row->setSourceProperty('widget_type', $data['widget']['type']);
+
     return parent::prepareRow($row);
   }
 

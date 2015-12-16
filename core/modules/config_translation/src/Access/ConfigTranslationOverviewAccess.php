@@ -45,6 +45,8 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
    *
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
    *   The mapper plugin discovery service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager service.
    */
   public function __construct(ConfigMapperManagerInterface $config_mapper_manager, LanguageManagerInterface $language_manager) {
     $this->configMapperManager = $config_mapper_manager;

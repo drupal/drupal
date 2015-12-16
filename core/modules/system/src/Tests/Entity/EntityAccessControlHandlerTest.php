@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
@@ -155,6 +156,10 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
     // Test hook_entity_create_access() and hook_ENTITY_TYPE_create_access().
     $entity->access('create');
     $this->assertEqual($state->get('entity_test_entity_create_access'), TRUE);
+    $this->assertIdentical($state->get('entity_test_entity_create_access_context'), [
+      'entity_type_id' => 'entity_test',
+      'langcode' => LanguageInterface::LANGCODE_DEFAULT,
+    ]);
     $this->assertEqual($state->get('entity_test_entity_test_create_access'), TRUE);
 
     // Test hook_entity_access() and hook_ENTITY_TYPE_access().

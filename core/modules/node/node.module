@@ -181,7 +181,7 @@ function node_entity_view_display_alter(EntityViewDisplayInterface $display, $co
  * @param $title
  *   (optional) A heading for the resulting list.
  *
- * @return
+ * @return array|false
  *   A renderable array containing a list of linked node titles fetched from
  *   $result, or FALSE if there are no rows in $result.
  */
@@ -316,7 +316,8 @@ function node_type_load($name) {
  * @param string $label
  *   (optional) The label for the body instance.
  *
- * @return \Drupal\field\Entity\FieldConfig Body field.
+ * @return \Drupal\field\Entity\FieldConfig
+ *   A Body field object.
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
@@ -465,7 +466,7 @@ function node_revision_load($vid = NULL) {
  * @param $revision_id
  *   The revision ID to delete.
  *
- * @return
+ * @return bool
  *   TRUE if the revision deletion was successful; otherwise, FALSE.
  */
 function node_revision_delete($revision_id) {
@@ -478,7 +479,7 @@ function node_revision_delete($revision_id) {
  * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  *
- * @return
+ * @return int|false
  *   The ID of the node if this is a full page view, otherwise FALSE.
  */
 function node_is_page(NodeInterface $node) {
@@ -729,7 +730,7 @@ function node_user_predelete($account) {
  * @param $number
  *   (optional) The maximum number of nodes to find. Defaults to 10.
  *
- * @return
+ * @return \Drupal\node\NodeInterface[]
  *   An array of node entities or an empty array if there are no recent nodes
  *   visible to the current user.
  */
@@ -776,7 +777,7 @@ function node_get_recent($number = 10) {
  *   (optional) A language code to use for rendering. Defaults to NULL which is
  *   the global content language of the current request.
  *
- * @return
+ * @return array
  *   An array as expected by drupal_render().
  */
 function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
@@ -794,7 +795,7 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  *
- * @return
+ * @return array
  *   An array in the format expected by drupal_render().
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
@@ -1063,6 +1064,14 @@ function node_query_node_access_alter(AlterableInterface $query) {
 
   // Update the query for the given storage method.
   \Drupal::service('node.grant_storage')->alterQuery($query, $tables, $op, $account, $base_table);
+
+  // Bubble the 'user.node_grants:$op' cache context to the current render
+  // context.
+  $renderer = \Drupal::service('renderer');
+  if ($renderer->hasRenderContext()) {
+    $build = ['#cache' => ['contexts' => ['user.node_grants:' . $op]]];
+    $renderer->render($build);
+  }
 }
 
 /**
@@ -1080,8 +1089,9 @@ function node_query_node_access_alter(AlterableInterface $query) {
  * @param $rebuild
  *   (optional) The boolean value to be written.
  *
- * @return
- *   The current value of the flag if no value was provided for $rebuild.
+ * @return bool|null
+ *   The current value of the flag if no value was provided for $rebuild. If a
+ *   value was provided for $rebuild, nothing (NULL) is returned.
  *
  * @see node_access_rebuild()
  */

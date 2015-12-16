@@ -59,7 +59,7 @@ class DeleteForm extends ConfirmFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\ConfirmFormBase::getQuestion().
+   * {@inheritdoc}
    */
   public function getQuestion() {
     return t('Are you sure you want to delete path alias %title?', array('%title' => $this->pathAlias['alias']));

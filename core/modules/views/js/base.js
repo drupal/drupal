@@ -55,8 +55,7 @@
     var path = Drupal.Views.getPath(href);
     // Ensure we have a correct path.
     if (viewPath && path.substring(0, viewPath.length + 1) === viewPath + '/') {
-      var args = decodeURIComponent(path.substring(viewPath.length + 1, path.length));
-      returnObj.view_args = args;
+      returnObj.view_args = decodeURIComponent(path.substring(viewPath.length + 1, path.length));
       returnObj.view_path = path;
     }
     return returnObj;

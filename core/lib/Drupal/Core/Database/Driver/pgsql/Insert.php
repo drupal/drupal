@@ -15,6 +15,9 @@ use Drupal\Core\Database\Query\Insert as QueryInsert;
  * @{
  */
 
+/**
+ * PostgreSQL implementation of \Drupal\Core\Database\Query\Insert.
+ */
 class Insert extends QueryInsert {
 
   public function execute() {

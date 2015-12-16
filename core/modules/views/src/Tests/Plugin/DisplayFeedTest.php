@@ -48,9 +48,13 @@ class DisplayFeedTest extends PluginTestBase {
 
     // Verify a title with HTML entities is properly escaped.
     $node_title = 'This "cool" & "neat" article\'s title';
-    $node = $this->drupalCreateNode(array(
-      'title' => $node_title
-    ));
+    $node = $this->drupalCreateNode([
+      'title' => $node_title,
+      'body' => [0 => [
+        'value' => 'A paragraph',
+        'format' => filter_default_format(),
+      ]],
+    ]);
 
     // Test the site name setting.
     $site_name = $this->randomMachineName();
@@ -60,6 +64,8 @@ class DisplayFeedTest extends PluginTestBase {
     $result = $this->xpath('//title');
     $this->assertEqual($result[0], $site_name, 'The site title is used for the feed title.');
     $this->assertEqual($result[1], $node_title, 'Node title with HTML entities displays correctly.');
+    // Verify HTML is properly escaped in the description field.
+    $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
 
     $view = $this->container->get('entity.manager')->getStorage('view')->load('test_display_feed');
     $display = &$view->getDisplay('feed_1');
@@ -101,12 +107,18 @@ class DisplayFeedTest extends PluginTestBase {
     // Verify a title with HTML entities is properly escaped.
     $node_title = 'This "cool" & "neat" article\'s title';
     $this->drupalCreateNode(array(
-      'title' => $node_title
+      'title' => $node_title,
+      'body' => [0 => [
+        'value' => 'A paragraph',
+        'format' => filter_default_format(),
+      ]],
     ));
 
     $this->drupalGet('test-feed-display-fields.xml');
     $result = $this->xpath('//title/a');
     $this->assertEqual($result[0], $node_title, 'Node title with HTML entities displays correctly.');
+    // Verify HTML is properly escaped in the description field.
+    $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
   }
 
   /**

@@ -107,12 +107,12 @@ class CreateNew extends GDImageToolkitOperationBase {
 
       case IMAGETYPE_GIF:
         if (empty($arguments['transparent_color'])) {
-          // No transparency color specified, fill white.
-          $fill_color = imagecolorallocate($res, 255, 255, 255);
+          // No transparency color specified, fill white transparent.
+          $fill_color = imagecolorallocatealpha($res, 255, 255, 255, 127);
         }
         else {
           $fill_rgb = Color::hexToRgb($arguments['transparent_color']);
-          $fill_color = imagecolorallocate($res, $fill_rgb['red'], $fill_rgb['green'], $fill_rgb['blue']);
+          $fill_color = imagecolorallocatealpha($res, $fill_rgb['red'], $fill_rgb['green'], $fill_rgb['blue'], 127);
           imagecolortransparent($res, $fill_color);
         }
         imagefill($res, 0, 0, $fill_color);

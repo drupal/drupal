@@ -40,12 +40,9 @@ catch (HttpExceptionInterface $e) {
 if (Settings::get('rebuild_access', FALSE) ||
   ($request->get('token') && $request->get('timestamp') &&
     ((REQUEST_TIME - $request->get('timestamp')) < 300) &&
-    ($request->get('token') === Crypt::hmacBase64($request->get('timestamp'), Settings::get('hash_salt')))
+    Crypt::hashEquals(Crypt::hmacBase64($request->get('timestamp'), Settings::get('hash_salt')), $request->get('token'))
   )) {
-  // Clear the APC cache to ensure APC class loader is reset.
-  if (function_exists('apc_clear_cache')) {
-    apc_clear_cache('user');
-  }
+  // Clear the APCu cache to ensure APCu class loader is reset.
   if (function_exists('apcu_clear_cache')) {
     apcu_clear_cache();
   }

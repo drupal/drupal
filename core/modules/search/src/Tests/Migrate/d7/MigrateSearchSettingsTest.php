@@ -31,6 +31,7 @@ class MigrateSearchSettingsTest extends MigrateDrupal7TestBase {
    */
   public function testSearchSettings() {
     $config = $this->config('search.settings');
+    $this->assertIdentical('node_search', $config->get('default_page'));
     $this->assertIdentical(4, $config->get('index.minimum_word_size'));
     $this->assertTrue($config->get('index.overlap_cjk'));
     $this->assertIdentical(100, $config->get('index.cron_limit'));

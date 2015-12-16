@@ -9,6 +9,7 @@ namespace Drupal\Core\Render;
 use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssets;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -155,7 +156,19 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       $attachment_placeholders = $attached['html_response_attachment_placeholders'];
       unset($attached['html_response_attachment_placeholders']);
 
-      $variables = $this->processAssetLibraries($attached, $attachment_placeholders);
+      $assets = AttachedAssets::createFromRenderArray(['#attached' => $attached]);
+      // Take Ajax page state into account, to allow for something like
+      // Turbolinks to be implemented without altering core.
+      // @see https://github.com/rails/turbolinks/
+      $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
+      $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
+      $variables = $this->processAssetLibraries($assets, $attachment_placeholders);
+      // $variables now contains the markup to load the asset libraries. Update
+      // $attached with the final list of libraries and JavaScript settings, so
+      // that $response can be updated with those. Then the response object will
+      // list the final, processed attachments.
+      $attached['library'] = $assets->getLibraries();
+      $attached['drupalSettings'] = $assets->getSettings();
 
       // Since we can only replace content in the HTML head section if there's a
       // placeholder for it, we can safely avoid processing the render array if
@@ -168,6 +181,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
             $attached,
             $this->processFeed($attached['feed'])
           );
+          unset($attached['feed']);
         }
         // 'html_head_link' is a special case of 'html_head' which can be present
         // as a head element, but also as a Link: HTTP header depending on
@@ -182,6 +196,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
             $attached,
             $this->processHtmlHeadLink($attached['html_head_link'])
           );
+          unset($attached['html_head_link']);
         }
 
         // Now we can process 'html_head', which contains both 'feed' and
@@ -199,6 +214,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     if (!empty($attached['http_header'])) {
       $this->setHeaders($response, $attached['http_header']);
     }
+
+    // AttachmentsResponseProcessorInterface mandates that the response it
+    // processes contains the final attachment values.
+    $response->setAttachments($attached);
 
     return $response;
   }
@@ -255,8 +274,8 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   /**
    * Processes asset libraries into render arrays.
    *
-   * @param array $attached
-   *   The attachments to process.
+   * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
+   *   The attached assets collection for the current response.
    * @param array $placeholders
    *   The placeholders that exist in the response.
    *
@@ -266,16 +285,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *     - scripts
    *     - scripts_bottom
    */
-  protected function processAssetLibraries(array $attached, array $placeholders) {
-    $all_attached = ['#attached' => $attached];
-    $assets = AttachedAssets::createFromRenderArray($all_attached);
-
-    // Take Ajax page state into account, to allow for something like Turbolinks
-    // to be implemented without altering core.
-    // @see https://github.com/rails/turbolinks/
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
-    $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
-
+  protected function processAssetLibraries(AttachedAssetsInterface $assets, array $placeholders) {
     $variables = [];
 
     // Print styles - if present.

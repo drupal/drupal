@@ -28,6 +28,9 @@ class ViewsBlock extends ViewsBlockBase {
   public function build() {
     $this->view->display_handler->preBlockBuild($this);
 
+    // We ask ViewExecutable::buildRenderable() to avoid creating a render cache
+    // entry for the view output by passing FALSE, because we're going to cache
+    // the whole block instead.
     if ($output = $this->view->buildRenderable($this->displayID, [], FALSE)) {
       // Override the label to the dynamic title configured in the view.
       if (empty($this->configuration['views_label']) && $this->view->getTitle()) {

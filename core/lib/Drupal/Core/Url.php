@@ -515,6 +515,7 @@ class Url {
     // Set empty route name and parameters.
     $this->routeName = NULL;
     $this->routeParameters = array();
+    return $this;
   }
 
   /**

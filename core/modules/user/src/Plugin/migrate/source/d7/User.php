@@ -25,7 +25,7 @@ class User extends FieldableEntity {
   public function query() {
     return $this->select('users', 'u')
       ->fields('u')
-      ->condition('uid', 1, '>');
+      ->condition('uid', 0, '>');
   }
 
   /**

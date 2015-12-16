@@ -96,11 +96,11 @@ function image_theme() {
     'image_style' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
       // allows the alt attribute to be omitted in some cases. Therefore,
-      // default the alt attribute to an empty string, but allow code calling
-      // _theme('image_style') to pass explicit NULL for it to be omitted.
+      // default the alt attribute to an empty string, but allow code using
+      // '#theme' => 'image_style' to pass explicit NULL for it to be omitted.
       // Usually, neither omission nor an empty string satisfies accessibility
-      // requirements, so it is strongly encouraged for code calling
-      // _theme('image_style') to pass a meaningful value for the alt variable.
+      // requirements, so it is strongly encouraged for code using '#theme' =>
+      // 'image_style' to pass a meaningful value for the alt variable.
       // - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
       // - http://www.w3.org/TR/xhtml1/dtds.html
       // - http://dev.w3.org/html5/spec/Overview.html#alt
@@ -260,8 +260,8 @@ function image_style_options($include_empty = TRUE) {
  *     attribute to be omitted in some cases. Therefore, this variable defaults
  *     to an empty string, but can be set to NULL for the attribute to be
  *     omitted. Usually, neither omission nor an empty string satisfies
- *     accessibility requirements, so it is strongly encouraged for code calling
- *     _theme('image_style') to pass a meaningful value for this variable.
+ *     accessibility requirements, so it is strongly encouraged for code using
+ *     '#theme' => 'image_style' to pass a meaningful value for this variable.
  *     - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
  *     - http://www.w3.org/TR/xhtml1/dtds.html
  *     - http://dev.w3.org/html5/spec/Overview.html#alt

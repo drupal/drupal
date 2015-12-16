@@ -69,9 +69,6 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
     // Always add a default 'uuid' key.
     $this->entity_keys['uuid'] = 'uuid';
     $this->entity_keys['langcode'] = 'langcode';
-    if (isset($this->handlers['storage'])) {
-      $this->checkStorageClass($this->handlers['storage']);
-    }
     $this->handlers += array(
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
     );
@@ -135,22 +132,11 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   /**
    * {@inheritdoc}
    *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityStorage.
+   *
    * @throws \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
    *   Exception thrown when the provided class is not an instance of
    *   \Drupal\Core\Config\Entity\ConfigEntityStorage.
-   */
-  public function setStorageClass($class) {
-    $this->checkStorageClass($class);
-    parent::setStorageClass($class);
-  }
-
-  /**
-   * Checks that the provided class is an instance of ConfigEntityStorage.
-   *
-   * @param string $class
-   *   The class to check.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigEntityStorage.
    */
   protected function checkStorageClass($class) {
     if (!is_a($class, 'Drupal\Core\Config\Entity\ConfigEntityStorage', TRUE)) {
@@ -171,6 +157,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
           'status' => 'status',
           'dependencies' => 'dependencies',
           'third_party_settings' => 'third_party_settings',
+          '_core' => '_core',
         ];
         foreach ($this->config_export as $property => $name) {
           if (is_numeric($property)) {

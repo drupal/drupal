@@ -10,6 +10,7 @@ namespace Drupal\views_ui\Tests;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -21,11 +22,16 @@ use Drupal\views\ViewExecutable;
 class HandlerTest extends UITestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = array('node_test_views');
+
+  /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view_empty', 'test_view_broken', 'node');
+  public static $testViews = array('test_view_empty', 'test_view_broken', 'node', 'test_node_view');
 
   /**
    * {@inheritdoc}
@@ -34,6 +40,7 @@ class HandlerTest extends UITestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
+    ViewTestData::createTestViews(get_class($this), array('node_test_views'));
   }
 
   /**
@@ -179,7 +186,8 @@ class HandlerTest extends UITestBase {
     ])->save();
 
     $this->drupalGet('admin/structure/views/nojs/add-handler/content/default/field');
-    $this->assertEscaped('Appears in: page, article. Also known as: Content: The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
+    $this->assertEscaped('The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
+    $this->assertEscaped('Appears in: page, article. Also known as: Content: The giraffe" label');
   }
 
   /**
@@ -217,4 +225,37 @@ class HandlerTest extends UITestBase {
     }
   }
 
+  /**
+   * Ensures that neither node type or node ID appears multiple times.
+   *
+   * @see \Drupal\views\EntityViewsData
+   */
+  public function testNoDuplicateFields() {
+    $handler_types = ['field', 'filter', 'sort', 'argument'];
+
+    foreach ($handler_types as $handler_type) {
+      $add_handler_url = 'admin/structure/views/nojs/add-handler/test_node_view/default/' . $handler_type;
+      $this->drupalGet($add_handler_url);
+
+      $this->assertNoDuplicateField('Node ID', 'Content');
+      $this->assertNoDuplicateField('Node ID', 'Content revision');
+      $this->assertNoDuplicateField('Type', 'Content');
+      $this->assertNoDuplicateField('UUID', 'Content');
+      $this->assertNoDuplicateField('Revision ID', 'Content');
+      $this->assertNoDuplicateField('Revision ID', 'Content revision');
+    }
+  }
+
+  /**
+   * Asserts that fields only appear once.
+   *
+   * @param string $field_name
+   *   The field name.
+   * @param string $entity_type
+   *   The entity type to which the field belongs.
+   */
+  public function assertNoDuplicateField($field_name, $entity_type) {
+    $elements = $this->xpath('//td[.=:entity_type]/preceding-sibling::td[@class="title" and .=:title]', [':title' => $field_name, ':entity_type' => $entity_type]);
+    $this->assertEqual(1, count($elements), $field_name . ' appears just once in ' . $entity_type .  '.');
+  }
 }

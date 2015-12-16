@@ -130,7 +130,7 @@ display:
       fields:
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           relationship: none
           group_type: group

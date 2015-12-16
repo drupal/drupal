@@ -52,7 +52,7 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
+   * {@inheritdoc}
    */
   public function getDefinitions() {
     if (isset($this->registerDefinitions)) {

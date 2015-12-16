@@ -72,6 +72,9 @@ interface LinkGeneratorInterface {
    * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
    *   Thrown when a parameter value for a placeholder is not correct because it
    *   does not match the requirement.
+   *
+   * @internal
+   *   Should not be used in user code. Use \Drupal\Core\Link instead.
    */
   public function generate($text, Url $url);
 
@@ -84,6 +87,10 @@ interface LinkGeneratorInterface {
    * @return \Drupal\Core\GeneratedLink
    *   A GeneratedLink object containing a link to the given route and
    *   parameters and bubbleable metadata.
+   *
+   * @internal
+   *   Should not be used in user code.
+   *   Use \Drupal\Core\Link instead.
    */
   public function generateFromLink(Link $link);
 

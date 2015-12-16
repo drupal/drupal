@@ -159,4 +159,35 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with extension checking.');
   }
 
+  /**
+   * Checks that a file can always be removed if it does not pass validation.
+   */
+  public function testFileRemoval() {
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $type_name = 'article';
+    $field_name = 'file_test';
+    $this->createFileField($field_name, 'node', $type_name);
+
+    $test_file = $this->getTestFile('image');
+
+    // Disable extension checking.
+    $this->updateFileField($field_name, $type_name, array('file_extensions' => ''));
+
+    // Check that the file can be uploaded with no extension checking.
+    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+    $node_storage->resetCache(array($nid));
+    $node = $node_storage->load($nid);
+    $node_file = File::load($node->{$field_name}->target_id);
+    $this->assertFileExists($node_file, 'File exists after uploading a file with no extension checking.');
+    $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with no extension checking.');
+
+    // Enable extension checking for text files.
+    $this->updateFileField($field_name, $type_name, array('file_extensions' => 'txt'));
+
+    // Check that the file can still be removed.
+    $this->removeNodeFile($nid);
+    $this->assertNoText('Only files with the following extensions are allowed: txt.');
+    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
+  }
+
 }

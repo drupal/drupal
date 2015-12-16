@@ -27,7 +27,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   public static $modules = array('language', 'content_translation', 'entity_test');
 
   /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
+   * {@inheritdoc}
    */
   protected function setUp() {
     // Use the entity_test_mul as this has multilingual property support.
@@ -36,7 +36,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getTranslatorPermission().
+   * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('administer entity_test content', 'view test entity'));

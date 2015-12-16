@@ -147,11 +147,11 @@ interface FieldableEntityInterface extends EntityInterface {
    * @param string $field_name
    *   The name of the field to get; e.g., 'title' or 'name'.
    *
-   * @throws \InvalidArgumentException
-   *   If an invalid field name is given.
-   *
    * @return \Drupal\Core\Field\FieldItemListInterface
    *   The field item list, containing the field items.
+   *
+   * @throws \InvalidArgumentException
+   *   If an invalid field name is given.
    */
   public function get($field_name);
 
@@ -167,10 +167,10 @@ interface FieldableEntityInterface extends EntityInterface {
    *   TRUE. If the update stems from the entity, set it to FALSE to avoid
    *   being notified again.
    *
+   * @return $this
+   *
    * @throws \InvalidArgumentException
    *   If the specified field does not exist.
-   *
-   * @return $this
    */
   public function set($field_name, $value, $notify = TRUE);
 

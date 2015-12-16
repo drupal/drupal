@@ -40,7 +40,7 @@ class FieldInstance extends DrupalSqlBase {
   public function fields() {
     return array(
       'field_name' => $this->t('The machine name of field.'),
-      'type_name' => $this->t('Content type where is used this field.'),
+      'type_name' => $this->t('Content type where this field is in use.'),
       'weight' => $this->t('Weight.'),
       'label' => $this->t('A name to show.'),
       'widget_type' => $this->t('Widget type.'),

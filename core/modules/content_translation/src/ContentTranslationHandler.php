@@ -177,8 +177,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected function hasAuthor() {
     // Check for field named uid, but only in case the entity implements the
     // EntityOwnerInterface. This helps to exclude cases, where the uid is
-    // defined as field name, but is not meant to be an owner field e.g. the
-    // User entity.
+    // defined as field name, but is not meant to be an owner field; for
+    // instance, the User entity.
     return $this->entityType->isSubclassOf('\Drupal\user\EntityOwnerInterface') && $this->checkFieldStorageDefinitionTranslatability('uid');
   }
 
@@ -550,7 +550,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Update #title attribute for all elements that are allowed to have a
     // #title attribute according to the Form API Reference. The reason for this
     // check is because some elements have a #title attribute even though it is
-    // not rendered, e.g. field containers.
+    // not rendered; for instance, field containers.
     if (isset($element['#type']) && isset($fapi_title_elements[$element['#type']]) && isset($element['#title'])) {
       $element['#title'] .= $suffix;
     }
@@ -652,7 +652,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $source = $form_state->getValue(array('source_langcode', 'source'));
 
     $entity_type_id = $entity->getEntityTypeId();
-    $form_state->setRedirect('content_translation.translation_add_' . $entity_type_id, array(
+    $form_state->setRedirect("entity.$entity_type_id.content_translation_add", array(
       $entity_type_id => $entity->id(),
       'source' => $source,
       'target' => $form_object->getFormLangcode($form_state),
@@ -689,7 +689,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $form_state->setRedirectUrl($entity->urlInfo('delete-form'));
     }
     else {
-      $form_state->setRedirect('content_translation.translation_delete_' . $entity_type_id, [
+      $form_state->setRedirect("entity.$entity_type_id.content_translation_delete", [
         $entity_type_id => $entity->id(),
         'language' => $form_object->getFormLangcode($form_state),
       ]);

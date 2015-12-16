@@ -12,6 +12,10 @@
   margin-right: 0;
   margin-left: 0.5em;
 }
+/* This is required to win over specificity of [dir="rtl"] .form--inline .form-item */
+[dir="rtl"] .views-filterable-options-controls .form-item {
+  margin-right: 2%;
+}
 .form--inline .form-item-separator {
   margin-top: 2.3em;
   margin-right: 1em; /* LTR */

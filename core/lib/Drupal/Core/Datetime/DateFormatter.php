@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Provides a service to handler various date related functionality.
+ * Provides a service to handle various date related functionality.
  *
  * @ingroup i18n
  */

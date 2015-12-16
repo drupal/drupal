@@ -115,7 +115,7 @@ class RouteProviderTest extends KernelTestBase {
   public function testCandidateOutlines() {
 
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $provider = new TestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 
     $parts = array('node', '5', 'edit');
 
@@ -131,6 +131,15 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertTrue(array_key_exists('/node/5', $candidates), 'Fifth candidate found.');
     $this->assertTrue(array_key_exists('/node/%', $candidates), 'Sixth candidate found.');
     $this->assertTrue(array_key_exists('/node', $candidates), 'Seventh candidate found.');
+  }
+
+  /**
+   * Don't fail when given an empty path.
+   */
+  public function testEmptyPathCandidatesOutlines() {
+    $provider = new TestRouteProvider(Database::getConnection(), $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $candidates = $provider->getCandidateOutlines([]);
+    $this->assertEqual(count($candidates), 0, 'Empty parts should return no candidates.');
   }
 
   /**
@@ -532,7 +541,7 @@ class RouteProviderTest extends KernelTestBase {
    */
   public function testGetRoutesByPatternWithLongPatterns() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $provider = new TestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 
     $this->fixtures->createTables($connection);
     // This pattern has only 3 parts, so we will get candidates, but no routes,
@@ -610,6 +619,14 @@ class RouteProviderTest extends KernelTestBase {
     // Query a limited sets of routes.
     $routes = $provider->getRoutesPaged(1, 2);
     $this->assertEqual(array_keys($routes), array_slice(array_keys($fixture_routes), 1, 2));
+  }
+
+}
+
+class TestRouteProvider extends RouteProvider {
+
+  public function getCandidateOutlines(array $parts) {
+    return parent::getCandidateOutlines($parts);
   }
 
 }

@@ -13,21 +13,21 @@ namespace Drupal\Core\FileTransfer;
 class Local extends FileTransfer implements ChmodInterface {
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::connect().
+   * {@inheritdoc}
    */
   public function connect() {
     // No-op
   }
 
   /**
-   * Overrides Drupal\Core\FileTransfer\FileTransfer::factory().
+   * {@inheritdoc}
    */
   static function factory($jail, $settings) {
     return new Local($jail);
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::copyFileJailed().
+   * {@inheritdoc}
    */
   protected function copyFileJailed($source, $destination) {
     if (@!copy($source, $destination)) {
@@ -36,7 +36,7 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::createDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function createDirectoryJailed($directory) {
     if (!is_dir($directory) && @!mkdir($directory, 0777, TRUE)) {
@@ -45,7 +45,7 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeDirectoryJailed().
+   * {@inheritdoc}
    */
   protected function removeDirectoryJailed($directory) {
     if (!is_dir($directory)) {
@@ -70,7 +70,7 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::removeFileJailed().
+   * {@inheritdoc}
    */
   protected function removeFileJailed($file) {
     if (@!drupal_unlink($file)) {
@@ -79,21 +79,21 @@ class Local extends FileTransfer implements ChmodInterface {
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isDirectory().
+   * {@inheritdoc}
    */
   public function isDirectory($path) {
     return is_dir($path);
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\FileTransfer::isFile().
+   * {@inheritdoc}
    */
   public function isFile($path) {
     return is_file($path);
   }
 
   /**
-   * Implements Drupal\Core\FileTransfer\ChmodInterface::chmodJailed().
+   * {@inheritdoc}
    */
   public function chmodJailed($path, $mode, $recursive) {
     if ($recursive && is_dir($path)) {

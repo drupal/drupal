@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\ProxyClass\Routing\MatcherDumper.
+ * Contains \Drupal\Core\ProxyClass\Routing\MatcherDumper.
  */
 
 /**

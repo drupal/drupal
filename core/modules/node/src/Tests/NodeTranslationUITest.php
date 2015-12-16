@@ -66,7 +66,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests the basic translation UI.
    */
-  function testTranslationUI() {
+  public function testTranslationUI() {
     parent::testTranslationUI();
     $this->doUninstallTest();
   }
@@ -74,7 +74,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests changing the published status on a node without fields.
    */
-  function testPublishedStatusNoFields() {
+  public function testPublishedStatusNoFields() {
     // Test changing the published status of an article without fields.
     $this->drupalLogin($this->administrator);
     // Delete all fields.
@@ -94,7 +94,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $language = ConfigurableLanguage::load($langcode);
     $values[$langcode] = array('title' => array(array('value' => $this->randomMachineName())));
 
-    $add_url = Url::fromRoute('content_translation.translation_add_' . $entity->getEntityTypeId(), [
+    $entity_type_id = $entity->getEntityTypeId();
+    $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
       'target' => $langcode
@@ -108,7 +109,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getTranslatorPermission().
+   * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('administer nodes', "edit any $this->bundle content"));
@@ -129,7 +130,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getNewEntityValues().
+   * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
     return array('title' => array(array('value' => $this->randomMachineName()))) + parent::getNewEntityValues($langcode);
@@ -148,7 +149,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::assertPublishedStatus().
+   * {@inheritdoc}
    */
   protected function doTestPublishedStatus() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
@@ -179,7 +180,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::assertAuthoringInfo().
+   * {@inheritdoc}
    */
   protected function doTestAuthoringInfo() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
@@ -221,7 +222,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translation page inherits admin status of edit page.
    */
-  function testTranslationLinkTheme() {
+  public function testTranslationLinkTheme() {
     $this->drupalLogin($this->administrator);
     $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => $this->langcodes[0]));
 
@@ -270,7 +271,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translations are rendered properly.
    */
-  function testTranslationRendering() {
+  public function testTranslationRendering() {
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);

@@ -23,6 +23,20 @@ use Drupal\Tests\UnitTestCase;
 class SafeMarkupTest extends UnitTestCase {
 
   /**
+   * The error message of the last error in the error handler.
+   *
+   * @var string
+   */
+  protected $lastErrorMessage;
+
+  /**
+   * The error number of the last error in the error handler.
+   *
+   * @var int
+   */
+  protected $lastErrorNumber;
+
+  /**
    * {@inheritdoc}
    */
   protected function tearDown() {
@@ -158,6 +172,40 @@ class SafeMarkupTest extends UnitTestCase {
     $tests['non-url-with-html'] = ['Hey giraffe <a href=":url">MUUUH</a>', [':url' => "<span>not a url</span>"], 'Hey giraffe <a href="&lt;span&gt;not a url&lt;/span&gt;">MUUUH</a>', '', TRUE];
 
     return $tests;
+  }
+    /**
+   * Custom error handler that saves the last error.
+   *
+   * We need this custom error handler because we cannot rely on the error to
+   * exception conversion as __toString is never allowed to leak any kind of
+   * exception.
+   *
+   * @param int $error_number
+   *   The error number.
+   * @param string $error_message
+   *   The error message.
+   */
+  public function errorHandler($error_number, $error_message) {
+    $this->lastErrorNumber = $error_number;
+    $this->lastErrorMessage = $error_message;
+  }
+
+  /**
+   * String formatting with SafeMarkup::format() and an unsupported placeholder.
+   *
+   * When you call SafeMarkup::format() with an unsupported placeholder, an
+   * InvalidArgumentException should be thrown.
+   */
+  public function testUnexpectedFormat() {
+
+    // We set a custom error handler because of https://github.com/sebastianbergmann/phpunit/issues/487
+    set_error_handler([$this, 'errorHandler']);
+    // We want this to trigger an error.
+    $error = SafeMarkup::format('Broken placeholder: ~placeholder', ['~placeholder' => 'broken'])->__toString();
+    restore_error_handler();
+
+    $this->assertEquals(E_USER_ERROR, $this->lastErrorNumber);
+    $this->assertEquals('Invalid placeholder (~placeholder) in string: Broken placeholder: ~placeholder', $this->lastErrorMessage);
   }
 
 }

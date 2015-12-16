@@ -50,15 +50,16 @@
           }
         }, true);
 
-        // Override requiredContent & allowedContent.
+        // Extend requiredContent & allowedContent.
+        // CKEDITOR.style is an immutable object: we cannot modify its
+        // definition to extend requiredContent. Hence we get the definition,
+        // modify it, and pass it to a new CKEDITOR.style instance.
         var requiredContent = widgetDefinition.requiredContent.getDefinition();
         requiredContent.attributes['data-align'] = '';
         requiredContent.attributes['data-caption'] = '';
         widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
-        var allowedContent = widgetDefinition.allowedContent.getDefinition();
-        allowedContent.attributes['!data-align'] = '';
-        allowedContent.attributes['!data-caption'] = '';
-        widgetDefinition.allowedContent = new CKEDITOR.style(allowedContent);
+        widgetDefinition.allowedContent.img.attributes['!data-align'] = true;
+        widgetDefinition.allowedContent.img.attributes['!data-caption'] = true;
 
         // Override allowedContent setting for the 'caption' nested editable.
         // This must match what caption_filter enforces.
@@ -71,10 +72,9 @@
         // data-caption attributes.
         var originalDowncast = widgetDefinition.downcast;
         widgetDefinition.downcast = function (element) {
-          var img = originalDowncast.call(this, element);
-          if (!img) {
-            img = findElementByName(element, 'img');
-          }
+          var img = findElementByName(element, 'img');
+          originalDowncast.call(this, img);
+
           var caption = this.editables.caption;
           var captionHtml = caption && caption.getData();
           var attrs = img.attributes;
@@ -91,10 +91,14 @@
               attrs['data-align'] = this.data.align;
             }
           }
-          attrs['data-entity-type'] = this.data['data-entity-type'];
-          attrs['data-entity-uuid'] = this.data['data-entity-uuid'];
 
-          return img;
+          // If img is wrapped with a link, we want to return that link.
+          if (img.parent.name === 'a') {
+            return img.parent;
+          }
+          else {
+            return img;
+          }
         };
 
         // We want to upcast <img> elements to a DOM structure required by the
@@ -115,6 +119,11 @@
 
           element = originalUpcast.call(this, element, data);
           var attrs = element.attributes;
+
+          if (element.parent.name === 'a') {
+            element = element.parent;
+          }
+
           var retElement = element;
           var caption;
 

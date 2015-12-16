@@ -63,7 +63,7 @@ class RegisterForm extends AccountForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::actions().
+   * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);

@@ -75,14 +75,14 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::isInternal().
+   * {@inheritdoc}
    */
   public function isInternal() {
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getFile().
+   * {@inheritdoc}
    */
   public function getFile() {
     // This plugin is already part of Drupal core's CKEditor build.
@@ -90,7 +90,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getConfig().
+   * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
     // Reasonable defaults that provide expected basic behavior.
@@ -123,7 +123,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Implements \Drupal\ckeditor\Plugin\CKEditorPluginButtonsInterface::getButtons().
+   * {@inheritdoc}
    */
   public function getButtons() {
     $button = function($name, $direction = 'ltr') {
@@ -477,11 +477,11 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           //     Once validated, an element or its property cannot be
           //     invalidated by another rule.
           // That means that the most permissive setting wins. Which means that
-          // it will still be allowed by CKEditor to e.g. define any style, no
-          // matter what the "*" tag's restrictions may be. If there's a setting
-          // for either the "style" or "class" attribute, it cannot possibly be
-          // more permissive than what was set above. Hence: inherit from the
-          // "*" tag where possible.
+          // it will still be allowed by CKEditor, for instance, to define any
+          // style, no matter what the "*" tag's restrictions may be. If there
+          // is a setting for either the "style" or "class" attribute, it cannot
+          // possibly be more permissive than what was set above. Hence, inherit
+          // from the "*" tag where possible.
           if (isset($html_restrictions['allowed']['*'])) {
             $wildcard = $html_restrictions['allowed']['*'];
             if (isset($wildcard['style'])) {
@@ -538,16 +538,26 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           if (count($allowed_attributes)) {
             $allowed[$tag]['attributes'] = implode(',', array_keys($allowed_attributes));
           }
-          if (isset($allowed_attributes['style']) && is_array($allowed_attributes['style'])) {
-            $allowed_styles = $get_attribute_values($allowed_attributes['style'], TRUE);
-            if (isset($allowed_styles)) {
-              $allowed[$tag]['styles'] = $allowed_styles;
+          if (isset($allowed_attributes['style'])) {
+            if (is_bool($allowed_attributes['style'])) {
+              $allowed[$tag]['styles'] = $allowed_attributes['style'];
+            }
+            elseif (is_array($allowed_attributes['style'])) {
+              $allowed_classes = $get_attribute_values($allowed_attributes['style'], TRUE);
+              if (isset($allowed_classes)) {
+                $allowed[$tag]['styles'] = $allowed_classes;
+              }
             }
           }
-          if (isset($allowed_attributes['class']) && is_array($allowed_attributes['class'])) {
-            $allowed_classes = $get_attribute_values($allowed_attributes['class'], TRUE);
-            if (isset($allowed_classes)) {
-              $allowed[$tag]['classes'] = $allowed_classes;
+          if (isset($allowed_attributes['class'])) {
+            if (is_bool($allowed_attributes['class'])) {
+              $allowed[$tag]['classes'] = $allowed_attributes['class'];
+            }
+            elseif (is_array($allowed_attributes['class'])) {
+              $allowed_classes = $get_attribute_values($allowed_attributes['class'], TRUE);
+              if (isset($allowed_classes)) {
+                $allowed[$tag]['classes'] = $allowed_classes;
+              }
             }
           }
 
