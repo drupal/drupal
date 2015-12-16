@@ -41,11 +41,6 @@ use Symfony\Component\HttpFoundation\Request;
  * Drupal\Tests\yourmodule\Functional namespace and live in the
  * modules/yourmodule/Tests/Functional directory.
  *
- * All BrowserTestBase tests must have two annotations to ensure process
- * isolation:
- * - @runTestsInSeparateProcesses
- * - @preserveGlobalState disabled
- *
  * @ingroup testing
  *
  * @see \Drupal\simpletest\WebTestBase
@@ -215,6 +210,19 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @var \Behat\Mink\Mink
    */
   protected $mink;
+
+  /**
+   * {@inheritdoc}
+   *
+   * Browser tests are run in separate processes to prevent collisions between
+   * code that may be loaded by tests.
+   */
+  protected $runTestInSeparateProcess = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $preserveGlobalState = FALSE;
 
   /**
    * Initializes Mink sessions.
