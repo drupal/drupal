@@ -9,6 +9,8 @@ namespace Drupal\user\Tests\Migrate\d6;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
+use Drupal\user\AccountSettingsForm;
+use Drupal\Core\Database\Database;
 
 /**
  * Upgrade variables to user.*.yml.
@@ -24,6 +26,8 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->installSchema('system', 'router');
+    $this->container->get('router.builder')->rebuild();
     $this->executeMigrations(['d6_user_mail', 'd6_user_settings']);
   }
 
@@ -60,6 +64,34 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(FALSE, $config->get('verify_mail'));
     $this->assertIdentical('admin_only', $config->get('register'));
     $this->assertIdentical('Guest', $config->get('anonymous'));
+
+    // Tests migration of user_register using the AccountSettingsForm.
+
+    // Map D6 value to D8 value
+    $user_register_map = [
+      [0, USER_REGISTER_ADMINISTRATORS_ONLY],
+      [1, USER_REGISTER_VISITORS],
+      [2, USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL],
+    ];
+
+    foreach ($user_register_map as $map) {
+      // Tests migration of user_register = 1
+      Database::getConnection('default', 'migrate')
+          ->update('variable')
+          ->fields(['value' => serialize($map[0])])
+          ->condition('name', 'user_register')
+          ->execute();
+
+      /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+      $migration = \Drupal::entityManager()
+          ->getStorage('migration')
+          ->loadUnchanged('d6_user_settings');
+      // Indicate we're rerunning a migration that's already run.
+      $migration->getIdMap()->prepareUpdate();
+      $this->executeMigration($migration);
+      $form = $this->container->get('form_builder')->getForm(AccountSettingsForm::create($this->container));
+      $this->assertIdentical($map[1], $form['registration_cancellation']['user_register']['#value']);
+    }
   }
 
 }
