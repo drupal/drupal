@@ -162,7 +162,7 @@ class ResponsiveImageStyleForm extends EntityForm {
           '#type' => 'textfield',
           '#title' => $this->t('Sizes'),
           '#default_value' => isset($image_style_mapping['image_mapping']['sizes']) ? $image_style_mapping['image_mapping']['sizes'] : '100vw',
-          '#description' => $this->t('Enter the value for the sizes attribute: for example "(min-width:700px) 700px, 100vw)".'),
+          '#description' => $this->t('Enter the value for the sizes attribute, for example: %example_sizes.', ['%example_sizes' => '(min-width:700px) 700px, 100vw']),
           '#states' => array(
             'visible' => array(
               ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
