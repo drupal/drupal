@@ -366,7 +366,7 @@
  * @code
  *   '#cache' => [
  *     'keys' => ['entity_view', 'node', $node->id()],
- *     'contexts' => ['language'],
+ *     'contexts' => ['languages'],
  *     'tags' => ['node:' . $node->id()],
  *     'max-age' => Cache::PERMANENT,
  *   ],
