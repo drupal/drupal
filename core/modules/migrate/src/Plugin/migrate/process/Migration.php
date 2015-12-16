@@ -115,7 +115,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
       // Only keep the process necessary to produce the destination ID.
       $process = $migration->get('process');
 
-      // We already have the source id values but need to key them for the Row
+      // We already have the source ID values but need to key them for the Row
       // constructor.
       $source_ids = $migration->getSourcePlugin()->getIds();
       $values = array();

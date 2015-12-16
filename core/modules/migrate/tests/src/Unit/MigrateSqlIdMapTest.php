@@ -56,7 +56,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * Saves a single ID mapping row in the database.
    *
    * @param array $map
-   *  The row to save.
+   *   The row to save.
    */
   protected function saveMap(array $map) {
     $table = 'migrate_map_sql_idmap_test';
@@ -114,6 +114,12 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
 
   /**
    * Sets defaults for SQL ID map plugin tests.
+   *
+   * @return array
+   *   An associative array with the following keys:
+   *   - source_row_status
+   *   - rollback_action
+   *   - hash
    */
   protected function idMapDefaults() {
     $defaults = array(
@@ -731,7 +737,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    */
   public function testDestroy() {
     $id_map = $this->getIdMap();
-    // Initialize the id map.
+    // Initialize the ID map.
     $id_map->getDatabase();
     $map_table_name = $id_map->mapTableName();
     $message_table_name = $id_map->messageTableName();

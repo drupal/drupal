@@ -102,10 +102,10 @@ class EntityContentBase extends Entity {
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The content entity.
    * @param array $old_destination_id_values
-   *   An array of destination id values.
+   *   (optional) An array of destination ID values. Defaults to an empty array.
    *
    * @return array
-   *   An array containing the entity id.
+   *   An array containing the entity ID.
    */
   protected function save(ContentEntityInterface $entity, array $old_destination_id_values = array()) {
     $entity->save();

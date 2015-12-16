@@ -173,13 +173,13 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
    * Add one or more dependencies to a graph.
    *
    * @param array $graph
-   *   The graph so far.
+   *   The graph so far, passed by reference.
    * @param int $id
-   *   The migration id.
+   *   The migration ID.
    * @param string $dependency
    *   The dependency string.
    * @param array $dynamic_ids
-   *   The dynamic id mapping.
+   *   The dynamic ID mapping.
    */
   protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
     $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : array($dependency);

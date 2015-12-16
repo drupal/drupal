@@ -54,7 +54,7 @@ abstract class CckFieldPluginBase extends PluginBase implements MigrateCckFieldI
    * {@inheritdoc}
    */
   public function getFieldWidgetMap() {
-    // By default use the plugin id for the widget types.
+    // By default, use the plugin ID for the widget types.
     return [
       $this->pluginId => $this->pluginId . '_default',
     ];

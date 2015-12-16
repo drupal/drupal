@@ -123,9 +123,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    * Prepare any dependent migrations.
    *
    * @param array $id_mappings
-   *   A list of id mappings keyed by migration ids. Each id mapping is a list
-   *   of two arrays, the first are source ids and the second are destination
-   *   ids.
+   *   A list of ID mappings keyed by migration IDs. Each ID mapping is a list
+   *   of two arrays, the first are source IDs and the second are destination
+   *   IDs.
    */
   protected function prepareMigrations(array $id_mappings) {
     foreach ($id_mappings as $migration_id => $data) {
