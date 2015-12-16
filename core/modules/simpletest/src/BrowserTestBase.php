@@ -291,7 +291,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // coverage against.
     $base_url = getenv('SIMPLETEST_BASE_URL');
     if (!$base_url) {
-      $this->markTestSkipped(
+      throw new \Exception(
         'You must provide a SIMPLETEST_BASE_URL environment variable to run some PHPUnit based functional tests.'
       );
     }
