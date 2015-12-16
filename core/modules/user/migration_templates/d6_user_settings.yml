@@ -20,7 +20,7 @@ process:
     default_value: visitors_admin_approval
     map:
       2: visitors_admin_approval
-      1: user_register
+      1: visitors
       0: admin_only
   anonymous: anonymous
 destination:
