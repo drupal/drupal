@@ -9,6 +9,7 @@ namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Tests\ViewKernelTestBase;
 use Drupal\views_ui\Controller\ViewsUIController;
+use Drupal\Component\Utility\Html;
 
 /**
  * Tests the views ui tagging functionality.
@@ -44,16 +45,25 @@ class TagTest extends ViewKernelTestBase {
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $request->query->set('q', 'autocomplete_tag_test');
     $result = $controller->autocompleteTag($request);
-    $matches = (array) json_decode($result->getContent());
+    $matches = (array) json_decode($result->getContent(), TRUE);
     $this->assertEqual(count($matches), 10, 'Make sure the maximum amount of tag results is 10.');
+
+    // Make sure the returned array has the proper format.
+    $suggestions = array_map(function ($tag) {
+      return array('value' => $tag, 'label' => Html::escape($tag));
+    }, $tags);
+    foreach ($matches as $match) {
+      $this->assertTrue(in_array($match, $suggestions), 'Make sure the returned array has the proper format.');
+    }
+
 
     // Make sure that matching by a certain prefix works.
     $request->query->set('q', 'autocomplete_tag_test_even');
     $result = $controller->autocompleteTag($request);
-    $matches = (array) json_decode($result->getContent());
+    $matches = (array) json_decode($result->getContent(), TRUE);
     $this->assertEqual(count($matches), 8, 'Make sure that only a subset is returned.');
     foreach ($matches as $tag) {
-      $this->assertTrue(array_search($tag, $tags) !== FALSE, format_string('Make sure the returned tag @tag actually exists.', array('@tag' => $tag)));
+      $this->assertTrue(array_search($tag['value'], $tags) !== FALSE, format_string('Make sure the returned tag @tag actually exists.', array('@tag' => $tag['value'])));
     }
 
     // Make sure an invalid result doesn't return anything.
