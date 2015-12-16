@@ -19,9 +19,12 @@ class ThemeHandler implements ThemeHandlerInterface {
    * Contains the features enabled for themes by default.
    *
    * @var array
+   *
+   * @see _system_default_theme_features()
    */
   protected $defaultFeatures = array(
     'favicon',
+    'logo',
     'node_user_picture',
     'comment_user_picture',
     'comment_user_verification',

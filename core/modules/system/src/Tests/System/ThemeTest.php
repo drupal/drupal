@@ -189,10 +189,6 @@ class ThemeTest extends WebTestBase {
     $this->assertEqual($elements[0]['src'], file_create_url($uploaded_filename));
 
     $this->container->get('theme_handler')->install(array('bartik'));
-    $this->drupalGet('admin/appearance/settings/bartik');
-    // The logo field should only be present on the global theme settings form.
-    $this->assertNoFieldByName('logo_path');
-    $this->drupalPostForm(NULL, [], t('Save configuration'));
 
     // Ensure only valid themes are listed in the local tasks.
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
@@ -210,6 +206,22 @@ class ThemeTest extends WebTestBase {
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
     $this->assertResponse(200, 'The theme settings form URL for a hidden theme that is the admin theme is available.');
+  }
+
+  /**
+   * Test the theme settings logo form.
+   */
+  function testThemeSettingsLogo() {
+    // Visit Bartik's theme settings page to replace the logo.
+    $this->container->get('theme_handler')->install(['bartik']);
+    $this->drupalGet('admin/appearance/settings/bartik');
+    $edit = [
+      'default_logo' => FALSE,
+      'logo_path' => 'core/misc/druplicon.png',
+    ];
+    $this->drupalPostForm('admin/appearance/settings/bartik', $edit, t('Save configuration'));
+    $this->assertFieldByName('default_logo', FALSE);
+    $this->assertFieldByName('logo_path', 'core/misc/druplicon.png');
   }
 
   /**
