@@ -23,11 +23,13 @@ class SqlBaseTest extends UnitTestCase {
    * @param bool $id_map_is_sql
    *   TRUE if we want getIdMap() to return an instance of Sql.
    * @param bool $with_id_map
-   *   TRUE if we want the id map to have a valid map of ids.
+   *   TRUE if we want the ID map to have a valid map of IDs.
    * @param array $source_options
-   *   An array of connection options for the source connection.
+   *   (optional) An array of connection options for the source connection.
+   *   Defaults to an empty array.
    * @param array $idmap_options
-   *   An array of connection options for the id map connection.
+   *  (optional) An array of connection options for the ID map connection.
+   *  Defaults to an empty array.
    *
    * @dataProvider sqlBaseTestProvider
    */
@@ -40,7 +42,7 @@ class SqlBaseTest extends UnitTestCase {
       ->method('getConnectionOptions')
       ->willReturn($source_options);
 
-    // Setup the id map connection.
+    // Setup the ID map connection.
     $idmap_connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
       ->getMock();
@@ -85,14 +87,14 @@ class SqlBaseTest extends UnitTestCase {
    */
   public function sqlBaseTestProvider() {
     return [
-      // Source ids are empty so mapJoinable() is false.
+      // Source IDs are empty so mapJoinable() is false.
       [FALSE, FALSE, FALSE],
       // Still false because getIdMap() is not a subclass of Sql.
       [FALSE, FALSE, TRUE],
-      // Test mapJoinable() returns false when source and id connection options
+      // Test mapJoinable() returns false when source and ID connection options
       // differ.
       [FALSE, TRUE, TRUE, ['username' => 'different_from_map', 'password' => 'different_from_map'], ['username' => 'different_from_source', 'password' => 'different_from_source']],
-      // Returns true because source and id map connection options are the same.
+      // Returns true because source and ID map connection options are the same.
       [TRUE, TRUE, TRUE, ['username' => 'same_value', 'password' => 'same_value'], ['username' => 'same_value', 'password' => 'same_value']],
     ];
   }
@@ -151,7 +153,10 @@ class TestSqlBase extends SqlBase {
   }
 
   /**
-   * Allows us to set the ids during a test.
+   * Allows us to set the IDs during a test.
+   *
+   * @param array $ids
+   *   An array of identifiers.
    */
   public function setIds($ids) {
     $this->ids = $ids;

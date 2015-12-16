@@ -51,7 +51,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
 
     $this->installConfig(['system']);
 
-    // A simple migration, which will generate a message to the id map because
+    // A simple migration, which will generate a message to the ID map because
     // the concat plugin throws an exception if its source is not an array.
     $config = [
       'id' => 'sample_data',

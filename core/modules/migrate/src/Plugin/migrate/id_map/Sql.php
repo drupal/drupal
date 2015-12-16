@@ -300,7 +300,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $fields = $source_id_schema;
 
       // Add destination identifiers to map table.
-      // TODO: How do we discover the destination schema?
+      // @todo How do we discover the destination schema?
       $count = 1;
       foreach ($this->migration->getDestinationPlugin()->getIds() as $id_definition) {
         // Allow dest identifier fields to be NULL (for IGNORED/FAILED
@@ -405,12 +405,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * Create schema from an id definition.
+   * Creates schema from an ID definition.
    *
    * @param array $id_definition
    *   A field schema definition. Can be SQL schema or a type data
    *   based schema. In the latter case, the value of type needs to be
    *   $typed_data_type.$column
+   *
    * @return array
    */
   protected function getFieldSchema(array $id_definition) {
