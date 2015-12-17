@@ -54,6 +54,7 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
       }
       // Entity bundle field definitions may depend on bundle settings.
       $entity_manager->clearCachedFieldDefinitions();
+      $entity_manager->clearCachedBundles();
     }
   }
 
