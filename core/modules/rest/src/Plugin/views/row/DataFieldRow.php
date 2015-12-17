@@ -138,10 +138,9 @@ class DataFieldRow extends RowPluginBase {
     $output = array();
 
     foreach ($this->view->field as $id => $field) {
-      // If this is not unknown and the raw output option has been set, just get
-      // the raw value.
-      if (($field->field_alias != 'unknown') && !empty($this->rawOutputOptions[$id])) {
-        $value = $field->sanitizeValue($field->getValue($row), 'xss_admin');
+      // If the raw output option has been set, just get the raw value.
+      if (!empty($this->rawOutputOptions[$id])) {
+        $value = $field->getValue($row);
       }
       // Otherwise, pass this through the field advancedRender() method.
       else {
