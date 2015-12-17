@@ -445,16 +445,30 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
-    $this->drupalPostForm($row_options, array('row_options[field_options][created][raw_output]' => '1'), t('Apply'));
+    $values = array(
+      'row_options[field_options][created][raw_output]' => '1',
+      'row_options[field_options][name][raw_output]' => '1',
+    );
+    $this->drupalPostForm($row_options, $values, t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+
+    // Update the name for each to include a script tag.
+    foreach ($storage->loadMultiple() as $entity_test) {
+      $name = $entity_test->name->value;
+      $entity_test->set('name', "<script>$name</script>");
+      $entity_test->save();
+    }
+
     // Just test the raw 'created' value against each row.
     foreach ($this->drupalGetJSON('test/serialize/field') as $index => $values) {
       $this->assertIdentical($values['created'], $view->result[$index]->views_test_data_created, 'Expected raw created value found.');
+      $this->assertIdentical($values['name'], $view->result[$index]->views_test_data_name, 'Expected raw name value found.');
     }
   }
 
@@ -545,6 +559,52 @@ class StyleSerializerTest extends PluginTestBase {
     $result = $this->drupalGetJSON('test/serialize/node-field');
     $this->assertEqual($result[1]['nid'], $node->id());
     $this->assertTrue(strpos($this->getRawContent(), "<script") === FALSE, "No script tag is present in the raw page contents.");
+
+    $this->drupalLogin($this->adminUser);
+
+    // Add an alias and make the output raw.
+    $row_options = 'admin/structure/views/nojs/display/test_serializer_node_display_field/rest_export_1/row_options';
+
+    // Test an empty string for an alias, this should not be used. This also
+    // tests that the form can be submitted with no aliases.
+    $this->drupalPostForm($row_options, ['row_options[field_options][title][raw_output]' => '1'], t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+
+    $view = Views::getView('test_serializer_node_display_field');
+    $view->setDisplay('rest_export_1');
+    $this->executeView($view);
+
+    // Test the raw 'created' value against each row.
+    foreach ($this->drupalGetJSON('test/serialize/node-field') as $index => $values) {
+      $this->assertIdentical($values['title'], $view->result[$index]->_entity->title->value, 'Expected raw title value found.');
+    }
+
+    // Test that multiple raw body fields are shown.
+    // Make the body field unlimited cardinatlity.
+    $storage_definition = $node->getFieldDefinition('body')->getFieldStorageDefinition();
+    $storage_definition->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $storage_definition->save();
+
+    $this->drupalPostForm($row_options, ['row_options[field_options][body][raw_output]' => '1'], t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+
+    $node = $this->drupalCreateNode();
+
+    $body = [
+      'value' => '<script type="text/javascript">alert("node-body");</script>' . $this->randomMachineName(32),
+      'format' => filter_default_format(),
+    ];
+    // Add two body items.
+    $node->body = [$body, $body];
+    $node->save();
+
+    $view = Views::getView('test_serializer_node_display_field');
+    $view->setDisplay('rest_export_1');
+    $this->executeView($view);
+
+    $result = $this->drupalGetJSON('test/serialize/node-field');
+    $this->assertEqual(count($result[2]['body']), $node->body->count(), 'Expected count of values');
+    $this->assertEqual($result[2]['body'], array_map(function($item) { return $item['value']; }, $node->body->getValue()), 'Expected raw body values found.');
   }
 
   /**
