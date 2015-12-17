@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Language;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * An object containing the information for an interface language.
  *
@@ -151,7 +153,17 @@ class Language implements LanguageInterface {
       $a_weight = $a->getWeight();
       $b_weight = $b->getWeight();
       if ($a_weight == $b_weight) {
-        return strnatcasecmp($a->getName(), $b->getName());
+        $a_name = $a->getName();
+        $b_name = $b->getName();
+        // If either name is a TranslatableMarkup object it can not be converted
+        // to a string. This is because translation requires a sorted list of
+        // languages thereby causing an infinite loop. Determine the order based
+        // on ID if this is the case.
+        if ($a_name instanceof TranslatableMarkup || $b_name instanceof TranslatableMarkup) {
+          $a_name = $a->getId();
+          $b_name = $b->getId();
+        }
+        return strnatcasecmp($a_name, $b_name);
       }
       return ($a_weight < $b_weight) ? -1 : 1;
     });
