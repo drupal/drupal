@@ -222,6 +222,13 @@ class ThemeTest extends WebTestBase {
     $this->drupalPostForm('admin/appearance/settings/bartik', $edit, t('Save configuration'));
     $this->assertFieldByName('default_logo', FALSE);
     $this->assertFieldByName('logo_path', 'core/misc/druplicon.png');
+
+    // Make sure the logo and favicon settings are not available when the file
+    // module is not enabled.
+    \Drupal::service('module_installer')->uninstall(['file']);
+    $this->drupalGet('admin/appearance/settings');
+    $this->assertNoText('Logo image settings');
+    $this->assertNoText('Shortcut icon settings');
   }
 
   /**
