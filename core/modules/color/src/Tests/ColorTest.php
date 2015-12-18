@@ -22,7 +22,7 @@ class ColorTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('color', 'color_test', 'block');
+  public static $modules = array('color', 'color_test', 'block', 'file');
 
   /**
    * A user with administrative permissions.
