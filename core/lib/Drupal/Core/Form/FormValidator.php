@@ -346,7 +346,7 @@ class FormValidator implements FormValidatorInterface {
         foreach ($value as $v) {
           if (!isset($options[$v])) {
             $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
-            $this->logger->error('Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']));
+            $this->logger->error('Illegal choice %choice in %name element.', array('%choice' => $v, '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']));
           }
         }
       }
