@@ -101,6 +101,32 @@
           return element;
         };
 
+        // Overrides default implementation. Used to populate the "classes"
+        // property of the widget's "data" property, which is used for the
+        // "widget styles" functionality
+        // (http://docs.ckeditor.com/#!/guide/dev_styles-section-widget-styles).
+        // Is applied to whatever the main element of the widget is (<figure> or
+        // <img>). The classes in image2_captionedClass are always added due to
+        // a bug in CKEditor. In the case of drupalimage, we don't ever want to
+        // add that class, because the widget template already contains it.
+        // @see http://dev.ckeditor.com/ticket/13888
+        // @see https://www.drupal.org/node/2268941
+        var originalGetClasses = widgetDefinition.getClasses;
+        widgetDefinition.getClasses = function () {
+          var classes = originalGetClasses.call(this);
+          var captionedClasses = (this.editor.config.image2_captionedClass || '').split(/\s+/);
+
+          if (captionedClasses.length && classes) {
+            for (var i = 0; i < captionedClasses.length; i++) {
+              if (captionedClasses[i] in classes) {
+                delete classes[captionedClasses[i]];
+              }
+            }
+          }
+
+          return classes;
+        };
+
         // Protected; keys of the widget data to be sent to the Drupal dialog.
         // Keys in the hash are the keys for image2's data, values are the keys
         // that the Drupal dialog uses.
