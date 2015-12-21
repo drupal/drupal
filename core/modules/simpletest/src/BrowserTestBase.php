@@ -1346,4 +1346,22 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     return $logged_in;
   }
 
+  /**
+   * Prevents serializing any properties.
+   *
+   * Browser tests are run in a separate process. To do this PHPUnit creates a
+   * script to run the test. If it fails, the test result object will contain a
+   * stack trace which includes the test object. It will attempt to serialize
+   * it. Returning an empty array prevents it from serializing anything it
+   * should not.
+   *
+   * @return array
+   *   An empty array.
+   *
+   * @see vendor/phpunit/phpunit/src/Util/PHP/Template/TestCaseMethod.tpl.dist
+   */
+  public function __sleep() {
+    return [];
+  }
+
 }
