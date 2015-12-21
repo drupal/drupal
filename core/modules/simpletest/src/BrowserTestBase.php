@@ -809,24 +809,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
-   * Override to use Mink exceptions.
-   *
-   * @return mixed
-   *   Either a test result or NULL.
-   *
-   * @throws \PHPUnit_Framework_AssertionFailedError
-   *   When exception was thrown inside the test.
-   */
-  protected function runTest() {
-    try {
-      return parent::runTest();
-    }
-    catch (Exception $e) {
-      throw new \PHPUnit_Framework_AssertionFailedError($e->getMessage());
-    }
-  }
-
-  /**
    * Installs Drupal into the Simpletest site.
    */
   public function installDrupal() {
