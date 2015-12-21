@@ -38,7 +38,11 @@ class Combine extends StringFilter {
     if ($this->view->style_plugin->usesFields()) {
       $options = array();
       foreach ($this->view->display_handler->getHandlers('field') as $name => $field) {
-        $options[$name] = $field->adminLabel(TRUE);
+        // Only allow clickSortable fields. Fields without clickSorting will
+        // probably break in the Combine filter.
+        if ($field->clickSortable()) {
+          $options[$name] = $field->adminLabel(TRUE);
+        }
       }
       if ($options) {
         $form['fields'] = array(
@@ -107,6 +111,13 @@ class Combine extends StringFilter {
         // settings.
         $errors[] = $this->t('Field %field set in %filter is not set in this display.', array('%field' => $id, '%filter' => $this->adminLabel()));
         break;
+      }
+      elseif (!$fields[$id]->clickSortable()) {
+        // Combined field filter only works with simple fields. If the field is
+        // not click sortable we can assume it is not a simple field.
+        // @todo change this check to isComputed. See
+        // https://www.drupal.org/node/2349465
+        $errors[] = $this->t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', array('%field' => $fields[$id]->adminLabel(), '%filter' => $this->adminLabel()));
       }
     }
     return $errors;
