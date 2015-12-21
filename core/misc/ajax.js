@@ -484,6 +484,11 @@
    *
    * Allows developers to execute an Ajax request manually without specifying
    * an event to respond to.
+   *
+   * @return {object}
+   *   Returns the jQuery.Deferred object underlying the Ajax request. If
+   *   pre-serialization fails, the Deferred will be returned in the rejected
+   *   state.
    */
   Drupal.Ajax.prototype.execute = function () {
     // Do not perform another ajax command if one is already in progress.
@@ -493,13 +498,17 @@
 
     try {
       this.beforeSerialize(this.element, this.options);
-      $.ajax(this.options);
+      // Return the jqXHR so that external code can hook into the Deferred API.
+      return $.ajax(this.options);
     }
     catch (e) {
       // Unset the ajax.ajaxing flag here because it won't be unset during
       // the complete response.
       this.ajaxing = false;
       window.alert('An error occurred while attempting to process ' + this.options.url + ': ' + e.message);
+      // For consistency, return a rejected Deferred (i.e., jqXHR's superclass)
+      // so that calling code can take appropriate action.
+      return $.Deferred().reject();
     }
   };
 
