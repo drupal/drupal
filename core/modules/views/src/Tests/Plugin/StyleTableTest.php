@@ -136,4 +136,23 @@ class StyleTableTest extends PluginTestBase {
     $this->assertTrue(count($result), 'Ensure that the baby\'s age is shown');
   }
 
+  /**
+   * Test that empty columns are hidden when empty_column is set.
+   */
+  public function testEmptyColumn() {
+    // Empty the 'job' data.
+    \Drupal::database()->update('views_test_data')
+      ->fields(['job' => ''])
+      ->execute();
+
+    $this->drupalGet('test-table');
+
+    // Test that only one of the job columns still shows.
+    $result = $this->xpath('//thead/tr/th/a[text()="Job"]');
+    $this->assertEqual(count($result), 1, 'Ensure that empty column header is hidden.');
+
+    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job-1 ")]');
+    $this->assertEqual(count($result), 0, 'Ensure the empty table cells are hidden.');
+  }
+
 }

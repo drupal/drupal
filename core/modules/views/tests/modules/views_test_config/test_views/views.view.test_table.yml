@@ -108,7 +108,7 @@ display:
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: false
+              empty_column: true
               responsive: ''
           default: id
           empty_table: true
