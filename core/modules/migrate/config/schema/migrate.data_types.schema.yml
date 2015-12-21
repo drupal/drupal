@@ -26,6 +26,10 @@ migrate_source:
       type: ignore
       label: 'Constants'
 
+migrate_process:
+  type: migrate_plugin
+  label: 'Process'
+
 # Base schema for migrate source plugins that extend
 # \Drupal\migrate\Plugin\migrate\source\SqlBase.
 migrate_source_sql:

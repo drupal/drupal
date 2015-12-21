@@ -1,0 +1,134 @@
+# Schema for the migrate process plugins.
+
+migrate.process.*:
+  type: migrate_process
+  label: 'Default process'
+
+migrate.process.callback:
+  type: migrate_process
+  label: 'Callback process'
+  mapping:
+    callback:
+      type: string
+      label: 'Callback'
+
+migrate.process.concat:
+  type: migrate_process
+  label: 'Concat process'
+  mapping:
+    delimiter:
+      type: string
+      label: 'Delimiter'
+
+migrate.process.dedupe_entity:
+  type: migrate_process
+  label: 'Dedupe Entity process'
+  mapping:
+    entity_type:
+      type: string
+      label: 'Entity type'
+    field:
+      type: string
+      label: 'Field name'
+    postfix:
+      type: string
+      label: 'Postfix'
+    start:
+      type: integer
+      label: 'Start'
+    length:
+      type: integer
+      label: 'Length'
+
+migrate.process.extract:
+  type: migrate_process
+  label: 'Extract process'
+  mapping:
+    default:
+      type: string
+      label: 'Default value'
+
+migrate.process.flatten:
+  type: migrate_process
+  label: 'Flatten process'
+
+migrate.process.get:
+  type: migrate_process
+  label: 'Get process'
+  mapping:
+    source:
+      type: string
+      label: 'Source key'
+
+migrate.process.iterator:
+  type: migrate_process
+  label: 'Iterator process'
+  mapping:
+    process:
+      type: ignore
+      label: 'Process'
+    key:
+      type: string
+      label: 'Key'
+
+migrate.process.machine_name:
+  type: migrate_process
+  label: 'Machine name process'
+
+migrate.process.migration:
+  type: migrate_process
+  label: 'Migration process'
+  mapping:
+    migration:
+      type: sequence
+      label: 'Migration'
+    source:
+      type: sequence
+      label: 'Source keys'
+    source_ids:
+      type: string
+      label: 'Source IDs'
+    stub_id:
+      type: string
+      label: 'Stub ID'
+
+migrate.process.route:
+  type: migrate_process
+  label: 'Route process'
+
+migrate.process.skip_on_empty:
+  type: migrate_process
+  label: 'Skip on Empty'
+
+migrate.process.skip_row_if_not_set:
+  type: migrate_process
+  label: 'Skip Row process if not set'
+  mapping:
+    index:
+      type: integer
+      label: 'Index'
+
+migrate.process.static_map:
+  type: migrate_process
+  label: 'Static Map'
+  mapping:
+    map:
+      type: sequence
+      label: 'Map'
+    default_value:
+      type: string
+      label: 'Default value'
+    bypass:
+      type: boolean
+      label: 'Bypass lookup'
+
+migrate.process.default_value:
+  type: migrate_process
+  label: 'Default value'
+  mapping:
+    strict:
+      type: boolean
+      label: 'Strict type check'
+    default_value:
+      type: string
+      label: 'Default value'
