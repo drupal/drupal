@@ -1061,21 +1061,6 @@ function system_rebuild_module_data() {
 }
 
 /**
- * Returns an array of default theme features.
- *
- * @see \Drupal\Core\Extension\ThemeHandler::$defaultFeatures
- */
-function _system_default_theme_features() {
-  return array(
-    'favicon',
-    'logo',
-    'node_user_picture',
-    'comment_user_picture',
-    'comment_user_verification',
-  );
-}
-
-/**
  * Get a list of available regions from a specified theme.
  *
  * @param \Drupal\Core\Extension\Extension|string $theme

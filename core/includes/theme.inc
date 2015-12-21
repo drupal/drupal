@@ -95,6 +95,21 @@ function theme_get_registry($complete = TRUE) {
 }
 
 /**
+ * Returns an array of default theme features.
+ *
+ * @see \Drupal\Core\Extension\ThemeHandler::$defaultFeatures
+ */
+function _system_default_theme_features() {
+  return array(
+    'favicon',
+    'logo',
+    'node_user_picture',
+    'comment_user_picture',
+    'comment_user_verification',
+  );
+}
+
+/**
  * Forces the system to rebuild the theme registry.
  *
  * This function should be called when modules are added to the system, or when
