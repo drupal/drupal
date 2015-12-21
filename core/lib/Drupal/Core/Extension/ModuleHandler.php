@@ -90,6 +90,13 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $root;
 
   /**
+   * A list of module include file keys.
+   *
+   * @var array
+   */
+  protected $includeFileKeys = [];
+
+  /**
    * Constructs a ModuleHandler object.
    *
    * @param string $root
@@ -263,14 +270,21 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     $name = $name ?: $module;
+    $key = $type . ':' . $module . ':' . $name;
+    if (isset($this->includeFileKeys[$key])) {
+      return $this->includeFileKeys[$key];
+    }
     if (isset($this->moduleList[$module])) {
       $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
       if (is_file($file)) {
         require_once $file;
+        $this->includeFileKeys[$key] = $file;
         return $file;
       }
+      else {
+        $this->includeFileKeys[$key] = FALSE;
+      }
     }
-
     return FALSE;
   }
 
