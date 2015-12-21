@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\action\Unit\Plugin\migrate\source\d6\ActionTest.
+ * Contains \Drupal\Tests\action\Unit\Plugin\migrate\source\ActionTest.
  */
 
-namespace Drupal\Tests\action\Unit\Plugin\migrate\source\d6;
+namespace Drupal\Tests\action\Unit\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
 
 /**
- * Tests D6 actions source plugin.
+ * Tests actions source plugin.
  *
  * @group action
  */
@@ -18,14 +18,14 @@ class ActionTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\action\Plugin\migrate\source\d6\Action';
+  const PLUGIN_CLASS = 'Drupal\action\Plugin\migrate\source\Action';
 
   // The fake Migration configuration entity.
   protected $migrationConfiguration = array(
     // The ID of the entity, can be any string.
     'id' => 'test',
     'source' => array(
-      'plugin' => 'd6_action',
+      'plugin' => 'action',
     ),
   );
 
@@ -33,14 +33,14 @@ class ActionTest extends MigrateSqlSourceTestCase {
 
   protected $expectedResults = array(
     array(
-      'aid' => '1',
+      'aid' => 'Redirect to node list page',
       'type' => 'system',
       'callback' => 'system_goto_action',
       'parameters' => 'a:1:{s:3:"url";s:4:"node";}',
       'description' => 'Redirect to node list page',
     ),
     array(
-      'aid' => '2',
+      'aid' => 'Test notice email',
       'type' => 'system',
       'callback' => 'system_send_email_action',
       'parameters' => 'a:3:{s:9:"recipient";s:7:"%author";s:7:"subject";s:4:"Test";s:7:"message";s:4:"Test',
@@ -50,15 +50,15 @@ class ActionTest extends MigrateSqlSourceTestCase {
       'aid' => 'comment_publish_action',
       'type' => 'comment',
       'callback' => 'comment_publish_action',
-      'parameters' => null,
-      'description' => null,
+      'parameters' => NULL,
+      'description' => NULL,
     ),
     array(
       'aid' => 'node_publish_action',
       'type' => 'comment',
       'callback' => 'node_publish_action',
-      'parameters' => null,
-      'description' => null,
+      'parameters' => NULL,
+      'description' => NULL,
     ),
   );
 

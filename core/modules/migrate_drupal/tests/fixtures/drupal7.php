@@ -418,6 +418,48 @@ $connection->insert('actions')
   'label',
 ))
 ->values(array(
+  'aid' => '2',
+  'type' => 'comment',
+  'callback' => 'comment_unpublish_by_keyword_action',
+  'parameters' => 'a:1:{s:8:"keywords";a:1:{i:0;s:6:"drupal";}}',
+  'label' => 'Unpublish comment containing keyword(s)',
+))
+->values(array(
+  'aid' => '3',
+  'type' => 'node',
+  'callback' => 'node_assign_owner_action',
+  'parameters' => 'a:1:{s:9:"owner_uid";s:1:"2";}',
+  'label' => 'Change the author of content',
+))
+->values(array(
+  'aid' => '4',
+  'type' => 'node',
+  'callback' => 'node_unpublish_by_keyword_action',
+  'parameters' => 'a:1:{s:8:"keywords";a:1:{i:0;s:6:"drupal";}}',
+  'label' => 'Unpublish content containing keyword(s)',
+))
+->values(array(
+  'aid' => '5',
+  'type' => 'system',
+  'callback' => 'system_message_action',
+  'parameters' => 'a:1:{s:7:"message";s:21:"Drupal migration test";}',
+  'label' => 'Display a message to the user',
+))
+->values(array(
+  'aid' => '6',
+  'type' => 'system',
+  'callback' => 'system_send_email_action',
+  'parameters' => 'a:3:{s:9:"recipient";s:16:"test@example.com";s:7:"subject";s:21:"Drupal migration test";s:7:"message";s:21:"Drupal migration test";}',
+  'label' => 'Send e-mail',
+))
+->values(array(
+  'aid' => '7',
+  'type' => 'system',
+  'callback' => 'system_goto_action',
+  'parameters' => 'a:1:{s:3:"url";s:22:"https://www.drupal.org";}',
+  'label' => 'Redirect to URL',
+))
+->values(array(
   'aid' => 'comment_publish_action',
   'type' => 'comment',
   'callback' => 'comment_publish_action',
