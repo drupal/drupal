@@ -551,4 +551,38 @@ class TermTest extends TaxonomyTestBase {
     $this->assertRaw($term->getName(), 'Term is displayed after saving the node with no changes.');
   }
 
+  /**
+   * Check the breadcrumb on edit and delete a term page.
+   */
+  public function testTermBreadcrumbs() {
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(14),
+      'description[0][value]' => $this->randomMachineName(100),
+      'parent[]' => [0],
+    ];
+
+    // Create the term.
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
+
+    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $term = reset($terms);
+    $this->assertNotNull($term, 'Term found in database.');
+
+    // Check the breadcrumb on the term edit page.
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
+    $breadcrumbs = $this->cssSelect('nav.breadcrumb ol li a');
+    $this->assertIdentical(count($breadcrumbs), 2, 'The breadcrumbs are present on the page.');
+    $this->assertIdentical((string) $breadcrumbs[0], 'Home', 'First breadcrumb text is Home');
+    $this->assertIdentical((string) $breadcrumbs[1], $term->label(), 'Second breadcrumb text is term name on term edit page.');
+    $this->assertEscaped((string) $breadcrumbs[1], 'breadcrumbs displayed and escaped.');
+
+    // Check the breadcrumb on the term delete page.
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
+    $breadcrumbs = $this->cssSelect('nav.breadcrumb ol li a');
+    $this->assertIdentical(count($breadcrumbs), 2, 'The breadcrumbs are present on the page.');
+    $this->assertIdentical((string) $breadcrumbs[0], 'Home', 'First breadcrumb text is Home');
+    $this->assertIdentical((string) $breadcrumbs[1], $term->label(), 'Second breadcrumb text is term name on term delete page.');
+    $this->assertEscaped((string) $breadcrumbs[1], 'breadcrumbs displayed and escaped.');
+  }
+
 }

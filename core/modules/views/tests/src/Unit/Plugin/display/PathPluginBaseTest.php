@@ -261,6 +261,44 @@ class PathPluginBaseTest extends UnitTestCase {
   }
 
   /**
+   * Tests the alter route method with preexisting title callback.
+   */
+  public function testAlterRouteWithAlterCallback() {
+    $collection = new RouteCollection();
+    $collection->add('test_route', new Route('test_route', array('_controller' => 'Drupal\Tests\Core\Controller\TestController::content', '_title_callback' => '\Drupal\Tests\views\Unit\Plugin\display\TestController::testTitle')));
+    $route_2 = new Route('test_route/example', array('_controller' => 'Drupal\Tests\Core\Controller\TestController::content'));
+    $collection->add('test_route_2', $route_2);
+
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route',
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $view_route_names = $this->pathPlugin->alterRoutes($collection);
+    $this->assertEquals(array('test_id.page_1' => 'test_route'), $view_route_names);
+
+    // Ensure that the test_route is overridden.
+    $route = $collection->get('test_route');
+    $this->assertTrue($route instanceof Route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('\Drupal\Tests\views\Unit\Plugin\display\TestController::testTitle', $route->getDefault('_title_callback'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertEquals('my views title', $route->getDefault('_title'));
+
+    // Ensure that the test_route_2 is not overridden.
+    $route = $collection->get('test_route_2');
+    $this->assertTrue($route instanceof Route);
+    $this->assertFalse($route->hasDefault('view_id'));
+    $this->assertFalse($route->hasDefault('display_id'));
+    $this->assertSame($collection->get('test_route_2'), $route_2);
+  }
+
+  /**
    * Tests the collectRoutes method with a path containing named parameters.
    *
    * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
@@ -454,6 +492,23 @@ class PathPluginBaseTest extends UnitTestCase {
       ->will($this->returnValue($access_plugin));
 
     return array($view, $view_entity, $access_plugin);
+  }
+
+}
+
+/**
+ * A page controller for use by tests in this file.
+ */
+class TestController {
+
+  /**
+   * A page title callback.
+   *
+   * @return string
+   *   The page title.
+   */
+  public function testTitle() {
+    return 'Test title';
   }
 
 }

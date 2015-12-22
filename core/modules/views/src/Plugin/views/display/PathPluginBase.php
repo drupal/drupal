@@ -270,6 +270,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         // that parameter conversion options is carried over.
         $route->setOptions($route->getOptions() + $original_route->getOptions());
 
+        if ($original_route->hasDefault('_title_callback')) {
+          $route->setDefault('_title_callback', $original_route->getDefault('_title_callback'));
+        }
+
         // Set the corrected path and the mapping to the route object.
         $route->setOption('_view_argument_map', $argument_map);
         $route->setPath($path);
