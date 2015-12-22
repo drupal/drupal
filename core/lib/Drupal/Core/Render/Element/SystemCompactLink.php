@@ -11,7 +11,14 @@ use Drupal\Core\Url as BaseUrl;
 use Drupal\Component\Utility\NestedArray;
 
 /**
- * Provides a link render element to show or hide inline help descriptions.
+ * Provides a link to show or hide help text on administration pages.
+ *
+ * Usage example:
+ * @code
+ * $form['system_compact_link'] = [
+ *   '#type' => 'system_compact_link',
+ * ];
+ * @endcode
  *
  * @RenderElement("system_compact_link")
  */

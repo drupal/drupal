@@ -16,6 +16,24 @@ use Drupal\Core\Template\Attribute;
 /**
  * Provides a render element for any HTML tag, with properties and value.
  *
+ * Properties:
+ * - #tag: The tag name to output.
+ * - #attributes: (array, optional) HTML attributes to apply to the tag. The
+ *   attributes are escaped, see \Drupal\Core\Template\Attribute.
+ * - #value: (string, optional) A string containing the textual contents of
+ *   the tag.
+ * - #noscript: (bool, optional) When set to TRUE, the markup
+ *   (including any prefix or suffix) will be wrapped in a <noscript> element.
+ *
+ * Usage example:
+ * @code
+ * $build['hello'] = [
+ *   '#type' => 'html_tag'
+ *   '#tag' => 'p',
+ *   '#value' => $this->t('Hello World'),
+ * ];
+ * @endcode
+ *
  * @RenderElement("html_tag")
  */
 class HtmlTag extends RenderElement {
