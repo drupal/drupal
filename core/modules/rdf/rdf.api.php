@@ -18,7 +18,7 @@
  * defined in rdf_rdf_namespaces(), this hook should be used to define the new
  * namespace prefixes.
  *
- * @return
+ * @return string[]
  *   An associative array of namespaces where the key is the namespace prefix
  *   and the value is the namespace URI.
  *
