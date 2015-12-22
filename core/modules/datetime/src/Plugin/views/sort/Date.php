@@ -28,22 +28,6 @@ class Date extends NumericDate {
   }
 
   /**
-   * Override query to provide 'second' granularity.
-   */
-  public function query() {
-    $this->ensureMyTable();
-    switch ($this->options['granularity']) {
-      case 'second':
-        $formula = $this->getDateFormat('YmdHis');
-        $this->query->addOrderBy(NULL, $formula, $this->options['order'], $this->tableAlias . '_' . $this->field . '_' . $this->options['granularity']);
-        return;
-    }
-
-    // All other granularities are handled by the numeric sort handler.
-    parent::query();
-  }
-
-  /**
    * {@inheritdoc}
    *
    * Overridden in order to pass in the string date flag.
