@@ -10,6 +10,22 @@ namespace Drupal\Core\Render\Element;
 /**
  * Provides a render element where the user supplies an in-line Twig template.
  *
+ * Properties:
+ * - #template: The inline Twig template used to render the element.
+ * - #context: (array) The variables to substitute into the Twig template.
+ *   Each variable may be a string or a render array.
+ *
+ * Usage example:
+ * @code
+ * $build['hello']  = [
+ *   '#type' => 'inline_template',
+ *   '#template' => "{% trans %} Hello {% endtrans %} <strong>{{name}}</strong>",
+ *   '#context' => [
+ *     'name' => $name,
+ *   ]
+ * ];
+ * @endcode
+ *
  * @RenderElement("inline_template")
  */
 class InlineTemplate extends RenderElement {

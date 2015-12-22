@@ -10,6 +10,15 @@ namespace Drupal\Core\Render\Element;
 /**
  * Provides a messages element.
  *
+ * Used to display results of drupal_set_message() calls.
+ *
+ * Usage example:
+ * @code
+ * $build['status_messages'] = [
+ *   '#type' => 'status_messages',
+ * ];
+ * @end
+ *
  * @RenderElement("status_messages")
  */
 class StatusMessages extends RenderElement {
