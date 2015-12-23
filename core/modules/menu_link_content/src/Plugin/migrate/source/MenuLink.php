@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\source;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
@@ -23,12 +24,20 @@ class MenuLink extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('menu_links', 'ml')
-      ->fields('ml')
-      ->orderby('ml.depth')
-      ->orderby('ml.mlid')
-      ->condition('module', 'menu')
-      ->condition('customized', 1);
+    $query = $this->select('menu_links', 'ml')
+      ->fields('ml');
+    $and = $query->andConditionGroup()
+      ->condition('ml.module', 'menu')
+      ->condition('ml.router_path', ['admin/build/menu-customize/%', 'admin/structure/menu/manage/%'], 'NOT IN');
+    $condition = $query->orConditionGroup()
+      ->condition('ml.customized', 1)
+      ->condition($and);
+    $query->condition($condition);
+    $query->leftJoin('menu_links', 'pl', 'ml.plid = pl.mlid');
+    $query->addField('pl', 'link_path', 'parent_link_path');
+    $query->orderBy('ml.depth');
+    $query->orderby('ml.mlid');
+    return $query;
   }
 
   /**
@@ -70,6 +79,7 @@ class MenuLink extends DrupalSqlBase {
   public function prepareRow(Row $row) {
     $row->setSourceProperty('options', unserialize($row->getSourceProperty('options')));
     $row->setSourceProperty('enabled', !$row->getSourceProperty('hidden'));
+    $row->setSourceProperty('description', Unicode::truncate($row->getSourceProperty('options/attributes/title'), 255));
 
     return parent::prepareRow($row);
   }
@@ -79,6 +89,7 @@ class MenuLink extends DrupalSqlBase {
    */
   public function getIds() {
     $ids['mlid']['type'] = 'integer';
+    $ids['mlid']['alias'] = 'ml';
     return $ids;
   }
 

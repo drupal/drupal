@@ -23,4 +23,4 @@ destination:
 migration_dependencies:
   required:
     - d7_shortcut_set
-    - d7_menu_links
+    - menu_links

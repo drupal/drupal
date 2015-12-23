@@ -320,10 +320,10 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    * {@inheritdoc}
    */
   public function getDestinationPlugin($stub_being_requested = FALSE) {
+    if ($stub_being_requested && !empty($this->destination['no_stub'])) {
+      throw new MigrateSkipRowException;
+    }
     if (!isset($this->destinationPlugin)) {
-      if ($stub_being_requested && !empty($this->destination['no_stub'])) {
-        throw new MigrateSkipRowException;
-      }
       $this->destinationPlugin = \Drupal::service('plugin.manager.migrate.destination')->createInstance($this->destination['plugin'], $this->destination, $this);
     }
     return $this->destinationPlugin;
