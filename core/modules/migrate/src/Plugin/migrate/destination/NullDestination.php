@@ -11,6 +11,8 @@ use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
+ * Provides null destination plugin.
+ *
  * @MigrateDestination(
  *   id = "null",
  *   requirements_met = false

@@ -10,6 +10,8 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 use Drupal\migrate\Row;
 
 /**
+ * Provides entity base field override plugin.
+ *
  * @MigrateDestination(
  *   id = "entity:base_field_override"
  * )

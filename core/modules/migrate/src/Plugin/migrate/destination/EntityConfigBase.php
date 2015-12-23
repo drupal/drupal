@@ -105,7 +105,7 @@ class EntityConfigBase extends Entity {
   }
 
   /**
-   * Generate an entity ID.
+   * Generates an entity ID.
    *
    * @param \Drupal\migrate\Row $row
    *   The current row.

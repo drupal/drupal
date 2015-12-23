@@ -16,12 +16,15 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Provides entity destination plugin.
+ *
  * @MigrateDestination(
  *   id = "entity",
  *   deriver = "Drupal\migrate\Plugin\Derivative\MigrateEntity"
  * )
  */
 abstract class Entity extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
+
   use DependencyTrait;
 
   /**
@@ -86,7 +89,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    *   The entity type.
    */
   protected static function getEntityTypeId($plugin_id) {
-    // Remove "entity:"
+    // Remove "entity:".
     return substr($plugin_id, 7);
   }
 
@@ -125,13 +128,13 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
   }
 
   /**
-   * Get the entity ID of the row.
+   * Gets the entity ID of the row.
    *
    * @param \Drupal\migrate\Row $row
    *   The row of data.
    *
    * @return string
-   *   The entity ID for the row we are importing.
+   *   The entity ID for the row that we are importing.
    */
   protected function getEntityId(Row $row) {
     return $row->getDestinationProperty($this->getKey('id'));

@@ -7,15 +7,12 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
-use Drupal\Component\Utility\Random;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\link\LinkItemInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -97,7 +94,7 @@ class EntityContentBase extends Entity {
   }
 
   /**
-   * Save the entity.
+   * Saves the entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The content entity.
@@ -122,7 +119,7 @@ class EntityContentBase extends Entity {
   }
 
   /**
-   * Update an entity with the new values from row.
+   * Updates an entity with the new values from row.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to update.
@@ -152,7 +149,7 @@ class EntityContentBase extends Entity {
   }
 
   /**
-   * Do as much population of the stub row as we can.
+   * Populates as much of the stub row as possible.
    *
    * @param \Drupal\migrate\Row $row
    *   The row of data.
@@ -185,7 +182,6 @@ class EntityContentBase extends Entity {
           if (is_null($values)) {
             // Handle failure to generate a sample value.
             throw new MigrateException('Stubbing failed, unable to generate value for field ' . $field_name);
-            break;
           }
         }
 
