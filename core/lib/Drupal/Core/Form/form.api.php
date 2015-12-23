@@ -53,7 +53,7 @@
  *     such as how many total items were processed.
  */
 function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
-  $node_storage = $this->container->get('entity.manager')->getStorage('node');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
