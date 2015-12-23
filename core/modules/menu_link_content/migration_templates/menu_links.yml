@@ -1,6 +1,7 @@
-id: d7_menu_links
+id: menu_links
 label: Menu links
 migration_tags:
+  - Drupal 6
   - Drupal 7
 source:
   plugin: menu_link
@@ -10,19 +11,17 @@ process:
   id: mlid
   bundle: 'constants/bundle'
   title: link_title
-  description:
-    plugin: extract
-    source:
-      - options
-    index:
-      - 0
-      - attributes
-      - title
-    default: ''
+  description: description
   menu_name:
-    plugin: migration
-    migration: menu
-    source: menu_name
+    -
+      plugin: migration
+      migration: menu
+      source: menu_name
+    -
+      plugin: static_map
+      map:
+        management: admin
+      bypass: true
   'link/uri':
     plugin: internal_uri
     source:
@@ -42,16 +41,15 @@ process:
   expanded: expanded
   enabled: enabled
   parent:
-    -
-      plugin: skip_on_empty
-      method: process
-      source: plid
-    -
-      plugin: migration
-      migration: d7_menu_links
+    plugin: menu_link_parent
+    source:
+      - plid
+      - @menu_name
+      - parent_link_path
   changed: updated
 destination:
   plugin: entity:menu_link_content
+  no_stub: true
 migration_dependencies:
   required:
     - menu

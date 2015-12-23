@@ -29,7 +29,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     parent::setUp();
     $this->installSchema('system', ['router']);
     $this->installEntitySchema('menu_link_content');
-    $this->executeMigrations(['menu', 'd6_menu_links']);
+    $this->executeMigrations(['menu', 'menu_links']);
   }
 
   /**
