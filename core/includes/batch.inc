@@ -203,7 +203,7 @@ function _batch_progress_page() {
  * exceeded. It will continue with the next operation of the same batch set in
  * the next request.
  *
- * @return
+ * @return array
  *   An array containing a completion value (in percent) and a status message.
  */
 function _batch_process() {
@@ -337,15 +337,15 @@ function _batch_process() {
 /**
  * Formats the percent completion for a batch set.
  *
- * @param $total
+ * @param int $total
  *   The total number of operations.
- * @param $current
+ * @param int|float $current
  *   The number of the current operation. This may be a floating point number
  *   rather than an integer in the case of a multi-step operation that is not
  *   yet complete; in that case, the fractional part of $current represents the
  *   fraction of the operation that has been completed.
  *
- * @return
+ * @return string
  *   The properly formatted percentage, as a string. We output percentages
  *   using the correct number of decimal places so that we never print "100%"
  *   until we are finished, but we also never print more decimal places than
@@ -372,8 +372,9 @@ function &_batch_current_set() {
  * process and execute its form submit handler (if defined), which may add
  * further sets to this batch.
  *
- * @return
- *   TRUE if a subsequent set was found in the batch.
+ * @return true|null
+ *   TRUE if a subsequent set was found in the batch; no value will be returned
+ *   if no subsequent set was found.
  */
 function _batch_next_set() {
   $batch = &batch_get();
