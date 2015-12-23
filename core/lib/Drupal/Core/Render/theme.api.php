@@ -429,9 +429,10 @@
  *
  * @section render_pipeline The render pipeline
  * The term "render pipeline" refers to the process Drupal uses to take
- * information provided by modules and render it into a response. For more
- * details on this process, see https://www.drupal.org/developing/api/8/render;
- * for background on routing concepts, see @ref sec_controller.
+ * information provided by modules and render it into a response. See
+ * https://www.drupal.org/developing/api/8/render for more details on this
+ * process. For background on routing concepts, see
+ * @link routing Routing API. @endlink
  *
  * There are in fact multiple render pipelines:
  * - Drupal always uses the Symfony render pipeline. See
