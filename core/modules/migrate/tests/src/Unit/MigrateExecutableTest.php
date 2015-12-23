@@ -14,7 +14,7 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
 
 /**
- * @coversDefaultClass \Drupal\Tests\migrate\Unit\MigrateExecutableTest
+ * @coversDefaultClass \Drupal\migrate\MigrateExecutable
  * @group migrate
  */
 class MigrateExecutableTest extends MigrateTestCase {
