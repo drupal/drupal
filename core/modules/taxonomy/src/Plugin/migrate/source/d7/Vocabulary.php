@@ -47,7 +47,7 @@ class Vocabulary extends DrupalSqlBase {
       'hierarchy' => $this->t('The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)'),
       'module' => $this->t('Module responsible for the vocabulary.'),
       'weight' => $this->t('The weight of the vocabulary in relation to other vocabularies.'),
-      'machine_name' => $this->t('Unique achine name of the vocabulary.')
+      'machine_name' => $this->t('Unique machine name of the vocabulary.')
     );
   }
 
