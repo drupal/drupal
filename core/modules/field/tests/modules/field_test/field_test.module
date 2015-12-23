@@ -124,7 +124,7 @@ function field_test_field_widget_form_alter(&$element, FormStateInterface $form_
 function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // Add an additional join onto the entity base table. This will cause an
   // exception if the EFQ does not properly prefix the base table.
-  $query->join('entity_test','et2','%alias.id = entity_test.id');
+  $query->join('entity_test', 'et2', '%alias.id = entity_test.id');
 }
 
 

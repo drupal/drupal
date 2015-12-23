@@ -98,7 +98,7 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->drupalGet('node/1');
 
     // Library and in-place editors.
-    $this->assertNoRaw('core/modules/quickedit/js/quickedit.js',  'Quick Edit library not loaded.');
+    $this->assertNoRaw('core/modules/quickedit/js/quickedit.js', 'Quick Edit library not loaded.');
     $this->assertNoRaw('core/modules/quickedit/js/editors/formEditor.js', "'form' in-place editor not loaded.");
 
     // HTML annotation must always exist (to not break the render cache).

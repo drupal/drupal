@@ -132,7 +132,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display->save();
     $components = array_keys($display->getComponents());
     // The name field is not configurable so will be added automatically.
-    $expected = array ( 0 => 'component_1', 1 => 'component_2',  2 => 'component_3', 'name');
+    $expected = array ( 0 => 'component_1', 1 => 'component_2', 2 => 'component_3', 'name');
     $this->assertIdentical($components, $expected);
   }
 

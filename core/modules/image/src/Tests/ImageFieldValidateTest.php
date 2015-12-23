@@ -72,7 +72,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     // Look for form-required for the alt text.
     $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-alt" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
 
-    $this->assertTrue(isset($elements[0]),'Required marker is shown for the required alt text.');
+    $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required alt text.');
 
     $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-title" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
 

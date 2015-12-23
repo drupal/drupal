@@ -76,13 +76,13 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
     return array(
       array('enabled', array('_module_dependencies' => 'enabled'), FALSE),
       array('disabled', array('_module_dependencies' => 'disabled'), TRUE),
-      array('enabled_or',  array('_module_dependencies' => 'disabled,enabled'), FALSE),
-      array('enabled_or',  array('_module_dependencies' => 'enabled,disabled'), FALSE),
-      array('disabled_or',  array('_module_dependencies' => 'disabled,disabled'), TRUE),
-      array('enabled_and',  array('_module_dependencies' => 'enabled+enabled'), FALSE),
-      array('enabled_and',  array('_module_dependencies' => 'enabled+disabled'), TRUE),
-      array('enabled_and',  array('_module_dependencies' => 'disabled+enabled'), TRUE),
-      array('disabled_and',  array('_module_dependencies' => 'disabled+disabled'), TRUE),
+      array('enabled_or', array('_module_dependencies' => 'disabled,enabled'), FALSE),
+      array('enabled_or', array('_module_dependencies' => 'enabled,disabled'), FALSE),
+      array('disabled_or', array('_module_dependencies' => 'disabled,disabled'), TRUE),
+      array('enabled_and', array('_module_dependencies' => 'enabled+enabled'), FALSE),
+      array('enabled_and', array('_module_dependencies' => 'enabled+disabled'), TRUE),
+      array('enabled_and', array('_module_dependencies' => 'disabled+enabled'), TRUE),
+      array('disabled_and', array('_module_dependencies' => 'disabled+disabled'), TRUE),
       array('no_dependencies', array(), FALSE),
     );
   }

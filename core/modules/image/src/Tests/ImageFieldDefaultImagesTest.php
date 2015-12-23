@@ -326,7 +326,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // The non-existent default image should not be saved.
     $this->assertNull($settings['default_image']['uuid']);
 
-    $field = entity_create('field_config',  array(
+    $field = entity_create('field_config', array(
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'label' => $this->randomMachineName(),

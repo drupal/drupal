@@ -61,7 +61,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     );
 
     // Create a vocabulary.
-    $this->vocabulary = entity_create('taxonomy_vocabulary',  array(
+    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Views testing tags',
       'vid' => 'views_testing_tags',
     ));

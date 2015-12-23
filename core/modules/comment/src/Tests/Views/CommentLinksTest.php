@@ -47,7 +47,7 @@ class CommentLinksTest extends CommentViewKernelTestBase {
     $view = Views::getView('test_comment');
     $view->setDisplay();
 
-    $view->displayHandlers->get('default')->overrideOption('fields',  [
+    $view->displayHandlers->get('default')->overrideOption('fields', [
       'approve_comment' => [
         'table' => 'comment',
         'field' => 'approve_comment',
@@ -134,7 +134,7 @@ class CommentLinksTest extends CommentViewKernelTestBase {
     $view = Views::getView('test_comment');
     $view->setDisplay();
 
-    $view->displayHandlers->get('default')->overrideOption('fields',  [
+    $view->displayHandlers->get('default')->overrideOption('fields', [
       'replyto_comment' => [
         'table' => 'comment',
         'field' => 'replyto_comment',

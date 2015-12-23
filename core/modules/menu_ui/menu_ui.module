@@ -270,7 +270,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   else {
     $default = $node_type->getThirdPartySetting('menu_ui', 'parent', 'main:');
   }
-  $parent_element = $menu_parent_selector->parentSelectElement($default,  $defaults['id'], $available_menus);
+  $parent_element = $menu_parent_selector->parentSelectElement($default, $defaults['id'], $available_menus);
   // If no possible parent menu items were found, there is nothing to display.
   if (empty($parent_element)) {
     return;

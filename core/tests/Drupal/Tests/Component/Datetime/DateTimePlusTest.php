@@ -376,7 +376,7 @@ class DateTimePlusTest extends UnitTestCase {
       // Test for invalid minute from date array.
       array(array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0), 'America/Chicago'),
       // Regression test for https://www.drupal.org/node/2084455.
-      array(array('hour' => 59, 'minute' => 1,'second' => 1), 'America/Chicago'),
+      array(array('hour' => 59, 'minute' => 1, 'second' => 1), 'America/Chicago'),
     );
   }
 

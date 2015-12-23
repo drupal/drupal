@@ -145,7 +145,7 @@ class InsertTest extends DatabaseTestBase {
     // re-ordered.
     $query->addExpression('tp.age', 'age');
     $query
-      ->fields('tp', array('name','job'))
+      ->fields('tp', array('name', 'job'))
       ->condition('tp.name', 'Meredith');
 
     // The resulting query should be equivalent to:

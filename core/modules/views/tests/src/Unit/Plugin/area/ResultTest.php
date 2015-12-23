@@ -135,7 +135,7 @@ class ResultTest extends UnitTestCase {
     $this->view->pager = $pager;
     $this->view->style_plugin = new \stdClass();
     $this->view->total_rows = 100;
-    $this->view->result = array(1,2,3,4,5);
+    $this->view->result = array(1, 2, 3, 4, 5);
   }
 
 }

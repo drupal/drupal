@@ -37,7 +37,7 @@ class ThemeController extends ControllerBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler,ConfigFactoryInterface $config_factory) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
   }

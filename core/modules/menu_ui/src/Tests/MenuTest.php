@@ -116,7 +116,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Verify delete link exists and reset link does not exist.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
-    $this->assertLinkByHref(Url::fromRoute('entity.menu_link_content.delete_form',  ['menu_link_content' => $this->items[0]->id()])->toString());
+    $this->assertLinkByHref(Url::fromRoute('entity.menu_link_content.delete_form', ['menu_link_content' => $this->items[0]->id()])->toString());
     $this->assertNoLinkByHref(Url::fromRoute('menu_ui.link_reset', ['menu_link_plugin' => $this->items[0]->getPluginId()])->toString());
     // Check delete and reset access.
     $this->drupalGet('admin/structure/menu/item/' . $this->items[0]->id() . '/delete');
@@ -265,23 +265,23 @@ class MenuTest extends MenuWebTestBase {
     $menu_name = $this->menu->id();
 
     // Test the 'Add link' local action.
-    $this->drupalGet(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+    $this->drupalGet(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
     $this->clickLink(t('Add link'));
     $link_title = $this->randomString();
     $this->drupalPostForm(NULL, array('link[0][uri]' => '/', 'title[0][value]' => $link_title), t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+    $this->assertUrl(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Edit' operation.
     $this->clickLink(t('Edit'));
     $this->assertFieldByName('title[0][value]', $link_title);
     $link_title = $this->randomString();
     $this->drupalPostForm(NULL, array('title[0][value]' => $link_title), t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+    $this->assertUrl(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the custom menu link %item?', array('%item' => $link_title)));
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+    $this->assertUrl(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
     // Add nodes to use as links for menu links.
     $node1 = $this->drupalCreateNode(array('type' => 'article'));

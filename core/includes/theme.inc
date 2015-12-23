@@ -1782,7 +1782,7 @@ function drupal_common_theme() {
       'render element' => 'page',
     ),
     'maintenance_task_list' => array(
-      'variables' => array('items' => NULL, 'active' => NULL,  'variant' => NULL),
+      'variables' => array('items' => NULL, 'active' => NULL, 'variant' => NULL),
     ),
     'authorize_report' => array(
       'variables' => ['messages' => [], 'attributes' => []],

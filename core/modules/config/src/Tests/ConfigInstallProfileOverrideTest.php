@@ -87,7 +87,7 @@ class ConfigInstallProfileOverrideTest extends WebTestBase {
     // type does not exist.
     $optional_dir = drupal_get_path('module', 'testing_config_overrides') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
     $optional_storage = new FileStorage($optional_dir);
-    foreach (['config_test.dynamic.dotted.default', 'config_test.dynamic.override','config_test.dynamic.override_unmet'] as $id) {
+    foreach (['config_test.dynamic.dotted.default', 'config_test.dynamic.override', 'config_test.dynamic.override_unmet'] as $id) {
       $this->assertTrue(\Drupal::config($id)->isNew(), "The config_test entity $id contained in the profile's optional directory does not exist.");
       // Make that we don't get false positives from the assertion above.
       $this->assertTrue($optional_storage->exists($id), "The config_test entity $id does exist in the profile's optional directory.");
