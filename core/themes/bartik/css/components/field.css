@@ -29,6 +29,10 @@
   margin: 0;
   list-style: none;
 }
+/* This is required to win over specificity of [dir="rtl"] .region-content ul */
+[dir="rtl"] .field--type-entity-reference ul.links {
+  padding: 0;
+}
 .field--type-entity-reference ul.links li {
   float: left; /* LTR */
   padding: 0 1em 0 0; /* LTR */
