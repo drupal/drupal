@@ -488,6 +488,9 @@ Classy theme
 Seven theme
 - Lewis Nyman 'LewisNyman' https://www.drupal.org/u/lewisnyman
 
+Stable theme
+- Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
+
 Stark theme
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
 
