@@ -16,7 +16,7 @@ use Drupal\migrate\MigrateMessageInterface;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Test whether idmap messages are sent to the message interface when requested.
+ * Tests whether idmap messages are sent to message interface when requested.
  *
  * @group migrate
  */

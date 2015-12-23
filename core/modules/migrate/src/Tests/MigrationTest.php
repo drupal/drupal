@@ -19,14 +19,14 @@ use Drupal\simpletest\KernelTestBase;
 class MigrationTest extends KernelTestBase {
 
   /**
-   * Enable field because we're using one of its source plugins.
+   * Enable field because we are using one of its source plugins.
    *
    * @var array
    */
   public static $modules = ['migrate', 'field'];
 
   /**
-   * Tests Migration::set()
+   * Tests Migration::set().
    *
    * @covers ::set()
    */

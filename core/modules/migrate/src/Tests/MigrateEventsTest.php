@@ -85,7 +85,7 @@ class MigrateEventsTest extends KernelTestBase {
     $migration = Migration::create($config);
 
     /** @var MigrationInterface $migration */
-    $executable = new MigrateExecutable($migration, new MigrateMessage);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
     // As the import runs, events will be dispatched, recording the received
     // information in state.
     $executable->import();

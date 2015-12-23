@@ -11,14 +11,14 @@ use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
 
 /**
- * Test migration status tracking.
+ * Tests migration status tracking.
  *
  * @group migrate
  */
 class MigrateStatusTest extends MigrateTestBase {
 
   /**
-   * Test different connection types.
+   * Tests different connection types.
    */
   public function testStatus() {
     // Create a minimally valid migration.

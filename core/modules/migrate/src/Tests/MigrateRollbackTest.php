@@ -81,8 +81,8 @@ class MigrateRollbackTest extends MigrateTestBase {
       $this->assertNotNull($map_row['destid1']);
     }
 
-    // We use taxonomy terms to demonstrate importing and rolling back
-    // content entities.
+    // We use taxonomy terms to demonstrate importing and rolling back content
+    // entities.
     $term_data_rows = [
       ['id' => '1', 'vocab' => '1', 'name' => 'music'],
       ['id' => '2', 'vocab' => '2', 'name' => 'Bach'],
