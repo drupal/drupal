@@ -17,8 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Default argument plugin to extract a node.
  *
- * This plugin actually has no options so it odes not need to do a great deal.
- *
  * @ViewsArgumentDefault(
  *   id = "node",
  *   title = @Translation("Content ID from URL")
