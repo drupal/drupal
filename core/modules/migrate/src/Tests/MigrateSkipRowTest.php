@@ -41,7 +41,7 @@ class MigrateSkipRowTest extends KernelTestBase {
         'plugin' => 'embedded_data',
         'data_rows' => [
           ['id' => '1', 'data' => 'skip_and_record'],
-          ['id' => '2', 'data' => 'skip_and_dont_record']
+          ['id' => '2', 'data' => 'skip_and_dont_record'],
         ],
         'ids' => [
           'id' => ['type' => 'string'],
@@ -57,7 +57,7 @@ class MigrateSkipRowTest extends KernelTestBase {
 
     $migration = Migration::create($config);
 
-    $executable = new MigrateExecutable($migration, new MigrateMessage);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
     $result = $executable->import();
     $this->assertEqual($result, MigrationInterface::RESULT_COMPLETED);
 

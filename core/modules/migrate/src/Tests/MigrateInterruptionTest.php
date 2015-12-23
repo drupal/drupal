@@ -64,8 +64,9 @@ class MigrateInterruptionTest extends KernelTestBase {
     $migration = Migration::create($config);
 
     /** @var MigrationInterface $migration */
-    $executable = new MigrateExecutable($migration, new MigrateMessage);
-    // When the import runs, the first row imported will trigger an interruption.
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    // When the import runs, the first row imported will trigger an
+    // interruption.
     $result = $executable->import();
 
     $this->assertEqual($result, MigrationInterface::RESULT_INCOMPLETE);
