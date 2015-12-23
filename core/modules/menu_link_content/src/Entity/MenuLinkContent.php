@@ -200,15 +200,22 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
 
     // The menu link can just be updated if there is already an menu link entry
     // on both entity and menu link plugin level.
-    if ($update && $menu_link_manager->getDefinition($this->getPluginId())) {
+    $definition = $this->getPluginDefinition();
+    // Even when $update is FALSE, for top level links it is possible the link
+    // already is in the storage because of the getPluginDefinition() call
+    // above, see https://www.drupal.org/node/2605684#comment-10515450 for the
+    // call chain. Because of this the $update flag is ignored and only the
+    // existence of the definition (equals to being in the tree storage) is
+    // checked.
+    if ($menu_link_manager->getDefinition($this->getPluginId(), FALSE)) {
       // When the entity is saved via a plugin instance, we should not call
       // the menu tree manager to update the definition a second time.
       if (!$this->insidePlugin) {
-        $menu_link_manager->updateDefinition($this->getPluginId(), $this->getPluginDefinition(), FALSE);
+        $menu_link_manager->updateDefinition($this->getPluginId(), $definition, FALSE);
       }
     }
     else {
-      $menu_link_manager->addDefinition($this->getPluginId(), $this->getPluginDefinition());
+      $menu_link_manager->addDefinition($this->getPluginId(), $definition);
     }
   }
 
