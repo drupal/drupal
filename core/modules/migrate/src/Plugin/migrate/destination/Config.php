@@ -3,8 +3,6 @@
 /**
  * @file
  * Contains \Drupal\migrate\Plugin\migrate\destination\Config.
- *
- * Provides Configuration Management destination plugin.
  */
 
 namespace Drupal\migrate\Plugin\migrate\destination;
@@ -18,6 +16,8 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Provides Configuration Management destination plugin.
+ *
  * Persist data to the config system.
  *
  * When a property is NULL, the default is used unless the configuration option
@@ -28,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class Config extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
+
   use DependencyTrait;
 
   /**

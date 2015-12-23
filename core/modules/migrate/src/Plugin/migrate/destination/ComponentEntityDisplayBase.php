@@ -10,6 +10,9 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
 
+/**
+ * Defines the base abstract class for component entity display.
+ */
 abstract class ComponentEntityDisplayBase extends DestinationBase {
 
   const MODE_NAME = '';
@@ -54,7 +57,7 @@ abstract class ComponentEntityDisplayBase extends DestinationBase {
   }
 
   /**
-   * Get the entity.
+   * Gets the entity.
    *
    * @param string $entity_type
    *   The entity type to retrieve.

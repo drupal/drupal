@@ -5,7 +5,6 @@
  * Contains \Drupal\migrate\Plugin\migrate\destination\DestinationBase.
  */
 
-
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Core\Plugin\PluginBase;
@@ -113,4 +112,5 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
       $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_PRESERVE;
     }
   }
+
 }
