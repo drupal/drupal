@@ -77,7 +77,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->nodeTypeWithoutTags = $this->drupalCreateContentType();
 
     // Create the vocabulary for the tag field.
-    $this->tagVocabulary = entity_create('taxonomy_vocabulary',  array(
+    $this->tagVocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Views testing tags',
       'vid' => 'views_testing_tags',
     ));

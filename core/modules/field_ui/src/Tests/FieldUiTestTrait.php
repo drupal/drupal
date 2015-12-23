@@ -46,7 +46,7 @@ trait FieldUiTestTrait {
     }
 
     // First step: 'Add field' page.
-    $this->drupalPostForm($bundle_path,  $initial_edit, t('Save and continue'));
+    $this->drupalPostForm($bundle_path, $initial_edit, t('Save and continue'));
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Storage settings page was displayed.');
     // Test Breadcrumbs.
     $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');

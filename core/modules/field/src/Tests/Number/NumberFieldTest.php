@@ -371,8 +371,8 @@ class NumberFieldTest extends WebTestBase {
     $decimal_separators = array('.', ',');
     $prefix = $this->randomMachineName();
     $suffix = $this->randomMachineName();
-    $random_float = rand(0,pow(10,6));
-    $random_integer = rand(0, pow(10,6));
+    $random_float = rand(0, pow(10, 6));
+    $random_integer = rand(0, pow(10, 6));
 
     // Create a content type containing float and integer fields.
     $this->drupalCreateContentType(array('type' => $type));

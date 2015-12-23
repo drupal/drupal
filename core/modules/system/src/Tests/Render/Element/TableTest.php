@@ -38,7 +38,7 @@ class TableTest extends KernelTestBase {
    */
   function testThemeTableStickyHeaders() {
     $header = array('one', 'two', 'three');
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $table = array(
       '#type' => 'table',
       '#header' => $header,
@@ -57,7 +57,7 @@ class TableTest extends KernelTestBase {
    */
   function testThemeTableNoStickyHeaders() {
     $header = array('one', 'two', 'three');
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $attributes = array();
     $caption = NULL;
     $colgroups = array();
@@ -172,7 +172,7 @@ class TableTest extends KernelTestBase {
    */
   public function testThemeTableResponsive() {
     $header = array('one', 'two', 'three');
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $table = array(
       '#type' => 'table',
       '#header' => $header,
@@ -187,7 +187,7 @@ class TableTest extends KernelTestBase {
    * Tests that the 'responsive-table' class is not applied without headers.
    */
   public function testThemeTableNotResponsiveHeaders() {
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $table = array(
       '#type' => 'table',
       '#rows' => $rows,
@@ -202,7 +202,7 @@ class TableTest extends KernelTestBase {
    */
   public function testThemeTableNotResponsiveProperty() {
     $header = array('one', 'two', 'three');
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $table = array(
       '#type' => 'table',
       '#header' => $header,
@@ -260,7 +260,7 @@ class TableTest extends KernelTestBase {
         ),
       ),
     );
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $table = array(
       '#type' => 'table',
       '#header' => $header,

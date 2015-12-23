@@ -33,7 +33,7 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testLocalePageLocalTasks($route) {
     $tasks = array(
-      0 => array('locale.translate_page', 'locale.translate_import', 'locale.translate_export','locale.settings'),
+      0 => array('locale.translate_page', 'locale.translate_import', 'locale.translate_export', 'locale.settings'),
     );
     $this->assertLocalTasks($route, $tasks);
   }

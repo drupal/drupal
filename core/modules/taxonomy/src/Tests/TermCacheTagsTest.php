@@ -26,7 +26,7 @@ class TermCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Camelids" vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary',  array(
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Camelids',
       'vid' => 'camelids',
     ));

@@ -175,18 +175,18 @@ class BulkFormTest extends NodeTestBase {
     // operations are always applied to individual translations.
     $edit = array(
       // Original and all translations.
-      'node_bulk_form[0]' => TRUE,  // Node 1, English, original.
-      'node_bulk_form[1]' => TRUE,  // Node 1, British English.
-      'node_bulk_form[2]' => TRUE,  // Node 1, Italian.
+      'node_bulk_form[0]' => TRUE, // Node 1, English, original.
+      'node_bulk_form[1]' => TRUE, // Node 1, British English.
+      'node_bulk_form[2]' => TRUE, // Node 1, Italian.
       // Original and only one translation.
-      'node_bulk_form[3]' => TRUE,  // Node 2, English.
-      'node_bulk_form[4]' => TRUE,  // Node 2, British English, original.
+      'node_bulk_form[3]' => TRUE, // Node 2, English.
+      'node_bulk_form[4]' => TRUE, // Node 2, British English, original.
       'node_bulk_form[5]' => FALSE, // Node 2, Italian.
       // Only a single translation.
-      'node_bulk_form[6]' => TRUE,  // Node 3, English.
+      'node_bulk_form[6]' => TRUE, // Node 3, English.
       'node_bulk_form[7]' => FALSE, // Node 3, Italian, original.
       // Only a single untranslated node.
-      'node_bulk_form[8]' => TRUE,  // Node 4, English, untranslated.
+      'node_bulk_form[8]' => TRUE, // Node 4, English, untranslated.
       'node_bulk_form[9]' => FALSE, // Node 5, British English, untranslated.
       'action' => 'node_unpublish_action',
     );
@@ -216,18 +216,18 @@ class BulkFormTest extends NodeTestBase {
     // nodes and individual translations are properly deleted.
     $edit = array(
       // Original and all translations.
-      'node_bulk_form[0]' => TRUE,  // Node 1, English, original.
-      'node_bulk_form[1]' => TRUE,  // Node 1, British English.
-      'node_bulk_form[2]' => TRUE,  // Node 1, Italian.
+      'node_bulk_form[0]' => TRUE, // Node 1, English, original.
+      'node_bulk_form[1]' => TRUE, // Node 1, British English.
+      'node_bulk_form[2]' => TRUE, // Node 1, Italian.
       // Original and only one translation.
-      'node_bulk_form[3]' => TRUE,  // Node 2, English.
-      'node_bulk_form[4]' => TRUE,  // Node 2, British English, original.
+      'node_bulk_form[3]' => TRUE, // Node 2, English.
+      'node_bulk_form[4]' => TRUE, // Node 2, British English, original.
       'node_bulk_form[5]' => FALSE, // Node 2, Italian.
       // Only a single translation.
-      'node_bulk_form[6]' => TRUE,  // Node 3, English.
+      'node_bulk_form[6]' => TRUE, // Node 3, English.
       'node_bulk_form[7]' => FALSE, // Node 3, Italian, original.
       // Only a single untranslated node.
-      'node_bulk_form[8]' => TRUE,  // Node 4, English, untranslated.
+      'node_bulk_form[8]' => TRUE, // Node 4, English, untranslated.
       'node_bulk_form[9]' => FALSE, // Node 5, British English, untranslated.
       'action' => 'node_delete_action',
     );

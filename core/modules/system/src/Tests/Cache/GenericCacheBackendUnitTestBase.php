@@ -268,7 +268,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
       'test3' => '',
       'test4' => 12.64,
       'test5' => FALSE,
-      'test6' => array(1,2,3),
+      'test6' => array(1, 2, 3),
     );
 
     // Create cache entries.

@@ -535,7 +535,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPostForm(NULL, NULL, t('Cancel accounts'));
     $status = TRUE;
     foreach ($users as $account) {
-      $status = $status && (strpos($this->content,  $account->getUsername() . '</em> has been deleted.') !== FALSE);
+      $status = $status && (strpos($this->content, $account->getUsername() . '</em> has been deleted.') !== FALSE);
       $user_storage->resetCache(array($account->id()));
       $status = $status && !$user_storage->load($account->id());
     }

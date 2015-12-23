@@ -60,7 +60,7 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
   public function testSingleUpdates() {
     // Create a test entity.
     $user_ids = [mt_rand(), mt_rand()];
-    $entity = EntityTest::create(['name' => $this->randomString(),  'user_id' => $user_ids]);
+    $entity = EntityTest::create(['name' => $this->randomString(), 'user_id' => $user_ids]);
     $entity->save();
 
     // Check that only a single value is stored for 'user_id'.
@@ -108,7 +108,7 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
   public function testMultipleUpdates() {
     // Create a test entity.
     $user_ids = [mt_rand(), mt_rand()];
-    $entity = EntityTest::create(['name' => $this->randomString(),  'user_id' => $user_ids]);
+    $entity = EntityTest::create(['name' => $this->randomString(), 'user_id' => $user_ids]);
     $entity->save();
 
     // Check that only a single value is stored for 'user_id'.
@@ -138,7 +138,7 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
    */
   function testStatusReport() {
     // Create a test entity.
-    $entity = EntityTest::create(['name' => $this->randomString(),  'user_id' => mt_rand()]);
+    $entity = EntityTest::create(['name' => $this->randomString(), 'user_id' => mt_rand()]);
     $entity->save();
 
     // Check that the status report initially displays no error.

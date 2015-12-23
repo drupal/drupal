@@ -1386,7 +1386,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // In that case the original path looks like
       // internal:/admin/content/files/usage/{{ fid }}, which will be escaped by
       // the toUriString() call above.
-      $path = preg_replace(['/(\%7B){2}(\%20)*/', '/(\%20)*(\%7D){2}/'], ['{{','}}'], $path);
+      $path = preg_replace(['/(\%7B){2}(\%20)*/', '/(\%20)*(\%7D){2}/'], ['{{', '}}'], $path);
 
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that are escaped

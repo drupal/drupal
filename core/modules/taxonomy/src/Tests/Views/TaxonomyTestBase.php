@@ -82,7 +82,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
       'type' => 'article',
     ));
     // Create the vocabulary for the tag field.
-    $this->vocabulary = entity_create('taxonomy_vocabulary',  array(
+    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Views testing tags',
       'vid' => 'views_testing_tags',
     ));

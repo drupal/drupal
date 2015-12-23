@@ -61,7 +61,7 @@ final class FieldFilteredMarkup implements MarkupInterface, \Countable {
    *   A list of allowed tags.
    */
   public static function allowedTags() {
-    return ['a', 'b', 'big', 'code', 'del', 'em', 'i', 'ins',  'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img'];
+    return ['a', 'b', 'big', 'code', 'del', 'em', 'i', 'ins', 'pre', 'q', 'small', 'span', 'strong', 'sub', 'sup', 'tt', 'ol', 'ul', 'li', 'p', 'br', 'img'];
   }
 
   /**

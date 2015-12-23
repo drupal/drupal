@@ -42,7 +42,6 @@
     <exclude name="Drupal.Semantics.RemoteAddress"/>
     <exclude name="Drupal.Strings.UnnecessaryStringConcat"/>
     <exclude name="Drupal.WhiteSpace.CloseBracketSpacing"/>
-    <exclude name="Drupal.WhiteSpace.Comma"/>
     <exclude name="Drupal.WhiteSpace.EmptyLines"/>
     <exclude name="Drupal.WhiteSpace.ObjectOperatorSpacing"/>
     <exclude name="Drupal.WhiteSpace.OpenBracketSpacing"/>

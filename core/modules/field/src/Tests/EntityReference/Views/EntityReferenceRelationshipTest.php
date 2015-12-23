@@ -62,7 +62,7 @@ class EntityReferenceRelationshipTest extends ViewKernelTestBase {
     $this->installEntitySchema('entity_test_mul');
 
     // Create reference from entity_test to entity_test_mul.
-    $this->createEntityReferenceField('entity_test','entity_test','field_test_data','field_test_data','entity_test_mul');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_data', 'field_test_data', 'entity_test_mul');
 
     // Create reference from entity_test_mul to entity_test.
     $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test', 'field_data_test', 'entity_test');

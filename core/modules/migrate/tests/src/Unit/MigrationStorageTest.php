@@ -63,7 +63,7 @@ class MigrationStorageTest extends UnitTestCase {
       ->willReturn(['d6_node__page', 'd6_node__article']);
 
     $ids = $this->storage->getVariantIds(['d6_node:*', 'd6_user']);
-    $this->assertSame(['d6_node__page', 'd6_node__article', 'd6_user'],  $ids);
+    $this->assertSame(['d6_node__page', 'd6_node__article', 'd6_user'], $ids);
   }
 
   /**
@@ -76,7 +76,7 @@ class MigrationStorageTest extends UnitTestCase {
       ->willReturn([]);
 
     $ids = $this->storage->getVariantIds(['d6_node:*', 'd6_user']);
-    $this->assertSame(['d6_user'],  $ids);
+    $this->assertSame(['d6_user'], $ids);
   }
 
   /**
@@ -90,7 +90,7 @@ class MigrationStorageTest extends UnitTestCase {
       ->willReturn([]);
 
     $ids = $this->storage->getVariantIds(['d6_node:*', 'd6_node_revision:*']);
-    $this->assertSame([],  $ids);
+    $this->assertSame([], $ids);
   }
 
 }

@@ -644,7 +644,7 @@ class SchemaTest extends KernelTestBase {
    */
   function testSchemaChangeField() {
     $field_specs = array(
-      array('type' => 'int', 'size' => 'normal','not null' => FALSE),
+      array('type' => 'int', 'size' => 'normal', 'not null' => FALSE),
       array('type' => 'int', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 17),
       array('type' => 'float', 'size' => 'normal', 'not null' => FALSE),
       array('type' => 'float', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 7.3),

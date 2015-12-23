@@ -492,13 +492,13 @@ class ManageFieldsTest extends WebTestBase {
     // Try with an entity key.
     $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalPostForm("$bundle_path/fields/add-field",  $edit, t('Save and continue'));
+    $this->drupalPostForm("$bundle_path/fields/add-field", $edit, t('Save and continue'));
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalPostForm("$bundle_path/fields/add-field",  $edit, t('Save and continue'));
+    $this->drupalPostForm("$bundle_path/fields/add-field", $edit, t('Save and continue'));
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
   }
 
