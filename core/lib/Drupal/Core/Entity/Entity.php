@@ -320,11 +320,6 @@ abstract class Entity implements EntityInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * Returns a list of URI relationships supported by this entity.
-   *
-   * @return array
-   *   An array of link relationships supported by this entity.
    */
   public function uriRelationships() {
     return array_keys($this->linkTemplates());
@@ -497,9 +492,6 @@ abstract class Entity implements EntityInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @return static|null
-   *   The entity object or NULL if there is no entity with the given ID.
    */
   public static function load($id) {
     $entity_manager = \Drupal::entityManager();
@@ -508,10 +500,6 @@ abstract class Entity implements EntityInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @return static[]
-   *   An array of entity objects indexed by their IDs. Returns an empty array
-   *   if no matching entities are found.
    */
   public static function loadMultiple(array $ids = NULL) {
     $entity_manager = \Drupal::entityManager();
@@ -520,9 +508,6 @@ abstract class Entity implements EntityInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @return static
-   *   The entity object.
    */
   public static function create(array $values = array()) {
     $entity_manager = \Drupal::entityManager();
