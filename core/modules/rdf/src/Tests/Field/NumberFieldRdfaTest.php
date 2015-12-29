@@ -33,7 +33,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testIntegerFormatterWithSettings() {
     \Drupal::service('theme_handler')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_handler')->setDefault('classy');
     $this->fieldType = 'integer';
     $formatter = array(
       'type' => 'number_integer',
@@ -76,7 +76,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testFloatFormatterWithSettings() {
     \Drupal::service('theme_handler')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_handler')->setDefault('classy');
     $this->fieldType = 'float';
     $formatter = array(
       'type' => 'number_decimal',
@@ -126,7 +126,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testFloatFormatterWithScaleExercised() {
     \Drupal::service('theme_handler')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_handler')->setDefault('classy');
     $this->fieldType = 'float';
     $formatter = array(
       'type' => 'number_decimal',
@@ -164,7 +164,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testDecimalFormatterWithSettings() {
     \Drupal::service('theme_handler')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_handler')->setDefault('classy');
     $this->fieldType = 'decimal';
     $formatter = array(
       'type' => 'number_decimal',

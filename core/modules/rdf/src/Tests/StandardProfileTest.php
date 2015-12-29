@@ -109,7 +109,7 @@ class StandardProfileTest extends WebTestBase {
 
     // Use Classy theme for testing markup output.
     \Drupal::service('theme_handler')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_handler')->setDefault('classy');
 
     $this->baseUri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
 
