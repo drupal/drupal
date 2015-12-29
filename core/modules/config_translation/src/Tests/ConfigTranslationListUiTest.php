@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
+use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
  * Visit all lists.
@@ -281,7 +282,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
   public function doShortcutListTest() {
     // Create a test shortcut to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $shortcut = entity_create('shortcut_set', array(
+    $shortcut = ShortcutSet::create(array(
       'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomString(),
     ));
