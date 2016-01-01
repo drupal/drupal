@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\system\Entity\Action;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -985,7 +986,7 @@ function user_user_role_insert(RoleInterface $role) {
 
   $add_id = 'user_add_role_action.' . $role->id();
   if (!entity_load('action', $add_id)) {
-    $action = entity_create('action', array(
+    $action = Action::create(array(
       'id' => $add_id,
       'type' => 'user',
       'label' => t('Add the @label role to the selected users', array('@label' => $role->label())),
@@ -998,7 +999,7 @@ function user_user_role_insert(RoleInterface $role) {
   }
   $remove_id = 'user_remove_role_action.' . $role->id();
   if (!entity_load('action', $remove_id)) {
-    $action = entity_create('action', array(
+    $action = Action::create(array(
       'id' => $remove_id,
       'type' => 'user',
       'label' => t('Remove the @label role from the selected users', array('@label' => $role->label())),

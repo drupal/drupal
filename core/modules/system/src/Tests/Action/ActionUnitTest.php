@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Action;
 
 use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Action\ActionInterface;
+use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
 /**
@@ -80,7 +81,7 @@ class ActionUnitTest extends KernelTestBase {
    */
   public function testDependencies() {
     // Create a new action that depends on a user role.
-    $action = entity_create('action', array(
+    $action = Action::create(array(
       'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
       'type' => 'user',
       'label' => t('Add the anonymous role to the selected users'),

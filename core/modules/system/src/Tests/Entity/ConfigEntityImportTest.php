@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\simpletest\WebTestBase;
+use Drupal\system\Entity\Action;
 
 /**
  * Tests ConfigEntity importing.
@@ -50,7 +51,7 @@ class ConfigEntityImportTest extends WebTestBase {
   protected function doActionUpdate() {
     // Create a test action with a known label.
     $name = 'system.action.apple';
-    $entity = entity_create('action', array(
+    $entity = Action::create(array(
       'id' => 'apple',
       'plugin' => 'action_message_action',
     ));
