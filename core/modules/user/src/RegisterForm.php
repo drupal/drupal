@@ -20,13 +20,6 @@ class RegisterForm extends AccountForm {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, QueryFactory $entity_query) {
-    parent::__construct($entity_manager, $language_manager, $entity_query);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function form(array $form, FormStateInterface $form_state) {
     $user = $this->currentUser();
     /** @var \Drupal\user\UserInterface $account */
