@@ -9,6 +9,7 @@ namespace Drupal\image\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -72,7 +73,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
-    $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
+    $style = ImageStyle::create(array('name' => 'test', 'label' => 'Test'));
     $style->save();
     $url = $style->buildUrl($original_uri);
 
@@ -134,7 +135,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
-    $style = entity_create('image_style', array('name' => 'image_test', 'label' => 'Test'));
+    $style = ImageStyle::create(array('name' => 'image_test', 'label' => 'Test'));
     $style->save();
     $url = $style->buildUrl($original_uri);
 

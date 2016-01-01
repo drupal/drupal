@@ -38,7 +38,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Create a style.
     /** @var $style \Drupal\image\ImageStyleInterface */
-    $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
+    $style = ImageStyle::create(array('name' => 'test', 'label' => 'Test'));
     $style->save();
     $generated_uri = 'public://styles/test/public/'. \Drupal::service('file_system')->basename($original_uri);
     $url = $style->buildUrl($original_uri);
