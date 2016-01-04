@@ -22,6 +22,7 @@ class Status extends InOperator {
     if (!isset($this->valueOptions)) {
       $this->valueOptions = _views_file_status();
     }
+    return $this->valueOptions;
   }
 
 }
