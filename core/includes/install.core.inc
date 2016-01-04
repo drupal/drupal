@@ -418,13 +418,6 @@ function install_begin_request($class_loader, &$install_state) {
   $container->get('string_translation')
     ->addTranslator($container->get('string_translator.file_translation'));
 
-  // Set the default language to the selected language, if any.
-  if (isset($install_state['parameters']['langcode'])) {
-    $default_language = new Language(array('id' => $install_state['parameters']['langcode']));
-    $container->get('language.default')->set($default_language);
-    \Drupal::translation()->setDefaultLangcode($install_state['parameters']['langcode']);
-  }
-
   // Add list of all available profiles to the installation state.
   $listing = new ExtensionDiscovery($container->get('app.root'));
   $listing->setProfileDirectories(array());
@@ -441,6 +434,19 @@ function install_begin_request($class_loader, &$install_state) {
     if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
       $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
     }
+  }
+
+  // Use the language from the profile configuration, if available, to override
+  // the language previously set in the parameters.
+  if (isset($install_state['profile_info']['distribution']['langcode'])) {
+    $install_state['parameters']['langcode'] = $install_state['profile_info']['distribution']['langcode'];
+  }
+
+  // Set the default language to the selected language, if any.
+  if (isset($install_state['parameters']['langcode'])) {
+    $default_language = new Language(array('id' => $install_state['parameters']['langcode']));
+    $container->get('language.default')->set($default_language);
+    \Drupal::translation()->setDefaultLangcode($install_state['parameters']['langcode']);
   }
 
   // Override the module list with a minimal set of modules.

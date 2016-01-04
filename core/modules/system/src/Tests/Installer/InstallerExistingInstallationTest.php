@@ -29,12 +29,12 @@ class InstallerExistingInstallationTest extends InstallerTestBase {
    */
   public function testInstaller() {
     // Verify that Drupal can't be immediately reinstalled.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');
+    $this->visitInstaller();
     $this->assertRaw('Drupal already installed');
 
     // Delete settings.php and attempt to reinstall again.
     unlink($this->siteDirectory . '/settings.php');
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');
+    $this->visitInstaller();
     $this->setUpLanguage();
     $this->setUpProfile();
     $this->setUpSettings();

@@ -26,7 +26,7 @@ class InstallerLanguagePageTest extends InstallerTestBase {
     touch(\Drupal::root() . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.xoxo.po');
 
     // Check that all predefined languages show up with their native names.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');
+    $this->visitInstaller();
     foreach (LanguageManager::getStandardLanguageList() as $langcode => $names) {
       $this->assertOption('edit-langcode', $langcode);
       $this->assertRaw('>' . $names[1] . '<');
