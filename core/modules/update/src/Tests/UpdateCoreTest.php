@@ -176,7 +176,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $system_info = array(
       '#all' => array(
         // We need to think we're running a -dev snapshot to see dates.
-        'version' => '8.0.0-dev',
+        'version' => '8.1.0-dev',
         'datestamp' => time(),
       ),
       'block' => array(
