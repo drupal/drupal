@@ -203,8 +203,8 @@ class ToolkitGdTest extends KernelTestBase {
         'rotate_5' => array(
           'function' => 'rotate',
           'arguments' => array('degrees' => 5, 'background' => '#FF00FF'), // Fuchsia background.
-          'width' => 42,
-          'height' => 24,
+          'width' => 41,
+          'height' => 23,
           'corners' => array_fill(0, 4, $this->fuchsia),
         ),
         'rotate_90' => array(
@@ -217,8 +217,8 @@ class ToolkitGdTest extends KernelTestBase {
         'rotate_transparent_5' => array(
           'function' => 'rotate',
           'arguments' => array('degrees' => 5),
-          'width' => 42,
-          'height' => 24,
+          'width' => 41,
+          'height' => 23,
           'corners' => array_fill(0, 4, $this->rotateTransparent),
         ),
         'rotate_transparent_90' => array(
@@ -289,20 +289,6 @@ class ToolkitGdTest extends KernelTestBase {
         $correct_dimensions_real = TRUE;
         $correct_dimensions_object = TRUE;
 
-        // PHP 5.5 GD bug: https://bugs.php.net/bug.php?id=65148. PHP 5.5 GD
-        // rotates differently then it did in PHP 5.4 resulting in different
-        // dimensions then what math teaches us. For the test images, the
-        // dimensions will be 1 pixel smaller in both dimensions (though other
-        // tests have shown a difference of 0 to 3 pixels in both dimensions.
-        // @todo: if and when the PHP bug gets solved, add an upper limit
-        //   version check.
-        // @todo: in [#1551686] the dimension calculations for rotation are
-        //   reworked. That issue should also check if these tests can be made
-        //   more robust.
-        if (version_compare(PHP_VERSION, '5.5', '>=') && $values['function'] === 'rotate' && $values['arguments']['degrees'] % 90 != 0) {
-          $values['height']--;
-          $values['width']--;
-        }
         if (imagesy($toolkit->getResource()) != $values['height'] || imagesx($toolkit->getResource()) != $values['width']) {
           $correct_dimensions_real = FALSE;
         }

@@ -8,6 +8,7 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Component\Utility\Color;
+use Drupal\Component\Utility\Rectangle;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\image\ConfigurableImageEffectBase;
@@ -43,14 +44,13 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function transformDimensions(array &$dimensions, $uri) {
-    // If the rotate is not random and the angle is a multiple of 90 degrees,
+    // If the rotate is not random and current dimensions are set,
     // then the new dimensions can be determined.
-    if (!$this->configuration['random'] && ((int) ($this->configuration['degrees']) == $this->configuration['degrees']) && ($this->configuration['degrees'] % 90 == 0)) {
-      if ($this->configuration['degrees'] % 180 != 0) {
-        $temp = $dimensions['width'];
-        $dimensions['width'] = $dimensions['height'];
-        $dimensions['height'] = $temp;
-      }
+    if (!$this->configuration['random'] && $dimensions['width'] && $dimensions['height']) {
+      $rect = new Rectangle($dimensions['width'], $dimensions['height']);
+      $rect = $rect->rotate($this->configuration['degrees']);
+      $dimensions['width'] = $rect->getBoundingWidth();
+      $dimensions['height'] = $rect->getBoundingHeight();
     }
     else {
       $dimensions['width'] = $dimensions['height'] = NULL;
