@@ -23,11 +23,15 @@ use Drupal\Tests\UnitTestCase;
 class MigrationStorageTest extends UnitTestCase {
 
   /**
+   * The migration storage.
+   *
    * @var \Drupal\Tests\migrate\Unit\TestMigrationStorage
    */
   protected $storage;
 
   /**
+   * The storage query.
+   *
    * @var \Drupal\Core\Entity\Query\QueryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $query;
@@ -80,7 +84,9 @@ class MigrationStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests getVariantIds() when no variants exist and there are no static
+   * Tests getVariantIds().
+   *
+   * This tests getVariantIds() when no variants exist and there are no static
    * (non-variant) dependencies.
    *
    * @covers ::getVariantIds
@@ -98,7 +104,7 @@ class MigrationStorageTest extends UnitTestCase {
 /**
  * Test version of \Drupal\migrate\MigrationStorage.
  *
- * Exposes protected methods for testing.
+ * This class exposes protected methods for testing.
  */
 class TestMigrationStorage extends MigrationStorage {
 

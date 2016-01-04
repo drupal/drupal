@@ -120,29 +120,65 @@ class MigrationTest extends UnitTestCase {
 
 }
 
+/**
+ * Defines the TestMigration class.
+ */
 class TestMigration extends Migration {
 
+  /**
+   * Constructs an instance of TestMigration object.
+   */
   public function __construct() {
   }
 
+  /**
+   * Sets the requirements values.
+   *
+   * @param array $requirements
+   *   The array of requirement values.
+   */
   public function setRequirements(array $requirements) {
     $this->requirements = $requirements;
   }
 
+  /**
+   * Sets the source Plugin.
+   *
+   * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source_plugin
+   *   The source Plugin.
+   */
   public function setSourcePlugin(MigrateSourceInterface $source_plugin) {
     $this->sourcePlugin = $source_plugin;
   }
 
+  /**
+   * Sets the destination Plugin.
+   *
+   * @param \Drupal\migrate\Plugin\MigrateDestinationInterface $destination_plugin
+   *   The destination Plugin.
+   */
   public function setDestinationPlugin(MigrateDestinationInterface $destination_plugin) {
     $this->destinationPlugin = $destination_plugin;
   }
 
+  /**
+   * Sets the entity manager service.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
+   */
   public function setEntityManager(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
   }
 
 }
 
+/**
+ * Defines the RequirementsAwareSourceInterface.
+ */
 interface RequirementsAwareSourceInterface extends MigrateSourceInterface, RequirementsInterface {}
 
+/**
+ * Defines the RequirementsAwareDestinationInterface.
+ */
 interface RequirementsAwareDestinationInterface extends MigrateDestinationInterface, RequirementsInterface {}

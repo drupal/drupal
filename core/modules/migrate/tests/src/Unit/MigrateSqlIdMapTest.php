@@ -29,12 +29,22 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     'id' => 'sql_idmap_test',
   ];
 
+  /**
+   * The source IDs.
+   *
+   * @var array
+   */
   protected $sourceIds = [
     'source_id_property' => [
       'type' => 'string',
     ],
   ];
 
+  /**
+   * The destination IDs.
+   *
+   * @var array
+   */
   protected $destinationIds = [
     'destination_id_property' => [
       'type' => 'string',
@@ -48,6 +58,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    */
   protected $database;
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     $this->database = $this->getDatabase([]);
   }
@@ -357,6 +370,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - Multi-value source ID to multi-value destination ID.
    * - Single-value source ID to multi-value destination ID.
    * - Multi-value source ID to single-value destination ID.
+   *
+   * @return array
+   *   An array of data values.
    */
   public function lookupDestinationIdMappingDataProvider() {
     return [
@@ -374,6 +390,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Number of source fields to test.
    * @param int $num_destination_fields
    *   Number of destination fields to test.
+   *
    * @dataProvider lookupDestinationIdMappingDataProvider
    */
   public function testLookupDestinationIdMapping($num_source_fields, $num_destination_fields) {
@@ -441,6 +458,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - Multi-value destination ID to multi-value source ID.
    * - Single-value destination ID to multi-value source ID.
    * - Multi-value destination ID to single-value source ID.
+   *
+   * @return array
+   *   An array of data values.
    */
   public function lookupSourceIDMappingDataProvider() {
     return [
@@ -458,6 +478,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   Number of source fields to test.
    * @param int $num_destination_fields
    *   Number of destination fields to test.
+   *
    * @dataProvider lookupSourceIDMappingDataProvider
    */
   public function testLookupSourceIDMapping($num_source_fields, $num_destination_fields) {
@@ -562,6 +583,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - No updates.
    * - One update.
    * - Multiple updates.
+   *
+   * @return array
+   *   An array of data values.
    */
   public function updateCountDataProvider() {
     return [
@@ -576,6 +600,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @param int $num_update_rows
    *   The number of update rows to test.
+   *
    * @dataProvider updateCountDataProvider
    */
   public function testUpdateCount($num_update_rows) {
@@ -604,6 +629,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - No errors.
    * - One error.
    * - Multiple errors.
+   *
+   * @return array
+   *   An array of data values.
    */
   public function errorCountDataProvider() {
     return [
@@ -618,6 +646,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @param int $num_error_rows
    *   Number of error rows to test.
+   *
    * @dataProvider errorCountDataProvider
    */
   public function testErrorCount($num_error_rows) {
@@ -795,6 +824,12 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->assertSame(iterator_to_array($this->getIdMap()), $expected_results);
   }
 
+  /**
+   * Retrieves the contents of an ID map.
+   *
+   * @return array
+   *   The contents of an ID map.
+   */
   private function getIdMapContents() {
     $result = $this->database
       ->select('migrate_map_sql_idmap_test', 't')

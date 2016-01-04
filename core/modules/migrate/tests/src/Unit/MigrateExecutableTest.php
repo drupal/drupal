@@ -40,6 +40,11 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   protected $executable;
 
+  /**
+   * The migration's configuration values.
+   *
+   * @var array
+   */
   protected $migrationConfiguration = array(
     'id' => 'test',
   );
@@ -224,8 +229,9 @@ class MigrateExecutableTest extends MigrateTestCase {
   }
 
   /**
-   * Tests the import method with a MigrateException being thrown from the
-   * destination.
+   * Tests the import method with a thrown MigrateException.
+   *
+   * The MigrationException in this case is being thrown from the destination.
    */
   public function testImportWithValidRowWithDestinationMigrateException() {
     $exception_message = $this->getRandomGenerator()->string();
@@ -275,8 +281,9 @@ class MigrateExecutableTest extends MigrateTestCase {
   }
 
   /**
-   * Tests the import method with a MigrateException being thrown from a process
-   * plugin.
+   * Tests the import method with a thrown MigrateException.
+   *
+   * The MigrationException in this case is being thrown from a process plugin.
    */
   public function testImportWithValidRowWithProcesMigrateException() {
     $exception_message = $this->getRandomGenerator()->string();
@@ -421,6 +428,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    * Returns a mock migration source instance.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface|\PHPUnit_Framework_MockObject_MockObject
+   *   The mocked migration source.
    */
   protected function getMockSource() {
     $iterator = $this->getMock('\Iterator');

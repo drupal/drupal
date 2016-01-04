@@ -31,6 +31,8 @@ class TestSqlIdMap extends Sql implements \Iterator {
    *   The configuration for the plugin.
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration to do.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher service.
    */
   public function __construct(Connection $database, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
     $this->database = $database;
@@ -44,6 +46,18 @@ class TestSqlIdMap extends Sql implements \Iterator {
     return parent::getDatabase();
   }
 
+  /**
+   * Gets the field schema.
+   *
+   * @param array $id_definition
+   *   An array defining the field, with a key 'type'.
+   *
+   * @return array
+   *   A field schema depending on value of key 'type'.  An empty array is
+   *   returned if 'type' is not defined.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   */
   protected function getFieldSchema(array $id_definition) {
     if (!isset($id_definition['type'])) {
       return array();
@@ -54,14 +68,17 @@ class TestSqlIdMap extends Sql implements \Iterator {
           'type' => 'int',
           'not null' => TRUE,
         );
+
       case 'string':
         return array(
           'type' => 'varchar',
           'length' => 255,
           'not null' => FALSE,
         );
+
       default:
         throw new MigrateException($id_definition['type'] . ' not supported');
     }
   }
+
 }
