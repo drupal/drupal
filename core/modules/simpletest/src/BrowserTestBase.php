@@ -25,6 +25,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -614,7 +615,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
     // Create new role.
     /* @var \Drupal\user\RoleInterface $role */
-    $role = entity_create('user_role', array(
+    $role = Role::create(array(
       'id' => $rid,
       'label' => $name,
     ));

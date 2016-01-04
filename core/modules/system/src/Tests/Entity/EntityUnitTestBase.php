@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Defines an abstract test base for entity unit tests.
@@ -99,7 +100,7 @@ abstract class EntityUnitTestBase extends KernelTestBase {
   protected function createUser($values = array(), $permissions = array()) {
     if ($permissions) {
       // Create a new role and apply permissions to it.
-      $role = entity_create('user_role', array(
+      $role = Role::create(array(
         'id' => strtolower($this->randomMachineName(8)),
         'label' => $this->randomMachineName(8),
       ));
