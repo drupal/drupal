@@ -5,7 +5,6 @@
  * Contains \Drupal\migrate\Plugin\MigrateDestinationPluginManager.
  */
 
-
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -37,7 +36,7 @@ class MigrateDestinationPluginManager extends MigratePluginManager {
    *
    * @param string $type
    *   The type of the plugin: row, source, process, destination, entity_field,
-   * id_map.
+   *   id_map.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
@@ -48,7 +47,8 @@ class MigrateDestinationPluginManager extends MigratePluginManager {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param string $annotation
-   *   The annotation class name.
+   *   (optional) The annotation class name. Defaults to
+   *   'Drupal\migrate\Annotation\MigrateDestination'.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager, $annotation = 'Drupal\migrate\Annotation\MigrateDestination') {
     parent::__construct($type, $namespaces, $cache_backend, $module_handler, $annotation);

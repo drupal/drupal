@@ -27,11 +27,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The query string.
+   *
    * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $query;
 
   /**
+   * The database object.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
@@ -65,7 +69,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Print the query string when the object is used a string.
+   * Prints the query string when the object is used as a string.
    *
    * @return string
    *   The query string.
@@ -75,7 +79,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Get the database connection object.
+   * Gets the database connection object.
    *
    * @return \Drupal\Core\Database\Connection
    *   The database connection.
@@ -95,8 +99,9 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Get a connection to the referenced database, adding the connection if
-   * necessary.
+   * Gets a connection to the referenced database.
+   *
+   * This method will add the database connection if necessary.
    *
    * @param array $database_info
    *   Configuration for the source database connection. The keys are:
@@ -136,7 +141,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * A helper for adding tags and metadata to the query.
+   * Adds tags and metadata to the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
    *   The query with additional tags and metadata.
@@ -164,8 +169,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     $keys = array();
 
     // The rules for determining what conditions to add to the query are as
-    // follows (applying first applicable rule)
-
+    // follows (applying first applicable rule):
     // 1. If the map is joinable, join it. We will want to accept all rows
     //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
     //    Note that if high water fields are in play, we want to accept all rows
@@ -241,7 +245,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Check if we can join against the map table.
+   * Checks if we can join against the map table.
    *
    * This function specifically catches issues when we're migrating with
    * unique sets of credentials for the source and destination database.

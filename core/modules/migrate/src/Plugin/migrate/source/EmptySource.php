@@ -34,6 +34,9 @@ class EmptySource extends SourcePluginBase {
     return new \ArrayIterator(array(array('id' => '')));
   }
 
+  /**
+   * Allows class to decide how it will react when it is treated like a string.
+   */
   public function __toString() {
     return '';
   }

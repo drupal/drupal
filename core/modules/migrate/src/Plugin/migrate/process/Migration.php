@@ -5,7 +5,6 @@
  * Contains \Drupal\migrate\Plugin\migrate\process\Migration.
  */
 
-
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -28,11 +27,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Migration extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The process plugin manager.
+   *
    * @var \Drupal\migrate\Plugin\MigratePluginManager
    */
   protected $processPluginManager;
 
   /**
+   * The entity storage manager.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $migrationStorage;
@@ -148,7 +151,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Skip the migration process entirely if the value is FALSE.
+   * Skips the migration process entirely if the value is FALSE.
    *
    * @param mixed $value
    *   The incoming value to transform.

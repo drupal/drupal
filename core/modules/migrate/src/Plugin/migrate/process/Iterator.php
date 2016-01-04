@@ -65,4 +65,5 @@ class Iterator extends ProcessPluginBase {
   public function multiple() {
     return TRUE;
   }
+
 }

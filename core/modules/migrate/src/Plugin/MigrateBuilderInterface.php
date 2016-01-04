@@ -11,8 +11,8 @@ namespace Drupal\migrate\Plugin;
  * Defines the builder plugin type.
  *
  * Builder plugins implement custom logic to generate migration entities from
- * migration templates. For example, a migration may need to be customized
- * based on data that's present in the source database; such customization is
+ * migration templates. For example, a migration may need to be customized based
+ * on data that's present in the source database; such customization is
  * implemented by builders.
  */
 interface MigrateBuilderInterface {

@@ -29,6 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MachineName extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The transliteration service.
+   *
    * @var \Drupal\Component\Transliteration\TransliterationInterface
    */
   protected $transliteration;
@@ -37,13 +39,13 @@ class MachineName extends ProcessPluginBase implements ContainerFactoryPluginInt
    * Constructs a MachineName plugin.
    *
    * @param array $configuration
-   *  The plugin configuration.
+   *   The plugin configuration.
    * @param string $plugin_id
-   *  The plugin ID.
+   *   The plugin ID.
    * @param mixed $plugin_definition
-   *  The plugin definition.
+   *   The plugin definition.
    * @param \Drupal\Component\Transliteration\TransliterationInterface $transliteration
-   *  The transliteration service.
+   *   The transliteration service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, TransliterationInterface $transliteration) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);

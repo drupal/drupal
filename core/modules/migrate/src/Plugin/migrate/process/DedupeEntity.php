@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DedupeEntity extends DedupeBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The entity query factory.
+   *
    * @var \Drupal\Core\Entity\Query\QueryFactoryInterface
    */
   protected $entityQueryFactory;

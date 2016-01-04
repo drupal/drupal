@@ -28,11 +28,15 @@ use Drupal\migrate\Row;
 abstract class SourcePluginBase extends PluginBase implements MigrateSourceInterface {
 
   /**
+   * The module handler service.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
+   * The entity migration object.
+   *
    * @var \Drupal\migrate\Entity\MigrationInterface
    */
   protected $migration;
@@ -47,14 +51,14 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $highWaterProperty;
 
   /**
-   * The current row from the query
+   * The current row from the query.
    *
    * @var \Drupal\Migrate\Row
    */
   protected $currentRow;
 
   /**
-   * The primary key of the current row
+   * The primary key of the current row.
    *
    * @var array
    */
@@ -92,6 +96,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $skipCount = FALSE;
 
   /**
+   * Flags whether to track changes to incloming data.
+   *
    * If TRUE, we will maintain hashed source rows to determine whether incoming
    * data has changed.
    *
@@ -100,6 +106,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $trackChanges = FALSE;
 
   /**
+   * Flags whether source plugin will read the map row and add to data row.
+   *
    * By default, next() will directly read the map row and add it to the data
    * row. A source plugin implementation may do this itself (in particular, the
    * SQL source can incorporate the map table into the query) - if so, it should
@@ -110,16 +118,22 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $mapRowAdded = FALSE;
 
   /**
+   * The backend cache.
+   *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
   /**
+   * The migration ID map.
+   *
    * @var \Drupal\migrate\Plugin\MigrateIdMapInterface
    */
   protected $idMap;
 
   /**
+   * The iterator to iterate over the source rows.
+   *
    * @var \Iterator
    */
   protected $iterator;
@@ -150,7 +164,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Initialize the iterator with the source data.
+   * Initializes the iterator with the source data.
    *
    * @return array
    *   An array of the data for this source.
@@ -158,7 +172,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected abstract function initializeIterator();
 
   /**
-   * Get the module handler.
+   * Gets the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler.
@@ -212,6 +226,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Returns the iterator that will yield the row arrays to be processed.
    *
    * @return \Iterator
+   *   The iterator that will yield the row arrays to be processed.
    */
   protected function getIterator() {
     if (!isset($this->iterator)) {
@@ -228,7 +243,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Get the iterator key.
+   * Gets the iterator key.
    *
    * Implementation of Iterator::key - called when entering a loop iteration,
    * returning the key of the current row. It must be a scalar - we will
@@ -240,17 +255,17 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Whether the iterator is currently valid.
+   * Checks whether the iterator is currently valid.
    *
    * Implementation of Iterator::valid() - called at the top of the loop,
-   * returning TRUE to process the loop and FALSE to terminate it
+   * returning TRUE to process the loop and FALSE to terminate it.
    */
   public function valid() {
     return isset($this->currentRow);
   }
 
   /**
-   * Rewind the iterator.
+   * Rewinds the iterator.
    *
    * Implementation of Iterator::rewind() - subclasses of MigrateSource should
    * implement performRewind() to do any class-specific setup for iterating
@@ -311,14 +326,14 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       // 2. Explicitly set to update.
       // 3. The row is newer than the current highwater mark.
       // 4. If no such property exists then try by checking the hash of the row.
-      if (!$row->getIdMap() || $row->needsUpdate() || $this->aboveHighwater($row) || $this->rowChanged($row) ) {
+      if (!$row->getIdMap() || $row->needsUpdate() || $this->aboveHighwater($row) || $this->rowChanged($row)) {
         $this->currentRow = $row->freezeSource();
       }
     }
   }
 
   /**
-   * Check if the incoming data is newer than what we've previously imported.
+   * Checks if the incoming data is newer than what we've previously imported.
    *
    * @param \Drupal\migrate\Row $row
    *   The row we're importing.
@@ -331,7 +346,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Check if the incoming row has changed since our last import.
+   * Checks if the incoming row has changed since our last import.
    *
    * @param \Drupal\migrate\Row $row
    *   The row we're importing.
@@ -344,20 +359,20 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Getter for currentSourceIds data member.
+   * Gets the currentSourceIds data member.
    */
   public function getCurrentIds() {
     return $this->currentSourceIds;
   }
 
   /**
-   * Get the source count.
+   * Gets the source count.
    *
    * Return a count of available source records, from the cache if appropriate.
    * Returns -1 if the source is not countable.
    *
    * @param bool $refresh
-   *   Whether or not to refresh the count.
+   *   (optional) Whether or not to refresh the count. Defaults to FALSE.
    *
    * @return int
    *   The count.
@@ -395,7 +410,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Get the cache object.
+   * Gets the cache object.
    *
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   The cache object.
