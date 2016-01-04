@@ -61,14 +61,16 @@ class MigrateSourceTest extends MigrateTestCase {
   protected $executable;
 
   /**
-   * Get the source plugin to test.
+   * Gets the source plugin to test.
    *
    * @param array $configuration
-   *   The source configuration.
+   *   (optional) The source configuration. Defaults to an empty array.
    * @param array $migrate_config
-   *   The migration configuration to be used in parent::getMigration().
+   *   (optional) The migration configuration to be used in
+   *   parent::getMigration(). Defaults to an empty array.
    * @param int $status
-   *   The default status for the new rows to be imported.
+   *   (optional) The default status for the new rows to be imported. Defaults
+   *   to MigrateIdMapInterface::STATUS_NEEDS_UPDATE.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   A mocked source plugin.
@@ -367,7 +369,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Get a mock executable for the test.
+   * Gets a mock executable for the test.
    *
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration entity.
@@ -394,8 +396,9 @@ class StubSourcePlugin extends SourcePluginBase {
    * Helper for setting internal module handler implementation.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  function setModuleHandler(ModuleHandlerInterface $module_handler) {
+  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
   }
 
@@ -426,4 +429,5 @@ class StubSourcePlugin extends SourcePluginBase {
   protected function initializeIterator() {
     return [];
   }
+
 }

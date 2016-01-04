@@ -18,6 +18,8 @@ use Drupal\Tests\UnitTestCase;
 class SqlBaseTest extends UnitTestCase {
 
   /**
+   * Tests that the ID map is joinable.
+   *
    * @param bool $expected_result
    *   The expected result.
    * @param bool $id_map_is_sql
@@ -28,8 +30,8 @@ class SqlBaseTest extends UnitTestCase {
    *   (optional) An array of connection options for the source connection.
    *   Defaults to an empty array.
    * @param array $idmap_options
-   *  (optional) An array of connection options for the ID map connection.
-   *  Defaults to an empty array.
+   *   (optional) An array of connection options for the ID map connection.
+   *   Defaults to an empty array.
    *
    * @dataProvider sqlBaseTestProvider
    */
@@ -87,23 +89,57 @@ class SqlBaseTest extends UnitTestCase {
    */
   public function sqlBaseTestProvider() {
     return [
-      // Source IDs are empty so mapJoinable() is false.
-      [FALSE, FALSE, FALSE],
+      // Source ids are empty so mapJoinable() is false.
+      [
+        FALSE,
+        FALSE,
+        FALSE,
+      ],
       // Still false because getIdMap() is not a subclass of Sql.
-      [FALSE, FALSE, TRUE],
-      // Test mapJoinable() returns false when source and ID connection options
+      [
+        FALSE,
+        FALSE,
+        TRUE,
+      ],
+      // Test mapJoinable() returns false when source and id connection options
       // differ.
-      [FALSE, TRUE, TRUE, ['username' => 'different_from_map', 'password' => 'different_from_map'], ['username' => 'different_from_source', 'password' => 'different_from_source']],
-      // Returns true because source and ID map connection options are the same.
-      [TRUE, TRUE, TRUE, ['username' => 'same_value', 'password' => 'same_value'], ['username' => 'same_value', 'password' => 'same_value']],
+      [
+        FALSE,
+        TRUE,
+        TRUE,
+        ['username' => 'different_from_map', 'password' => 'different_from_map'],
+        ['username' => 'different_from_source', 'password' => 'different_from_source'],
+      ],
+      // Returns true because source and id map connection options are the same.
+      [
+        TRUE,
+        TRUE,
+        TRUE,
+        ['username' => 'same_value', 'password' => 'same_value'],
+        ['username' => 'same_value', 'password' => 'same_value'],
+      ],
     ];
   }
 
 }
 
+/**
+ * Creates a base source class for SQL migration testing.
+ */
 class TestSqlBase extends SqlBase {
 
+  /**
+   * The database object.
+   *
+   * @var object
+   */
   protected $database;
+
+  /**
+   * The migration IDs.
+   *
+   * @var array
+   */
   protected $ids;
 
   /**
