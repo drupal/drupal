@@ -155,4 +155,80 @@ class StyleTableTest extends PluginTestBase {
     $this->assertEqual(count($result), 0, 'Ensure the empty table cells are hidden.');
   }
 
+  /**
+   * Tests grouping by a field.
+   */
+  public function testGrouping() {
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_table');
+    // Get a reference to the display configuration so we can alter some
+    // specific style options.
+    $display = &$view->getDisplay('default');
+    // Set job as the grouping field.
+    $display['display_options']['style']['options']['grouping'][0] = array(
+      'field' => 'job',
+      'rendered' => TRUE,
+      'rendered_strip' => FALSE,
+    );
+    // Clear the caption text, the rendered job field will be used as a caption.
+    $display['display_options']['style']['options']['caption'] = '';
+    $display['display_options']['style']['options']['summary'] = '';
+    $display['display_options']['style']['options']['description'] = '';
+    $view->save();
+
+    // Add a record containing unsafe markup to be sure it's filtered out.
+    $unsafe_markup = '<script>alert("Rapper");</script>';
+    $unsafe_markup_data = array(
+      'name' => 'Marshall',
+      'age' => 42,
+      'job' => $unsafe_markup,
+      'created' => gmmktime(0, 0, 0, 2, 15, 2001),
+      'status' => 1,
+    );
+    $database = $this->container->get('database');
+    $database->insert('views_test_data')
+      ->fields(array_keys($unsafe_markup_data))
+      ->values($unsafe_markup_data)
+      ->execute();
+
+    $this->drupalGet('test-table');
+    $expected_captions = array(
+      'Job: Speaker',
+      'Job: Songwriter',
+      'Job: Drummer',
+      'Job: Singer',
+      'Job: ' . $unsafe_markup,
+    );
+
+    // Ensure that we don't find the caption containing unsafe markup.
+    $this->assertNoRaw($unsafe_markup, "Didn't find caption containing unsafe markup.");
+
+    // Ensure that all expected captions are found.
+    foreach ($expected_captions as $raw_caption) {
+      $this->assertEscaped($raw_caption);
+    }
+
+    $display = &$view->getDisplay('default');
+    // Remove the label from the grouping field.
+    $display['display_options']['fields']['job']['label'] = '';
+    $view->save();
+
+    $this->drupalGet('test-table');
+    $expected_captions = array(
+      'Speaker',
+      'Songwriter',
+      'Drummer',
+      'Singer',
+      $unsafe_markup,
+    );
+
+    // Ensure that we don't find the caption containing unsafe markup.
+    $this->assertNoRaw($unsafe_markup, "Didn't find caption containing unsafe markup.");
+
+    // Ensure that all expected captions are found.
+    foreach ($expected_captions as $raw_caption) {
+      $this->assertEscaped($raw_caption);
+    }
+  }
+
 }
