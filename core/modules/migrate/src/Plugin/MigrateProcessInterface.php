@@ -37,12 +37,12 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
    * @param \Drupal\migrate\MigrateExecutableInterface $migrate_executable
    *   The migration in which this process is being executed.
    * @param \Drupal\migrate\Row $row
-   *   The row from the source to process. Normally, just transforming the
-   *   value is adequate but very rarely you might need to change two columns
-   *   at the same time or something like that.
+   *   The row from the source to process. Normally, just transforming the value
+   *   is adequate but very rarely you might need to change two columns at the
+   *   same time or something like that.
    * @param string $destination_property
-   *   The destination property currently worked on. This is only used
-   *   together with the $row above.
+   *   The destination property currently worked on. This is only used together
+   *   with the $row above.
    *
    * @return string|array
    *   The newly transformed value.

@@ -21,6 +21,8 @@ use Drupal\migrate\Row;
 class Get extends ProcessPluginBase {
 
   /**
+   * Flag indicating whether there are multiple values.
+   *
    * @var bool
    */
   protected $multiple;
@@ -69,4 +71,5 @@ class Get extends ProcessPluginBase {
   public function multiple() {
     return $this->multiple;
   }
+
 }

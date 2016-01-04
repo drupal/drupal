@@ -34,7 +34,7 @@ class MigratePluginManager extends DefaultPluginManager {
    *
    * @param string $type
    *   The type of the plugin: row, source, process, destination, entity_field,
-   * id_map.
+   *   id_map.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
@@ -43,7 +43,8 @@ class MigratePluginManager extends DefaultPluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    * @param string $annotation
-   *   The annotation class name.
+   *   (optional) The annotation class name. Defaults to
+   *   'Drupal\Component\Annotation\PluginID'.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
     $plugin_interface = isset($plugin_interface_map[$type]) ? $plugin_interface_map[$type] : NULL;

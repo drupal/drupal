@@ -12,6 +12,8 @@ use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
+ * Defines an interface for Migration Destination classes.
+ *
  * Destinations are responsible for persisting source data into the destination
  * Drupal.
  *
@@ -43,11 +45,11 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
    * Derived classes must implement fields(), returning a list of available
    * destination fields.
    *
-   * @todo Review the cases where we need the Migration parameter,
-   * can we avoid that?
+   * @todo Review the cases where we need the Migration parameter, can we avoid
+   *   that? To be resolved with https://www.drupal.org/node/2543568.
    *
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
-   *   (optional) The migration containing this destination.
+   *   (optional) The migration containing this destination. Defaults to NULL.
    *
    * @return array
    *   - Keys: machine names of the fields
