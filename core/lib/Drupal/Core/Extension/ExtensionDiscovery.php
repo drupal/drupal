@@ -15,6 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Discovers available extensions in the filesystem.
+ *
+ * To also discover test modules, add
+ * @code
+ * $settings['extension_discovery_scan_tests'] = TRUE;
+ * @encode
+ * to your settings.php.
+ *
  */
 class ExtensionDiscovery {
 
@@ -133,6 +140,12 @@ class ExtensionDiscovery {
    * - the legacy site-wide directory; i.e., /sites/all
    * - the site-wide directory; i.e., /
    * - the site-specific directory; e.g., /sites/example.com
+   *
+   * To also find test modules, add
+   * @code
+   * $settings['extension_discovery_scan_tests'] = TRUE;
+   * @encode
+   * to your settings.php.
    *
    * The information is returned in an associative array, keyed by the extension
    * name (without .info.yml extension). Extensions found later in the search

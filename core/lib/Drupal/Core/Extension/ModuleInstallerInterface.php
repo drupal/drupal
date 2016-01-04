@@ -23,6 +23,12 @@ interface ModuleInstallerInterface {
    *   - Invoke hook_install() and add it to the list of installed modules.
    * - Invoke hook_modules_installed().
    *
+   * To install test modules add
+   * @code
+   * $settings['extension_discovery_scan_tests'] = TRUE;
+   * @encode
+   * to your settings.php.
+   *
    * @param string[] $module_list
    *   An array of module names.
    * @param bool $enable_dependencies
