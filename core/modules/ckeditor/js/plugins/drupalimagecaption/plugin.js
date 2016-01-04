@@ -244,6 +244,27 @@
         };
       // Low priority to ensure drupalimage's event handler runs first.
       }, null, null, 20);
+    },
+
+    afterInit: function (editor) {
+      var disableButtonIfOnWidget = function (evt) {
+        var widget = editor.widgets.focused;
+        if (widget && widget.name === 'image') {
+          this.setState(CKEDITOR.TRISTATE_DISABLED);
+          evt.cancel();
+        }
+      };
+
+      // Disable alignment buttons if the align filter is not enabled.
+      if (editor.plugins.justify && !editor.config.drupalImageCaption_alignFilterEnabled) {
+        var cmd;
+        var commands = ['justifyleft', 'justifycenter', 'justifyright', 'justifyblock'];
+        for (var n = 0; n < commands.length; n++) {
+          cmd = editor.getCommand(commands[n]);
+          cmd.contextSensitive = 1;
+          cmd.on('refresh', disableButtonIfOnWidget, null, null, 4);
+        }
+      }
     }
   });
 
