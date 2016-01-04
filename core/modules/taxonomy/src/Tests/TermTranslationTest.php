@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\TermTranslationBreadcrumbTest.
+ * Contains \Drupal\taxonomy\Tests\TermTranslationTest.
  */
 
 namespace Drupal\taxonomy\Tests;
@@ -15,7 +15,7 @@ use Drupal\system\Tests\Menu\AssertBreadcrumbTrait;
  *
  * @group taxonomy
  */
-class TermTranslationBreadcrumbTest extends TaxonomyTestBase {
+class TermTranslationTest extends TaxonomyTestBase {
 
   use AssertBreadcrumbTrait;
   use TaxonomyTranslationTestTrait;
@@ -86,6 +86,34 @@ class TermTranslationBreadcrumbTest extends TaxonomyTestBase {
     $term = $this->getLeafTerm();
     $translated = $term->getTranslation($this->translateToLangcode);
     $this->assertBreadcrumb($translated->urlInfo('canonical', ['language' => $languages[$this->translateToLangcode]]), $breadcrumb, $translated->label());
+
+  }
+
+  /**
+   * Test translation of terms are showed in the node.
+   */
+  protected function testTermsTranslation() {
+
+    // Set the display of the term reference field on the article content type
+    // to "Check boxes/radio buttons".
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent($this->termFieldName, array(
+        'type' => 'options_buttons',
+      ))
+      ->save();
+    $this->drupalLogin($this->drupalCreateUser(['create article content']));
+
+    // Test terms are listed.
+    $this->drupalget('node/add/article');
+    $this->assertText('one');
+    $this->assertText('two');
+    $this->assertText('three');
+
+    // Test terms translated are listed.
+    $this->drupalget('hu/node/add/article');
+    $this->assertText('translatedOne');
+    $this->assertText('translatedTwo');
+    $this->assertText('translatedThree');
   }
 
   /**

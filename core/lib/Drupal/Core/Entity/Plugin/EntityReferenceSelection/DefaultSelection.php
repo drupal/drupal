@@ -257,7 +257,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
     $entities = $this->entityManager->getStorage($target_type)->loadMultiple($result);
     foreach ($entities as $entity_id => $entity) {
       $bundle = $entity->bundle();
-      $options[$bundle][$entity_id] = Html::escape($entity->label());
+      $options[$bundle][$entity_id] = Html::escape($this->entityManager->getTranslationFromContext($entity)->label());
     }
 
     return $options;

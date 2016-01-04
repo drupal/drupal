@@ -73,7 +73,7 @@ class TermSelection extends DefaultSelection {
       if ($vocabulary = Vocabulary::load($bundle)) {
         if ($terms = $this->entityManager->getStorage('taxonomy_term')->loadTree($vocabulary->id(), 0, NULL, TRUE)) {
           foreach ($terms as $term) {
-            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . Html::escape($term->getName());
+            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . Html::escape($this->entityManager->getTranslationFromContext($term)->label());
           }
         }
       }
