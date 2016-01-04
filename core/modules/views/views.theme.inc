@@ -598,6 +598,10 @@ function template_preprocess_views_view_table(&$variables) {
     $variables['caption'] = ['#markup' => $handler->options['caption']];
     $variables['caption_needed'] = TRUE;
   }
+  elseif (!empty($variables['title'])) {
+    $variables['caption'] = ['#markup' => $variables['title']];
+    $variables['caption_needed'] = TRUE;
+  }
   else {
     $variables['caption'] = '';
     $variables['caption_needed'] = FALSE;
