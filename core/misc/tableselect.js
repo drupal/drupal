@@ -42,12 +42,17 @@
     var updateSelectAll = function (state) {
       // Update table's select-all checkbox (and sticky header's if available).
       $table.prev('table.sticky-header').addBack().find('th.select-all input[type="checkbox"]').each(function () {
-        $(this).attr('title', state ? strings.selectNone : strings.selectAll);
+        var $checkbox = $(this);
+        var stateChanged = $checkbox.prop('checked') !== state;
+
+        $checkbox.attr('title', state ? strings.selectNone : strings.selectAll);
 
         /**
-         * @this {HTMLElement}
+         * @checkbox {HTMLElement}
          */
-        this.checked = state;
+        if (stateChanged) {
+          $checkbox.prop('checked', state).trigger('change');
+        }
       });
     };
 
@@ -57,18 +62,22 @@
         // Loop through all checkboxes and set their state to the select all
         // checkbox' state.
         checkboxes.each(function () {
+          var $checkbox = $(this);
+          var stateChanged = $checkbox.prop('checked') !== event.target.checked;
 
           /**
-           * @this {HTMLElement}
+           * @checkbox {HTMLElement}
            */
-          this.checked = event.target.checked;
+          if (stateChanged) {
+            $checkbox.prop('checked', event.target.checked).trigger('change');
+          }
           // Either add or remove the selected class based on the state of the
           // check all checkbox.
 
           /**
-           * @this {HTMLElement}
+           * @checkbox {HTMLElement}
            */
-          $(this).closest('tr').toggleClass('selected', this.checked);
+          $checkbox.closest('tr').toggleClass('selected', this.checked);
         });
         // Update the title and the state of the check all box.
         updateSelectAll(event.target.checked);
