@@ -13,6 +13,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\responsive_image\Plugin\Field\FieldFormatter\ResponsiveImageFormatter;
+use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\user\RoleInterface;
 
 /**
@@ -60,7 +61,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     ));
     $this->drupalLogin($this->adminUser);
     // Add responsive image style.
-    $this->responsiveImgStyle = entity_create('responsive_image_style', array(
+    $this->responsiveImgStyle = ResponsiveImageStyle::create(array(
       'id' => 'style_one',
       'label' => 'Style One',
       'breakpoint_group' => 'responsive_image_test_module',
