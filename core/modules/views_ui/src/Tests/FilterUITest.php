@@ -95,4 +95,33 @@ class FilterUITest extends ViewTestBase {
     $this->assertNoRaw('<span>Group 3</span>', 'Group 3 has not been added yet.');
   }
 
+  /**
+   * Tests the identifier settings and restrictions.
+   */
+  public function testFilterIdentifier() {
+    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+    $path = 'admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type';
+
+    // Set an empty identifier.
+    $edit = array(
+      'options[expose][identifier]' => '',
+    );
+    $this->drupalPostForm($path, $edit, t('Apply'));
+    $this->assertText('The identifier is required if the filter is exposed.');
+
+    // Set the identifier to 'value'.
+    $edit = array(
+      'options[expose][identifier]' => 'value',
+    );
+    $this->drupalPostForm($path, $edit, t('Apply'));
+    $this->assertText('This identifier is not allowed.');
+
+    // Set the identifier to a value with a restricted character.
+    $edit = array(
+      'options[expose][identifier]' => 'value value',
+    );
+    $this->drupalPostForm($path, $edit, t('Apply'));
+    $this->assertText('This identifier has illegal characters.');
+  }
 }

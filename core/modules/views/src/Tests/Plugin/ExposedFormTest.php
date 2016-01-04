@@ -85,6 +85,69 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
+   * Tests the exposed form with a non-standard identifier.
+   */
+  public function testExposedIdentifier() {
+    // Alter the identifier of the filter to a random string.
+    $view = Views::getView('test_exposed_form_buttons');
+    $view->setDisplay();
+    $identifier = 'new_identifier';
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'type' => [
+        'exposed' => TRUE,
+        'field' => 'type',
+        'id' => 'type',
+        'table' => 'node_field_data',
+        'plugin_id' => 'in_operator',
+        'entity_type' => 'node',
+        'entity_field' => 'type',
+        'expose' => [
+          'identifier' => $identifier,
+          'label' => 'Content: Type',
+          'operator_id' => 'type_op',
+          'reduce' => FALSE,
+          'description' => 'Exposed overridden description'
+        ],
+      ]
+    ));
+    $view->save();
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array($identifier => 'article')));
+    $this->assertFieldById(Html::getId('edit-' . $identifier), 'article', "Article type filter set with new identifier.");
+
+    // Alter the identifier of the filter to a random string containing
+    // restricted characters.
+    $view = Views::getView('test_exposed_form_buttons');
+    $view->setDisplay();
+    $identifier = 'bad identifier';
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'type' => [
+        'exposed' =>  TRUE,
+        'field' => 'type',
+        'id' => 'type',
+        'table' => 'node_field_data',
+        'plugin_id' => 'in_operator',
+        'entity_type' => 'node',
+        'entity_field' => 'type',
+        'expose' => [
+          'identifier' => $identifier,
+          'label' => 'Content: Type',
+          'operator_id' => 'type_op',
+          'reduce' => FALSE,
+          'description' => 'Exposed overridden description'
+        ],
+      ]
+    ));
+    $this->executeView($view);
+
+    $errors = $view->validate();
+    $expected = [
+      'default' => ['This identifier has illegal characters.'],
+      'page_1' => ['This identifier has illegal characters.'],
+    ];
+    $this->assertEqual($errors, $expected);
+  }
+
+  /**
    * Tests whether the reset button works on an exposed form.
    */
   public function testResetButton() {
