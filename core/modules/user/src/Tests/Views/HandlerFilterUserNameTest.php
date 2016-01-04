@@ -83,6 +83,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
 
     $this->executeView($view);
     $this->assertIdenticalResultset($view, array(array('uid' => $this->accounts[0]->id())), $this->columnMap);
+
+    $this->assertEqual($view->filter['uid']->getValueOptions(), NULL);
   }
 
   /**

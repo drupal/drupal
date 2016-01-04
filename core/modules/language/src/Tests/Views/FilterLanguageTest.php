@@ -45,6 +45,18 @@ class FilterLanguageTest extends LanguageTestBase {
         'name' => $name,
       ));
       $this->assertIdenticalResultset($view, $expected, array('views_test_data_name' => 'name'));
+
+      $expected = [
+        '***LANGUAGE_site_default***',
+        '***LANGUAGE_language_interface***',
+        '***LANGUAGE_language_content***',
+        'en',
+        'xx-lolspeak',
+        'und',
+        'zxx'
+      ];
+      $this->assertIdentical(array_keys($view->filter['langcode']->getValueOptions()), $expected);
+
       $view->destroy();
     }
   }
