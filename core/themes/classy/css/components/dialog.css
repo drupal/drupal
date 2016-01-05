@@ -56,7 +56,7 @@
   top: 48.5%;
   z-index: 1000;
   background-color: #232323;
-  background-image: url(loading-small.gif);
+  background-image: url(../../../../misc/loading-small.gif);
   background-position: center center;
   background-repeat: no-repeat;
   border-radius: 7px;
