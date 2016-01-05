@@ -127,7 +127,22 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
       }
       elseif ($this->resolveConditions($conditions, 'and') !== FALSE) {
         // Delegate to the plugin.
-        $access = $entity->getPlugin()->access($account, TRUE);
+        $block_plugin = $entity->getPlugin();
+        try {
+          if ($block_plugin instanceof ContextAwarePluginInterface) {
+            $contexts = $this->contextRepository->getRuntimeContexts(array_values($block_plugin->getContextMapping()));
+            $this->contextHandler->applyContextMapping($block_plugin, $contexts);
+          }
+          $access = $block_plugin->access($account, TRUE);
+        }
+        catch (ContextException $e) {
+          // Setting access to forbidden if any context is missing for the same
+          // reasons as with conditions (described in the comment above).
+          // @todo Avoid setting max-age 0 for some or all cases, for example by
+          //   treating available contexts without value differently in
+          //   https://www.drupal.org/node/2521956.
+          $access = AccessResult::forbidden()->setCacheMaxAge(0);
+        }
       }
       else {
         $access = AccessResult::forbidden();
