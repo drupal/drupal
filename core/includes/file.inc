@@ -630,7 +630,8 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
 
   // Allow potentially insecure uploads for very savvy users and admin
   if (!\Drupal::config('system.file')->get('allow_insecure_uploads')) {
-    // Remove any null bytes. See http://php.net/manual/en/security.filesystem.nullbytes.php
+    // Remove any null bytes. See
+    // http://php.net/manual/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
 
     $whitelist = array_unique(explode(' ', strtolower(trim($extensions))));

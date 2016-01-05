@@ -177,7 +177,7 @@ class DateTimePlus {
    *   to use things like negative years, which php's parser fails on, or
    *   any other specialized input with a known format. If provided the
    *   date will be created using the createFromFormat() method.
-   *   @see http://us3.php.net/manual/en/datetime.createfromformat.php
+   *   @see http://php.net/manual/datetime.createfromformat.php
    * @param mixed $time
    *   @see __construct()
    * @param mixed $timezone
@@ -389,7 +389,7 @@ class DateTimePlus {
    * PHP creates a valid date from invalid data with only a warning,
    * 2011-02-30 becomes 2011-03-03, for instance, but we don't want that.
    *
-   * @see http://us3.php.net/manual/en/time.getlasterrors.php
+   * @see http://php.net/manual/time.getlasterrors.php
    */
   public function checkErrors() {
     $errors = \DateTime::getLastErrors();

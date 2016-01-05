@@ -175,7 +175,7 @@ class ArgumentDateTest extends ViewKernelTestBase {
     $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_3');
     // Check the week calculation for a leap year.
-    // @see http://en.wikipedia.org/wiki/ISO_week_date#Calculation
+    // @see http://wikipedia.org/wiki/ISO_week_date#Calculation
     $this->executeView($view, array('39'));
     $expected = array();
     $expected[] = array('id' => 1);
@@ -184,7 +184,7 @@ class ArgumentDateTest extends ViewKernelTestBase {
 
     $view->setDisplay('embed_3');
     // Check the week calculation for the 29th of February in a leap year.
-    // @see http://en.wikipedia.org/wiki/ISO_week_date#Calculation
+    // @see http://wikipedia.org/wiki/ISO_week_date#Calculation
     $this->executeView($view, array('09'));
     $expected = array();
     $expected[] = array('id' => 2);

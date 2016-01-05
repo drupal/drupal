@@ -1312,7 +1312,7 @@ abstract class WebTestBase extends TestBase {
    * @param $curl_options
    *   An associative array of cURL options to set, where the keys are constants
    *   defined by the cURL library. For a list of valid options, see
-   *   http://www.php.net/manual/function.curl-setopt.php
+   *   http://php.net/manual/function.curl-setopt.php
    * @param $redirect
    *   FALSE if this is an initial request, TRUE if this request is the result
    *   of a redirect.

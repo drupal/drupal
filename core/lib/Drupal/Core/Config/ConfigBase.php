@@ -55,7 +55,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * incompatible with this limitation are created, we enforce a maximum name
    * length of 250 characters (leaving 5 characters for the file extension).
    *
-   * @see http://en.wikipedia.org/wiki/Comparison_of_file_systems
+   * @see http://wikipedia.org/wiki/Comparison_of_file_systems
    *
    * Configuration objects not stored on the filesystem should still be
    * restricted in name length so name can be used as a cache key.

@@ -334,7 +334,7 @@ EOD;
         // Prevent invalid cdata escaping as this would throw a DOM error.
         // This is the same behavior as found in libxml2.
         // Related W3C standard: http://www.w3.org/TR/REC-xml/#dt-cdsection
-        // Fix explanation: http://en.wikipedia.org/wiki/CDATA#Nesting
+        // Fix explanation: http://wikipedia.org/wiki/CDATA#Nesting
         $data = str_replace(']]>', ']]]]><![CDATA[>', $child_node->data);
 
         $fragment = $node->ownerDocument->createDocumentFragment();

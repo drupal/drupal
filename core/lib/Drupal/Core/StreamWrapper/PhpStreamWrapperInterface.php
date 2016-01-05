@@ -10,7 +10,7 @@ namespace Drupal\Core\StreamWrapper;
 /**
  * Defines a generic PHP stream wrapper interface.
  *
- * @see http://www.php.net/manual/class.streamwrapper.php
+ * @see http://php.net/manual/class.streamwrapper.php
  */
 interface PhpStreamWrapperInterface {
 
@@ -116,7 +116,7 @@ interface PhpStreamWrapperInterface {
    *   Returns TRUE on success or FALSE on failure. If $option is not
    *   implemented, FALSE should be returned.
    *
-   * @see http://www.php.net/manual/streamwrapper.stream-metadata.php
+   * @see http://php.net/manual/streamwrapper.stream-metadata.php
    */
   public function stream_metadata($path, $option, $value);
 

@@ -28,7 +28,7 @@ function simpletest_requirements($phase) {
   );
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = t('The testing framework could not be installed because the PHP <a href=":curl_url">cURL</a> library is not available.', array(':curl_url' => 'http://php.net/manual/curl.setup.php'));
+    $requirements['curl']['description'] = t('The testing framework could not be installed because the PHP <a href="http://php.net/manual/curl.setup.php">cURL</a> library is not available.');
   }
 
   $requirements['php_domdocument'] = array(
@@ -49,7 +49,7 @@ function simpletest_requirements($phase) {
   );
   if ($open_basedir) {
     $requirements['php_open_basedir']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_open_basedir']['description'] = t('The testing framework requires the PHP <a href=":open_basedir-url">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.', array(':open_basedir-url' => 'http://php.net/manual/ini.core.php#ini.open-basedir'));
+    $requirements['php_open_basedir']['description'] = t('The testing framework requires the PHP <a href="http://php.net/manual/ini.core.php#ini.open-basedir">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.');
   }
 
   // Check the current memory limit. If it is set too low, SimpleTest will fail

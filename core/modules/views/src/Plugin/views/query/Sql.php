@@ -1838,7 +1838,7 @@ class Sql extends QueryPluginBase {
 
         // SQLite does not have a ISO week substitution string, so it needs
         // special handling.
-        // @see http://en.wikipedia.org/wiki/ISO_week_date#Calculation
+        // @see http://wikipedia.org/wiki/ISO_week_date#Calculation
         // @see http://stackoverflow.com/a/15511864/1499564
         if ($format === '%W') {
           $expression = "((strftime('%j', date(strftime('%Y-%m-%d', $field" . $unixepoch . "), '-3 days', 'weekday 4')) - 1) / 7 + 1)";

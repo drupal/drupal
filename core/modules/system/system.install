@@ -246,7 +246,7 @@ function system_requirements($phase) {
       $requirements['php_opcache'] = array(
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href=":opcache_link" target="_blank">OPcache</a> installed on your server.', array(':opcache_link' => 'http://php.net/manual/en/opcache.installation.php')),
+        'description' => t('PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="http://php.net/manual/opcache.installation.php" target="_blank">OPcache</a> installed on your server.'),
       );
     }
     else {

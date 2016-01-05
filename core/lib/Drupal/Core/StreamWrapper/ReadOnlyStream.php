@@ -138,7 +138,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    * @return bool
    *   FALSE as data will not be written.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-write.php
+   * @see http://php.net/manual/streamwrapper.stream-write.php
    */
   public function stream_write($data) {
     trigger_error('stream_write() not supported for read-only stream wrappers', E_USER_WARNING);
@@ -192,7 +192,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    *   TRUE so that file_delete() will remove db reference to file. File is not
    *   actually deleted.
    *
-   * @see http://php.net/manual/en/streamwrapper.unlink.php
+   * @see http://php.net/manual/streamwrapper.unlink.php
    */
   public function unlink($uri) {
     trigger_error('unlink() not supported for read-only stream wrappers', E_USER_WARNING);
@@ -212,7 +212,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    * @return bool
    *   FALSE as file will never be renamed.
    *
-   * @see http://php.net/manual/en/streamwrapper.rename.php
+   * @see http://php.net/manual/streamwrapper.rename.php
    */
   public function rename($from_uri, $to_uri) {
     trigger_error('rename() not supported for read-only stream wrappers', E_USER_WARNING);
@@ -234,7 +234,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    * @return bool
    *   FALSE as directory will never be created.
    *
-   * @see http://php.net/manual/en/streamwrapper.mkdir.php
+   * @see http://php.net/manual/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
     trigger_error('mkdir() not supported for read-only stream wrappers', E_USER_WARNING);
@@ -254,7 +254,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    * @return bool
    *   FALSE as directory will never be deleted.
    *
-   * @see http://php.net/manual/en/streamwrapper.rmdir.php
+   * @see http://php.net/manual/streamwrapper.rmdir.php
    */
   public function rmdir($uri, $options) {
     trigger_error('rmdir() not supported for read-only stream wrappers', E_USER_WARNING);

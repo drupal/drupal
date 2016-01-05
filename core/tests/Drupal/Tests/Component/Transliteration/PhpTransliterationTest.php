@@ -118,7 +118,7 @@ class PhpTransliterationTest extends UnitTestCase {
     // http://www.unicode.org/charts/PDF/U1400.pdf
     $four_byte = html_entity_decode('&#x1411;', ENT_NOQUOTES, 'UTF-8');
     // These are two Gothic alphabet letters. See
-    // http://en.wikipedia.org/wiki/Gothic_alphabet
+    // http://wikipedia.org/wiki/Gothic_alphabet
     // They are not in our tables, but should at least give us '?' (unknown).
     $five_byte = html_entity_decode('&#x10330;&#x10338;', ENT_NOQUOTES, 'UTF-8');
 

@@ -34,7 +34,7 @@ class SortRandomTest extends ViewKernelTestBase {
    * of protons / electrons in the observable universe, also called the
    * eddington number.
    *
-   * @see http://en.wikipedia.org/wiki/Eddington_number
+   * @see http://wikipedia.org/wiki/Eddington_number
    */
   protected function dataSet() {
     $data = parent::dataSet();
