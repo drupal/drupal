@@ -111,7 +111,17 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
   }
 
   /**
-   * Returns the in-place editor that Edit selects.
+   * Returns the in-place editor that quickedit selects.
+   *
+   * @param int $entity_id
+   *   An entity ID.
+   * @param string $field_name
+   *   A field name.
+   * @param string $view_mode
+   *   A view mode.
+   *
+   * @return string
+   *   Returns the selected in-place editor.
    */
   protected function getSelectedEditor($entity_id, $field_name, $view_mode = 'default') {
     $entity = entity_load('entity_test', $entity_id, TRUE);
