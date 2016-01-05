@@ -24,7 +24,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installConfig(['image']);
   }

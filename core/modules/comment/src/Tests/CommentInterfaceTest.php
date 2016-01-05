@@ -23,7 +23,7 @@ class CommentInterfaceTest extends CommentTestBase {
   /**
    * Set up comments to have subject and preview disabled.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
     // Make sure that comment field title is not displayed when there's no

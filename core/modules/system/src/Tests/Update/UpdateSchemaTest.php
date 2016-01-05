@@ -37,7 +37,7 @@ class UpdateSchemaTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     require_once \Drupal::root() . '/core/includes/update.inc';

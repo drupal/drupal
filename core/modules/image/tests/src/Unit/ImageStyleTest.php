@@ -90,7 +90,7 @@ class ImageStyleTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityTypeId = $this->randomMachineName();
     $this->provider = $this->randomMachineName();
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');

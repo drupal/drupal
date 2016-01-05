@@ -36,7 +36,7 @@ class SelectionTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create nodes.

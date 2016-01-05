@@ -32,7 +32,7 @@ class ValidReferenceConstraintValidatorTest extends EntityUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->installSchema('user', array('users_data'));
     $this->typedData = $this->container->get('typed_data_manager');

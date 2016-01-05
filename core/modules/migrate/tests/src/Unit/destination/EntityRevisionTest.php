@@ -41,7 +41,7 @@ class EntityRevisionTest extends UnitTestCase {
    */
   protected $fieldTypeManager;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Setup mocks to be used when creating a revision destination.

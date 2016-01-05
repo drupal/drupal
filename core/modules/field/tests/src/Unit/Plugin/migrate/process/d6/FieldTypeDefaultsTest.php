@@ -22,7 +22,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->plugin = new FieldTypeDefaults([], 'field_type_defaults', []);
   }

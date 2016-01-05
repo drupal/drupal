@@ -81,7 +81,7 @@ class DbDumpTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Determine what database backend is running, and set the skip flag.

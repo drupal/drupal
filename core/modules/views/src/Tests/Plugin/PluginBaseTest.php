@@ -24,7 +24,7 @@ class PluginBaseTest extends KernelTestBase {
    */
   var $testPluginBase;
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
     $this->testPluginBase = new TestPluginBase();
   }

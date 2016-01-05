@@ -54,7 +54,7 @@ class StableLibraryOverrideTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->themeManager = $this->container->get('theme.manager');

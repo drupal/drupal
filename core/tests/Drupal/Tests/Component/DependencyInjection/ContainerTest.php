@@ -49,7 +49,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->machineFormat = TRUE;
     $this->containerClass = '\Drupal\Component\DependencyInjection\Container';
     $this->containerDefinition = $this->getMockContainerDefinition();

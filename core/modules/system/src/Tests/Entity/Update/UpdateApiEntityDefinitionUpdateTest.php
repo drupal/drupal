@@ -44,7 +44,7 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->entityManager = $this->container->get('entity.manager');

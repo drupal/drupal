@@ -27,7 +27,7 @@ class ClientFactoryTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $stack = $this->getMockBuilder('GuzzleHttp\HandlerStack')
       ->disableOriginalConstructor()
       ->getMock();

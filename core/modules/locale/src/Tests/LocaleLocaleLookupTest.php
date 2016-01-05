@@ -27,7 +27,7 @@ class LocaleLocaleLookupTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Change the language default object to different values.
