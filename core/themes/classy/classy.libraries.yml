@@ -56,12 +56,6 @@ forum:
     component:
       css/components/forum.css: { weight: -10 }
 
-image-widget:
-  version: VERSION
-  css:
-    component:
-      css/components/image-widget.css: { weight: -10 }
-
 indented:
   version: VERSION
   css:
