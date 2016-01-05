@@ -140,11 +140,15 @@ class Link implements RenderableInterface {
   /**
    * Generates the HTML for this Link object.
    *
+   * Do not use this method to render a link in an HTML context. In an HTML
+   * context, self::toRenderable() should be used so that render cache
+   * information is maintained. However, there might be use cases such as tests
+   * and non-HTML contexts where calling this method directly makes sense.
+   *
    * @return \Drupal\Core\GeneratedLink
    *   The link HTML markup.
    *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
-   *   self::toRenderable() instead.
+   * @see \Drupal\Core\Link::toRenderable()
    */
   public function toString() {
     return $this->getLinkGenerator()->generateFromLink($this);
