@@ -1144,7 +1144,7 @@ services:
     class: Drupal\Core\EventSubscriber\DefaultExceptionHtmlSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@http_kernel', '@logger.channel.php', '@redirect.destination']
+    arguments: ['@http_kernel', '@logger.channel.php', '@redirect.destination', '@router.no_access_checks']
   exception.default:
     class: Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
     tags:
@@ -1164,7 +1164,7 @@ services:
     class: Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@config.factory', '@path.alias_manager', '@http_kernel', '@logger.channel.php', '@redirect.destination']
+    arguments: ['@config.factory', '@http_kernel', '@logger.channel.php', '@redirect.destination', '@router.no_access_checks']
   exception.fast_404_html:
     class: Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
     tags:

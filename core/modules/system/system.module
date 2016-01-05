@@ -17,6 +17,7 @@ use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Extension\ModuleHandler;
@@ -646,7 +647,9 @@ function system_js_settings_build(&$settings, AttachedAssetsInterface $assets) {
  * as well as theme_token ajax state.
  */
 function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
-  $request = \Drupal::request();
+  // As this is being output in the final response always use the master
+  // request.
+  $request = \Drupal::requestStack()->getMasterRequest();
   $current_query = $request->query->all();
 
   // Let output path processors set a prefix.
@@ -656,8 +659,12 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   $path_processor->processOutbound('/', $options);
   $pathPrefix = $options['prefix'];
 
-  $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
-  $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  $route_match = \Drupal::routeMatch();
+  if ($route_match instanceof StackedRouteMatchInterface) {
+    $route_match = $route_match->getMasterRouteMatch();
+  }
+  $current_path = $route_match->getRouteName() ? Url::fromRouteMatch($route_match)->getInternalPath() : '';
+  $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route_match->getRouteObject());
   $path_settings = [
     'baseUrl' => $request->getBaseUrl() . '/',
     'pathPrefix' => $pathPrefix,

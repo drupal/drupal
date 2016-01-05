@@ -106,6 +106,15 @@ class TestControllers {
     throw new \Exception('Escaped content: <p> <br> <h3>');
   }
 
+  public function test25() {
+    return [
+      '#cache' => [
+        'url',
+      ],
+      '#markup' => \Drupal::requestStack()->getCurrentRequest()->getUri(),
+    ];
+  }
+
   /**
    * Throws an exception.
    *

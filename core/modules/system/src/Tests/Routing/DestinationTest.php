@@ -74,7 +74,7 @@ class DestinationTest extends WebTestBase {
 
     // Make sure that 404 pages do not populate $_GET['destination'] with
     // external URLs.
-    \Drupal::configFactory()->getEditable('system.site')->set('page.404', 'system-test/get-destination')->save();
+    \Drupal::configFactory()->getEditable('system.site')->set('page.404', '/system-test/get-destination')->save();
     $this->drupalGet('http://example.com', ['external' => FALSE]);
     $this->assertResponse(404);
     $this->assertIdentical(Url::fromRoute('<front>')->toString(), $this->getRawContent(), 'External URL is not allowed on 404 pages.');

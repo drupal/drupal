@@ -44,6 +44,14 @@ class AccessDeniedTest extends WebTestBase {
     $this->assertText(t('Access denied'), 'Found the default 403 page');
     $this->assertResponse(403);
 
+    // Ensure that users without permission are denied access and have the
+    // correct path information in drupalSettings.
+    $this->drupalLogin($this->createUser([]));
+    $this->drupalGet('admin', ['query' => ['foo' => 'bar']]);
+    $this->assertEqual($this->drupalSettings['path']['currentPath'], 'admin');
+    $this->assertEqual($this->drupalSettings['path']['currentPathIsAdmin'], TRUE);
+    $this->assertEqual($this->drupalSettings['path']['currentQuery'], ['foo' => 'bar']);
+
     $this->drupalLogin($this->adminUser);
 
     // Set a custom 404 page without a starting slash.

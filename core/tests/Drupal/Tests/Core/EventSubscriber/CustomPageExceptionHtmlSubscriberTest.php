@@ -36,13 +36,6 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   protected $configFactory;
 
   /**
-   * The mocked alias manager.
-   *
-   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $aliasManager;
-
-  /**
    * The mocked logger.
    *
    * @var \Psr\Log\LoggerInterface
@@ -71,21 +64,31 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   protected $redirectDestination;
 
   /**
+   * The mocked access unaware router.
+   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $accessUnawareRouter;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->configFactory = $this->getConfigFactoryStub(['system.site' => ['page.403' => 'access-denied-page', 'page.404' => 'not-found-page']]);
+    $this->configFactory = $this->getConfigFactoryStub(['system.site' => ['page.403' => '/access-denied-page', 'page.404' => '/not-found-page']]);
 
-    $this->aliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
     $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $this->logger = $this->getMock('Psr\Log\LoggerInterface');
     $this->redirectDestination = $this->getMock('\Drupal\Core\Routing\RedirectDestinationInterface');
-
     $this->redirectDestination->expects($this->any())
       ->method('getAsArray')
       ->willReturn(['destination' => 'test']);
+    $this->accessUnawareRouter = $this->getMock('Symfony\Component\Routing\Matcher\UrlMatcherInterface');
+    $this->accessUnawareRouter->expects($this->any())
+      ->method('match')
+      ->willReturn([
+        '_controller' => 'mocked',
+      ]);
 
-    $this->customPageSubscriber = new CustomPageExceptionHtmlSubscriber($this->configFactory, $this->aliasManager, $this->kernel, $this->logger, $this->redirectDestination);
+    $this->customPageSubscriber = new CustomPageExceptionHtmlSubscriber($this->configFactory, $this->kernel, $this->logger, $this->redirectDestination, $this->accessUnawareRouter);
 
     // You can't create an exception in PHP without throwing it. Store the
     // current error_log, and disable it temporarily.
@@ -100,20 +103,9 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Sets up an alias manager that does nothing.
-   */
-  protected function setupStubAliasManager() {
-    $this->aliasManager->expects($this->any())
-      ->method('getPathByAlias')
-      ->willReturnArgument(0);
-  }
-
-  /**
    * Tests onHandleException with a POST request.
    */
   public function testHandleWithPostRequest() {
-    $this->setupStubAliasManager();
-
     $request = Request::create('/test', 'POST', array('name' => 'druplicon', 'pass' => '12345'));
 
     $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
@@ -133,8 +125,6 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
    * Tests onHandleException with a GET request.
    */
   public function testHandleWithGetRequest() {
-    $this->setupStubAliasManager();
-
     $request = Request::create('/test', 'GET', array('name' => 'druplicon', 'pass' => '12345'));
 
     $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {

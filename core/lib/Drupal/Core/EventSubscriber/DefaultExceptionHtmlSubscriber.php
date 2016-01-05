@@ -7,16 +7,14 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 /**
  * Exception subscriber for handling core default HTML error pages.
@@ -45,6 +43,13 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   protected $redirectDestination;
 
   /**
+   * A router implementation which does not check access.
+   *
+   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
+   */
+  protected $accessUnawareRouter;
+
+  /**
    * Constructs a new DefaultExceptionHtmlSubscriber.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
@@ -53,11 +58,14 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The logger service.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination service.
+   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $access_unaware_router
+   *   A router implementation which does not check access.
    */
-  public function __construct(HttpKernelInterface $http_kernel, LoggerInterface $logger, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(HttpKernelInterface $http_kernel, LoggerInterface $logger, RedirectDestinationInterface $redirect_destination, UrlMatcherInterface $access_unaware_router) {
     $this->httpKernel = $http_kernel;
     $this->logger = $logger;
     $this->redirectDestination = $redirect_destination;
+    $this->accessUnawareRouter = $access_unaware_router;
   }
 
   /**
@@ -83,7 +91,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on401(GetResponseForExceptionEvent $event) {
-    $this->makeSubrequest($event, Url::fromRoute('system.401')->toString(), Response::HTTP_UNAUTHORIZED);
+    $this->makeSubrequest($event, '/system/401', Response::HTTP_UNAUTHORIZED);
   }
 
   /**
@@ -93,7 +101,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on403(GetResponseForExceptionEvent $event) {
-    $this->makeSubrequest($event, Url::fromRoute('system.403')->toString(), Response::HTTP_FORBIDDEN);
+    $this->makeSubrequest($event, '/system/403', Response::HTTP_FORBIDDEN);
   }
 
   /**
@@ -103,7 +111,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on404(GetResponseForExceptionEvent $event) {
-    $this->makeSubrequest($event, Url::fromRoute('system.404')->toString(), Response::HTTP_NOT_FOUND);
+    $this->makeSubrequest($event, '/system/404', Response::HTTP_NOT_FOUND);
   }
 
   /**
@@ -120,54 +128,46 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
     $request = $event->getRequest();
     $exception = $event->getException();
 
-    if (!($url && $url[0] == '/')) {
-      $url = $request->getBasePath() . '/' . $url;
+    try {
+      // Reuse the exact same request (so keep the same URL, keep the access
+      // result, the exception, et cetera) but override the routing information.
+      // This means that aside from routing, this is identical to the master
+      // request. This allows us to generate a response that is executed on
+      // behalf of the master request, i.e. for the original URL. This is what
+      // allows us to e.g. generate a 404 response for the original URL; if we
+      // would execute a subrequest with the 404 route's URL, then it'd be
+      // generated for *that* URL, not the *original* URL.
+      $sub_request = clone $request;
+      $sub_request->attributes->add($this->accessUnawareRouter->match($url));
+
+      // Add to query (GET) or request (POST) parameters:
+      // - 'destination' (to ensure e.g. the login form in a 403 response
+      //   redirects to the original URL)
+      // - '_exception_statuscode'
+      $parameters = $sub_request->isMethod('GET') ? $sub_request->query : $sub_request->request;
+      $parameters->add($this->redirectDestination->getAsArray() + ['_exception_statuscode' => $status_code]);
+
+      $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
+      // Only 2xx responses should have their status code overridden; any
+      // other status code should be passed on: redirects (3xx), error (5xx)…
+      // @see https://www.drupal.org/node/2603788#comment-10504916
+      if ($response->isSuccessful()) {
+        $response->setStatusCode($status_code);
+      }
+
+      // Persist any special HTTP headers that were set on the exception.
+      if ($exception instanceof HttpExceptionInterface) {
+        $response->headers->add($exception->getHeaders());
+      }
+
+      $event->setResponse($response);
     }
-
-    $current_url = $request->getBasePath() . $request->getPathInfo();
-
-    if ($url != $request->getBasePath() . '/' && $url != $current_url) {
-      if ($request->getMethod() === 'POST') {
-        $sub_request = Request::create($url, 'POST', $this->redirectDestination->getAsArray() + ['_exception_statuscode' => $status_code] + $request->request->all(), $request->cookies->all(), [], $request->server->all());
-      }
-      else {
-        $sub_request = Request::create($url, 'GET', $request->query->all() + $this->redirectDestination->getAsArray() + ['_exception_statuscode' => $status_code], $request->cookies->all(), [], $request->server->all());
-      }
-
-      try {
-        // Persist the 'exception' attribute to the subrequest.
-        $sub_request->attributes->set('exception', $request->attributes->get('exception'));
-        // Persist the access result attribute to the subrequest, so that the
-        // error page inherits the access result of the master request.
-        $sub_request->attributes->set(AccessAwareRouterInterface::ACCESS_RESULT, $request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT));
-
-        // Carry over the session to the subrequest.
-        if ($session = $request->getSession()) {
-          $sub_request->setSession($session);
-        }
-
-        $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
-        // Only 2xx responses should have their status code overridden; any
-        // other status code should be passed on: redirects (3xx), error (5xx)…
-        // @see https://www.drupal.org/node/2603788#comment-10504916
-        if ($response->isSuccessful()) {
-          $response->setStatusCode($status_code);
-        }
-
-        // Persist any special HTTP headers that were set on the exception.
-        if ($exception instanceof HttpExceptionInterface) {
-          $response->headers->add($exception->getHeaders());
-        }
-
-        $event->setResponse($response);
-      }
-      catch (\Exception $e) {
-        // If an error happened in the subrequest we can't do much else. Instead,
-        // just log it. The DefaultExceptionSubscriber will catch the original
-        // exception and handle it normally.
-        $error = Error::decodeException($e);
-        $this->logger->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
-      }
+    catch (\Exception $e) {
+      // If an error happened in the subrequest we can't do much else. Instead,
+      // just log it. The DefaultExceptionSubscriber will catch the original
+      // exception and handle it normally.
+      $error = Error::decodeException($e);
+      $this->logger->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
     }
   }
 

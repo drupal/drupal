@@ -31,6 +31,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('system', ['router']);
+    $this->installEntitySchema('date_format');
     \Drupal::service('router.builder')->rebuild();
   }
 
@@ -96,6 +97,42 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     $this->assertEqual($response->getStatusCode(), Response::HTTP_NOT_FOUND);
     $this->assertEqual($response->headers->get('Content-type'), 'text/html; charset=UTF-8');
+  }
+
+  /**
+   * Tests that the exception response is executed in the original context.
+   */
+  public function testExceptionResponseGeneratedForOriginalRequest() {
+    // Test with 404 path pointing to a route that uses '_controller'.
+    $response = $this->doTest404Route('/router_test/test25');
+    $this->assertTrue(strpos($response->getContent(), '/not-found') !== FALSE);
+
+    // Test with 404 path pointing to a route that uses '_form'.
+    $response = $this->doTest404Route('/router_test/test26');
+    $this->assertTrue(strpos($response->getContent(), '<form class="system-logging-settings"') !== FALSE);
+
+    // Test with 404 path pointing to a route that uses '_entity_form'.
+    $response = $this->doTest404Route('/router_test/test27');
+    $this->assertTrue(strpos($response->getContent(), '<form class="date-format-add-form date-format-form"') !== FALSE);
+  }
+
+  /**
+   * Sets the given path to use as the 404 page and triggers a 404.
+   *
+   * @param string $path
+   * @return \Drupal\Core\Render\HtmlResponse
+   *
+   * @see \Drupal\system\Tests\Routing\ExceptionHandlingTest::testExceptionResponseGeneratedForOriginalRequest()
+   */
+  protected function doTest404Route($path) {
+    $this->config('system.site')->set('page.404', $path)->save();
+
+    $request = Request::create('/not-found');
+    $request->setFormat('html', ['text/html']);
+
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
+    $kernel = \Drupal::getContainer()->get('http_kernel');
+    return $kernel->handle($request)->prepare($request);
   }
 
   /**

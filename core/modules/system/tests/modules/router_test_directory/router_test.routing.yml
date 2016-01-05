@@ -155,6 +155,29 @@ router_test.24:
   requirements:
     _access: 'TRUE'
 
+router_test.25:
+  path: '/router_test/test25'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test25'
+  requirements:
+    _access: 'TRUE'
+
+router_test.26:
+  path: '/router_test/test26'
+  defaults:
+    _form: 'Drupal\system\Form\LoggingForm'
+    _title: 'Cron'
+  requirements:
+    _access: 'TRUE'
+
+router_test.27:
+  path: '/router_test/test27'
+  defaults:
+    _entity_form: 'date_format.add'
+    _title: 'Add date format'
+  requirements:
+    _access: 'TRUE'
+
 router_test.hierarchy_parent:
   path: '/menu-test/parent'
   defaults:
