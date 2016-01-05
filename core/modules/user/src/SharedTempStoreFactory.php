@@ -49,16 +49,16 @@ class SharedTempStoreFactory {
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $storage_factory
    *   The key/value store factory.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock_backend
    *   The lock object used for this data.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lockBackend, RequestStack $request_stack, $expire = 604800) {
+  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, RequestStack $request_stack, $expire = 604800) {
     $this->storageFactory = $storage_factory;
-    $this->lockBackend = $lockBackend;
+    $this->lockBackend = $lock_backend;
     $this->requestStack = $request_stack;
     $this->expire = $expire;
   }
