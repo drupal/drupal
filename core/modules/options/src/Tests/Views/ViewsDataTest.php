@@ -28,7 +28,7 @@ class ViewsDataTest extends OptionsTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $field_name = 'test_options';

@@ -17,7 +17,7 @@ class AjaxFormPageCacheTest extends AjaxTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $config = $this->config('system.performance');

@@ -173,7 +173,7 @@ class MenuLinkSourceTest extends MigrateSqlSourceTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->databaseContents['menu_links'] = $this->expectedResults;
 
     // Add long link title attributes.

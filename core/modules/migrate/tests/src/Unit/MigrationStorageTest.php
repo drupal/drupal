@@ -39,7 +39,7 @@ class MigrationStorageTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->query = $this->getMock(QueryInterface::class);
     $this->query->method('condition')
       ->willReturnSelf();

@@ -61,7 +61,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->database = $this->getDatabase([]);
   }
 

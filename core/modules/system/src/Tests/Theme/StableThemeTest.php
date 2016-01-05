@@ -40,7 +40,7 @@ class StableThemeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->themeHandler = $this->container->get('theme_handler');

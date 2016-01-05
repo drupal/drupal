@@ -43,7 +43,7 @@ class ContextTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->typedDataManager = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
