@@ -470,6 +470,32 @@ class StyleSerializerTest extends PluginTestBase {
       $this->assertIdentical($values['created'], $view->result[$index]->views_test_data_created, 'Expected raw created value found.');
       $this->assertIdentical($values['name'], $view->result[$index]->views_test_data_name, 'Expected raw name value found.');
     }
+
+    // Test result with an excluded field.
+    $view->setDisplay('rest_export_1');
+    $view->displayHandlers->get('rest_export_1')->overrideOption('fields', [
+      'name' => [
+        'id' => 'name',
+        'table' => 'views_test_data',
+        'field' => 'name',
+        'relationship' => 'none',
+      ],
+      'created' => [
+        'id' => 'created',
+        'exclude' => TRUE,
+        'table' => 'views_test_data',
+        'field' => 'created',
+        'relationship' => 'none',
+      ],
+    ]);
+    $view->save();
+    $this->executeView($view);
+    foreach ($this->drupalGetJSON('test/serialize/field') as $index => $values) {
+      $this->assertTrue(!isset($values['created']), 'Excluded value not found.');
+    }
+    // Test that the excluded field is not shown in the row options.
+    $this->drupalGet('admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/row_options');
+    $this->assertNoText('created');
   }
 
   /**
