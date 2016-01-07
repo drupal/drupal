@@ -883,7 +883,9 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * with node access to ensure only nodes to which the user has access are
  * retrieved, through the use of hook_query_TAG_alter(). See the
  * @link entity_api Entity API topic @endlink for more information on entity
- * queries.
+ * queries. Tagging a query with "node_access" does not check the
+ * published/unpublished status of nodes, so the base query is responsible
+ * for ensuring that unpublished nodes are not displayed to inappropriate users.
  *
  * Note: Even a single module returning an AccessResultInterface object from
  * hook_node_access() whose isForbidden() method equals TRUE will block access
