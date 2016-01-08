@@ -30,7 +30,7 @@ class BookTest extends WebTestBase {
   /**
    * A book node.
    *
-   * @var object
+   * @var \Drupal\node\NodeInterface
    */
   protected $book;
 
@@ -77,11 +77,13 @@ class BookTest extends WebTestBase {
     $this->bookAuthor = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->webUser = $this->drupalCreateUser(array('access printer-friendly version', 'node test view'));
     $this->webUserWithoutNodeAccess = $this->drupalCreateUser(array('access printer-friendly version'));
-    $this->adminUser = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types', 'administer site configuration'));
+    $this->adminUser = $this->drupalCreateUser(array('create new books', 'create book content', 'edit any book content', 'delete any book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types', 'administer site configuration'));
   }
 
   /**
    * Creates a new book with a page hierarchy.
+   *
+   * @return \Drupal\node\NodeInterface[]
    */
   function createBook() {
     // Create new book.
@@ -498,6 +500,25 @@ class BookTest extends WebTestBase {
      $node_storage->resetCache(array($this->book->id()));
      $node = $node_storage->load($this->book->id());
      $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
+
+     // Tests directly deleting a book parent.
+     $nodes = $this->createBook();
+     $this->drupalLogin($this->adminUser);
+     $this->drupalGet($this->book->urlInfo('delete-form'));
+     $this->assertRaw(t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', ['%title' => $this->book->label()]));
+     // Delete parent, and visit a child page.
+     $this->drupalPostForm($this->book->urlInfo('delete-form'), [], t('Delete'));
+     $this->drupalGet($nodes[0]->urlInfo());
+     $this->assertResponse(200);
+     $this->assertText($nodes[0]->label());
+     // The book parents should be updated.
+     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+     $node_storage->resetCache();
+     $child = $node_storage->load($nodes[0]->id());
+     $this->assertEqual($child->id(), $child->book['bid'], 'Child node book ID updated when parent is deleted.');
+     // 3rd-level children should now be 2nd-level.
+     $second = $node_storage->load($nodes[1]->id());
+     $this->assertEqual($child->id(), $second->book['bid'], '3rd-level child node is now second level when top-level node is deleted.');
    }
 
   /**
