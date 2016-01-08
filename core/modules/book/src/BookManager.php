@@ -439,9 +439,9 @@ class BookManager implements BookManagerInterface {
     if ($nid == $original['bid']) {
       // Handle deletion of a top-level post.
       $result = $this->bookOutlineStorage->loadBookChildren($nid);
-
-      foreach ($result as $child) {
-        $child['bid'] = $child['nid'];
+      $children = $this->entityManager->getStorage('node')->loadMultiple(array_keys($result));
+      foreach ($children as $child) {
+        $child->book['bid'] = $child->id();
         $this->updateOutline($child);
       }
     }

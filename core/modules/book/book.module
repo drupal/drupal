@@ -323,14 +323,22 @@ function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterf
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for node_delete_confirm().
+ * Implements hook_form_BASE_FORM_ID_alter().
  *
  * Alters the confirm form for a single node deletion.
- *
- * @see node_delete_confirm()
  */
-function book_form_node_delete_confirm_alter(&$form, FormStateInterface $form_state) {
-  $node = Node::load($form['nid']['#value']);
+function book_form_node_confirm_form_alter(&$form, FormStateInterface $form_state) {
+  // Only need to alter the delete operation form.
+  if ($form_state->getFormObject()->getOperation() !== 'delete') {
+    return;
+  }
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+  if (!book_type_is_allowed($node->getType())) {
+    // Not a book node.
+    return;
+  }
 
   if (isset($node->book) && $node->book['has_children']) {
     $form['book_warning'] = array(
