@@ -66,7 +66,7 @@ class Composer {
     'symfony/routing' => ['Tests'],
     'symfony/serializer' => ['Tests'],
     'symfony/translation' => ['Tests'],
-    'symfony/validator' => ['Tests'],
+    'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
     'symfony-cmf/routing' => ['Test', 'Tests'],
     'twig/twig' => ['doc', 'ext', 'test'],
