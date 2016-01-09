@@ -170,11 +170,11 @@ class ImageWidget extends FileWidget {
       );
 
       // Determine image dimensions.
-      if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
-        $variables['width'] = $element['#value']['width'];
-        $variables['height'] = $element['#value']['height'];
-      }
-      else {
+    //  if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
+      //  $variables['width'] = $element['#value']['width'];
+      //  $variables['height'] = $element['#value']['height'];
+    //  }
+    //  else {
         $image = \Drupal::service('image.factory')->get($file->getFileUri());
         if ($image->isValid()) {
           $variables['width'] = $image->getWidth();
@@ -183,7 +183,7 @@ class ImageWidget extends FileWidget {
         else {
           $variables['width'] = $variables['height'] = NULL;
         }
-      }
+    //  }
 
       $element['preview'] = array(
         '#weight' => -10,
