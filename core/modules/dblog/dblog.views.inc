@@ -35,9 +35,6 @@ function dblog_views_data() {
     'sort' => array(
       'id' => 'standard',
     ),
-    'search' => array(
-      'id' => 'standard',
-    ),
   );
 
   $data['watchdog']['uid'] = array(
@@ -51,9 +48,6 @@ function dblog_views_data() {
     ),
     'argument' => array(
       'id' => 'numeric',
-    ),
-    'search' => array(
-      'id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('User'),
