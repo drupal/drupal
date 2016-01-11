@@ -263,7 +263,7 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
     $this->assertTrue(strpos(strtolower($this->drupalGetHeader('Vary')), 'cookie') === FALSE, 'Vary: Cookie header was not sent.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
@@ -452,12 +452,12 @@ class PageCacheTest extends WebTestBase {
     // GET a URL, which would be marked as a cache miss if it were cacheable.
     $this->drupalGet('/system-test/respond-reponse');
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent');
 
     // GET it again, verify it's still not cached.
     $this->drupalGet('/system-test/respond-reponse');
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent');
 
     // GET a URL, which would be marked as a cache miss if it were cacheable.
     $this->drupalGet('/system-test/respond-public-response');
