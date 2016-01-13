@@ -1133,6 +1133,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  */
 function node_access_rebuild($batch_mode = FALSE) {
   $node_storage = \Drupal::entityManager()->getStorage('node');
+  /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
   $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
   $access_control_handler->deleteGrants();
   // Only recalculate if the site is using a node_access module.
@@ -1162,7 +1163,8 @@ function node_access_rebuild($batch_mode = FALSE) {
         // To preserve database integrity, only write grants if the node
         // loads successfully.
         if (!empty($node)) {
-          $access_control_handler->writeGrants($node);
+          $grants = $access_control_handler->acquireGrants($node);
+          \Drupal::service('node.grant_storage')->write($node, $grants);
         }
       }
     }
@@ -1212,7 +1214,10 @@ function _node_access_rebuild_batch_operation(&$context) {
     // To preserve database integrity, only write grants if the node
     // loads successfully.
     if (!empty($node)) {
-      \Drupal::entityManager()->getAccessControlHandler('node')->writeGrants($node);
+      /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
+      $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+      $grants = $access_control_handler->acquireGrants($node);
+      \Drupal::service('node.grant_storage')->write($node, $grants);
     }
     $context['sandbox']['progress']++;
     $context['sandbox']['current_node'] = $nid;

@@ -131,7 +131,10 @@ class Node extends ContentEntityBase implements NodeInterface {
     // default revision. There's no need to delete existing records if the node
     // is new.
     if ($this->isDefaultRevision()) {
-      \Drupal::entityManager()->getAccessControlHandler('node')->writeGrants($this, $update);
+      /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
+      $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+      $grants = $access_control_handler->acquireGrants($this);
+      \Drupal::service('node.grant_storage')->write($this, $grants, NULL, $update);
     }
 
     // Reindex the node when it is updated. The node is automatically indexed

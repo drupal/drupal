@@ -151,7 +151,6 @@ function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
  * @return
  *   An array of grants as defined above.
  *
- * @see node_access_write_grants()
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
