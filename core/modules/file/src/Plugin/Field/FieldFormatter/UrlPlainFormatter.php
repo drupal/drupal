@@ -30,7 +30,7 @@ class UrlPlainFormatter extends FileFormatterBase {
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
       $elements[$delta] = array(
-        '#markup' => file_create_url($file->getFileUri()),
+        '#markup' => file_url_transform_relative(file_create_url($file->getFileUri())),
         '#cache' => array(
           'tags' => $file->getCacheTags(),
         ),

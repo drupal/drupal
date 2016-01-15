@@ -135,7 +135,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
           // assets: output a LINK tag for a file CSS asset.
           if (count($css_assets) <= 31) {
             $element = $link_element_defaults;
-            $element['#attributes']['href'] = file_create_url($css_asset['data']) . $query_string_separator . $query_string;
+            $element['#attributes']['href'] = file_url_transform_relative(file_create_url($css_asset['data'])) . $query_string_separator . $query_string;
             $element['#attributes']['media'] = $css_asset['media'];
             $element['#browsers'] = $css_asset['browsers'];
             $elements[] = $element;
@@ -148,7 +148,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
             // LINK tag.
             if (!$css_asset['preprocess']) {
               $element = $link_element_defaults;
-              $element['#attributes']['href'] = file_create_url($css_asset['data']) . $query_string_separator . $query_string;
+              $element['#attributes']['href'] = file_url_transform_relative(file_create_url($css_asset['data'])) . $query_string_separator . $query_string;
               $element['#attributes']['media'] = $css_asset['media'];
               $element['#browsers'] = $css_asset['browsers'];
               $elements[] = $element;
@@ -168,7 +168,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
                 // control browser-caching. IE7 does not support a media type on
                 // the @import statement, so we instead specify the media for
                 // the group on the STYLE tag.
-                $import[] = '@import url("' . Html::escape(file_create_url($next_css_asset['data']) . '?' . $query_string) . '");';
+                $import[] = '@import url("' . Html::escape(file_url_transform_relative(file_create_url($next_css_asset['data'])) . '?' . $query_string) . '");';
                 // Move the outer for loop skip the next item, since we
                 // processed it here.
                 $i = $j;

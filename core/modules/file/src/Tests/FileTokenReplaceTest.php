@@ -66,7 +66,8 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $metadata_tests['[file:path]'] = $base_bubbleable_metadata;
     $metadata_tests['[file:mime]'] = $base_bubbleable_metadata;
     $metadata_tests['[file:size]'] = $base_bubbleable_metadata;
-    $metadata_tests['[file:url]'] = $base_bubbleable_metadata;
+    $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[file:url]'] = $bubbleable_metadata->addCacheContexts(['url.site']);
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $metadata_tests['[file:created]'] = $bubbleable_metadata->addCacheTags(['rendered']);
     $metadata_tests['[file:created:short]'] = $bubbleable_metadata;

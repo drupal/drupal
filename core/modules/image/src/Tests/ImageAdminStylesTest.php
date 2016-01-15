@@ -307,7 +307,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw($style->buildUrl($original_uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomMachineName(10));
@@ -322,7 +322,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Reload the image style using the new name.
     $style = ImageStyle::load($new_style_name);
-    $this->assertRaw($style->buildUrl($original_uri), 'Image displayed using style replacement style.');
+    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)), 'Image displayed using style replacement style.');
 
     // Delete the style and choose a replacement style.
     $edit = array(
@@ -334,7 +334,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw($replacement_style->buildUrl($original_uri), 'Image displayed using style replacement style.');
+    $this->assertRaw(file_url_transform_relative($replacement_style->buildUrl($original_uri)), 'Image displayed using style replacement style.');
   }
 
   /**
@@ -441,7 +441,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw($style->buildUrl($original_uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');

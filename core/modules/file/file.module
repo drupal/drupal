@@ -977,7 +977,12 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'url':
+          // Ideally, this would use file_url_transform_relative(), but because
+          // tokens are also often used in e-mails, it's better to keep absolute
+          // file URLs. The 'url.site' cache context is associated to ensure the
+          // correct absolute URL is used in case of a multisite setup.
           $replacements[$original] = file_create_url($file->getFileUri());
+          $bubbleable_metadata->addCacheContexts(['url.site']);
           break;
 
         // These tokens are default variations on the chained tokens handled below.
@@ -1228,7 +1233,13 @@ function template_preprocess_file_link(&$variables) {
   $options = array();
 
   $file_entity = ($file instanceof File) ? $file : File::load($file->fid);
+  // @todo Wrap in file_url_transform_relative(). This is currently
+  // impossible. As a work-around, we currently add the 'url.site' cache context
+  // to ensure different file URLs are generated for different sites in a
+  // multisite setup, including HTTP and HTTPS versions of the same site.
+  // Fix in https://www.drupal.org/node/2646744.
   $url = file_create_url($file_entity->getFileUri());
+  $variables['#cache']['contexts'][] = 'url.site';
 
   $mime_type = $file->getMimeType();
   // Set options as per anchor format described at

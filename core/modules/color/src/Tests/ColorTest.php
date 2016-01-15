@@ -121,7 +121,7 @@ class ColorTest extends WebTestBase {
     $this->drupalGet('<front>');
     $stylesheets = $this->config('color.theme.' . $theme)->get('stylesheets');
     foreach ($stylesheets as $stylesheet) {
-      $this->assertPattern('|' . file_create_url($stylesheet) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
+      $this->assertPattern('|' . file_url_transform_relative(file_create_url($stylesheet)) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
       $stylesheet_content = join("\n", file($stylesheet));
       $this->assertTrue(strpos($stylesheet_content, 'color: #123456') !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
     }
@@ -191,7 +191,7 @@ class ColorTest extends WebTestBase {
 
     // Ensure that the overridden logo is present in Bartik, which is colorable.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertIdentical($GLOBALS['base_url'] . '/' . 'core/misc/druplicon.png', $this->getDrupalSettings()['color']['logo']);
+    $this->assertIdentical($GLOBALS['base_path'] . 'core/misc/druplicon.png', $this->getDrupalSettings()['color']['logo']);
   }
 
   /**

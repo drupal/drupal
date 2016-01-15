@@ -65,27 +65,27 @@ class ThemeTest extends WebTestBase {
       // Raw stream wrapper URI.
       $file->uri => array(
         'form' => file_uri_target($file->uri),
-        'src' => file_create_url($file->uri),
+        'src' => file_url_transform_relative(file_create_url($file->uri)),
       ),
       // Relative path within the public filesystem.
       file_uri_target($file->uri) => array(
         'form' => file_uri_target($file->uri),
-        'src' => file_create_url($file->uri),
+        'src' => file_url_transform_relative(file_create_url($file->uri)),
       ),
       // Relative path to a public file.
       $file_relative => array(
         'form' => $file_relative,
-        'src' => file_create_url($file->uri),
+        'src' => file_url_transform_relative(file_create_url($file->uri)),
       ),
       // Relative path to an arbitrary file.
       'core/misc/druplicon.png' => array(
         'form' => 'core/misc/druplicon.png',
-        'src' => $GLOBALS['base_url'] . '/' . 'core/misc/druplicon.png',
+        'src' => base_path() . 'core/misc/druplicon.png',
       ),
       // Relative path to a file in a theme.
       $default_theme_path . '/logo.svg' => array(
         'form' => $default_theme_path . '/logo.svg',
-        'src' => $GLOBALS['base_url'] . '/' . $default_theme_path . '/logo.svg',
+        'src' => base_path() . $default_theme_path . '/logo.svg',
       ),
     );
     foreach ($supported_paths as $input => $expected) {
@@ -186,7 +186,7 @@ class ThemeTest extends WebTestBase {
         ':rel' => 'home',
       )
     );
-    $this->assertEqual($elements[0]['src'], file_create_url($uploaded_filename));
+    $this->assertEqual($elements[0]['src'], file_url_transform_relative(file_create_url($uploaded_filename)));
 
     $this->container->get('theme_handler')->install(array('bartik'));
 

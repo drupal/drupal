@@ -33,6 +33,9 @@ class RSSEnclosureFormatter extends FileFormatterBase {
       $entity->rss_elements[] = array(
         'key' => 'enclosure',
         'attributes' => array(
+          // In RSS feeds, it is necessary to use absolute URLs. The 'url.site'
+          // cache context is already associated with RSS feed responses, so it
+          // does not need to be specified here.
           'url' => file_create_url($file->getFileUri()),
           'length' => $file->getSize(),
           'type' => $file->getMimeType(),

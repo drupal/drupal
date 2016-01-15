@@ -298,8 +298,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     );
 
     // Finally, set Drupal-specific CKEditor settings.
+    $root_relative_file_url = function ($uri) {
+      return file_url_transform_relative(file_create_url($uri));
+    };
     $settings += array(
-      'drupalExternalPlugins' => array_map('file_create_url', $external_plugin_files),
+      'drupalExternalPlugins' => array_map($root_relative_file_url, $external_plugin_files),
     );
 
     // Parse all CKEditor plugin JavaScript files for translations.
@@ -421,6 +424,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $this->moduleHandler->alter('ckeditor_css', $css, $editor);
     $css = array_merge($css, _ckeditor_theme_css());
     $css = array_map('file_create_url', $css);
+    $css = array_map('file_url_transform_relative', $css);
 
     return array_values($css);
   }

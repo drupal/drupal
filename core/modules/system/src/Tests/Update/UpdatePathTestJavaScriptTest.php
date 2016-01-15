@@ -43,7 +43,9 @@ class UpdatePathTestJavaScriptTest extends UpdatePathTestBase {
       if (!isset($script['src'])) {
         continue;
       }
-      $src = (string) $script['src'];
+      // Source is a root-relative URL. Transform it to an absolute URL to allow
+      // file_get_contents() to access the file.
+      $src = preg_replace('#^' . $GLOBALS['base_path'] . '(.*)#i', $GLOBALS['base_url'] . '/' . '${1}', (string) $script['src']);
       $file_content = file_get_contents($src);
 
       if (strpos($file_content, 'window.drupalSettings =') !== FALSE) {

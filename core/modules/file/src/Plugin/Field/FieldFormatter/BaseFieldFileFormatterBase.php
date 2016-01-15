@@ -52,6 +52,8 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
     $url = NULL;
     // Add support to link to the entity itself.
     if ($this->getSetting('link_to_file')) {
+      // @todo Wrap in file_url_transform_relative(). This is currently
+      // impossible. See below.
       $url = file_create_url($items->getEntity()->uri->value);
     }
 
@@ -63,6 +65,16 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
           '#type' => 'link',
           '#title' => $view_value,
           '#url' => Url::fromUri($url),
+          // @todo Remove the 'url.site' cache context by using a relative file
+          // URL (file_url_transform_relative()). This is currently impossible
+          // because #type => link requires a Url object, and Url objects do not
+          // support relative URLs: they require fully qualified URLs. Fix in
+          // https://www.drupal.org/node/2646744.
+          '#cache' => [
+            'contexts' => [
+              'url.site',
+            ],
+          ],
         ];
       }
       else {

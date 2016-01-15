@@ -135,7 +135,9 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFunction('url', array($this, 'getUrl'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('path', array($this, 'getPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('link', array($this, 'getLink')),
-      new \Twig_SimpleFunction('file_url', 'file_create_url'),
+      new \Twig_SimpleFunction('file_url', function ($uri) {
+        return file_url_transform_relative(file_create_url($uri));
+      }),
       new \Twig_SimpleFunction('attach_library', [$this, 'attachLibrary']),
       new \Twig_SimpleFunction('active_theme_path', [$this, 'getActiveThemePath']),
       new \Twig_SimpleFunction('active_theme', [$this, 'getActiveTheme']),
