@@ -514,6 +514,9 @@ class ForumTest extends WebTestBase {
     // Check that forum renders properly.
     $this->drupalGet("forum/{$this->forum['tid']}");
     $this->assertResponse(200);
+
+    // Verify there is no unintentional HTML tag escaping.
+    $this->assertNoEscaped('<', '');
   }
 
   /**

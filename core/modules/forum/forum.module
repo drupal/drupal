@@ -501,7 +501,12 @@ function template_preprocess_forums(&$variables) {
           }
 
           $row[] = array(
-            'data' => $topic->comment_count . $new_replies,
+            'data' => [
+              [
+                '#prefix' => $topic->comment_count,
+                '#markup' => $new_replies,
+              ],
+            ],
             'class' => array('forum__replies'),
           );
           $row[] = array(
