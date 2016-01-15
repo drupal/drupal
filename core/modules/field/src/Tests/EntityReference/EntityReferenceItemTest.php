@@ -12,6 +12,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
@@ -76,6 +77,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->installEntitySchema('file');
 
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installSchema('node', ['node_access']);
 
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomMachineName(),
@@ -100,7 +102,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_entity_test_string_id', 'Test content entity reference with string ID', 'entity_test_string_id');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
-    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_node', 'Test node entity reference', 'node');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_node', 'Test node entity reference', 'node', 'default', [], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_user', 'Test user entity reference', 'user');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_comment', 'Test comment entity reference', 'comment');
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_file', 'Test file entity reference', 'file');
@@ -403,6 +405,64 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
 
     // Publish the node and try again.
     $node->setPublished(TRUE);
+    $errors = $entity->validate();
+    $this->assertEqual(0, count($errors));
+
+    // Test with a mix of valid and invalid nodes.
+    $unsaved_unpublished_node_title = $this->randomString();
+    $unsaved_unpublished_node = Node::create([
+      'title' => $unsaved_unpublished_node_title,
+      'type' => 'node',
+      'status' => NODE_NOT_PUBLISHED,
+    ]);
+
+    $saved_unpublished_node_title = $this->randomString();
+    $saved_unpublished_node = Node::create([
+      'title' => $saved_unpublished_node_title,
+      'type' => 'node',
+      'status' => NODE_NOT_PUBLISHED,
+    ]);
+    $saved_unpublished_node->save();
+
+    $saved_published_node_title = $this->randomString();
+    $saved_published_node = Node::create([
+      'title' => $saved_published_node_title,
+      'type' => 'node',
+      'status' => NODE_PUBLISHED,
+    ]);
+    $saved_published_node->save();
+
+    $entity = EntityTest::create([
+      'field_test_node' => [
+        [
+          'entity' => $unsaved_unpublished_node,
+        ],
+        [
+          'target_id' => $saved_unpublished_node->id(),
+        ],
+        [
+          'target_id' => $saved_published_node->id(),
+        ],
+      ],
+    ]);
+
+    $errors = $entity->validate();
+    $this->assertEqual(2, count($errors));
+    $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $unsaved_unpublished_node_title]));
+    $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
+    $this->assertEqual($errors[1]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $saved_unpublished_node->id()]));
+    $this->assertEqual($errors[1]->getPropertyPath(), 'field_test_node.1.target_id');
+
+    // Publish one of the nodes and try again.
+    $saved_unpublished_node->setPublished(TRUE);
+    $saved_unpublished_node->save();
+    $errors = $entity->validate();
+    $this->assertEqual(1, count($errors));
+    $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $unsaved_unpublished_node_title]));
+    $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
+
+    // Publish the last invalid node and try again.
+    $unsaved_unpublished_node->setPublished(TRUE);
     $errors = $entity->validate();
     $this->assertEqual(0, count($errors));
 
