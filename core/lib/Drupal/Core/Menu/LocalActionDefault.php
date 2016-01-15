@@ -8,6 +8,8 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -18,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a default implementation for local action plugins.
  */
-class LocalActionDefault extends PluginBase implements LocalActionInterface, ContainerFactoryPluginInterface {
+class LocalActionDefault extends PluginBase implements LocalActionInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
 
   use DependencySerializationTrait;
 
@@ -120,6 +122,36 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    */
   public function getOptions(RouteMatchInterface $route_match) {
     return (array) $this->pluginDefinition['options'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    if (!isset($this->pluginDefinition['cache_tags'])) {
+      return [];
+    }
+    return $this->pluginDefinition['cache_tags'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    if (!isset($this->pluginDefinition['cache_contexts'])) {
+      return [];
+    }
+    return $this->pluginDefinition['cache_contexts'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    if (!isset($this->pluginDefinition['cache_max_age'])) {
+      return Cache::PERMANENT;
+    }
+    return $this->pluginDefinition['cache_max_age'];
   }
 
 }

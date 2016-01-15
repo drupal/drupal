@@ -197,6 +197,9 @@ class LocalActionManagerTest extends UnitTestCase {
         ),
       ),
       array(
+        '#cache' => array(
+          'contexts' => array('route'),
+        ),
         'plugin_id_1' => array(
           '#theme' => 'menu_local_action',
           '#link' => array(
@@ -206,6 +209,11 @@ class LocalActionManagerTest extends UnitTestCase {
           ),
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
+          '#cache' => array(
+            'contexts' => array(),
+            'tags' => array(),
+            'max-age' => 0,
+          ),
         ),
       ),
     );
@@ -231,6 +239,9 @@ class LocalActionManagerTest extends UnitTestCase {
         ),
       ),
       array(
+        '#cache' => array(
+          'contexts' => array('route'),
+        ),
         'plugin_id_1' => array(
           '#theme' => 'menu_local_action',
           '#link' => array(
@@ -240,6 +251,11 @@ class LocalActionManagerTest extends UnitTestCase {
           ),
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
+          '#cache' => array(
+            'contexts' => array(),
+            'tags' => array(),
+            'max-age' => 0,
+          ),
         ),
       ),
     );
@@ -266,6 +282,9 @@ class LocalActionManagerTest extends UnitTestCase {
         ),
       ),
       array(
+        '#cache' => array(
+          'contexts' => array('route'),
+        ),
         'plugin_id_1' => array(
           '#theme' => 'menu_local_action',
           '#link' => array(
@@ -275,6 +294,11 @@ class LocalActionManagerTest extends UnitTestCase {
           ),
           '#access' => AccessResult::forbidden(),
           '#weight' => 1,
+          '#cache' => array(
+            'contexts' => array(),
+            'tags' => array(),
+            'max-age' => 0,
+          ),
         ),
         'plugin_id_2' => array(
           '#theme' => 'menu_local_action',
@@ -285,6 +309,11 @@ class LocalActionManagerTest extends UnitTestCase {
           ),
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
+          '#cache' => array(
+            'contexts' => array(),
+            'tags' => array(),
+            'max-age' => 0,
+          ),
         ),
       ),
     );
@@ -313,6 +342,9 @@ class LocalActionManagerTest extends UnitTestCase {
         ),
       ),
       array(
+        '#cache' => array(
+          'contexts' => array('route'),
+        ),
         'plugin_id_1' => array(
           '#theme' => 'menu_local_action',
           '#link' => array(
@@ -322,6 +354,11 @@ class LocalActionManagerTest extends UnitTestCase {
           ),
           '#access' => AccessResult::forbidden(),
           '#weight' => 1,
+          '#cache' => array(
+            'contexts' => array(),
+            'tags' => array(),
+            'max-age' => 0,
+          ),
         ),
         'plugin_id_2' => array(
           '#theme' => 'menu_local_action',
@@ -332,6 +369,11 @@ class LocalActionManagerTest extends UnitTestCase {
           ),
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
+          '#cache' => array(
+            'contexts' => array(),
+            'tags' => array(),
+            'max-age' => 0,
+          ),
         ),
       ),
     );
