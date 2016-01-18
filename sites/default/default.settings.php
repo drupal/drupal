@@ -313,20 +313,25 @@ $settings['update_free_access'] = FALSE;
 /**
  * External access proxy settings:
  *
- * If your site must access the Internet via a web proxy then you can enter
- * the proxy settings here. Currently only basic authentication is supported
- * by using the username and password variables. The proxy_user_agent variable
- * can be set to NULL for proxies that require no User-Agent header or to a
- * non-empty string for proxies that limit requests to a specific agent. The
- * proxy_exceptions variable is an array of host names to be accessed directly,
- * not via proxy.
+ * If your site must access the Internet via a web proxy then you can enter the
+ * proxy settings here. Set the full URL of the proxy, including the port, in
+ * variables:
+ * - $settings['http_client_config']['proxy']['http']: The proxy URL for HTTP
+ *   requests.
+ * - $settings['http_client_config']['proxy']['https']: The proxy URL for HTTPS
+ *   requests.
+ * You can pass in the user name and password for basic authentication in the
+ * URLs in these settings.
+ *
+ * You can also define an array of host names that can be accessed directly,
+ * bypassing the proxy, in $settings['http_client_config']['proxy']['no'].
+ *
+ * If these settings are not configured, the system environment variables
+ * HTTP_PROXY, HTTPS_PROXY, and NO_PROXY on the web server will be used instead.
  */
-# $settings['proxy_server'] = '';
-# $settings['proxy_port'] = 8080;
-# $settings['proxy_username'] = '';
-# $settings['proxy_password'] = '';
-# $settings['proxy_user_agent'] = '';
-# $settings['proxy_exceptions'] = array('127.0.0.1', 'localhost');
+# $settings['http_client_config']['proxy']['http'] = 'http://proxy_user:proxy_pass@example.com:8080';
+# $settings['http_client_config']['proxy']['https'] = 'http://proxy_user:proxy_pass@example.com:8080';
+# $settings['http_client_config']['proxy']['no'] = ['127.0.0.1', 'localhost'];
 
 /**
  * Reverse Proxy Configuration:
