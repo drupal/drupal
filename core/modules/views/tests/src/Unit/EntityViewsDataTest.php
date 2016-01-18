@@ -138,8 +138,8 @@ class EntityViewsDataTest extends UnitTestCase {
     // Add a description field to the fields supplied by the EntityTest
     // classes. This example comes from the taxonomy Term entity.
     $base_fields['description'] = BaseFieldDefinition::create('text_long')
-      ->setLabel(t('Description'))
-      ->setDescription(t('A description of the term.'))
+      ->setLabel('Description')
+      ->setDescription('A description of the term.')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
           'label' => 'hidden',
@@ -155,8 +155,8 @@ class EntityViewsDataTest extends UnitTestCase {
 
     // Add a URL field; this example is from the Comment entity.
     $base_fields['homepage'] = BaseFieldDefinition::create('uri')
-      ->setLabel(t('Homepage'))
-      ->setDescription(t("The comment author's home page address."))
+      ->setLabel('Homepage')
+      ->setDescription("The comment author's home page address.")
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 255);
 
@@ -409,8 +409,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $base_field_definitions = $this->setupBaseFields(EntityTest::baseFieldDefinitions($this->baseEntityType));
     $user_base_field_definitions = [
       'uid' => BaseFieldDefinition::create('integer')
-        ->setLabel(t('ID'))
-        ->setDescription(t('The ID of the user entity.'))
+        ->setLabel('ID')
+        ->setDescription('The ID of the user entity.')
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE)
     ];
@@ -498,8 +498,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $base_field_definitions = $this->setupBaseFields($base_field_definitions);
     $user_base_field_definitions = [
       'uid' => BaseFieldDefinition::create('integer')
-        ->setLabel(t('ID'))
-        ->setDescription(t('The ID of the user entity.'))
+        ->setLabel('ID')
+        ->setDescription('The ID of the user entity.')
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE)
     ];
@@ -621,8 +621,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $base_field_definitions = $this->setupBaseFields(EntityTestMulRev::baseFieldDefinitions($this->baseEntityType));
     $user_base_field_definitions = [
       'uid' => BaseFieldDefinition::create('integer')
-        ->setLabel(t('ID'))
-        ->setDescription(t('The ID of the user entity.'))
+        ->setLabel('ID')
+        ->setDescription('The ID of the user entity.')
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE)
     ];
@@ -970,10 +970,11 @@ class TestEntityType extends EntityType {
 
 }
 
-namespace {
+namespace Drupal\entity_test\Entity {
   if (!function_exists('t')) {
     function t($string, array $args = []) {
       return strtr($string, $args);
     }
   }
 }
+
