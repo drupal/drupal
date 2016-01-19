@@ -563,7 +563,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
 
   if (!$form_state->getErrors()) {
     $comment->in_preview = TRUE;
-    $comment_build = comment_view($comment);
+    $comment_build = \Drupal::entityTypeManager()->getViewBuilder('comment')->view($comment);
     $comment_build['#weight'] = -100;
 
     $preview_build['comment_preview'] = $comment_build;
@@ -573,7 +573,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
     $build = array();
     $parent = $comment->getParentComment();
     if ($parent && $parent->isPublished()) {
-      $build = comment_view($parent);
+      $build = \Drupal::entityTypeManager()->getViewBuilder('comment')->view($parent);
     }
   }
   else {
