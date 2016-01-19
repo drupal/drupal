@@ -80,17 +80,17 @@ class NodeAttributesTest extends NodeTestBase {
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/title', $expected_value), 'Node title found in RDF output (dc:title).');
-    // Node date.
+    // Node date (date format must be UTC).
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $node->getCreatedTime()),
+      'value' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'c', 'UTC'),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/date', $expected_value), 'Node date found in RDF output (dc:date).');
-    // Node date.
+    // Node date (date format must be UTC).
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $node->getCreatedTime()),
+      'value' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'c', 'UTC'),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/created', $expected_value), 'Node date found in RDF output (dc:created).');

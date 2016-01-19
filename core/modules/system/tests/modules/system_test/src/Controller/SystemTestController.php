@@ -341,4 +341,16 @@ class SystemTestController extends ControllerBase {
     return $build;
   }
 
+  /**
+   * Returns the current date.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response $response
+   *   A Response object containing the current date.
+   */
+  public function getCurrentDate() {
+    // Uses specific time to test that the right timezone is used.
+    $response = new Response(\Drupal::service('date.formatter')->format(1452702549));
+    return $response;
+  }
+
 }

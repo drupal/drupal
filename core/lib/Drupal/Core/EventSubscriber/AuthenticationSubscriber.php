@@ -83,8 +83,11 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
         $account = $this->authenticationProvider->authenticate($request);
         if ($account) {
           $this->accountProxy->setAccount($account);
+          return;
         }
       }
+      // No account has been set explicitly, initialize the timezone here.
+      date_default_timezone_set(drupal_get_user_timezone());
     }
   }
 
