@@ -33,7 +33,6 @@ class ConfigEventsTest extends KernelTestBase {
 
     $config = new Config($name, \Drupal::service('config.storage'), \Drupal::service('event_dispatcher'), \Drupal::service('config.typed'));
     $config->set('key', 'initial');
-    \Drupal::state()->get('config_events_test.event', FALSE);
     $this->assertIdentical(\Drupal::state()->get('config_events_test.event', array()), array(), 'No events fired by creating a new configuration object');
     $config->save();
 
