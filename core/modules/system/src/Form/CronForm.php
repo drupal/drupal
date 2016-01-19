@@ -133,7 +133,6 @@ class CronForm extends FormBase {
       drupal_set_message(t('Cron run failed.'), 'error');
     }
 
-    return new RedirectResponse($this->url('system.cron_settings', array(), array('absolute' => TRUE)));
   }
 
 }
