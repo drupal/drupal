@@ -749,6 +749,16 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the fromUri() method with a base: URI starting with a number.
+   *
+   * @covers ::fromUri
+   */
+  public function testFromUriNumber() {
+    $url = Url::fromUri('base:2015/10/06');
+    $this->assertSame($url->toUriString(), 'base:/2015/10/06');
+  }
+
+  /**
    * Tests the toUriString() method with route: URIs.
    *
    * @covers ::toUriString
