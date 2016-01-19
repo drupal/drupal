@@ -69,7 +69,7 @@ class TwigSandboxTest extends UnitTestCase {
    * Tests that white listed classes can be extended.
    */
   public function testExtendedClass() {
-    $this->twig->render('{{ attribute.addClass("kitten") }}', ['attribute' => new TestAttribute()]);
+    $this->assertEquals(' class=&quot;kitten&quot;', $this->twig->render('{{ attribute.addClass("kitten") }}', ['attribute' => new TestAttribute()]));
   }
 
   /**
