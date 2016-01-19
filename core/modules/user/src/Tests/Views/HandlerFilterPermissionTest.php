@@ -62,6 +62,31 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $this->assertIdenticalResultset($view, $expected, $column_map);
     $view->destroy();
 
+    // Filter by not a permission.
+    $view->initHandlers();
+    $view->filter['permission']->operator = 'not';
+    $view->filter['permission']->value = array('administer users');
+    $this->executeView($view);
+    $this->assertEqual(count($view->result), 3);
+    $expected = array();
+    $expected[] = array('uid' => 1);
+    $expected[] = array('uid' => 2);
+    $expected[] = array('uid' => 3);
+    $this->assertIdenticalResultset($view, $expected, $column_map);
+    $view->destroy();
+
+    // Filter by not multiple permissions, that are present in multiple roles.
+    $view->initHandlers();
+    $view->filter['permission']->operator = 'not';
+    $view->filter['permission']->value = array('administer users', 'administer permissions');
+    $this->executeView($view);
+    $this->assertEqual(count($view->result), 2);
+    $expected = array();
+    $expected[] = array('uid' => 1);
+    $expected[] = array('uid' => 2);
+    $this->assertIdenticalResultset($view, $expected, $column_map);
+    $view->destroy();
+
     // Filter by another permission of a role with multiple permissions.
     $view->initHandlers();
     $view->filter['permission']->value = array('administer users');
