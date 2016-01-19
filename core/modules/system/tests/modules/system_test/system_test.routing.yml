@@ -150,3 +150,12 @@ system_test.respond_cacheable_response:
     _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableReponse'
   requirements:
     _access: 'TRUE'
+
+system_test.date:
+  path: '/system-test/date'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::getCurrentDate'
+  options:
+    no_cache: 'TRUE'
+  requirements:
+    _access: 'TRUE'

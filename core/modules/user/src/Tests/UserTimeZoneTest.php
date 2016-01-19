@@ -21,7 +21,7 @@ class UserTimeZoneTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = array('node', 'system_test');
 
   /**
    * Tests the display of dates and time when user-configurable time zones are set.
@@ -73,5 +73,19 @@ class UserTimeZoneTest extends WebTestBase {
     $this->assertText('2007-03-11 05:00 CLT', 'Date should be Chile time; four hours ahead of PST');
     $this->drupalGet('node/' . $node3->id());
     $this->assertText('2007-03-21 00:00 CLT', 'Date should be Chile time; three hours ahead of PDT.');
+
+    // Ensure that anonymous users also use the default timezone.
+    $this->drupalLogout();
+    $this->drupalGet('node/' . $node1->id());
+    $this->assertText('2007-03-09 21:00 PST', 'Date should be PST.');
+    $this->drupalGet('node/' . $node2->id());
+    $this->assertText('2007-03-11 01:00 PST', 'Date should be PST.');
+    $this->drupalGet('node/' . $node3->id());
+    $this->assertText('2007-03-20 21:00 PDT', 'Date should be PDT.');
+
+    // Format a date without accessing the current user at all and
+    // ensure that it uses the default timezone.
+    $this->drupalGet('/system-test/date');
+    $this->assertText('2016-01-13 08:29 PST', 'Date should be PST.');
   }
 }
