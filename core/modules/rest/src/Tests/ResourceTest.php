@@ -106,4 +106,19 @@ class ResourceTest extends RESTTestBase {
     $this->curlClose();
   }
 
+  /**
+   * Tests that resource URI paths are formatted properly.
+   */
+  public function testUriPaths() {
+    $this->enableService('entity:entity_test');
+    /** @var \Drupal\rest\Plugin\Type\ResourcePluginManager $manager */
+    $manager = \Drupal::service('plugin.manager.rest');
+
+    foreach ($manager->getDefinitions() as $resource => $definition) {
+      foreach ($definition['uri_paths'] as $key => $uri_path) {
+        $this->assertFalse(strpos($uri_path, '//'), 'The resource URI path does not have duplicate slashes.');
+      }
+    }
+  }
+
 }
