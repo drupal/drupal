@@ -1961,7 +1961,7 @@ function install_check_requirements($install_state) {
   $profile = $install_state['parameters']['profile'];
 
   // Check the profile requirements.
-  $requirements = drupal_check_profile($profile, $install_state);
+  $requirements = drupal_check_profile($profile);
 
   if ($install_state['settings_verified']) {
     return $requirements;

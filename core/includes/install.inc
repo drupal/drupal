@@ -921,13 +921,11 @@ function drupal_requirements_url($severity) {
  *
  * @param string $profile
  *   Name of installation profile to check.
- * @param array $install_state
- *   The current state in the install process.
  *
  * @return array
  *   Array of the installation profile's requirements.
  */
-function drupal_check_profile($profile, array $install_state) {
+function drupal_check_profile($profile) {
   $info = install_profile_info($profile);
 
   // Collect requirement testing results.
