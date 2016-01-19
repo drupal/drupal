@@ -177,25 +177,20 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    * {@inheritdoc}
    */
   public function getFormObject($entity_type, $operation) {
-    if (!isset($this->handlers['form'][$operation][$entity_type])) {
-      if (!$class = $this->getDefinition($entity_type, TRUE)->getFormClass($operation)) {
-        throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type, $operation));
-      }
-
-      $form_object = $this->classResolver->getInstanceFromDefinition($class);
-
-      $form_object
-        ->setStringTranslation($this->stringTranslation)
-        ->setModuleHandler($this->moduleHandler)
-        ->setEntityTypeManager($this)
-        ->setOperation($operation)
-        // The entity manager cannot be injected due to a circular dependency.
-        // @todo Remove this set call in https://www.drupal.org/node/2603542.
-        ->setEntityManager(\Drupal::entityManager());
-      $this->handlers['form'][$operation][$entity_type] = $form_object;
+    if (!$class = $this->getDefinition($entity_type, TRUE)->getFormClass($operation)) {
+      throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type, $operation));
     }
 
-    return $this->handlers['form'][$operation][$entity_type];
+    $form_object = $this->classResolver->getInstanceFromDefinition($class);
+
+    return $form_object
+      ->setStringTranslation($this->stringTranslation)
+      ->setModuleHandler($this->moduleHandler)
+      ->setEntityTypeManager($this)
+      ->setOperation($operation)
+      // The entity manager cannot be injected due to a circular dependency.
+      // @todo Remove this set call in https://www.drupal.org/node/2603542.
+      ->setEntityManager(\Drupal::entityManager());
   }
 
   /**
