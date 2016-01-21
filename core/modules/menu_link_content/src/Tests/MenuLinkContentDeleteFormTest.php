@@ -56,6 +56,8 @@ class MenuLinkContentDeleteFormTest extends WebTestBase {
     $this->assertLinkByHref($menu_link->url('edit-form'));
 
     \Drupal::service('module_installer')->install(['menu_ui']);
+    \Drupal::service('router.builder')->rebuild();
+
     // Make sure cancel URL points to menu_ui route now.
     $this->drupalGet($menu_link->urlInfo('delete-form'));
     $menu = Menu::load($menu_link->getMenuName());
