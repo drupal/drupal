@@ -9,6 +9,7 @@ namespace Drupal\menu_link_content\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
+use Drupal\system\Entity\Menu;
 
 /**
  * Tests handling of menu links hierarchies.
@@ -39,7 +40,7 @@ class LinksTest extends WebTestBase {
 
     $this->menuLinkManager = \Drupal::service('plugin.manager.menu.link');
 
-    entity_create('menu', array(
+    Menu::create(array(
       'id' => 'menu_test',
       'label' => 'Test menu',
       'description' => 'Description text',

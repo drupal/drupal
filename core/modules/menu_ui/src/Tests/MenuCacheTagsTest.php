@@ -9,6 +9,7 @@ namespace Drupal\menu_ui\Tests;
 
 use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
+use Drupal\system\Entity\Menu;
 
 /**
  * Tests the Menu and Menu Link entities' cache tags.
@@ -32,7 +33,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $url = Url::fromRoute('test_page_test.test_page');
 
     // Create a Llama menu, add a link to it and place the corresponding block.
-    $menu = entity_create('menu', array(
+    $menu = Menu::create(array(
       'id' => 'llama',
       'label' => 'Llama',
       'description' => 'Description text',
