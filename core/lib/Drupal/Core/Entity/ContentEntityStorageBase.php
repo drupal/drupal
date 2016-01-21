@@ -440,7 +440,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
     $result = [];
     $args = array_slice(func_get_args(), 2);
-    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+    $langcodes = array_keys($entity->getTranslationLanguages());
+    foreach ($langcodes as $langcode) {
       $translation = $entity->getTranslation($langcode);
       // For non translatable fields, there is only one field object instance
       // across all translations and it has as parent entity the entity in the
@@ -453,6 +454,20 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         $result[$langcode][$name] = $args ? call_user_func_array([$items, $method], $args) : $items->{$method}();
       }
     }
+
+    // We need to call the delete method for field items of removed
+    // translations.
+    if ($method == 'postSave' && !empty($entity->original)) {
+      $original_langcodes = array_keys($entity->original->getTranslationLanguages());
+      foreach (array_diff($original_langcodes, $langcodes) as $removed_langcode) {
+        $translation = $entity->original->getTranslation($removed_langcode);
+        $fields = $translation->getTranslatableFields();
+        foreach ($fields as $name => $items) {
+          $items->delete();
+        }
+      }
+    }
+
     return $result;
   }
 
