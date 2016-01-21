@@ -17,11 +17,11 @@ use Drupal\editor\Entity\Editor;
  * than the one provided by Drupal core is used. Most CKEditor plugins don't
  * need to provide additional settings forms.
  *
- * This base assumes that your plugin has buttons that you want to be enabled
- * through the toolbar builder UI. It is still possible to also implement the
- * CKEditorPluginContextualInterface (for contextual enabling) and
+ * This base class assumes that your plugin has buttons that you want to be
+ * enabled through the toolbar builder UI. It is still possible to also
+ * implement the CKEditorPluginContextualInterface (for contextual enabling) and
  * CKEditorPluginConfigurableInterface interfaces (for configuring plugin
- * settings) though.
+ * settings).
  *
  * NOTE: the Drupal plugin ID should correspond to the CKEditor plugin name.
  *
