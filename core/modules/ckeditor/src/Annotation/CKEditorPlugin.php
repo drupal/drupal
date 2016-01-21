@@ -19,6 +19,7 @@ use Drupal\Component\Annotation\Plugin;
  * @see \Drupal\ckeditor\CKEditorPluginInterface
  * @see \Drupal\ckeditor\CKEditorPluginBase
  * @see \Drupal\ckeditor\CKEditorPluginManager
+ * @see hook_ckeditor_plugin_info_alter()
  * @see plugin_api
  *
  * @Annotation

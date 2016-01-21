@@ -35,10 +35,11 @@ function hook_ckeditor_plugin_info_alter(array &$plugins) {
  * iframe versions of CKEditor.
  *
  * Front-end themes (and base themes) can easily specify CSS files to be used in
- * iframe instances of CKEditor through an entry in their .info file:
+ * iframe instances of CKEditor through an entry in their .info.yml file:
  *
  * @code
- * ckeditor_stylesheets[] = css/ckeditor-iframe.css
+ * ckeditor_stylesheets:
+ *   - css/ckeditor-iframe.css
  * @endcode
  *
  * @param array &$css
