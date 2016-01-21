@@ -230,7 +230,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     foreach ($files as $delta => $file) {
       // Link the <picture> element to the original file.
       if (isset($link_file)) {
-        $url = Url::fromUri(file_create_url($file->getFileUri()));
+        $url = file_url_transform_relative(file_create_url($file->getFileUri()));
       }
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.

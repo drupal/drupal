@@ -74,7 +74,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     // Create a style.
     $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
     $style->save();
-    $url = $style->buildUrl($original_uri);
+    $url = file_url_transform_relative($style->buildUrl($original_uri));
 
     // Create a test entity with the image field set.
     $entity = entity_create('entity_test');
@@ -136,7 +136,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     // Create a style.
     $style = entity_create('image_style', array('name' => 'image_test', 'label' => 'Test'));
     $style->save();
-    $url = $style->buildUrl($original_uri);
+    $url = file_url_transform_relative($style->buildUrl($original_uri));
 
     // Create the base element that we'll use in the tests below.
     $base_element = array(

@@ -69,6 +69,12 @@ class File extends FieldPluginBase {
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_file']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
+      // @todo Wrap in file_url_transform_relative(). This is currently
+      // impossible. As a work-around, we could add the 'url.site' cache context
+      // to ensure different file URLs are generated for different sites in a
+      // multisite setup, including HTTP and HTTPS versions of the same site.
+      // But unfortunately it's impossible to bubble a cache context here.
+      // Fix in https://www.drupal.org/node/2646744.
       $this->options['alter']['path'] = file_create_url($this->getValue($values, 'uri'));
     }
 

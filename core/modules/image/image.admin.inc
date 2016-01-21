@@ -34,7 +34,7 @@ function template_preprocess_image_style_preview(&$variables) {
   $original_path = \Drupal::config('image.settings')->get('preview_image');
   $original_image = $image_factory->get($original_path);
   $variables['original'] = array(
-    'url' => file_create_url($original_path),
+    'url' => file_url_transform_relative(file_create_url($original_path)),
     'width' => $original_image->getWidth(),
     'height' => $original_image->getHeight(),
   );
@@ -55,7 +55,7 @@ function template_preprocess_image_style_preview(&$variables) {
   }
   $preview_image = $image_factory->get($preview_file);
   $variables['derivative'] = array(
-    'url' => file_create_url($preview_file),
+    'url' => file_url_transform_relative(file_create_url($preview_file)),
     'width' => $preview_image->getWidth(),
     'height' => $preview_image->getHeight(),
   );

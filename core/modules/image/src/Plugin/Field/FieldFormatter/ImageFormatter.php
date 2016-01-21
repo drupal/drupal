@@ -199,9 +199,16 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
     }
 
     foreach ($files as $delta => $file) {
+      $cache_contexts = array();
       if (isset($link_file)) {
         $image_uri = $file->getFileUri();
+        // @todo Wrap in file_url_transform_relative(). This is currently
+        // impossible. As a work-around, we currently add the 'url.site' cache
+        // context to ensure different file URLs are generated for different
+        // sites in a multisite setup, including HTTP and HTTPS versions of the
+        // same site. Fix in https://www.drupal.org/node/2646744.
         $url = Url::fromUri(file_create_url($image_uri));
+        $cache_contexts[] = 'url.site';
       }
       $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
 
@@ -219,6 +226,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
         '#url' => $url,
         '#cache' => array(
           'tags' => $cache_tags,
+          'contexts' => $cache_contexts,
         ),
       );
     }

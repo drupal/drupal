@@ -41,7 +41,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
     $style->save();
     $generated_uri = 'public://styles/test/public/'. \Drupal::service('file_system')->basename($original_uri);
-    $url = $style->buildUrl($original_uri);
+    $url = file_url_transform_relative($style->buildUrl($original_uri));
 
     $variables = array(
       '#theme' => 'image_style',
@@ -70,7 +70,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="120" height="60" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -91,7 +91,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="60" height="120" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -113,7 +113,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="45" height="90" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -135,7 +135,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="45" height="90" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -153,7 +153,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="45" height="90" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -174,7 +174,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
 
@@ -194,7 +194,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="30" height="30" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -215,7 +215,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style->save();
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" alt="" class="image-style-test" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
 
@@ -251,10 +251,10 @@ class ImageDimensionsTest extends WebTestBase {
     ];
     // PNG original image. Should be resized to 100x100.
     $generated_uri = 'public://styles/test_uri/public/'. \Drupal::service('file_system')->basename($original_uri);
-    $url = $style->buildUrl($original_uri);
+    $url = file_url_transform_relative($style->buildUrl($original_uri));
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="100" height="100" alt="" class="image-style-test-uri" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);
@@ -264,11 +264,11 @@ class ImageDimensionsTest extends WebTestBase {
     $file = $files[1];
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
     $generated_uri = 'public://styles/test_uri/public/'. \Drupal::service('file_system')->basename($original_uri);
-    $url = $style->buildUrl($original_uri);
+    $url = file_url_transform_relative($style->buildUrl($original_uri));
     $variables['#uri'] = $original_uri;
     $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="50" height="50" alt="" class="image-style-test-uri" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
-    $this->drupalGet($url);
+    $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
     $image_file = $image_factory->get($generated_uri);

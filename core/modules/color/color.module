@@ -126,7 +126,7 @@ function color_block_view_pre_render(array $build) {
   // Override logo.
   $logo = $config->get('logo');
   if ($logo && $build['content']['site_logo'] && preg_match('!' . $theme_key . '/logo.svg$!', $build['content']['site_logo']['#uri'])) {
-    $build['content']['site_logo']['#uri'] = file_create_url($logo);
+    $build['content']['site_logo']['#uri'] = file_url_transform_relative(file_create_url($logo));
   }
 
   return $build;

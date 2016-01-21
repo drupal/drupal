@@ -9,7 +9,8 @@
 namespace {
 
 /**
- * CssOptimizer uses file_create_url(), which *is* available when using the
+ * CssOptimizer uses file_create_url(), file_uri_scheme() and
+ * file_url_transform_relative(), which *are* available when using the
  * Simpletest test runner, but not when using the PHPUnit test runner; hence
  * this hack.
  */
@@ -32,6 +33,17 @@ if (!function_exists('file_uri_scheme')) {
   }
 
 }
+if (!function_exists('file_url_transform_relative')) {
+
+  /**
+   * Temporary mock of file_url_transform_relative, until that is moved into
+   * Component/Utility.
+   */
+  function file_url_transform_relative($uri) {
+    return 'file_url_transform_relative:' . $uri;
+  }
+
+}
 
 }
 
@@ -47,6 +59,11 @@ use Drupal\Tests\UnitTestCase;
  * @group Asset
  */
 class CssOptimizerUnitTest extends UnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $backupGlobals = FALSE;
 
   /**
    * A CSS asset optimizer.
@@ -65,7 +82,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Provides data for the CSS asset optimizing test.
    */
   function providerTestOptimize() {
-    $path = dirname(__FILE__)  . '/css_test_files/';
+    $path = 'core/tests/Drupal/Tests/Core/Asset/css_test_files/';
+    $absolute_path = dirname(__FILE__)  . '/css_test_files/';
     return array(
       // File. Tests:
       // - Stripped comments and white-space.
@@ -82,7 +100,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
           'basename' => 'css_input_without_import.css',
         ),
-        file_get_contents($path . 'css_input_without_import.css.optimized.css'),
+        file_get_contents($absolute_path . 'css_input_without_import.css.optimized.css'),
       ),
       // File. Tests:
       // - Proper URLs in imported files. (https://www.drupal.org/node/265719)
@@ -102,7 +120,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
           'basename' => 'css_input_with_import.css',
         ),
-        str_replace('url(images/icon.png)', 'url(' . file_create_url($path . 'images/icon.png') . ')', file_get_contents($path . 'css_input_with_import.css.optimized.css')),
+        str_replace('url(images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_input_with_import.css.optimized.css')),
       ),
       // File. Tests:
       // - Retain comment hacks.
@@ -117,7 +135,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
           'basename' => 'comment_hacks.css',
         ),
-        file_get_contents($path . 'comment_hacks.css.optimized.css'),
+        file_get_contents($absolute_path . 'comment_hacks.css.optimized.css'),
       ),
       // File in subfolder. Tests:
       // - CSS import path is properly interpreted.
@@ -134,7 +152,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
           'basename' => 'css_input_with_import.css',
         ),
-        str_replace('url(../images/icon.png)', 'url(' . file_create_url($path . 'images/icon.png') . ')', file_get_contents($path . 'css_subfolder/css_input_with_import.css.optimized.css')),
+        str_replace('url(../images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_subfolder/css_input_with_import.css.optimized.css')),
       ),
       // File. Tests:
       // - Any @charaset declaration at the beginning of a file should be
@@ -150,7 +168,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
           'basename' => 'charset_sameline.css',
         ),
-        file_get_contents($path . 'charset.css.optimized.css'),
+        file_get_contents($absolute_path . 'charset.css.optimized.css'),
       ),
       array(
         array(
@@ -163,7 +181,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
           'basename' => 'charset_newline.css',
         ),
-        file_get_contents($path . 'charset.css.optimized.css'),
+        file_get_contents($absolute_path . 'charset.css.optimized.css'),
       ),
       array(
         array(
@@ -226,7 +244,18 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * @dataProvider providerTestOptimize
    */
   function testOptimize($css_asset, $expected) {
+    global $base_path;
+    $original_base_path = $base_path;
+    $base_path = '/';
+
+    // \Drupal\Core\Asset\CssOptimizer::loadFile() relies on the current working
+    // directory being the one that is used when index.php is the entry point.
+    // Note: PHPUnit automatically restores the original working directory.
+    chdir(realpath(__DIR__ . '/../../../../../../'));
+
     $this->assertEquals($expected, $this->optimizer->optimize($css_asset), 'Group of file CSS assets optimized correctly.');
+
+    $base_path = $original_base_path;
   }
 
   /**

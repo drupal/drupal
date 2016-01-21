@@ -57,7 +57,6 @@ class CKEditorToolbarButtonTest extends WebTestBase {
    * Method tests CKEditor image buttons.
    */
   public function testImageButtonDisplay() {
-    global $base_url;
     $this->drupalLogin($this->admin_user);
 
     // Install the Arabic language (which is RTL) and configure as the default.
@@ -75,7 +74,7 @@ class CKEditorToolbarButtonTest extends WebTestBase {
     $json_encode = function($html) {
       return trim(Json::encode($html), '"');
     };
-    $markup = $json_encode($base_url . '/core/modules/ckeditor/js/plugins/drupalimage/image.png');
+    $markup = $json_encode(file_url_transform_relative(file_create_url('core/modules/ckeditor/js/plugins/drupalimage/image.png')));
     $this->assertRaw($markup);
   }
 

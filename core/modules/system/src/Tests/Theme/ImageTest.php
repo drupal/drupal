@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\KernelTestBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests built-in image theme functions.
@@ -32,9 +33,17 @@ class ImageTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    // The code under test uses file_url_transform_relative(), which relies on
+    // the Request containing the correct hostname. KernelTestBase doesn't set
+    // it, so push another request onto the stack to ensure it's correct.
+    $request = Request::create('/', 'GET', [], [], [], $_SERVER);
+    $this->container = $this->kernel->getContainer();
+    $this->container->get('request_stack')->push($request);
+
     $this->testImages = array(
-      '/core/misc/druplicon.png',
-      '/core/misc/loading.gif',
+      'core/misc/druplicon.png',
+      'core/misc/loading.gif',
     );
   }
 
@@ -75,7 +84,7 @@ class ImageTest extends KernelTestBase {
     $this->render($image);
 
     // Make sure the src attribute has the correct value.
-    $this->assertRaw(file_create_url($image['#uri']), 'Correct output for an image with the src attribute.');
+    $this->assertRaw(file_url_transform_relative(file_create_url($image['#uri'])), 'Correct output for an image with the src attribute.');
   }
 
   /**
@@ -103,7 +112,7 @@ class ImageTest extends KernelTestBase {
     $this->render($image);
 
     // Make sure the srcset attribute has the correct value.
-    $this->assertRaw(file_create_url($this->testImages[0]) . ' 1x, ' . file_create_url($this->testImages[1]) . ' 2x', 'Correct output for image with srcset attribute and multipliers.');
+    $this->assertRaw(file_url_transform_relative(file_create_url($this->testImages[0])) . ' 1x, ' . file_url_transform_relative(file_create_url($this->testImages[1])) . ' 2x', 'Correct output for image with srcset attribute and multipliers.');
   }
 
   /**
@@ -135,7 +144,7 @@ class ImageTest extends KernelTestBase {
     $this->render($image);
 
     // Make sure the srcset attribute has the correct value.
-    $this->assertRaw(file_create_url($this->testImages[0]) . ' ' . $widths[0] . ', ' . file_create_url($this->testImages[1]) . ' ' . $widths[1], 'Correct output for image with srcset attribute and width descriptors.');
+    $this->assertRaw(file_url_transform_relative(file_create_url($this->testImages[0])) . ' ' . $widths[0] . ', ' . file_url_transform_relative(file_create_url($this->testImages[1])) . ' ' . $widths[1], 'Correct output for image with srcset attribute and width descriptors.');
   }
 
 }

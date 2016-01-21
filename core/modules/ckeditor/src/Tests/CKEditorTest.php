@@ -90,8 +90,8 @@ class CKEditorTest extends KernelTestBase {
       'language' => 'en',
       'stylesSet' => FALSE,
       'drupalExternalPlugins' => array(
-        'drupalimage' => file_create_url('core/modules/ckeditor/js/plugins/drupalimage/plugin.js'),
-        'drupallink' => file_create_url('core/modules/ckeditor/js/plugins/drupallink/plugin.js'),
+        'drupalimage' => file_url_transform_relative(file_create_url('core/modules/ckeditor/js/plugins/drupalimage/plugin.js')),
+        'drupallink' => file_url_transform_relative(file_create_url('core/modules/ckeditor/js/plugins/drupallink/plugin.js')),
       ),
     );
     $expected_config = $this->castSafeStrings($expected_config);
@@ -114,9 +114,9 @@ class CKEditorTest extends KernelTestBase {
     $expected_config['toolbar'][0]['items'][] = 'Format';
     $expected_config['format_tags'] = 'p;h2;h3;h4;h5;h6';
     $expected_config['extraPlugins'] .= ',llama_contextual,llama_contextual_and_button';
-    $expected_config['drupalExternalPlugins']['llama_contextual'] = file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual.js');
-    $expected_config['drupalExternalPlugins']['llama_contextual_and_button'] = file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual_and_button.js');
-    $expected_config['contentsCss'][] = file_create_url('core/modules/ckeditor/tests/modules/ckeditor_test.css');
+    $expected_config['drupalExternalPlugins']['llama_contextual'] = file_url_transform_relative(file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual.js'));
+    $expected_config['drupalExternalPlugins']['llama_contextual_and_button'] = file_url_transform_relative(file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual_and_button.js'));
+    $expected_config['contentsCss'][] = file_url_transform_relative(file_create_url('core/modules/ckeditor/tests/modules/ckeditor_test.css'));
     ksort($expected_config);
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
@@ -261,15 +261,15 @@ class CKEditorTest extends KernelTestBase {
 
     // Enable the editor_test module, which implements hook_ckeditor_css_alter().
     $this->enableModules(array('ckeditor_test'));
-    $expected[] = file_create_url('core/modules/ckeditor/tests/modules/ckeditor_test.css');
+    $expected[] = file_url_transform_relative(file_create_url('core/modules/ckeditor/tests/modules/ckeditor_test.css'));
     $this->assertIdentical($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a hook_ckeditor_css_alter() implementation exists.');
 
     // Enable the Bartik theme, which specifies a CKEditor stylesheet.
     \Drupal::service('theme_handler')->install(['bartik']);
     $this->config('system.theme')->set('default', 'bartik')->save();
-    $expected[] = file_create_url('core/themes/bartik/css/base/elements.css');
-    $expected[] = file_create_url('core/themes/bartik/css/components/captions.css');
-    $expected[] = file_create_url('core/themes/bartik/css/components/table.css');
+    $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/base/elements.css'));
+    $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/components/captions.css'));
+    $expected[] = file_url_transform_relative(file_create_url('core/themes/bartik/css/components/table.css'));
     $this->assertIdentical($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a theme providing a CKEditor stylesheet exists.');
   }
 
@@ -478,8 +478,8 @@ class CKEditorTest extends KernelTestBase {
 
   protected function getDefaultContentsCssConfig() {
     return array(
-      file_create_url('core/modules/ckeditor/css/ckeditor-iframe.css'),
-      file_create_url('core/modules/system/css/components/align.module.css'),
+      file_url_transform_relative(file_create_url('core/modules/ckeditor/css/ckeditor-iframe.css')),
+      file_url_transform_relative(file_create_url('core/modules/system/css/components/align.module.css')),
     );
   }
 

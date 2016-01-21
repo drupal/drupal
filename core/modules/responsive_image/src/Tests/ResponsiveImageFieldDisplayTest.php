@@ -244,7 +244,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $display->setComponent($field_name, $display_options)
       ->save();
 
-    $default_output = '<a href="' . file_create_url($image_uri) . '"><picture';
+    $default_output = '<a href="' . file_url_transform_relative(file_create_url($image_uri)) . '"><picture';
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
@@ -289,10 +289,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertRaw('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
       $thumbnail_style = ImageStyle::load('thumbnail');
       // Assert the output of the 'srcset' attribute (small multipliers first).
-      $this->assertRaw('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . $thumbnail_style->buildUrl($image_uri) . ' 1.5x');
+      $this->assertRaw('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . file_url_transform_relative($thumbnail_style->buildUrl($image_uri)) . ' 1.5x');
       $this->assertRaw('/styles/medium/');
       // Assert the output of the original image.
-      $this->assertRaw(file_create_url($image_uri) . ' 3x');
+      $this->assertRaw(file_url_transform_relative(file_create_url($image_uri)) . ' 3x');
       // Assert the output of the breakpoints.
       $this->assertRaw('media="(min-width: 0px)"');
       $this->assertRaw('media="(min-width: 560px)"');
@@ -301,7 +301,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertPattern('/media="\(min-width: 560px\)".+?sizes="\(min-width: 700px\) 700px, 100vw"/');
       // Assert the output of the 'srcset' attribute (small images first).
       $medium_style = ImageStyle::load('medium');
-      $this->assertRaw($medium_style->buildUrl($image_uri) . ' 220w, ' . $large_style->buildUrl($image_uri) . ' 360w');
+      $this->assertRaw(file_url_transform_relative($medium_style->buildUrl($image_uri)) . ' 220w, ' . file_url_transform_relative($large_style->buildUrl($image_uri)) . ' 360w');
       $this->assertRaw('media="(min-width: 851px)"');
     }
     $this->assertRaw('/styles/large/');
@@ -321,7 +321,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#srcset' => array(
         array(
-          'uri' => $large_style->buildUrl($image->getSource()),
+          'uri' => file_url_transform_relative($large_style->buildUrl($image->getSource())),
         ),
       ),
     );
@@ -403,7 +403,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $thumbnail_style = ImageStyle::load('thumbnail');
     $node = $node_storage->load($nid);
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
-    $this->assertPattern('/srcset="' . preg_quote($thumbnail_style->buildUrl($image_uri), '/') . ' 1x".+?media="\(min-width: 0px\)"/');
+    $this->assertPattern('/srcset="' . preg_quote(file_url_transform_relative($thumbnail_style->buildUrl($image_uri)), '/') . ' 1x".+?media="\(min-width: 0px\)"/');
   }
 
   /**
@@ -449,7 +449,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $medium_style = ImageStyle::load('medium');
     $node = $node_storage->load($nid);
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
-    $this->assertRaw('<img srcset="' . $medium_style->buildUrl($image_uri) . ' 1x, ' . $large_style->buildUrl($image_uri) . ' 2x"');
+    $this->assertRaw('<img srcset="' . file_url_transform_relative($medium_style->buildUrl($image_uri)) . ' 1x, ' . file_url_transform_relative($large_style->buildUrl($image_uri)) . ' 2x"');
   }
 
   /**
@@ -509,7 +509,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     switch ($link_type) {
       case 'file':
         // Make sure the link to the file is present.
-        $this->assertPattern('/<a(.*?)href="' . preg_quote(file_create_url($image_uri), '/') . '"(.*?)><picture/');
+        $this->assertPattern('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)><picture/');
         break;
 
       case 'content':
