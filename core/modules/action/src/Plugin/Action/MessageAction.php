@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MessageAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The token service.
+   *
    * @var \Drupal\Core\Utility\Token
    */
   protected $token;
@@ -48,10 +50,8 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Utility\Token
-   *   The token service.
    * @param \Drupal\Core\Utility\Token $token
-   *   The token replacement service.
+   *   The token service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
