@@ -292,8 +292,6 @@ class MenuForm extends EntityForm {
         $form['links'][$id]['#attributes'] = $element['#attributes'];
         $form['links'][$id]['#attributes']['class'][] = 'draggable';
 
-        $form['links'][$id]['#item'] = $element['#item'];
-
         // TableDrag: Sort the table row according to its existing/configured weight.
         $form['links'][$id]['#weight'] = $element['#item']->link->getWeight();
 
