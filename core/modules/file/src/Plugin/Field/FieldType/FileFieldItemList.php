@@ -56,9 +56,11 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
       $original_ids = array();
       $langcode = $this->getLangcode();
       $original = $entity->original;
-      $original_items = $original->hasTranslation($langcode) ? $original->getTranslation($langcode)->{$field_name} : $original->{$field_name};
-      foreach ($original_items as $item) {
-        $original_ids[] = $item->target_id;
+      if ($original->hasTranslation($langcode)) {
+        $original_items = $original->getTranslation($langcode)->{$field_name};
+        foreach ($original_items as $item) {
+          $original_ids[] = $item->target_id;
+        }
       }
 
       // Decrement file usage by 1 for files that were removed from the field.
