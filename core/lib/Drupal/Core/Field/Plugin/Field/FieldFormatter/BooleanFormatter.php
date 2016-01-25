@@ -83,6 +83,7 @@ class BooleanFormatter extends FormatterBase {
       }
     }
 
+    $field_name = $this->fieldDefinition->getName();
     $form['format'] = [
       '#type' => 'select',
       '#title' => $this->t('Output format'),
@@ -95,7 +96,7 @@ class BooleanFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('format_custom_true'),
       '#states' => [
         'visible' => [
-          'select[name="fields[field_boolean][settings_edit_form][settings][format]"]' => ['value' => 'custom'],
+          'select[name="fields[' . $field_name . '][settings_edit_form][settings][format]"]' => ['value' => 'custom'],
         ],
       ],
     ];
@@ -105,7 +106,7 @@ class BooleanFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('format_custom_false'),
       '#states' => [
         'visible' => [
-          'select[name="fields[field_boolean][settings_edit_form][settings][format]"]' => ['value' => 'custom'],
+          'select[name="fields[' . $field_name . '][settings_edit_form][settings][format]"]' => ['value' => 'custom'],
         ],
       ],
     ];
