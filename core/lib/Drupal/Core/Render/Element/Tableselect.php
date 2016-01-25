@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Provides a form element for a table with radios or checkboxes in left column.
  *
  * Properties:
- * - #headers: Table headers used in the table.
+ * - #header: Table headers used in the table.
  * - #options: An associative array where each key is the value returned when
  *   a user selects the radio button or checkbox, and each value is the row of
  *   table data.
