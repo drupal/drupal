@@ -33,7 +33,7 @@ class EntityDeriver implements ContainerDeriverInterface {
   protected $entityManager;
 
   /**
-   * Constructs an EntityDerivative object.
+   * Constructs an EntityDeriver object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
