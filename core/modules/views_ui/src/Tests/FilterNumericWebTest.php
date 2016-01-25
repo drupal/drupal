@@ -112,23 +112,6 @@ class FilterNumericWebTest extends UITestBase {
     $this->assertRaw('<label for="edit-age-min">Age between</label>', 'Min field label found');
     // Check that the description is shown in the right place.
     $this->assertEqual(trim($this->cssSelect('.form-item-age-min .description')[0]), 'Description of the exposed filter');
-    // Check if the filter 'regular expression' is working properly.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/age');
-    $edit = array();
-    $edit['options[expose][label]'] = 'Age expression';
-    $edit['options[expose][description]'] = 'Description of the exposed filter';
-    $edit['options[operator]'] = 'regular_expression';
-    $edit['options[value][value]'] = '26|27';
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->drupalPostForm('admin/structure/views/view/test_view', array(), t('Save'));
-    $this->assertConfigSchemaByName('views.view.test_view');
-
-    $this->drupalPostForm(NULL, array(), t('Update preview'));
-    $this->assertNoText('John');
-    $this->assertText('Paul');
-    $this->assertNoText('Ringo');
-    $this->assertText('George');
-    $this->assertNoText('Meredith');
   }
 
 }

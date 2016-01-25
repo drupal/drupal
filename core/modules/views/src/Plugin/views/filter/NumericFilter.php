@@ -87,7 +87,7 @@ class NumericFilter extends FilterPluginBase {
       'regular_expression' => array(
         'title' => $this->t('Regular expression'),
         'short' => $this->t('regex'),
-        'method' => 'opRegex',
+        'method' => 'op_regex',
         'values' => 1,
       ),
     );
