@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Uuid\Php;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
@@ -1440,8 +1441,14 @@ function simpletest_script_open_browser() {
   // not have created one.
   $directory = PublicStream::basePath() . '/simpletest/verbose';
   file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-  $uuid = new Php();
-  $filename = $directory . '/results-' . $uuid->generate() . '.html';
+  $php = new Php();
+  $uuid = $php->generate();
+  $filename = $directory . '/results-' . $uuid . '.html';
+  $base_url = getenv('SIMPLETEST_BASE_URL');
+  if (empty($base_url)) {
+    simpletest_script_print_error("--browser needs argument --url.");
+  }
+  $url = $base_url . '/' . PublicStream::basePath() . '/simpletest/verbose/results-' . $uuid . '.html';
   file_put_contents($filename, $html);
 
   // See if we can find an OS helper to open URLs in default browser.
@@ -1457,7 +1464,7 @@ function simpletest_script_open_browser() {
   }
 
   if ($browser) {
-    shell_exec($browser . ' ' . escapeshellarg($filename));
+    shell_exec($browser . ' ' . escapeshellarg($url));
   }
   else {
     // Can't find assets valid browser.
