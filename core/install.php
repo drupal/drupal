@@ -7,6 +7,8 @@
 
 // Change the directory to the Drupal root.
 chdir('..');
+// Store the Drupal root path.
+$root_path = realpath('');
 
 /**
  * Global flag to indicate the site is in installation mode.
@@ -32,6 +34,6 @@ if (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabl
 }
 
 // Start the installer.
-$class_loader = require_once 'autoload.php';
-require_once __DIR__ . '/includes/install.core.inc';
+$class_loader = require_once $root_path . '/autoload.php';
+require_once $root_path . '/core/includes/install.core.inc';
 install_drupal($class_loader);
