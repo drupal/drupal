@@ -138,7 +138,8 @@ class EntityReference extends DisplayPluginBase {
       foreach ($style_options['options']['search_fields'] as $field_id) {
         if (!empty($field_id)) {
           // Get the table and field names for the checked field.
-          $field_alias = $this->view->query->addField($this->view->field[$field_id]->table, $field_id);
+          $field_handler = $this->view->field[$field_id];
+          $field_alias = $this->view->query->addField($field_handler->table, $field_handler->realField);
           $field = $this->view->query->fields[$field_alias];
           // Add an OR condition for the field.
           $conditions->condition($field['table'] . '.' . $field['field'], $value, 'LIKE');
