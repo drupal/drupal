@@ -12,6 +12,8 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
@@ -161,7 +163,15 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Overwrite the destination.
         // @see the redirect.destination service.
         $origin_destination = $path;
-        $query = UrlHelper::buildQuery($request->query->all());
+
+        // Remove some special parameters you never want to have part of the
+        // destination query.
+        $used_query_parameters = $request->query->all();
+        // @todo Remove this parsing once these are removed from the request in
+        //   https://www.drupal.org/node/2504709.
+        unset($used_query_parameters[FormBuilderInterface::AJAX_FORM_REQUEST], $used_query_parameters[MainContentViewSubscriber::WRAPPER_FORMAT], $used_query_parameters['ajax_page_state']);
+
+        $query = UrlHelper::buildQuery($used_query_parameters);
         if ($query != '') {
           $origin_destination .= '?' . $query;
         }
