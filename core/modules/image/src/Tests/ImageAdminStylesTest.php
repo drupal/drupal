@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
@@ -446,6 +447,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');
     $active = $this->container->get('config.storage');
+    // Remove the image field from the display, to avoid a dependency error
+    // during import.
+    EntityViewDisplay::load('node.article.default')
+      ->removeComponent($field_name)
+      ->save();
     $this->copyConfig($active, $sync);
     $sync->delete('image.style.' . $style_name);
     $this->configImporter()->import();

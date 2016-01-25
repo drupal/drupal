@@ -36,6 +36,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *       "flush" = "Drupal\image\Form\ImageStyleFlushForm"
  *     },
  *     "list_builder" = "Drupal\image\ImageStyleListBuilder",
+ *     "storage" = "Drupal\image\ImageStyleStorage",
  *   },
  *   admin_permission = "administer image styles",
  *   config_prefix = "style",
@@ -57,13 +58,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * )
  */
 class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginCollectionInterface {
-
-  /**
-   * The name of the image style to use as replacement upon delete.
-   *
-   * @var string
-   */
-  protected $replacementID;
 
   /**
    * The name of the image style.
@@ -128,17 +122,13 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
+    /** @var \Drupal\image\ImageStyleInterface[] $entities */
     foreach ($entities as $style) {
       // Flush cached media for the deleted style.
       $style->flush();
-      // Check whether field settings need to be updated.
-      // In case no replacement style was specified, all image fields that are
-      // using the deleted style are left in a broken state.
-      if (!$style->isSyncing() && $new_id = $style->getReplacementID()) {
-        // The deleted ID is still set as originalID.
-        $style->setName($new_id);
-        static::replaceImageStyle($style);
-      }
+      // Clear the replacement ID, if one has been previously stored.
+      /** @var \Drupal\image\ImageStyleStorageInterface $storage */
+      $storage->clearReplacementId($style->id());
     }
   }
 
@@ -380,7 +370,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function getReplacementID() {
-    return $this->get('replacementID');
+    /** @var \Drupal\image\ImageStyleStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
+    return $storage->getReplacementId($this->id());
   }
 
   /**

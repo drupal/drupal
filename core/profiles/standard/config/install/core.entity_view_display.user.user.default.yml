@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.user.user.user_picture
+    - image.style.thumbnail
   module:
     - image
     - user
