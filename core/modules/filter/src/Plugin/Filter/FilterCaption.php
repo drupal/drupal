@@ -72,16 +72,18 @@ class FilterCaption extends FilterBase {
         $altered_html = drupal_render($filter_caption);
 
         // Load the altered HTML into a new DOMDocument and retrieve the element.
-        $updated_node = Html::load($altered_html)->getElementsByTagName('body')
+        $updated_nodes = Html::load($altered_html)->getElementsByTagName('body')
           ->item(0)
-          ->childNodes
-          ->item(0);
+          ->childNodes;
 
-        // Import the updated node from the new DOMDocument into the original
-        // one, importing also the child nodes of the updated node.
-        $updated_node = $dom->importNode($updated_node, TRUE);
-        // Finally, replace the original node with the new node.
-        $node->parentNode->replaceChild($updated_node, $node);
+        foreach ($updated_nodes as $updated_node) {
+          // Import the updated node from the new DOMDocument into the original
+          // one, importing also the child nodes of the updated node.
+          $updated_node = $dom->importNode($updated_node, TRUE);
+          $node->parentNode->insertBefore($updated_node, $node);
+        }
+        // Finally, remove the original data-caption node.
+        $node->parentNode->removeChild($node);
       }
 
       $result->setProcessedText(Html::serialize($dom))
