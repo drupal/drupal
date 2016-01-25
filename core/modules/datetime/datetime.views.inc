@@ -26,8 +26,11 @@ function datetime_field_views_data(FieldStorageConfigInterface $field_storage) {
     $arguments = [
       // Argument type => help text.
       'year' => t('Date in the form of YYYY.'),
-      'month' => t('Date in the form of MM.'),
-      'day' => t('Date in the form of DD.'),
+      'month' => t('Date in the form of MM (01 - 12).'),
+      'day' => t('Date in the form of DD (01 - 31).'),
+      'week' => t('Date in the form of WW (01 - 53).'),
+      'year_month' => t('Date in the form of YYYYMM.'),
+      'full_date' => t('Date in the form of CCYYMMDD.'),
     ];
     foreach ($arguments as $argument_type => $help_text) {
       $data[$table_name][$field_storage->getName() . '_value_' . $argument_type] = [
