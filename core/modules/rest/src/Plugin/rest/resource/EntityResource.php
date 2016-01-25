@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *   }
  * )
  *
- * @see \Drupal\rest\Plugin\Derivative\EntityDerivative
+ * @see \Drupal\rest\Plugin\Deriver\EntityDeriver
  */
 class EntityResource extends ResourceBase {
 
