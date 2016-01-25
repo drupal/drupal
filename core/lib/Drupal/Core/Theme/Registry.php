@@ -40,7 +40,8 @@ class Registry implements DestructableInterface {
    * The complete theme registry.
    *
    * @var array
-   *   An associative array keyed by theme hook names, whose values are
+   *   An array of theme registries, keyed by the theme name. Each registry is
+   *   an associative array keyed by theme hook names, whose values are
    *   associative arrays containing the aggregated hook definition:
    *   - type: The type of the extension the original theme hook originates
    *     from; e.g., 'module' for theme hook 'node' of Node module.
@@ -79,7 +80,7 @@ class Registry implements DestructableInterface {
    *   - process: An array of theme variable process callbacks to invoke
    *     before invoking the actual theme function or template.
    */
-  protected $registry;
+  protected $registry = [];
 
   /**
    * The cache backend to use for the complete theme registry data.
@@ -96,11 +97,11 @@ class Registry implements DestructableInterface {
   protected $moduleHandler;
 
   /**
-   * The incomplete, runtime theme registry.
+   * An array of incomplete, runtime theme registries, keyed by theme name.
    *
-   * @var \Drupal\Core\Utility\ThemeRegistry
+   * @var \Drupal\Core\Utility\ThemeRegistry[]
    */
-  protected $runtimeRegistry;
+  protected $runtimeRegistry = [];
 
   /**
    * Stores whether the registry was already initialized.
@@ -209,20 +210,20 @@ class Registry implements DestructableInterface {
    */
   public function get() {
     $this->init($this->themeName);
-    if (isset($this->registry)) {
-      return $this->registry;
+    if (isset($this->registry[$this->theme->getName()])) {
+      return $this->registry[$this->theme->getName()];
     }
     if ($cache = $this->cache->get('theme_registry:' . $this->theme->getName())) {
-      $this->registry = $cache->data;
+      $this->registry[$this->theme->getName()] = $cache->data;
     }
     else {
-      $this->registry = $this->build();
+      $this->build();
       // Only persist it if all modules are loaded to ensure it is complete.
       if ($this->moduleHandler->isLoaded()) {
         $this->setCache();
       }
     }
-    return $this->registry;
+    return $this->registry[$this->theme->getName()];
   }
 
   /**
@@ -235,17 +236,17 @@ class Registry implements DestructableInterface {
    */
   public function getRuntime() {
     $this->init($this->themeName);
-    if (!isset($this->runtimeRegistry)) {
-      $this->runtimeRegistry = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry'), $this->moduleHandler->isLoaded());
+    if (!isset($this->runtimeRegistry[$this->theme->getName()])) {
+      $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry'), $this->moduleHandler->isLoaded());
     }
-    return $this->runtimeRegistry;
+    return $this->runtimeRegistry[$this->theme->getName()];
   }
 
   /**
    * Persists the theme registry in the cache backend.
    */
   protected function setCache() {
-    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry, Cache::PERMANENT, array('theme_registry'));
+    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry[$this->theme->getName()], Cache::PERMANENT, array('theme_registry'));
   }
 
   /**
@@ -359,9 +360,9 @@ class Registry implements DestructableInterface {
         unset($cache[$hook]['preprocess functions']);
       }
     }
-    $this->registry = $cache;
+    $this->registry[$this->theme->getName()] = $cache;
 
-    return $this->registry;
+    return $this->registry[$this->theme->getName()];
   }
 
   /**
@@ -719,12 +720,12 @@ class Registry implements DestructableInterface {
    */
   public function reset() {
     // Reset the runtime registry.
-    if (isset($this->runtimeRegistry) && $this->runtimeRegistry instanceof ThemeRegistry) {
-      $this->runtimeRegistry->clear();
+    foreach ($this->runtimeRegistry as $runtime_registry) {
+      $runtime_registry->clear();
     }
-    $this->runtimeRegistry = NULL;
+    $this->runtimeRegistry = [];
 
-    $this->registry = NULL;
+    $this->registry = [];
     Cache::invalidateTags(array('theme_registry'));
     return $this;
   }
@@ -733,8 +734,8 @@ class Registry implements DestructableInterface {
    * {@inheritdoc}
    */
   public function destruct() {
-    if (isset($this->runtimeRegistry)) {
-      $this->runtimeRegistry->destruct();
+    foreach ($this->runtimeRegistry as $runtime_registry) {
+      $runtime_registry->destruct();
     }
   }
 
