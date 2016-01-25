@@ -17,8 +17,14 @@ interface ImageStyleInterface extends ConfigEntityInterface {
   /**
    * Returns the replacement ID.
    *
-   * @return string
-   *   The name of the image style to use as replacement upon delete.
+   * @return string|null
+   *   The replacement image style ID or NULL if no replacement has been
+   *   selected.
+   *
+   * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.x. Use
+   *   \Drupal\image\ImageStyleStorageInterface::getReplacementId() instead.
+   *
+   * @see \Drupal\image\ImageStyleStorageInterface::getReplacementId()
    */
   public function getReplacementID();
 

@@ -12,6 +12,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * Plugin implementation of the 'image_image' widget.
@@ -271,6 +272,51 @@ class ImageWidget extends FileWidget {
     else {
       $form_state->setLimitValidationErrors([]);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    $style_id = $this->getSetting('preview_image_style');
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    if ($style_id && $style = ImageStyle::load($style_id)) {
+      // If this widget uses a valid image style to display the preview of the
+      // uploaded image, add that image style configuration entity as dependency
+      // of this widget.
+      $dependencies[$style->getConfigDependencyKey()][] = $style->getConfigDependencyName();
+    }
+    return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = parent::onDependencyRemoval($dependencies);
+    $style_id = $this->getSetting('preview_image_style');
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    if ($style_id && $style = ImageStyle::load($style_id)) {
+      if (!empty($dependencies[$style->getConfigDependencyKey()][$style->getConfigDependencyName()])) {
+        /** @var \Drupal\image\ImageStyleStorageInterface $storage */
+        $storage = \Drupal::entityManager()->getStorage($style->getEntityTypeId());
+        $replacement_id = $storage->getReplacementId($style_id);
+        // If a valid replacement has been provided in the storage, replace the
+        // preview image style with the replacement.
+        if ($replacement_id && ImageStyle::load($replacement_id)) {
+          $this->setSetting('preview_image_style', $replacement_id);
+        }
+        // If there's no replacement or the replacement is invalid, disable the
+        // image preview.
+        else {
+          $this->setSetting('preview_image_style', '');
+        }
+        // Signal that the formatter plugin settings were updated.
+        $changed = TRUE;
+      }
+    }
+    return $changed;
   }
 
 }

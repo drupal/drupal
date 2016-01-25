@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.article.comment
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
+    - image.style.large
     - node.type.article
   module:
     - comment

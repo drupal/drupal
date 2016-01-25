@@ -66,9 +66,11 @@ abstract class ImageFieldTestBase extends WebTestBase {
    * @param array $field_settings
    *   A list of instance settings that will be added to the instance defaults.
    * @param array $widget_settings
-   *   A list of widget settings that will be added to the widget defaults.
+   *   Widget settings to be added to the widget defaults.
+   * @param array $formatter_settings
+   *   Formatter settings to be added to the formatter defaults.
    */
-  function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
+  function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array(), $formatter_settings = array()) {
     entity_create('field_storage_config', array(
       'field_name' => $name,
       'entity_type' => 'node',
@@ -95,7 +97,10 @@ abstract class ImageFieldTestBase extends WebTestBase {
       ->save();
 
     entity_get_display('node', $type_name, 'default')
-      ->setComponent($name)
+      ->setComponent($name, array(
+        'type' => 'image',
+        'settings' => $formatter_settings,
+      ))
       ->save();
 
     return $field_config;
