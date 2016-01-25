@@ -87,7 +87,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[ConfigEvents::SAVE][] = array('onConfigSave', 0);
-    // The empty check has a high priority so that is can stop propagation if
+    // The empty check has a high priority so that it can stop propagation if
     // there is no configuration to import.
     $events[ConfigEvents::IMPORT_VALIDATE][] = array('onConfigImporterValidateNotEmpty', 512);
     $events[ConfigEvents::IMPORT_VALIDATE][] = array('onConfigImporterValidateSiteUUID', 256);
