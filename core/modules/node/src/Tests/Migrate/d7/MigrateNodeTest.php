@@ -39,6 +39,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('file');
     $this->installConfig(static::$modules);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('system', ['sequences']);
@@ -134,6 +135,14 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('Some more text', $node->field_text_list[0]->value);
     $this->assertIdentical('7', $node->field_integer_list[0]->value);
     $this->assertIdentical('qwerty', $node->field_text->value);
+    $this->assertIdentical('2', $node->field_file->target_id);
+    $this->assertIdentical('file desc', $node->field_file->description);
+    $this->assertTrue($node->field_file->display);
+    $this->assertIdentical('1', $node->field_images->target_id);
+    $this->assertIdentical('alt text', $node->field_images->alt);
+    $this->assertIdentical('title text', $node->field_images->title);
+    $this->assertIdentical('93', $node->field_images->width);
+    $this->assertIdentical('93', $node->field_images->height);
   }
 
 }

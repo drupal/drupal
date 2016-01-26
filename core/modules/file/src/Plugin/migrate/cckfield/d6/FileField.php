@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\file\Plugin\migrate\cckfield\FileField.
+ * Contains \Drupal\file\Plugin\migrate\cckfield\d6\FileField.
  */
 
-namespace Drupal\file\Plugin\migrate\cckfield;
+namespace Drupal\file\Plugin\migrate\cckfield\d6;
 
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
