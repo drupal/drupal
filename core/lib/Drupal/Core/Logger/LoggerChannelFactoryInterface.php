@@ -23,10 +23,7 @@ interface LoggerChannelFactoryInterface {
   public function get($channel);
 
   /**
-   * Adds a logger.
-   *
-   * Here is were all services tagged as 'logger' are being retrieved and then
-   * passed to the channels after instantiation.
+   * Adds a logger to all the channels.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   The PSR-3 logger to add.
