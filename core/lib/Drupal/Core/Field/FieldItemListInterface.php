@@ -102,28 +102,28 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Magic method: Gets a property value of to the first field item.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::__get()
+   * @see \Drupal\Core\Field\FieldItemInterface::__set()
    */
   public function __get($property_name);
 
   /**
    * Magic method: Sets a property value of the first field item.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::__set()
+   * @see \Drupal\Core\Field\FieldItemInterface::__get()
    */
   public function __set($property_name, $value);
 
   /**
    * Magic method: Determines whether a property of the first field item is set.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::__isset()
+   * @see \Drupal\Core\Field\FieldItemInterface::__unset()
    */
   public function __isset($property_name);
 
   /**
    * Magic method: Unsets a property of the first field item.
    *
-   * @see \Drupal\Core\Field\FieldItemInterface::__unset()
+   * @see \Drupal\Core\Field\FieldItemInterface::__isset()
    */
   public function __unset($property_name);
 
