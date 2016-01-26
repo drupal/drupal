@@ -151,6 +151,7 @@ abstract class PathFormBase extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#button_type' => 'primary',
     );
 
     return $form;
