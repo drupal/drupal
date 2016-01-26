@@ -30,7 +30,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     'theme',
     'route',
     'timezone',
-    'url',
+    'url.path',
+    'url.query_args:_wrapper_format',
     'user'
   ];
 

@@ -122,9 +122,7 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    // The "Help" block must be cached per URL: help is defined for a
-    // given path, and does not come with any access restrictions.
-    return Cache::mergeContexts(parent::getCacheContexts(), ['url']);
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
   }
 
 }
