@@ -4330,6 +4330,33 @@ $connection->schema()->createTable('field_data_field_file', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('field_data_field_file')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_file_fid',
+  'field_file_display',
+  'field_file_description',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'field_file_fid' => '2',
+  'field_file_display' => '1',
+  'field_file_description' => 'file desc',
+))
+->execute();
+
 $connection->schema()->createTable('field_data_field_float', array(
   'fields' => array(
     'entity_type' => array(
@@ -6065,6 +6092,33 @@ $connection->schema()->createTable('field_revision_field_file', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('field_revision_field_file')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_file_fid',
+  'field_file_display',
+  'field_file_description',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'field_file_fid' => '2',
+  'field_file_display' => '1',
+  'field_file_description' => 'file desc',
+))
+->execute();
+
 $connection->schema()->createTable('field_revision_field_float', array(
   'fields' => array(
     'entity_type' => array(
@@ -7334,6 +7388,13 @@ $connection->insert('file_usage')
 ))
 ->values(array(
   'fid' => '1',
+  'module' => 'file',
+  'type' => 'node',
+  'id' => '1',
+  'count' => '2',
+))
+->values(array(
+  'fid' => '2',
   'module' => 'file',
   'type' => 'node',
   'id' => '1',
