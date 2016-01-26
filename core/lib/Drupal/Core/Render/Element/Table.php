@@ -34,7 +34,7 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * @code
  * $form['contacts'] = array(
  *   '#type' => 'table',
- *   '#title' => 'Sample Table',
+ *   '#caption' => 'Sample Table',
  *   '#header' => array('Name', 'Phone'),
  * );
  *
