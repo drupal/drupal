@@ -186,7 +186,6 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       $elements['#description'] = $description;
       $elements['#field_name'] = $field_name;
       $elements['#language'] = $items->getLangcode();
-      $elements['#display_field'] = (bool) $this->getFieldSetting('display_field');
       // The field settings include defaults for the field type. However, this
       // widget is a base class for other widgets (e.g., ImageWidget) that may
       // act on field types without these expected settings.
