@@ -37,6 +37,16 @@ class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
         '#config_name' => 'user.mail',
         '#config_key' => 'cancel_confirm.subject',
       ),
+      'register_pending_approval_admin_body' => array(
+        '#value' => $this->randomString(),
+        '#config_name' => 'user.mail',
+        '#config_key' => 'register_pending_approval_admin.body',
+      ),
+      'register_pending_approval_admin_subject' => array(
+        '#value' => $this->randomString(20),
+        '#config_name' => 'user.mail',
+        '#config_key' => 'register_pending_approval_admin.subject',
+      ),
     );
   }
 }
