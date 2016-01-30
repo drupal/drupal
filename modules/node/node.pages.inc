@@ -396,7 +396,6 @@ function node_preview($node) {
 
     $cloned_node->changed = REQUEST_TIME;
     $nodes = array($cloned_node->nid => $cloned_node);
-    field_attach_prepare_view('node', $nodes, 'full');
 
     // Display a preview of the node.
     if (!form_get_errors()) {
