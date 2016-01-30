@@ -386,17 +386,19 @@ function _block_rehash($theme = NULL) {
   // Gather the blocks defined by modules.
   foreach (module_implements('block_info') as $module) {
     $module_blocks = module_invoke($module, 'block_info');
+    $delta_list = array();
     foreach ($module_blocks as $delta => $block) {
       // Compile a condition to retrieve this block from the database.
-      $condition = db_and()
-        ->condition('module', $module)
-        ->condition('delta', $delta);
-      $or->condition($condition);
       // Add identifiers.
+      $delta_list[] = $delta;
       $block['module'] = $module;
-      $block['delta']  = $delta;
-      $block['theme']  = $theme;
+      $block['delta'] = $delta;
+      $block['theme'] = $theme;
       $current_blocks[$module][$delta] = $block;
+    }
+    if (!empty($delta_list)) {
+      $condition = db_and()->condition('module', $module)->condition('delta', $delta_list);
+      $or->condition($condition);
     }
   }
   // Save the blocks defined in code for alter context.
