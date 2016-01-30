@@ -49,7 +49,7 @@ function search_view($module = NULL, $keys = '') {
   // which will get us back to this page callback. In other words, the search
   // form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle.
-  if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
+  if (empty($_POST['form_id']) || ($_POST['form_id'] != 'search_form' && $_POST['form_id'] != 'search_block_form')) {
     $conditions =  NULL;
     if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
       // Build an optional array of more search conditions.

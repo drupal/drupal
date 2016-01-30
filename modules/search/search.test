@@ -666,6 +666,24 @@ class SearchBlockTestCase extends DrupalWebTestCase {
       url('search/node/', array('absolute' => TRUE)),
       'Redirected to correct url.'
     );
+
+    // Test that after entering a too-short keyword in the form, you can then
+    // search again with a longer keyword. First test using the block form.
+    $terms = array('search_block_form' => 'a');
+    $this->drupalPost('node', $terms, t('Search'));
+    $this->assertText('You must include at least one positive keyword with 3 characters or more');
+    $terms = array('search_block_form' => 'foo');
+    $this->drupalPost(NULL, $terms, t('Search'));
+    $this->assertNoText('You must include at least one positive keyword with 3 characters or more');
+    $this->assertText('Your search yielded no results');
+
+    // Same test again, using the search page form for the second search this time.
+    $terms = array('search_block_form' => 'a');
+    $this->drupalPost('node', $terms, t('Search'));
+    $terms = array('keys' => 'foo');
+    $this->drupalPost(NULL, $terms, t('Search'));
+    $this->assertNoText('You must include at least one positive keyword with 3 characters or more');
+    $this->assertText('Your search yielded no results');
   }
 }
 
