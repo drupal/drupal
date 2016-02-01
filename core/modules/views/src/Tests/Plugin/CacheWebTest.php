@@ -84,4 +84,15 @@ class CacheWebTest extends PluginTestBase {
     $this->assertCacheTags($cache_tags);
   }
 
+  /**
+   * Tests that a display without caching still contains the cache metadata.
+   */
+  public function testDisplayWithoutCacheStillBubblesMetadata() {
+    $view = Views::getView('test_display');
+
+    $uncached_block = $view->buildRenderable('block_1', [], FALSE);
+    $cached_block = $view->buildRenderable('block_1', [], TRUE);
+    $this->assertEqual($uncached_block['#cache']['contexts'], $cached_block['#cache']['contexts'], 'Cache contexts are the same when you render the view cached and uncached.');
+  }
+
 }

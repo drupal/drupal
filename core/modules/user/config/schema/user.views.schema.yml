@@ -56,10 +56,6 @@ views.argument_default.current_user:
   type: boolean
   label: 'User ID from logged in user'
 
-views.argument_default.node:
-  type: boolean
-  label: 'Content ID from URL'
-
 views_field_user:
   type: views_field
   mapping:
