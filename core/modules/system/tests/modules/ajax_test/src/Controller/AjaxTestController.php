@@ -50,9 +50,8 @@ class AjaxTestController {
   /**
    * Returns a render array that will be rendered by AjaxRenderer.
    *
-   * Ensures that \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
-   * incorporates JavaScript settings generated during the page request by
-   * adding a dummy setting.
+   * Verifies that the response incorporates JavaScript settings generated
+   * during the page request by adding a dummy setting.
    */
   public function render() {
     return [
