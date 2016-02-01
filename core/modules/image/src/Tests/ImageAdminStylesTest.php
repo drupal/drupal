@@ -274,6 +274,19 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $this->assertFalse(ImageStyle::load($style_name), format_string('Image style %style successfully deleted.', array('%style' => $style->label())));
 
+    // Test empty text when there are no image styles.
+
+    // Delete all image styles.
+    foreach (ImageStyle::loadMultiple() as $image_style) {
+      $image_style->delete();
+    }
+
+    // Confirm that the empty text is correct on the image styles page.
+    $this->drupalGet($admin_path);
+    $this->assertRaw(t('There are currently no styles. <a href=":url">Add a new one</a>.', [
+      ':url' => \Drupal::url('image.style_add'),
+    ]));
+
   }
 
   /**
