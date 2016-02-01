@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -37,7 +37,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   /**
    * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -46,10 +46,10 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The node storage.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(EntityStorageInterface $node_storage, DateFormatter $date_formatter) {
+  public function __construct(EntityStorageInterface $node_storage, DateFormatterInterface $date_formatter) {
     $this->nodeStorage = $node_storage;
     $this->dateFormatter = $date_formatter;
   }

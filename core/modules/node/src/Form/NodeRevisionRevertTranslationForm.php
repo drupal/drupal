@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -38,12 +38,12 @@ class NodeRevisionRevertTranslationForm extends NodeRevisionRevertForm {
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The node storage.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityStorageInterface $node_storage, DateFormatter $date_formatter, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityStorageInterface $node_storage, DateFormatterInterface $date_formatter, LanguageManagerInterface $language_manager) {
     parent::__construct($node_storage, $date_formatter);
     $this->languageManager = $language_manager;
   }

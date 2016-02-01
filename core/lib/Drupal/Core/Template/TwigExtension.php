@@ -15,7 +15,7 @@ namespace Drupal\Core\Template;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -55,7 +55,7 @@ class TwigExtension extends \Twig_Extension {
   /**
    * The date formatter.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
@@ -118,7 +118,7 @@ class TwigExtension extends \Twig_Extension {
    *
    * @return $this
    */
-  public function setDateFormatter(DateFormatter $date_formatter) {
+  public function setDateFormatter(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
     return $this;
   }
