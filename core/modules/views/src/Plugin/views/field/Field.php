@@ -820,9 +820,10 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
         'settings' => $this->options['settings'],
         'label' => 'hidden',
       ];
-      $build_list = $this->createEntityForGroupBy($this->getEntity($values), $values)
-        ->{$this->definition['field_name']}
-        ->view($display);
+      // Some bundles might not have a specific field, in which case the faked
+      // entity doesn't have it either.
+      $entity = $this->createEntityForGroupBy($this->getEntity($values), $values);
+      $build_list = isset($entity->{$this->definition['field_name']}) ? $entity->{$this->definition['field_name']}->view($display) : NULL;
     }
 
     if (!$build_list) {
@@ -1002,8 +1003,17 @@ class Field extends FieldPluginBase implements CacheableDependencyInterface, Mul
    * {@inheritdoc}
    */
   public function getValue(ResultRow $values, $field = NULL) {
+    $entity = $this->getEntity($values);
+    // Some bundles might not have a specific field, in which case the entity
+    // (potentially a fake one) doesn't have it either.
     /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
-    $field_item_list = $this->getEntity($values)->{$this->definition['field_name']};
+    $field_item_list = isset($entity->{$this->definition['field_name']}) ? $entity->{$this->definition['field_name']} : NULL;
+
+    if (!isset($field_item_list)) {
+      // There isn't anything we can do without a valid field.
+      return NULL;
+    }
+
     $field_item_definition = $field_item_list->getFieldDefinition();
 
     if ($field_item_definition->getFieldStorageDefinition()->getCardinality() == 1) {
