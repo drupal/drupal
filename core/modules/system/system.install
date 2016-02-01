@@ -61,7 +61,7 @@ function system_requirements($phase) {
     if (!empty($experimental)) {
       $requirements['experimental'] = array(
         'title' => t('Experimental modules enabled'),
-        'value' => t('Experimental modules found: %module_list. Experimental modules are provided for testing purposes only. Use at your own risk.', array('%module_list' => implode(', ', $experimental))),
+        'value' => t('Experimental modules found: %module_list. <a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', array('%module_list' => implode(', ', $experimental), ':url' => 'https://www.drupal.org/core/experimental')),
         'severity' => REQUIREMENT_WARNING,
       );
     }
