@@ -1,6 +1,7 @@
 
 Drupal 7.42, xxxx-xx-xx (development version)
 -----------------------
+- Changed the default .htaccess and web.config to block Composer-related files.
 - Added static caching to module_load_include() to improve performance.
 - Fixed double-encoding bugs in select field widgets provided by the Options
   module. The fix deprecates the 'strip_tags' property on option widgets and
