@@ -95,12 +95,13 @@ class FileStorage implements StorageInterface {
     if (!$this->exists($name)) {
       return FALSE;
     }
-    $data = file_get_contents($this->getFilePath($name));
+    $filepath = $this->getFilePath($name);
+    $data = file_get_contents($filepath);
     try {
       $data = $this->decode($data);
     }
     catch (InvalidDataTypeException $e) {
-      throw new UnsupportedDataTypeConfigException("Invalid data type in config $name: {$e->getMessage()}");
+      throw new UnsupportedDataTypeConfigException('Invalid data type in config ' . $name . ', found in file' . $filepath . ' : ' . $e->getMessage());
     }
     return $data;
   }
