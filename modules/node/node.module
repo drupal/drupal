@@ -3685,7 +3685,7 @@ function _node_access_rebuild_batch_operation(&$context) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
+    $context['sandbox']['max'] = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
   }
 
   // Process the next 20 nodes.
