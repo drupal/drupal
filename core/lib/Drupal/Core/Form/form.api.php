@@ -146,8 +146,6 @@ function callback_batch_finished($success, $results, $operations) {
  *
  * @param \Drupal\Core\Ajax\CommandInterface[] $data
  *   An array of all the rendered commands that will be sent to the client.
- *
- * @see \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
  */
 function hook_ajax_render_alter(array &$data) {
   // Inject any new status messages into the content area.

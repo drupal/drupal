@@ -1868,8 +1868,7 @@ abstract class WebTestBase extends TestBase {
           }
           // @todo Ajax commands can target any jQuery selector, but these are
           //   hard to fully emulate with XPath. For now, just handle 'head'
-          //   and 'body', since these are used by
-          //   \Drupal\Core\Ajax\AjaxResponse::ajaxRender().
+          //   and 'body', since these are used by the Ajax renderer.
           elseif (in_array($command['selector'], array('head', 'body'))) {
             $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
           }
