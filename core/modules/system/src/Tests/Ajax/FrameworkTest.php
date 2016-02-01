@@ -198,7 +198,7 @@ class FrameworkTest extends AjaxTestBase {
    * Tests that overridden CSS files are not added during lazy load.
    */
   public function testLazyLoadOverriddenCSS() {
-    // The test theme overrides system.module.css without an implementation,
+    // The test theme overrides js.module.css without an implementation,
     // thereby removing it.
     \Drupal::service('theme_handler')->install(array('test_theme'));
     $this->config('system.theme')
@@ -214,6 +214,6 @@ class FrameworkTest extends AjaxTestBase {
     // information about the file; we only really care about whether it appears
     // in a LINK or STYLE tag, for which Drupal always adds a query string for
     // cache control.
-    $this->assertNoText('system.module.css?', 'Ajax lazy loading does not add overridden CSS files.');
+    $this->assertNoText('js.module.css?', 'Ajax lazy loading does not add overridden CSS files.');
   }
 }

@@ -46,15 +46,15 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'browsers' => array('IE' => TRUE, '!IE' => TRUE),
         'basename' => 'system.base.css',
       ),
-      'system.theme.css' => array(
+      'js.module.css' => array(
         'group' => -100,
         'type' => 'file',
         'weight' => 0.013,
         'media' => 'all',
         'preprocess' => TRUE,
-        'data' => 'core/modules/system/system.theme.css',
+        'data' => 'core/modules/system/js.module.css',
         'browsers' => array('IE' => TRUE, '!IE' => TRUE),
-        'basename' => 'system.theme.css',
+        'basename' => 'js.module.css',
       ),
       'jquery.ui.core.css' => array(
         'group' => -100,
@@ -120,7 +120,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame($group['preprocess'], TRUE);
     $this->assertSame(count($group['items']), 3);
     $this->assertContains($css_assets['system.base.css'], $group['items']);
-    $this->assertContains($css_assets['system.theme.css'], $group['items']);
+    $this->assertContains($css_assets['js.module.css'], $group['items']);
 
     // Check group 2.
     $group = $groups[1];
