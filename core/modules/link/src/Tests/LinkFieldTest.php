@@ -101,6 +101,10 @@ class LinkFieldTest extends WebTestBase {
     // strings displayed to the user).
     $valid_external_entries = array(
       'http://www.example.com/' => 'http://www.example.com/',
+      // Strings within parenthesis without leading space char.
+      'http://www.example.com/strings_(string_within_parenthesis)' => 'http://www.example.com/strings_(string_within_parenthesis)',
+      // Numbers within parenthesis without leading space char.
+      'http://www.example.com/numbers_(9999)' => 'http://www.example.com/numbers_(9999)',
     );
     $valid_internal_entries = array(
       '/entity_test/add' => '/entity_test/add',

@@ -330,11 +330,11 @@ class EntityAutocomplete extends Textfield {
 
     // Take "label (entity id)', match the ID from parenthesis when it's a
     // number.
-    if (preg_match("/.+\((\d+)\)/", $input, $matches)) {
+    if (preg_match("/.+\s\((\d+)\)/", $input, $matches)) {
       $match = $matches[1];
     }
     // Match the ID when it's a string (e.g. for config entity types).
-    elseif (preg_match("/.+\(([\w.]+)\)/", $input, $matches)) {
+    elseif (preg_match("/.+\s\(([\w.]+)\)/", $input, $matches)) {
       $match = $matches[1];
     }
 
