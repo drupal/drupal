@@ -169,9 +169,6 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    *   Dependency types are, for example, entity, module and theme.
    *
    * @return bool
-   *   TRUE if the entity has changed, FALSE if not.
-   *
-   * @return bool
    *   TRUE if the entity has been changed as a result, FALSE if not.
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
