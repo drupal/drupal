@@ -1,6 +1,9 @@
 
 Drupal 7.42, xxxx-xx-xx (development version)
 -----------------------
+- Improved MySQL 5.7 support by changing the MySQL database driver to stop
+  using the ANSI SQL mode alias, which has different meanings for different
+  MySQL versions.
 - Fixed a regression introduced in Drupal 7.39 which prevented autocomplete
   functionality from working on servers that are not configured to
   automatically recognize index.php.
