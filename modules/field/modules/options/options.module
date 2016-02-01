@@ -185,6 +185,7 @@ function _options_properties($type, $multiple, $required, $has_value) {
   $base = array(
     'filter_xss' => FALSE,
     'strip_tags' => FALSE,
+    'strip_tags_and_unescape' => FALSE,
     'empty_option' => FALSE,
     'optgroups' => FALSE,
   );
@@ -195,7 +196,7 @@ function _options_properties($type, $multiple, $required, $has_value) {
     case 'select':
       $properties = array(
         // Select boxes do not support any HTML tag.
-        'strip_tags' => TRUE,
+        'strip_tags_and_unescape' => TRUE,
         'optgroups' => TRUE,
       );
       if ($multiple) {
@@ -271,8 +272,15 @@ function _options_prepare_options(&$options, $properties) {
       _options_prepare_options($options[$value], $properties);
     }
     else {
+      // The 'strip_tags' option is deprecated. Use 'strip_tags_and_unescape'
+      // when plain text is required (and where the output will be run through
+      // check_plain() before being inserted back into HTML) or 'filter_xss'
+      // when HTML is required.
       if ($properties['strip_tags']) {
         $options[$value] = strip_tags($label);
+      }
+      if ($properties['strip_tags_and_unescape']) {
+        $options[$value] = decode_entities(strip_tags($label));
       }
       if ($properties['filter_xss']) {
         $options[$value] = field_filter_xss($label);

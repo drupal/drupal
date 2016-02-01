@@ -1,6 +1,10 @@
 
 Drupal 7.42, xxxx-xx-xx (development version)
 -----------------------
+- Fixed double-encoding bugs in select field widgets provided by the Options
+  module. The fix deprecates the 'strip_tags' property on option widgets and
+  replaces it with a new 'strip_tags_and_unescape' property (minor data
+  structure change).
 - Improved MySQL 5.7 support by changing the MySQL database driver to stop
   using the ANSI SQL mode alias, which has different meanings for different
   MySQL versions.

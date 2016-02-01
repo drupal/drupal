@@ -24,7 +24,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       'cardinality' => 1,
       'settings' => array(
         // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',  3 => 'Some HTML encoded markup with &lt; &amp; &gt;'),
       ),
     );
     $this->card_1 = field_create_field($this->card_1);
@@ -233,6 +233,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('Some HTML encoded markup with &lt; &amp; &gt;', 'HTML entities in option text were properly handled and not double-encoded');
 
     // Submit form: select invalid 'none' option.
     $edit = array("card_1[$langcode]" => '_none');
