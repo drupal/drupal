@@ -28,6 +28,7 @@ class UserAdminTest extends WebTestBase {
    * Registers a user and deletes it.
    */
   function testUserAdmin() {
+    $config = $this->config('user.settings');
     $user_a = $this->drupalCreateUser();
     $user_a->name = 'User A';
     $user_a->mail = $this->randomMachineName() . '@example.com';
@@ -101,11 +102,16 @@ class UserAdminTest extends WebTestBase {
     $edit = array();
     $edit['action'] = 'user_block_user_action';
     $edit['user_bulk_form[4]'] = TRUE;
+    $config
+      ->set('notify.status_blocked', TRUE)
+      ->save();
     $this->drupalPostForm('admin/people', $edit, t('Apply'), array(
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => array('order' => 'name', 'sort' => 'asc')
     ));
+    $site_name = $this->config('system.site')->get('name');
+    $this->assertMailString('body', 'Your account on ' . $site_name . ' has been blocked.', 1, 'Blocked message found in the mail sent to user C.');
     $user_storage->resetCache(array($user_c->id()));
     $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isBlocked(), 'User C blocked');
