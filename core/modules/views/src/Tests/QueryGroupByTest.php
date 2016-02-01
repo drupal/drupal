@@ -25,7 +25,7 @@ class QueryGroupByTest extends ViewKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality');
+  public static $testViews = array('test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality', 'test_group_by_field_not_within_bundle');
 
   /**
    * Modules to enable.
@@ -290,6 +290,50 @@ class QueryGroupByTest extends ViewKernelTestBase {
     $this->assertEqual(6, count($view->result));
     $this->assertEqual('3', $view->getStyle()->getField(5, 'id'));
     $this->assertEqual('6', $view->getStyle()->getField(5, 'field_test'));
+  }
+
+  /**
+   * Tests groupby with a field not existing on some bundle.
+   */
+  public function testGroupByWithFieldsNotExistingOnBundle() {
+    $field_storage = FieldStorageConfig::create([
+      'type' => 'integer',
+      'field_name' => 'field_test',
+      'cardinality' => 4,
+      'entity_type' => 'entity_test_mul',
+    ]);
+    $field_storage->save();
+    $field = FieldConfig::create([
+      'field_name' => 'field_test',
+      'entity_type' => 'entity_test_mul',
+      'bundle' => 'entity_test_mul',
+    ]);
+    $field->save();
+
+    $entities = [];
+    $entity = EntityTestMul::create([
+      'field_test' => [1],
+      'type' => 'entity_test_mul',
+    ]);
+    $entity->save();
+    $entities[] = $entity;
+
+    $entity = EntityTestMul::create([
+      'type' => 'entity_test_mul2',
+    ]);
+    $entity->save();
+    $entities[] = $entity;
+
+    $view = Views::getView('test_group_by_field_not_within_bundle');
+    $this->executeView($view);
+
+    $this->assertEqual(2, count($view->result));
+    // The first result is coming from entity_test_mul2, so no field could be
+    // rendered.
+    $this->assertEqual('', $view->getStyle()->getField(0, 'field_test'));
+    // The second result is coming from entity_test_mul, so its field value
+    // could be rendered.
+    $this->assertEqual('1', $view->getStyle()->getField(1, 'field_test'));
   }
 
 }
