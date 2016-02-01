@@ -253,6 +253,7 @@ class LanguageManager implements LanguageManagerInterface {
       'dz' => array('Dzongkha', 'རྫོང་ཁ'),
       'el' => array('Greek', 'Ελληνικά'),
       'en' => array('English', 'English'),
+      'en-x-simple' => array('Simple English', 'Simple English'),
       'eo' => array('Esperanto', 'Esperanto'),
       'es' => array('Spanish', 'Español'),
       'et' => array('Estonian', 'Eesti'),
